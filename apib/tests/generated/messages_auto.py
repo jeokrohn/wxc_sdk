@@ -88,7 +88,8 @@ class Message(ApiModel):
     #: example: <p><strong>PROJECT UPDATE</strong> A new project plan has been published <a href=\"http://example.com/s/lf5vj\" rel=\"nofollow\">here</a>. The PM for this project is mike@example.com and the Engineering Manager is jane@example.com.</p>
     html: Optional[str] = None
     #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
-    #: see [Message Attachments](/docs/basics#message-attachments).
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -103,8 +104,8 @@ class Message(ApiModel):
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
     mentioned_groups: Optional[list[str]] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more
-    #: information.
+    #: Message content attachments attached to the message. See the `Cards Guide
+    #: <https://developer.webex.com/docs/api/guides/cards>`_ for more information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
@@ -142,7 +143,8 @@ class ListMessage(ApiModel):
     #: example: <p><strong>PROJECT UPDATE</strong> A new project plan has been published <a href=\"http://example.com/s/lf5vj\" rel=\"nofollow\">here</a>. The PM for this project is mike@example.com and the Engineering Manager is jane@example.com.</p>
     html: Optional[str] = None
     #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
-    #: see [Message Attachments](/docs/basics#message-attachments).
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -157,8 +159,8 @@ class ListMessage(ApiModel):
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
     mentioned_groups: Optional[list[str]] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more
-    #: information.
+    #: Message content attachments attached to the message. See the `Cards Guide
+    #: <https://developer.webex.com/docs/api/guides/cards>`_ for more information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
@@ -196,7 +198,8 @@ class DirectMessage(ApiModel):
     #: example: <p>Hey there, what do you think of <a href=\"http://sharepoint.example.com/presentation.pptx\" rel=\"nofollow\">this project update presentation</a>?</p>
     html: Optional[str] = None
     #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
-    #: see [Message Attachments](/docs/api/basics#message-attachments).
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/api/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -205,8 +208,8 @@ class DirectMessage(ApiModel):
     #: The email address of the message author.
     #: example: matt@example.com
     person_email: Optional[str] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more
-    #: information.
+    #: Message content attachments attached to the message. See the `Cards Guide
+    #: <https://developer.webex.com/docs/api/guides/cards>`_ for more information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00

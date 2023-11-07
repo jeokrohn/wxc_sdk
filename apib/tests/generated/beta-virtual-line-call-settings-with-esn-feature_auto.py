@@ -7,8 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListVirtualLineObject', 'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVirtualLineObjectLocation',
-            'ListVirtualLineObjectNumber', 'ReadTheListOfVirtualLinesResponse']
+__auto__ = ['ListVirtualLineObject', 'ListVirtualLineObjectExternalCallerIdNamePolicy',
+            'ListVirtualLineObjectLocation', 'ListVirtualLineObjectNumber', 'ReadTheListOfVirtualLinesResponse']
 
 
 class ListVirtualLineObjectExternalCallerIdNamePolicy(str, Enum):

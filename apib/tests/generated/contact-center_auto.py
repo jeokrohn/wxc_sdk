@@ -9,9 +9,9 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __auto__ = ['AgentStats', 'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'Artifact',
             'ArtifactAttributes', 'FieldValidationError', 'GetAgentsStatisticsInterval', 'ListCapturesQuery',
-            'ListCapturesResponse', 'Meta', 'QueueStats', 'QueueStatsResponse', 'Recording', 'RecordingStatus', 'Task',
-            'TaskAttributes', 'TaskAttributesContext', 'TaskAttributesStatus', 'TaskOwner', 'TaskWithCaptures',
-            'TasksResponse', 'TasksValidationError']
+            'ListCapturesResponse', 'Meta', 'QueueStats', 'QueueStatsResponse', 'Recording', 'RecordingStatus',
+            'Task', 'TaskAttributes', 'TaskAttributesContext', 'TaskAttributesStatus', 'TaskOwner',
+            'TaskWithCaptures', 'TasksResponse', 'TasksValidationError']
 
 
 class Meta(ApiModel):

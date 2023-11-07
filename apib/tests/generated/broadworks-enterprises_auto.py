@@ -65,9 +65,9 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus(ApiModel)
     #: example: NA_dde3a13a-bad7-4990-b155-9b4574e545b9
     last_sync_tracking_id: Optional[str] = None
     #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures
-    #: errors that occurred during *directory sync* of the BroadWorks enterprise, *after* the API has been accepted and
-    #: 200 OK response returned. Any errors that occur during initial API request validation will be captured directly
-    #: in error response with appropriate HTTP status code.
+    #: errors that occurred during *directory sync* of the BroadWorks enterprise, *after* the API has been accepted
+    #: and 200 OK response returned. Any errors that occur during initial API request validation will be captured
+    #: directly in error response with appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
     #: example: 5.0

@@ -8,8 +8,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['Error', 'PrecheckABroadworksSubscriberProvisioningCustomerInfo', 'Subscriber', 'SubscriberListResponse',
-            'SubscriberPackage', 'SubscriberProvisioningPrecheckResponse', 'SubscriberProvisioningPrecheckResponseInfo',
-            'SubscriberStatus']
+            'SubscriberPackage', 'SubscriberProvisioningPrecheckResponse',
+            'SubscriberProvisioningPrecheckResponseInfo', 'SubscriberStatus']
 
 
 class Error(ApiModel):

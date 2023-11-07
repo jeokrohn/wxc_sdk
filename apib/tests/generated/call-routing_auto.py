@@ -12,9 +12,9 @@ __auto__ = ['ActionOnRouteList', 'CallSourceInfo', 'CallSourceType', 'Customer',
             'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost',
             'DialPlanPut', 'Emergency', 'FeatureAccessCode', 'GetLocalGatewayDialPlanUsageForATrunkResponse',
             'GetRouteGroupsUsingTheLocalGatewayResponse', 'HostedAgent', 'HostedAgentType', 'HostedFeature',
-            'LocalGatewayUsageCount', 'LocalGateways', 'LocationUsageGetResponse', 'ModifyNumbersForRouteListResponse',
-            'NumberStatus', 'OriginatorType', 'PbxUser', 'PostResponse', 'PstnNumber',
-            'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfDialPlansResponse',
+            'LocalGatewayUsageCount', 'LocalGateways', 'LocationUsageGetResponse',
+            'ModifyNumbersForRouteListResponse', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PostResponse',
+            'PstnNumber', 'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfDialPlansResponse',
             'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfTrunksResponse',
             'ReadTheRouteListsOfARoutingGroupResponse', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus',
             'ResponseStatusType', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet',
@@ -61,9 +61,10 @@ class CallSourceInfo(ApiModel):
     #: example: dialPlan1
     dial_plan_name: Optional[str] = None
     #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name trunkA, trunkA belongs to a
-    #: route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA as
-    #: routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the `dialPattern`
-    #: `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
+    #: route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA
+    #: as routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the
+    #: `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is
+    #: `DIAL_PATTERN`.
     #: example: *888
     dial_pattern: Optional[str] = None
     #: Dial plan ID.

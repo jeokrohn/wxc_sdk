@@ -27,15 +27,15 @@ class TranscriptObject(ApiModel):
     #: URL of the Webex site from which the API lists meeting transcripts.
     #: example: example.webex.com
     site_url: Optional[str] = None
-    #: Start time for the meeting transcript in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: Start time for the meeting transcript in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2020-06-01T20:30:15.042Z
     start_time: Optional[datetime] = None
     #: The meeting's topic.
     #: example: John's Meeting
     meeting_topic: Optional[str] = None
-    #: Unique identifier for the [meeting
-    #: instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the transcripts
-    #: belong.
+    #: Unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the transcripts belong.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
     meeting_id: Optional[str] = None
     #: Unique identifier for scheduled meeting with which the current meeting is associated. Only apples to a meeting

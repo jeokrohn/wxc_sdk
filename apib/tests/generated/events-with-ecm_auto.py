@@ -65,9 +65,10 @@ class Event(ApiModel):
     #: The date and time of the event.
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None
-    #: The event's data representation. This object will contain the event's `resource`, such as
-    #: [memberships](/docs/api/v1/memberships/get-membership-details) or
-    #: [messages](/docs/api/v1/messages/get-message-details), at the time the event took place.
+    #: The event's data representation. This object will contain the event's `resource`, such as `memberships
+    #: <https://developer.webex.com/docs/api/v1/memberships/get-membership-details>`_ or
+    #: `messages
+    #: <https://developer.webex.com/docs/api/v1/messages/get-message-details>`_, at the time the event took place.
     data: Optional[EventData] = None
 
 

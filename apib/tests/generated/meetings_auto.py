@@ -28,21 +28,22 @@ __auto__ = ['AnswerForCustomizedQuestion', 'BatchRegisterMeetingRegistrantsRespo
             'MeetingSeriesObjectAudioConnectionOptionsEntryAndExitTone', 'MeetingSeriesObjectForListMeeting',
             'MeetingSeriesObjectMeetingOptions', 'MeetingSeriesObjectMeetingOptionsNoteType',
             'MeetingSeriesObjectMeetingType', 'MeetingSeriesObjectRegistration', 'MeetingSeriesObjectScheduledType',
-            'MeetingSeriesObjectSimultaneousInterpretation', 'MeetingSeriesObjectState', 'MeetingSeriesObjectTelephony',
-            'MeetingSeriesObjectTelephonyCallInNumbers', 'MeetingSeriesObjectTelephonyCallInNumbersTollType',
-            'MeetingSeriesObjectUnlockedMeetingJoinSecurity', 'MeetingSeriesObjectWithAdhoc',
-            'MeetingSeriesObjectWithAdhocRegistration', 'MeetingSeriesObjectWithAdhocTelephony',
-            'MeetingSessionTypeObject', 'MeetingSessionTypeObjectType', 'MeetingTrackingCodesObject',
-            'MeetingTrackingCodesObjectInputMode', 'MeetingTrackingCodesObjectService',
-            'MeetingTrackingCodesObjectType', 'OptionsForTrackingCodeObject', 'PatchMeetingObject', 'QueryRegistrants',
-            'QueryRegistrantsOrderBy', 'QueryRegistrantsOrderType', 'QuestionObject', 'QuestionObjectType',
-            'QuestionOptionObject', 'QuestionWithAnswersObject', 'ReassignMeetingErrorDescriptionObject',
-            'ReassignMeetingRequestObject', 'ReassignMeetingResponseObject', 'ReassignMeetingsToANewHostResponse',
-            'Registrant', 'RegistrantCreateResponse', 'RegistrantFormObject', 'RegistrantStatus', 'Registrants',
-            'Registration', 'RegistrationForUpdate', 'ScheduledMeetingObject', 'StandardRegistrationApproveRule',
-            'StandardRegistrationApproveRuleQuestion', 'SurveyLinkObject', 'SurveyLinkRequestObject', 'SurveyObject',
-            'SurveyResultObject', 'TemplateObject', 'TemplateObjectTemplateType',
-            'TrackingCodeItemForCreateMeetingObject', 'UpdateInterpreterObject', 'UpdateMeetingBreakoutSessionsObject']
+            'MeetingSeriesObjectSimultaneousInterpretation', 'MeetingSeriesObjectState',
+            'MeetingSeriesObjectTelephony', 'MeetingSeriesObjectTelephonyCallInNumbers',
+            'MeetingSeriesObjectTelephonyCallInNumbersTollType', 'MeetingSeriesObjectUnlockedMeetingJoinSecurity',
+            'MeetingSeriesObjectWithAdhoc', 'MeetingSeriesObjectWithAdhocRegistration',
+            'MeetingSeriesObjectWithAdhocTelephony', 'MeetingSessionTypeObject', 'MeetingSessionTypeObjectType',
+            'MeetingTrackingCodesObject', 'MeetingTrackingCodesObjectInputMode', 'MeetingTrackingCodesObjectService',
+            'MeetingTrackingCodesObjectType', 'OptionsForTrackingCodeObject', 'PatchMeetingObject',
+            'QueryRegistrants', 'QueryRegistrantsOrderBy', 'QueryRegistrantsOrderType', 'QuestionObject',
+            'QuestionObjectType', 'QuestionOptionObject', 'QuestionWithAnswersObject',
+            'ReassignMeetingErrorDescriptionObject', 'ReassignMeetingRequestObject', 'ReassignMeetingResponseObject',
+            'ReassignMeetingsToANewHostResponse', 'Registrant', 'RegistrantCreateResponse', 'RegistrantFormObject',
+            'RegistrantStatus', 'Registrants', 'Registration', 'RegistrationForUpdate', 'ScheduledMeetingObject',
+            'StandardRegistrationApproveRule', 'StandardRegistrationApproveRuleQuestion', 'SurveyLinkObject',
+            'SurveyLinkRequestObject', 'SurveyObject', 'SurveyResultObject', 'TemplateObject',
+            'TemplateObjectTemplateType', 'TrackingCodeItemForCreateMeetingObject', 'UpdateInterpreterObject',
+            'UpdateMeetingBreakoutSessionsObject']
 
 
 class InviteeObjectForCreateMeeting(ApiModel):
@@ -50,8 +51,8 @@ class InviteeObjectForCreateMeeting(ApiModel):
     #: example: brenda.song@example.com
     email: Optional[str] = None
     #: Display name of meeting invitee. The maximum length of `displayName` is 128 characters. If not specified but the
-    #: email has been registered, user's registered name for the email will be taken as `displayName`. If not specified
-    #: and the email hasn't been registered, the email will be taken as `displayName`.
+    #: email has been registered, user's registered name for the email will be taken as `displayName`. If not
+    #: specified and the email hasn't been registered, the email will be taken as `displayName`.
     #: example: Brenda Song
     display_name: Optional[str] = None
     #: Whether or not invitee is allowed to be a cohost for the meeting. `coHost` for each invitee is `true` by default
@@ -67,13 +68,13 @@ class InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting(ApiModel)
     #: example: OGQ0OGRiM2U3ZTAxNDZiMGFjYzJjMzYxNDNmNGZhN2RfZTA5MTJiZDBjNWVlNDA4YjgxMTZlMjU4Zjg2NWIzZmM
     id: Optional[str] = None
     #: Forms a set of simultaneous interpretation channels together with `languageCode2`. Standard language format from
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes code. Read
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for details.
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: en
     language_code1: Optional[str] = None
     #: Forms a set of simultaneous interpretation channels together with `languageCode1`. Standard language format from
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes code. Read
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for details.
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: de
     language_code2: Optional[str] = None
     #: Email address of meeting interpreter.
@@ -86,13 +87,13 @@ class InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting(ApiModel)
 
 class InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting(ApiModel):
     #: Forms a set of simultaneous interpretation channels together with `languageCode2`. Standard language format from
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes code. Read
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for details.
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: en
     language_code1: Optional[str] = None
     #: Forms a set of simultaneous interpretation channels together with `languageCode1`. Standard language format from
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes code. Read
-    #: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for details.
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: de
     language_code2: Optional[str] = None
     #: Email address of meeting interpreter.
@@ -156,7 +157,8 @@ class MeetingSeriesObjectScheduledType(str, Enum):
     #: If the value of `scheduledType` attribute is `webinar`, it is a webinar meeting.
     webinar = 'webinar'
     #: If the value of `scheduledType` attribute is `personalRoomMeeting`, it is a meeting scheduled in the user's
-    #: https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings.
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     personal_room_meeting = 'personalRoomMeeting'
 
 
@@ -178,14 +180,16 @@ class MeetingSeriesObjectTelephonyCallInNumbers(ApiModel):
 
 
 class LinksObjectForTelephony(ApiModel):
-    #: Link relation describing how the target resource is related to the current context (conforming with
-    #: https://tools.ietf.org/html/rfc5988).
+    #: Link relation describing how the target resource is related to the current context (conforming with `RFC5998
+    #: <https://tools.ietf.org/html/rfc5988>`_).
     #: example: globalCallinNumbers
     rel: Optional[str] = None
-    #: Target resource URI (conforming with https://tools.ietf.org/html/rfc5988).
+    #: Target resource URI (conforming with `RFC5998
+    #: <https://tools.ietf.org/html/rfc5988>`_).
     #: example: /api/v1/meetings/2c87cf8ece4e414a9fe5516e4a0aac76/globalCallinNumbers
     href: Optional[str] = None
-    #: Target resource method (conforming with https://tools.ietf.org/html/rfc5988).
+    #: Target resource method (conforming with `RFC5998
+    #: <https://tools.ietf.org/html/rfc5988>`_).
     #: example: GET
     method: Optional[str] = None
 
@@ -197,8 +201,8 @@ class MeetingSeriesObjectTelephony(ApiModel):
     access_code: Optional[str] = None
     #: Array of call-in numbers for joining a teleconference from a phone.
     call_in_numbers: Optional[list[MeetingSeriesObjectTelephonyCallInNumbers]] = None
-    #: https://en.wikipedia.org/wiki/HATEOAS information of global call-in numbers for joining a teleconference from a
-    #: phone.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ information of global call-in numbers for joining a teleconference from a phone.
     links: Optional[list[LinksObjectForTelephony]] = None
 
 
@@ -234,9 +238,9 @@ class MeetingSeriesObjectMeetingOptions(ApiModel):
     #: Whether or not to allow any attendee to transfer files in the meeting. The value of this attribute also depends
     #: on the session type.
     enabled_file_transfer: Optional[bool] = None
-    #: Whether or not to allow any attendee to share
-    #: https://www.cisco.com/c/en/us/td/docs/collaboration/training_center/wbs30/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions_chapter_0110.pdf media files in the meeting. The value of this attribute also depends on the
-    #: sessionType.
+    #: Whether or not to allow any attendee to share `Universal Communications Format
+    #: <https://www.cisco.com/c/en/us/td/docs/collaboration/training_center/wbs30/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions_chapter_0110.pdf>`_ media files in the meeting. The
+    #: value of this attribute also depends on the sessionType.
     enabled_ucfrich_media: Optional[bool] = Field(alias='enabledUCFRichMedia', default=None)
 
 
@@ -532,17 +536,19 @@ class MeetingSeriesObject(ApiModel):
     #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
-    #: meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting series or a scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
     #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
     #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
-    #: [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
     #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
@@ -555,17 +561,19 @@ class MeetingSeriesObject(ApiModel):
     #: Meeting state.
     #: example: active
     state: Optional[MeetingSeriesObjectState] = None
-    #: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List of `start` and `end`, conforming with the
-    #: https://www.iana.org/time-zones.
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format. If the meeting is a meeting
-    #: series, `start` is the date and time the first meeting of the series starts. If the meeting is a meeting series
-    #: and the `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series
-    #: starts. If the meeting is a scheduled meeting from a meeting series, `start` is the date and time when that
-    #: scheduled meeting starts. If the meeting is a meeting instance that has happened or is happening, `start` is the
-    #: date and time that the instance actually starts. Can be modified for a meeting series or a scheduled meeting
-    #: using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meeting is a meeting series, `start` is the date and
+    #: time the first meeting of the series starts. If the meeting is a meeting series and the `current` filter is
+    #: true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meeting is a
+    #: scheduled meeting from a meeting series, `start` is the date and time when that scheduled meeting starts. If
+    #: the meeting is a meeting instance that has happened or is happening, `start` is the date and time that the
+    #: instance actually starts. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
     #: End time for a meeting in ISO 8601 compliant format. If the meeting is a meeting series, `end` is the date and
@@ -574,17 +582,19 @@ class MeetingSeriesObject(ApiModel):
     #: meeting from a meeting series, `end` is the date and time when that scheduled meeting ends. If the meeting is a
     #: meeting instance that has happened, `end` is the date and time that instance actually ends. If a meeting
     #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
-    #: using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with https://www.ietf.org/rfc/rfc2445.txt). Applies only to a
-    #: recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting
-    #: series using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for
-    #: monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For
-    #: example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially
-    #: supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". For a non-recurring meeting which has no
-    #: `recurrence`, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in
-    #: Webex meeting modeling.
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only
+    #: the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+    #: is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". For a
+    #: non-recurring meeting which has no `recurrence`, its `meetingType` is also `meetingSeries` which is a meeting
+    #: series with only one occurrence in Webex meeting modeling.
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -616,27 +626,31 @@ class MeetingSeriesObject(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
     #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
-    #: using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
-    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's
-    #: a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
-    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update
-    #: a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
     #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
     #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
     #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
-    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`,
-    #: and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -650,20 +664,22 @@ class MeetingSeriesObject(ApiModel):
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
-    #: meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting
-    #: Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
-    #: https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings.
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details. If not specified, a random password conforming to the site's password rules will be generated
-    #: automatically.
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -676,12 +692,14 @@ class MeetingSeriesObject(ApiModel):
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
-    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting uisng the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
-    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the  [Update
-    #: a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Information for callbacks from a meeting to phone or for joining a teleconference using a phone.
     telephony: Optional[MeetingSeriesObjectTelephony] = None
@@ -695,7 +713,8 @@ class MeetingSeriesObject(ApiModel):
     #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
     #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no `password` or when the feature
     #: toggle `DecoupleJBHWithRegistration` is disabled the `Join Before Host` option is enabled for the meeting, See
-    #: https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings for details.
+    #: `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectRegistration] = None
     #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc.
@@ -704,7 +723,8 @@ class MeetingSeriesObject(ApiModel):
     simultaneous_interpretation: Optional[MeetingSeriesObjectSimultaneousInterpretation] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: https://en.wikipedia.org/wiki/HATEOAS Breakout Sessions information for meeting.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ Breakout Sessions information for meeting.
     links: Optional[list[LinksObjectForTelephony]] = None
     #: Tracking codes information.
     tracking_codes: Optional[list[TrackingCodeItemForCreateMeetingObject]] = None
@@ -723,8 +743,8 @@ class MeetingSeriesObjectWithAdhocTelephony(ApiModel):
     access_code: Optional[str] = None
     #: Array of call-in numbers for joining a teleconference from a phone.
     call_in_numbers: Optional[list[MeetingSeriesObjectTelephonyCallInNumbers]] = None
-    #: https://en.wikipedia.org/wiki/HATEOAS information of global call-in numbers for joining a teleconference from a
-    #: phone.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ information of global call-in numbers for joining a teleconference from a phone.
     links: Optional[LinksObjectForTelephony] = None
 
 
@@ -778,17 +798,19 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
-    #: meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting series or a scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
     #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
     #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
-    #: [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
     #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
@@ -803,37 +825,42 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     state: Optional[MeetingSeriesObjectState] = None
     #: If `true`, the meeting is ad-hoc.
     adhoc: Optional[bool] = None
-    #: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List of `start` and `end`, conforming with the
-    #: https://www.iana.org/time-zones.
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format. If the meetingType of this
-    #: meeting is `meetingSeries`, and `current` is not specified or is `false`, `start` is the scheduled start time of
-    #: the first occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is not
-    #: specified or is `false`, `start` is the scheduled start time of the first occurrence of this series. If the
-    #: meetingType of this meeting is `meetingSeries`, and `current` is `true`, `start` is the scheduled start time of
-    #: the ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`,
-    #: `start` is the scheduled start time of this occurrence. If the meetingType of this meeting is `meeting`, `start`
-    #: is the actual start time of this meeting instance. Can be modified for a meeting series or a scheduled meeting
-    #: using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of this meeting is `meetingSeries`, and
+    #: `current` is not specified or is `false`, `start` is the scheduled start time of the first occurrence of this
+    #: series. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`,
+    #: `start` is the scheduled start time of the first occurrence of this series. If the meetingType of this meeting
+    #: is `meetingSeries`, and `current` is `true`, `start` is the scheduled start time of the ongoing or upcoming
+    #: occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `start` is the scheduled
+    #: start time of this occurrence. If the meetingType of this meeting is `meeting`, `start` is the actual start
+    #: time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format. If the meeting is a meeting
-    #: series, `end` is the date and time the first meeting of the series ends. If the meetingType of this meeting is
-    #: `meetingSeries`, and `current` is not specified or is `false`, `end` is the scheduled end time of the first
-    #: occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is `true`, `end`
-    #: is the scheduled end time of the ongoing or upcoming occurrence in this series. If the meetingType of this
-    #: meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the meetingType of this
-    #: meeting is `meeting`, `end` is the actual end time of this meeting instance. Can be modified for a meeting
-    #: series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meeting is a meeting series, `end` is the date and
+    #: time the first meeting of the series ends. If the meetingType of this meeting is `meetingSeries`, and `current`
+    #: is not specified or is `false`, `end` is the scheduled end time of the first occurrence of this series. If the
+    #: meetingType of this meeting is `meetingSeries`, and `current` is `true`, `end` is the scheduled end time of the
+    #: ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `end`
+    #: is the scheduled end time of this occurrence. If the meetingType of this meeting is `meeting`, `end` is the
+    #: actual end time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with https://www.ietf.org/rfc/rfc2445.txt). Applies only to a
-    #: recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting
-    #: series using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for
-    #: monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For
-    #: example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially
-    #: supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only
+    #: the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+    #: is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -865,27 +892,31 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
     #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
-    #: using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
-    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's
-    #: a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
-    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update
-    #: a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
     #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
     #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
     #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
-    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`,
-    #: and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -899,20 +930,22 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
-    #: meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting
-    #: Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
-    #: https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings.
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details. If not specified, a random password conforming to the site's password rules will be generated
-    #: automatically.
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -925,12 +958,14 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
-    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
-    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -955,8 +990,8 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
     #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
     #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before
-    #: Host` option is enabled for the meeting. See
-    #: https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings for details.
+    #: Host` option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
     #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc.
@@ -983,17 +1018,19 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
-    #: meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
     #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
     #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
-    #: [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
     #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
@@ -1006,33 +1043,38 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Meeting state.
     #: example: active
     state: Optional[MeetingSeriesObjectState] = None
-    #: Time zone of `start` and `end`, conforming with the https://www.iana.org/time-zones.
+    #: Time zone of `start` and `end`, conforming with the `IANA time zone database
+    #: <https://www.iana.org/time-zones>`_.
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format. If the meetingType of a
-    #: meeting is `meetingSeries`, `start` is the scheduled start time of the first occurrence of this series. If the
-    #: meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or
-    #: ongoing meeting of the series starts. If the meetingType of a meeting is `scheduledMeeting`, `start` is the
-    #: scheduled start time of this occurrence. If the meetingType of a meeting is `meeting`, `start` is the actual
-    #: start time of the meeting instance. Can be modified for a meeting series or a scheduled meeting using the
-    #: [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `start`
+    #: is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If
+    #: the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If
+    #: the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format. If the meetingType of a
-    #: meeting is `meetingSeries`, `end` is the scheduled end time of the first occurrence of this series. If the
-    #: meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing
-    #: meeting of the series ends. If the meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end
-    #: time of this occurrence. If the meetingType of a meeting is `meeting`, `end` is the actual end time of the
-    #: meeting instance. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting
-    #: series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `end`
+    #: is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the
+    #: meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the
+    #: meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with https://www.ietf.org/rfc/rfc2445.txt). Applies only to a
-    #: recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting
-    #: series using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for
-    #: monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For
-    #: example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially
-    #: supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_
+    #: API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or
+    #: date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported
+    #: and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -1064,27 +1106,31 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
     #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
-    #: using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
-    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's
-    #: a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
-    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update
-    #: a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
     #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
     #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
     #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
-    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`,
-    #: and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -1098,20 +1144,22 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
-    #: meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting
-    #: Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
-    #: https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings.
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details. If not specified, a random password conforming to the site's password rules will be generated
-    #: automatically.
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -1124,12 +1172,14 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
-    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
-    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -1154,8 +1204,8 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
     #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
     #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before
-    #: Host` option is enabled for the meeting. See
-    #: https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings for details.
+    #: Host` option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
     #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc.
@@ -1192,17 +1242,19 @@ class ScheduledMeetingObject(ApiModel):
     #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
-    #: meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
     #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
     #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
-    #: [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
     #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
@@ -1218,26 +1270,29 @@ class ScheduledMeetingObject(ApiModel):
     #: This state only applies to scheduled meeting. Flag identifying whether or not the scheduled meeting has been
     #: modified.
     is_modified: Optional[bool] = None
-    #: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List of `start` and `end`, conforming with the
-    #: https://www.iana.org/time-zones.
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format. If the meetingType of a
-    #: meeting is `meetingSeries`, `start` is the scheduled start time of the first occurrence of this series. If the
-    #: meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or
-    #: ongoing meeting of the series starts. If the meetingType of a meeting is `scheduledMeeting`, `start` is the
-    #: scheduled start time of this occurrence. If the meetingType of a meeting is `meeting`, `start` is the actual
-    #: start time of the meeting instance. Can be modified for a meeting series or a scheduled meeting using the
-    #: [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `start`
+    #: is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If
+    #: the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If
+    #: the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format. If the meetingType of a
-    #: meeting is `meetingSeries`, `end` is the scheduled end time of the first occurrence of this series. If the
-    #: meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing
-    #: meeting of the series ends. If the meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end
-    #: time of this occurrence. If the meetingType of a meeting is `meeting`, `end` is the actual end time of the
-    #: meeting instance. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting
-    #: series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `end`
+    #: is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the
+    #: meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the
+    #: meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
     #: Unique identifier for the meeting host.
@@ -1269,27 +1324,31 @@ class ScheduledMeetingObject(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
     #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
-    #: using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
-    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's
-    #: a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
-    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update
-    #: a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
     #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
     #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
     #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
-    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be
-    #: modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`,
-    #: and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -1303,20 +1362,22 @@ class ScheduledMeetingObject(ApiModel):
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
-    #: meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting
-    #: Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
-    #: https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings.
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of webinar meeting. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details. If not specified, a random password conforming to the site's password rules will be generated
-    #: automatically.
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join webinar meeting from audio and video devices.
@@ -1329,12 +1390,14 @@ class ScheduledMeetingObject(ApiModel):
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
-    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a
-    #: scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
-    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a
-    #: Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -1360,14 +1423,16 @@ class ScheduledMeetingObject(ApiModel):
     #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
     #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no `password` or when the feature
     #: toggle `DecoupleJBHWithRegistration` is disabled the `Join Before Host` option is enabled for the meeting, See
-    #: https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings for details.
+    #: `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
     #: External keys created by an integration application in its domain, for example, Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: https://en.wikipedia.org/wiki/HATEOAS Breakout Sessions information for meeting.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ Breakout Sessions information for meeting.
     links: Optional[list[LinksObjectForTelephony]] = None
     #: Tracking codes information.
     tracking_codes: Optional[list[TrackingCodeItemForCreateMeetingObject]] = None
@@ -1387,17 +1452,17 @@ class PatchMeetingObject(ApiModel):
     #: becomes null and hidden from the response after the patch.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details.
+    #: Meeting password. Must conform to the site's password complexity settings. Read `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: Date and time for the start of meeting in any https://en.wikipedia.org/wiki/ISO_8601 compliant format. `start`
-    #: cannot be before current date and time or after `end`. Duration between `start` and `end` cannot be shorter than
-    #: 10 minutes or longer than 23 hours 59 minutes. Refer to the [Webex
-    #: Meetings](/docs/meetings#restrictions-on-updating-a-meeting) guide for more information about restrictions on
-    #: updating date and time for a meeting. Please note that when a meeting is being updated, `start` of the meeting
-    #: will be accurate to minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the
+    #: Date and time for the start of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before current date
+    #: and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 23
+    #: hours 59 minutes. Refer to the `Webex Meetings
+    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date
+    #: and time for a meeting. Please note that when a meeting is being updated, `start` of the meeting will be
+    #: accurate to minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the
     #: current time, `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds
     #: and milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of
     #: `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`,
@@ -1405,26 +1470,28 @@ class PatchMeetingObject(ApiModel):
     #: `2022-03-01T11:32:00+08:00`.
     #: example: 2020-05-15T20:30:00-08:00
     start: Optional[datetime] = None
-    #: Date and time for the end of meeting in any https://en.wikipedia.org/wiki/ISO_8601 compliant format. `end`
-    #: cannot be before current date and time or before `start`. Duration between `start` and `end` cannot be shorter
-    #: than 10 minutes or longer than 23 hours 59 minutes. Refer to the [Webex
-    #: Meetings](/docs/meetings#restrictions-on-updating-a-meeting) guide for more information about restrictions on
-    #: updating date and time for a meeting. Please note that when a meeting is being updated, `end` of the meeting
-    #: will be accurate to minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and
-    #: milliseconds stripped off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00`
-    #: will be adjusted to `2022-03-01T11:52:00+08:00`.
+    #: Date and time for the end of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `end` cannot be before current date and
+    #: time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 23
+    #: hours 59 minutes. Refer to the `Webex Meetings
+    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date
+    #: and time for a meeting. Please note that when a meeting is being updated, `end` of the meeting will be accurate
+    #: to minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds
+    #: stripped off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be
+    #: adjusted to `2022-03-01T11:52:00+08:00`.
     #: example: 2020-05-15T21:30:00-08:00
     end: Optional[datetime] = None
-    #: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List in which the meeting was originally scheduled
-    #: (conforming with the https://www.iana.org/time-zones).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the `IANA time zone database
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
-    #: Meeting series recurrence rule (conforming with https://www.ietf.org/rfc/rfc2445.txt). Applies only to a
-    #: recurring meeting series, not to a meeting series with only one scheduled meeting. Multiple days or dates for
-    #: monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For
-    #: example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially
-    #: supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". It can be specified `null` so that the meeting
-    #: becomes non-recurring and the `recurrence` attribute becomes null and hidden from the response after the patch.
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly `recurrence` rule
+    #: are not supported, only the first day or date specified is taken. For example,
+    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as
+    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". It can be specified `null` so that the meeting becomes
+    #: non-recurring and the `recurrence` attribute becomes null and hidden from the response after the patch.
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=20
     recurrence: Optional[str] = None
     #: Whether or not meeting is recorded automatically.
@@ -1455,16 +1522,17 @@ class PatchMeetingObject(ApiModel):
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required while scheduling webinar
-    #: meeting. All available meeting session types enabled for the user can be retrieved by [List Meeting Session
-    #: Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: meeting. All available meeting session types enabled for the user can be retrieved by
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details. If not specified, a random password conforming to the site's password rules will be generated
-    #: automatically.
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: Whether or not to automatically lock the meeting after it starts.
@@ -1483,8 +1551,8 @@ class PatchMeetingObject(ApiModel):
     #: example: True
     send_email: Optional[bool] = None
     #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
-    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the
-    #: meeting host.
+    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be
+    #: the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: URL of the Webex site which the meeting is updated on. If not specified, the meeting is created on user's
@@ -1505,16 +1573,16 @@ class PatchMeetingObject(ApiModel):
     integration_tags: Optional[list[str]] = None
     #: Whether or not breakout sessions are enabled. If the value of `enabledBreakoutSessions` is false, users can not
     #: set breakout sessions. If the value of `enabledBreakoutSessions` is true, users can update breakout sessions
-    #: using the [Update Breakout Sessions](/docs/api/v1/meetings/{meetingId}/breakoutSessions) API. Updating breakout
-    #: sessions are not supported by this API.
+    #: using the `Update Breakout Sessions
+    #: <https://developer.webex.com/docs/api/v1/meetings/{meetingId}/breakoutSessions>`_ API. Updating breakout sessions are not supported by this API.
     enabled_breakout_sessions: Optional[bool] = None
     #: Tracking codes information. All available tracking codes and their options for the specified site can be
-    #: retrieved by [List Meeting Tracking Codes](/docs/api/v1/meetings/list-meeting-tracking-codes) API. If an
-    #: optional tracking code is missing from the `trackingCodes` array and there's a default option for this tracking
-    #: code, the default option is assigned automatically. If the `inputMode` of a tracking code is `select`, its value
-    #: must be one of the site-level options or the user-level value. Tracking code is not supported for a personal
-    #: room meeting or an ad-hoc space meeting. It can be specified `null` so that it becomes null and hidden from the
-    #: response after the patch.
+    #: retrieved by `List Meeting Tracking Codes
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes>`_ API. If an optional tracking code is missing from the `trackingCodes`
+    #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
+    #: `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level
+    #: value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting. It can be
+    #: specified `null` so that it becomes null and hidden from the response after the patch.
     tracking_codes: Optional[list[TrackingCodeItemForCreateMeetingObject]] = None
     #: Audio connection options.
     audio_connection_options: Optional[MeetingSeriesObjectAudioConnectionOptions] = None
@@ -1632,15 +1700,16 @@ class CreateMeetingObject(ApiModel):
     #: Whether or not to create an ad-hoc meeting for the room specified by `roomId`. When `true`, `roomId` is
     #: required.
     adhoc: Optional[bool] = None
-    #: Unique identifier for the Webex space which the meeting is to be associated with. It can be retrieved by [List
-    #: Rooms](/docs/api/v1/rooms/list-rooms). `roomId` is required when `adhoc` is `true`. When `roomId` is specified,
-    #: the parameter `hostEmail` will be ignored.
+    #: Unique identifier for the Webex space which the meeting is to be associated with. It can be retrieved by
+    #: `List Rooms
+    #: <https://developer.webex.com/docs/api/v1/rooms/list-rooms>`_. `roomId` is required when `adhoc` is `true`. When `roomId` is specified, the parameter `hostEmail`
+    #: will be ignored.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
     #: Unique identifier for meeting template. Please note that `start` and `end` are optional when `templateId` is
     #: specified. The list of meeting templates that is available for the authenticated user can be retrieved from
-    #: [List Meeting Templates](/docs/api/v1/meetings/list-meeting-templates). This parameter is ignored for an ad-hoc
-    #: meeting.
+    #: `List Meeting Templates
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-templates>`_. This parameter is ignored for an ad-hoc meeting.
     #: example: N2Q3ZWE1ZjQyYjkyMWVhY2UwNTM4NmNhMjRhZDczMGU6VS0yMDA5NzItTUMtZW5fVVM
     template_id: Optional[str] = None
     #: Meeting title. The title can be a maximum of 128 characters long. The default value for an ad-hoc meeting is the
@@ -1650,45 +1719,46 @@ class CreateMeetingObject(ApiModel):
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details. If not specified, a random password conforming to the site's password rules will be generated
-    #: automatically.
+    #: Meeting password. Must conform to the site's password complexity settings. Read `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details.
+    #: If not specified, a random password conforming to the site's password rules will be generated automatically.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: Date and time for the start of meeting in any https://en.wikipedia.org/wiki/ISO_8601 compliant format. `start`
-    #: cannot be before current date and time or after `end`. Duration between `start` and `end` cannot be shorter than
-    #: 10 minutes or longer than 23 hours 59 minutes. Please note that when a meeting is being scheduled, `start` of
-    #: the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, if `start` is within the same
-    #: minute as the current time, `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted
-    #: with seconds and milliseconds stripped off. For instance, if the current time is
-    #: `2022-03-01T10:32:16.657+08:00`, `start` of `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will
-    #: be adjusted to `2022-03-01T10:33:00+08:00`, and `start` of `2022-03-01T11:32:28.076+08:00` or
-    #: `2022-03-01T11:32:41+08:00` will be adjusted to `2022-03-01T11:32:00+08:00`. The default value for an ad-hoc
-    #: meeting is 5 minutes after the current time and the user's input value will be ignored. An ad-hoc meeting can be
-    #: started immediately even if the `start` is 5 minutes after the current time.
+    #: Date and time for the start of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before current date
+    #: and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 23
+    #: hours 59 minutes. Please note that when a meeting is being scheduled, `start` of the meeting will be accurate
+    #: to minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time,
+    #: `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and
+    #: milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of
+    #: `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`,
+    #: and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to
+    #: `2022-03-01T11:32:00+08:00`. The default value for an ad-hoc meeting is 5 minutes after the current time and
+    #: the user's input value will be ignored. An ad-hoc meeting can be started immediately even if the `start` is 5
+    #: minutes after the current time.
     #: example: 2020-05-15T20:30:00-08:00
     start: Optional[datetime] = None
-    #: Date and time for the end of meeting in any https://en.wikipedia.org/wiki/ISO_8601 compliant format. `end`
-    #: cannot be before current date and time or before `start`. Duration between `start` and `end` cannot be shorter
-    #: than 10 minutes or longer than 23 hours 59 minutes. Please note that when a meeting is being scheduled, `end` of
-    #: the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with
-    #: seconds and milliseconds stripped off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or
-    #: `2022-03-01T11:52:41+08:00` will be adjusted to `2022-03-01T11:52:00+08:00`. The default value for an ad-hoc
-    #: meeting is 20 minutes after the current time and the user's input value will be ignored.
+    #: Date and time for the end of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `end` cannot be before current date and
+    #: time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 23
+    #: hours 59 minutes. Please note that when a meeting is being scheduled, `end` of the meeting will be accurate to
+    #: minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped
+    #: off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to
+    #: `2022-03-01T11:52:00+08:00`. The default value for an ad-hoc meeting is 20 minutes after the current time and
+    #: the user's input value will be ignored.
     #: example: 2020-05-15T21:30:00-08:00
     end: Optional[datetime] = None
-    #: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List in which the meeting was originally scheduled
-    #: (conforming with the https://www.iana.org/time-zones). The default value for an ad-hoc meeting is `UTC` and the
-    #: user's input value will be ignored.
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the `IANA time zone database
+    #: default value for an ad-hoc meeting is `UTC` and the user's input value will be ignored.
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
-    #: Meeting series recurrence rule (conforming with https://www.ietf.org/rfc/rfc2445.txt), applying only to meeting
-    #: series. It doesn't apply to a scheduled meeting or an ended or ongoing meeting instance. This parameter is
-    #: ignored for an ad-hoc meeting. Multiple days or dates for monthly or yearly `recurrence` rule are not supported,
-    #: only the first day or date specified is taken. For example,
-    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as
-    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_), applying only to meeting series. It doesn't apply to
+    #: a scheduled meeting or an ended or ongoing meeting instance. This parameter is ignored for an ad-hoc meeting.
+    #: Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date
+    #: specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it
+    #: will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=20
     recurrence: Optional[str] = None
     #: Whether or not meeting is recorded automatically.
@@ -1726,23 +1796,23 @@ class CreateMeetingObject(ApiModel):
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
-    #: meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting
-    #: Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a
-    #: meeting scheduled in the user's
-    #: https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings. If not specified, it's a
-    #: regular meeting by default. The default value for an ad-hoc meeting is `meeting` and the user's input value will
-    #: be ignored.
+    #: meeting scheduled in the user's `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_. If not specified, it's a regular meeting by default. The default
+    #: value for an ad-hoc meeting is `meeting` and the user's input value will be ignored.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled. This parameter is ignored for an ad-hoc meeting.
     enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
-    #: https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration for
-    #: details. If not specified, a random password conforming to the site's password rules will be generated
-    #: automatically. This parameter is ignored for an ad-hoc meeting.
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically. This parameter is ignored for an ad-hoc meeting.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: Whether or not to automatically lock the meeting after it starts. The default value for an ad-hoc meeting is
@@ -1762,18 +1832,18 @@ class CreateMeetingObject(ApiModel):
     allow_authenticated_devices: Optional[bool] = None
     #: Invitees for meeting. The maximum size of invitees is 1000. If `roomId` is specified and `invitees` is missing,
     #: all the members in the space are invited implicitly. If both `roomId` and `invitees` are specified, only those
-    #: in the `invitees` list are invited. `coHost` for each invitee is `true` by default if `roomId` is specified when
-    #: creating a meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as a
-    #: non-cohost invitee. The user's input value will be ignored for an ad-hoc meeting and the the members of the room
-    #: specified by `roomId` except "me" will be used by default.
+    #: in the `invitees` list are invited. `coHost` for each invitee is `true` by default if `roomId` is specified
+    #: when creating a meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as
+    #: a non-cohost invitee. The user's input value will be ignored for an ad-hoc meeting and the the members of the
+    #: room specified by `roomId` except "me" will be used by default.
     invitees: Optional[list[InviteeObjectForCreateMeeting]] = None
     #: Whether or not to send emails to host and invitees. It is an optional field and default value is true. The
     #: default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
     #: example: True
     send_email: Optional[bool] = None
     #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
-    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the
-    #: meeting host.
+    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be
+    #: the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's
@@ -1791,7 +1861,8 @@ class CreateMeetingObject(ApiModel):
     #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
     #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no `password` or when the feature
     #: toggle `DecoupleJBHWithRegistration` is disabled the `Join Before Host` option is enabled for the meeting, See
-    #: https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings for details.
+    #: `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[CreateMeetingObjectRegistration] = None
     #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The
@@ -1804,17 +1875,17 @@ class CreateMeetingObject(ApiModel):
     enabled_breakout_sessions: Optional[bool] = None
     #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of
     #: participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops,
-    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main session.
-    #: Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts
-    #: preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout session
-    #: is not supported for a meeting with simultaneous interpretation.
+    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main
+    #: session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if
+    #: hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout
+    #: session is not supported for a meeting with simultaneous interpretation.
     breakout_sessions: Optional[list[BreakoutSessionObject]] = None
     #: Tracking codes information. All available tracking codes and their options for the specified site can be
-    #: retrieved by [List Meeting Tracking Codes](/docs/api/v1/meetings/list-meeting-tracking-codes) API. If an
-    #: optional tracking code is missing from the `trackingCodes` array and there's a default option for this tracking
-    #: code, the default option is assigned automatically. If the `inputMode` of a tracking code is `select`, its value
-    #: must be one of the site-level options or the user-level value. Tracking code is not supported for a personal
-    #: room meeting or an ad-hoc space meeting.
+    #: retrieved by `List Meeting Tracking Codes
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes>`_ API. If an optional tracking code is missing from the `trackingCodes`
+    #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
+    #: `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level
+    #: value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
     tracking_codes: Optional[list[TrackingCodeItemForCreateMeetingObject]] = None
     #: Audio connection options.
     audio_connection_options: Optional[MeetingSeriesObjectAudioConnectionOptions] = None
@@ -2057,8 +2128,8 @@ class Registrant(ApiModel):
     registration_time: Optional[datetime] = None
     #: Registrant's answers for customized questions, Registration options define whether or not this is required.
     customized_questions: Optional[list[CustomizedRegistrant]] = None
-    #: Registrant's source id.The `sourceId` is from [Create Invitation
-    #: Sources](/docs/api/v1/meetings/create-invitation-sources) API.
+    #: Registrant's source id.The `sourceId` is from `Create Invitation Sources
+    #: <https://developer.webex.com/docs/api/v1/meetings/create-invitation-sources>`_ API.
     #: example: cisco
     source_id: Optional[str] = None
     #: Registrant's registration ID. Registrants have a special number to identify a registrations if it is
@@ -2184,11 +2255,13 @@ class MeetingSessionTypeObject(ApiModel):
 
 class UpdateInterpreterObject(ApiModel):
     #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language
-    #: channel. The language codes conform with https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+    #: channel. The language codes conform with `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.
     #: example: en
     language_code1: Optional[str] = None
     #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language
-    #: channel. The language codes conform with https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes.
+    #: channel. The language codes conform with `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.
     #: example: de
     language_code2: Optional[str] = None
     #: Email address of meeting interpreter. If not specified, it'll be an empty interpreter for the bi-directional
@@ -2201,8 +2274,8 @@ class UpdateInterpreterObject(ApiModel):
     #: example: Tuchel
     display_name: Optional[str] = None
     #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
-    #: has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage to
-    #: be the meeting host.
+    #: has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage
+    #: to be the meeting host.
     #: example: brenda.song@example.com
     host_email: Optional[str] = None
     #: If `true`, send email to the interpreter.
@@ -2212,8 +2285,8 @@ class UpdateInterpreterObject(ApiModel):
 
 class UpdateMeetingBreakoutSessionsObject(ApiModel):
     #: Email address for the meeting host. This parameter is only used if the user or application calling the API has
-    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API will
-    #: return details for a meeting that is hosted by that user.
+    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API
+    #: will return details for a meeting that is hosted by that user.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: Whether or not to send emails to host and invitees. It is an optional field and default value is true.
@@ -2221,10 +2294,10 @@ class UpdateMeetingBreakoutSessionsObject(ApiModel):
     send_email: Optional[bool] = None
     #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of
     #: participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops,
-    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main session.
-    #: Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts
-    #: preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout session
-    #: is not supported for a meeting with simultaneous interpretation.
+    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main
+    #: session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if
+    #: hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout
+    #: session is not supported for a meeting with simultaneous interpretation.
     items: Optional[list[BreakoutSessionObject]] = None
 
 
@@ -2247,8 +2320,8 @@ class GetBreakoutSessionsObject(ApiModel):
 class JoinMeetingObject(ApiModel):
     #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't
     #: apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled
-    #: https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings meeting is also supported
-    #: for this API.
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is also supported for this API.
     #: example: 98d8c2212c9d62b162b9565932735e58_I_231409844992607809
     meeting_id: Optional[str] = None
     #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
@@ -2262,14 +2335,15 @@ class JoinMeetingObject(ApiModel):
     #: Whether or not to redirect to `joinLink`. It is an optional field and default value is true.
     join_directly: Optional[bool] = None
     #: Email address of meeting participant. If `email` is specified, the link is generated for the user of `email`;
-    #: otherwise, the API returns the link for the user calling the API. `email` is required for a
-    #: https://developer.webex.com/docs/guest-issuer.
+    #: otherwise, the API returns the link for the user calling the API. `email` is required for a `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
     #: example: brenda.song@example.com
     email: Optional[str] = None
     #: Display name of meeting participant. If `displayName` is specified, `email` must be specified as well. If
-    #: `email` is specified and `displayName` is not, display name is the same as `email`. If neither `displayName` nor
-    #: `email` is specified, the API returns the link for the user calling the API. The maximum length of `displayName`
-    #: is 128 characters. `displayName` is required for a https://developer.webex.com/docs/guest-issuer.
+    #: `email` is specified and `displayName` is not, display name is the same as `email`. If neither `displayName`
+    #: nor `email` is specified, the API returns the link for the user calling the API. The maximum length of
+    #: `displayName` is 128 characters. `displayName` is required for a `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
     #: example: Brenda Song
     display_name: Optional[str] = None
     #: Required when the meeting is protected by a password and the current user is not privileged to view it if they
@@ -2283,8 +2357,9 @@ class JoinMeetingObject(ApiModel):
     #: example: 1111
     registration_id: Optional[datetime] = None
     #: Email address for the meeting host. This attribute should be set if the user or application calling the API has
-    #: the admin on-behalf-of scopes. This parameter is required for a [Service App](/docs/service-apps). It only
-    #: applies to meetings, not webinars.
+    #: the admin on-behalf-of scopes. This parameter is required for a `Service App
+    #: <https://developer.webex.com/docs/service-apps>`_. It only applies to meetings, not
+    #: webinars.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
 
@@ -2405,8 +2480,8 @@ class SurveyResultObject(ApiModel):
 
 class RegistrationForUpdate(ApiModel):
     #: - Email address for the meeting host. This parameter is only used if the user or application calling the API has
-    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API will
-    #: return an update for a meeting that is hosted by that user.
+    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API
+    #: will return an update for a meeting that is hosted by that user.
     #: example: 'john.andersen@example.com'
     host_email: Optional[str] = None
     #: Whether or not meeting registration requests are accepted automatically.
@@ -2459,22 +2534,24 @@ class SurveyLinkRequestObject(ApiModel):
     #: and the API returns post survey links on behalf of the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
-    #: Start date and time (inclusive) in any https://en.wikipedia.org/wiki/ISO_8601 compliant format for the meeting
-    #: objects being requested and conforms with the `timezone` in the request header if specified.
-    #: `meetingStartTimeFrom` cannot be after `meetingStartTimeTo`. Only applies when `meetingId` is not an instance
-    #: ID. The API generates survey links for the last instance of `meetingId` in the time range specified by
-    #: `meetingStartTimeFrom` and `meetingStartTimeTo`. If not specified, `meetingStartTimeFrom` equals
-    #: `meetingStartTimeTo` minus `1` month; if `meetingStartTimeTo` is also not specified, the default value for
-    #: `meetingStartTimeFrom` is `1` month before the current date and time.
+    #: Start date and time (inclusive) in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format for the meeting objects being requested and
+    #: conforms with the `timezone` in the request header if specified. `meetingStartTimeFrom` cannot be after
+    #: `meetingStartTimeTo`. Only applies when `meetingId` is not an instance ID. The API generates survey links for
+    #: the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and
+    #: `meetingStartTimeTo`. If not specified, `meetingStartTimeFrom` equals `meetingStartTimeTo` minus `1` month; if
+    #: `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is `1` month before
+    #: the current date and time.
     #: example: 2019-03-18T09:30:00Z
     meeting_start_time_from: Optional[datetime] = None
-    #: End date and time (exclusive) in any https://en.wikipedia.org/wiki/ISO_8601 compliant format for the meeting
-    #: objects being requested and conforms with the `timezone` in the request header if specified.
-    #: `meetingStartTimeTo` cannot be prior to `meetingStartTimeFrom`. Only applies when `meetingId` is not an instance
-    #: ID. The API generates survey links for the last instance of `meetingId` in the time range specified by
-    #: `meetingStartTimeFrom` and `meetingStartTimeTo`. If not specified, `meetingStartTimeTo` equals
-    #: `meetingStartTimeFrom` plus `1` month; if `meetingStartTimeFrom` is also not specified, the default value for
-    #: `meetingStartTimeTo` is the current date and time.
+    #: End date and time (exclusive) in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format for the meeting objects being requested and
+    #: conforms with the `timezone` in the request header if specified. `meetingStartTimeTo` cannot be prior to
+    #: `meetingStartTimeFrom`. Only applies when `meetingId` is not an instance ID. The API generates survey links for
+    #: the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and
+    #: `meetingStartTimeTo`. If not specified, `meetingStartTimeTo` equals `meetingStartTimeFrom` plus `1` month; if
+    #: `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is the current date
+    #: and time.
     #: example: 2019-03-25T09:30:00Z
     meeting_start_time_to: Optional[datetime] = None
     #: Participants' email list. The maximum size of `emails` is 100.
@@ -2578,11 +2655,12 @@ class MeetingTrackingCodesObject(ApiModel):
     #: Site URL for the tracking code.
     #: example: example.webex.com
     site_url: Optional[str] = None
-    #: Tracking code option list. The options here differ from those in the [site-level tracking
-    #: codes](/docs/api/v1/tracking-codes/get-a-tracking-code) and the [user-level tracking
-    #: codes](/docs/api/v1/tracking-codes/get-user-tracking-codes). It is the result of a selective combination of the
-    #: two. If there's user-level value for a tracking code, the user-level value becomes the default option for the
-    #: tracking code, and the site-level default value becomes non-default.
+    #: Tracking code option list. The options here differ from those in the `site-level tracking codes
+    #: <https://developer.webex.com/docs/api/v1/tracking-codes/get-a-tracking-code>`_ and the
+    #: `user-level tracking codes
+    #: <https://developer.webex.com/docs/api/v1/tracking-codes/get-user-tracking-codes>`_. It is the result of a selective combination of the two. If there's user-level value
+    #: for a tracking code, the user-level value becomes the default option for the tracking code, and the site-level
+    #: default value becomes non-default.
     options: Optional[list[OptionsForTrackingCodeObject]] = None
     #: The input mode in which the tracking code value can be assigned.
     input_mode: Optional[MeetingTrackingCodesObjectInputMode] = None
@@ -2599,7 +2677,8 @@ class ReassignMeetingRequestObject(ApiModel):
     #: List of meeting series IDs to be reassigned the new host. The size is between 1 and 100. All the meetings of
     #: `meetingIds` should belong to the same site, which is the `siteUrl` in the request header, if specified, or the
     #: admin user's preferred site, if not specified. All available Webex sites and the preferred sites of a user can
-    #: be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: be retrieved by `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     meeting_ids: Optional[list[str]] = None
 
 

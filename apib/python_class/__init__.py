@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from functools import partial
 from itertools import chain
 from operator import attrgetter
+from os.path import commonprefix
 from re import subn, sub
 from typing import Any, Optional, Union
 
@@ -18,7 +19,8 @@ from html2text import html2text
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember
 from apib.apib.classes import ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray, ApibApi
-from apib.tools import break_line, remove_links, sanitize_class_name, snake_case, words_to_camel
+from apib.tools import break_line, remove_links, sanitize_class_name, snake_case, words_to_camel, \
+    remove_html_comments, remove_div
 from wxc_sdk.base import to_camel
 
 log = logging.getLogger(__name__)
@@ -64,7 +66,7 @@ class Endpoint:
     # title for docstring
     title: str
     # text for docstring
-    docstring: str
+    docstring: str = field(repr=False)
     # HTTP method
     method: str = field(default=None)
     # the host. Something like 'https://webexapis.com/v1/'
@@ -72,15 +74,15 @@ class Endpoint:
     # the url. Something like 'people/{personId}/features/bargeIn'
     url: str = field(default=None)
     # list of parameters, each can be a URL parameter or a query parameter
-    href_parameter: list[Parameter] = field(default_factory=list)
+    href_parameter: list[Parameter] = field(default_factory=list, repr=False)
     # class name for body content if present ...
-    body_class_name: str = field(default=None)
+    body_class_name: str = field(default=None, repr=False)
     # ... or list of parameters to be sent in the body
-    body_parameter: list[Parameter] = field(default_factory=list)
+    body_parameter: list[Parameter] = field(default_factory=list, repr=False)
     # python type for result
-    result: str = field(default=None)
+    result: str = field(default=None, repr=False)
     # references class if python result type is a class or references a class, e.g. list[SomeObject]
-    result_referenced_class: str = field(default=None)
+    result_referenced_class: str = field(default=None, repr=False)
 
     @property
     def full_url(self) -> str:
@@ -113,10 +115,9 @@ class Attribute:
         """
         if self.docstring:
             # break docstring lines to 80 characters
-            lines = chain.from_iterable(break_line(remove_links(ls), 112)
-                                        for line in self.docstring.strip().splitlines()
-                                        if (ls := line.strip()))
-            lines = [f'#: {line}' for line in lines]
+            lines = list(chain.from_iterable(break_line(ls, prefix='#: ', width=116)
+                                             for line in self.docstring.strip().splitlines()
+                                             if (ls := line.strip())))
         else:
             lines = []
         if for_enum:
@@ -186,6 +187,11 @@ class PythonAPI:
     docstring: str
     host: str
 
+    class_template = '''class {class_name}(ApiChild, base='{base}'):
+    """
+{docstring}
+    """'''
+
     endpoints: list[Endpoint] = field(repr=False, default_factory=list)
 
     def add_endpoint(self, ep: Endpoint):
@@ -193,9 +199,9 @@ class PythonAPI:
 
     def __post_init__(self):
         # clean up docstring
-        docstring = remove_links(self.docstring)
-        docstring = html2text(docstring)
-        self.docstring = docstring.strip()
+        # docstring = remove_links(self.docstring)
+        # docstring = html2text(docstring)
+        self.docstring = self.docstring and self.docstring.strip()
 
     @classmethod
     def from_apib_api(cls, apib_api: ApibApi) -> 'PythonAPI':
@@ -203,6 +209,31 @@ class PythonAPI:
         title = apib_api.meta.title
         host = apib_api.host
         return PythonAPI(docstring=docstring, title=title, host=host)
+
+    @property
+    def cleaned_doc_string(self) -> str:
+        """
+        docstring w/o stuff like:
+            <!-- feature-toggle-name:wxc-cpapi-receptionist-72075 -->
+
+            <div><Callout type="warning">Not supported for Webex for Government (FedRAMP)</Callout></div>
+        """
+        return self.docstring and remove_div(remove_html_comments(self.docstring)) or ''
+
+    def source(self, class_name: str = None) -> str:
+        """
+        Generate API source for given class name. If class name is not given, then class name is derived from API title
+        """
+        class_name = class_name or f'{words_to_camel(self.title)}Api'
+        base = commonprefix([f'{ep.url}/' for ep in self.endpoints])
+        # remove everything after the last '/'
+        base = re.sub('/\w*$', '', base)
+        doc_lines = chain([self.title, ''], self.cleaned_doc_string.splitlines())
+        docstring = '\n'.join(chain.from_iterable(break_line(line, prefix=' ' * 4) for line in doc_lines))
+        class_head = self.class_template.format(class_name=class_name,
+                                                base=base,
+                                                docstring=docstring)
+        return class_head
 
 
 @dataclass(init=False)
@@ -272,12 +303,15 @@ class PythonClassRegistry:
         """
         Add a python class to the registry. When adding the class name to the registry pc.name gets updated to a
         qualident.
-        pc.name has to be unique
+        pc.name has to be unique; this is ensured her
         """
         qualident = self.qualified_class_name(sanitize_class_name(pc.name))
         if qualident in self._classes:
-            raise KeyError(f'python class name "{pc.name}" already registered')
-
+            log.warning(f'python class name "{pc.name}" already registered')
+            qualident = next((name
+                              for i in range(1, 10)
+                              if (name := f'{qualident}{i}') not in self._classes))
+            log.warning(f'class name "{pc.name}" not unique using qualident "{qualident}" instead')
         pc.name = qualident
         self._classes[pc.name] = pc
 
@@ -447,6 +481,7 @@ class PythonClassRegistry:
                                     description=value.description, is_enum=True, baseclass=None)
             self._add_class(new_class)
             python_type = new_class.name
+            referenced_class = new_class.name
         elif value.element == 'boolean':
             python_type = 'bool'
             sample = value.content

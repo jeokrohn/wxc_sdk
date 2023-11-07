@@ -25,8 +25,9 @@ class RecordingReportSummaryObject(ApiModel):
     #: The recording's topic.
     #: example: John's Meeting
     topic: Optional[str] = None
-    #: The date and time the recording started in https://en.wikipedia.org/wiki/ISO_8601 compliant format. the time is
-    #: the record button was clicked in the meeting.
+    #: The date and time the recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. the time is the record button was clicked
+    #: in the meeting.
     #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Site URL for the recording.
@@ -56,7 +57,8 @@ class RecordingReportObject(ApiModel):
     #: The email address of the person who accessed the recording.
     #: example: john.andersen@example.com
     email: Optional[str] = None
-    #: The date and time the recording was accessed in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the recording was accessed in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2019-01-27T17:40:20Z
     access_time: Optional[datetime] = None
     #: Whether or not the recording was viewed by the person.
@@ -84,8 +86,8 @@ class RecordingAchriveSummaryObject(ApiModel):
     #: Meeting title.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: The date and time in https://en.wikipedia.org/wiki/ISO_8601 compliant format that when the archive was created
-    #: by the system.
+    #: The date and time in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format that when the archive was created by the system.
     #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
 
@@ -117,7 +119,8 @@ class MeetingRecordingArchiveChat(ApiModel):
     #: Display name for the sender of the chat snippet.
     #: example: John Andersen
     sender_name: Optional[str] = None
-    #: Chat time for the chat snippet in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: Chat time for the chat snippet in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:22:34Z
     chat_time: Optional[datetime] = None
     #: Information of the receivers of the chat snippet.
@@ -209,10 +212,12 @@ class MeetingRecordingArchivePoll(ApiModel):
     #: The type of the question.
     #: example: single
     type: Optional[str] = None
-    #: The date and time the poll started in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the poll started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:25:34Z
     start_time: Optional[datetime] = None
-    #: The date and time the poll ended in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the poll ended in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:28:34Z
     end_time: Optional[datetime] = None
     #: The content of the meeting archive poll;
@@ -232,7 +237,8 @@ class MeetingRecordingArchiveQAAnswer(ApiModel):
     #: The email of the person who answered the question.
     #: example: alex.green@example.com
     email: Optional[str] = None
-    #: The date and time the question answered in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the question answered in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:52:34Z
     answer_time: Optional[datetime] = None
     #: The text of the answer.
@@ -245,14 +251,15 @@ class MeetingRecordingArchiveQA(ApiModel):
     #: example: NA
     priority: Optional[str] = None
     #: Whether the type of the Q and A is private, public, or group. Private Q and A is for the 1:1 chat. Public Q and
-    #: A are for the message which is sent to all the people in the meeting. Group Q and A are for the message which is
-    #: sent to a small group of people, like a Q and A to "host and presenter".
+    #: A are for the message which is sent to all the people in the meeting. Group Q and A are for the message which
+    #: is sent to a small group of people, like a Q and A to "host and presenter".
     #: example: private
     type: Optional[str] = None
     #: The email of the user who asked the question.
     #: example: john.andersen@example.com`
     display_name: Optional[str] = None
-    #: The date and time the question was created in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the question was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:22:34Z
     question_time: Optional[datetime] = None
     #: Information of the user who asked the question.
@@ -343,7 +350,8 @@ class RecordingArchiveReportObject(ApiModel):
     #: Meeting title.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Start time for meeting in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
     #: End time for a meeting in ISO 8601 compliant format.

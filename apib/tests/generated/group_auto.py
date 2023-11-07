@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GroupResponse', 'GroupsCollectionResponse', 'Member', 'PatchGroup', 'PatchMemberWithOperation', 'PatchMemberWithOperationOperation', 'PostGroup', 'PostMember']
+__auto__ = ['GroupResponse', 'GroupsCollectionResponse', 'Member', 'PatchGroup', 'PatchMemberWithOperation',
+            'PostGroup', 'PostMember']
 
 
 class Member(ApiModel):
@@ -27,33 +28,29 @@ class PostMember(ApiModel):
     id: Optional[str] = None
 
 
-class PatchMemberWithOperationOperation(str, Enum):
-    #: Remove member from group
-    delete = 'delete'
-    #: Add member into group
-    add = 'add'
-
-
 class PatchMemberWithOperation(ApiModel):
     #: Person ID.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xOTUzOTdhMi03MTU5LTRjNTgtYTBiOC00NmQ2ZWZlZTdkMTM
     id: Optional[str] = None
     #: Operation type. The default operation is `add` if no operation is specified.
     #: example: add
-    operation: Optional[PatchMemberWithOperationOperation] = None
+    operation: Optional[str] = None
 
 
 class PostGroup(ApiModel):
     #: The name of the group.
     #: example: Sales Group
     display_name: Optional[str] = None
-    #: The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth token is used.
+    #: The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth
+    #: token is used.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNDhhZGI4MS0yOGY5LTRhYjUtYjJkNi1lOWI0OTRlNzJhMDY
     org_id: Optional[str] = None
     #: Description of the group.
     #: example: Salas Group in San Jose
     description: Optional[str] = None
-    #: An array of members. Maximum of 500 members can be provided. To add more members, use the [Update a Group](/docs/api/v1/groups/update-a-group) API to add additional members.
+    #: An array of members. Maximum of 500 members can be provided. To add more members, use the `Update a Group
+    #: <https://developer.webex.com/docs/api/v1/groups/update-a-group>`_ API to
+    #: add additional members.
     members: Optional[list[PostMember]] = None
 
 

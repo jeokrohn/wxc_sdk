@@ -272,21 +272,21 @@ class PostUser(ApiModel):
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the
-    #: http://www.loc.gov/standards/iso639-2/php/code_list.php and https://www.iso.org/obp/ui/#search with the 2 letter
-    #: language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations. 
-    #: Acceptable values for this field are based on the http://www.loc.gov/standards/iso639-2/php/code_list.php and
-    #: https://www.iso.org/obp/ui/#search with the 2 letter language code followed by an _ and then the 2 letter
-    #: country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
+    #: Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
-    #: The user's time zone specified in the https://nodatime.org/timezones timezone format, for example,
-    #: "America/Los_Angeles".
+    #: The user's time zone specified in the `IANA timezone
+    #: <https://nodatime.org/timezones>`_ timezone format, for example, "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
@@ -336,21 +336,21 @@ class PutUser(ApiModel):
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the
-    #: http://www.loc.gov/standards/iso639-2/php/code_list.php and https://www.iso.org/obp/ui/#search with the 2 letter
-    #: language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United States, fr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations. 
-    #: Acceptable values for this field are based on the  http://www.loc.gov/standards/iso639-2/php/code_list.php and
-    #: https://www.iso.org/obp/ui/#search with the 2 letter language code followed by an _ and then the 2 letter
-    #: country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
+    #: Acceptable values for this field are based on the  `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
-    #: The user's time zone specified in the https://nodatime.org/timezones timezone format. e.g:
-    #: "America/Los_Angeles".
+    #: The user's time zone specified in the `IANA timezone
+    #: <https://nodatime.org/timezones>`_ timezone format. e.g: "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
@@ -448,24 +448,24 @@ class GetUserResponse(ApiModel):
     #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
     #: example: Sales manager
     title: Optional[str] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the
-    #: http://www.loc.gov/standards/iso639-2/php/code_list.php and https://www.iso.org/obp/ui/#search with the 2 letter
-    #: language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations. 
-    #: Acceptable values for this field are based on the http://www.loc.gov/standards/iso639-2/php/code_list.php and
-    #: https://www.iso.org/obp/ui/#search with the 2 letter language code followed by an _ and then the 2 letter
-    #: country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
+    #: Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
     #: External identity.
     #: example: externalIdValue
     external_id: Optional[str] = None
-    #: The user's time zone specified in the https://nodatime.org/timezones timezone format, for example,
-    #: "America/Los_Angeles".
+    #: The user's time zone specified in the `IANA timezone
+    #: <https://nodatime.org/timezones>`_ timezone format, for example, "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.

@@ -7,10 +7,11 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentChannelType',
-            'AgentCurrentState', 'AgentSession', 'AnalyzeEntitiesDocument', 'Customer', 'CustomerActivity',
-            'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession', 'CustomerSessionTerminatingEnd',
-            'CustomerSessionTerminationType', 'Entity', 'EntityRecognition', 'Error', 'ErrorDetails', 'Link']
+__auto__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn',
+            'AgentChannelType', 'AgentCurrentState', 'AgentSession', 'AnalyzeEntitiesDocument', 'Customer',
+            'CustomerActivity', 'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession',
+            'CustomerSessionTerminatingEnd', 'CustomerSessionTerminationType', 'Entity', 'EntityRecognition', 'Error',
+            'ErrorDetails', 'Link']
 
 
 class ErrorDetails(ApiModel):

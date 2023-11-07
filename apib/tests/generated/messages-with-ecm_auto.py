@@ -66,7 +66,8 @@ class Message(ApiModel):
     #: example: **PROJECT UPDATE** A new project plan has been published [here](http://example.com/s/lf5vj). The PM for this project is <@personEmail:mike@example.com> and the Engineering Manager is <@personEmail:jane@example.com>.
     markdown: Optional[str] = None
     #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
-    #: see [Message Attachments](/docs/api/basics#message-attachments).
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/api/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: Content attachments attached to the message.
@@ -106,7 +107,8 @@ class DirectMessage(ApiModel):
     #: example: Hey there, what do you think of [this project update presentation](http://sharepoint.example.com/presentation.pptx)?
     markdown: Optional[str] = None
     #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
-    #: see [Message Attachments](/docs/api/basics#message-attachments).
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/api/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.

@@ -171,8 +171,8 @@ class CustomerProvisioningPrecheckResponse(ApiModel):
 
 
 class ResourceURL(ApiModel):
-    #: A URL which points to the [Get a Wholesale
-    #: Customer](/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer) endpoint for the provisioned customer.
+    #: A URL which points to the `Get a Wholesale Customer
+    #: <https://developer.webex.com/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer>`_ endpoint for the provisioned customer.
     #: example: "https://webexapis.com/v1/wholesale/customers/Y2lzY29zcGFyazovL3VzL0VOVEVSUFJJU0UvNTJjZjU3NmQtNjBhOC00MDdhLWIyMmMtNDY3YzUxNTkxOTA4"
     url: Optional[str] = None
 
@@ -275,9 +275,8 @@ class ProvisionAWholesaleCustomerCustomerInfo(ApiModel):
     #: example: john.anderson@acme.com
     primary_email: Optional[str] = None
     #: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language for organization
-    #: and Webex Meeting Sites. Refer to the
-    #: https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wholesale_rtm/wbxbw_b_wholesale-rtm-solution-guide/wbxbw_m_overview-of-webex-wholesale.html#Cisco_Reference.dita_deb994cb-9c48-4488-b352-54495c54ba1e for more
-    #: information.
+    #: and Webex Meeting Sites. Refer to the `help page
+    #: <https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wholesale_rtm/wbxbw_b_wholesale-rtm-solution-guide/wbxbw_m_overview-of-webex-wholesale.html#Cisco_Reference.dita_deb994cb-9c48-4488-b352-54495c54ba1e>`_ for more information.
     #: example: 'en'
     language: Optional[str] = None
 
@@ -345,8 +344,8 @@ class ProvisionAWholesaleSubscriberProvisioningParameters(ApiModel):
     #: assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
     #: example: 51212
     extension: Optional[str] = None
-    #: A unique identifier for the location. This ID should be retrieved via the [List
-    #: Locations](/docs/api/v1/locations/list-locations) API.
+    #: A unique identifier for the location. This ID should be retrieved via the `List Locations
+    #: <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ API.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
     location_id: Optional[str] = None
 
@@ -360,8 +359,8 @@ class UpdateAWholesaleSubscriberProvisioningParameters(ApiModel):
     #: changing from the webex_meetings package to any calling-enabled package.
     #: example: 5221
     extension: Optional[datetime] = None
-    #: A unique identifier for the location. This id should be retrieved via the [List
-    #: Locations](/docs/api/v1/locations/list-locations) API.
+    #: A unique identifier for the location. This id should be retrieved via the `List Locations
+    #: <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ API.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
     location_id: Optional[str] = None
 

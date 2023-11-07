@@ -31,9 +31,9 @@ __auto__ = ['AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'Announce
             'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType',
             'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'MediaType',
             'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding', 'ModifyCallQueueHolidayObject',
-            'ModifyCallQueueObject', 'ModifyPersonPlaceVirtualLineCallQueueObject', 'PatchCallQueueNightServiceObject',
-            'PostPersonPlaceVirtualLineCallQueueObject', 'ReadTheListOfCallQueueAnnouncementFilesResponse',
-            'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
+            'ModifyCallQueueObject', 'ModifyPersonPlaceVirtualLineCallQueueObject',
+            'PatchCallQueueNightServiceObject', 'PostPersonPlaceVirtualLineCallQueueObject',
+            'ReadTheListOfCallQueueAnnouncementFilesResponse', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -111,8 +111,8 @@ class CallForwardRulesGet(ApiModel):
     name: Optional[str] = None
     #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
     #: is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls
-    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an
-    #: unavailable number.
+    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from
+    #: an unavailable number.
     #: example: Any private Number,2025551212
     call_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
@@ -267,8 +267,8 @@ class CallQueueQueueSettingsGetObjectWelcomeMessage(ApiModel):
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: Array of announcement files to be played as `welcomeMessage` greetings. These files are from the list of
-    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory,
-    #: and the maximum is 4.
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
@@ -327,8 +327,8 @@ class CallQueueQueueSettingsGetObjectComfortMessage(ApiModel):
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: Array of announcement files to be played as `comfortMessage` greetings. These files are from the list of
-    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory,
-    #: and the maximum is 4.
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
@@ -357,8 +357,8 @@ class CallQueueQueueSettingsGetObjectMohMessageNormalSource(ApiModel):
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: Array of announcement files to be played as `mohMessage` greetings. These files are from the list of
-    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory,
-    #: and the maximum is 4.
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 

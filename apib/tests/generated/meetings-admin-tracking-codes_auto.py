@@ -117,8 +117,8 @@ class CreateOrUpdateTrackingCodeObject(ApiModel):
     #: Tracking code option list. The maximum size of `options` is 500.
     options: Optional[list[OptionsForTrackingCodeObject]] = None
     #: Select an option for how users can provide a code value. Please note that if users set `inputMode` as
-    #: `hostProfileSelect`, `scheduleStartCode` should be `null`, which means `hostProfileSelect` only applies to "Host
-    #: Profile".
+    #: `hostProfileSelect`, `scheduleStartCode` should be `null`, which means `hostProfileSelect` only applies to
+    #: "Host Profile".
     input_mode: Optional[GetTrackingCodeObjectInputMode] = None
     #: Type for the host profile.
     host_profile_code: Optional[GetTrackingCodeObjectHostProfileCode] = None

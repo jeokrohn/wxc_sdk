@@ -54,14 +54,16 @@ class Poll(ApiModel):
     #: A unique identifier for the poll.
     #: example: 1aea8390-e375-4547-b7ff-58ecd9e0b03d
     id: Optional[str] = None
-    #: A unique identifier for the [meeting
-    #: instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the poll belongs.
+    #: A unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the poll belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
-    #: The date and time the poll started in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the poll started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:22:34Z
     start_time: Optional[datetime] = None
-    #: The date and time the poll ended in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the poll ended in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:25:51Z
     end_time: Optional[datetime] = None
     #: The length of time in the alarm box, in seconds.
@@ -153,8 +155,8 @@ class PollResult(ApiModel):
     #: A unique identifier for the poll.
     #: example: 1aea8390-e375-4547-b7ff-58ecd9e0b03d
     id: Optional[str] = None
-    #: A unique identifier for the [meeting
-    #: instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the poll belongs.
+    #: A unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the poll belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
@@ -163,10 +165,12 @@ class PollResult(ApiModel):
     #: The total number of respondents in the poll.
     #: example: 10.0
     total_respondents: Optional[int] = None
-    #: The date and time the poll started in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the poll started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:25:34Z
     start_time: Optional[datetime] = None
-    #: The date and time the poll ended in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: The date and time the poll ended in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:28:34Z
     end_time: Optional[datetime] = None
     #: The duration of the poll, in seconds.

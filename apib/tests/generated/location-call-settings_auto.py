@@ -11,14 +11,16 @@ __auto__ = ['ArrayOfExtensionsObject', 'AudioAnnouncementFileGetObject', 'AudioA
             'AudioAnnouncementFileGetObjectMediaFileType', 'CallBackEffectiveLevel', 'CallBackMemberType',
             'CallBackQuality', 'CallBackSelected', 'ExtensionStatusObject', 'ExtensionStatusObjectState',
             'ExtentionStatusObject', 'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo',
-            'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
-            'GetPrivateNetworkConnectObject', 'GetPrivateNetworkConnectObjectNetworkConnectionType',
-            'GetTelephonyLocationObject', 'GetTelephonyLocationObjectCallingLineId',
-            'GetTelephonyLocationObjectConnection', 'ListLocationObject', 'ListLocationsWebexCallingDetailsResponse',
-            'LocationCallingResponseWithId', 'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest',
-            'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse', 'PostValidateExtensionResponseStatus',
-            'PutLocationCallBackNumberObject', 'PutTelephonyLocationObject', 'ReadTheListOfDialPatternsResponse',
-            'ReadTheListOfRoutingChoicesResponse', 'RouteIdentity', 'RouteType', 'StatusOfExtensionsObject']
+            'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetMusicOnHoldObject',
+            'GetMusicOnHoldObjectGreeting', 'GetPrivateNetworkConnectObject',
+            'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject',
+            'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'ListLocationObject',
+            'ListLocationsWebexCallingDetailsResponse', 'LocationCallingResponseWithId',
+            'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest',
+            'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse',
+            'PostValidateExtensionResponseStatus', 'PutLocationCallBackNumberObject', 'PutTelephonyLocationObject',
+            'ReadTheListOfDialPatternsResponse', 'ReadTheListOfRoutingChoicesResponse', 'RouteIdentity', 'RouteType',
+            'StatusOfExtensionsObject']
 
 
 class ArrayOfExtensionsObject(ApiModel):
@@ -329,9 +331,8 @@ class PostLocationCallingRequest(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location. Refer to this link
-    #: (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
-    #: for the format.
+    #: Time zone associated with this location. Refer to this `link
+    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for the format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.

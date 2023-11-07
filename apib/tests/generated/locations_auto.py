@@ -62,9 +62,8 @@ class PutCommonLocationObject(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location, refer to this link
-    #: (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
-    #: for format.
+    #: Time zone associated with this location, refer to this `link
+    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.
@@ -78,9 +77,8 @@ class PostCommonLocationObject(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location, refer to this link
-    #: (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
-    #: for format.
+    #: Time zone associated with this location, refer to this `link
+    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.

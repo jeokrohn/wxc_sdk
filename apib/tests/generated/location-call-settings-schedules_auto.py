@@ -8,10 +8,10 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['CreateAScheduleResponse', 'GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType',
-            'ListScheduleObject', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject', 'ModifyScheduleObject',
-            'PostScheduleObject', 'ReadTheListOfSchedulesResponse', 'RecurWeeklyObject', 'RecurYearlyByDateObject',
-            'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject', 'RecurYearlyByDayObjectDay',
-            'RecurYearlyByDayObjectWeek', 'RecurrenceObject']
+            'ListScheduleObject', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject',
+            'ModifyScheduleObject', 'PostScheduleObject', 'ReadTheListOfSchedulesResponse', 'RecurWeeklyObject',
+            'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject',
+            'RecurYearlyByDayObjectDay', 'RecurYearlyByDayObjectWeek', 'RecurrenceObject']
 
 
 class RecurWeeklyObject(ApiModel):

@@ -8,31 +8,31 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['BandwidthTest', 'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BulkUpdateEventThresholdResponse',
-            'ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1',
+            'ClientTypeDistributionTrend1', 'ClienttypedistributionCollectionforOrg', 'ClienttypedistributionforOrg',
             'CloudOverflowTrend1', 'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline',
             'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterDetails',
             'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a',
             'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ',
             'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization',
-            'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode', 'ConnectivityTestResultsObject',
-            'EventThresholdBody', 'EventThresholdBodyEventName', 'FailureDetails3', 'GetEntityThresholdConfig1',
-            'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName',
+            'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode',
+            'ConnectivityTestResultsObject', 'EventThresholdBody', 'EventThresholdBodyEventName', 'FailureDetails3',
+            'GetEntityThresholdConfig1', 'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName',
             'ListEventThresholdConfigurationEventScope', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType',
-            'MediaHealthMonitoringClusters', 'MediaHealthMonitoringForFirstCluster',
-            'MediaHealthMonitoringResultsCollectionForOrganization', 'MediaHealthMonitoringResultsForOrganization',
-            'MediaHealthMonitoringSecondNode', 'MediaHealthMonitoringTestResultsFailure',
-            'MediaHealthMonitoringTestResultsSuccess', 'MediaSignallingTestResultFailure',
-            'MediaSignallingTestResultSuccess', 'NodeAvailability', 'NodeAvailabilityCollection',
-            'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status', 'NodesAvailability',
-            'OverflowDetails1', 'OverflowToCloud', 'OverflowToCloudCollection', 'PerClusterConnectivityResult1',
-            'PerNodeConnectivityResult1', 'ReachabilityTestResults', 'ReachabilityTestResultsDestinationCluster',
-            'ReachabilityTestResultsFirstNode', 'ReachabilityTestResultsForCluster1',
-            'ReachabilityTestResultsForFirstCluster', 'ReachabilityTestResultsForOrganization',
-            'ReachabilityTestResultsStunResults1', 'ReachabilityTestResultsSuccess', 'RedirectCollectionForOrg',
-            'RedirectForOrg', 'RedirectTrend1', 'ServiceTypeResult2', 'ServiceTypeResult4', 'SingleNodeAvailability',
-            'SingleNodeAvailability1', 'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline',
-            'TriggerOnDemandBody', 'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggeredTestResult',
-            'TriggeredTestStatus1', 'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds',
+            'MediaHealthMonitoringResultsCollectionfororganization', 'MediaHealthMonitoringResultsforOrganization',
+            'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringTestResultsSuccess',
+            'MediaHealthMonitoringclusters', 'MediaHealthMonitoringforfirstcluster',
+            'MediaHealthMonitoringsecondnode', 'MediaSignallingtestResultFailure', 'MediaSignallingtestResultSuccess',
+            'NodeAvailability', 'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1',
+            'NodeStatusList1Status', 'NodesAvailability', 'OverflowDetails1', 'OverflowtoCloud',
+            'OverflowtoCloudCollection', 'PerClusterConnectivityResult1', 'PerNodeConnectivityResult1',
+            'ReachabilityTestResults', 'ReachabilityTestResultsforcluster', 'ReachabilityTestResultsforfirstcluster',
+            'ReachabilityTestresultsStunresults1', 'ReachabilityTestresultsSuccess',
+            'ReachabilityTestresultsdestinationcluster', 'ReachabilityTestresultsfirstnode',
+            'ReachabilityTestresultsfororganization', 'RedirectCollectionForOrg', 'RedirectTrend1', 'RedirectforOrg',
+            'ServiceTypeResult2', 'ServiceTypeResult4', 'SingleNodeAvailability', 'SingleNodeAvailability1',
+            'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'TriggerOnDemandBody',
+            'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggeredTestResult', 'TriggeredTestStatus1',
+            'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds',
             'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UtilizationMetricsT1SJ',
             'WebSocketConnectivityTest']
 
@@ -192,7 +192,7 @@ class SingleNodeAvailability(ApiModel):
     items: Optional[list[SingleNodeAvailabilityCollection]] = None
 
 
-class MediaSignallingTestResultFailure(ApiModel):
+class MediaSignallingtestResultFailure(ApiModel):
     #: The name of the test.
     #: example: Media Signalling
     test_name: Optional[str] = None
@@ -212,10 +212,10 @@ class MediaHealthMonitoringTestResultsFailure(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT01NQU5EX0lELzJjM2M5ZjllLTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhYzo2NTJmNmMxMC01NjgxLTExZWQtOTkyZS1kNTY5YzlkMDlhNzU
     id: Optional[str] = None
     #: Test results of Media Signalling, SIP Signalling, Media Cascade runs.
-    test_results: Optional[list[MediaSignallingTestResultFailure]] = None
+    test_results: Optional[list[MediaSignallingtestResultFailure]] = None
 
 
-class MediaHealthMonitoringSecondNode(ApiModel):
+class MediaHealthMonitoringsecondnode(ApiModel):
     #: Unique ID of the Video Mesh node.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT05ORUNUT1IvMmMzYzlmOTUtNzNkOS00NDYwLWE2NjgtMDQ3MTYyZmYxYmFkOjE1NmRmNzg5Yzg1NTRkNTVhMjc1ZGY5OTc4Zjk5MDJk
     node_id: Optional[str] = None
@@ -226,7 +226,7 @@ class MediaHealthMonitoringSecondNode(ApiModel):
     mhm_test_results: Optional[list[MediaHealthMonitoringTestResultsFailure]] = None
 
 
-class MediaHealthMonitoringForFirstCluster(ApiModel):
+class MediaHealthMonitoringforfirstcluster(ApiModel):
     #: Unique ID of the Video Mesh cluster.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DTFVTVEVSLzJjM2M5Zjk1LTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhZDpmMWJmMGI1MC0yMDUyLTQ3ZmUtYjg3ZC01MTFjMmZlNzQ3MWI=
     cluster_id: Optional[str] = None
@@ -234,15 +234,15 @@ class MediaHealthMonitoringForFirstCluster(ApiModel):
     #: example: banglore
     cluster_name: Optional[str] = None
     #: The Video Mesh nodes in the cluster.
-    nodes: Optional[list[MediaHealthMonitoringSecondNode]] = None
+    nodes: Optional[list[MediaHealthMonitoringsecondnode]] = None
 
 
-class MediaHealthMonitoringClusters(ApiModel):
+class MediaHealthMonitoringclusters(ApiModel):
     #: The list of Video Mesh clusters.
-    clusters: Optional[list[MediaHealthMonitoringForFirstCluster]] = None
+    clusters: Optional[list[MediaHealthMonitoringforfirstcluster]] = None
 
 
-class MediaHealthMonitoringResultsCollectionForOrganization(ApiModel):
+class MediaHealthMonitoringResultsCollectionfororganization(ApiModel):
     #: Unique ID of the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8yYzNjOWY5NS03M2Q5LTQ0NjAtYTY2OC0wNDcxNjJmZjFiYWQ=
     org_id: Optional[str] = None
@@ -253,14 +253,14 @@ class MediaHealthMonitoringResultsCollectionForOrganization(ApiModel):
     #: example: 2023-01-20T15:53:00Z
     to_: Optional[datetime] = None
     #: Media Health Monitoring Tool test results.
-    items: Optional[list[MediaHealthMonitoringClusters]] = None
+    items: Optional[list[MediaHealthMonitoringclusters]] = None
 
 
-class MediaHealthMonitoringResultsForOrganization(ApiModel):
-    items: Optional[list[MediaHealthMonitoringResultsCollectionForOrganization]] = None
+class MediaHealthMonitoringResultsforOrganization(ApiModel):
+    items: Optional[list[MediaHealthMonitoringResultsCollectionfororganization]] = None
 
 
-class MediaSignallingTestResultSuccess(ApiModel):
+class MediaSignallingtestResultSuccess(ApiModel):
     #: The name of the test.
     #: example: Media Signalling
     test_name: Optional[str] = None
@@ -277,7 +277,7 @@ class MediaHealthMonitoringTestResultsSuccess(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT01NQU5EX0lELzJjM2M5ZjllLTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhYzo2NTJmNmMxMC01NjgxLTExZWQtOTkyZS1kNTY5YzlkMDlhNzU
     id: Optional[str] = None
     #: Test results of Media Signalling, SIP Signalling, Media Cascade runs.
-    test_results: Optional[list[MediaSignallingTestResultSuccess]] = None
+    test_results: Optional[list[MediaSignallingtestResultSuccess]] = None
 
 
 class OverflowDetails1(ApiModel):
@@ -300,7 +300,7 @@ class CloudOverflowTrend1(ApiModel):
     overflow_details: Optional[list[OverflowDetails1]] = None
 
 
-class OverflowToCloudCollection(ApiModel):
+class OverflowtoCloudCollection(ApiModel):
     #: The unique ID for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNmQ4OTRmNy0yYjU3LTQzYzEtYWNlZS1kNDdlNjc3NjE0MTQ
     org_id: Optional[str] = None
@@ -317,8 +317,8 @@ class OverflowToCloudCollection(ApiModel):
     items: Optional[list[CloudOverflowTrend1]] = None
 
 
-class OverflowToCloud(ApiModel):
-    items: Optional[list[OverflowToCloudCollection]] = None
+class OverflowtoCloud(ApiModel):
+    items: Optional[list[OverflowtoCloudCollection]] = None
 
 
 class ClusterRedirectDetailsBlr1a(ApiModel):
@@ -368,7 +368,7 @@ class RedirectCollectionForOrg(ApiModel):
     items: Optional[list[RedirectTrend1]] = None
 
 
-class RedirectForOrg(ApiModel):
+class RedirectforOrg(ApiModel):
     items: Optional[list[RedirectCollectionForOrg]] = None
 
 
@@ -426,7 +426,7 @@ class ClustersUtilization(ApiModel):
     items: Optional[list[ClusterUtilizationCollection]] = None
 
 
-class ReachabilityTestResultsSuccess(ApiModel):
+class ReachabilityTestresultsSuccess(ApiModel):
     #: Destination IP address.
     #: example: 1.1.1.1
     ip_address: Optional[str] = None
@@ -438,7 +438,7 @@ class ReachabilityTestResultsSuccess(ApiModel):
     reachable: Optional[bool] = None
 
 
-class ReachabilityTestResultsStunResults1(ApiModel):
+class ReachabilityTestresultsStunresults1(ApiModel):
     #: The timestamp of the test run.
     #: example: 2022-03-15T15:53:00Z
     timestamp: Optional[datetime] = None
@@ -449,20 +449,20 @@ class ReachabilityTestResultsStunResults1(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT01NQU5EX0lELzJjM2M5ZjllLTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhYzo2NTJmNmMxMC01NjgxLTExZWQtOTkyZS1kNTY5YzlkMDlhNzU
     id: Optional[str] = None
     #: List of UDP ports being checked in Reachability test.
-    udp: Optional[list[ReachabilityTestResultsSuccess]] = None
+    udp: Optional[list[ReachabilityTestresultsSuccess]] = None
     #: List of TCP ports being checked in Reachability test.
-    tcp: Optional[list[ReachabilityTestResultsSuccess]] = None
+    tcp: Optional[list[ReachabilityTestresultsSuccess]] = None
 
 
-class ReachabilityTestResultsDestinationCluster(ApiModel):
+class ReachabilityTestresultsdestinationcluster(ApiModel):
     #: Cloud Webex cluster against which Reachability test is being executed.
     #: example: Amsterdam Cluster
     destination_cluster: Optional[str] = None
     #: STUN test results for a Video Mesh cluster.
-    stun_results: Optional[list[ReachabilityTestResultsStunResults1]] = None
+    stun_results: Optional[list[ReachabilityTestresultsStunresults1]] = None
 
 
-class ReachabilityTestResultsFirstNode(ApiModel):
+class ReachabilityTestresultsfirstnode(ApiModel):
     #: Unique ID of the Video Mesh node.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT05ORUNUT1IvMmMzYzlmOTUtNzNkOS00NDYwLWE2NjgtMDQ3MTYyZmYxYmFkOjE1NmRmNzg5Yzg1NTRkNTVhMjc1ZGY5OTc4Zjk5MDJk
     node_id: Optional[str] = None
@@ -470,10 +470,10 @@ class ReachabilityTestResultsFirstNode(ApiModel):
     #: example: xyz.company.com
     host_name_or_ip: Optional[str] = Field(alias='hostNameOrIP', default=None)
     #: Reachability test results for a single Video Mesh node.
-    test_results: Optional[list[ReachabilityTestResultsDestinationCluster]] = None
+    test_results: Optional[list[ReachabilityTestresultsdestinationcluster]] = None
 
 
-class ReachabilityTestResultsForFirstCluster(ApiModel):
+class ReachabilityTestResultsforfirstcluster(ApiModel):
     #: Unique ID of the Video Mesh cluster.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DTFVTVEVSLzJjM2M5Zjk1LTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhZDpmMWJmMGI1MC0yMDUyLTQ3ZmUtYjg3ZC01MTFjMmZlNzQ3MWI=
     cluster_id: Optional[str] = None
@@ -481,15 +481,15 @@ class ReachabilityTestResultsForFirstCluster(ApiModel):
     #: example: banglore
     cluster_name: Optional[str] = None
     #: The Video Mesh nodes in the cluster.
-    nodes: Optional[list[ReachabilityTestResultsFirstNode]] = None
+    nodes: Optional[list[ReachabilityTestresultsfirstnode]] = None
 
 
-class ReachabilityTestResultsForCluster1(ApiModel):
+class ReachabilityTestResultsforcluster(ApiModel):
     #: List of Video Mesh clusters.
-    clusters: Optional[list[ReachabilityTestResultsForFirstCluster]] = None
+    clusters: Optional[list[ReachabilityTestResultsforfirstcluster]] = None
 
 
-class ReachabilityTestResultsForOrganization(ApiModel):
+class ReachabilityTestresultsfororganization(ApiModel):
     #: Unique ID of the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8yYzNjOWY5NS03M2Q5LTQ0NjAtYTY2OC0wNDcxNjJmZjFiYWQ=
     org_id: Optional[str] = None
@@ -500,11 +500,11 @@ class ReachabilityTestResultsForOrganization(ApiModel):
     #: example: 2023-01-20T15:53:00Z
     to_: Optional[datetime] = None
     #: Reachability test results data.
-    items: Optional[list[ReachabilityTestResultsForCluster1]] = None
+    items: Optional[list[ReachabilityTestResultsforcluster]] = None
 
 
 class ReachabilityTestResults(ApiModel):
-    items: Optional[list[ReachabilityTestResultsForOrganization]] = None
+    items: Optional[list[ReachabilityTestresultsfororganization]] = None
 
 
 class BlrNodeLocation(ApiModel):
@@ -589,7 +589,7 @@ class TriggeredTestResult(ApiModel):
     #: Unique ID of the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8yYzNjOWY5NS03M2Q5LTQ0NjAtYTY2OC0wNDcxNjJmZjFiYWQ=
     org_id: Optional[str] = None
-    results: Optional[list[MediaHealthMonitoringClusters]] = None
+    results: Optional[list[MediaHealthMonitoringclusters]] = None
 
 
 class NodeStatusList1Status(str, Enum):
@@ -772,7 +772,7 @@ class ClientTypeDistributionTrend1(ApiModel):
     clusters: Optional[list[ClusterClientTypeDistributionBlr1]] = None
 
 
-class ClientTypeDistributionCollectionForOrg(ApiModel):
+class ClienttypedistributionCollectionforOrg(ApiModel):
     #: The unique ID for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNmQ4OTRmNy0yYjU3LTQzYzEtYWNlZS1kNDdlNjc3NjE0MTQ
     org_id: Optional[str] = None
@@ -789,8 +789,8 @@ class ClientTypeDistributionCollectionForOrg(ApiModel):
     items: Optional[list[ClientTypeDistributionTrend1]] = None
 
 
-class ClientTypeDistributionForOrg(ApiModel):
-    items: Optional[list[ClientTypeDistributionCollectionForOrg]] = None
+class ClienttypedistributionforOrg(ApiModel):
+    items: Optional[list[ClienttypedistributionCollectionforOrg]] = None
 
 
 class UpdateEventThresholdConfig1(ApiModel):

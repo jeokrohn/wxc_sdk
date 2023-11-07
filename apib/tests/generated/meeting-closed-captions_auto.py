@@ -15,9 +15,8 @@ class ClosedCaptionObject(ApiModel):
     #: A unique identifier for the closed caption.
     #: example: 195d64646ad14be2924ea50f541fd91d
     id: Optional[str] = None
-    #: Unique identifier for the [meeting
-    #: instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the closed captions
-    #: belong to.
+    #: Unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the closed captions belong to.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
     meeting_id: Optional[str] = None
     #: The download link for the closed caption vtt file.
@@ -26,7 +25,8 @@ class ClosedCaptionObject(ApiModel):
     #: The download link for the closed caption txt file.
     #: example: http://site-example.webex.com/v1/meetingClosedCaptions/195d64646ad14be2924ea50f541fd91d/download?format=txt
     txt_download_link: Optional[str] = None
-    #: Start time for the meeting closed caption in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: Start time for the meeting closed caption in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2020-06-01T20:30:15.042Z
     start: Optional[datetime] = None
 
@@ -35,9 +35,8 @@ class SnippetObject(ApiModel):
     #: A unique identifier for the closed caption snippet.
     #: example: 195d64646ad14be2924ea50f541fd91d_00001
     id: Optional[str] = None
-    #: Unique identifier for the [meeting
-    #: instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the closed captions
-    #: belong to.
+    #: Unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the closed captions belong to.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
     meeting_id: Optional[str] = None
     #: Text for the snippet.

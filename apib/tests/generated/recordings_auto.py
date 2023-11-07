@@ -59,13 +59,14 @@ class RecordingObject(ApiModel):
     #: The recording's topic.
     #: example: John's Meeting
     topic: Optional[str] = None
-    #: The date and time recording was created in https://en.wikipedia.org/wiki/ISO_8601 compliant format. Please note
-    #: that it's not the time the record button was clicked in meeting but the time the recording file was generated
-    #: offline.
+    #: The date and time recording was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. Please note that it's not the time the
+    #: record button was clicked in meeting but the time the recording file was generated offline.
     #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
-    #: The date and time recording started in https://en.wikipedia.org/wiki/ISO_8601 compliant format. It indicates
-    #: when the record button was clicked in the meeting.
+    #: The date and time recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. It indicates when the record button was
+    #: clicked in the meeting.
     #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Site URL for the recording.
@@ -73,7 +74,8 @@ class RecordingObject(ApiModel):
     site_url: Optional[str] = None
     #: The download link for recording. This attribute is not available if **Prevent downloading** has been turned on
     #: for the recording being requested. The **Prevent downloading** option can be viewed and set by a site admin on
-    #: https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub.
+    #: `Control Hub
+    #: <https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub>`_.
     #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
     download_url: Optional[str] = None
     #: The playback link for recording.
@@ -118,13 +120,14 @@ class RecordingObjectForAdminAndCO(ApiModel):
     #: The recording's topic.
     #: example: John's Meeting
     topic: Optional[str] = None
-    #: The date and time recording was created in https://en.wikipedia.org/wiki/ISO_8601 compliant format. Please note
-    #: that it's not the time the record button was clicked in meeting but the time the recording file was generated
-    #: offline.
+    #: The date and time recording was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. Please note that it's not the time the
+    #: record button was clicked in meeting but the time the recording file was generated offline.
     #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
-    #: The date and time recording started in https://en.wikipedia.org/wiki/ISO_8601 compliant format. It indicates
-    #: when the record button was clicked in the meeting.
+    #: The date and time recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. It indicates when the record button was
+    #: clicked in the meeting.
     #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Display name for the meeting host.
@@ -138,7 +141,8 @@ class RecordingObjectForAdminAndCO(ApiModel):
     site_url: Optional[str] = None
     #: The download link for recording. This attribute is not available if **Prevent downloading** has been turned on
     #: for the recording being requested. The **Prevent downloading** option can be viewed and set by a site admin on
-    #: https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub.
+    #: `Control Hub
+    #: <https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub>`_.
     #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
     download_url: Optional[str] = None
     #: The playback link for recording.
@@ -180,7 +184,8 @@ class RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks(ApiMode
     #: Expires 3 hours after the API request.
     transcript_download_link: Optional[str] = None
     #: The date and time when `recordingDownloadLink`, `audioDownloadLink`, and `transcriptDownloadLink` expire in
-    #: https://en.wikipedia.org/wiki/ISO_8601 compliant format.
+    #: `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     expiration: Optional[str] = None
 
 
@@ -211,21 +216,22 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: The recording's topic.
     #: example: John's Meeting
     topic: Optional[str] = None
-    #: The date and time recording was created in https://en.wikipedia.org/wiki/ISO_8601 compliant format. Please note
-    #: that it's not the time the record button was clicked in meeting but the time the recording file was generated
-    #: offline.
+    #: The date and time recording was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. Please note that it's not the time the
+    #: record button was clicked in meeting but the time the recording file was generated offline.
     #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
-    #: The date and time recording started in https://en.wikipedia.org/wiki/ISO_8601 compliant format. It indicates
-    #: when the record button was clicked in the meeting.
+    #: The date and time recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. It indicates when the record button was
+    #: clicked in the meeting.
     #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Site URL for the recording.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
     #: The download link for the recording. This attribute is not available if `prevent downloading` has been turned on
-    #: for the recording being requested. The `prevent downloading` option can be viewed and set on page when editing a
-    #: recording.
+    #: for the recording being requested. The `prevent downloading` option can be viewed and set on page when editing
+    #: a recording.
     #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
     download_url: Optional[str] = None
     #: The playback link for recording.
@@ -247,9 +253,12 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
     #: The download links for MP4/ARF, audio, and transcript of the recording without HTML page rendering in browser or
-    #: HTTP redirect. This attribute is not available if the user is not a
-    #: https://www.cisco.com/c/en/us/products/conferencing/product_comparison.html such as "Webex Meetings", "Webex
-    #: Training" and "Webex Events".
+    #: HTTP redirect. This attribute is not available if the user is not a `Compliance Officer
+    #: <https://developer.webex.com/docs/compliance#compliance>`_ and **Prevent
+    #: Downloading** has been turned on for the recording being requested. The Prevent Downloading option can be
+    #: viewed and set on page when editing a recording. Note that there are various products in `Webex Suite
+    #: <https://www.cisco.com/c/en/us/products/conferencing/product_comparison.html>`_ such as
+    #: "Webex Meetings", "Webex Training" and "Webex Events".
     temporary_direct_download_links: Optional[RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks] = None
     #: External keys of the parent meeting created by an integration application. The key can be Zendesk ticket IDs,
     #: Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own
@@ -273,8 +282,9 @@ class BulkSoftDeleteRecordingObject(ApiModel):
     #: should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
     recording_ids: Optional[list[str]] = None
     #: URL of the Webex site from which the API deletes recordings. If not specified, the API deletes recordings from
-    #: the user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by the [Get
-    #: Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: the user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by the
+    #: `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     #: example: example.webex.com
     site_url: Optional[str] = None
 
@@ -287,8 +297,9 @@ class BulkRestoreRecordingObject(ApiModel):
     #: belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
     recording_ids: Optional[list[str]] = None
     #: URL of the Webex site from which the API restores recordings. If not specified, the API restores recordings from
-    #: a user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by [Get Site
-    #: List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: a user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by
+    #: `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     #: example: example.webex.com
     site_url: Optional[str] = None
 
@@ -301,8 +312,9 @@ class BulkPurgeRecordingObject(ApiModel):
     #: belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
     recording_ids: Optional[list[str]] = None
     #: URL of the Webex site from which the API purges recordings. If not specified, the API purges recordings from
-    #: user's preferred site. All available Webex sites and preferred sites of the user can be retrieved by [Get Site
-    #: List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: user's preferred site. All available Webex sites and preferred sites of the user can be retrieved by
+    #: `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     #: example: example.webex.com
     site_url: Optional[str] = None
 

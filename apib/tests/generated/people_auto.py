@@ -87,7 +87,8 @@ class PersonType(str, Enum):
     person = 'person'
     #: Account is a bot user
     bot = 'bot'
-    #: Account is a [guest user](/docs/guest-issuer)
+    #: Account is a `guest user
+    #: <https://developer.webex.com/docs/guest-issuer>`_
     appuser = 'appuser'
 
 
@@ -156,8 +157,9 @@ class Person(ApiModel):
     #: example: America/Denver
     timezone: Optional[str] = None
     #: The date and time of the person's last activity within Webex. This will only be returned for people within your
-    #: organization or an organization you manage. Presence information will not be shown if the authenticated user has
-    #: https://help.webex.com/nkzs6wl/.
+    #: organization or an organization you manage. Presence information will not be shown if the authenticated user
+    #: has `disabled status sharing
+    #: <https://help.webex.com/nkzs6wl/>`_.
     #: example: 2015-10-18T14:26:16.028Z
     last_activity: Optional[datetime] = None
     #: One or several site names where this user has a role (host or attendee)
@@ -171,7 +173,8 @@ class Person(ApiModel):
     xmpp_federation_jid: Optional[str] = None
     #: The current presence status of the person. This will only be returned for people within your organization or an
     #: organization you manage. Presence information will not be shown if the authenticated user has
-    #: https://help.webex.com/nkzs6wl/.
+    #: `disabled status sharing
+    #: <https://help.webex.com/nkzs6wl/>`_.
     #: example: active
     status: Optional[PersonStatus] = None
     #: Whether or not an invite is pending for the user to complete account activation. This property is only returned

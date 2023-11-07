@@ -106,8 +106,8 @@ class CallForwardRulesObject(ApiModel):
     name: Optional[str] = None
     #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
     #: is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls
-    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an
-    #: unavailable number.
+    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from
+    #: an unavailable number.
     #: example: Any private number
     calls_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.

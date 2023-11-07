@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['IdentityManagedOrg', 'ManagedOrgsResponse', 'PartnerAdminUser', 'PartnerAdminsForOrgResponse']
+__auto__ = ['IdentityManagedOrg', 'ManagedOrgsResponse', 'PartnerAdminUser', 'PartneradminsfororgResponse']
 
 
 class IdentityManagedOrg(ApiModel):
@@ -45,6 +45,6 @@ class ManagedOrgsResponse(ApiModel):
     items: Optional[list[IdentityManagedOrg]] = None
 
 
-class PartnerAdminsForOrgResponse(ApiModel):
+class PartneradminsfororgResponse(ApiModel):
     #: An array of partner admin user details.
     items: Optional[list[PartnerAdminUser]] = None

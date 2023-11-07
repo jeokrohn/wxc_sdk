@@ -75,7 +75,8 @@ class AuditEvent(ApiModel):
 
 
 class AuditEventCollectionResponse(ApiModel):
-    #: An array of audit event objects. See https://help.webex.com/n3b0w6x/ for details about each event type.
+    #: An array of audit event objects. See `this article
+    #: <https://help.webex.com/n3b0w6x/>`_ for details about each event type.
     items: Optional[list[AuditEvent]] = None
 
 

@@ -7,17 +7,17 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectComfortMessage',
-            'CallQueueQueueSettingsObjectComfortMessageBypass', 'CallQueueQueueSettingsObjectMohMessage',
-            'CallQueueQueueSettingsObjectMohMessageNormalSource', 'CallQueueQueueSettingsObjectOverflow',
-            'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting',
-            'CallQueueQueueSettingsObjectWaitMessage', 'CallQueueQueueSettingsObjectWaitMessageWaitMode',
-            'CallQueueQueueSettingsObjectWelcomeMessage', 'GetCallQueueCallPolicyObject',
-            'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
-            'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings',
-            'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType',
-            'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'ReadTheListOfCallQueuesResponse',
-            'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject',
+            'CallQueueQueueSettingsObjectComfortMessage', 'CallQueueQueueSettingsObjectComfortMessageBypass',
+            'CallQueueQueueSettingsObjectMohMessage', 'CallQueueQueueSettingsObjectMohMessageNormalSource',
+            'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction',
+            'CallQueueQueueSettingsObjectOverflowGreeting', 'CallQueueQueueSettingsObjectWaitMessage',
+            'CallQueueQueueSettingsObjectWaitMessageWaitMode', 'CallQueueQueueSettingsObjectWelcomeMessage',
+            'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
+            'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
+            'GetCallQueueObjectAlternateNumberSettings', 'GetPersonPlaceVirtualLineCallQueueObject',
+            'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection',
+            'ListCallQueueObject', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -99,8 +99,8 @@ class CallQueueQueueSettingsObjectWelcomeMessage(ApiModel):
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
     #: Array of announcement `fileName` strings to be played as `welcomeMessage` greetings. These files are from the
-    #: list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName`
-    #: is mandatory, and the maximum is 4.
+    #: list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1
+    #: `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
     audio_files: Optional[list[str]] = None
 
@@ -160,9 +160,9 @@ class CallQueueQueueSettingsObjectComfortMessage(ApiModel):
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
     #: Array of announcement `fileName` strings to be played as `comfortMessage` greetings. These files are from the
-    #: list of announcement files associated with this call queue. These files are from the list of announcements files
-    #: associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the
-    #: maximum is 4.
+    #: list of announcement files associated with this call queue. These files are from the list of announcements
+    #: files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and
+    #: the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
     audio_files: Optional[list[str]] = None
 

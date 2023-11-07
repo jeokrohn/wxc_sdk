@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1',
+__auto__ = ['ClientTypeDistributionTrend1', 'ClienttypedistributionCollectionforOrg', 'ClienttypedistributionforOrg',
             'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a']
 
 
@@ -41,7 +41,7 @@ class ClientTypeDistributionTrend1(ApiModel):
     clusters: Optional[list[ClusterClientTypeDistributionBlr1]] = None
 
 
-class ClientTypeDistributionCollectionForOrg(ApiModel):
+class ClienttypedistributionCollectionforOrg(ApiModel):
     #: The unique ID for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNmQ4OTRmNy0yYjU3LTQzYzEtYWNlZS1kNDdlNjc3NjE0MTQ
     org_id: Optional[str] = None
@@ -58,5 +58,5 @@ class ClientTypeDistributionCollectionForOrg(ApiModel):
     items: Optional[list[ClientTypeDistributionTrend1]] = None
 
 
-class ClientTypeDistributionForOrg(ApiModel):
-    items: Optional[list[ClientTypeDistributionCollectionForOrg]] = None
+class ClienttypedistributionforOrg(ApiModel):
+    items: Optional[list[ClienttypedistributionCollectionforOrg]] = None

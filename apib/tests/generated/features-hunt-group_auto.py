@@ -52,8 +52,8 @@ class CallForwardRulesGet(ApiModel):
     name: Optional[str] = None
     #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
     #: is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls
-    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an
-    #: unavailable number.
+    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from
+    #: an unavailable number.
     #: example: Any private Number,2025551212
     call_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
@@ -251,8 +251,8 @@ class PostHuntGroupCallPolicyObject(ApiModel):
     #: example: UNIFORM
     policy: Optional[HuntPolicySelection] = None
     #: If false, then the option is treated as "Advance when busy": the hunt group won't ring agents when they're on a
-    #: call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is advanced
-    #: to them, then the call will wait until that hunt group agent isn't busy.
+    #: call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is
+    #: advanced to them, then the call will wait until that hunt group agent isn't busy.
     #: example: True
     waiting_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.

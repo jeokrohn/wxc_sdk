@@ -11,21 +11,29 @@ __auto__ = ['Webhook', 'WebhookCollectionResponse', 'WebhookEvent', 'WebhookReso
 
 
 class WebhookResource(str, Enum):
-    #: The [Attachment Actions](/docs/api/v1/attachment-actions) resource.
+    #: The `Attachment Actions
+    #: <https://developer.webex.com/docs/api/v1/attachment-actions>`_ resource.
     attachment_actions = 'attachmentActions'
-    #: The [Memberships](/docs/api/v1/memberships) resource.
+    #: The `Memberships
+    #: <https://developer.webex.com/docs/api/v1/memberships>`_ resource.
     memberships = 'memberships'
-    #: The [Messages](/docs/api/v1/messages) resource.
+    #: The `Messages
+    #: <https://developer.webex.com/docs/api/v1/messages>`_ resource.
     messages = 'messages'
-    #: The [Rooms](/docs/api/v1/rooms) resource.
+    #: The `Rooms
+    #: <https://developer.webex.com/docs/api/v1/rooms>`_ resource.
     rooms = 'rooms'
-    #: The [Meetings](/docs/api/v1/meetings) resource.
+    #: The `Meetings
+    #: <https://developer.webex.com/docs/api/v1/meetings>`_ resource.
     meetings = 'meetings'
-    #: The [Recordings](/docs/api/v1/recordings) resource.
+    #: The `Recordings
+    #: <https://developer.webex.com/docs/api/v1/recordings>`_ resource.
     recordings = 'recordings'
-    #: The [Meeting Participants](/docs/api/v1/meeting-participants) resource.
+    #: The `Meeting Participants
+    #: <https://developer.webex.com/docs/api/v1/meeting-participants>`_ resource.
     meeting_participants = 'meetingParticipants'
-    #: The [Meeting Transcripts](/docs/api/v1/meeting-transcripts) resource.
+    #: The `Meeting Transcripts
+    #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_ resource.
     meeting_transcripts = 'meetingTranscripts'
 
 
@@ -85,8 +93,8 @@ class Webhook(ApiModel):
     created: Optional[datetime] = None
     #: Specify `org` when creating an org/admin level webhook. Supported for `meetings`, `recordings`,
     #: `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`, and `messaging`
-    #: (for Compliance Officers and messages with file attachments only - see
-    #: https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics) resources.
+    #: (for Compliance Officers and messages with file attachments only - see `inline file DLP
+    #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     #: example: org
     owned_by: Optional[str] = None
 

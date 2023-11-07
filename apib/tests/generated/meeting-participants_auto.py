@@ -63,8 +63,8 @@ class Device(ApiModel):
     joined_time: Optional[datetime] = None
     #: The time the device left the meeting, `leftTime` is the exact moment when a specific devi    ce left the
     #: meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and
-    #: the `leftTime` will     be filled in after the meeting ended. If you need real-time left events, please refer to
-    #: the webhooks guide.
+    #: the `leftTime` will     be filled in after the meeting ended. If you need real-time left events, please refer
+    #: to the webhooks guide.
     #: example: 2019-04-23T17:32:00.000Z
     left_time: Optional[datetime] = None
     #: The duration in seconds the device stayed in the meeting.
@@ -73,10 +73,10 @@ class Device(ApiModel):
     #: The PSTN call type in which the device joined the meeting.
     #: example: callIn
     call_type: Optional[DeviceCallType] = None
-    #: The PSTN phone number from which the device joined the meeting. Only [compliance
-    #: officer](/docs/compliance#compliance) can retrieve the `phoneNumber`. The meeting host and admin users cannot
-    #: retrieve it. NOTE: The `phoneNumber` will be returned after the meeting ends; it is not returned while the
-    #: meeting is in progress.
+    #: The PSTN phone number from which the device joined the meeting. Only `compliance officer
+    #: <https://developer.webex.com/docs/compliance#compliance>`_ can retrieve the
+    #: `phoneNumber`. The meeting host and admin users cannot retrieve it. NOTE: The `phoneNumber` will be returned
+    #: after the meeting ends; it is not returned while the meeting is in progress.
     #: example: 745273328
     phone_number: Optional[str] = None
 
@@ -125,8 +125,8 @@ class Participant(ApiModel):
     #: example: 2022-10-25T09:00:00Z
     joined_time: Optional[datetime] = None
     #: The time the participant left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the
-    #: meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need real-time
-    #: left events, please refer to the webhooks guide.
+    #: meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need
+    #: real-time left events, please refer to the webhooks guide.
     #: example: 2022-10-25T09:30:00Z
     left_time: Optional[datetime] = None
     #: The site URL.
@@ -139,8 +139,8 @@ class Participant(ApiModel):
     #: example: janeDoe@cisco.com
     host_email: Optional[str] = None
     devices: Optional[list[Device]] = None
-    #: The source ID of the participant. The `sourceId` is from the [Create Invitation
-    #: Sources](/docs/api/v1/meetings/create-invitation-sources) API.
+    #: The source ID of the participant. The `sourceId` is from the `Create Invitation Sources
+    #: <https://developer.webex.com/docs/api/v1/meetings/create-invitation-sources>`_ API.
     #: example: cisco
     source_id: Optional[str] = None
 

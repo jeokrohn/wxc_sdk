@@ -42,8 +42,8 @@ class Room(ApiModel):
     #: The date and time the room was created.
     #: example: 2016-04-21T19:01:55.966Z
     created: Optional[datetime] = None
-    #: The ID of the organization which owns this room. See [Webex Data](/docs/api/guides/compliance#webex-teams-data)
-    #: in the [Compliance Guide](/docs/api/guides/compliance) for more information.
+    #: The ID of the organization which owns this room. See `Webex Data
+    #: <https://developer.webex.com/docs/api/guides/compliance#webex-teams-data>`_ in the `Compliance Guide
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     owner_id: Optional[str] = None
     #: Space classification ID represents the space's current classification.  It can be attached during space creation

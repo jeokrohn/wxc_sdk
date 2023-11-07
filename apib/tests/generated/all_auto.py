@@ -7,7 +7,467 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AcdObject', 'ActionOnRouteList', 'ActivationCode', 'ActivationStates', 'ActivityList', 'ActivityListDatasetMetadata', 'AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'Address', 'AddressAgentHuntGroupObject', 'AdminBatchStartJobObject', 'AdminBatchStartJobObjectLocationCustomizations', 'AdmitParticipant', 'AdmitParticipantsObject', 'AdmitParticipantsObject1', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentAvaliableCallQueueIdList', 'AgentAvaliableCallQueueIdList1', 'AgentCallQueueId', 'AgentCallQueueId1', 'AgentChannelType', 'AgentCurrentState', 'AgentSession', 'AgentStats', 'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'AggregatedMetric', 'Alarm', 'AlarmCollection', 'AlarmSeverity', 'AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AlternateNumbersWithPattern', 'AnalyzeEntitiesDocument', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel', 'AnnouncementResponse', 'AnnouncementUsageResponse', 'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'AnswerForCustomizedQuestion', 'AnswerObject', 'AnswerSummaryItem', 'Application', 'ApplicationOrgSubmissionStatus', 'ApplicationSubmissionStatus', 'ApplicationType', 'ApplicationUsage', 'ApplicationUsageCollectionResponse', 'ApplicationUsagePolicyAction', 'ApplicationsCollectionResponse', 'ApplicationsSetting', 'ApplicationsSettingPut', 'ArrayOfExtensionsObject', 'Artifact', 'ArtifactAttributes', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'Attachment', 'Attachment1', 'AttachmentAction', 'AttachmentActivity', 'AttachmentActivityType', 'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'AudioAnnouncementFileObject2', 'AudioCodecPriorityObject', 'AudioFileObject', 'AudioFileObjectMediaType', 'AudioIn', 'AudioInType', 'AuditEvent', 'AuditEvent1', 'AuditEventCategoryCollectionResponse', 'AuditEventCollectionResponse', 'AuditEventCollectionResponse1', 'AuditEventData', 'AuditEventData1', 'AuthenticationMethodObject', 'Authorization', 'AuthorizationType', 'AuthorizationsCollectionResponse', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'AvailableSharedLineMemberItem', 'AvailableSharedLineMemberItem1', 'AvailableSharedLineMemberList', 'AvailableSharedLineMemberList1', 'BackgroundImage', 'BackgroundImageColor', 'BacklightTimer68XX', 'BacklightTimerObject', 'BandwidthTest', 'BargeInInfo', 'BatchJobError', 'BatchJobError1', 'BatchRegisterMeetingRegistrantsResponse', 'BatchResponse', 'BatchResponse1', 'BatchUpdateMeetingRegistrantsStatusStatusOpType', 'BillingReportsListResponse', 'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BluetoothObject', 'BluetoothObjectMode', 'BreakoutSessionObject', 'BulkCreate', 'BulkCreateContacts', 'BulkDelete', 'BulkPurgeRecordingObject', 'BulkRestoreRecordingObject', 'BulkSoftDeleteRecordingObject', 'BulkUpdateEventThresholdResponse', 'BulkUser', 'BulkUserOperations', 'BulkUserOperationsMethod', 'CDR', 'CDRResponse', 'CLIDPolicySelection', 'Call', 'Call2', 'CallBackEffectiveLevel', 'CallBackQuality', 'CallBackSelected', 'CallBridgeInfo', 'CallForwardExpandedSoftKey', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection', 'CallForwardSettingsGet', 'CallForwardSettingsGetCallForwarding', 'CallForwardingPlaceSettingPatch', 'CallForwardingPut', 'CallForwardingPut1', 'CallForwardingPutCallForwarding', 'CallForwardingPutCallForwarding1', 'CallForwardingPutCallForwardingAlways', 'CallForwardingPutCallForwardingNoAnswer', 'CallForwardingPutCallForwardingNoAnswer1', 'CallHistoryMethod', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallInterceptInfo', 'CallInterceptInfoIncoming', 'CallInterceptInfoIncomingAnnouncements', 'CallInterceptPut', 'CallInterceptPutIncoming', 'CallInterceptPutIncomingAnnouncements', 'CallMembership', 'CallMembershipAudio', 'CallMembershipCollectionResponse', 'CallMembershipStatus', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueObject1', 'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage', 'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage', 'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow', 'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObject1', 'CallQueueQueueSettingsObjectComfortMessage', 'CallQueueQueueSettingsObjectComfortMessageBypass', 'CallQueueQueueSettingsObjectMohMessage', 'CallQueueQueueSettingsObjectMohMessageNormalSource', 'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectWaitMessage', 'CallQueueQueueSettingsObjectWaitMessageWaitMode', 'CallQueueQueueSettingsObjectWelcomeMessage', 'CallRecordingInfo', 'CallRecordingInfo1', 'CallRecordingInfoNotification', 'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord', 'CallRecordingInfoRepeat', 'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPut', 'CallRecordingPut1', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallTypeEnum', 'CallerIdInfo', 'CallerIdPut', 'CallerIdSelectedType', 'CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType', 'CallsCollectionResponse', 'CallsQualitiesResponse', 'CapabilityMap', 'CapabilityResponse', 'CatalogListResponse', 'CatalogResponse', 'CatalogResponseAvailability', 'ChatObject', 'ChatObjectSender', 'ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1', 'ClosedCaptionObject', 'CloudOverflowTrend1', 'Cluster', 'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline', 'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterCollection', 'ClusterDetails', 'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a', 'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ', 'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization', 'CommSecurityType', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceStateEnum', 'ConferenceTypeEnum', 'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode', 'ConnectivityTestResultsObject', 'Connector', 'ConnectorCollection', 'ConnectorStatus', 'ConnectorType', 'Contact', 'ContactDetails', 'ContactEmails', 'ContactEmailsType', 'ContactIms', 'ContactImsType', 'ContactPayload', 'ContactPhoneNumbers', 'ContactPhoneNumbersType', 'ContactPrimaryContactMethod', 'ContactResponse', 'ContactSipAddresses', 'ContactSipAddressesType', 'ContactSource', 'Control', 'CountObject', 'Counts', 'Counts1', 'CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'CreateCallQueueObject', 'CreateHuntGroupObject', 'CreateHuntGroupObject1', 'CreateInvitationSourcesResponse', 'CreateInviteeObject', 'CreateInviteesItemObject', 'CreateInviteesItemResponseObject', 'CreateInviteesObject', 'CreateInviteesResponse', 'CreateMeetingObject', 'CreateMeetingObject1', 'CreateMeetingObjectRegistration', 'CreateMeetingObjectSimultaneousInterpretation', 'CreateOrUpdateTrackingCodeObject', 'Customer1', 'Customer2', 'CustomerActivity', 'CustomerCallDirection', 'CustomerCurrentState', 'CustomerListResponse', 'CustomerSession', 'CustomerSessionTerminatingEnd', 'CustomerSessionTerminationType', 'CustomerStatus', 'CustomerTagsResponse', 'CustomizationDeviceLevelObject', 'CustomizationDeviceLevelObjectDevice', 'CustomizationObject', 'CustomizedQuestionForCreateMeeting', 'CustomizedQuestionForCreateMeetingOptions', 'CustomizedQuestionForCreateMeetingRules', 'CustomizedQuestionForCreateMeetingRulesCondition', 'CustomizedQuestionForCreateMeetingRulesResult', 'CustomizedQuestionForCreateMeetingType', 'CustomizedQuestionForGetMeeting', 'CustomizedQuestionForGetMeetingRules', 'CustomizedRegistrant', 'DectDeviceList', 'DectObject', 'DectVlanObject', 'DefaultLoggingLevelObject', 'DefaultSiteObject', 'DeleteTranscriptObject', 'DepartmentCollectionRequest', 'DepartmentCollectionResponse', 'DepartmentResponse', 'DepartmentResponseDepartment', 'DepartmentResponseWithId', 'DestinationType', 'DetailedTemplateObject', 'DetailedTemplateObject1', 'DeveloperRegistrationGetResponse', 'DeveloperRegistrationUpdateRequest', 'Device', 'Device1', 'DeviceAudioType', 'DeviceCallType', 'DeviceCapabilities', 'DeviceCollectionResponse', 'DeviceConnectionStatus', 'DeviceList', 'DeviceList1', 'DeviceObject', 'DeviceOwner', 'DevicePermissions', 'DeviceSettingsObject', 'DeviceSettingsObjectForDeviceLevel', 'DeviceStatus', 'DeviceType', 'DeviceType1', 'Devices', 'Devices1', 'DialPattern', 'DialPatternPut', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost', 'DialPlanPut', 'DialResponse', 'DirectMessage', 'DirectMessage1', 'DirectMessageCollectionResponse', 'DirectMessageCollectionResponse1', 'DirectoryMethod', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistributorDetailsResponse', 'DistributorDetailsResponseCapabilities', 'DistributorListResponse', 'DistributorResponse', 'DoNotDisturbInfo', 'DownloadMeetingClosedCaptionSnippetsFormat', 'DurationMetric', 'ECMFolder', 'ECMFolderCollectionResponse', 'ECMFolderRoomType', 'EmailObject', 'Emergency', 'EndpointIdType', 'EndpointInformation', 'Endpoints', 'EnterpriseListResponse', 'EnterpriseListResponse1', 'EnterpriseListResponse3', 'EnterpriseListResponseBroadworksDirectorySync', 'EnterpriseListResponseBroadworksDirectorySync1', 'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus', 'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus1', 'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors', 'Entity', 'EntityRecognition', 'Error1', 'Error4', 'ErrorMessage', 'ErrorOrImpactItem', 'ErrorResponseObject', 'Event', 'Event1', 'EventCollectionResponse', 'EventCollectionResponse1', 'EventData', 'EventData1', 'EventLongDetails', 'EventLongDetailsRecurrence', 'EventLongDetailsRecurrenceRecurDaily', 'EventLongDetailsRecurrenceRecurWeekly', 'EventResourceEnum', 'EventResourceEnum1', 'EventThresholdBody', 'EventThresholdBodyEventName', 'EventTypeEnum', 'EventTypeEnum1', 'ExecuteCommandArguments', 'ExecuteCommandBody', 'ExecuteCommandBodyBooking', 'ExecuteCommandBodyBookingOrganizer', 'ExecuteCommandBodyBookingTime', 'ExecuteCommandResponse', 'ExtensionStatusObject', 'ExtensionStatusObjectState', 'ExtentionStatusObject', 'FailureDetails3', 'FeatureAccessCode', 'FeatureReferenceObject', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse', 'FieldValidationError', 'File', 'File1', 'FileExternalContent', 'FileType', 'Floor', 'FloorCollectionResponse', 'FloorCreationRequest', 'GeneratePasswordPostResponse', 'GetAgentsStatisticsInterval', 'GetAnnouncementFileInfo', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantCallForwardSettingsObject', 'GetAutoAttendantObject', 'GetAutoAttendantObject1', 'GetAutoAttendantObject2', 'GetAutoAttendantObjectExtensionDialing', 'GetAutoTransferNumberObject', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallParksResponse1', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableAgentsFromCallPickupsResponse1', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetBreakoutSessionObject', 'GetBreakoutSessionsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallParkExtensionObject', 'GetCallParkExtensionObject1', 'GetCallParkObject', 'GetCallParkObject1', 'GetCallParkSettingsObject', 'GetCallPickupObject', 'GetCallPickupObject1', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObject1', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject', 'GetCallQueueObject1', 'GetCallQueueObject2', 'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject', 'GetCallQueueStrandedCallsObjectAction', 'GetCallRecordingObject', 'GetCallRecordingTermsOfServiceObject', 'GetCallingBehaviorObject', 'GetCallingBehaviorObjectBehaviorType', 'GetCallingBehaviorObjectEffectiveBehaviorType', 'GetComplianceAnnouncementObject', 'GetComplianceAnnouncementObject1', 'GetDetailsForAReceptionistContactDirectoryResponse', 'GetEntityThresholdConfig1', 'GetEvent', 'GetEventThresholdResponse', 'GetGroupResponse', 'GetGroupResponseMembers', 'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group', 'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetHuntGroupObject1', 'GetHuntGroupObject2', 'GetHuntGroupObject3', 'GetLineKeyTemplateResponse', 'GetLocalGatewayDialPlanUsageForATrunkResponse', 'GetLocationAccessCodeObject', 'GetLocationAccessCodeObjectAccessCodes', 'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo', 'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetLocationInterceptObject', 'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements', 'GetLocationInterceptObjectIncomingType', 'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObject1', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectMessageStorage', 'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications', 'GetLocationVoicemailObject', 'GetMeetingConfigurationCommonSettingObject', 'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions', 'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsEntryAndExitTone', 'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsTelephonySupport', 'GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions', 'GetMeetingConfigurationCommonSettingObjectSecurityOptions', 'GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria', 'GetMeetingConfigurationCommonSettingObjectSiteOptions', 'GetMeetingConfigurationCommonSettingObjectTelephonyConfig', 'GetMeetingSurveyLinksResponse', 'GetMemberResponse', 'GetMemberResponse1', 'GetMonitoredElementsObject', 'GetMonitoredElementsObject1', 'GetMonitoredElementsObjectCallparkextension', 'GetMonitoredElementsObjectCallparkextension1', 'GetMonitoredElementsObjectMember', 'GetMonitoredElementsObjectMember1', 'GetMusicOnHoldObject', 'GetMusicOnHoldObject2', 'GetMusicOnHoldObjectGreeting2', 'GetNumbers', 'GetNumbers1', 'GetNumbersPhoneNumbers', 'GetNumbersPhoneNumbers1', 'GetOrgComplianceAnnouncementObject', 'GetPagingGroupAgentObject', 'GetPagingGroupAgentObject1', 'GetPagingGroupAgentObject2', 'GetPagingGroupObject', 'GetPagingGroupObject1', 'GetPagingGroupObject2', 'GetPersonOrWorkspaceDetailsObject', 'GetPersonPlaceObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObject1', 'GetPersonPlaceVirtualLineCallParksObjectType', 'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject1', 'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObject1', 'GetPersonPlaceVirtualLineHuntGroupObject1', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse1', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse2', 'GetPrivateNetworkConnectObject', 'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetRecordingAuditReportDetailsResponse', 'GetRouteGroupsUsingTheLocalGatewayResponse', 'GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType', 'GetSharedLineMemberItem', 'GetSharedLineMemberItem1', 'GetSharedLineMemberList', 'GetSharedLineMemberList1', 'GetTelephonyLocationObject', 'GetTelephonyLocationObjectCallingLineId', 'GetThirdPartyDeviceObject', 'GetTrackingCodeForUserObject', 'GetTrackingCodeItemForUserObject', 'GetTrackingCodeObject', 'GetTrackingCodeObjectHostProfileCode', 'GetTrackingCodeObjectInputMode', 'GetTrackingCodesObject', 'GetUserNumberItemObject', 'GetUserNumberItemObject2', 'GetUserResponse', 'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'GetVoicePortalObject', 'GetVoicePortalPasscodeRuleObject', 'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicemailGroupObject', 'GetVoicemailGroupObject1', 'GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes', 'GetVoicemailRulesObjectDefaultVoicemailPinRules', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode', 'GetVoicemailSettingsObject', 'GroupMemberObject', 'GroupMemberResponse', 'GroupMemberResponseMembers', 'GroupResponse', 'Groups', 'GroupsCollectionResponse', 'HistoricalDataRelatedToMeetingsResponse', 'HistoricalDataRelatedToMeetingsResponseMetrics', 'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods', 'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation', 'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByRoles', 'HistoricalDataRelatedToMessagingResponse', 'HistoricalDataRelatedToMessagingResponseMetrics', 'HistoricalDataRelatedToMessagingResponseMetricsSharing', 'HistoricalDataRelatedToRoomDevicesResponse', 'HistoricalDataRelatedToRoomDevicesResponseMetrics', 'HistoricalDataRelatedToRoomDevicesResponseMetricsSharing', 'HostedAgent', 'HostedFeature', 'HotelingRequest', 'HoursMenuGetObject', 'HoursMenuObject', 'HoursMenuObject1', 'HoursMenuObjectGreeting', 'HttpProxyObject', 'HttpProxyObjectMode', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'HydraClassification', 'IdentityManagedOrg', 'InProgressDevice', 'InProgressParticipant', 'InProgressParticipantState', 'IncomingPermissionSetting', 'IncomingPermissionSettingExternalTransfer', 'InternalDialingGet', 'InternalDialingPut', 'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting', 'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject', 'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'Issue', 'IssueStatus', 'IssueType', 'IssuesCollectionResponse', 'ItemObject', 'JobDetailsResponse', 'JobDetailsResponseById', 'JobExecutionStatus', 'JobExecutionStatus1', 'JobExecutionStatusObject', 'JobExecutionStatusObject11', 'JobListResponse', 'JobListResponse1', 'JoinMeetingLinkObject', 'JoinMeetingObject', 'JoinMeetingObject1', 'KemModuleTypeObject', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction', 'KeyConfigurationsObjectKey', 'LdapObject', 'License', 'LicenseCollectionResponse', 'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation', 'LicenseSiteType', 'LicenseWithUsers', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineKeyTemplatesResponse', 'LineKeyType', 'LineType', 'Link', 'Link1', 'ListAnswersOfAQuestionResponse', 'ListApplicationUsageOrderBy', 'ListApplicationsType', 'ListAutoAttendantObject', 'ListAutoAttendantObject1', 'ListAutoAttendantObject2', 'ListCPCallParkExtensionObject', 'ListCPCallParkExtensionObject1', 'ListCallHistoryResponse', 'ListCallMembershipsCallStatus', 'ListCallMembershipsIsHost', 'ListCallParkExtensionObject', 'ListCallParkExtensionObject1', 'ListCallQueueObject', 'ListCallQueueObject1', 'ListCallQueueObject2', 'ListCallsResponse', 'ListCapturesQuery', 'ListCapturesResponse', 'ListDectDeviceType', 'ListDeviceSettingsObject', 'ListDevicesProduct', 'ListDevicesType', 'ListEventThresholdConfigurationEventName', 'ListEventThresholdConfigurationEventScope', 'ListLocationObject', 'ListLocationsWebexCallingDetailsResponse', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType', 'ListMeetingArchiveSummariesResponse', 'ListMeetingAttendeeReportsResponse', 'ListMeetingChatsResponse', 'ListMeetingClosedCaptionSnippetsResponse', 'ListMeetingClosedCaptionsResponse', 'ListMeetingInterpretersResponse', 'ListMeetingParticipantsResponse', 'ListMeetingParticipantsResponse1', 'ListMeetingQAndAResponse', 'ListMeetingRegistrantsResponse', 'ListMeetingRegistrantsResponse1', 'ListMeetingSessionTypesResponse', 'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse', 'ListMeetingTranscriptsResponse', 'ListMeetingUsageReportsResponse', 'ListMeetingsOfAMeetingSeriesMeetingType', 'ListMeetingsOfAMeetingSeriesResponse', 'ListMeetingsOfAMeetingSeriesResponse1', 'ListMeetingsOfAMeetingSeriesState', 'ListMeetingsResponse', 'ListMeetingsResponse1', 'ListMessage', 'ListMessageCollectionResponse', 'ListNumbersAssociatedWithASpecificWorkspaceResponse', 'ListNumbersAssociatedWithASpecificWorkspaceResponse1', 'ListOfRecordingAuditReportSummariesResponse', 'ListPagingGroupObject', 'ListPagingGroupObject1', 'ListPoliciesType', 'ListRecordingsResponse', 'ListRecordingsStatus', 'ListReport', 'ListReport2', 'ListRoomsSortBy', 'ListScheduleObject', 'ListSiteSessionTypesResponse', 'ListSnippetsOfAMeetingTranscriptResponse', 'ListUserSessionTypeResponse', 'ListVirtualLineObject', 'ListVirtualLineObject1', 'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVoicemailgroupResponse', 'ListVoicemailgroupResponse1', 'ListWholesaleBillingReportsSortBy', 'LocalGatewayUsageCount', 'LocalGateways', 'Location', 'Location5', 'Location8', 'LocationUsageGetResponse', 'LocationsCollectionResponse', 'MACAddressResponse', 'MacStatusObject', 'MacStatusObjectState', 'ManagedByObject', 'ManagedByObject1', 'ManagedGroupObject', 'ManagedOrgsResponse', 'ManagedSitesObject', 'ManagerResponseObject', 'ManufacturerObject', 'MediaHealthMonitoringClusters', 'MediaHealthMonitoringForFirstCluster', 'MediaHealthMonitoringResultsCollectionForOrganization', 'MediaHealthMonitoringResultsForOrganization', 'MediaHealthMonitoringSecondNode', 'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringTestResultsSuccess', 'MediaSessionQuality', 'MediaSessionQuality1', 'MediaSessionQualityNetworkType', 'MediaSignallingTestResultFailure', 'MediaSignallingTestResultSuccess', 'MediaType', 'MeetingAttendeeReportObject', 'MeetingPreferenceObject', 'MeetingPreferenceObjectAudio', 'MeetingPreferenceObjectAudioDefaultAudioType', 'MeetingPreferenceObjectAudioOfficeNumber', 'MeetingPreferenceObjectPersonalMeetingRoom', 'MeetingPreferenceObjectPersonalMeetingRoomCoHosts', 'MeetingPreferenceObjectPersonalMeetingRoomTelephony', 'MeetingPreferenceObjectPersonalMeetingRoomTelephonyCallInNumbers', 'MeetingPreferenceObjectPersonalMeetingRoomTelephonyCallInNumbersTollType', 'MeetingPreferenceObjectSites', 'MeetingPreferenceObjectVideo', 'MeetingPreferenceObjectVideoVideoDevices', 'MeetingQualitiesResponse', 'MeetingRecordingArchiveChat', 'MeetingRecordingArchiveParticipant', 'MeetingRecordingArchivePoll', 'MeetingRecordingArchivePollAnswerSummary', 'MeetingRecordingArchivePollContent', 'MeetingRecordingArchivePollQuestion', 'MeetingRecordingArchivePollQuestionQuestion', 'MeetingRecordingArchivePollRespondent', 'MeetingRecordingArchiveQA', 'MeetingRecordingArchiveQAAnswer', 'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser', 'MeetingSeriesObject', 'MeetingSeriesObject1', 'MeetingSeriesObjectAttendeePrivileges', 'MeetingSeriesObjectAudioConnectionOptions', 'MeetingSeriesObjectAudioConnectionOptionsAudioConnectionType', 'MeetingSeriesObjectAudioConnectionOptionsEntryAndExitTone', 'MeetingSeriesObjectForListMeeting', 'MeetingSeriesObjectForListMeeting1', 'MeetingSeriesObjectMeetingOptions', 'MeetingSeriesObjectMeetingOptionsNoteType', 'MeetingSeriesObjectMeetingType', 'MeetingSeriesObjectRegistration', 'MeetingSeriesObjectScheduledType', 'MeetingSeriesObjectSimultaneousInterpretation', 'MeetingSeriesObjectState', 'MeetingSeriesObjectTelephony', 'MeetingSeriesObjectUnlockedMeetingJoinSecurity', 'MeetingSeriesObjectWithAdhoc', 'MeetingSeriesObjectWithAdhoc1', 'MeetingSeriesObjectWithAdhocRegistration', 'MeetingSessionTypeObject', 'MeetingSessionTypeObjectType', 'MeetingTrackingCodesObject', 'MeetingUsageReportObject', 'MeetingUsageReportObjectScheduledType', 'MeetingUsageReportObjectServiceType', 'MeetingUsageReportTrackingCodeObject', 'Member', 'MemberObject', 'MemberObject1', 'MemberType', 'Membership', 'MembershipCollectionResponse', 'Message', 'Message1', 'MessageCollectionResponse', 'MessageCollectionResponse1', 'Meta', 'Meta1', 'MetaObject', 'MetaObjectResourceType', 'ModifyAutoAttendantCallForwardSelectiveRuleObject', 'ModifyAutoAttendantCallForwardSettingsObject', 'ModifyAutoAttendantObject', 'ModifyAutoAttendantObject1', 'ModifyCallExtensionParkObject', 'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding', 'ModifyCallParkObject', 'ModifyCallParkSettingsObject', 'ModifyCallPickupObject', 'ModifyCallQueueHolidayObject', 'ModifyCallQueueObject', 'ModifyCallQueueObject1', 'ModifyCallRecordingSettingsObject', 'ModifyCallRecordingTermsOfServiceObject', 'ModifyDeviceTagsOp', 'ModifyHuntGroupObject', 'ModifyHuntGroupObject1', 'ModifyHuntGroupObject2', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceVirtualLineCallQueueObject', 'ModifyPlaceCallForwardSettings', 'ModifyPlaceCallerIdGet', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject', 'ModifyScheduleObject', 'MonitoredElementItem', 'MonitoredElementItem1', 'MonitoredElementUser', 'MonitoredElementUser1', 'MonitoringSettings', 'MonitoringSettings1', 'MonitoringSettingsPut', 'MoveUsersErrorResponse', 'MoveUsersStartJobObject', 'MoveUsersStartJobResponse', 'MoveUsersValidationResponse', 'MppAudioCodecPriorityObject', 'MppObject', 'MppObjectDevice', 'MppVlanObject', 'NameObject', 'NetworkConnectivityType', 'NodeAvailability', 'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status', 'NodesAvailability', 'NoiseCancellationObject', 'Number', 'NumberItem', 'NumberListGetObject', 'NumberListGetObject1', 'NumberListGetObject2', 'NumberListGetObjectOwner', 'NumberState', 'NumberStatus', 'NumbersDelete', 'NumbersPost', 'OnboardingMethodObject', 'Option', 'OptionsForTrackingCodeObject', 'OrderListResponse', 'OrderRequest', 'OrderRequestLineItem', 'OrderResponse', 'OrderResponseLineItem', 'OrderShippingDetails', 'Organization2', 'Organization3', 'Organization4', 'OrganizationCollectionResponse', 'OrganizationCollectionResponse1', 'OrganizationCollectionResponse2', 'OrganizationSupportedContentType', 'OrganizationsSpaceClassificationCollectionResponse', 'OriginatorType', 'OutgoingCallingPermissionsSetting', 'OverflowDetails1', 'OverflowToCloud', 'OverflowToCloudCollection', 'Package', 'PackageName', 'PackageStatus', 'ParkResponse', 'Participant', 'Participant1', 'ParticipantID', 'ParticipantState', 'PartnerAdminUser', 'PartnerAdminsForOrgResponse', 'PartyInformation', 'PasswordGenerate', 'PatchCallQueueNightServiceObject', 'PatchCallingBehaviorObject', 'PatchGroup', 'PatchGroup1', 'PatchGroupOperations', 'PatchMemberWithOperation', 'PatchMemberWithOperationOperation', 'PatchUserLicenses', 'PbxUser', 'PerClusterConnectivityResult1', 'PerNodeConnectivityResult1', 'Person', 'Person1', 'PersonAddresses', 'PersonCollectionResponse', 'PersonId', 'PersonInvitePending', 'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonStatus', 'PersonType', 'PhoneLanguage', 'PhoneNumber', 'PhotoObject', 'PhotoObjectType', 'PlaceCallerIdGet', 'PoeMode', 'Policy', 'PolicyCollectionResponse', 'PolicyType', 'Poll', 'PollCollectionResponse', 'PollResult', 'PollResultCollectionResponse', 'PostApplyLineKeyTemplateRequest', 'PostApplyLineKeyTemplateRequestAction', 'PostCommonLocationObject', 'PostGroup', 'PostGroup1', 'PostGroupUrnscimschemasextensionciscowebexidentity20Group', 'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostLineKeyTemplateRequest', 'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest', 'PostLocationCallingRequestAddress', 'PostLocationVoicemailGroupObject', 'PostPagingGroupObject', 'PostPersonPlaceObject', 'PostPersonPlaceVirtualLineCallQueueObject', 'PostScheduleObject', 'PostUser', 'PostUserUrnietfparamsscimschemasextensionenterprise20User', 'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PostValidateExtensionResponse', 'PrecheckABroadworksSubscriberProvisioningCustomerInfo', 'PrecheckAWholesaleCustomerProvisioningCustomerInfo', 'PreviewApplyLinekeyTemplateResponse', 'PrivacyGet', 'PrivacyGet1', 'ProgrammableLineKeys', 'ProvisionAWholesaleCustomerCustomerInfo', 'ProvisionAWholesaleCustomerProvisioningParameters', 'ProvisionAWholesaleCustomerProvisioningParametersCalling', 'ProvisionAWholesaleCustomerProvisioningParametersCallingLocation', 'ProvisionAWholesaleCustomerProvisioningParametersMeetings', 'ProvisionAWholesaleSubscriberProvisioningParameters', 'PskObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'PushToTalkInfo1', 'PushToTalkPut', 'PutAccessCodeLocationObject', 'PutAgentCallQueueId', 'PutCommonLocationObject', 'PutDeviceSettingsRequest', 'PutEvent', 'PutLineKeyTemplateRequest', 'PutLocationCallBackNumberObject', 'PutLocationVoicemailGroupObject', 'PutMemberObject', 'PutMembersRequest', 'PutMusicOnHoldObject', 'PutPersonOrWorkspaceDetailsObject', 'PutRecallHuntGroupObject', 'PutSharedLineMemberItem', 'PutSharedLineMemberList', 'PutTelephonyLocationObject', 'PutThirdPartyDevice', 'PutUser', 'PutUserPhoneNumbers', 'PutVoicePortalObject', 'PutVoicePortalObjectPasscode', 'PutVoicemailRulesObject', 'QAObject', 'QAObjectAnswers', 'QueryRegistrants', 'QueryRegistrantsOrderBy', 'QueryRegistrantsOrderType', 'QueryStatusResponse', 'QueryStatusResponseResult', 'QueryStatusResponseResultAudio', 'Question', 'QuestionObject', 'QuestionObjectType', 'QuestionOptionObject', 'QuestionResult', 'QuestionType', 'QuestionWithAnswersObject', 'QueueStats', 'QueueStatsResponse', 'RawMetric', 'ReachabilityTestResults', 'ReachabilityTestResultsDestinationCluster', 'ReachabilityTestResultsFirstNode', 'ReachabilityTestResultsForCluster1', 'ReachabilityTestResultsForFirstCluster', 'ReachabilityTestResultsForOrganization', 'ReachabilityTestResultsStunResults1', 'ReachabilityTestResultsSuccess', 'ReadListOfReceptionistContactDirectoriesResponse', 'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfAnnouncementLanguagesResponse', 'ReadTheListOfAutoAttendantsResponse', 'ReadTheListOfAutoAttendantsResponse1', 'ReadTheListOfAutoAttendantsResponse2', 'ReadTheListOfCallParkExtensionsResponse', 'ReadTheListOfCallParkExtensionsResponse1', 'ReadTheListOfCallParksResponse', 'ReadTheListOfCallPickupsResponse', 'ReadTheListOfCallQueueAnnouncementFilesResponse', 'ReadTheListOfCallQueuesResponse', 'ReadTheListOfCallQueuesResponse1', 'ReadTheListOfCallQueuesResponse2', 'ReadTheListOfDialPatternsResponse', 'ReadTheListOfDialPlansResponse', 'ReadTheListOfHuntGroupsResponse', 'ReadTheListOfHuntGroupsResponse1', 'ReadTheListOfHuntGroupsResponse2', 'ReadTheListOfLineKeyTemplatesResponse', 'ReadTheListOfPagingGroupsResponse', 'ReadTheListOfPagingGroupsResponse1', 'ReadTheListOfPagingGroupsResponse2', 'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingChoicesResponse', 'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfSchedulesResponse', 'ReadTheListOfTrunksResponse', 'ReadTheListOfUcManagerProfilesResponse', 'ReadTheListOfVirtualLinesResponse', 'ReadTheListOfVirtualLinesResponse1', 'ReadTheRouteListsOfARoutingGroupResponse', 'ReadTheUsageOfARoutingGroupResponse', 'ReassignMeetingErrorDescriptionObject', 'ReassignMeetingRequestObject', 'ReassignMeetingResponseObject', 'ReassignMeetingsToANewHostResponse', 'RecallInformation', 'RecallTypeEnum', 'ReceptionInfo', 'ReceptionInfo1', 'ReceptionPut', 'Recording', 'RecordingAchriveSummaryObject', 'RecordingArchiveReportObject', 'RecordingObject', 'RecordingObjectFormat', 'RecordingObjectWithDirectDownloadLinks', 'RecordingObjectWithDirectDownloadLinksStatus', 'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks', 'RecordingReportObject', 'RecordingReportSummaryObject', 'RecordingStateEnum', 'RecordingStatus', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject', 'RecurYearlyByDayObjectDay', 'RecurYearlyByDayObjectWeek', 'RecurrenceObject', 'RedirectCollectionForOrg', 'RedirectForOrg', 'RedirectTrend1', 'RedirectionInformation', 'RedirectionReasonEnum', 'Registrant', 'Registrant1', 'RegistrantCreateResponse', 'RegistrantFormObject', 'RegistrantStatus', 'Registration', 'RegistrationForUpdate', 'RejectActionEnum', 'Report', 'Report1', 'Report3', 'ReportCollectionResponse', 'ReportError', 'ReportId2', 'ReportIdType', 'ReportStatus', 'ResourceDetails', 'ResourceGroup', 'ResourceGroupCollectionResponse', 'ResourceGroupMembership', 'ResourceGroupMembershipCollectionResponse', 'ResourceGroupMembershipStatus', 'ResourceURL', 'Resources', 'Respondent', 'RespondentCollectionResponse', 'RespondentsReferenceLinks', 'ResponseStatus', 'ResponseStatusType', 'RetrieveExecutiveAssistantSettingsForAPersonResponse', 'RetrieveExecutiveAssistantSettingsForAPersonResponseType', 'RingPatternObject', 'RoleCollectionResponse', 'RoleObject', 'RoleObjectType', 'Room', 'RoomCollectionResponse', 'RoomMeetingDetails', 'RoomTab', 'RoomTabsCollectionResponse', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteIdentity', 'RouteList', 'RouteListGet', 'RouteListNumberListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteListPatch', 'RouteListPost', 'RouteType', 'ScheduleCollectionRequest', 'ScheduleCollectionResponse', 'ScheduleLongDetails', 'ScheduleShortDetails', 'ScheduleStartCodeObject', 'ScheduleStartCodeObjectService', 'ScheduleStartCodeObjectType', 'ScheduleUpdateRequest', 'ScheduledMeetingObject', 'ScheduledMeetingObject1', 'SchedulingOptionsObject', 'SearchGroupResponse', 'SearchMemberObject', 'SearchMemberResponse', 'SearchResponse', 'SearchUserResponse', 'SecurityAuditEvent', 'SecurityAuditEventCollectionResponse', 'SecurityAuditEventData', 'SelectionType', 'ServiceType', 'ServiceTypeResult2', 'ServiceTypeResult4', 'SessionType', 'SingleNodeAvailability', 'SingleNodeAvailability1', 'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'SipAddressObject', 'SipAddressObjectType', 'SiteResponse', 'SiteResponseAccountType', 'SiteSessionType', 'SiteSessionTypeType', 'SiteUrlsRequest', 'SiteUrlsRequestAccountType', 'SitesObject', 'SkillCreateRequest', 'SkillCreateRequestLanguages', 'SkillCreateResponse', 'SnippetObject', 'SnippetObject1', 'SnmpObject', 'SoftKeyLayoutObject', 'SoftKeyMenuObject', 'StandardRegistrationApproveRule', 'StandardRegistrationApproveRuleQuestion', 'StartJobExecutionStatusObject', 'StartJobResponse', 'StartJobResponseObject', 'State', 'StatusOfExtensionsObject', 'StepExecutionStatuses', 'SubPartner', 'SubPartnerProvisioningState', 'SubPartnersListResponse', 'SubmitCardAction', 'SubmitCardActionInputs', 'SubmitCardActionResponse', 'Subscriber', 'Subscriber1', 'Subscriber2', 'SubscriberListResponse', 'SubscriberListResponse1', 'SubscriberListResponse2', 'SubscriberPackage', 'SubscriberPackage2', 'SubscriberProvisioningPrecheckResponse', 'SubscriberProvisioningPrecheckResponseInfo', 'SubscriberStatus', 'SubscriberStatus2', 'SubscriptionTagsResponse', 'SupportAndConfiguredInfo', 'SupportedDevicesObject', 'SurveyLinkObject', 'SurveyLinkRequestObject', 'SurveyObject', 'SurveyResultObject', 'SystemInfoCatalog', 'TagsObj', 'TagsRequest', 'Task', 'TaskAttributes', 'TaskAttributesStatus', 'TaskWithCaptures', 'TasksResponse', 'TasksValidationError', 'Team', 'TeamCollectionResponse', 'TeamMembership', 'TeamMembershipCollectionResponse', 'TelephonyType', 'Template', 'Template2', 'TemplateCollectionResponse', 'TemplateObject', 'TemplateTemplateType', 'TestCallRoutingPostResponse', 'TranscriptObject', 'TranscriptObjectStatus', 'TriggerDirectorySyncResponse', 'TriggerDirectorySyncResponseDirectorySyncStatus', 'TriggerOnDemandBody', 'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggerUserDirectorySyncResponse', 'TriggerUserDirectorySyncResponseStatus', 'TriggerUserDirectorySyncResponseUserResponse', 'TriggeredTestResult', 'TriggeredTestStatus1', 'Trunk', 'TrunkFQDNValidatePost', 'TrunkGet', 'TrunkPost', 'TrunkPut', 'TrunkType', 'TrunkTypeGetList', 'TrunkTypeWithDeviceType', 'TypeObject', 'UnknownExtensionRouteIdentity', 'UpdateAWholesaleSubscriberProvisioningParameters', 'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds', 'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UpdateInterpreterObject', 'UpdateInviteeObject', 'UpdateMeetingBreakoutSessionsObject', 'UpdateMeetingConfigurationCommonSettingObject', 'UpdateMeetingObject', 'UpdateMeetingObject1', 'UpdatePMRObject', 'UpdatePagingGroupObject', 'UpdatePagingGroupObject1', 'UpdateSnippetObject', 'UpdateTrackingCodeForUserObject', 'UpdateUserSessionType', 'UsbPortsObject', 'UserHotelingRequestPatch', 'UserItem', 'UserLicensesResponse', 'UserListItem', 'UserMonitoringGet', 'UserMonitoringGet1', 'UserNumberItem', 'UserNumberItem1', 'UserNumbersPatch', 'UserPlaceAuthorizationCodeListGet', 'UserSessionTypes', 'UserTypeObject', 'Users', 'UsersListItem', 'UtilizationMetricsT1SJ', 'ValidateMACRequest', 'ValidateNumbersResponse', 'ValidationRules', 'ValidationRulesCollection', 'VideoIn', 'VideoIn1', 'VideoInTransportType', 'VirtualExtension', 'VirtualExtensionRange', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'VoicemailInfo', 'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls', 'VoicemailInfoTransferToNumber', 'VoicemailPut', 'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls', 'VolumeSettingsObject', 'WebAccessObject', 'WebSocketConnectivityTest', 'Webhook', 'WebhookCollectionResponse', 'WebhookEvent', 'WebhookResource', 'WebhookStatus', 'WholesaleBillingReportsListResponse', 'WifiNetworkObject', 'WifiObject', 'WifiObjectDevice', 'Workspace3', 'WorkspaceCalendar', 'WorkspaceCalendarType', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType', 'WorkspaceCollectionResponse', 'WorkspaceCreationRequest', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling', 'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceDeviceHostedMeetings', 'WorkspaceDurationMetricsResponse', 'WorkspaceDurationMetricsResponseAggregation', 'WorkspaceDurationMetricsResponseMeasurement', 'WorkspaceHotdeskingStatus', 'WorkspaceLocationsCollectionResponse', 'WorkspaceLocationsCreationRequest', 'WorkspaceMetricsResponse', 'WorkspaceMetricsResponseAggregation', 'WorkspaceMetricsResponseMetricName', 'WorkspaceMetricsResponseSortBy', 'WorkspaceMetricsResponseUnit', 'WorkspacePersonalizationRequest', 'WorkspacePersonalizationTaskResponse', 'WorkspaceResponse', 'WorkspaceSupportedDevices', 'WorkspaceType', 'WorkspaceType1', 'WorkspaceUpdateRequest', 'WorkspaceUpdateRequestType']
+__auto__ = ['AcdObject', 'Action', 'ActivationCode', 'ActivationStates', 'ActivityList', 'ActivityListDatasetMetadata',
+            'AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'AddDECTHandset', 'Address',
+            'AddressAgentHuntGroupObject', 'AdminBatchStartJobObject',
+            'AdminBatchStartJobObjectLocationCustomizations', 'AdmitParticipant', 'AdmitParticipantsObject',
+            'AdmitParticipantsObject1', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentAvaliableCallQueueIdList',
+            'AgentAvaliableCallQueueIdList1', 'AgentCallQueueId', 'AgentCallQueueId1', 'AgentCallerId',
+            'AgentCallerIdType', 'AgentChannelType', 'AgentCurrentState', 'AgentSession', 'AgentStats',
+            'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'AggregatedMetric', 'Alarm',
+            'AlarmCollection', 'AlarmSeverity', 'AlternateNumbersObject', 'AlternateNumbersObjectRingPattern',
+            'AlternateNumbersWithPattern', 'AnalyzeEntitiesDocument', 'AnnouncementAudioFileGet',
+            'AnnouncementAudioFileGetLevel', 'AnnouncementResponse', 'AnnouncementUsageResponse',
+            'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'AnswerForCustomizedQuestion',
+            'AnswerObject', 'AnswerSummaryItem', 'Application', 'ApplicationOrgSubmissionStatus',
+            'ApplicationSubmissionStatus', 'ApplicationType', 'ApplicationUsage',
+            'ApplicationUsageCollectionResponse', 'ApplicationUsagePolicyAction', 'ApplicationsCollectionResponse',
+            'ApplicationsSetting', 'ApplicationsSettingPut', 'ApplyLineKeyTemplateJobDetails',
+            'ApplyLineKeyTemplateJobErrors', 'ApplyLineKeyTemplateJobList', 'ArrayOfExtensionsObject', 'Artifact',
+            'ArtifactAttributes', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'Attachment',
+            'Attachment1', 'AttachmentAction', 'AttachmentActivity', 'AttachmentActivityType',
+            'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileGetObject',
+            'AudioAnnouncementFileGetObject1', 'AudioAnnouncementFileGetObjectLevel',
+            'AudioAnnouncementFileGetObjectMediaFileType1', 'AudioCodecPriorityObject', 'AudioFileObject',
+            'AudioFileObjectMediaType', 'AudioIn', 'AudioInType', 'AuditEvent', 'AuditEvent1',
+            'AuditEventCategoryCollectionResponse', 'AuditEventCollectionResponse', 'AuditEventCollectionResponse1',
+            'AuditEventData', 'AuditEventData1', 'AuthenticationMethodObject', 'Authorization', 'AuthorizationCode',
+            'AuthorizationType', 'AuthorizationsCollectionResponse', 'AutoAttendantCallForwardSettingsDetailsObject',
+            'AutoAttendantCallForwardSettingsModifyDetailsObject', 'AvailableCallerIdList', 'AvailableCallerIdObject',
+            'AvailableMembersResponse', 'AvailableSharedLineMemberItem', 'AvailableSharedLineMemberItem1',
+            'AvailableSharedLineMemberList', 'AvailableSharedLineMemberList1', 'BackgroundImage',
+            'BackgroundImageColor', 'BacklightTimer68XX', 'BacklightTimerObject', 'BandwidthTest', 'BargeInInfo',
+            'BaseStationPostResult', 'BaseStationResponse', 'BaseStationsPostResponse', 'BatchJobError',
+            'BatchRefreshPMRIDObject', 'BatchRefreshPMRIDResponseObject', 'BatchRegisterMeetingRegistrantsResponse',
+            'BatchResponse', 'BatchUpdateMeetingRegistrantsStatusStatusOpType', 'BillingReportsListResponse',
+            'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BluetoothObject', 'BluetoothObjectMode',
+            'BreakoutSessionObject', 'BulkCreate', 'BulkCreateContacts', 'BulkDelete', 'BulkPurgeRecordingObject',
+            'BulkRestoreRecordingObject', 'BulkSoftDeleteRecordingObject', 'BulkUpdateEventThresholdResponse',
+            'BulkUser', 'BulkUserOperations', 'BulkUserOperationsMethod', 'CDR', 'CDRResponse', 'CLIDPolicySelection',
+            'Call', 'Call2', 'CallBackEffectiveLevel', 'CallBackQuality', 'CallBackSelected', 'CallBridgeInfo',
+            'CallForwardExpandedSoftKey', 'CallForwardRulesGet', 'CallForwardRulesModifyObject',
+            'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject',
+            'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsFromObjectSelection',
+            'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToNumbersObjectType',
+            'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject',
+            'CallForwardSelectiveForwardToObjectSelection', 'CallForwardSettingsGet',
+            'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
+            'CallForwardingInfo', 'CallForwardingInfoCallForwarding', 'CallForwardingInfoCallForwardingNoAnswer',
+            'CallForwardingPut', 'CallForwardingPutCallForwarding', 'CallForwardingPutCallForwardingNoAnswer',
+            'CallHistoryMethod', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallInterceptInfo',
+            'CallInterceptInfoIncoming', 'CallInterceptInfoIncomingAnnouncements', 'CallInterceptPut',
+            'CallInterceptPutIncoming', 'CallInterceptPutIncomingAnnouncements', 'CallMembership',
+            'CallMembershipAudio', 'CallMembershipCollectionResponse', 'CallMembershipStatus',
+            'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject',
+            'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueObject1',
+            'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage',
+            'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage',
+            'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
+            'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CallQueueQueueSettingsObject',
+            'CallQueueQueueSettingsObject1', 'CallQueueQueueSettingsObjectComfortMessage',
+            'CallQueueQueueSettingsObjectComfortMessageBypass', 'CallQueueQueueSettingsObjectMohMessage',
+            'CallQueueQueueSettingsObjectMohMessageNormalSource', 'CallQueueQueueSettingsObjectOverflow',
+            'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectWaitMessage',
+            'CallQueueQueueSettingsObjectWaitMessageWaitMode', 'CallQueueQueueSettingsObjectWelcomeMessage',
+            'CallRecordingInfo', 'CallRecordingInfo1', 'CallRecordingInfoNotification',
+            'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord', 'CallRecordingInfoRepeat',
+            'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPut', 'CallRecordingPut1', 'CallSourceInfo',
+            'CallSourceType', 'CallStateEnum', 'CallTypeEnum', 'CallerIdInfo', 'CallerIdPut', 'CallerIdSelectedType',
+            'CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType',
+            'CallsCollectionResponse', 'CallsQualitiesResponse', 'CapabilityMap', 'CapabilityResponse',
+            'CatalogListResponse', 'CatalogResponse', 'CatalogResponseAvailability', 'ChatObject', 'ChatObjectSender',
+            'ClientTypeDistributionTrend1', 'ClienttypedistributionCollectionforOrg', 'ClienttypedistributionforOrg',
+            'ClosedCaptionObject', 'CloudOverflowTrend1', 'Cluster', 'ClusterAvailability',
+            'ClusterAvailabilityCollection', 'ClusterAvailableTimeline', 'ClusterClientTypeDistributionBlr1',
+            'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterCollection', 'ClusterDetails',
+            'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a',
+            'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ',
+            'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization', 'CommSecurityType',
+            'ConferenceDetails', 'ConferenceParticipant', 'ConferenceStateEnum', 'ConferenceTypeEnum',
+            'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode',
+            'ConnectivityTestResultsObject', 'Connector', 'ConnectorCollection', 'ConnectorStatus', 'ConnectorType',
+            'Contact', 'ContactDetails', 'ContactEmails', 'ContactEmailsType', 'ContactIms', 'ContactImsType',
+            'ContactPayload', 'ContactPayloadForModify', 'ContactPhoneNumbers', 'ContactPhoneNumbersType',
+            'ContactPrimaryContactMethod', 'ContactResponse', 'ContactSipAddresses', 'ContactSipAddressesType',
+            'ContactSource', 'Control', 'CountObject', 'CountObject2', 'Counts', 'CreateADectNetworkResponse',
+            'CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'CreateCallQueueObject',
+            'CreateDECTNetwork', 'CreateDECTNetworkModel', 'CreateHuntGroupObject', 'CreateHuntGroupObject1',
+            'CreateHuntGroupObject2', 'CreateInvitationSourcesResponse', 'CreateInviteeObject',
+            'CreateInviteesItemObject', 'CreateInviteesItemResponseObject', 'CreateInviteesObject',
+            'CreateInviteesResponse', 'CreateMeetingObject', 'CreateMeetingObject1',
+            'CreateMeetingObjectRegistration', 'CreateMeetingObjectSimultaneousInterpretation',
+            'CreateOrUpdateTrackingCodeObject', 'Customer1', 'Customer2', 'CustomerActivity', 'CustomerCallDirection',
+            'CustomerCurrentState', 'CustomerListResponse', 'CustomerSession', 'CustomerSessionTerminatingEnd',
+            'CustomerSessionTerminationType', 'CustomerStatus', 'CustomerTagsResponse',
+            'CustomizationDeviceLevelObject', 'CustomizationDeviceLevelObjectDevice', 'CustomizationObject',
+            'CustomizedQuestionForCreateMeeting', 'CustomizedQuestionForCreateMeetingOptions',
+            'CustomizedQuestionForCreateMeetingRules', 'CustomizedQuestionForCreateMeetingRulesCondition',
+            'CustomizedQuestionForCreateMeetingRulesResult', 'CustomizedQuestionForCreateMeetingType',
+            'CustomizedQuestionForGetMeeting', 'CustomizedQuestionForGetMeetingRules', 'CustomizedRegistrant',
+            'DectDeviceList', 'DectObject', 'DectVlanObject', 'DefaultLoggingLevelObject', 'DefaultSiteObject',
+            'DeleteTranscriptObject', 'DepartmentCollectionRequest', 'DepartmentCollectionResponse',
+            'DepartmentResponse', 'DepartmentResponseDepartment', 'DepartmentResponseWithId', 'DestinationType',
+            'DetailedTemplateObject', 'DetailedTemplateObject1', 'DeveloperRegistrationGetResponse',
+            'DeveloperRegistrationUpdateRequest', 'Device', 'Device1', 'DeviceAudioType', 'DeviceCallType',
+            'DeviceCapabilities', 'DeviceCollectionResponse', 'DeviceConnectionStatus', 'DeviceList', 'DeviceObject',
+            'DeviceOwner', 'DevicePermissions', 'DeviceSettingsObject', 'DeviceSettingsObjectForDeviceLevel',
+            'DeviceStatus', 'DeviceType', 'DeviceType1', 'Devices', 'DialPattern', 'DialPatternPut',
+            'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidateResult', 'DialPlan', 'DialPlanGet',
+            'DialPlanPost', 'DialPlanPut', 'DialResponse', 'DirectMessage', 'DirectMessage1',
+            'DirectMessageCollectionResponse', 'DirectMessageCollectionResponse1', 'DirectoryMethod',
+            'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistributorDetailsResponse',
+            'DistributorDetailsResponseCapabilities', 'DistributorListResponse', 'DistributorResponse',
+            'DoNotDisturbInfo', 'DownloadMeetingClosedCaptionSnippetsFormat', 'DurationMetric', 'ECMFolder',
+            'ECMFolderCollectionResponse', 'ECMFolderRoomType', 'EmailObject', 'Emergency', 'EndpointIdType',
+            'EndpointInformation', 'Endpoints', 'EnterpriseListResponse', 'EnterpriseListResponse1',
+            'EnterpriseListResponse3', 'EnterpriseListResponseBroadworksDirectorySync',
+            'EnterpriseListResponseBroadworksDirectorySync1',
+            'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus',
+            'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus1',
+            'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors', 'Entity', 'EntityRecognition',
+            'Error1', 'Error3', 'ErrorMessage', 'ErrorOrImpactItem', 'ErrorResponseObject', 'Event', 'Event1',
+            'EventCollectionResponse', 'EventCollectionResponse1', 'EventData', 'EventData1', 'EventLongDetails',
+            'EventLongDetailsRecurrence', 'EventLongDetailsRecurrenceRecurDaily',
+            'EventLongDetailsRecurrenceRecurWeekly', 'EventResourceEnum', 'EventResourceEnum1', 'EventThresholdBody',
+            'EventThresholdBodyEventName', 'EventTypeEnum', 'EventTypeEnum1', 'ExecuteCommandArguments',
+            'ExecuteCommandBody', 'ExecuteCommandBodyBooking', 'ExecuteCommandBodyBookingOrganizer',
+            'ExecuteCommandBodyBookingTime', 'ExecuteCommandResponse', 'ExtensionStatusObject',
+            'ExtensionStatusObjectState', 'ExtentionStatusObject', 'ExternalCallerIdNumberListGet', 'FailureDetails3',
+            'FeatureAccessCode', 'FeatureReferenceObject',
+            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId',
+            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse', 'FieldValidationError', 'File',
+            'File1', 'FileExternalContent', 'FileType', 'Floor', 'FloorCollectionResponse', 'FloorCreationRequest',
+            'GeneratePasswordPostResponse', 'GetAgentsStatisticsInterval', 'GetAnnouncementFileInfo',
+            'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantCallForwardSettingsObject',
+            'GetAutoAttendantObject', 'GetAutoAttendantObject1', 'GetAutoAttendantObject2',
+            'GetAutoAttendantObjectExtensionDialing', 'GetAutoTransferNumberObject',
+            'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallParksResponse1',
+            'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableAgentsFromCallPickupsResponse1',
+            'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetBreakoutSessionObject',
+            'GetBreakoutSessionsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallParkExtensionObject',
+            'GetCallParkExtensionObject1', 'GetCallParkObject', 'GetCallParkObject1', 'GetCallParkSettingsObject',
+            'GetCallPickupObject', 'GetCallPickupObject1', 'GetCallPickupObject2',
+            'GetCallPickupObjectNotificationType', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObject1',
+            'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
+            'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
+            'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
+            'GetCallQueueObject1', 'GetCallQueueObject2', 'GetCallQueueObjectAlternateNumberSettings',
+            'GetCallQueueStrandedCallsObject', 'GetCallQueueStrandedCallsObjectAction', 'GetCallRecordingObject',
+            'GetCallRecordingTermsOfServiceObject', 'GetCallingBehaviorObject',
+            'GetCallingBehaviorObjectBehaviorType', 'GetCallingBehaviorObjectEffectiveBehaviorType',
+            'GetComplianceAnnouncementObject', 'GetComplianceAnnouncementObject1',
+            'GetDetailsForAReceptionistContactDirectoryResponse', 'GetEntityThresholdConfig1', 'GetEvent',
+            'GetEventThresholdResponse', 'GetGroupResponse', 'GetGroupResponseMembers',
+            'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group',
+            'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GetHuntGroupCallPolicyObject',
+            'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer',
+            'GetHuntGroupObject', 'GetHuntGroupObject1', 'GetHuntGroupObject2', 'GetHuntGroupObject3',
+            'GetHuntGroupObject4', 'GetLicenseDetailsIncludeAssignedTo', 'GetLineKeyTemplateResponse',
+            'GetLocalGatewayDialPlanUsageForATrunkResponse', 'GetLocationAccessCodeObject',
+            'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo',
+            'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetLocationInterceptObject',
+            'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements',
+            'GetLocationInterceptObjectIncomingType', 'GetLocationInterceptObjectOutgoing',
+            'GetLocationInterceptObjectOutgoingType', 'GetLocationOutgoingPermissionResponse',
+            'GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObject1',
+            'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage',
+            'GetLocationVoicemailGroupObjectMessageStorage',
+            'GetLocationVoicemailGroupObjectMessageStorageStorageType',
+            'GetLocationVoicemailGroupObjectNotifications', 'GetLocationVoicemailObject',
+            'GetMeetingConfigurationCommonSettingObject',
+            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions',
+            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsEntryAndExitTone',
+            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsTelephonySupport',
+            'GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions',
+            'GetMeetingConfigurationCommonSettingObjectSecurityOptions',
+            'GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria',
+            'GetMeetingConfigurationCommonSettingObjectSiteOptions',
+            'GetMeetingConfigurationCommonSettingObjectTelephonyConfig', 'GetMeetingSurveyLinksResponse',
+            'GetMemberResponse', 'GetMemberResponse1', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject',
+            'GetMonitoredElementsObject1', 'GetMonitoredElementsObjectCallparkextension',
+            'GetMonitoredElementsObjectCallparkextension1', 'GetMonitoredElementsObjectMember',
+            'GetMonitoredElementsObjectMember1', 'GetMusicOnHoldObject', 'GetMusicOnHoldObject1',
+            'GetMusicOnHoldObjectGreeting', 'GetNumbers', 'GetNumbers1', 'GetNumbersPhoneNumbers',
+            'GetNumbersPhoneNumbers1', 'GetOrgComplianceAnnouncementObject', 'GetPagingGroupAgentObject',
+            'GetPagingGroupAgentObject1', 'GetPagingGroupAgentObject2', 'GetPagingGroupObject',
+            'GetPagingGroupObject1', 'GetPagingGroupObject2', 'GetPersonOrWorkspaceDetailsObject',
+            'GetPersonPlaceObject', 'GetPersonPlaceVirtualLineCallParksObject',
+            'GetPersonPlaceVirtualLineCallParksObject1', 'GetPersonPlaceVirtualLineCallPickupObject',
+            'GetPersonPlaceVirtualLineCallPickupObject1', 'GetPersonPlaceVirtualLineCallQueueObject',
+            'GetPersonPlaceVirtualLineCallQueueObject1', 'GetPersonPlaceVirtualLineHuntGroupObject1',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse1', 'GetPrivateNetworkConnectObject',
+            'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetRecallHuntGroupObject',
+            'GetRecallHuntGroupObjectOption', 'GetRecordingAuditReportDetailsResponse',
+            'GetRouteGroupsUsingTheLocalGatewayResponse', 'GetScheduleEventObject', 'GetScheduleObject',
+            'GetScheduleObjectType', 'GetSharedLineMemberItem', 'GetSharedLineMemberItem1', 'GetSharedLineMemberList',
+            'GetSharedLineMemberList1', 'GetTelephonyLocationObject', 'GetTelephonyLocationObjectCallingLineId',
+            'GetTelephonyLocationObjectConnection', 'GetThirdPartyDeviceObject', 'GetTrackingCodeForUserObject',
+            'GetTrackingCodeItemForUserObject', 'GetTrackingCodeObject', 'GetTrackingCodeObjectHostProfileCode',
+            'GetTrackingCodeObjectInputMode', 'GetTrackingCodesObject', 'GetUserNumberItemObject',
+            'GetUserNumberItemObject2', 'GetUserResponse',
+            'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'GetVoicePortalObject',
+            'GetVoicePortalPasscodeRuleObject', 'GetVoicePortalPasscodeRuleObjectFailedAttempts',
+            'GetVoicemailGroupObject', 'GetVoicemailGroupObject1', 'GetVoicemailRulesObject',
+            'GetVoicemailRulesObjectBlockPreviousPasscodes', 'GetVoicemailRulesObjectDefaultVoicemailPinRules',
+            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences',
+            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits',
+            'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode',
+            'GetVoicemailSettingsObject', 'GroupMemberObject', 'GroupMemberResponse', 'GroupMemberResponseMembers',
+            'GroupResponse', 'Groups', 'GroupsCollectionResponse', 'HistoricalDataRelatedToMeetingsResponse',
+            'HistoricalDataRelatedToMeetingsResponseMetrics',
+            'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods',
+            'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation',
+            'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByRoles',
+            'HistoricalDataRelatedToMessagingResponse', 'HistoricalDataRelatedToMessagingResponseMetrics',
+            'HistoricalDataRelatedToMessagingResponseMetricsSharing', 'HistoricalDataRelatedToRoomDevicesResponse',
+            'HistoricalDataRelatedToRoomDevicesResponseMetrics',
+            'HistoricalDataRelatedToRoomDevicesResponseMetricsSharing', 'HostedAgent', 'HostedFeature', 'Hoteling',
+            'HoursMenuGetObject', 'HoursMenuObject', 'HoursMenuObject1', 'HoursMenuObjectGreeting', 'HttpProxyObject',
+            'HttpProxyObjectMode', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'HydraClassification',
+            'IdentityManagedOrg', 'InProgressDevice', 'InProgressParticipant', 'InProgressParticipantState',
+            'IncomingPermissionSetting', 'IncomingPermissionSettingExternalTransfer', 'InternalDialingGet',
+            'InternalDialingPut', 'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting',
+            'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject',
+            'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'Issue', 'IssueStatus', 'IssueType',
+            'IssuesCollectionResponse', 'ItemObject', 'JobDetailsResponse', 'JobDetailsResponseById',
+            'JobExecutionStatus', 'JobExecutionStatusObject', 'JobExecutionStatusObject1',
+            'JobExecutionStatusObject3', 'JobIdResponseObject', 'JobListResponse', 'JobListResponse2',
+            'JoinMeetingLinkObject', 'JoinMeetingObject', 'JoinMeetingObject1', 'JoinMeetingObject2',
+            'KemModuleTypeObject', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction',
+            'KeyConfigurationsObject', 'KeyConfigurationsObjectAction', 'KeyConfigurationsObjectKey', 'LdapObject',
+            'License', 'LicenseCollectionResponse', 'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation',
+            'LicenseSiteType', 'LicensewithUsers', 'LineKeyLEDPattern', 'LineKeyLabelSelection',
+            'LineKeyTemplatesResponse', 'LineKeyType', 'LineType', 'Link', 'Link1', 'ListAnswersOfAQuestionResponse',
+            'ListApplicationUsageOrderBy', 'ListApplicationsType', 'ListAutoAttendantObject',
+            'ListAutoAttendantObject1', 'ListAutoAttendantObject2', 'ListCPCallParkExtensionObject',
+            'ListCPCallParkExtensionObject1', 'ListCallHistoryResponse', 'ListCallMembershipsCallStatus',
+            'ListCallMembershipsIsHost', 'ListCallParkExtensionObject', 'ListCallParkExtensionObject1',
+            'ListCallQueueObject', 'ListCallQueueObject1', 'ListCallQueueObject2', 'ListCallsResponse',
+            'ListCapturesQuery', 'ListCapturesResponse', 'ListDectDeviceType', 'ListDeviceSettingsObject',
+            'ListDevicesProduct', 'ListDevicesType', 'ListEventThresholdConfigurationEventName',
+            'ListEventThresholdConfigurationEventScope', 'ListLocationObject',
+            'ListLocationsWebexCallingDetailsResponse', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType',
+            'ListMeetingArchiveSummariesResponse', 'ListMeetingAttendeeReportsResponse', 'ListMeetingChatsResponse',
+            'ListMeetingClosedCaptionSnippetsResponse', 'ListMeetingClosedCaptionsResponse',
+            'ListMeetingInterpretersResponse', 'ListMeetingParticipantsResponse', 'ListMeetingParticipantsResponse1',
+            'ListMeetingQAndAResponse', 'ListMeetingRegistrantsResponse', 'ListMeetingRegistrantsResponse1',
+            'ListMeetingSessionTypesResponse', 'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse',
+            'ListMeetingTranscriptsResponse', 'ListMeetingUsageReportsResponse',
+            'ListMeetingsOfAMeetingSeriesMeetingType', 'ListMeetingsOfAMeetingSeriesResponse',
+            'ListMeetingsOfAMeetingSeriesResponse1', 'ListMeetingsOfAMeetingSeriesState', 'ListMeetingsResponse',
+            'ListMeetingsResponse1', 'ListMessage', 'ListMessageCollectionResponse', 'ListMessagesResponse',
+            'ListNumbersAssociatedWithASpecificWorkspaceResponse',
+            'ListNumbersAssociatedWithASpecificWorkspaceResponse1', 'ListOfRecordingAuditReportSummariesResponse',
+            'ListPagingGroupObject', 'ListPagingGroupObject1', 'ListPoliciesType',
+            'ListRecordingsForAnAdminOrComplianceOfficerResponse', 'ListRecordingsFormat', 'ListRecordingsResponse',
+            'ListRecordingsStatus', 'ListReport', 'ListReport1', 'ListReportType', 'ListRoomsSortBy',
+            'ListScheduleObject', 'ListSiteSessionTypesResponse', 'ListSnippetsOfAMeetingTranscriptResponse',
+            'ListUserSessionTypeResponse', 'ListVirtualLineObject', 'ListVirtualLineObject1',
+            'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVoicemailgroupResponse',
+            'ListVoicemailgroupResponse1', 'ListWholesaleBillingReportsSortBy', 'LocalGatewayUsageCount',
+            'LocalGateways', 'Location', 'Location10', 'Location7', 'LocationUsageGetResponse',
+            'LocationsCollectionResponse', 'MACAddressResponse', 'MacStatusObject', 'MacStatusObjectState',
+            'ManagedBy', 'ManagedByObject', 'ManagedByObject1', 'ManagedGroupObject', 'ManagedOrgsResponse',
+            'ManagedSitesObject', 'ManagerResponseObject', 'ManufacturerObject',
+            'MediaHealthMonitoringResultsCollectionfororganization', 'MediaHealthMonitoringResultsforOrganization',
+            'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringTestResultsSuccess',
+            'MediaHealthMonitoringclusters', 'MediaHealthMonitoringforfirstcluster',
+            'MediaHealthMonitoringsecondnode', 'MediaSessionQuality', 'MediaSessionQuality1',
+            'MediaSessionQualityNetworkType', 'MediaSignallingtestResultFailure', 'MediaSignallingtestResultSuccess',
+            'MediaType', 'MeetingAttendeeReportObject', 'MeetingPreferenceObject', 'MeetingPreferenceObjectAudio',
+            'MeetingPreferenceObjectAudioDefaultAudioType', 'MeetingPreferenceObjectAudioOfficeNumber',
+            'MeetingPreferenceObjectPersonalMeetingRoom', 'MeetingPreferenceObjectPersonalMeetingRoomCoHosts',
+            'MeetingPreferenceObjectPersonalMeetingRoomTelephony',
+            'MeetingPreferenceObjectPersonalMeetingRoomTelephonyCallInNumbers',
+            'MeetingPreferenceObjectPersonalMeetingRoomTelephonyCallInNumbersTollType',
+            'MeetingPreferenceObjectSites', 'MeetingPreferenceObjectVideo',
+            'MeetingPreferenceObjectVideoVideoDevices', 'MeetingQualitiesResponse', 'MeetingRecordingArchiveChat',
+            'MeetingRecordingArchiveParticipant', 'MeetingRecordingArchivePoll',
+            'MeetingRecordingArchivePollAnswerSummary', 'MeetingRecordingArchivePollContent',
+            'MeetingRecordingArchivePollQuestion', 'MeetingRecordingArchivePollQuestionQuestion',
+            'MeetingRecordingArchivePollRespondent', 'MeetingRecordingArchiveQA', 'MeetingRecordingArchiveQAAnswer',
+            'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser', 'MeetingSeriesObject',
+            'MeetingSeriesObject1', 'MeetingSeriesObjectAttendeePrivileges',
+            'MeetingSeriesObjectAudioConnectionOptions',
+            'MeetingSeriesObjectAudioConnectionOptionsAudioConnectionType',
+            'MeetingSeriesObjectAudioConnectionOptionsEntryAndExitTone', 'MeetingSeriesObjectForListMeeting',
+            'MeetingSeriesObjectForListMeeting1', 'MeetingSeriesObjectMeetingOptions',
+            'MeetingSeriesObjectMeetingOptionsNoteType', 'MeetingSeriesObjectMeetingType',
+            'MeetingSeriesObjectRegistration', 'MeetingSeriesObjectScheduledType',
+            'MeetingSeriesObjectSimultaneousInterpretation', 'MeetingSeriesObjectState',
+            'MeetingSeriesObjectTelephony', 'MeetingSeriesObjectUnlockedMeetingJoinSecurity',
+            'MeetingSeriesObjectWithAdhoc', 'MeetingSeriesObjectWithAdhoc1',
+            'MeetingSeriesObjectWithAdhocRegistration', 'MeetingSessionTypeObject', 'MeetingSessionTypeObjectType',
+            'MeetingTrackingCodesObject', 'MeetingUsageReportObject', 'MeetingUsageReportObjectScheduledType',
+            'MeetingUsageReportObjectServiceType', 'MeetingUsageReportTrackingCodeObject', 'Member', 'MemberObject',
+            'MemberObject1', 'MemberType', 'MemberType1', 'Membership', 'MembershipCollectionResponse', 'Message',
+            'Message1', 'MessageCollectionResponse', 'MessageCollectionResponse1', 'Meta', 'Meta1', 'MetaObject',
+            'MetaObjectResourceType', 'ModifyAutoAttendantCallForwardSelectiveRuleObject',
+            'ModifyAutoAttendantCallForwardSettingsObject', 'ModifyAutoAttendantObject', 'ModifyAutoAttendantObject1',
+            'ModifyCallExtensionParkObject', 'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding',
+            'ModifyCallParkObject', 'ModifyCallParkSettingsObject', 'ModifyCallPickupObject',
+            'ModifyCallPickupObject1', 'ModifyCallQueueHolidayObject', 'ModifyCallQueueObject',
+            'ModifyCallQueueObject1', 'ModifyCallRecordingSettingsObject', 'ModifyCallRecordingTermsOfServiceObject',
+            'ModifyDeviceTagsOp', 'ModifyHuntGroupObject', 'ModifyHuntGroupObject1', 'ModifyHuntGroupObject2',
+            'ModifyHuntGroupObject3', 'ModifyNumbersForRouteListResponse',
+            'ModifyPersonPlaceVirtualLineCallQueueObject', 'ModifyPlaceCallerIdGet', 'ModifyScheduleEventListObject',
+            'ModifyScheduleEventObject', 'ModifyScheduleObject', 'MonitoredElementItem', 'MonitoredElementItem1',
+            'MonitoredElementUser', 'MonitoredElementUser1', 'MonitoringSettings', 'MonitoringSettings1',
+            'MonitoringSettingsPut', 'MoveNumberValidationError', 'MoveUsersErrorResponse', 'MoveUsersStartJobObject',
+            'MoveUsersStartJobResponse', 'MoveUsersValidationResponse', 'MppAudioCodecPriorityObject', 'MppObject',
+            'MppObjectDevice', 'MppVlanObject', 'NameObject', 'NetworkConnectivityType', 'NodeAvailability',
+            'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status',
+            'NodesAvailability', 'NoiseCancellationObject', 'Number', 'NumberCount', 'NumberItem',
+            'NumberListGetObject', 'NumberListGetObject1', 'NumberListGetObject2', 'NumberListGetObjectOwner',
+            'NumberObject', 'NumberObject1', 'NumberObjectOwner1', 'NumberOwnerType', 'NumberState',
+            'NumberStateOptions', 'NumberStatus', 'NumberTypeOptions', 'NumbersPost', 'NumbersPost1',
+            'NumbersRequest', 'OnboardingMethodObject', 'Option', 'OptionsForTrackingCodeObject', 'OrderListResponse',
+            'OrderRequest', 'OrderRequestLineItem', 'OrderResponse', 'OrderResponseLineItem', 'OrderShippingDetails',
+            'Organization3', 'Organization4', 'Organization5', 'OrganizationCollectionResponse',
+            'OrganizationCollectionResponse1', 'OrganizationCollectionResponse2', 'OrganizationSupportedContentType',
+            'OrganizationsSpaceClassificationCollectionResponse', 'OriginatorType',
+            'OutgoingCallingPermissionsSetting', 'OverflowDetails1', 'OverflowtoCloud', 'OverflowtoCloudCollection',
+            'PMRIDObject', 'PMRIDResponseObject', 'Package', 'PackageName', 'PackageStatus', 'ParkResponse',
+            'Participant', 'Participant1', 'ParticipantID', 'ParticipantState', 'PartnerAdminUser',
+            'PartneradminsfororgResponse', 'PartyInformation', 'PasswordGenerate', 'PatchCallQueueNightServiceObject',
+            'PatchCallingBehaviorObject', 'PatchGroup', 'PatchGroup1', 'PatchGroupOperations',
+            'PatchMemberWithOperation', 'PatchUserLicenses', 'PbxUser', 'PerClusterConnectivityResult1',
+            'PerNodeConnectivityResult1', 'Person', 'Person1', 'PersonAddresses', 'PersonCollectionResponse',
+            'PersonId', 'PersonInvitePending', 'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonStatus',
+            'PersonType', 'PhoneLanguage', 'PhoneNumber', 'PhotoObject', 'PhotoObjectType', 'PlaceCallerIdGet',
+            'PoeMode', 'Policy', 'PolicyCollectionResponse', 'PolicyType', 'Poll', 'PollCollectionResponse',
+            'PollResult', 'PollResultCollectionResponse', 'PostApplyLineKeyTemplateRequest',
+            'PostApplyLineKeyTemplateRequestAction', 'PostCommonLocationObject', 'PostGroup', 'PostGroup1',
+            'PostGroupUrnscimschemasextensionciscowebexidentity20Group', 'PostHuntGroupCallPolicyObject',
+            'PostHuntGroupCallPolicyObjectNoAnswer', 'PostLineKeyTemplateRequest',
+            'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest',
+            'PostLocationCallingRequestAddress', 'PostLocationVoicemailGroupObject', 'PostPagingGroupObject',
+            'PostPersonPlaceObject', 'PostPersonPlaceVirtualLineCallQueueObject', 'PostScheduleObject', 'PostUser',
+            'PostUserUrnietfparamsscimschemasextensionenterprise20User',
+            'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PostValidateExtensionResponse',
+            'PostValidateExtensionResponseStatus', 'PrecheckABroadworksSubscriberProvisioningCustomerInfo',
+            'PrecheckAWholesaleCustomerProvisioningCustomerInfo', 'PreviewApplyLineKeyTemplateResponse', 'PrivacyGet',
+            'PrivacyGet1', 'ProgrammableLineKeys', 'ProvisionAWholesaleCustomerCustomerInfo',
+            'ProvisionAWholesaleCustomerProvisioningParameters',
+            'ProvisionAWholesaleCustomerProvisioningParametersCalling',
+            'ProvisionAWholesaleCustomerProvisioningParametersCallingLocation',
+            'ProvisionAWholesaleCustomerProvisioningParametersMeetings',
+            'ProvisionAWholesaleSubscriberProvisioningParameters', 'PskObject', 'PstnNumber', 'PushToTalkAccessType',
+            'PushToTalkConnectionType', 'PushToTalkInfo', 'PushToTalkInfo1', 'PushToTalkPut',
+            'PutAccessCodeLocationObject', 'PutAgentCallQueueId', 'PutCommonLocationObject',
+            'PutDeviceSettingsRequest', 'PutEvent', 'PutLineKeyTemplateRequest', 'PutLocationCallBackNumberObject',
+            'PutLocationVoicemailGroupObject', 'PutMemberObject', 'PutMembersRequest', 'PutMusicOnHoldObject1',
+            'PutPersonOrWorkspaceDetailsObject', 'PutRecallHuntGroupObject', 'PutSharedLineMemberItem',
+            'PutSharedLineMemberList', 'PutTelephonyLocationObject', 'PutTelephonyLocationObject1',
+            'PutThirdPartyDevice', 'PutUser', 'PutUserPhoneNumbers', 'PutVoicePortalObject',
+            'PutVoicePortalObjectPasscode', 'PutVoicemailRulesObject', 'QAObject', 'QAObjectAnswers',
+            'QueryRegistrants', 'QueryRegistrantsOrderBy', 'QueryRegistrantsOrderType', 'QueryStatusResponse',
+            'QueryStatusResponseResult', 'QueryStatusResponseResultAudio', 'Question', 'QuestionObject',
+            'QuestionObjectType', 'QuestionOptionObject', 'QuestionResult', 'QuestionType',
+            'QuestionWithAnswersObject', 'QueueStats', 'QueueStatsResponse', 'RawMetric', 'ReachabilityTestResults',
+            'ReachabilityTestResultsforcluster', 'ReachabilityTestResultsforfirstcluster',
+            'ReachabilityTestresultsStunresults1', 'ReachabilityTestresultsSuccess',
+            'ReachabilityTestresultsdestinationcluster', 'ReachabilityTestresultsfirstnode',
+            'ReachabilityTestresultsfororganization', 'ReadListOfReceptionistContactDirectoriesResponse',
+            'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfAnnouncementLanguagesResponse',
+            'ReadTheListOfAutoAttendantsResponse', 'ReadTheListOfAutoAttendantsResponse1',
+            'ReadTheListOfAutoAttendantsResponse2', 'ReadTheListOfCallParkExtensionsResponse',
+            'ReadTheListOfCallParkExtensionsResponse1', 'ReadTheListOfCallParksResponse',
+            'ReadTheListOfCallPickupsResponse', 'ReadTheListOfCallQueueAnnouncementFilesResponse',
+            'ReadTheListOfCallQueuesResponse', 'ReadTheListOfCallQueuesResponse1', 'ReadTheListOfCallQueuesResponse2',
+            'ReadTheListOfDialPatternsResponse', 'ReadTheListOfDialPlansResponse', 'ReadTheListOfHuntGroupsResponse',
+            'ReadTheListOfHuntGroupsResponse1', 'ReadTheListOfHuntGroupsResponse2',
+            'ReadTheListOfLineKeyTemplatesResponse', 'ReadTheListOfPagingGroupsResponse',
+            'ReadTheListOfPagingGroupsResponse1', 'ReadTheListOfPagingGroupsResponse2',
+            'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingChoicesResponse',
+            'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfSchedulesResponse', 'ReadTheListOfTrunksResponse',
+            'ReadTheListOfUcManagerProfilesResponse', 'ReadTheListOfVirtualLinesResponse',
+            'ReadTheListOfVirtualLinesResponse1', 'ReadTheRouteListsOfARoutingGroupResponse',
+            'ReadTheUsageOfARoutingGroupResponse', 'ReassignMeetingErrorDescriptionObject',
+            'ReassignMeetingRequestObject', 'ReassignMeetingResponseObject', 'ReassignMeetingsToANewHostResponse',
+            'RecallInformation', 'RecallTypeEnum', 'ReceptionInfo', 'ReceptionInfo1', 'ReceptionPut', 'Recording',
+            'RecordingAchriveSummaryObject', 'RecordingArchiveReportObject', 'RecordingObject',
+            'RecordingObjectForAdminAndCO', 'RecordingObjectFormat', 'RecordingObjectWithDirectDownloadLinks',
+            'RecordingObjectWithDirectDownloadLinksStatus',
+            'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks', 'RecordingReportObject',
+            'RecordingReportSummaryObject', 'RecordingStateEnum', 'RecordingStatus', 'RecurWeeklyObject',
+            'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject',
+            'RecurYearlyByDayObjectDay', 'RecurYearlyByDayObjectWeek', 'RecurrenceObject', 'RedirectCollectionForOrg',
+            'RedirectTrend1', 'RedirectforOrg', 'RedirectionInformation', 'RedirectionReasonEnum', 'Registrant',
+            'Registrant1', 'RegistrantCreateResponse', 'RegistrantFormObject', 'RegistrantStatus', 'Registration',
+            'Registration2', 'RegistrationForUpdate', 'RegistrationForUpdate2', 'RejectActionEnum', 'Report',
+            'Report1', 'Report2', 'ReportCollectionResponse', 'ReportError', 'ReportId1', 'ReportStatus',
+            'ResourceDetails', 'ResourceGroup', 'ResourceGroupCollectionResponse', 'ResourceGroupMembership',
+            'ResourceGroupMembershipCollectionResponse', 'ResourceGroupMembershipStatus', 'ResourceURL', 'Resources',
+            'Respondent', 'RespondentCollectionResponse', 'RespondentsReferenceLinks', 'ResponseStatus',
+            'ResponseStatusType', 'RetrieveExecutiveAssistantSettingsForAPersonResponse',
+            'RetrieveExecutiveAssistantSettingsForAPersonResponseType', 'RingPatternObject', 'RoleCollectionResponse',
+            'RoleObject', 'RoleObjectType', 'Room', 'RoomCollectionResponse', 'RoomMeetingDetails', 'RoomTab',
+            'RoomTabsCollectionResponse', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch',
+            'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteIdentity', 'RouteList',
+            'RouteListGet', 'RouteListNumberListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse',
+            'RouteListPatch', 'RouteListPost', 'RouteType', 'ScheduleCollectionRequest', 'ScheduleCollectionResponse',
+            'ScheduleLongDetails', 'ScheduleShortDetails', 'ScheduleStartCodeObject',
+            'ScheduleStartCodeObjectService', 'ScheduleStartCodeObjectType', 'ScheduleUpdateRequest',
+            'ScheduledMeetingObject', 'ScheduledMeetingObject1', 'SchedulingOptionsObject', 'SearchGroupResponse',
+            'SearchMemberObject', 'SearchMemberResponse', 'SearchResponse', 'SearchUserResponse',
+            'SecurityAuditEvent', 'SecurityAuditEventCollectionResponse', 'SecurityAuditEventData', 'SelectionType',
+            'ServiceType', 'ServiceTypeResult2', 'ServiceTypeResult4', 'SessionType', 'SingleNodeAvailability',
+            'SingleNodeAvailability1', 'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline',
+            'SipAddressObject', 'SipAddressObjectType', 'SiteResponse', 'SiteResponseAccountType', 'SiteSessionType',
+            'SiteSessionTypeType', 'SiteUrlsRequest', 'SiteUrlsRequestAccountType', 'SitesObject',
+            'SkillCreateRequest', 'SkillCreateRequestLanguages', 'SkillCreateResponse', 'SnippetObject',
+            'SnippetObject1', 'SnmpObject', 'SoftKeyLayoutObject', 'SoftKeyMenuObject',
+            'StandardRegistrationApproveRule', 'StandardRegistrationApproveRuleQuestion',
+            'StartJobExecutionStatusObject', 'StartJobResponse', 'StartJobResponseObject', 'State',
+            'StatusOfExtensionsObject', 'StepExecutionStatuses', 'SubPartner', 'SubPartnerProvisioningState',
+            'SubPartnersListResponse', 'SubmitCardAction', 'SubmitCardActionInputs', 'SubmitCardActionResponse',
+            'Subscriber', 'Subscriber1', 'Subscriber2', 'SubscriberListResponse', 'SubscriberListResponse1',
+            'SubscriberListResponse2', 'SubscriberPackage', 'SubscriberPackage2',
+            'SubscriberProvisioningPrecheckResponse', 'SubscriberProvisioningPrecheckResponseInfo',
+            'SubscriberStatus', 'SubscriberStatus2', 'SubscriptionTagsResponse', 'SupportAndConfiguredInfo',
+            'SupportedDevicesObject', 'SurveyLinkObject', 'SurveyLinkRequestObject', 'SurveyObject',
+            'SurveyResultObject', 'SystemInfoCatalog', 'TagsObj', 'TagsRequest', 'Task', 'TaskAttributes',
+            'TaskAttributesStatus', 'TaskWithCaptures', 'TasksResponse', 'TasksValidationError', 'Team',
+            'TeamCollectionResponse', 'TeamMembership', 'TeamMembershipCollectionResponse', 'TelephonyType',
+            'Template', 'Template2', 'TemplateCollectionResponse', 'TemplateObject', 'TemplateTemplateType',
+            'TestCallRoutingPostResponse', 'TranscriptObject', 'TranscriptObjectStatus',
+            'TriggerDirectorySyncResponse', 'TriggerDirectorySyncResponseDirectorySyncStatus', 'TriggerOnDemandBody',
+            'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggerUserDirectorySyncResponse',
+            'TriggerUserDirectorySyncResponseStatus', 'TriggerUserDirectorySyncResponseUserResponse',
+            'TriggeredTestResult', 'TriggeredTestStatus1', 'Trunk', 'TrunkFQDNValidatePost', 'TrunkGet', 'TrunkPost',
+            'TrunkPut', 'TrunkType', 'TrunkTypeGetList', 'TrunkTypeWithDeviceType', 'TypeObject',
+            'UpdateAWholesaleSubscriberProvisioningParameters', 'UpdateEventThresholdConfig1',
+            'UpdateEventThresholdConfigurationEventThresholds',
+            'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UpdateInterpreterObject',
+            'UpdateInviteeObject', 'UpdateMeetingBreakoutSessionsObject',
+            'UpdateMeetingConfigurationCommonSettingObject', 'UpdateMeetingObject', 'UpdateMeetingObject1',
+            'UpdatePMRObject', 'UpdatePagingGroupObject', 'UpdatePagingGroupObject1', 'UpdateSnippetObject',
+            'UpdateTrackingCodeForUserObject', 'UpdateUserSessionType', 'UsbPortsObject', 'UserHotelingRequestPatch',
+            'UserItem', 'UserLicensesResponse', 'UserListItem', 'UserMonitoringGet', 'UserMonitoringGet1',
+            'UserNumberItem', 'UserNumberItem1', 'UserNumbersPatch', 'UserPlaceAuthorizationCodeListGet',
+            'UserSessionTypes', 'UserTypeObject', 'Users', 'UsersListItem', 'UtilizationMetricsT1SJ',
+            'ValidateMACRequest', 'ValidateNumbersResponse', 'ValidationRules', 'ValidationRulesCollection',
+            'VideoIn', 'VideoIn1', 'VideoInTransportType', 'VirtualExtension', 'VirtualExtensionRange',
+            'VoiceMailPartyInformation', 'VoiceMessageDetails', 'VoicemailInfo', 'VoicemailInfoFaxMessage',
+            'VoicemailInfoMessageStorage', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls',
+            'VoicemailInfoTransferToNumber', 'VoicemailPut', 'VoicemailPutSendBusyCalls',
+            'VoicemailPutSendUnansweredCalls', 'VolumeSettingsObject', 'WebAccessObject', 'WebSocketConnectivityTest',
+            'Webhook', 'WebhookCollectionResponse', 'WebhookEvent', 'WebhookResource', 'WebhookStatus',
+            'WholesaleBillingReportsListResponse', 'WifiNetworkObject', 'WifiObject', 'WifiObjectDevice',
+            'Workspace4', 'WorkspaceCalendar', 'WorkspaceCalendarType', 'WorkspaceCalling',
+            'WorkspaceCallingHybridCalling', 'WorkspaceCallingType', 'WorkspaceCollectionResponse',
+            'WorkspaceCreationRequest', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
+            'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceDeviceHostedMeetings',
+            'WorkspaceDurationMetricsResponse', 'WorkspaceDurationMetricsResponseAggregation',
+            'WorkspaceDurationMetricsResponseMeasurement', 'WorkspaceHotdeskingStatus',
+            'WorkspaceLocationsCollectionResponse', 'WorkspaceLocationsCreationRequest', 'WorkspaceMetricsResponse',
+            'WorkspaceMetricsResponseAggregation', 'WorkspaceMetricsResponseMetricName',
+            'WorkspaceMetricsResponseSortBy', 'WorkspaceMetricsResponseUnit', 'WorkspacePersonalizationRequest',
+            'WorkspacePersonalizationTaskResponse', 'WorkspaceResponse', 'WorkspaceSupportedDevices', 'WorkspaceType',
+            'WorkspaceType1', 'WorkspaceUpdateRequest', 'WorkspaceUpdateRequestType']
 
 
 class AuditEventData(ApiModel):
@@ -81,7 +541,8 @@ class AuditEvent(ApiModel):
 
 
 class AuditEventCollectionResponse(ApiModel):
-    #: An array of audit event objects. See [this article](https://help.webex.com/n3b0w6x/) for details about each event type.
+    #: An array of audit event objects. See `this article
+    #: <https://help.webex.com/n3b0w6x/>`_ for details about each event type.
     items: Optional[list[AuditEvent]] = None
 
 
@@ -155,7 +616,8 @@ class AuditEvent1(ApiModel):
 
 
 class AuditEventCollectionResponse1(ApiModel):
-    #: An array of audit event objects. See [this article](https://help.webex.com/n3b0w6x/) for details about each event type.
+    #: An array of audit event objects. See `this article
+    #: <https://help.webex.com/n3b0w6x/>`_ for details about each event type.
     items: Optional[list[AuditEvent1]] = None
 
 
@@ -504,7 +966,10 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus(ApiModel)
     #: Unique tracking identifier.
     #: example: NA_dde3a13a-bad7-4990-b155-9b4574e545b9
     last_sync_tracking_id: Optional[str] = None
-    #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures errors that occurred during *directory sync* of the BroadWorks enterprise, *after* the API has been accepted and 200 OK response returned. Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures
+    #: errors that occurred during *directory sync* of the BroadWorks enterprise, *after* the API has been accepted
+    #: and 200 OK response returned. Any errors that occur during initial API request validation will be captured
+    #: directly in error response with appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
     #: example: 5.0
@@ -651,7 +1116,10 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus1(ApiModel
     #: Unique tracking identifier.
     #: example: NA_dde3a13a-bad7-4990-b155-9b4574e545b9
     last_sync_tracking_id: Optional[str] = None
-    #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures errors that occurred during *directory sync* of the BroadWorks enterprise, *after* the API has been accepted and 200 OK response returned. Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures
+    #: errors that occurred during *directory sync* of the BroadWorks enterprise, *after* the API has been accepted
+    #: and 200 OK response returned. Any errors that occur during initial API request validation will be captured
+    #: directly in error response with appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
     #: example: 5.0
@@ -750,9 +1218,11 @@ class SubscriberPackage(str, Enum):
 class SubscriberStatus(str, Enum):
     #: Subscriber provisioning is paused, pending input of an email address.
     pending_email_input = 'pending_email_input'
-    #: Subscriber provisioning is paused. The subscriber has entered an email address but has yet to complete validation.
+    #: Subscriber provisioning is paused. The subscriber has entered an email address but has yet to complete
+    #: validation.
     pending_email_validation = 'pending_email_validation'
-    #: Subscriber provisioning is paused. An automated email has been sent to the subscriber; waiting for the subscriber's consent.
+    #: Subscriber provisioning is paused. An automated email has been sent to the subscriber; waiting for the
+    #: subscriber's consent.
     pending_user_migration = 'pending_user_migration'
     #: Subscriber provisioning is in progress.
     provisioning = 'provisioning'
@@ -768,7 +1238,8 @@ class Subscriber(ApiModel):
     #: A unique Cisco identifier for the subscriber.
     #: example: 'Y2lzY29zcGFyazovL3VzL1NVQlNDUklCRVIvNjk3MGU2YmItNzQzOS00ZmZiLWFkMzQtZDNmZjAxNjdkZGFk'
     id: Optional[str] = None
-    #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only presented when status is `provisioned`.
+    #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only
+    #: presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
     person_id: Optional[str] = None
     #: The user ID of the subscriber on BroadWorks.
@@ -795,7 +1266,8 @@ class Subscriber(ApiModel):
     #: The mobile phone number configured against the subscriber on BroadWorks.
     #: example: +1-818-279-1234
     mobile_phone_number: Optional[str] = None
-    #: The ISO 639-1 language code associated with the subscriber. Reserved for future use. Any value returned should be ignored. Currently set to "en" in all responses.
+    #: The ISO 639-1 language code associated with the subscriber. Reserved for future use. Any value returned should
+    #: be ignored. Currently set to "en" in all responses.
     #: example: en
     language: Optional[str] = None
     #: The Webex for BroadWorks Package assigned to the subscriber.
@@ -806,8 +1278,10 @@ class Subscriber(ApiModel):
     status: Optional[SubscriberStatus] = None
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the subscriber, *after* the API has been accepted and 200 OK response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the subscriber,
+    #: *after* the API has been accepted and 200 OK response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The date and time the subscriber was provisioned.
     #: example: 2019-10-18T14:26:16.000Z
@@ -832,7 +1306,8 @@ class CallPersonalityEnum(str, Enum):
     originator = 'originator'
     #: An incoming call received by the user.
     terminator = 'terminator'
-    #: A call that is alerting the user's devices for a Click to Dial action. When the user answers on one of these alerting devices, the call's personality is updated to originator.
+    #: A call that is alerting the user's devices for a Click to Dial action. When the user answers on one of these
+    #: alerting devices, the call's personality is updated to originator.
     click_to_dial = 'clickToDial'
 
 
@@ -862,7 +1337,8 @@ class CallTypeEnum(str, Enum):
     emergency = 'emergency'
     #: The party is a repair call destination.
     repair = 'repair'
-    #: The party does not belong to one of the defined call types. For example, a call to a Call Forwarding Always feature activation code.
+    #: The party does not belong to one of the defined call types. For example, a call to a Call Forwarding Always
+    #: feature activation code.
     other = 'other'
 
 
@@ -870,7 +1346,9 @@ class PartyInformation(ApiModel):
     #: The party's name. Only present when the name is available and privacy is not enabled.
     #: example: John Smith
     name: Optional[str] = None
-    #: The party's number. Only present when the number is available and privacy is not enabled. The number can be digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`, `*73`, `user@company.domain`
+    #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
+    #: digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`, `*73`,
+    #: `user@company.domain`
     #: example: +12223334444
     number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
@@ -888,7 +1366,8 @@ class PartyInformation(ApiModel):
 class RedirectionReasonEnum(str, Enum):
     #: The call was redirected on a busy condition. For example, the call was forwarded by Call Forwarding Busy.
     busy = 'busy'
-    #: The call was redirected on a no answer condition. For example, the call was forwarded by Call Forwarding No Answer.
+    #: The call was redirected on a no answer condition. For example, the call was forwarded by Call Forwarding No
+    #: Answer.
     no_answer = 'noAnswer'
     #: The call was redirected on an unavailable condition. For example, the call was forwarded by Business Continuity.
     unavailable = 'unavailable'
@@ -921,9 +1400,12 @@ class RecallTypeEnum(str, Enum):
 
 
 class RecallInformation(ApiModel):
-    #: The type of recall the incoming call is for. Park is the only type of recall currently supported but additional values may be added in the future.
+    #: The type of recall the incoming call is for. Park is the only type of recall currently supported but additional
+    #: values may be added in the future.
     type: Optional[RecallTypeEnum] = None
-    #: If the type is park, contains the details of where the call was parked. For example, if user A parks a call against user B and A is recalled for the park, then this field contains B's information in A's incoming call details. Only present when the type is park.
+    #: If the type is park, contains the details of where the call was parked. For example, if user A parks a call
+    #: against user B and A is recalled for the park, then this field contains B's information in A's incoming call
+    #: details. Only present when the type is park.
     party: Optional[PartyInformation] = None
 
 
@@ -944,16 +1426,19 @@ class Call(ApiModel):
     #: The call identifier of the call.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTEwvQkNMRC9jYWxsaGFsZi00ODg6MA
     id: Optional[str] = None
-    #: The call session identifier of the call session the call belongs to. This can be used to correlate multiple calls that are part of the same call session.
+    #: The call session identifier of the call session the call belongs to. This can be used to correlate multiple
+    #: calls that are part of the same call session.
     #: example: MmFmNThiZjktYWE3Ny00NWE5LThiMDEtYzI4NDMxZWYwNzRm
     call_session_id: Optional[str] = None
     #: The personality of the call.
     personality: Optional[CallPersonalityEnum] = None
     #: The current state of the call.
     state: Optional[CallStateEnum] = None
-    #: The remote party's details. For example, if user A calls user B then B is the remote party in A's outgoing call details and A is the remote party in B's incoming call details.
+    #: The remote party's details. For example, if user A calls user B then B is the remote party in A's outgoing call
+    #: details and A is the remote party in B's incoming call details.
     remote_party: Optional[PartyInformation] = None
-    #: The appearance value for the call. The appearance value can be used to display the user's calls in an order consistent with the user's devices. Only present when the call has an appearance value assigned.
+    #: The appearance value for the call. The appearance value can be used to display the user's calls in an order
+    #: consistent with the user's devices. Only present when the call has an appearance value assigned.
     #: example: 1.0
     appearance: Optional[int] = None
     #: The date and time the call was created.
@@ -962,11 +1447,15 @@ class Call(ApiModel):
     #: The date and time the call was answered. Only present when the call has been answered.
     #: example: 2016-04-21T17:00:00.000Z
     answered: Optional[datetime] = None
-    #: The list of details for previous redirections of the incoming call ordered from most recent to least recent. For example, if user B forwards an incoming call to user C, then a redirection entry is present for B's forwarding in C's incoming call details. Only present when there were previous redirections and the incoming call's state is alerting.
+    #: The list of details for previous redirections of the incoming call ordered from most recent to least recent. For
+    #: example, if user B forwards an incoming call to user C, then a redirection entry is present for B's forwarding
+    #: in C's incoming call details. Only present when there were previous redirections and the incoming call's state
+    #: is alerting.
     redirections: Optional[list[RedirectionInformation]] = None
     #: The recall details for the incoming call. Only present when the incoming call is for a recall.
     recall: Optional[RecallInformation] = None
-    #: The call's current recording state. Only present when the user's call recording has been invoked during the life of the call.
+    #: The call's current recording state. Only present when the user's call recording has been invoked during the life
+    #: of the call.
     recording_state: Optional[RecordingStateEnum] = None
 
 
@@ -985,12 +1474,16 @@ class CallHistoryRecord(ApiModel):
     #: The name of the called/calling party. Only present when the name is available and privacy is not enabled.
     #: example: John Smith
     name: Optional[str] = None
-    #: The number of the called/calling party. Only present when the number is available and privacy is not enabled. The number can be digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`, `*73`, `user@company.domain`
+    #: The number of the called/calling party. Only present when the number is available and privacy is not enabled.
+    #: The number can be digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`,
+    #: `*73`, `user@company.domain`
     #: example: +12225554444
     number: Optional[str] = None
     #: Indicates whether privacy is enabled for the name and number.
     privacy_enabled: Optional[bool] = None
-    #: The date and time the call history record was created. For a placed call history record, this is when the call was placed. For a missed call history record, this is when the call was disconnected. For a received call history record, this is when the call was answered.
+    #: The date and time the call history record was created. For a placed call history record, this is when the call
+    #: was placed. For a missed call history record, this is when the call was disconnected. For a received call
+    #: history record, this is when the call was answered.
     #: example: 2016-04-21T17:00:00.000Z
     time: Optional[datetime] = None
 
@@ -1008,7 +1501,8 @@ class DialResponse(ApiModel):
     #: A unique identifier for the call which is used in all subsequent commands for the same call.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTEwvQkNMRC9jYWxsaGFsZi00ODg6MA
     call_id: Optional[str] = None
-    #: A unique identifier for the call session the call belongs to. This can be used to correlate multiple calls that are part of the same call session.
+    #: A unique identifier for the call session the call belongs to. This can be used to correlate multiple calls that
+    #: are part of the same call session.
     #: example: MmFmNThiZjktYWE3Ny00NWE5LThiMDEtYzI4NDMxZWYwNzRm
     call_session_id: Optional[str] = None
 
@@ -1086,9 +1580,11 @@ class BatchResponse(ApiModel):
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
     instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatus]] = None
-    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of invocation.
+    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of
+    #: invocation.
     latest_execution_status: Optional[str] = None
     #: Job statistics.
     counts: Optional[Counts] = None
@@ -1099,7 +1595,8 @@ class ErrorMessage(ApiModel):
     description: Optional[str] = None
     #: Internal error code.
     code: Optional[str] = None
-    #: Error messages describing the location id in which the error occurs. For a move operation this is the target location ID.
+    #: Error messages describing the location id in which the error occurs. For a move operation this is the target
+    #: location ID.
     location_id: Optional[str] = None
 
 
@@ -1116,6 +1613,126 @@ class BatchJobError(ApiModel):
     #: row number of failed record.
     item_number: Optional[int] = None
     error: Optional[Error1] = None
+
+
+class CreateDECTNetworkModel(str, Enum):
+    #: Supports 1 base station and 30 line ports.
+    dms_cisco_dbs110 = 'DMS Cisco DBS110'
+    #: Supports 250 base stations and 1000 line ports.
+    dms_cisco_dbs210 = 'DMS Cisco DBS210'
+
+
+class CreateDECTNetwork(ApiModel):
+    #: Name of the DECT network. Min and max length supported for the DECT network name are 1 and 40 respectively.
+    #: example: test-dect
+    name: Optional[str] = None
+    #: Add a default name (11 characters max) to display for all handsets. If left blank, the default name will be an
+    #: indexed number followed by the DECT network name.
+    #: example: test-dect
+    display_name: Optional[str] = None
+    #: Select a device model type depending on the number of base stations and handset lines needed in the DECT
+    #: network.
+    model: Optional[CreateDECTNetworkModel] = None
+    #: If set to true, need to provide a default access code that will be shared for all users in this network to pair
+    #: their lines to the next available handset. Otherwise, each user will get a unique 4-digit access code that will
+    #: be auto-generated.
+    #: example: True
+    default_access_code_enabled: Optional[bool] = None
+    #: If `defaultAccessCodeEnabled` is set to true, then provide a default access code that needs to be a 4-numeric
+    #: digit. The access code should be unique to the DECT network for the location.
+    #: example: 1551
+    default_access_code: Optional[datetime] = None
+
+
+class BaseStationPostResult(ApiModel):
+    #: HTTP status code indicating the creation of base station. 201 status code indicates the successful creation of
+    #: base stations
+    #: example: 201.0
+    status: Optional[int] = None
+    #: Unique identifier of the base station.
+    #: example: Y2lzY29zcGFyazovL3VzL0RFQ1RfREVWX1NUQVRJT04vYzRhMTQxN2ItZGNiYi00MGMzLWE3YWQtNTY1MGZkZGRkNTNj
+    id: Optional[str] = None
+
+
+class BaseStationResponse(ApiModel):
+    #: MAC Address added to the base station.
+    #: example: 6DDE9EBDE1C9
+    mac: Optional[str] = None
+    #: Object with base station POST Result.
+    result: Optional[BaseStationPostResult] = None
+
+
+class BaseStationsPostResponse(ApiModel):
+    #: List of base station MAC addresses that have to be added to the DECT network.
+    base_station_macs: Optional[list[BaseStationResponse]] = None
+
+
+class AddDECTHandset(ApiModel):
+    #: ID of the member on line1 of the handset. Members can be PEOPLE or PLACE.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
+    line1_member_id: Optional[str] = None
+    #: ID of the member on line2 of the handset. Members can be PEOPLE, PLACE, or VIRTUAL_LINE.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
+    line2_member_id: Optional[str] = None
+    #: Custom display name on the handset. Min and max length supported for the custom display name is 1 and 16
+    #: respectively
+    #: example: handsetDisplayName
+    custom_display_name: Optional[str] = None
+
+
+class LineType(str, Enum):
+    #: Primary line for the member.
+    primary = 'PRIMARY'
+    #: Shared line for the member.
+    shared_call_appearance = 'SHARED_CALL_APPEARANCE'
+
+
+class MemberType(str, Enum):
+    #: Indicates the associated member is a person.
+    people = 'PEOPLE'
+    #: Indicates the associated member is a workspace.
+    place = 'PLACE'
+    #: Indicates the associated member is a virtual profile.
+    virtual_line = 'VIRTUAL_LINE'
+
+
+class Location(ApiModel):
+    #: Location identifier associated with the member.
+    #: example: Y2lzY29zcGFyazovL3VzL0RFQ1RfREVWX05FVC81NmRiMjRkMy03YTdhLTQwYTItOWFjOS1iMjMzMjc3OTIxTrd
+    id: Optional[str] = None
+    #: Location name associated with the member.
+    #: example: MainOffice
+    name: Optional[str] = None
+
+
+class AvailableMembersResponse(ApiModel):
+    #: Unique identifier for the member.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
+    id: Optional[str] = None
+    #: First name of the member.
+    #: example: John
+    first_name: Optional[str] = None
+    #: Last name of the member.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Phone Number of the member.
+    #: example: +12055552221
+    phone_number: Optional[str] = None
+    #: Extension of the member.
+    #: example: 1234
+    extension: Optional[datetime] = None
+    #: Line type indicates if the associated line is a primary line or a shared line.
+    line_type: Optional[LineType] = None
+    #: Indicates the type of the member.
+    member_type: Optional[MemberType] = None
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[Location] = None
+
+
+class CreateADectNetworkResponse(ApiModel):
+    #: A unique identifier for the DECT network.
+    #: example: Y2lzY29zcGFyazovL3VzL0RFQ1RfREVWX05FVC81NmRiMjRkMy03YTdhLTQwYTItOWFjOS1iMjMzMjc3OTIxNzf
+    dect_network_id: Optional[str] = None
 
 
 class DepartmentCollectionRequest(ApiModel):
@@ -1152,223 +1769,11 @@ class DepartmentResponseWithId(ApiModel):
     id: Optional[str] = None
 
 
-class BatchJobError1(ApiModel):
-    #: Unique identifier to track the HTTP requests.
-    tracking_id: Optional[str] = None
-    error: Optional[Error1] = None
-
-
-class JobExecutionStatus1(ApiModel):
-    #: Unique identifier that identifies each instance of the job.
-    id: Optional[int] = None
-    #: Last updated time (in UTC format) post one of the step execution completion.
-    last_updated: Optional[str] = None
-    #: Displays status for overall steps that are part of the job.
-    status_message: Optional[str] = None
-    #: Exit Code for a job.
-    exit_code: Optional[str] = None
-    #: Job creation time in UTC format.
-    created_time: Optional[str] = None
-    #: Time lapsed since the job execution started.
-    time_elapsed: Optional[str] = None
-    #: Status of each step within a job.
-    step_execution_statuses: Optional[list[StepExecutionStatuses]] = None
-
-
-class Counts1(ApiModel):
-    #: Indicates the total number of phone numbers requested to be moved.
-    total_numbers: Optional[int] = None
-    #: Indicates the total number of phone numbers successfully deleted.
-    numbers_deleted: Optional[int] = None
-    #: Indicates the total number of phone numbers successfully moved.
-    numbers_moved: Optional[int] = None
-    #: Indicates the total number of phone numbers failed.
-    numbers_failed: Optional[int] = None
-
-
-class BatchResponse1(ApiModel):
-    #: Job name.
-    name: Optional[str] = None
-    #: Unique identifier of the job.
-    id: Optional[str] = None
-    #: Job type.
-    job_type: Optional[str] = None
-    #: Unique identifier to track the flow of HTTP requests.
-    tracking_id: Optional[str] = None
-    #: Unique identifier to identify which user has run the job.
-    source_user_id: Optional[str] = None
-    #: Unique identifier to identify the customer who has run the job.
-    source_customer_id: Optional[str] = None
-    #: Unique identifier to identify the customer for which the job was run.
-    target_customer_id: Optional[str] = None
-    #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    job_execution_status: Optional[list[JobExecutionStatus1]] = None
-    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of invocation.
-    latest_execution_status: Optional[str] = None
-    #: Indicates the operation type that was carried out.
-    operation_type: Optional[str] = None
-    #: Unique location identifier for which the job was run.
-    source_location_id: Optional[str] = None
-    #: Unique location identifier for which the numbers have been moved.
-    target_location_id: Optional[str] = None
-    #: The location name for which the job was run.
-    source_location_name: Optional[str] = None
-    #: The location name for which the numbers have been moved.
-    target_location_name: Optional[str] = None
-    #: Job statistics.
-    counts: Optional[Counts1] = None
-
-
-class GetLineKeyTemplateResponse(ApiModel):
-    #: Unique identifier for the Line Key Template.
-    #: example: Y2lzY29zcGFyazovL3VzL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS81NzVhMWY3Zi03MjRkLTRmZGUtODk4NC1mNjNhNDljMzYxZmQ
-    id: Optional[str] = None
-    #: Name of the Line Key Template.
-    #: example: Basic Template
-    template_name: Optional[str] = None
-    #: The Device Model for which the Line Key Template is applicable.
-    #: example: 'DMS Cisco 6821'
-    device_model: Optional[str] = None
-    #: The friendly display name used to represent the device model in Control Hub.
-    #: example: Cisco 6821
-    model_display_name: Optional[str] = None
-    #: Indicates whether user can reorder the line keys.
-    user_reorder_enabled: Optional[bool] = None
-
-
-class LineKeyType(str, Enum):
-    #: PRIMARY_LINE is the user's primary extension. This is the default assignment for Line Key Index 1 and cannot be modified.
-    primary_line = 'PRIMARY_LINE'
-    #: Shows the appearance of other users on the owner's phone.
-    shared_line = 'SHARED_LINE'
-    #: Enables User and Call Park monitoring.
-    monitor = 'MONITOR'
-    #: Allows users to reach a telephone number, extension or a SIP URI.
-    speed_dial = 'SPEED_DIAL'
-    #: An open key will automatically take the configuration of a monitor button starting with the first open key. These buttons are also usable by the user to configure speed dial numbers on these keys.
-    open = 'OPEN'
-    #: Button not usable but reserved for future features.
-    closed = 'CLOSED'
-
-
-class PostApplyLineKeyTemplateRequestAction(str, Enum):
-    #: Used to apply LinekeyTemplate to devices.
-    apply_template = 'APPLY_TEMPLATE'
-    #: Used to reset devices to its default Linekey Template configurations.
-    apply_default_templates = 'APPLY_DEFAULT_TEMPLATES'
-
-
-class PostApplyLineKeyTemplateRequest(ApiModel):
-    #: Line key Template action to perform.
-    #: example: APPLY_TEMPLATE
-    action: Optional[PostApplyLineKeyTemplateRequestAction] = None
-    #: `templateId` is required for `APPLY_TEMPLATE` action.
-    #: example: Y2lzY29zcGFyazovL1VTL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS9kNDUzM2MwYi1hZGRmLTRjODUtODk0YS1hZTVkOTAyYzAyMDM=
-    template_id: Optional[str] = None
-    #: Used to search for devices only in the given locations.
-    location_ids: Optional[list[str]] = None
-    #: Indicates whether to exclude devices with custom layout.
-    exclude_devices_with_custom_layout: Optional[bool] = None
-    #: Include devices only with these tags.
-    include_device_tags: Optional[list[str]] = None
-    #: Exclude devices with these tags.
-    exclude_device_tags: Optional[list[str]] = None
-    #: Refine search by warnings for More shared appearances than shared users.
-    #: example: True
-    more_shared_appearances_enabled: Optional[bool] = None
-    #: Refine search by warnings for Fewer shared appearances than shared users.
-    #: example: True
-    few_shared_appearances_enabled: Optional[bool] = None
-    #: Refine search by warnings for more monitor appearances than monitors.
-    #: example: True
-    more_monitor_appearances_enabled: Optional[bool] = None
-
-
-class ProgrammableLineKeys(ApiModel):
-    #: An index representing a Line Key. Index starts from 1 representing the first key on the left side of the phone.
-    #: example: 2.0
-    line_key_index: Optional[int] = None
-    #: The action that would be performed when the Line Key is pressed.
-    #: example: SPEED_DIAL
-    line_key_type: Optional[LineKeyType] = None
-    #: This is applicable only when the lineKeyType is `SPEED_DIAL`.
-    #: example: Help Line
-    line_key_label: Optional[str] = None
-    #: This is applicable only when the lineKeyType is `SPEED_DIAL` and the value must be a valid Telephone Number, Ext, or SIP URI (format: user@host using A-Z,a-z,0-9,-_ .+ for user and host).
-    #: example: 5646
-    line_key_value: Optional[datetime] = None
-
-
-class PostLineKeyTemplateRequest(ApiModel):
-    #: Name of the Line Key Template.
-    #: example: template for 8845
-    template_name: Optional[str] = None
-    #: The Device Model for which the Line Key Template is applicable.
-    #: example: DMS Cisco 8845
-    device_model: Optional[str] = None
-    #: User Customization Enabled.
-    #: example: True
-    user_reorder_enabled: Optional[bool] = None
-    #: Contains a mapping of Line Keys and their corresponding actions.
-    line_keys: Optional[list[ProgrammableLineKeys]] = None
-
-
-class PutLineKeyTemplateRequest(ApiModel):
-    #: Indicates whether the user can reorder the line keys.
-    #: example: True
-    user_reorder_enabled: Optional[bool] = None
-    #: List of line keys that are being updated.
-    line_keys: Optional[list[ProgrammableLineKeys]] = None
-
-
-class LineKeyTemplatesResponse(ApiModel):
-    #: Unique identifier for the Line Key Template.
-    #: example: Y2lzY29zcGFyazovL1VTL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS9kNDUzM2MwYi1hZGRmLTRjODUtODk0YS1hZTVkOTAyYzAyMDM=
-    id: Optional[str] = None
-    #: Name of the Line Key Template.
-    #: example: template for 8845
-    template_name: Optional[str] = None
-    #: The Device Model for which the Line Key Template is applicable.
-    #: example: DMS Cisco 8845
-    device_model: Optional[str] = None
-    #: The friendly display name used to represent the device model in Control Hub.
-    #: example: Cisco 8845
-    model_display_name: Optional[str] = None
-
-
-class PreviewApplyLinekeyTemplateResponse(ApiModel):
-    #: Number of devices affected.
-    device_count: Optional[int] = None
-
-
-class ReadTheListOfLineKeyTemplatesResponse(ApiModel):
-    #: Array of Line Key Templates.
-    line_key_templates: Optional[list[LineKeyTemplatesResponse]] = None
-
-
-class LineType(str, Enum):
-    #: Indicates a Primary line for the member.
-    primary = 'PRIMARY'
-    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and from another user's extension, using their device.
-    shared_call_appearance = 'SHARED_CALL_APPEARANCE'
-
-
-class MemberType(str, Enum):
+class MemberType1(str, Enum):
     #: Indicates the associated member is a person.
     people = 'PEOPLE'
     #: Indicates the associated member is a workspace.
     place = 'PLACE'
-
-
-class Location(ApiModel):
-    #: Location identifier associated with the members.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzJiNDkyZmZkLTRjNGItNGVmNS04YzAzLWE1MDYyYzM4NDA5Mw
-    id: Optional[str] = None
-    #: Location name associated with the member.
-    #: example: MainOffice
-    name: Optional[str] = None
 
 
 class MemberObject(ApiModel):
@@ -1381,7 +1786,8 @@ class MemberObject(ApiModel):
     #: Last name of a person or workspace.
     #: example: Smith
     last_name: Optional[str] = None
-    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will be supported in a future update.
+    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will
+    #: be supported in a future update.
     #: example: 2055552221
     phone_number: Optional[str] = None
     #: Extension of a person or workspace.
@@ -1393,13 +1799,15 @@ class MemberObject(ApiModel):
     #: Routing prefix + extension of a person or workspace.
     #: example: 1234000
     esn: Optional[str] = None
-    #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
+    #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
+    #: Line/Port of the device.
     #: example: True
     primary_owner: Optional[bool] = None
     #: Port number assigned to person or workspace.
     #: example: 1.0
     port: Optional[int] = None
-    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
+    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
+    #: requires this option. This will override user level compression options.
     t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType] = None
@@ -1412,20 +1820,23 @@ class MemberObject(ApiModel):
     #: Registration Remote IP address for the line port.
     #: example: 192.102.12.84
     remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
-    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
+    #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
     hotline_enabled: Optional[bool] = None
     #: The preconfigured number for Hotline. Required only if `hotlineEnabled` is set to true.
     #: example: +12055552222
     hotline_destination: Optional[str] = None
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
+    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
     line_label: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    member_type: Optional[MemberType] = None
+    member_type: Optional[MemberType1] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -1454,15 +1865,18 @@ class SearchMemberObject(ApiModel):
     #: Phone Number of a person or workspace.
     #: example: +12055552221
     phone_number: Optional[str] = None
-    #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device requires this option. this will override user level compression options.
+    #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device
+    #: requires this option. this will override user level compression options.
     t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType] = None
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
+    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Indicates if member is of type `PEOPLE` or `PLACE`.
-    member_type: Optional[MemberType] = None
+    member_type: Optional[MemberType1] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -1472,88 +1886,105 @@ class SearchMemberResponse(ApiModel):
     members: Optional[list[SearchMemberObject]] = None
 
 
-class ActivationStates(str, Enum):
-    #: Indicates a device is activating.
-    activating = 'ACTIVATING'
-    #: Indicates a device is activated.
-    activated = 'ACTIVATED'
-    #: Indicates a device is deactivated.
-    deactivated = 'DEACTIVATED'
-
-
-class HotelingRequest(ApiModel):
-    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this host(workspace device) and use this device
-    #: as if it were their own. This is useful for employees who travel to remote offices and need to make and receive calls using their office phone number and access features that are normally available on their office phone.
-    enabled: Optional[bool] = None
-    #: Enable limiting the time a guest can use the device. The time limit is configured via `guestHoursLimit`.
-    limit_guest_use: Optional[bool] = None
-    #: Time limit, in hours, until the hoteling reservation expires.
-    guest_hours_limit: Optional[int] = None
-
-
-class DeviceOwner(ApiModel):
-    #: Unique identifier of a person or a workspace.
+class FeatureReferenceObject(ApiModel):
+    #: Unique identifier of the call feature referenced. The call Feature can be Auto Attendant, Call Queue or Music On
+    #: hold.
+    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
     id: Optional[str] = None
-    #: Enumeration that indicates if the member is of type `PEOPLE` or `PLACE`.
-    type: Optional[MemberType] = None
-    #: First name of device owner.
-    first_name: Optional[str] = None
-    #: Last name of device owner.
-    last_name: Optional[str] = None
+    #: Name of the call feature referenced.
+    #: example: Main Line AA - Test
+    name: Optional[str] = None
+    #: Resource Type of the call feature.
+    #: example: Auto Attendant
+    type: Optional[str] = None
+    #: Unique identifier of the location.
+    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi81ZTk3MzFlNy1iOWQ0LTRmMWQtYjYyMi05NDgwMDhhMjkzMzM
+    location_id: Optional[str] = None
+    #: Location name of the announcement file.
+    #: example: RCDN
+    location_name: Optional[str] = None
 
 
-class Devices(ApiModel):
-    #: Unique identifier for a device.
+class AnnouncementResponse(ApiModel):
+    #: Unique identifier of the announcement.
+    #: example: Y2lzY29zcGFyazovL3VzL0FOTk9VTkNFTUVOVC8zMjAxNjRmNC1lNWEzLTQxZmYtYTMyNi02N2MwOThlNDFkMWQ
     id: Optional[str] = None
-    #: Comma separated array of tags used to describe device.
-    description: Optional[list[str]] = None
-    #: Identifier for device model.
-    model: Optional[str] = None
-    #: MAC address of device.
-    mac: Optional[str] = None
-    #: IP address of device.
-    ip_address: Optional[str] = None
-    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
-    primary_owner: Optional[bool] = None
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
-    type: Optional[LineType] = None
-    #: Hoteling settings, which are available when the device is the user's primary device and device type is PRIMARY
-    hoteling: Optional[HotelingRequest] = None
-    #: Owner of device.
-    owner: Optional[DeviceOwner] = None
-    #: Activation state of device.
-    activation_state: Optional[ActivationStates] = None
+    #: Name of the announcement.
+    #: example: Public_Announcement
+    name: Optional[str] = None
+    #: File name of the uploaded binary announcement greeting.
+    #: example: Sample_Greetings_file.wav
+    file_name: Optional[str] = None
+    #: Size of the file in kilobytes.
+    #: example: 356
+    file_size: Optional[datetime] = None
+    #: Media file type of the announcement file.
+    #: example: WAV
+    media_file_type: Optional[str] = None
+    #: Last updated timestamp (in UTC format) of the announcement.
+    #: example: 2023-06-13T18:39:53.651Z
+    last_updated: Optional[datetime] = None
+    #: Reference count of the call features this announcement is assigned to.
+    #: example: 1.0
+    feature_reference_count: Optional[int] = None
+    #: Call features referenced by this announcement.
+    feature_references: Optional[list[FeatureReferenceObject]] = None
 
 
-class DeviceList(ApiModel):
-    #: Array of devices available to person.
-    devices: Optional[list[Devices]] = None
-    #: Maximum number of devices a person can be assigned to.
-    max_device_count: Optional[int] = None
+class AnnouncementUsageResponse(ApiModel):
+    #: Total file size used by announcements in this repository in kilobytes.
+    #: example: 1068.0
+    total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB', default=None)
+    #: Maximum audio file size allowed to upload in kilobytes.
+    #: example: 9600.0
+    max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB', default=None)
+    #: Maximum video file size allowed to upload in kilobytes.
+    #: example: 120000.0
+    max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB', default=None)
+    #: Total file size limit for the repository in megabytes.
+    #: example: 1000.0
+    total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB', default=None)
 
 
-class GetThirdPartyDeviceObject(ApiModel):
-    #: Manufacturer of the device.
-    #: example: THIRD_PARTY
-    manufacturer: Optional[str] = None
-    #: The Line/Port identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode.
-    #: example: lg1_sias10_cpapi16004_LGU@64941297.int10.bcld.webex.com
-    line_port: Optional[str] = None
-    #: Contains the body of the HTTP response received following the request to the Console API. Not set if the response has no body.
-    #: example: hs17.hosted-int.bcld.webex.com
-    outbound_proxy: Optional[str] = None
-    #: Device manager(s).
-    #: example: CUSTOMER
-    managed_by: Optional[str] = None
-    #: SIP authentication user name for the owner of the device.
-    #: example: 392829
-    sip_user_name: Optional[str] = None
+class AnnouncementsListResponseLevel(str, Enum):
+    location = 'LOCATION'
 
 
-class PutThirdPartyDevice(ApiModel):
-    #: Password to be updated.
-    #: example: Test4Password123&
-    sip_password: Optional[str] = None
+class AnnouncementsListResponse(ApiModel):
+    #: Unique identifier of the announcement.
+    #: example: Y2lzY29zcGFyazovL3VzL0FOTk9VTkNFTUVOVC8zMjAxNjRmNC1lNWEzLTQxZmYtYTMyNi02N2MwOThlNDFkMWQ
+    id: Optional[str] = None
+    #: Name of the announcement.
+    #: example: Public_Announcement
+    name: Optional[str] = None
+    #: File name of the uploaded binary announcement greeting.
+    #: example: Sample_Greetings_file.wav
+    file_name: Optional[str] = None
+    #: Size of the file in kilobytes.
+    #: example: 356
+    file_size: Optional[datetime] = None
+    #: Media file type of the announcement file.
+    #: example: WAV
+    media_file_type: Optional[str] = None
+    #: LastUpdated timestamp (in UTC format) of the announcement.
+    #: example: 2023-06-13T18:39:53.651Z
+    last_updated: Optional[datetime] = None
+    #: The level at which this announcement exists.
+    #: example: LOCATION
+    level: Optional[AnnouncementsListResponseLevel] = None
+    #: The details of location at which this announcement exists.
+    location: Optional[Location] = None
+
+
+class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId(str, Enum):
+    all = 'all'
+    locations = 'locations'
+    y2lz_y29zc_gfyazov_l3_vz_l0x_pq0_fusu9_olz_mx_mtyx = 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx'
+
+
+class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse(ApiModel):
+    #: Array of announcements.
+    announcements: Optional[list[AnnouncementsListResponse]] = None
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -1927,15 +2358,6 @@ class GetRecallHuntGroupObject(ApiModel):
     option: Optional[GetRecallHuntGroupObjectOption] = None
 
 
-class GetPersonPlaceVirtualLineCallParksObjectType(str, Enum):
-    #: Indicates that this object is a user.
-    people = 'PEOPLE'
-    #: Indicates that this object is a place.
-    place = 'PLACE'
-    #: Indicates that this object is a virtual line.
-    virtual_line = 'VIRTUAL_LINE'
-
-
 class GetUserNumberItemObject(ApiModel):
     #: Phone number of a person or workspace.
     #: example: +19075552859
@@ -1969,7 +2391,7 @@ class GetPersonPlaceVirtualLineCallParksObject(ApiModel):
     display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
+    type: Optional[MemberType] = None
     #: Email of a person or workspace.
     #: example: john.brown@example.com
     email: Optional[str] = None
@@ -2061,7 +2483,7 @@ class GetPersonPlaceVirtualLineCallPickupObject(ApiModel):
     display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
+    type: Optional[MemberType] = None
     #: Email of a person, workspace or virtual line.
     #: example: john.brown@example.com
     email: Optional[str] = None
@@ -2100,7 +2522,8 @@ class AlternateNumbersWithPattern(ApiModel):
     #: Alternate phone number for the hunt group.
     #: example: 5558675309
     phone_number: Optional[str] = None
-    #: Ring pattern for when this alternate number is called. Only available when `distinctiveRing` is enabled for the hunt group.
+    #: Ring pattern for when this alternate number is called. Only available when `distinctiveRing` is enabled for the
+    #: hunt group.
     #: example: NORMAL
     ring_pattern: Optional[RingPatternObject] = None
 
@@ -2118,29 +2541,34 @@ class CallQueueQueueSettingsObjectOverflow(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     #: example: PERFORM_BUSY_TREATMENT
     action: Optional[CallQueueQueueSettingsObjectOverflowAction] = None
-    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an external `transferNumber` is entered.
+    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an
+    #: external `transferNumber` is entered.
     send_to_voicemail: Optional[bool] = None
     #: Destination number for overflow calls when `action` is set to `TRANSFER_TO_PHONE_NUMBER`.
     #: example: +15553331212
     transfer_number: Optional[str] = None
-    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is triggered.
+    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is
+    #: triggered.
     #: example: True
     overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available.
     #: example: 20.0
     overflow_after_wait_time: Optional[int] = None
-    #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered by a user.
+    #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered by a
+    #: user.
     #: example: True
     play_overflow_greeting_enabled: Optional[bool] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement file name strings to be played as overflow greetings. These files are from the list of announcements files associated with this call queue.
+    #: Array of announcement file name strings to be played as overflow greetings. These files are from the list of
+    #: announcements files associated with this call queue.
     audio_files: Optional[list[str]] = None
 
 
 class CallQueueQueueSettingsObject(ApiModel):
-    #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are triggered.
+    #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are
+    #: triggered.
     #: example: 50.0
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
@@ -2180,19 +2608,22 @@ class GetCallQueueCallPolicyObjectDistinctiveRing(ApiModel):
     #: Whether or not the distinctive ring is enabled.
     #: example: True
     enabled: Optional[bool] = None
-    #: Ring pattern for when this callqueue is called. Only available when `distinctiveRing` is enabled for the call queue.
+    #: Ring pattern for when this callqueue is called. Only available when `distinctiveRing` is enabled for the call
+    #: queue.
     #: example: NORMAL
     ring_pattern: Optional[RingPatternObject] = None
 
 
 class HuntPolicySelection(str, Enum):
-    #: This option cycles through all agents after the last agent that took a call. It sends calls to the next available agent.
+    #: This option cycles through all agents after the last agent that took a call. It sends calls to the next
+    #: available agent.
     circular = 'CIRCULAR'
     #: Send the call through the queue of agents in order, starting from the top each time.
     regular = 'REGULAR'
     #: Sends calls to all agents at once
     simultaneous = 'SIMULTANEOUS'
-    #: Sends calls to the agent that has been idle the longest. If they don't answer, proceed to the next agent who has been idle the second longest, and so on until the call is answered.
+    #: Sends calls to the agent that has been idle the longest. If they don't answer, proceed to the next agent who has
+    #: been idle the second longest, and so on until the call is answered.
     uniform = 'UNIFORM'
     #: Sends call to idle agents based on percentages you assign to each agent (up to 100%).
     weighted = 'WEIGHTED'
@@ -2209,7 +2640,8 @@ class GetCallQueueCallPolicyObject(ApiModel):
 
 
 class GetCallQueueObjectAlternateNumberSettings(ApiModel):
-    #: Distinctive Ringing selected for the alternate numbers in the call queue overrides the normal ringing patterns set for Alternate Number.
+    #: Distinctive Ringing selected for the alternate numbers in the call queue overrides the normal ringing patterns
+    #: set for Alternate Number.
     #: example: True
     distinctive_ring_enabled: Optional[bool] = None
     #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
@@ -2250,7 +2682,8 @@ class GetCallQueueObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Primary phone number of the call queue.
@@ -2259,7 +2692,9 @@ class GetCallQueueObject(ApiModel):
     #: Extension of the call queue.
     #: example: 7781
     extension: Optional[datetime] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Language for call queue.
     #: example: English
@@ -2330,7 +2765,8 @@ class ModifyCallQueueObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -2342,7 +2778,9 @@ class ModifyCallQueueObject(ApiModel):
     #: Extension of the call queue.
     #: example: 7781
     extension: Optional[datetime] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[GetCallQueueCallPolicyObject] = None
@@ -2370,7 +2808,9 @@ class CallQueueQueueSettingsObjectWelcomeMessage(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement `fileName` strings to be played as `welcomeMessage` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
+    #: Array of announcement `fileName` strings to be played as `welcomeMessage` greetings. These files are from the
+    #: list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1
+    #: `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
     audio_files: Optional[list[str]] = None
 
@@ -2389,18 +2829,21 @@ class CallQueueQueueSettingsObjectWaitMessage(ApiModel):
     #: Estimated wait message operating mode. Supported values `TIME` and `POSITION`.
     #: example: POSITION
     wait_mode: Optional[CallQueueQueueSettingsObjectWaitMessageWaitMode] = None
-    #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time is 100 minutes.
+    #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
+    #: is 100 minutes.
     #: example: 100.0
     handling_time: Optional[int] = None
     #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
     #: example: 100.0
     default_handling_time: Optional[int] = None
-    #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum positions are 100.
+    #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
+    #: positions are 100.
     #: example: 100.0
     queue_position: Optional[int] = None
     #: Play time / Play position High Volume.
     high_volume_message_enabled: Optional[bool] = None
-    #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600 seconds.
+    #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
+    #: seconds.
     #: example: 600.0
     estimated_waiting_time: Optional[int] = None
     #: Callback options enabled/disabled. Default value is false.
@@ -2419,13 +2862,17 @@ class CallQueueQueueSettingsObjectComfortMessage(ApiModel):
     #: If enabled play periodic comfort message.
     #: example: True
     enabled: Optional[bool] = None
-    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time is 10 seconds.The maximum time is 600 seconds.
+    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
+    #: is 10 seconds.The maximum time is 600 seconds.
     #: example: 10.0
     time_between_messages: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement `fileName` strings to be played as `comfortMessage` greetings. These files are from the list of announcement files associated with this call queue. These files are from the list of announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
+    #: Array of announcement `fileName` strings to be played as `comfortMessage` greetings. These files are from the
+    #: list of announcement files associated with this call queue. These files are from the list of announcements
+    #: files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and
+    #: the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
     audio_files: Optional[list[str]] = None
 
@@ -2434,13 +2881,16 @@ class CallQueueQueueSettingsObjectComfortMessageBypass(ApiModel):
     #: If enabled play comfort bypass message.
     #: example: True
     enabled: Optional[bool] = None
-    #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The minimum time is 1 seconds. The maximum time is 120 seconds.
+    #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The
+    #: minimum time is 1 seconds. The maximum time is 120 seconds.
     #: example: 10.0
     call_waiting_age_threshold: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement `fileName` strings to be played as `comfortMessageBypass` greetings. These files are from the list of announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
+    #: Array of announcement `fileName` strings to be played as `comfortMessageBypass` greetings. These files are from
+    #: the list of announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1
+    #: `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
     audio_files: Optional[list[str]] = None
 
@@ -2452,7 +2902,9 @@ class CallQueueQueueSettingsObjectMohMessageNormalSource(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement `fileName` strings to be played as `mohMessage` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
+    #: Array of announcement `fileName` strings to be played as `mohMessage` greetings. These files are from the list
+    #: of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is
+    #: mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
     audio_files: Optional[list[str]] = None
 
@@ -2463,7 +2915,8 @@ class CallQueueQueueSettingsObjectMohMessage(ApiModel):
 
 
 class CallQueueQueueSettingsObject1(ApiModel):
-    #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are triggered.
+    #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
+    #: triggered.
     #: example: 50.0
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
@@ -2473,24 +2926,33 @@ class CallQueueQueueSettingsObject1(ApiModel):
     reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queueSize.
     overflow: Optional[CallQueueQueueSettingsObjectOverflow] = None
-    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call queue while there is an available agent, the caller will not hear this announcement and is transferred to an agent. The welcome message feature is enabled by default.
+    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
+    #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call
+    #: queue while there is an available agent, the caller will not hear this announcement and is transferred to an
+    #: agent. The welcome message feature is enabled by default.
     welcome_message: Optional[CallQueueQueueSettingsObjectWelcomeMessage] = None
-    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it plays after the welcome message and before the comfort message. By default, it is not enabled.
+    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
+    #: plays after the welcome message and before the comfort message. By default, it is not enabled.
     wait_message: Optional[CallQueueQueueSettingsObjectWaitMessage] = None
-    #: Play a message after the welcome message and before hold music. This is typically a `CUSTOM` announcement that plays information, such as current promotions or information about products and services.
+    #: Play a message after the welcome message and before hold music. This is typically a `CUSTOM` announcement that
+    #: plays information, such as current promotions or information about products and services.
     comfort_message: Optional[CallQueueQueueSettingsObjectComfortMessage] = None
-    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort message that abruptly ends when they are connected to an agent.
+    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that
+    #: should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort
+    #: message that abruptly ends when they are connected to an agent.
     comfort_message_bypass: Optional[CallQueueQueueSettingsObjectComfortMessageBypass] = None
     #: Play music after the comforting message in a repetitive loop.
     moh_message: Optional[CallQueueQueueSettingsObjectMohMessage] = None
-    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces the identity of the call queue from which the call is coming.
+    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
+    #: the identity of the call queue from which the call is coming.
     whisper_message: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
 
 
 class HuntRoutingTypeSelection(str, Enum):
     #: Default routing type which directly uses the routing policy to dispatch calls to the agents.
     priority_based = 'PRIORITY_BASED'
-    #: This option uses skill level as the criteria to route calls to agents. When there is more than one agent with the same skill level, the selected `policy` helps dispatch the calls to the agents.
+    #: This option uses skill level as the criteria to route calls to agents. When there is more than one agent with
+    #: the same skill level, the selected `policy` helps dispatch the calls to the agents.
     skill_based = 'SKILL_BASED'
 
 
@@ -2513,7 +2975,7 @@ class GetPersonPlaceVirtualLineCallQueueObject(ApiModel):
     id: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
+    type: Optional[MemberType] = None
     #: First name of person, workspace or virtual line.
     #: example: Hakim
     first_name: Optional[str] = None
@@ -2562,7 +3024,8 @@ class GetCallQueueObject1(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the call queue.
@@ -2583,7 +3046,9 @@ class GetCallQueueObject1(ApiModel):
     #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
     #: example: True
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Policy controlling how calls are routed to `agents`.
     call_policies: Optional[GetCallQueueCallPolicyObject1] = None
@@ -2688,18 +3153,23 @@ class PostHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: Destination if `forwardEnabled` is True.
     #: example: 2225551212
     destination: Optional[str] = None
-    #: If `forwardEnabled` is true, enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: If `forwardEnabled` is true, enables and disables sending incoming to destination number's voicemail if the
+    #: destination is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
 class GetHuntGroupCallPolicyObjectBusinessContinuity(ApiModel):
-    #: Divert calls when unreachable, unanswered calls divert to a defined phone number. This could apply to phone calls that aren't answered due to a network outage, or all agents of the hunt group are busy and the Advance when the busy option is also enabled. For persons only using a mobile device, calls won't be diverted, if there is a network outage.
+    #: Divert calls when unreachable, unanswered calls divert to a defined phone number. This could apply to phone
+    #: calls that aren't answered due to a network outage, or all agents of the hunt group are busy and the Advance
+    #: when the busy option is also enabled. For persons only using a mobile device, calls won't be diverted, if there
+    #: is a network outage.
     #: example: True
     enabled: Optional[bool] = None
     #: Destination for Business Continuity.
     #: example: 2225551212
     destination: Optional[str] = None
-    #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if
+    #: the destination is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
@@ -2707,12 +3177,15 @@ class PostHuntGroupCallPolicyObject(ApiModel):
     #: Call routing policy to use to dispatch calls to agents.
     #: example: UNIFORM
     policy: Optional[HuntPolicySelection] = None
-    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring agents when they're on a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is advanced to them, then the call will wait until that hunt group agent isn't busy.
+    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring agents when they're on a
+    #: call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is
+    #: advanced to them, then the call will wait until that hunt group agent isn't busy.
     #: example: True
     waiting_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
     no_answer: Optional[PostHuntGroupCallPolicyObjectNoAnswer] = None
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
+    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
+    #: reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
 
 
@@ -2732,7 +3205,8 @@ class CreateHuntGroupObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -2772,7 +3246,8 @@ class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 15.0
     system_max_number_of_rings: Optional[int] = None
-    #: If destinationVoicemailEnabled is true, enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: If destinationVoicemailEnabled is true, enables and disables sending incoming to destination number's voicemail
+    #: if the destination is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
@@ -2780,12 +3255,15 @@ class GetHuntGroupCallPolicyObject(ApiModel):
     #: Call routing policy to use to dispatch calls to agents.
     #: example: UNIFORM
     policy: Optional[HuntPolicySelection] = None
-    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring `agents` when they're on a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is advanced to them, then the call will wait until that hunt group agent isn't busy.
+    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring `agents` when they're on
+    #: a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is
+    #: advanced to them, then the call will wait until that hunt group agent isn't busy.
     #: example: True
     waiting_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
     no_answer: Optional[GetHuntGroupCallPolicyObjectNoAnswer] = None
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
+    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
+    #: reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
 
 
@@ -2805,7 +3283,9 @@ class GetHuntGroupObject(ApiModel):
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language for hunt group.
     #: example: English
@@ -2816,7 +3296,8 @@ class GetHuntGroupObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -2848,7 +3329,9 @@ class ModifyHuntGroupObject(ApiModel):
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language code.
     #: example: en-US
@@ -2856,7 +3339,8 @@ class ModifyHuntGroupObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -2891,7 +3375,9 @@ class GetHuntGroupObject1(ApiModel):
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language for hunt group.
     #: example: English
@@ -2902,7 +3388,8 @@ class GetHuntGroupObject1(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -2932,7 +3419,9 @@ class ModifyHuntGroupObject1(ApiModel):
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language code.
     #: example: en-US
@@ -2940,7 +3429,8 @@ class ModifyHuntGroupObject1(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -3011,7 +3501,9 @@ class GetHuntGroupObject2(ApiModel):
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language for hunt group.
     #: example: English
@@ -3022,7 +3514,8 @@ class GetHuntGroupObject2(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -3042,6 +3535,133 @@ class ReadTheListOfHuntGroupsResponse1(ApiModel):
     hunt_groups: Optional[list[ListCallQueueObject1]] = None
 
 
+class CreateHuntGroupObject1(ApiModel):
+    #: Unique name for the hunt group.
+    #: example: 5558675309-Group
+    name: Optional[str] = None
+    #: Primary phone number of the hunt group. Either phone number or extension are required.
+    #: example: 5558675309
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the hunt group. Either phone number or extension are required.
+    #: example: 7781
+    extension: Optional[datetime] = None
+    #: Language code.
+    #: example: en-US
+    language_code: Optional[str] = None
+    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+    #: example: Hakim
+    first_name: Optional[str] = None
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Time zone for the hunt group.
+    #: example: America/Chicago
+    time_zone: Optional[str] = None
+    #: Policy controlling how calls are routed to agents.
+    call_policies: Optional[PostHuntGroupCallPolicyObject] = None
+    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    agents: Optional[list[PostPersonPlaceObject]] = None
+    #: Whether or not the hunt group is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Enable the hunt group to be used as the caller ID when the agent places outgoing calls. When set to true the
+    #: hunt group's caller ID will be used.
+    #: example: True
+    hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
+
+
+class GetHuntGroupObject3(ApiModel):
+    #: A unique identifier for the hunt group.
+    #: example: Y2lzY29zcGFyazovL3VzL0hVTlRfR1JPVVAvYUhaaFpUTjJNRzh5YjBBMk5EazBNVEk1Tnk1cGJuUXhNQzVpWTJ4a0xuZGxZbVY0TG1OdmJRPT0
+    id: Optional[str] = None
+    #: Unique name for the hunt group.
+    #: example: 5558675309-Group
+    name: Optional[str] = None
+    #: Primary phone number of the hunt group.
+    #: example: 5558675309
+    phone_number: Optional[str] = None
+    #: Extension of the hunt group.
+    #: example: 7781
+    extension: Optional[datetime] = None
+    #: Whether or not the hunt group has the distinctive ring option enabled.
+    #: example: True
+    distinctive_ring: Optional[bool] = None
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
+    #: Language for hunt group.
+    #: example: English
+    language: Optional[str] = None
+    #: Language code for hunt group.
+    #: example: en-US
+    language_code: Optional[str] = None
+    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+    #: example: Hakim
+    first_name: Optional[str] = None
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
+    #: otherwise defaults to call group name.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Time zone for the hunt group.
+    #: example: America/Chicago
+    time_zone: Optional[str] = None
+    #: Policy controlling how calls are routed to agents.
+    call_policies: Optional[GetHuntGroupCallPolicyObject] = None
+    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    agents: Optional[list[GetPersonPlaceObject]] = None
+    #: Whether or not the hunt group is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Whether or not the hunt group can be used as the caller ID when the agent places outgoing calls.
+    #: example: True
+    hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
+
+
+class ModifyHuntGroupObject2(ApiModel):
+    #: Unique name for the hunt group.
+    #: example: 5558675309-Group
+    name: Optional[str] = None
+    #: Primary phone number of the hunt group.
+    #: example: 5558675309
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the hunt group.
+    #: example: 7781
+    extension: Optional[datetime] = None
+    #: Whether or not the hunt group has the distinctive ring option enabled.
+    #: example: True
+    distinctive_ring: Optional[bool] = None
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
+    #: Language code.
+    #: example: en-US
+    language_code: Optional[str] = None
+    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+    #: example: Hakim
+    first_name: Optional[str] = None
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Time zone for the hunt group.
+    #: example: America/Chicago
+    time_zone: Optional[str] = None
+    #: Policy controlling how calls are routed to agents.
+    call_policies: Optional[PostHuntGroupCallPolicyObject] = None
+    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    agents: Optional[list[PostPersonPlaceObject]] = None
+    #: Whether or not the hunt group is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Enable the hunt group to be used as the caller ID when the agent places outgoing calls. When set to true the
+    #: hunt group's caller ID will be used.
+    #: example: True
+    hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
+
+
 class GetPagingGroupAgentObject(ApiModel):
     #: Agents ID.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80YTc2ZmVmNC1mZjlmLTExZWItYWYwZC00M2YwZjY1NTdjYWI
@@ -3054,7 +3674,7 @@ class GetPagingGroupAgentObject(ApiModel):
     last_name: Optional[str] = None
     #: Type of the person or workspace.
     #: example: PEOPLE
-    type: Optional[MemberType] = None
+    type: Optional[MemberType1] = None
     #: Agents phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
@@ -3073,7 +3693,8 @@ class GetPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
@@ -3091,7 +3712,8 @@ class GetPagingGroupObject(ApiModel):
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     #: example: Group
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people and/or workspaces, who may originate pages to this paging group.
@@ -3109,7 +3731,8 @@ class ListPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
@@ -3132,7 +3755,8 @@ class UpdatePagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
@@ -3144,10 +3768,12 @@ class UpdatePagingGroupObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people and/or workspaces, who may originate pages to this paging group.
@@ -3175,8 +3801,9 @@ class GetPagingGroupAgentObject1(ApiModel):
     last_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
-    #: Agents phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is mandatory.
+    type: Optional[MemberType] = None
+    #: Agents phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Agents extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
@@ -3200,10 +3827,12 @@ class GetPagingGroupObject1(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Routing prefix of location.
@@ -3226,7 +3855,8 @@ class GetPagingGroupObject1(ApiModel):
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     #: example: Group
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people, workspaces and virtual lines ID's who may originate pages to this paging group.
@@ -3242,10 +3872,12 @@ class ListPagingGroupObject1(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Routing prefix of location.
@@ -3291,7 +3923,8 @@ class ContactDetails(ApiModel):
     #: Location ID of person.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA
     location_id: Optional[str] = None
-    #: Location feature ID of the contact. Supported location feature types are Auto Attendant, Call Queue, Hunt Group, Single Number Reach, and Paging Group.
+    #: Location feature ID of the contact. Supported location feature types are Auto Attendant, Call Queue, Hunt Group,
+    #: Single Number Reach, and Paging Group.
     #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5ULzA1NTJmNjdiLTU5YTktNDFiYi04NzM2LTFiMDQxZDFkZGQ1ZQ
     feature_id: Optional[str] = None
 
@@ -3303,7 +3936,8 @@ class PersonId(ApiModel):
     #: Location feature ID.
     #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5ULzA1NTJmNjdiLTU5YTktNDFiYi04NzM2LTFiMDQxZDFkZGQ1ZQ
     feature_id: Optional[str] = None
-    #: Types of users supported in receptionist contacts are People, Auto Attendant, Call Queue, Hunt Group, Single Number Reach, and Paging Group.
+    #: Types of users supported in receptionist contacts are People, Auto Attendant, Call Queue, Hunt Group, Single
+    #: Number Reach, and Paging Group.
     #: example: PEOPLE
     type: Optional[str] = None
 
@@ -3316,6 +3950,15 @@ class ContactPayload(ApiModel):
     contacts: Optional[list[PersonId]] = None
 
 
+class ContactPayloadForModify(ApiModel):
+    #: Receptionist Contact Directory name.
+    #: example: My_Directory
+    name: Optional[str] = None
+    #: Array of users or location features assigned to this Receptionist Contact Directory.
+    #: example: ['Y2lzY29zcGFyazovL3VzL1BFT1BMRS8wNTUyZjY3Yi01OWE5LTQxYmItODczNi0xYjA0MWQxZGRkNWU']
+    contacts: Optional[list[str]] = None
+
+
 class ReadListOfReceptionistContactDirectoriesResponse(ApiModel):
     #: Array of Receptionist Contact Directories.
     directories: Optional[list[Location]] = None
@@ -3324,6 +3967,92 @@ class ReadListOfReceptionistContactDirectoriesResponse(ApiModel):
 class GetDetailsForAReceptionistContactDirectoryResponse(ApiModel):
     #: Array of Receptionist Contact Directories.
     contacts: Optional[list[ContactDetails]] = None
+
+
+class GetCallPickupObjectNotificationType(str, Enum):
+    #: Notification is not sent to any member of the call pickup group.
+    none_ = 'NONE'
+    #: When the notificationDelayTimerSeconds number of seconds has elapsed, play an audio notification for each call
+    #: pickup group member.
+    audio_only = 'AUDIO_ONLY'
+    #: When the notificationDelayTimerSeconds number of seconds has elapsed, provide a visual notification to every
+    #: call pickup group member.
+    visual_only = 'VISUAL_ONLY'
+    #: When the notificationDelayTimerSeconds number of seconds has elapsed, provide a audio and visual notification to
+    #: every call pickup group member.
+    audio_and_visual = 'AUDIO_AND_VISUAL'
+
+
+class GetUserNumberItemObject2(ApiModel):
+    #: Phone number of a person or workspace.
+    #: example: +19075552859
+    external: Optional[str] = None
+    #: Extension of a person or workspace.
+    #: example: 8080
+    extension: Optional[datetime] = None
+    #: Flag to indicate a primary phone.
+    #: example: True
+    primary: Optional[bool] = None
+
+
+class GetPersonPlaceVirtualLineCallPickupObject1(ApiModel):
+    #: ID of a person, workspace or virtual line.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80NDVkMzMzMC1mNjE3LTExZWItOWQyZS01NzViODE3ZGE1NmE
+    id: Optional[str] = None
+    #: First name of a person, workspace or virtual line.
+    #: example: John
+    first_name: Optional[str] = None
+    #: Last name of a person, workspace or virtual line.
+    #: example: Brown
+    last_name: Optional[str] = None
+    #: Display name of a person, workspace or virtual line.
+    #: example: johnBrown
+    display_name: Optional[str] = None
+    #: Type of the person, workspace or virtual line.
+    #: example: PEOPLE
+    type: Optional[MemberType] = None
+    #: Email of a person, workspace or virtual line.
+    #: example: john.brown@example.com
+    email: Optional[str] = None
+    #: List of phone numbers of a person, workspace or virtual line.
+    phone_number: Optional[list[GetUserNumberItemObject2]] = None
+
+
+class GetCallPickupObject1(ApiModel):
+    #: A unique identifier for the call pickup.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUElDS1VQL1kyRnNiRkJwWTJ0MWNERT0
+    id: Optional[str] = None
+    #: Unique name for the call pickup. The maximum length is 80.
+    #: example: North Alaska-Group
+    name: Optional[str] = None
+    #: Type of the notification when an incoming call is unanswered, the call pickup group notifies all of its members.
+    #: Default: NONE.
+    #: example: NONE
+    notification_type: Optional[GetCallPickupObjectNotificationType] = None
+    #: After the number of seconds given by the notificationDelayTimerSeconds has elapsed, notify every member of the
+    #: call pickup group when an incoming call goes unanswered. The notificationType field specifies the notification
+    #: method.Default: 6.
+    #: example: 6.0
+    notification_delay_timer_seconds: Optional[int] = None
+    #: People, workspaces and virtual lines that are eligible to receive calls.
+    agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject1]] = None
+
+
+class ModifyCallPickupObject(ApiModel):
+    #: Unique name for the call pickup. The maximum length is 80.
+    #: example: North Alaska-Group
+    name: Optional[str] = None
+    #: Type of the notification when an incoming call is unanswered, the call pickup group notifies all of its members.
+    #: Default: NONE.
+    #: example: NONE
+    notification_type: Optional[GetCallPickupObjectNotificationType] = None
+    #: After the number of seconds given by the notificationDelayTimerSeconds has elapsed, notify every member of the
+    #: call pickup group when an incoming call goes unanswered. The notificationType field specifies the notification
+    #: method.Default: 6.
+    #: example: 6.0
+    notification_delay_timer_seconds: Optional[int] = None
+    #: An array of people, workspace, and virtual lines IDs, that are added to call pickup.
+    agents: Optional[list[str]] = None
 
 
 class GetLocationVoicemailGroupObjectMessageStorageStorageType(str, Enum):
@@ -3467,6 +4196,406 @@ class ListVoicemailgroupResponse(ApiModel):
     voicemail_groups: Optional[list[GetVoicemailGroupObject]] = None
 
 
+class ArrayOfExtensionsObject(ApiModel):
+    #: Array of extensions that will be validated.
+    extensions: Optional[list[str]] = None
+
+
+class CallBackEffectiveLevel(str, Enum):
+    #: Assigned phone number to location.
+    location_number = 'LOCATION_NUMBER'
+    #: Assigned number of a user or workspace in the location.
+    location_member_number = 'LOCATION_MEMBER_NUMBER'
+    _none_ = 'NONE'
+
+
+class CallBackQuality(str, Enum):
+    recommended = 'RECOMMENDED'
+    not_recommended = 'NOT_RECOMMENDED'
+    invalid = 'INVALID'
+
+
+class CallBackSelected(str, Enum):
+    #: Assigned phone number to location.
+    location_number = 'LOCATION_NUMBER'
+    #: Assigned number of a user or workspace in the location.
+    location_member_number = 'LOCATION_MEMBER_NUMBER'
+
+
+class ExtensionStatusObjectState(str, Enum):
+    #: Extension is valid.
+    valid = 'VALID'
+    #: Extension already assigned to another group.
+    duplicate = 'DUPLICATE'
+    #: Extension already exists in the request body and was already verified.
+    duplicate_in_list = 'DUPLICATE_IN_LIST'
+    #: Extension is invalid.
+    invalid = 'INVALID'
+
+
+class ExtensionStatusObject(ApiModel):
+    #: Unique extension which will be validated at the location level.
+    #: example: 407721
+    extension: Optional[str] = None
+    #: State of the extension after it was validated.
+    #: example: VALID
+    state: Optional[ExtensionStatusObjectState] = None
+    #: Error code of the state in case extension is not valid.
+    #: example: 9495.0
+    error_code: Optional[int] = None
+    #: Message assigned to the error code.
+    #: example: [Error 9495] The extension is not available. It is already assigned as a Call Park Extension: 407721.
+    message: Optional[str] = None
+
+
+class GetLocationCallBackNumberObjectLocationInfo(ApiModel):
+    #: Assigned phone number to location.
+    #: example: +12145551767
+    phone_number: Optional[str] = None
+    #: The name of the location.
+    #: example: CPAPI_Dev_Test_Location_DND
+    name: Optional[str] = None
+    #: The source from which the emergency calling line ID is selected for an actual emergency call, applying fallback
+    #: rules as necessary.
+    #: example: LOCATION_NUMBER
+    effective_level: Optional[CallBackEffectiveLevel] = None
+    #: Location calling line ID number. Avaliable only when number is present and quality would be invalid.
+    #: example: +12145551767
+    effective_value: Optional[str] = None
+    #: Used to represent whether a number is a recommended emergency callback number.
+    #: example: RECOMMENDED
+    quality: Optional[CallBackQuality] = None
+
+
+class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
+    #: The member phone number.
+    #: example: +12145551767
+    phone_number: Optional[str] = None
+    #: The member first name.
+    #: example: Jim
+    first_name: Optional[str] = None
+    #: The member last name. Always contains `.` if the member is a place.
+    #: example: Grey
+    last_name: Optional[str] = None
+    #: Member ID of user/place within the location.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MmQ3YTY3MS00YmVlLTQ2MDItOGVkOC1jOTFmNjU5NjcxZGI
+    member_id: Optional[str] = None
+    #: Member Type.
+    #: example: PEOPLE
+    member_type: Optional[MemberType1] = None
+    #: The source from which the emergency calling line ID is selected for an actual emergency call, applying fallback
+    #: rules as necessary.
+    #: example: LOCATION_MEMBER_NUMBER
+    effective_level: Optional[CallBackEffectiveLevel] = None
+    #: Location calling line ID number. Avaliable only when number is present and quality would be invalid.
+    #: example: +12145551767
+    effective_value: Optional[str] = None
+    #: Used to represent whether a number is a recommended ECBN.
+    #: example: RECOMMENDED
+    quality: Optional[CallBackQuality] = None
+
+
+class GetLocationCallBackNumberObject(ApiModel):
+    #: Data relevant to this location.
+    location_info: Optional[GetLocationCallBackNumberObjectLocationInfo] = None
+    #: Data relevant to the user/place (member) selected for ECBN.
+    location_member_info: Optional[GetLocationCallBackNumberObjectLocationMemberInfo] = None
+    #: Selected number type to configure emergency call back.
+    #: example: LOCATION_MEMBER_NUMBER
+    selected: Optional[CallBackSelected] = None
+
+
+class GetMusicOnHoldObjectGreeting(str, Enum):
+    #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets
+    #: the customer know they are still connected.
+    system = 'SYSTEM'
+    #: Play previously uploaded custom music when call is placed on hold or parked.
+    custom = 'CUSTOM'
+
+
+class AudioAnnouncementFileGetObjectLevel(str, Enum):
+    #: Specifies this audio file is configured across organization.
+    organization = 'ORGANIZATION'
+    #: Specifies this audio file is configured across location.
+    location = 'LOCATION'
+
+
+class AudioAnnouncementFileGetObject(ApiModel):
+    #: A unique identifier for the announcement.
+    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
+    id: Optional[str] = None
+    #: Audio announcement file name.
+    #: example: AUDIO_FILE.wav
+    file_name: Optional[str] = None
+    #: Audio announcement file type.
+    #: example: WAV
+    media_file_type: Optional[AudioFileObjectMediaType] = None
+    #: Audio announcement file type location.
+    #: example: ORGANIZATION
+    level: Optional[AudioAnnouncementFileGetObjectLevel] = None
+
+
+class GetMusicOnHoldObject(ApiModel):
+    #: If enabled, music will be played when call is placed on hold.
+    #: example: True
+    call_hold_enabled: Optional[bool] = None
+    #: If enabled, music will be played when call is parked.
+    #: example: True
+    call_park_enabled: Optional[bool] = None
+    #: Greeting type for the location.
+    #: example: SYSTEM
+    greeting: Optional[GetMusicOnHoldObjectGreeting] = None
+    #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
+    audio_file: Optional[AudioAnnouncementFileGetObject] = None
+
+
+class GetPrivateNetworkConnectObjectNetworkConnectionType(str, Enum):
+    #: Use public internet for the location's connection type.
+    public_internet = 'PUBLIC_INTERNET'
+    #: Use private network connect for the location's connection type.
+    private_network = 'PRIVATE_NETWORK'
+
+
+class GetPrivateNetworkConnectObject(ApiModel):
+    #: Network Connection Type for the location.
+    #: example: PUBLIC_INTERNET
+    network_connection_type: Optional[GetPrivateNetworkConnectObjectNetworkConnectionType] = None
+
+
+class GetTelephonyLocationObjectCallingLineId(ApiModel):
+    #: Group calling line ID name. By default the Org name.
+    #: example: 'Denver Incoming'
+    name: Optional[str] = None
+    #: Directory Number / Main number in E.164 Format.
+    #: example: '+12145555698'
+    phone_number: Optional[str] = None
+
+
+class RouteType(str, Enum):
+    #: Route group must include at least one trunk with a maximum of 10 trunks per route group.
+    route_group = 'ROUTE_GROUP'
+    #: Connection between Webex Calling and the premises.
+    trunk = 'TRUNK'
+
+
+class GetTelephonyLocationObjectConnection(ApiModel):
+    #: Webex Calling location only suppports `TRUNK` and `ROUTE_GROUP` connection type.
+    #: example: ROUTE_GROUP
+    type: Optional[RouteType] = None
+    #: A unique identifier of route type.
+    #: example: 'Y2lzY29zcGFyazovL3VzL1RSVU5LL2M1MGIxZjY2LTRjODMtNDAzNy04NjM1LTg2ZjlkM2VkZDQ5MQ'
+    id: Optional[str] = None
+
+
+class GetTelephonyLocationObject(ApiModel):
+    #: A unique identifier for the location.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfRk9SV0FSRElOR19TRUxFQ1RJVkVfUlVMRS9kR1Z6ZEZKMWJHVTA
+    id: Optional[str] = None
+    #: The name of the location.
+    #: example: 'Denver'
+    name: Optional[str] = None
+    #: Location's phone announcement language.
+    #: example: 'fr_fr'
+    announcement_language: Optional[str] = None
+    #: Location calling line information.
+    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
+    #: Connection details are only returned for local PSTN types of `TRUNK` or `ROUTE_GROUP`.
+    connection: Optional[GetTelephonyLocationObjectConnection] = None
+    #: External Caller ID Name value. Unicode characters.
+    #: example: 'Big Corp Denver'
+    external_caller_id_name: Optional[str] = None
+    #: Limit on the number of people at the location(read-only).
+    #: example: 500000.0
+    user_limit: Optional[int] = None
+    #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to
+    #: the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish
+    #: the location of a device when you make an emergency call.
+    #: example: 'Rcdn'
+    p_access_network_info: Optional[str] = None
+    #: Digit required to reach an outside line. Default: none.
+    #: example: 'Rcdn'
+    outside_dial_digit: Optional[str] = None
+    #: Must dial a prefix when calling between locations having same extension within same location.
+    #: example: '2'
+    routing_prefix: Optional[datetime] = None
+    #: IP Address, hostname, or domain. Read-Only.
+    #: example: '98079822.int10.bcld.webex.com'
+    default_domain: Optional[str] = None
+    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
+    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
+    #: example: '+14158952369'
+    charge_number: Optional[str] = None
+
+
+class ListLocationObject(ApiModel):
+    #: A unique identifier for the location.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
+    id: Optional[str] = None
+    #: The name of the location.
+    #: example: 'Denver'
+    name: Optional[str] = None
+    #: Digit required to reach an outside line. Default: none.
+    #: example: '12'
+    outside_dial_digit: Optional[datetime] = None
+    #: Prefix required when calling between locations having the same extension within the same location.
+    #: example: '2'
+    routing_prefix: Optional[datetime] = None
+    #: Location calling line information.
+    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
+    #: True if E911 setup is required.
+    #: example: True
+    e911_setup_required: Optional[bool] = None
+
+
+class PostLocationAnnouncementLanguageObject(ApiModel):
+    #: Set to `true` to change announcement language for existing people and workspaces.
+    agent_enabled: Optional[bool] = None
+    #: Set to `true` to change announcement language for existing feature configurations.
+    service_enabled: Optional[bool] = None
+    #: Language code.
+    #: example: en_us
+    announcement_language_code: Optional[str] = None
+
+
+class PostLocationCallingRequestAddress(ApiModel):
+    #: Address 1 of the location.
+    #: example: 771 Alder Drive
+    address1: Optional[str] = None
+    #: Address 2 of the location.
+    #: example: Cisco Site 5
+    address2: Optional[str] = None
+    #: City of the location.
+    #: example: Milpitas
+    city: Optional[str] = None
+    #: State code of the location.
+    #: example: CA
+    state: Optional[str] = None
+    #: Postal code of the location.
+    #: example: 95035
+    postal_code: Optional[str] = None
+    #: ISO-3166 2-Letter country code of the location.
+    #: example: US
+    country: Optional[str] = None
+
+
+class PostLocationCallingRequest(ApiModel):
+    #: A unique identifier for the location.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
+    id: Optional[str] = None
+    #: The name of the location.
+    #: example: 'Denver'
+    name: Optional[str] = None
+    #: Time zone associated with this location.
+    #: example: 'America/Chicago'
+    time_zone: Optional[str] = None
+    #: Default email language.
+    #: example: 'en_us'
+    preferred_language: Optional[str] = None
+    #: Location's phone announcement language.
+    #: example: 'fr_fr'
+    announcement_language: Optional[str] = None
+    #: The address of the location.
+    address: Optional[PostLocationCallingRequestAddress] = None
+
+
+class PostValidateExtensionResponseStatus(str, Enum):
+    #: Validated succesfully.
+    ok = 'OK'
+    #: Validated with errors.
+    errors = 'ERRORS'
+
+
+class ExtentionStatusObject(ApiModel):
+    #: Indicates the extention ID for the status.
+    #: example: 1234
+    extension: Optional[datetime] = None
+    #: Indicates the status for the given extention ID.
+    #: example: VALID
+    state: Optional[ExtensionStatusObjectState] = None
+    #: Error Code.
+    #: example: 59475.0
+    error_code: Optional[int] = None
+    #: example: The extension is not available. It is already assigned to a virtual extension
+    message: Optional[str] = None
+
+
+class PostValidateExtensionResponse(ApiModel):
+    #: Either `OK` or `ERRORS`.
+    status: Optional[PostValidateExtensionResponseStatus] = None
+    extension_status: Optional[list[ExtentionStatusObject]] = None
+
+
+class PutLocationCallBackNumberObject(ApiModel):
+    #: Selected number type to configure emergency call back.
+    #: example: LOCATION_MEMBER_NUMBER
+    selected: Optional[CallBackSelected] = None
+    #: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is selected.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hOTc0MzVjZi0zYTZmLTRmNGYtOWU1OC00OTI2OTQ5MDkwMWY
+    location_member_id: Optional[str] = None
+
+
+class PutTelephonyLocationObject(ApiModel):
+    #: Location's phone announcement language.
+    #: example: 'fr_fr'
+    announcement_language: Optional[str] = None
+    #: Location calling line information.
+    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
+    #: Connection details can only be modified to and from local PSTN types of `TRUNK` and `ROUTE_GROUP`.
+    connection: Optional[GetTelephonyLocationObjectConnection] = None
+    #: Denve' (string) - External Caller ID Name value. Unicode characters.
+    #: example: 'Big Corp
+    external_caller_id_name: Optional[str] = None
+    #: Location Identifier.
+    #: example: 'Rcdn'
+    p_access_network_info: Optional[str] = None
+    #: Must dial to reach an outside line. Default is None.
+    #: example: '12'
+    outside_dial_digit: Optional[datetime] = None
+    #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
+    #: example: 2.0
+    routing_prefix: Optional[int] = None
+    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
+    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
+    #: example: '+14158952369'
+    charge_number: Optional[str] = None
+
+
+class RouteIdentity(ApiModel):
+    #: ID of the route type.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
+    id: Optional[str] = None
+    #: A unique name for the route identity.
+    #: example: route_identity_name
+    name: Optional[str] = None
+    #: Type associated with the identity.
+    #: example: ROUTE_GROUP
+    type: Optional[RouteType] = None
+
+
+class StatusOfExtensionsObject(ApiModel):
+    #: Status of the validated array of extensions
+    #: example: OK
+    status: Optional[PostValidateExtensionResponseStatus] = None
+    #: Array of extensions statuses.
+    extension_status: Optional[list[ExtensionStatusObject]] = None
+
+
+class ListLocationsWebexCallingDetailsResponse(ApiModel):
+    #: Array of locations.
+    locations: Optional[list[ListLocationObject]] = None
+
+
+class ReadTheListOfDialPatternsResponse(ApiModel):
+    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
+    #: optional wildcard characters.
+    dial_patterns: Optional[list[str]] = None
+
+
+class ReadTheListOfRoutingChoicesResponse(ApiModel):
+    #: Array of route identities.
+    route_identities: Optional[list[RouteIdentity]] = None
+
+
 class NumberListGetObjectOwner(ApiModel):
     #: ID of the owner to which PSTN Phone number is assigned.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
@@ -3537,7 +4666,7 @@ class TelephonyType(str, Enum):
     mobile_number = 'MOBILE_NUMBER'
 
 
-class NumberListGetObject1(ApiModel):
+class NumberObject(ApiModel):
     #: A unique identifier for the PSTN phone number.
     #: example: +12056350001
     phone_number: Optional[str] = None
@@ -3569,13 +4698,70 @@ class NumberListGetObject1(ApiModel):
     owner: Optional[NumberListGetObjectOwner] = None
 
 
-class GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse1(ApiModel):
+class NumberCount(ApiModel):
+    #: Count of phone numbers that are in the assigned state.
+    #: example: 33.0
+    assigned: Optional[int] = None
+    #: Count of phone numbers which are in the un-assigned state.
+    #: example: 114.0
+    un_assigned: Optional[int] = None
+    #: Count of phone numbers which are inactive.
+    #: example: 12.0
+    in_active: Optional[int] = None
+    #: Count of extensions only without phone number.
+    #: example: 692.0
+    extension_only: Optional[int] = None
+    #: Count of the toll free numbers.
+    #: example: 1.0
+    toll_free_numbers: Optional[int] = None
+    #: Total phone numbers and extensions available.
+    #: example: 839.0
+    total: Optional[int] = None
+    #: Count of phone numbers of type `MOBILE_NUMBER` only without `PSTN_NUMBER` and extension.
+    #: example: 6.0
+    mobile_number: Optional[int] = None
+
+
+class NumberListGetObject1(ApiModel):
     #: Array of phone numbers.
-    phone_numbers: Optional[NumberListGetObject1] = None
+    phone_numbers: Optional[list[NumberObject]] = None
+    #: Count of phone numbers categorized by type or their states, such as assigned or unassigned.
+    count: Optional[NumberCount] = None
+
+
+class NumberTypeOptions(str, Enum):
+    #: Indicates a toll-free PSTN number.
+    tollfree = 'TOLLFREE'
+    #: Indicates a normal Direct Inward Dial (DID) PSTN number.
+    did = 'DID'
+
+
+class NumberStateOptions(str, Enum):
+    #: Indicates number is activated and has calling capability.
+    active = 'ACTIVE'
+    #: Indicates a number is not yet activated and has no calling capability.
+    inactive = 'INACTIVE'
+
+
+class NumbersPost(ApiModel):
+    #: List of phone numbers needed to be added.
+    phone_numbers: Optional[list[str]] = None
+    #: Type of the number.
+    #: example: TOLLFREE
+    number_type: Optional[NumberTypeOptions] = None
+    #: Reflects the state of the number. By default the state of a number is `ACTIVE`.
+    #: example: INACTIVE
+    state: Optional[NumberStateOptions] = None
+
+
+class NumbersRequest(ApiModel):
+    #: List of phone numbers needed to be added.
+    phone_numbers: Optional[list[str]] = None
 
 
 class CallBridgeInfo(ApiModel):
-    #: Indicates that a stutter dial tone will be played to all the participants when a person is bridged on the active shared line call.
+    #: Indicates that a stutter dial tone will be played to all the participants when a person is bridged on the active
+    #: shared line call.
     warning_tone_enabled: Optional[bool] = None
 
 
@@ -3586,7 +4772,8 @@ class CallRecordingInfoRecord(str, Enum):
     never = 'Never'
     #: Calls are always recorded, but user can pause or resume the recording. Stop recording is not supported.
     always_with_pause_resume = 'Always with Pause/Resume'
-    #: Records only the portion of the call after the recording start (`*44`) has been entered. Pause, resume, and stop controls are supported.
+    #: Records only the portion of the call after the recording start (`*44`) has been entered. Pause, resume, and stop
+    #: controls are supported.
     on_demand_with_user_initiated_start = 'On Demand with User Initiated Start'
 
 
@@ -3611,14 +4798,17 @@ class CallRecordingInfoRepeat(ApiModel):
     #: Interval at which warning tone "beep" will be played. This interval is an integer from 10 to 1800 seconds
     #: example: 15.0
     interval: Optional[int] = None
-    #: `true` when ongoing call recording tone will be played at the designated interval. `false` indicates no warning tone will be played.
+    #: `true` when ongoing call recording tone will be played at the designated interval. `false` indicates no warning
+    #: tone will be played.
     enabled: Optional[bool] = None
 
 
 class CallRecordingInfoStartStopAnnouncement(ApiModel):
-    #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for internal calls.
+    #: When `true`, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends for internal calls.
     internal_calls_enabled: Optional[bool] = None
-    #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for PSTN calls.
+    #: When `true`, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends for PSTN calls.
     pstn_calls_enabled: Optional[bool] = None
 
 
@@ -3631,7 +4821,8 @@ class CallRecordingInfo(ApiModel):
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
     record_voicemail_enabled: Optional[bool] = None
-    #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
+    #: When enabled, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends.
     start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None
@@ -3659,7 +4850,8 @@ class CallRecordingPut(ApiModel):
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
     record_voicemail_enabled: Optional[bool] = None
-    #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
+    #: When enabled, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends.
     start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None
@@ -3701,15 +4893,19 @@ class CallQueueObject(ApiModel):
 
 
 class AgentAvaliableCallQueueIdList(ApiModel):
-    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
+    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for
+    #: outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number
+    #: setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
     available_queues: Optional[list[CallQueueObject]] = None
 
 
 class AgentCallQueueId(ApiModel):
-    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
+    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that
+    #: it is using the agent's configured Caller ID.
     #: example: True
     queue_caller_id_enabled: Optional[bool] = None
-    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
+    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when
+    #: `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
     selected_queue: Optional[CallQueueObject] = None
 
 
@@ -3756,7 +4952,8 @@ class GetSharedLineMemberItem(ApiModel):
     #: Last name of person or workspace.
     #: example: Doe
     last_name: Optional[str] = None
-    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the future update.
+    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the
+    #: future update.
     #: example: 2056852221
     phone_number: Optional[str] = None
     #: Phone extension of a person or workspace.
@@ -3789,20 +4986,23 @@ class GetSharedLineMemberItem(ApiModel):
     #: Registration remote IP for the line port.
     #: example: 198.168.0.2
     remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
-    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
+    #: can only make calls to the predefined number set in hotlineDestination.
     #: example: True
     hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
     hotline_destination: Optional[datetime] = None
-    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all the endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
+    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
+    #: the endpoints on the device. When set to `false`, a call decline request is only declined at the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
     line_label: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    member_type: Optional[MemberType] = None
+    member_type: Optional[MemberType1] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -3832,7 +5032,7 @@ class GetMonitoredElementsObjectMember(ApiModel):
     #: example: John Nelson
     display_name: Optional[str] = None
     #: Indicates whether the type is `PEOPLE`, `PLACE` or `VIRTUAL_LINE`.
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
+    type: Optional[MemberType] = None
     #: The email address of the monitored person, place or virtual line.
     #: example: john.nelson@gmail.com
     email: Optional[str] = None
@@ -3934,14 +5134,17 @@ class PushToTalkAccessType(str, Enum):
 
 
 class PushToTalkConnectionType(str, Enum):
-    #: Push-to-Talk initiators can chat with this person but only in one direction. The person you enable Push-to-Talk for cannot respond.
+    #: Push-to-Talk initiators can chat with this person but only in one direction. The person you enable Push-to-Talk
+    #: for cannot respond.
     one_way = 'ONE_WAY'
-    #: Push-to-Talk initiators can chat with this person in a two-way conversation. The person you enable Push-to-Talk for can respond.
+    #: Push-to-Talk initiators can chat with this person in a two-way conversation. The person you enable Push-to-Talk
+    #: for can respond.
     two_way = 'TWO_WAY'
 
 
 class PushToTalkInfo(ApiModel):
-    #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and answers the call automatically.
+    #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and
+    #: answers the call automatically.
     #: example: True
     allow_auto_answer: Optional[bool] = None
     #: Specifies the connection type to be used.
@@ -3960,228 +5163,19 @@ class ReceptionInfo(ApiModel):
     monitored_members: Optional[list[GetPersonPlaceVirtualLineCallParksObject]] = None
 
 
-class UserHotelingRequestPatch(ApiModel):
-    #: Modify person Device Hoteling Setting.
-    hoteling: Optional[HotelingRequest] = None
+class Action(str, Enum):
+    #: Add action.
+    add = 'ADD'
+    #: Delete action.
+    delete = 'DELETE'
 
 
-class CountObject(ApiModel):
-    #: Indicates the total number of user moves requested.
-    total_moves: Optional[int] = None
-    #: Indicates the total number of user moves completed.
-    moved: Optional[int] = None
-    #: Indicates the total number of user moves that failed.
-    failed: Optional[int] = None
-
-
-class ErrorOrImpactItem(ApiModel):
-    #: Error or Impact code.
-    code: Optional[int] = None
-    #: Message string with more error or impact information.
-    message: Optional[int] = None
-
-
-class ItemObject(ApiModel):
-    #: Phone number
-    item: Optional[str] = None
-    #: Index of error number.
-    item_number: Optional[int] = None
-    #: Unique identifier to track the HTTP requests.
-    tracking_id: Optional[str] = None
-    error: Optional[Error1] = None
-
-
-class ErrorResponseObject(ApiModel):
-    items: Optional[list[ItemObject]] = None
-
-
-class JobExecutionStatusObject(ApiModel):
-    #: Unique identifier that identifies each instance of the job.
-    id: Optional[int] = None
-    #: The date and time with seconds, the job has started in UTC format.
-    start_time: Optional[str] = None
-    #: The date and time with seconds, the job has ended in UTC format.
-    end_time: Optional[str] = None
-    #: The date and time with seconds, the job has last updated in UTC format post one of the step execution completion.
-    last_updated: Optional[str] = None
-    #: Displays status for overall steps that are part of the job.
-    status_message: Optional[str] = None
-    #: Exit Code for a job.
-    exit_code: Optional[str] = None
-    #: The date and time with seconds, the job has created in UTC format.
-    created_time: Optional[str] = None
-    #: Time lapsed in seconds since the job execution started.
-    time_elapsed: Optional[str] = None
-    #: Status of each step within a job.
-    step_execution_statuses: Optional[list[StepExecutionStatuses]] = None
-
-
-class JobDetailsResponse(ApiModel):
-    #: Unique identifier of the job.
-    id: Optional[str] = None
-    #: Unique identifier to track the flow of HTTP requests.
-    tracking_id: Optional[str] = None
-    #: Unique identifier to identify which user has run the job.
-    source_user_id: Optional[str] = None
-    #: Unique identifier to identify the customer who has run the job.
-    source_customer_id: Optional[str] = None
-    #: Unique identifier to identify the customer for which the job was run.
-    target_customer_id: Optional[str] = None
-    #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    job_execution_status: Optional[list[JobExecutionStatusObject]] = None
-    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of invocation.
-    latest_execution_status: Optional[str] = None
-    #: Job statistics.
-    counts: Optional[CountObject] = None
-    #: Reference ID for the file that holds the errors and impacts.
-    csv_file: Optional[str] = None
-    #: The date and time with seconds, the file expires in UTC format.
-    csv_file_expiry_time: Optional[str] = None
-    #: 'text/csv',  Format of the file generated.
-    file_format: Optional[str] = None
-
-
-class JobDetailsResponseById(ApiModel):
-    #: Job name.
-    name: Optional[str] = None
-    #: Unique identifier of the job.
-    id: Optional[str] = None
-    #: Unique identifier to track the flow of HTTP requests.
-    tracking_id: Optional[str] = None
-    #: Unique identifier to identify which user has run the job.
-    source_user_id: Optional[str] = None
-    #: Unique identifier to identify the customer who has run the job.
-    source_customer_id: Optional[str] = None
-    #: Unique identifier to identify the customer for which the job was run.
-    target_customer_id: Optional[str] = None
-    #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    job_execution_status: Optional[list[JobExecutionStatusObject]] = None
-    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of invocation.
-    latest_execution_status: Optional[str] = None
-    #: Job statistics.
-    counts: Optional[CountObject] = None
-    #: Reference ID for the file that holds the errors and impacts.
-    csv_file: Optional[str] = None
-    #: The date and time with seconds, the file expires in UTC format.
-    csv_file_expiry_time: Optional[str] = None
-    #: 'text/csv',  Format of the file generated.
-    file_format: Optional[str] = None
-    #: URL to the CSV file containing errors and impacts.
-    csv_file_download_url: Optional[str] = None
-
-
-class JobListResponse(ApiModel):
-    #: Lists all jobs for the customer in order of most recent one to oldest one irrespective of its status.
-    items: Optional[list[JobDetailsResponse]] = None
-
-
-class MoveUsersErrorResponse(ApiModel):
-    #: List of error items.
-    error: Optional[list[ErrorOrImpactItem]] = None
-
-
-class UserItem(ApiModel):
-    #: User ID to be moved.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzUyMjNiYmVkLTQyYzktNDU0ZC1hMWYzLTdmYWQ1Y2M3ZTZlMw
-    user_id: Optional[str] = None
-    #: Extension to be moved.
-    #: example: 28544
-    extension: Optional[str] = None
-
-
-class UsersListItem(ApiModel):
-    #: The target location for the user move.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA
-    location_id: Optional[str] = None
-    #: When `true`, validate the user move. When `false`, perform the user move.
-    validate: Optional[bool] = None
-    #: A list of users to be moved.
-    users: Optional[list[UserItem]] = None
-
-
-class MoveUsersStartJobObject(ApiModel):
-    #: The user to be moved from the source location.
-    users_list: Optional[list[UsersListItem]] = None
-
-
-class StartJobExecutionStatusObject(ApiModel):
-    #: Unique identifier that identifies each instance of the job.
-    id: Optional[int] = None
-    #: The date and time with seconds, the job has started in UTC format.
-    start_time: Optional[str] = None
-    #: The date and time with seconds, the job has last updated in UTC format post one of the step execution completion.
-    last_updated: Optional[str] = None
-    #: Displays status for overall steps that are part of the job.
-    status_message: Optional[str] = None
-    #: Exit Code for a job.
-    exit_code: Optional[str] = None
-    #: The date and time with seconds, the job has been created in UTC format.
-    created_time: Optional[str] = None
-    #: Time lapsed in seconds since the job execution started.
-    time_elapsed: Optional[str] = None
-
-
-class StartJobResponseObject(ApiModel):
-    #: Job name.
-    name: Optional[str] = None
-    #: Unique identifier of the job.
-    id: Optional[str] = None
-    #: Unique identifier to track the flow of HTTP requests.
-    tracking_id: Optional[str] = None
-    #: Unique identifier to identify which user has run the job.
-    source_user_id: Optional[str] = None
-    #: Unique identifier to identify the customer who has run the job.
-    source_customer_id: Optional[str] = None
-    #: Unique identifier to identify the customer for which the job was run.
-    target_customer_id: Optional[str] = None
-    #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    job_execution_status: Optional[list[StartJobExecutionStatusObject]] = None
-    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of invocation.
-    latest_execution_status: Optional[str] = None
-    #: Job statistics.
-    counts: Optional[CountObject] = None
-
-
-class MoveUsersStartJobResponse(ApiModel):
-    #: Response for the user move.
-    response: Optional[StartJobResponseObject] = None
-
-
-class UserListItem(ApiModel):
-    #: Associated user ID for the validation response.
-    user_id: Optional[str] = None
-    #: List of impacts for the user move.
-    impacts: Optional[list[ErrorOrImpactItem]] = None
-    #: List of errors for the user move.
-    errors: Optional[list[ErrorOrImpactItem]] = None
-
-
-class MoveUsersValidationResponse(ApiModel):
-    #: Response for the user move validation.
-    response: Optional[list[UserListItem]] = None
-
-
-class AudioAnnouncementFileGetObjectMediaFileType(str, Enum):
+class AudioAnnouncementFileGetObjectMediaFileType1(str, Enum):
     #: WAV File Extension.
     wav = 'WAV'
-    #: WMA File Extension.
-    wma = 'WMA'
 
 
-class AudioAnnouncementFileGetObjectLevel(str, Enum):
-    #: Specifies this audio file is configured across the organization.
-    organization = 'ORGANIZATION'
-    #: Specifies this audio file is configured across the location.
-    location = 'LOCATION'
-
-
-class AudioAnnouncementFileGetObject(ApiModel):
+class AudioAnnouncementFileGetObject1(ApiModel):
     #: A unique identifier for the announcement.
     #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
     id: Optional[str] = None
@@ -4190,35 +5184,135 @@ class AudioAnnouncementFileGetObject(ApiModel):
     file_name: Optional[str] = None
     #: Audio announcement file type.
     #: example: WAV
-    media_file_type: Optional[AudioAnnouncementFileGetObjectMediaFileType] = None
+    media_file_type: Optional[AudioAnnouncementFileGetObjectMediaFileType1] = None
     #: Audio announcement file location.
     #: example: ORGANIZATION
     level: Optional[AudioAnnouncementFileGetObjectLevel] = None
 
 
-class GetMusicOnHoldObject(ApiModel):
+class GetMusicOnHoldObject1(ApiModel):
     #: Music on hold enabled or disabled for the person.
     #: example: True
-    audio_enabled: Optional[bool] = None
-    #: Music on hold enabled or disabled for the location.
+    moh_enabled: Optional[bool] = None
+    #: Music on hold enabled or disabled for the location. The music on hold setting returned in the response is used
+    #: only when music on hold is enabled at the location level. When `mohLocationEnabled` is false and `mohEnabled`
+    #: is true, music on hold is disabled for the user. When `mohLocationEnabled` is true and `mohEnabled` is false,
+    #: music on hold is turned off for the user. In both cases, music on hold will not be played.
     #: example: True
     moh_location_enabled: Optional[bool] = None
     #: Greeting type for the person.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
-    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject1] = None
 
 
-class PutMusicOnHoldObject(ApiModel):
+class PutMusicOnHoldObject1(ApiModel):
     #: Music on hold is enabled or disabled for the person.
     #: example: True
-    audio_enabled: Optional[bool] = None
+    moh_enabled: Optional[bool] = None
     #: Greeting type for the person.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
-    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject1] = None
+
+
+class AgentCallerIdType(str, Enum):
+    #: The associated member is a call queue.
+    call_queue = 'CALL_QUEUE'
+    #: The associated member is a hunt group.
+    hunt_group = 'HUNT_GROUP'
+
+
+class AvailableCallerIdObject(ApiModel):
+    #: Call queue or hunt group's unique identifier.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUVVFVUUvMjE3ZDU3YmEtOTMxYi00ZjczLTk1Y2EtOGY3MWFhYzc4MTE5
+    id: Optional[str] = None
+    #: Member is of type `CALL_QUEUE` or `HUNT_GROUP`
+    #: example: CALL_QUEUE
+    type: Optional[AgentCallerIdType] = None
+    #: Call queue or hunt group's name.
+    #: example: TestCallQueue
+    name: Optional[str] = None
+    #: When not null, it is call queue or hunt group's phone number.
+    #: example: +441234200090
+    phone_number: Optional[str] = None
+    #: When not null, it is call queue or hunt group's extension number.
+    #: example: 6001
+    extension: Optional[datetime] = None
+
+
+class AvailableCallerIdList(ApiModel):
+    #: A list of call queues or hunt groups that the agent belongs to and are available to be selected as the Caller ID
+    #: for outgoing calls. It is empty when the agent's call queues or hunt groups have disabled the outgoing phone
+    #: number setting to be used as Caller ID.
+    available_caller_ids: Optional[list[AvailableCallerIdObject]] = None
+
+
+class AgentCallerId(ApiModel):
+    #: Indicates agent's choice of using this agent's Caller ID for outgoing calls.
+    selected_caller_id: Optional[AvailableCallerIdObject] = None
+
+
+class NumberOwnerType(str, Enum):
+    #: PSTN phone number's owner is a workspace.
+    place = 'PLACE'
+    #: PSTN phone number's owner is a person.
+    people = 'PEOPLE'
+    #: PSTN phone number's owner is a Virtual Profile.
+    virtual_line = 'VIRTUAL_LINE'
+    #: PSTN phone number's owner is an auto-attendant.
+    auto_attendant = 'AUTO_ATTENDANT'
+    #: PSTN phone number's owner is a call queue.
+    call_queue = 'CALL_QUEUE'
+    #: PSTN phone number's owner is a group paging.
+    group_paging = 'GROUP_PAGING'
+    #: PSTN phone number's owner is a hunt group.
+    hunt_group = 'HUNT_GROUP'
+    #: PSTN phone number's owner is a voice messaging.
+    voice_messaging = 'VOICE_MESSAGING'
+    #: PSTN phone number's owner is a Single Number Reach.
+    broadworks_anywhere = 'BROADWORKS_ANYWHERE'
+    #: PSTN phone number's owner is a Contact Center link.
+    contact_center_link = 'CONTACT_CENTER_LINK'
+    #: PSTN phone number's owner is a Contact Center adapter.
+    contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
+    #: PSTN phone number's owner is a route list.
+    route_list = 'ROUTE_LIST'
+    #: PSTN phone number's owner is a voice mail group.
+    voicemail_group = 'VOICEMAIL_GROUP'
+    #: PSTN phone number's owner is a collaborate bridge.
+    collaborate_bridge = 'COLLABORATE_BRIDGE'
+
+
+class NumberObjectOwner1(ApiModel):
+    #: Type of the PSTN phone number's owner.
+    #: example: PEOPLE
+    type: Optional[NumberOwnerType] = None
+    #: First name of the PSTN phone number's owner and will only be returned when the owner type is PEOPLE or PLACE or
+    #: VIRTUAL_PROFILE.
+    #: example: Mark
+    first_name: Optional[str] = None
+    #: Last name of the PSTN phone number's owner and will only be returned when the owner type is PEOPLE or PLACE or
+    #: VIRTUAL_PROFILE.
+    #: example: Zand
+    last_name: Optional[str] = None
+    #: Display name of the PSTN phone number's owner and will only be returned when the owner type is a Feature.
+    #: example: Mark Zand
+    display_name: Optional[str] = None
+
+
+class NumberObject1(ApiModel):
+    #: A unique identifier for the PSTN phone number.
+    #: example: +12056350001
+    phone_number: Optional[str] = None
+    owner: Optional[NumberObjectOwner1] = None
+
+
+class ExternalCallerIdNumberListGet(ApiModel):
+    #: Array of phone numbers.
+    phone_numbers: Optional[list[NumberObject1]] = None
 
 
 class ListVirtualLineObjectExternalCallerIdNamePolicy(str, Enum):
@@ -4504,52 +5598,6 @@ class OrderRequest(ApiModel):
     line_items: Optional[list[OrderRequestLineItem]] = None
 
 
-class CallForwardingPutCallForwardingAlways(ApiModel):
-    #: "Always" call forwarding is enabled or disabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Destination for "Always" call forwarding.
-    #: example: 2225551212
-    destination: Optional[str] = None
-    #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
-    ring_reminder_enabled: Optional[bool] = None
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    destination_voicemail_enabled: Optional[bool] = None
-
-
-class CallForwardingPutCallForwardingNoAnswer(ApiModel):
-    #: "No Answer" call forwarding is enabled or disabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Destination for "No Answer" call forwarding.
-    #: example: 2225551212
-    destination: Optional[str] = None
-    #: Number of rings before the call will be forwarded if unanswered.
-    #: example: 3.0
-    number_of_rings: Optional[int] = None
-    #: System-wide maximum number of rings allowed for `numberOfRings` setting.
-    #: example: 15.0
-    system_max_number_of_rings: Optional[int] = None
-    #: Indicates the enabled or disabled state of sending incoming calls to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destination_voicemail_enabled: Optional[bool] = None
-
-
-class CallForwardingPutCallForwarding(ApiModel):
-    #: Settings for forwarding all incoming calls to the destination you choose.
-    always: Optional[CallForwardingPutCallForwardingAlways] = None
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person is busy.
-    busy: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
-    #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    no_answer: Optional[CallForwardingPutCallForwardingNoAnswer] = None
-
-
-class CallForwardingPut(ApiModel):
-    #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
-    call_forwarding: Optional[CallForwardingPutCallForwarding] = None
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
-    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
-
-
 class UserNumberItem(ApiModel):
     #: Phone number of person or workspace. Either `phoneNumber` or `extension` is mandatory.
     #: example: +19075552859
@@ -4586,7 +5634,7 @@ class MonitoredElementUser(ApiModel):
     display_name: Optional[str] = None
     #: Type of the person or workspace.
     #: example: PEOPLE
-    type: Optional[MemberType] = None
+    type: Optional[MemberType1] = None
     #: Email of the person or workspace.
     #: example: john.brown@gmail.com
     email: Optional[str] = None
@@ -4624,6 +5672,15 @@ class ListNumbersAssociatedWithASpecificWorkspaceResponse(ApiModel):
     location: Optional[Location] = None
     #: Organization object having a unique identifier for the organization and its name.
     organization: Optional[Location] = None
+
+
+class AuthorizationCode(ApiModel):
+    #: Indicates an access code.
+    #: example: 4856
+    code: Optional[datetime] = None
+    #: Indicates the description of the access code.
+    #: example: Marketing's access code
+    description: Optional[str] = None
 
 
 class ReportError(ApiModel):
@@ -4665,7 +5722,8 @@ class Report(ApiModel):
     temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
     #: List of errors that occurred during report generation.
     #: **Note:**
-    #: * Captures errors that occurred during asynchronous or background report generation, after the request has been accepted and a `202 OK` response is returned.
+    #: * Captures errors that occurred during asynchronous or background report generation, after the request has been
+    #: accepted and a `202 OK` response is returned.
     errors: Optional[list[ReportError]] = None
 
 
@@ -4690,7 +5748,8 @@ class Subscriber1(ApiModel):
     #: A unique Cisco identifier for the subscriber.
     #: example: 'Y2lzY29zcGFyazovL3VzL1NVQlNDUklCRVIvNjk3MGU2YmItNzQzOS00ZmZiLWFkMzQtZDNmZjAxNjdkZGFk'
     id: Optional[str] = None
-    #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only presented when status is `provisioned`.
+    #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only
+    #: presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
     person_id: Optional[str] = None
     #: The user ID of the subscriber on BroadWorks.
@@ -4725,8 +5784,10 @@ class Subscriber1(ApiModel):
     status: Optional[SubscriberStatus] = None
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the subscriber, *after* the API has been accepted and 200 OK response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the subscriber,
+    #: *after* the API has been accepted and 200 OK response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The date and time the subscriber was provisioned.
     #: example: 2019-10-18T14:26:16.000Z
@@ -4756,7 +5817,8 @@ class SubscriberProvisioningPrecheckResponseInfo(ApiModel):
 
 
 class SubscriberProvisioningPrecheckResponse(ApiModel):
-    #: A textual representation of the Precheck response message containing the `infoCode` object in the case of a success response and the `errorCode` object in the case of failure.
+    #: A textual representation of the Precheck response message containing the `infoCode` object in the case of a
+    #: success response and the `errorCode` object in the case of failure.
     #: example: success
     message: Optional[str] = None
     #: A list of `ProvisioningPreCheckResponseInfo` objects.
@@ -4770,7 +5832,9 @@ class PrecheckABroadworksSubscriberProvisioningCustomerInfo(ApiModel):
 
 
 class WorkspaceResponse(ApiModel):
-    #: Provisioning ID that defines how this workspace is to be provisioned for Cisco Webex Services. Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen Customer Template on Cisco Webex Control Hub.
+    #: Provisioning ID that defines how this workspace is to be provisioned for Cisco Webex Services. Each Customer
+    #: Template will have their own unique Provisioning ID. This ID will be displayed under the chosen Customer
+    #: Template on Cisco Webex Control Hub.
     #: example: ZjViMzYxODctYzhkZC00NzI3LThiMmYtZjljNDQ3ZjI5MDQ2OjQyODVmNTk0LTViNTEtNDdiZS05Mzk2LTZjMzZlMmFkODNhNQ
     provisioning_id: Optional[str] = None
     #: The user ID of the workspace on BroadWorks.
@@ -4907,13 +5971,15 @@ class AudioIn(ApiModel):
     #: The date and time when this audio session ended.
     #: example: 2016-04-18T17:00:00.000Z
     end_time: Optional[datetime] = None
-    #: The percentage of audio packet loss, in float between 0.0 and 100.0, during each sampling interval. This applies to IP type only.
+    #: The percentage of audio packet loss, in float between 0.0 and 100.0, during each sampling interval. This applies
+    #: to IP type only.
     #: example: [0.02, 0.1, 0.07]
     packet_loss: Optional[list[float]] = None
     #: The average latency, in milliseconds, during each sampling interval. This applies to IP type only.
     #: example: [30.0, 10.0, 5.0]
     latency: Optional[list[float]] = None
-    #: The mean opinion score, in float between 0.0 and 5.0, during each sampling interval. This applies to PSTN type only.
+    #: The mean opinion score, in float between 0.0 and 5.0, during each sampling interval. This applies to PSTN type
+    #: only.
     #: example: [1.2, 3.4, 4.9]
     mean_opinion_score: Optional[list[float]] = None
 
@@ -4950,13 +6016,6 @@ class CallsQualitiesResponse(ApiModel):
     items: Optional[list[MediaSessionQuality]] = None
 
 
-class ActionOnRouteList(str, Enum):
-    #: Add a phone number to the Route List.
-    add = 'ADD'
-    #: Delete a phone number from the Route List.
-    delete = 'DELETE'
-
-
 class CallSourceType(str, Enum):
     #: Indicates that the call source is a route list.
     route_list = 'ROUTE_LIST'
@@ -4971,16 +6030,25 @@ class CallSourceType(str, Enum):
 class CallSourceInfo(ApiModel):
     #: The type of call source.
     call_source_type: Optional[CallSourceType] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk, this trunk belongs to a route group which is assigned to a route list with the name routeListA and `originatorNumber` is a number assigned to routeListA. routeListA is returned here. This element is returned when `callSourceType` is `ROUTE_LIST`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk, this trunk belongs to a route group which is
+    #: assigned to a route list with the name routeListA and `originatorNumber` is a number assigned to routeListA.
+    #: routeListA is returned here. This element is returned when `callSourceType` is `ROUTE_LIST`.
     #: example: routeList1
     route_list_name: Optional[str] = None
     #: Foute list ID.
     #: example: NTJiZmUxNDAtYjIwMS00NTUzLWI1OGQtMmVkNDU1NTFmYTUy
     route_list_id: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name trunkA, trunkA belongs to a route group which is assigned to a route list with name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has dialPattern xxxx assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`, dialPlanA is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name trunkA, trunkA belongs to a route
+    #: group which is assigned to a route list with name routeListA,  trunkA is also assigned to dialPlanA as routing
+    #: choice, dialPlanA has dialPattern xxxx assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`,
+    #: dialPlanA is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
     #: example: dialPlan1
     dial_plan_name: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name trunkA, trunkA belongs to a route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name trunkA, trunkA belongs to a
+    #: route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA
+    #: as routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the
+    #: `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is
+    #: `DIAL_PATTERN`.
     #: example: *888
     dial_pattern: Optional[str] = None
     #: Dial plan ID.
@@ -4991,7 +6059,8 @@ class CallSourceInfo(ApiModel):
 class DestinationType(str, Enum):
     #: Matching destination is a person or workspace with details in the `hostedAgent` field.
     hosted_agent = 'HOSTED_AGENT'
-    #: Matching destination is a calling feature like auto-attendant or hunt group with details in the `hostedFeature` field.
+    #: Matching destination is a calling feature like auto-attendant or hunt group with details in the `hostedFeature`
+    #: field.
     hosted_feature = 'HOSTED_FEATURE'
     #: Matching destination routes into a separate PBX with details in the `pbxUser` field.
     pbx_user = 'PBX_USER'
@@ -5041,7 +6110,7 @@ class DialPattern(ApiModel):
     #: example: +5555
     dial_pattern: Optional[str] = None
     #: Action to add or delete a pattern.
-    action: Optional[ActionOnRouteList] = None
+    action: Optional[Action] = None
 
 
 class DialPatternPut(ApiModel):
@@ -5072,25 +6141,11 @@ class DialPatternValidate(ApiModel):
     message: Optional[str] = None
 
 
-class DialPatternValidationStatus(str, Enum):
-    #: In case one or more dial pattern validation failed
-    errors = 'ERRORS'
-    #: If all the patterns are validated successfully
-    ok = 'OK'
-
-
 class DialPatternValidateResult(ApiModel):
     #: Overall validation result status.
-    status: Optional[DialPatternValidationStatus] = None
+    status: Optional[PostValidateExtensionResponseStatus] = None
     #: Patterns validation result.
     dial_pattern_status: Optional[list[DialPatternValidate]] = None
-
-
-class RouteType(str, Enum):
-    #: Route group must include at least one trunk with a maximum of 10 trunks per route group.
-    route_group = 'ROUTE_GROUP'
-    #: Connection between Webex Calling and the premises.
-    trunk = 'TRUNK'
 
 
 class DialPlan(ApiModel):
@@ -5191,7 +6246,7 @@ class HostedAgent(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mMjU4YjhmZi1lODIxLTQ3MDktYTI2My1mMmI4OWZjN2FlYmQ
     id: Optional[str] = None
     #: Type of agent for call destination.
-    type: Optional[MemberType] = None
+    type: Optional[MemberType1] = None
     #: Person or workspace's first name.
     #: example: firstName
     first_name: Optional[str] = None
@@ -5471,7 +6526,7 @@ class RouteListNumberPatch(ApiModel):
     number: Optional[str] = None
     #: Possible value, `ADD` or `DELETE`.
     #: example: DELETE
-    action: Optional[ActionOnRouteList] = None
+    action: Optional[Action] = None
 
 
 class RouteListNumberPatchResponse(ApiModel):
@@ -5559,7 +6614,8 @@ class VirtualExtensionRange(ApiModel):
     #: Virtual extension range name.
     #: example: firstName1
     name: Optional[str] = None
-    #: Prefix that the virtual extension range is associated with (Note: Standard mode must have leading '+' in prefix; BCD/Enhanced mode can have any valid prefix).
+    #: Prefix that the virtual extension range is associated with (Note: Standard mode must have leading '+' in prefix;
+    #: BCD/Enhanced mode can have any valid prefix).
     #: example: +1214555
     prefix: Optional[str] = None
     #: Pattern associated with the virtual extension range.
@@ -5633,7 +6689,8 @@ class TestCallRoutingPostResponse(ApiModel):
 class TrunkType(str, Enum):
     #: For Cisco CUBE Local Gateway.
     registering = 'REGISTERING'
-    #: For Cisco Unified Border Element, Oracle ACME Session Border Controller, AudioCodes Session Border Controller, Ribbon Session Border Controller.
+    #: For Cisco Unified Border Element, Oracle ACME Session Border Controller, AudioCodes Session Border Controller,
+    #: Ribbon Session Border Controller.
     certificate_based = 'CERTIFICATE_BASED'
 
 
@@ -5684,7 +6741,8 @@ class TrunkGet(ApiModel):
     #: User ID.
     #: example: lg1_sias10_cpapi12446_LGU@64941297.int10.bcld.webex.com
     pilot_user_id: Optional[str] = None
-    #: Contains the body of the HTTP response received following the request to Console API and will not be set if the response has no body.
+    #: Contains the body of the HTTP response received following the request to Console API and will not be set if the
+    #: response has no body.
     outbound_proxy: Optional[AttachmentAction] = None
     #: User's authentication service information.
     #: example: lg1_sias10_cpapi12446_LGU
@@ -5728,7 +6786,8 @@ class TrunkPost(ApiModel):
     #: A password to use on the trunk.
     #: example: password
     password: Optional[str] = None
-    #: Dual Identity Support setting impacts the handling of the From header and P-Asserted-Identity header when sending an initial SIP `INVITE` to the trunk for an outbound call.
+    #: Dual Identity Support setting impacts the handling of the From header and P-Asserted-Identity header when
+    #: sending an initial SIP `INVITE` to the trunk for an outbound call.
     #: example: True
     dual_identity_support_enabled: Optional[bool] = None
     #: Trunk Type associated with the trunk.
@@ -5871,7 +6930,8 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRules(ApiModel):
     #: If enabled, the passcode should not contain repeated pattern.
     #: example: True
     block_repeated_patterns_enabled: Optional[bool] = None
-    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
+    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
+    #: 408408).
     block_repeated_digits: Optional[GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     block_contiguous_sequences: Optional[GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences] = None
@@ -5917,7 +6977,8 @@ class GetVoicemailSettingsObject(ApiModel):
     #: Number of days after which messages expire.
     #: example: 10.0
     number_of_days_for_message_expiry: Optional[int] = None
-    #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When disabled, all unread voicemail messages will be kept.
+    #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When
+    #: disabled, all unread voicemail messages will be kept.
     strict_deletion_enabled: Optional[bool] = None
     #: When enabled, people in the organization can configure the email forwarding of voicemails.
     #: example: True
@@ -5969,7 +7030,8 @@ class HydraClassification(ApiModel):
     #: Unique identifier for the org's Space Classification
     #: example: Y2lzY29zcGFyazovL3VzL0NMQVNTSUZJQ0FUSU9OL2YyMDUyZTgyLTU0ZjgtMTFlYS1hMmUzLTJlNzI4Y2U4ODEyNQ
     id: Optional[str] = None
-    #: Represents the rank of the classification. A number from 0 to 4, in which 0 usually refers to "public", and is the default whenever a rank cannot be determined.
+    #: Represents the rank of the classification. A number from 0 to 4, in which 0 usually refers to "public", and is
+    #: the default whenever a rank cannot be determined.
     rank: Optional[int] = None
     #: Represents the classification title to be displayed in classified spaces for org users.
     #: example: Public
@@ -6043,7 +7105,7 @@ class Link(ApiModel):
     rel: Optional[str] = None
 
 
-class Error4(ApiModel):
+class Error3(ApiModel):
     code: Optional[int] = None
     details: Optional[AttachmentAction] = None
     internal: Optional[bool] = None
@@ -6171,7 +7233,8 @@ class CustomerCurrentState(str, Enum):
 
 
 class Customer1(ApiModel):
-    #: The ANI digits delivered with a call. ANI, or Automatic Number Identification, is a service provided by the phone company that delivers the caller's phone number along with the call.
+    #: The ANI digits delivered with a call. ANI, or Automatic Number Identification, is a service provided by the
+    #: phone company that delivers the caller's phone number along with the call.
     #: example: John
     ani: Optional[str] = None
     #: Flag that indicates whether this is a current session or not. 0 or 1.
@@ -6197,13 +7260,15 @@ class Customer1(ApiModel):
     #: The current state of the contact.
     #: example: ended
     current_state: Optional[CustomerCurrentState] = None
-    #: The DNIS digits delivered with the call. DNIS, or Dialed Number Identification Service, is a service provided by the phone company that delivers a digit string indicating the number the caller dialed along with the call.
+    #: The DNIS digits delivered with the call. DNIS, or Dialed Number Identification Service, is a service provided by
+    #: the phone company that delivers a digit string indicating the number the caller dialed along with the call.
     #: example: 11888999
     dnis: Optional[str] = None
     #: The ID assigned to an entry point.
     #: example: 11
     entrypoint_id: Optional[datetime] = None
-    #: The name of the entry point, which is the landing place for customer calls on the Webex Contact Center system. Calls are moved from the entry point into a queue and are then distributed to agents.
+    #: The name of the entry point, which is the landing place for customer calls on the Webex Contact Center system.
+    #: Calls are moved from the entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesEP
     entrypoint_name: Optional[str] = None
     #: The ID assigned to an entry point.
@@ -6268,7 +7333,8 @@ class CustomerSession(Customer1):
     #: The number of queues contact entered.
     #: example: 1.0
     queue_count: Optional[int] = None
-    #: The name of the current or final queue, which is holding place for contacts while they await handling by an agent. Calls are moved from an entry point into a queue and are then distributed to agents.
+    #: The name of the current or final queue, which is holding place for contacts while they await handling by an
+    #: agent. Calls are moved from an entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesQueue
     queue_name: Optional[str] = None
     #: The amount of time, in milliseconds, a contact spent in queue waiting.
@@ -6359,25 +7425,32 @@ class TaskAttributes(ApiModel):
     #: Created time of the task (epoch milliseconds).
     #: example: 1591702170000.0
     created_time: Optional[int] = None
-    #: Last updated time of the task (epoch milliseconds). Updates whenever the underlying data is modified, even if the Task view of the data is the same. May also update after task "closure", so not suitable for finding a task's "closed time".
+    #: Last updated time of the task (epoch milliseconds). Updates whenever the underlying data is modified, even if
+    #: the Task view of the data is the same. May also update after task "closure", so not suitable for finding a
+    #: task's "closed time".
     #: example: 1591712170099.0
     last_updated_time: Optional[int] = None
     owner: Optional[Location] = None
     queue: Optional[Location] = None
     context: Optional[AttachmentAction] = None
-    #: Customer's channel-specific identifier. For telephony, this is the phone number. For email and chat, this is the email address.
+    #: Customer's channel-specific identifier. For telephony, this is the phone number. For email and chat, this is the
+    #: email address.
     #: example: chatuser@email.com
     origin: Optional[str] = None
-    #: Destination the customer contacted. For telephony, this is the number the contact called. For chat, this is the URL of the page where the chat takes place. For email, it is the email address contacted.
+    #: Destination the customer contacted. For telephony, this is the number the contact called. For chat, this is the
+    #: URL of the page where the chat takes place. For email, it is the email address contacted.
     #: example: +18005555555
     destination: Optional[str] = None
-    #: Indicates which party initiated the Task. If "inbound", call was initated by customer. If "outbound", was initiated by system as part of campaign. If "outdial", was initiated by an agent.
+    #: Indicates which party initiated the Task. If "inbound", call was initated by customer. If "outbound", was
+    #: initiated by system as part of campaign. If "outdial", was initiated by an agent.
     #: example: inbound
     direction: Optional[str] = None
     #: Reason code specified by customer to indicate main aim of the task.
     #: example: Credit
     reason_code: Optional[str] = None
-    #: Whether a capture has been requested for this Task. If this is true, a capture should eventually be available. False indicates no capture will be made available. If null, it is not yet known whether a capture has been requested.
+    #: Whether a capture has been requested for this Task. If this is true, a capture should eventually be available.
+    #: False indicates no capture will be made available. If null, it is not yet known whether a capture has been
+    #: requested.
     capture_requested: Optional[bool] = None
     #: Current status of the task.
     #: example: assigned
@@ -6567,7 +7640,8 @@ class GetAgentsStatisticsInterval(str, Enum):
 
 
 class ListCapturesQuery(ApiModel):
-    #: Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.
+    #: Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to
+    #: interact with this organization.
     #: example: 93912f11-6017-404b-bf14-5331890b1797
     org_id: Optional[str] = None
     #: Comma separated list of taskIds to gather captures for. Max of 10 taskIds per request.
@@ -6590,6 +7664,15 @@ class AcdObject(ApiModel):
     #: Indicates the call queue agent soft key value of an ACD object.
     #: example: LAST_PAGE
     display_callqueue_agent_softkeys: Optional[DisplayCallqueueAgentSoftkeysObject] = None
+
+
+class ActivationStates(str, Enum):
+    #: Indicates a device is activating.
+    activating = 'ACTIVATING'
+    #: Indicates a device is activated.
+    activated = 'ACTIVATED'
+    #: Indicates a device is deactivated.
+    deactivated = 'DEACTIVATED'
 
 
 class SelectionType(str, Enum):
@@ -6646,7 +7729,8 @@ class SnmpObject(ApiModel):
     #: Read-only community string that allows/denies access to other device's statistics. Default value is `public`.
     #: example: public
     get_community: Optional[str] = None
-    #: Read-write community string that protects the device against unauthorized changes. Must never be set to `public`.
+    #: Read-write community string that protects the device against unauthorized changes. Must never be set to
+    #: `public`.
     #: example: private
     set_community: Optional[str] = None
     #: Denotes whether the SNMPv3 security is enabled.
@@ -6703,7 +7787,8 @@ class DectObject(ApiModel):
     #: Enable/disable user level web access to the local device.
     #: example: True
     web_access_enabled: Optional[bool] = None
-    #: Enable/disable phone's default behavior regarding the nightly maintenance synchronization with the Webex Calling platform.
+    #: Enable/disable phone's default behavior regarding the nightly maintenance synchronization with the Webex Calling
+    #: platform.
     #: example: True
     nightly_resync_enabled: Optional[bool] = None
 
@@ -6745,12 +7830,14 @@ class BackgroundImage(str, Enum):
     webex_dark_blue = 'WEBEX_DARK_BLUE'
     #: Indicates that a custom background image will be set for the devices.
     custom_background = 'CUSTOM_BACKGROUND'
-    #: When this option is selected, a field 'Custom Background URL' needs to be added with the image url. URLs provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
+    #: When this option is selected, a field 'Custom Background URL' needs to be added with the image url. URLs
+    #: provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
     custom_url = 'customUrl'
 
 
 class DisplayNameSelection(str, Enum):
-    #: Indicates that devices will display the person's phone number, or if a person doesn't have a phone number, the location number will be displayed.
+    #: Indicates that devices will display the person's phone number, or if a person doesn't have a phone number, the
+    #: location number will be displayed.
     person_number = 'PERSON_NUMBER'
     #: Indicates that devices will display the name in first name then last name format.
     person_first_then_last_name = 'PERSON_FIRST_THEN_LAST_NAME'
@@ -6766,7 +7853,8 @@ class DefaultLoggingLevelObject(str, Enum):
 
 
 class LineKeyLabelSelection(str, Enum):
-    #: This will display the person extension, or if a person doesn't have an extension, the person's first name will be displayed.
+    #: This will display the person extension, or if a person doesn't have an extension, the person's first name will
+    #: be displayed.
     person_extension = 'PERSON_EXTENSION'
     #: Indicates that devices will display the name in first name then last name format.
     person_first_then_last_name = 'PERSON_FIRST_THEN_LAST_NAME'
@@ -6837,11 +7925,14 @@ class MppVlanObject(ApiModel):
 class AuthenticationMethodObject(str, Enum):
     #: No authentication.
     none_ = 'NONE'
-    #: Extensible Authentication Protocol-Flexible Authentication via Secure Tunneling. Requires username and password authentication.
+    #: Extensible Authentication Protocol-Flexible Authentication via Secure Tunneling. Requires username and password
+    #: authentication.
     eap_fast = 'EAP_FAST'
-    #: Protected Extensible Authentication Protocol - Generic Token Card. Requires username and password authentication.
+    #: Protected Extensible Authentication Protocol - Generic Token Card. Requires username and password
+    #: authentication.
     peap_gtc = 'PEAP_GTC'
-    #: Protected Extensible Authentication Protocol - Microsoft Challenge Handshake Authentication Protocol version 2. Requires username and password authentication.
+    #: Protected Extensible Authentication Protocol - Microsoft Challenge Handshake Authentication Protocol version 2.
+    #: Requires username and password authentication.
     peap_mschapv2 = 'PEAP_MSCHAPV2'
     #: Pre-Shared Key. Requires shared passphrase for authentication.
     psk = 'PSK'
@@ -7129,7 +8220,8 @@ class MppObject(ApiModel):
     #: Line key labels define the format of what's shown next to line keys.
     #: example: PERSON_EXTENSION
     line_key_label_format: Optional[LineKeyLabelSelection] = None
-    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not supported on the MPP 8875
+    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not
+    #: supported on the MPP 8875
     #: example: DEFAULT
     line_key_ledpattern: Optional[LineKeyLEDPattern] = Field(alias='lineKeyLEDPattern', default=None)
     #: Enable/disable Link Layer Discovery Protocol for local devices.
@@ -7143,7 +8235,8 @@ class MppObject(ApiModel):
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
     #: example: 30.0
     off_hook_timer: Optional[int] = None
-    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your provisioned location.
+    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
+    #: provisioned location.
     #: example: RUSSIAN
     phone_language: Optional[PhoneLanguage] = None
     #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
@@ -7178,7 +8271,8 @@ class MppObject(ApiModel):
     #: Enable/disable the use of the PC passthrough ethernet port on supported phone models.
     #: example: True
     pass_through_port_enabled: Optional[bool] = None
-    #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the device.
+    #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the
+    #: device.
     #: example: True
     user_password_override_enabled: Optional[bool] = None
     #: Enable/disable the default screen behavior when inbound calls are received.
@@ -7285,10 +8379,23 @@ class AdminBatchStartJobObjectLocationCustomizations(ApiModel):
     #: Location within an organization where changes of device setings will be applied to all the devices within it.
     #: example: 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA'
     location_id: Optional[str] = None
-    #: Indicates if all the devices within this location will be customized with new requested customizations(if set to `true`) or will be overridden with the one at organization level (if set to `false` or any other value). This field has no effect when the job is being triggered at organization level.
+    #: Indicates if all the devices within this location will be customized with new requested customizations(if set to
+    #: `true`) or will be overridden with the one at organization level (if set to `false` or any other value). This
+    #: field has no effect when the job is being triggered at organization level.
     location_customizations_enabled: Optional[bool] = None
     #: Indicates the settings for ATA devices, DECT devices and MPP devices.
     customizations: Optional[CustomizationObject] = None
+
+
+class CountObject(ApiModel):
+    #: Indicates the total number of phone numbers requested to be moved.
+    total_numbers: Optional[int] = None
+    #: Indicates the total number of phone numbers successfully deleted.
+    numbers_deleted: Optional[int] = None
+    #: Indicates the total number of phone numbers successfully moved.
+    numbers_moved: Optional[int] = None
+    #: Indicates the total number of phone numbers failed.
+    numbers_failed: Optional[int] = None
 
 
 class CustomizationDeviceLevelObject(ApiModel):
@@ -7344,7 +8451,8 @@ class MppObjectDevice(ApiModel):
     #: Line key labels define the format of what's shown next to line keys.
     #: example: PERSON_EXTENSION
     line_key_label_format: Optional[LineKeyLabelSelection] = None
-    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not supported on the MPP 8875
+    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not
+    #: supported on the MPP 8875
     #: example: DEFAULT
     line_key_ledpattern: Optional[LineKeyLEDPattern] = Field(alias='lineKeyLEDPattern', default=None)
     #: Enable/disable Link Layer Discovery Protocol for local devices.
@@ -7358,7 +8466,8 @@ class MppObjectDevice(ApiModel):
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
     #: example: 30.0
     off_hook_timer: Optional[int] = None
-    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your provisioned location.
+    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
+    #: provisioned location.
     #: example: RUSSIAN
     phone_language: Optional[PhoneLanguage] = None
     #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
@@ -7371,7 +8480,8 @@ class MppObjectDevice(ApiModel):
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
     #: example: True
     usb_ports_enabled: Optional[bool] = None
-    #: By default the Side USB port is enabled to support KEMs and other peripheral devices. Use the option to disable use of this port.
+    #: By default the Side USB port is enabled to support KEMs and other peripheral devices. Use the option to disable
+    #: use of this port.
     usb_ports: Optional[UsbPortsObject] = None
     #: Specify a numeric Virtual LAN ID for devices.
     vlan: Optional[MppVlanObject] = None
@@ -7395,7 +8505,8 @@ class MppObjectDevice(ApiModel):
     #: Enable/disable the use of the PC passthrough ethernet port on supported phone models.
     #: example: True
     pass_through_port_enabled: Optional[bool] = None
-    #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the device.
+    #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the
+    #: device.
     #: example: True
     user_password_override_enabled: Optional[bool] = None
     #: Enable/disable the default screen behavior when inbound calls are received.
@@ -7482,14 +8593,16 @@ class TypeObject(str, Enum):
 class ManufacturerObject(str, Enum):
     #: Devices manufactured by Cisco.
     cisco = 'CISCO'
-    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for
+    #: provisioning in the control hub.
     third_party = 'THIRD_PARTY'
 
 
 class ManagedByObject(str, Enum):
     #: Devices managed by Cisco.
     cisco = 'CISCO'
-    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the
+    #: control hub.
     customer = 'CUSTOMER'
 
 
@@ -7521,7 +8634,7 @@ class DeviceObject(ApiModel):
     #: example: CUSTOMER
     managed_by: Optional[ManagedByObject] = None
     #: List of places the device is supported for.
-    supported_for: Optional[list[MemberType]] = None
+    supported_for: Optional[list[MemberType1]] = None
     #: Onboarding method.
     onboarding_method: Optional[list[OnboardingMethodObject]] = None
     #: Enables / Disables layout configuration for devices.
@@ -7554,10 +8667,12 @@ class DeviceObject(ApiModel):
 class DeviceSettingsObject(ApiModel):
     #: Indicates the customization object of the device settings.
     customizations: Optional[CustomizationDeviceLevelObject] = None
-    #: Indicates if customization is allowed at a location level. If `true`, customized at a location level. If `false`, not customized; uses customer-level configuration.
+    #: Indicates if customization is allowed at a location level. If `true`, customized at a location level. If
+    #: `false`, not customized; uses customer-level configuration.
     #: example: True
     custom_enabled: Optional[bool] = None
-    #: Customer devices setting update status. If `true`, an update is in progress (no further changes are allowed). `If false`, no update in progress (changes are allowed).
+    #: Customer devices setting update status. If `true`, an update is in progress (no further changes are allowed).
+    #: `If false`, no update in progress (changes are allowed).
     #: example: True
     update_in_progress: Optional[bool] = None
     #: Number of devices that will be updated.
@@ -7571,10 +8686,12 @@ class DeviceSettingsObject(ApiModel):
 class DeviceSettingsObjectForDeviceLevel(ApiModel):
     #: Indicates the customization object of the device settings.
     customizations: Optional[CustomizationDeviceLevelObjectDevice] = None
-    #: Indicates if customization is allowed at a device level. If `true`, customized at a device level. If `false`, not customized; uses customer-level configuration.
+    #: Indicates if customization is allowed at a device level. If `true`, customized at a device level. If `false`,
+    #: not customized; uses customer-level configuration.
     #: example: True
     custom_enabled: Optional[bool] = None
-    #: Customer devices setting update status. If `true`, an update is in progress (no further changes are allowed). `If false`, no update in progress (changes are allowed).
+    #: Customer devices setting update status. If `true`, an update is in progress (no further changes are allowed).
+    #: `If false`, no update in progress (changes are allowed).
     #: example: True
     update_in_progress: Optional[bool] = None
     #: Number of devices that will be updated.
@@ -7583,6 +8700,20 @@ class DeviceSettingsObjectForDeviceLevel(ApiModel):
     #: Indicates the last updated time.
     #: example: 1659624763665.0
     last_update_time: Optional[int] = None
+
+
+class ItemObject(ApiModel):
+    #: Phone number
+    item: Optional[str] = None
+    #: Index of error number.
+    item_number: Optional[int] = None
+    #: Unique identifier to track the HTTP requests.
+    tracking_id: Optional[str] = None
+    error: Optional[Error1] = None
+
+
+class ErrorResponseObject(ApiModel):
+    items: Optional[list[ItemObject]] = None
 
 
 class MemberObject1(ApiModel):
@@ -7595,19 +8726,22 @@ class MemberObject1(ApiModel):
     #: Last name of a person or workspace.
     #: example: Smith
     last_name: Optional[str] = None
-    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will be supported in a future update.
+    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will
+    #: be supported in a future update.
     #: example: 2055552221
     phone_number: Optional[str] = None
     #: Extension of a person or workspace.
     #: example: 000
     extension: Optional[str] = None
-    #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
+    #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
+    #: Line/Port of the device.
     #: example: True
     primary_owner: Optional[bool] = None
     #: Port number assigned to person or workspace.
     #: example: 1.0
     port: Optional[int] = None
-    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
+    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
+    #: requires this option. This will override user level compression options.
     t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType] = None
@@ -7620,13 +8754,16 @@ class MemberObject1(ApiModel):
     #: Registration Remote IP address for the line port.
     #: example: 192.102.12.84
     remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
-    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
+    #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
     hotline_enabled: Optional[bool] = None
     #: The preconfigured number for Hotline. Required only if `hotlineEnabled` is set to true.
     #: example: +12055552222
     hotline_destination: Optional[str] = None
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
+    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
@@ -7636,7 +8773,7 @@ class MemberObject1(ApiModel):
     #: example: evypzco5ds@55552222.int10.bcld.webex.com
     line_port: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    member_type: Optional[MemberType] = None
+    member_type: Optional[MemberType1] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -7652,7 +8789,36 @@ class GetMemberResponse1(ApiModel):
     max_line_count: Optional[int] = None
 
 
-class JobExecutionStatusObject11(ApiModel):
+class Hoteling(ApiModel):
+    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this
+    #: host(workspace device) and use this device
+    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive
+    #: calls with their telephone number and access features normally available to them on their office phone.
+    enabled: Optional[bool] = None
+    #: Enable limiting the time a guest can use the device. The time limit is configured via `guestHoursLimit`.
+    limit_guest_use: Optional[bool] = None
+    #: Time Limit in hours until hoteling is enabled. Mandatory if `limitGuestUse` is enabled.
+    guest_hours_limit: Optional[int] = None
+
+
+class JobExecutionStatusObject(ApiModel):
+    #: Unique identifier that identifies each instance of the job.
+    id: Optional[int] = None
+    #: Last updated time (in UTC format) post one of the step execution completion.
+    last_updated: Optional[str] = None
+    #: Displays status for overall steps that are part of the job.
+    status_message: Optional[str] = None
+    #: Exit Code for a job.
+    exit_code: Optional[str] = None
+    #: Job creation time in UTC format.
+    created_time: Optional[str] = None
+    #: Time lapsed since the job execution started.
+    time_elapsed: Optional[str] = None
+    #: Status of each step within a job.
+    step_execution_statuses: Optional[list[StepExecutionStatuses]] = None
+
+
+class JobExecutionStatusObject1(ApiModel):
     #: Unique identifier that identifies each instance of the job.
     id: Optional[int] = None
     #: Last updated time (in UTC format) post one of the step execution completion.
@@ -7684,8 +8850,9 @@ class StartJobResponse(ApiModel):
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
     instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    job_execution_status: Optional[list[JobExecutionStatusObject11]] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Indicates operation type that was carried out.
@@ -7695,10 +8862,10 @@ class StartJobResponse(ApiModel):
     #: Unique location identifier for which the numbers have been moved.
     target_location_id: Optional[str] = None
     #: Job statistics.
-    counts: Optional[Counts1] = None
+    counts: Optional[CountObject] = None
 
 
-class JobListResponse1(ApiModel):
+class JobListResponse(ApiModel):
     #: Lists all jobs for the customer in order of most recent one to oldest one irrespective of its status.
     items: Optional[list[StartJobResponse]] = None
 
@@ -7750,7 +8917,7 @@ class MacStatusObject(ApiModel):
 class MACAddressResponse(ApiModel):
     #: Status of MAC address.
     #: example: ERRORS
-    status: Optional[DialPatternValidationStatus] = None
+    status: Optional[PostValidateExtensionResponseStatus] = None
     #: Contains an array of all the MAC address provided and their statuses.
     mac_status: Optional[list[MacStatusObject]] = None
 
@@ -7758,7 +8925,8 @@ class MACAddressResponse(ApiModel):
 class PutDeviceSettingsRequest(ApiModel):
     #: Indicates the customization object of the device settings.
     customizations: Optional[CustomizationDeviceLevelObjectDevice] = None
-    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
+    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not
+    #: customized; uses customer-level configuration.
     #: example: True
     custom_enabled: Optional[bool] = None
 
@@ -7770,7 +8938,8 @@ class PutMemberObject(ApiModel):
     #: Unique identifier for the member.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
-    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
+    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
+    #: requires this option. This will override user level compression options.
     t38_fax_compression_enabled: Optional[bool] = None
     #: Whether the user is the owner of the device or not, and points to a primary Line/Port of device.
     #: example: True
@@ -7780,13 +8949,16 @@ class PutMemberObject(ApiModel):
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
     line_weight: Optional[int] = None
-    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
+    #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
     hotline_enabled: Optional[bool] = None
     #: The preconfigured number for Hotline. Required only if `hotlineEnabled` is set to true.
     #: example: +12055552222
     hotline_destination: Optional[str] = None
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
+    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
@@ -7805,7 +8977,18 @@ class ValidateMACRequest(ApiModel):
     macs: Optional[list[str]] = None
 
 
-class Devices1(ApiModel):
+class DeviceOwner(ApiModel):
+    #: Unique identifier of a person or a workspace.
+    id: Optional[str] = None
+    #: Enumeration that indicates if the member is of type `PEOPLE` or `PLACE`.
+    type: Optional[MemberType1] = None
+    #: First name of device owner.
+    first_name: Optional[str] = None
+    #: Last name of device owner.
+    last_name: Optional[str] = None
+
+
+class Devices(ApiModel):
     #: Unique identifier for a device.
     id: Optional[str] = None
     #: Comma separated array of tags used to describe device.
@@ -7816,26 +8999,261 @@ class Devices1(ApiModel):
     mac: Optional[str] = None
     #: IP address of device.
     ip_address: Optional[str] = None
-    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
+    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of
+    #: the device.
     primary_owner: Optional[bool] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     type: Optional[LineType] = None
+    #: Hoteling settings, which are available when the device is the user's primary device and device type is PRIMARY
+    hoteling: Optional[Hoteling] = None
     #: Owner of device.
     owner: Optional[DeviceOwner] = None
     #: Activation state of device.
     activation_state: Optional[ActivationStates] = None
 
 
-class DeviceList1(ApiModel):
+class DeviceList(ApiModel):
     #: Array of devices available to person.
-    devices: Optional[list[Devices1]] = None
+    devices: Optional[list[Devices]] = None
     #: Maximum number of devices a person can be assigned to.
     max_device_count: Optional[int] = None
+
+
+class JobIdResponseObject(ApiModel):
+    #: Job name.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Job type.
+    job_type: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject]] = None
+    #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
+    latest_execution_status: Optional[str] = None
+    #: Indicates the operation type that was carried out.
+    operation_type: Optional[str] = None
+    #: Unique location identifier for which the job was run.
+    source_location_id: Optional[str] = None
+    #: Unique location identifier for which the numbers have been moved.
+    target_location_id: Optional[str] = None
+    #: The location name for which the job was run.
+    source_location_name: Optional[str] = None
+    #: The location name for which the numbers have been moved.
+    target_location_name: Optional[str] = None
+    #: Job statistics.
+    counts: Optional[CountObject] = None
 
 
 class SupportedDevicesObject(ApiModel):
     #: List of supported devices.
     devices: Optional[list[DeviceObject]] = None
+
+
+class GetLineKeyTemplateResponse(ApiModel):
+    #: Unique identifier for the Line Key Template.
+    #: example: Y2lzY29zcGFyazovL3VzL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS81NzVhMWY3Zi03MjRkLTRmZGUtODk4NC1mNjNhNDljMzYxZmQ
+    id: Optional[str] = None
+    #: Name of the Line Key Template.
+    #: example: Basic Template
+    template_name: Optional[str] = None
+    #: The Device Model for which the Line Key Template is applicable.
+    #: example: 'DMS Cisco 6821'
+    device_model: Optional[str] = None
+    #: The friendly display name used to represent the device model in Control Hub.
+    #: example: Cisco 6821
+    model_display_name: Optional[str] = None
+    #: Indicates whether user can reorder the line keys.
+    user_reorder_enabled: Optional[bool] = None
+
+
+class LineKeyType(str, Enum):
+    #: PRIMARY_LINE is the user's primary extension. This is the default assignment for Line Key Index 1 and cannot be
+    #: modified.
+    primary_line = 'PRIMARY_LINE'
+    #: Shows the appearance of other users on the owner's phone.
+    shared_line = 'SHARED_LINE'
+    #: Enables User and Call Park monitoring.
+    monitor = 'MONITOR'
+    #: Allows users to reach a telephone number, extension or a SIP URI.
+    speed_dial = 'SPEED_DIAL'
+    #: An open key will automatically take the configuration of a monitor button starting with the first open key.
+    #: These buttons are also usable by the user to configure speed dial numbers on these keys.
+    open = 'OPEN'
+    #: Button not usable but reserved for future features.
+    closed = 'CLOSED'
+
+
+class ApplyLineKeyTemplateJobDetails(ApiModel):
+    #: Job name.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject]] = None
+    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of
+    #: invocation.
+    latest_execution_status: Optional[str] = None
+    #: Indicates the progress of the job.
+    percentage_complete: Optional[str] = None
+    #: Number of job steps completed.
+    updated_count: Optional[str] = None
+    #: Number of job steps completed with advisories.
+    advisory_count: Optional[str] = None
+
+
+class ApplyLineKeyTemplateJobList(ApiModel):
+    #: List of Apply Line Key Template jobs.
+    items: Optional[list[ApplyLineKeyTemplateJobDetails]] = None
+
+
+class ApplyLineKeyTemplateJobErrors(ApiModel):
+    #: Unique identifier to track the HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Description of errors in the job.
+    error: Optional[ErrorMessage] = None
+
+
+class PostApplyLineKeyTemplateRequestAction(str, Enum):
+    #: Used to apply LinekeyTemplate to devices.
+    apply_template = 'APPLY_TEMPLATE'
+    #: Used to reset devices to its default Linekey Template configurations.
+    apply_default_templates = 'APPLY_DEFAULT_TEMPLATES'
+
+
+class PostApplyLineKeyTemplateRequest(ApiModel):
+    #: Line key Template action to perform.
+    #: example: APPLY_TEMPLATE
+    action: Optional[PostApplyLineKeyTemplateRequestAction] = None
+    #: `templateId` is required for `APPLY_TEMPLATE` action.
+    #: example: Y2lzY29zcGFyazovL1VTL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS9kNDUzM2MwYi1hZGRmLTRjODUtODk0YS1hZTVkOTAyYzAyMDM=
+    template_id: Optional[str] = None
+    #: Used to search for devices only in the given locations.
+    location_ids: Optional[list[str]] = None
+    #: Indicates whether to exclude devices with custom layout.
+    exclude_devices_with_custom_layout: Optional[bool] = None
+    #: Include devices only with these tags.
+    include_device_tags: Optional[list[str]] = None
+    #: Exclude devices with these tags.
+    exclude_device_tags: Optional[list[str]] = None
+    #: Refine search by warnings for More shared appearances than shared users.
+    #: example: True
+    more_shared_appearances_enabled: Optional[bool] = None
+    #: Refine search by warnings for Fewer shared appearances than shared users.
+    #: example: True
+    few_shared_appearances_enabled: Optional[bool] = None
+    #: Refine search by warnings for more monitor appearances than monitors.
+    #: example: True
+    more_monitor_appearances_enabled: Optional[bool] = None
+
+
+class ProgrammableLineKeys(ApiModel):
+    #: An index representing a Line Key. Index starts from 1 representing the first key on the left side of the phone.
+    #: example: 2.0
+    line_key_index: Optional[int] = None
+    #: The action that would be performed when the Line Key is pressed.
+    #: example: SPEED_DIAL
+    line_key_type: Optional[LineKeyType] = None
+    #: This is applicable only when the lineKeyType is `SPEED_DIAL`.
+    #: example: Help Line
+    line_key_label: Optional[str] = None
+    #: This is applicable only when the lineKeyType is `SPEED_DIAL` and the value must be a valid Telephone Number,
+    #: Ext, or SIP URI (format: user@host using A-Z,a-z,0-9,-_ .+ for user and host).
+    #: example: 5646
+    line_key_value: Optional[datetime] = None
+
+
+class PostLineKeyTemplateRequest(ApiModel):
+    #: Name of the Line Key Template.
+    #: example: template for 8845
+    template_name: Optional[str] = None
+    #: The Device Model for which the Line Key Template is applicable.
+    #: example: DMS Cisco 8845
+    device_model: Optional[str] = None
+    #: User Customization Enabled.
+    #: example: True
+    user_reorder_enabled: Optional[bool] = None
+    #: Contains a mapping of Line Keys and their corresponding actions.
+    line_keys: Optional[list[ProgrammableLineKeys]] = None
+
+
+class PutLineKeyTemplateRequest(ApiModel):
+    #: Indicates whether the user can reorder the line keys.
+    #: example: True
+    user_reorder_enabled: Optional[bool] = None
+    #: List of line keys that are being updated.
+    line_keys: Optional[list[ProgrammableLineKeys]] = None
+
+
+class LineKeyTemplatesResponse(ApiModel):
+    #: Unique identifier for the Line Key Template.
+    #: example: Y2lzY29zcGFyazovL1VTL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS9kNDUzM2MwYi1hZGRmLTRjODUtODk0YS1hZTVkOTAyYzAyMDM=
+    id: Optional[str] = None
+    #: Name of the Line Key Template.
+    #: example: template for 8845
+    template_name: Optional[str] = None
+    #: The Device Model for which the Line Key Template is applicable.
+    #: example: DMS Cisco 8845
+    device_model: Optional[str] = None
+    #: The friendly display name used to represent the device model in Control Hub.
+    #: example: Cisco 8845
+    model_display_name: Optional[str] = None
+
+
+class GetThirdPartyDeviceObject(ApiModel):
+    #: Manufacturer of the device.
+    #: example: THIRD_PARTY
+    manufacturer: Optional[str] = None
+    #: The Line/Port identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode.
+    #: example: lg1_sias10_cpapi16004_LGU@64941297.int10.bcld.webex.com
+    line_port: Optional[str] = None
+    #: Contains the body of the HTTP response received following the request to the Console API. Not set if the
+    #: response has no body.
+    #: example: hs17.hosted-int.bcld.webex.com
+    outbound_proxy: Optional[str] = None
+    #: Device manager(s).
+    #: example: CUSTOMER
+    managed_by: Optional[str] = None
+    #: SIP authentication user name for the owner of the device.
+    #: example: 392829
+    sip_user_name: Optional[str] = None
+
+
+class PutThirdPartyDevice(ApiModel):
+    #: Password to be updated.
+    #: example: Test4Password123&
+    sip_password: Optional[str] = None
+
+
+class ReadTheListOfLineKeyTemplatesResponse(ApiModel):
+    #: Array of Line Key Templates.
+    line_key_templates: Optional[list[LineKeyTemplatesResponse]] = None
+
+
+class PreviewApplyLineKeyTemplateResponse(ApiModel):
+    #: Number of devices affected.
+    device_count: Optional[int] = None
 
 
 class ActivationCode(ApiModel):
@@ -7860,6 +9278,12 @@ class NetworkConnectivityType(str, Enum):
     wired = 'wired'
 
 
+class ManagedBy(str, Enum):
+    cisco = 'CISCO'
+    customer = 'CUSTOMER'
+    partner = 'PARTNER'
+
+
 class Device(ApiModel):
     #: A unique identifier for the device.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9ERVZJQ0UvNTEwMUIwN0ItNEY4Ri00RUY3LUI1NjUtREIxOUM3QjcyM0Y3
@@ -7882,7 +9306,8 @@ class Device(ApiModel):
     #: The capabilities of the device.
     #: example: ['xapi']
     capabilities: Optional[list[str]] = None
-    #: The permissions the user has for this device. For example, `xapi` means this user is entitled to using the `xapi` against this device.
+    #: The permissions the user has for this device. For example, `xapi` means this user is entitled to using the
+    #: `xapi` against this device.
     #: example: ['xapi']
     permissions: Optional[list[str]] = None
     #: The connection status of the device.
@@ -7936,6 +9361,9 @@ class Device(ApiModel):
     #: Timestamp of the last time device sent a status post.
     #: example: 2023-08-15T14:04:00.444Z
     last_seen: Optional[datetime] = None
+    #: Entity managing the device configuration.
+    #: example: CISCO
+    managed_by: Optional[ManagedBy] = None
 
 
 class DeviceCollectionResponse(ApiModel):
@@ -8073,7 +9501,10 @@ class Event(ApiModel):
     #: The date and time of the event.
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None
-    #: The event's data representation. This object will contain the event's `resource`, such as [memberships](/docs/api/v1/memberships/get-membership-details) or [messages](/docs/api/v1/messages/get-message-details), at the time the event took place.
+    #: The event's data representation. This object will contain the event's `resource`, such as `memberships
+    #: <https://developer.webex.com/docs/api/v1/memberships/get-membership-details>`_ or
+    #: `messages
+    #: <https://developer.webex.com/docs/api/v1/messages/get-message-details>`_, at the time the event took place.
     data: Optional[EventData] = None
 
 
@@ -8104,11 +9535,18 @@ class EventData1(ApiModel):
     host: Optional[AttachmentAction] = None
     #: Common Identity (CI) authenticated meeting attendees
     attendees: Optional[list[str]] = None
-    #: indicates whether or not the Voice Assistant was enabled during the meeting. If `true` a transcript should be available a couple minutes after the meeting ended at the [meetingTranscripts resource](/docs/api/v1/meeting-transcripts)
+    #: indicates whether or not the Voice Assistant was enabled during the meeting. If `true` a transcript should be
+    #: available a couple minutes after the meeting ended at the `meetingTranscripts resource
+    #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_
     transcription_enabled: Optional[str] = None
-    #: indicates if recording was enabled for all or parts of the meeting. If `true` a recording should be available shortly after the meeting ended at the [recordings resource](/docs/api/v1/recordings)
+    #: indicates if recording was enabled for all or parts of the meeting. If `true` a recording should be available
+    #: shortly after the meeting ended at the `recordings resource
+    #: <https://developer.webex.com/docs/api/v1/recordings>`_
     recording_enabled: Optional[str] = None
-    #: indicates if chat messages were exchanged during the meeting in the meetings client (not the unified client). If `true` these messages can be accessed by a compliance officer at the [postMeetingsChat](/docs/api/v1/meetings-chat) resource. Meetings chat collection must be custom enabled.
+    #: indicates if chat messages were exchanged during the meeting in the meetings client (not the unified client). If
+    #: `true` these messages can be accessed by a compliance officer at the `postMeetingsChat
+    #: <https://developer.webex.com/docs/api/v1/meetings-chat>`_ resource. Meetings chat
+    #: collection must be custom enabled.
     has_post_meetings_chat: Optional[str] = None
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None
@@ -8170,127 +9608,15 @@ class Event1(ApiModel):
     #: The date and time of the event.
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None
-    #: The event's data representation. This object will contain the event's `resource`, such as [memberships](/docs/api/v1/memberships/get-membership-details), [messages](/docs/api/v1/messages/get-message-details), [meetings](/docs/api/v1/meetings), [tabs](/docs/api/v1/room-tabs), [rooms](/docs/api/v1/space-classifications) or [attachmentActions](/docs/api/v1/attachment-actions) at the time the event took place.
+    #: The event's data representation. This object will contain the event's `resource`, such as `memberships
+    #: <https://developer.webex.com/docs/api/v1/memberships/get-membership-details>`_, `messages
+    #: `meetings
+    #: <https://developer.webex.com/docs/api/v1/meetings>`_, `tabs
     data: Optional[EventData1] = None
 
 
 class EventCollectionResponse1(ApiModel):
     items: Optional[list[Event1]] = None
-
-
-class FeatureReferenceObject(ApiModel):
-    #: Unique identifier of the call feature referenced. The call Feature can be Auto Attendant, Call Queue or Music On hold.
-    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
-    id: Optional[str] = None
-    #: Name of the call feature referenced.
-    #: example: Main Line AA - Test
-    name: Optional[str] = None
-    #: Resource Type of the call feature.
-    #: example: Auto Attendant
-    type: Optional[str] = None
-    #: Unique identifier of the location.
-    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi81ZTk3MzFlNy1iOWQ0LTRmMWQtYjYyMi05NDgwMDhhMjkzMzM
-    location_id: Optional[str] = None
-    #: Location name of the announcement file.
-    #: example: RCDN
-    location_name: Optional[str] = None
-
-
-class AnnouncementResponse(ApiModel):
-    #: Unique identifier of the announcement.
-    #: example: Y2lzY29zcGFyazovL3VzL0FOTk9VTkNFTUVOVC8zMjAxNjRmNC1lNWEzLTQxZmYtYTMyNi02N2MwOThlNDFkMWQ
-    id: Optional[str] = None
-    #: Name of the announcement.
-    #: example: Public_Announcement
-    name: Optional[str] = None
-    #: File name of the uploaded binary announcement greeting.
-    #: example: Sample_Greetings_file.wav
-    file_name: Optional[str] = None
-    #: Size of the file in kilobytes.
-    #: example: 356
-    file_size: Optional[datetime] = None
-    #: Media file type of the announcement file.
-    #: example: WAV
-    media_file_type: Optional[str] = None
-    #: Last updated timestamp (in UTC format) of the announcement.
-    #: example: 2023-06-13T18:39:53.651Z
-    last_updated: Optional[datetime] = None
-    #: Reference count of the call features this announcement is assigned to.
-    #: example: 1.0
-    feature_reference_count: Optional[int] = None
-    #: Call features referenced by this announcement.
-    feature_references: Optional[list[FeatureReferenceObject]] = None
-
-
-class AnnouncementUsageResponse(ApiModel):
-    #: Total file size used by announcements in this repository in kilobytes.
-    #: example: 1068.0
-    total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB', default=None)
-    #: Maximum audio file size allowed to upload in kilobytes.
-    #: example: 9600.0
-    max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB', default=None)
-    #: Maximum video file size allowed to upload in kilobytes.
-    #: example: 120000.0
-    max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB', default=None)
-    #: Total file size limit for the repository in megabytes.
-    #: example: 1000.0
-    total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB', default=None)
-
-
-class AnnouncementsListResponseLevel(str, Enum):
-    location = 'LOCATION'
-
-
-class AnnouncementsListResponse(ApiModel):
-    #: Unique identifier of the announcement.
-    #: example: Y2lzY29zcGFyazovL3VzL0FOTk9VTkNFTUVOVC8zMjAxNjRmNC1lNWEzLTQxZmYtYTMyNi02N2MwOThlNDFkMWQ
-    id: Optional[str] = None
-    #: Name of the announcement.
-    #: example: Public_Announcement
-    name: Optional[str] = None
-    #: File name of the uploaded binary announcement greeting.
-    #: example: Sample_Greetings_file.wav
-    file_name: Optional[str] = None
-    #: Size of the file in kilobytes.
-    #: example: 356
-    file_size: Optional[datetime] = None
-    #: Media file type of the announcement file.
-    #: example: WAV
-    media_file_type: Optional[str] = None
-    #: LastUpdated timestamp (in UTC format) of the announcement.
-    #: example: 2023-06-13T18:39:53.651Z
-    last_updated: Optional[datetime] = None
-    #: The level at which this announcement exists.
-    #: example: LOCATION
-    level: Optional[AnnouncementsListResponseLevel] = None
-    #: The details of location at which this announcement exists.
-    location: Optional[Location] = None
-
-
-class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId(str, Enum):
-    all = 'all'
-    locations = 'locations'
-    y2lz_y29zc_gfyazov_l3_vz_l0x_pq0_fusu9_olz_mx_mtyx = 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx'
-
-
-class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse(ApiModel):
-    #: Array of announcements.
-    announcements: Optional[list[AnnouncementsListResponse]] = None
-
-
-class AudioAnnouncementFileObject2(ApiModel):
-    #: A unique identifier for the announcement. `name`, `mediaFileType`, `level` are mandatory if `id` is not provided for uploading an announcement.
-    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
-    id: Optional[str] = None
-    #: Audio announcement file name.
-    #: example: AUDIO_FILE.wav
-    file_name: Optional[str] = None
-    #: Audio announcement file type.
-    #: example: WAV
-    media_file_type: Optional[AudioFileObjectMediaType] = None
-    #: Audio announcement file type location.
-    #: example: ORGANIZATION
-    level: Optional[AudioAnnouncementFileGetObjectLevel] = None
 
 
 class GetCallForwardAlwaysSettingObject(ApiModel):
@@ -8302,7 +9628,8 @@ class GetCallForwardAlwaysSettingObject(ApiModel):
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
     ring_reminder_enabled: Optional[bool] = None
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     send_to_voicemail_enabled: Optional[bool] = None
 
 
@@ -8313,7 +9640,10 @@ class CallForwardRulesObject(ApiModel):
     #: Unique name of rule.
     #: example: Test Rule
     name: Optional[str] = None
-    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an unavailable number.
+    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
+    #: is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls
+    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from
+    #: an unavailable number.
     #: example: Any private number
     calls_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
@@ -8330,7 +9660,8 @@ class CallForwardRulesObject(ApiModel):
 class AutoAttendantCallForwardSettingsDetailsObject(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[GetCallForwardAlwaysSettingObject] = None
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[GetCallForwardAlwaysSettingObject] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesObject]] = None
@@ -8340,7 +9671,8 @@ class CallForwardRulesModifyObject(ApiModel):
     #: A unique identifier for the auto attendant call forward selective rule.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExfRk9SV0FSRElOR19TRUxFQ1RJVkVfUlVMRS9WR1Z6ZENCU2RXeGw
     id: Optional[str] = None
-    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to false.
+    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
+    #: false.
     #: example: True
     enabled: Optional[bool] = None
 
@@ -8348,7 +9680,8 @@ class CallForwardRulesModifyObject(ApiModel):
 class AutoAttendantCallForwardSettingsModifyDetailsObject(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[GetCallForwardAlwaysSettingObject] = None
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[GetCallForwardAlwaysSettingObject] = None
     #: Rules for selectively forwarding calls. (Rules which are omitted in the list will not be deleted.)
     rules: Optional[list[CallForwardRulesModifyObject]] = None
@@ -8373,7 +9706,8 @@ class CallForwardSelectiveCallsFromObjectSelection(str, Enum):
 
 
 class CallForwardSelectiveCallsFromObject(ApiModel):
-    #: If `CUSTOM`, use `customNumbers` to specify which incoming caller ID values cause this rule to match. `ANY` means any incoming call matches assuming the rule is in effect based on the associated schedules.
+    #: If `CUSTOM`, use `customNumbers` to specify which incoming caller ID values cause this rule to match. `ANY`
+    #: means any incoming call matches assuming the rule is in effect based on the associated schedules.
     #: example: CUSTOM
     selection: Optional[CallForwardSelectiveCallsFromObjectSelection] = None
     #: Custom rules for matching incoming caller ID information. Mandatory if the selection option is set to `CUSTOM`.
@@ -8381,9 +9715,11 @@ class CallForwardSelectiveCallsFromObject(ApiModel):
 
 
 class CallForwardSelectiveCallsToNumbersObjectType(str, Enum):
-    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is a primary number or extension.
+    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is a primary
+    #: number or extension.
     primary = 'PRIMARY'
-    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is an alternate number or extension.
+    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is an
+    #: alternate number or extension.
     alternate = 'ALTERNATE'
 
 
@@ -8488,7 +9824,7 @@ class KeyConfigurationsGetObject(ApiModel):
     #: example: +19705550006
     value: Optional[str] = None
     #: Pre-configured announcement audio files when PLAY_ANNOUNCEMENT is set.
-    audio_announcement_file: Optional[AudioAnnouncementFileObject2] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
 
 
 class HoursMenuGetObject(ApiModel):
@@ -8499,7 +9835,7 @@ class HoursMenuGetObject(ApiModel):
     #: example: True
     extension_enabled: Optional[bool] = None
     #: Announcement Audio File details.
-    audio_announcement_file: Optional[AudioAnnouncementFileObject2] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
     #: Key configurations defined for the auto attendant.
     key_configurations: Optional[KeyConfigurationsGetObject] = None
 
@@ -8657,10 +9993,12 @@ class CallParkSettingsObject(ApiModel):
     #: Ring pattern for when this callpark is called.
     #: example: NORMAL
     ring_pattern: Optional[RingPatternObject] = None
-    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the set time, then the call will be recalled based on the Call Park Recall setting.
+    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the
+    #: set time, then the call will be recalled based on the Call Park Recall setting.
     #: example: 60.0
     recall_time: Optional[int] = None
-    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call will revert back to the hunt group (after the person who parked the call is alerted).
+    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call
+    #: will revert back to the hunt group (after the person who parked the call is alerted).
     #: example: 60.0
     hunt_wait_time: Optional[int] = None
 
@@ -8672,18 +10010,6 @@ class GetCallParkExtensionObject1(ApiModel):
     #: Unique name for the call park extension.
     #: example: 14159265
     name: Optional[str] = None
-
-
-class GetUserNumberItemObject2(ApiModel):
-    #: Phone number of a person or workspace.
-    #: example: +19075552859
-    external: Optional[str] = None
-    #: Extension of a person or workspace.
-    #: example: 8080
-    extension: Optional[datetime] = None
-    #: Flag to indicate a primary phone.
-    #: example: True
-    primary: Optional[bool] = None
 
 
 class GetPersonPlaceVirtualLineCallParksObject1(ApiModel):
@@ -8701,7 +10027,7 @@ class GetPersonPlaceVirtualLineCallParksObject1(ApiModel):
     display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
+    type: Optional[MemberType] = None
     #: Email of a person or workspace.
     #: example: john.brown@example.com
     email: Optional[str] = None
@@ -8818,30 +10144,7 @@ class ReadTheListOfCallParkExtensionsResponse1(ApiModel):
     call_park_extensions: Optional[list[ListCallParkExtensionObject1]] = None
 
 
-class GetPersonPlaceVirtualLineCallPickupObject1(ApiModel):
-    #: ID of a person, workspace or virtual line.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80NDVkMzMzMC1mNjE3LTExZWItOWQyZS01NzViODE3ZGE1NmE
-    id: Optional[str] = None
-    #: First name of a person, workspace or virtual line.
-    #: example: John
-    first_name: Optional[str] = None
-    #: Last name of a person, workspace or virtual line.
-    #: example: Brown
-    last_name: Optional[str] = None
-    #: Display name of a person, workspace or virtual line.
-    #: example: johnBrown
-    display_name: Optional[str] = None
-    #: Type of the person, workspace or virtual line.
-    #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
-    #: Email of a person, workspace or virtual line.
-    #: example: john.brown@example.com
-    email: Optional[str] = None
-    #: List of phone numbers of a person, workspace or virtual line.
-    phone_number: Optional[list[GetUserNumberItemObject2]] = None
-
-
-class GetCallPickupObject1(ApiModel):
+class GetCallPickupObject2(ApiModel):
     #: A unique identifier for the call pickup.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUElDS1VQL1kyRnNiRkJwWTJ0MWNERT0
     id: Optional[str] = None
@@ -8852,7 +10155,7 @@ class GetCallPickupObject1(ApiModel):
     agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject1]] = None
 
 
-class ModifyCallPickupObject(ApiModel):
+class ModifyCallPickupObject1(ApiModel):
     #: Unique name for the call pickup. The maximum length is 80.
     #: example: North Alaska-Group
     name: Optional[str] = None
@@ -8913,7 +10216,10 @@ class CallForwardRulesGet(ApiModel):
     #: Unique name of rule.
     #: example: My Rule
     name: Optional[str] = None
-    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an unavailable number.
+    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
+    #: is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls
+    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from
+    #: an unavailable number.
     #: example: Any private Number,2025551212
     call_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
@@ -8927,11 +10233,26 @@ class CallForwardRulesGet(ApiModel):
     enabled: Optional[bool] = None
 
 
+class CallForwardSettingsGetCallForwardingAlways(ApiModel):
+    #: `Always` call forwarding is enabled or disabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Destination for "Always" call forwarding.
+    #: example: 2225551212
+    destination: Optional[str] = None
+    #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
+    ring_reminder_enabled: Optional[bool] = None
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
+    destination_voicemail_enabled: Optional[bool] = None
+
+
 class CallForwardSettingsGetCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
-    always: Optional[CallForwardingPutCallForwardingAlways] = None
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
-    selective: Optional[CallForwardingPutCallForwardingAlways] = None
+    always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
+    selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesGet]] = None
 
@@ -8963,24 +10284,30 @@ class CallQueueQueueSettingsGetObjectOverflow(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     #: example: PERFORM_BUSY_TREATMENT
     action: Optional[CallQueueQueueSettingsObjectOverflowAction] = None
-    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an external `transferNumber` is entered.
+    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an
+    #: external `transferNumber` is entered.
     send_to_voicemail: Optional[bool] = None
     #: Destination number for overflow calls when `action` is set to `TRANSFER_TO_PHONE_NUMBER`.
     #: example: +15555551212
     transfer_number: Optional[str] = None
-    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is triggered.
+    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is
+    #: triggered.
     #: example: True
     overflow_after_wait_enabled: Optional[bool] = None
-    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum value 0, The maximum value is 7200 seconds.
+    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum
+    #: value 0, The maximum value is 7200 seconds.
     #: example: 20.0
     overflow_after_wait_time: Optional[int] = None
-    #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by a user.
+    #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by
+    #: a user.
     #: example: True
     play_overflow_greeting_enabled: Optional[bool] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement files to be played as `overflow` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the maximum is 4.
+    #: Array of announcement files to be played as `overflow` greetings. These files are from the list of announcement
+    #: files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the
+    #: maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
@@ -8993,7 +10320,9 @@ class CallQueueQueueSettingsGetObjectWelcomeMessage(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement files to be played as `welcomeMessage` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the maximum is 4.
+    #: Array of announcement files to be played as `welcomeMessage` greetings. These files are from the list of
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
@@ -9001,13 +10330,16 @@ class CallQueueQueueSettingsGetObjectComfortMessage(ApiModel):
     #: If enabled play periodic comfort message.
     #: example: True
     enabled: Optional[bool] = None
-    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time is 10 seconds.The maximum time is 600 seconds.
+    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
+    #: is 10 seconds.The maximum time is 600 seconds.
     #: example: 10.0
     time_between_messages: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement files to be played as `comfortMessage` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the maximum is 4.
+    #: Array of announcement files to be played as `comfortMessage` greetings. These files are from the list of
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
@@ -9015,13 +10347,16 @@ class CallQueueQueueSettingsGetObjectComfortMessageBypass(ApiModel):
     #: If enabled play comfort bypass message.
     #: example: True
     enabled: Optional[bool] = None
-    #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The minimum time is 1 seconds. The maximum time is 120 seconds.
+    #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The
+    #: minimum time is 1 seconds. The maximum time is 120 seconds.
     #: example: 10.0
     call_waiting_age_threshold: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement files to be played as `comfortMessageBypass` greetings. These files are from the list of announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the maximum is 4.
+    #: Array of announcement files to be played as `comfortMessageBypass` greetings. These files are from the list of
+    #: announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
@@ -9032,7 +10367,9 @@ class CallQueueQueueSettingsGetObjectMohMessageNormalSource(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
-    #: Array of announcement files to be played as `mohMessage` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the maximum is 4.
+    #: Array of announcement files to be played as `mohMessage` greetings. These files are from the list of
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
@@ -9042,7 +10379,8 @@ class CallQueueQueueSettingsGetObjectMohMessage(ApiModel):
 
 
 class CallQueueQueueSettingsGetObject(ApiModel):
-    #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are triggered.
+    #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
+    #: triggered.
     #: example: 50.0
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
@@ -9052,17 +10390,25 @@ class CallQueueQueueSettingsGetObject(ApiModel):
     reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queueSize.
     overflow: Optional[CallQueueQueueSettingsGetObjectOverflow] = None
-    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call queue while there is an available agent, the caller will not hear this announcement and is transferred to an agent. The welcome message feature is enabled by default.
+    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
+    #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call
+    #: queue while there is an available agent, the caller will not hear this announcement and is transferred to an
+    #: agent. The welcome message feature is enabled by default.
     welcome_message: Optional[CallQueueQueueSettingsGetObjectWelcomeMessage] = None
-    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it plays after the welcome message and before the comfort message. By default, it is not enabled.
+    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
+    #: plays after the welcome message and before the comfort message. By default, it is not enabled.
     wait_message: Optional[CallQueueQueueSettingsObjectWaitMessage] = None
-    #: Play a message after the welcome message and before hold music. This is typically a `CUSTOM` announcement that plays information, such as current promotions or information about products and services.
+    #: Play a message after the welcome message and before hold music. This is typically a `CUSTOM` announcement that
+    #: plays information, such as current promotions or information about products and services.
     comfort_message: Optional[CallQueueQueueSettingsGetObjectComfortMessage] = None
-    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort message that abruptly ends when they are connected to an agent.
+    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that
+    #: should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort
+    #: message that abruptly ends when they are connected to an agent.
     comfort_message_bypass: Optional[CallQueueQueueSettingsGetObjectComfortMessageBypass] = None
     #: Play music after the comforting message in a repetitive loop.
     moh_message: Optional[CallQueueQueueSettingsGetObjectMohMessage] = None
-    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces the identity of the call queue from which the call is coming.
+    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
+    #: the identity of the call queue from which the call is coming.
     whisper_message: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
 
 
@@ -9094,7 +10440,8 @@ class CreateCallQueueObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to `phoneNumber` if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to `phoneNumber` if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the call queue.
@@ -9173,7 +10520,8 @@ class GetCallQueueHolidayObject(ApiModel):
     #: Specifies call processing action type.
     #: example: BUSY
     action: Optional[GetCallQueueHolidayObjectAction] = None
-    #: Specifies whether the schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from `holidaySchedules` list)
+    #: Specifies whether the schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from
+    #: `holidaySchedules` list)
     #: example: LOCATION
     holiday_schedule_level: Optional[AudioAnnouncementFileGetObjectLevel] = None
     #: Name of the schedule configured for a holiday service as one of from `holidaySchedules` list.
@@ -9225,7 +10573,8 @@ class GetCallQueueNightServiceObject(ApiModel):
     #: Name of the schedule configured for a night service as one of from `businessHourSchedules` list.
     #: example: Working Hour
     business_hours_name: Optional[str] = None
-    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from `businessHourSchedules` list).
+    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from
+    #: `businessHourSchedules` list).
     #: example: ORGANIZATION
     business_hours_level: Optional[AudioAnnouncementFileGetObjectLevel] = None
     #: Lists the pre-configured business hour schedules.
@@ -9246,7 +10595,7 @@ class GetPersonPlaceVirtualLineCallQueueObject1(ApiModel):
     id: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
+    type: Optional[MemberType] = None
     #: First name of person, workspace or virtual line.
     #: example: Hakim
     first_name: Optional[str] = None
@@ -9289,7 +10638,8 @@ class GetCallQueueObject2(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the call queue.
@@ -9304,7 +10654,9 @@ class GetCallQueueObject2(ApiModel):
     #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
     #: example: True
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Policy controlling how calls are routed to `agents`.
     call_policies: Optional[GetCallQueueCallPolicyObject1] = None
@@ -9321,15 +10673,19 @@ class GetCallQueueObject2(ApiModel):
 class GetCallQueueStrandedCallsObjectAction(str, Enum):
     #: Call remains in the queue.
     none_ = 'NONE'
-    #: Calls are removed from the queue and are provided with the Busy treatment. If the queue is configured with the Call Forwarding Busy or the Voice Messaging service, then the call is handled accordingly.
+    #: Calls are removed from the queue and are provided with the Busy treatment. If the queue is configured with the
+    #: Call Forwarding Busy or the Voice Messaging service, then the call is handled accordingly.
     busy = 'BUSY'
     #: Calls are removed from the queue and are transferred to the configured `transferPhoneNumber`.
     transfer = 'TRANSFER'
-    #: Calls are handled according to the Night Service configuration. If the Night Service action is set to `none`, then this is equivalent to this policy being set to `none` (that is, calls remain in the queue).
+    #: Calls are handled according to the Night Service configuration. If the Night Service action is set to `none`,
+    #: then this is equivalent to this policy being set to `none` (that is, calls remain in the queue).
     night_service = 'NIGHT_SERVICE'
-    #: Calls are removed from the queue and are provided with ringing until the caller releases the call. The ringback tone played to the caller is localized according to the country code of the caller.
+    #: Calls are removed from the queue and are provided with ringing until the caller releases the call. The ringback
+    #: tone played to the caller is localized according to the country code of the caller.
     ringing = 'RINGING'
-    #: Calls are removed from the queue and are provided with an announcement that is played in a loop until the caller releases the call.
+    #: Calls are removed from the queue and are provided with an announcement that is played in a loop until the caller
+    #: releases the call.
     announcement = 'ANNOUNCEMENT'
 
 
@@ -9373,9 +10729,10 @@ class ListCallQueueObject2(ApiModel):
 
 class ModifyCallForwardingObjectCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
-    always: Optional[CallForwardingPutCallForwardingAlways] = None
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
-    selective: Optional[CallForwardingPutCallForwardingAlways] = None
+    always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
+    selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesModifyObject]] = None
 
@@ -9392,7 +10749,8 @@ class ModifyCallQueueHolidayObject(ApiModel):
     #: Specifies call processing action type.
     #: example: BUSY
     action: Optional[GetCallQueueHolidayObjectAction] = None
-    #: Specifies whether the schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from `holidaySchedules` list)
+    #: Specifies whether the schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from
+    #: `holidaySchedules` list)
     #: example: LOCATION
     holiday_schedule_level: Optional[AudioAnnouncementFileGetObjectLevel] = None
     #: Name of the schedule configured for a holiday service as one of from `holidaySchedules` list.
@@ -9439,7 +10797,8 @@ class ModifyCallQueueObject1(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -9451,7 +10810,9 @@ class ModifyCallQueueObject1(ApiModel):
     #: Extension of the call queue.
     #: example: 5309
     extension: Optional[datetime] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[GetCallQueueCallPolicyObject1] = None
@@ -9463,7 +10824,8 @@ class ModifyCallQueueObject1(ApiModel):
     agents: Optional[list[ModifyPersonPlaceVirtualLineCallQueueObject]] = None
     #: Whether or not to allow agents to join or unjoin a queue.
     allow_agent_join_enabled: Optional[bool] = None
-    #: When `true`, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
+    #: When `true`, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing
+    #: calls.
     #: example: True
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
 
@@ -9492,7 +10854,8 @@ class PatchCallQueueNightServiceObject(ApiModel):
     #: Name of the schedule configured for a night service as one of from `businessHourSchedules` list.
     #: example: Working Hour
     business_hours_name: Optional[str] = None
-    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from `businessHourSchedules` list)
+    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from
+    #: `businessHourSchedules` list)
     #: example: ORGANIZATION
     business_hours_level: Optional[AudioAnnouncementFileGetObjectLevel] = None
     #: Force night service regardless of business hour schedule.
@@ -9559,7 +10922,7 @@ class ModifyCallRecordingTermsOfServiceObject(ApiModel):
     terms_of_service_enabled: Optional[bool] = None
 
 
-class CreateHuntGroupObject1(ApiModel):
+class CreateHuntGroupObject2(ApiModel):
     #: Unique name for the hunt group.
     #: example: 5558675309-Group
     name: Optional[str] = None
@@ -9575,7 +10938,8 @@ class CreateHuntGroupObject1(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -9590,7 +10954,7 @@ class CreateHuntGroupObject1(ApiModel):
     enabled: Optional[bool] = None
 
 
-class GetHuntGroupObject3(ApiModel):
+class GetHuntGroupObject4(ApiModel):
     #: A unique identifier for the hunt group.
     #: example: Y2lzY29zcGFyazovL3VzL0hVTlRfR1JPVVAvYUhaaFpUTjJNRzh5YjBBMk5EazBNVEk1Tnk1cGJuUXhNQzVpWTJ4a0xuZGxZbVY0TG1OdmJRPT0
     id: Optional[str] = None
@@ -9606,7 +10970,9 @@ class GetHuntGroupObject3(ApiModel):
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language for hunt group.
     #: example: English
@@ -9617,7 +10983,8 @@ class GetHuntGroupObject3(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -9632,7 +10999,7 @@ class GetHuntGroupObject3(ApiModel):
     enabled: Optional[bool] = None
 
 
-class ModifyHuntGroupObject2(ApiModel):
+class ModifyHuntGroupObject3(ApiModel):
     #: Unique name for the hunt group.
     #: example: 5558675309-Group
     name: Optional[str] = None
@@ -9645,7 +11012,9 @@ class ModifyHuntGroupObject2(ApiModel):
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language code.
     #: example: en-US
@@ -9653,7 +11022,8 @@ class ModifyHuntGroupObject2(ApiModel):
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -9685,8 +11055,9 @@ class GetPagingGroupAgentObject2(ApiModel):
     last_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
-    #: Agents phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is mandatory.
+    type: Optional[MemberType] = None
+    #: Agents phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Agents extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
@@ -9704,10 +11075,12 @@ class GetPagingGroupObject2(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Flag to indicate toll free number.
@@ -9724,7 +11097,8 @@ class GetPagingGroupObject2(ApiModel):
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     #: example: Group
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people, workspaces and virtual lines ID's who may originate pages to this paging group.
@@ -9737,10 +11111,12 @@ class PostPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Language code.
@@ -9752,7 +11128,8 @@ class PostPagingGroupObject(ApiModel):
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     #: example: Group
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
@@ -9768,10 +11145,12 @@ class UpdatePagingGroupObject1(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: CallQueue-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Language code.
@@ -9780,10 +11159,12 @@ class UpdatePagingGroupObject1(ApiModel):
     #: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people and/or workspaces, who may originate pages to this paging group.
@@ -9841,33 +11222,29 @@ class Member(ApiModel):
     display_name: Optional[str] = None
 
 
-class PatchMemberWithOperationOperation(str, Enum):
-    #: Remove member from group
-    delete = 'delete'
-    #: Add member into group
-    add = 'add'
-
-
 class PatchMemberWithOperation(ApiModel):
     #: Person ID.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xOTUzOTdhMi03MTU5LTRjNTgtYTBiOC00NmQ2ZWZlZTdkMTM
     id: Optional[str] = None
     #: Operation type. The default operation is `add` if no operation is specified.
     #: example: add
-    operation: Optional[PatchMemberWithOperationOperation] = None
+    operation: Optional[str] = None
 
 
 class PostGroup(ApiModel):
     #: The name of the group.
     #: example: Sales Group
     display_name: Optional[str] = None
-    #: The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth token is used.
+    #: The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth
+    #: token is used.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNDhhZGI4MS0yOGY5LTRhYjUtYjJkNi1lOWI0OTRlNzJhMDY
     org_id: Optional[str] = None
     #: Description of the group.
     #: example: Salas Group in San Jose
     description: Optional[str] = None
-    #: An array of members. Maximum of 500 members can be provided. To add more members, use the [Update a Group](/docs/api/v1/groups/update-a-group) API to add additional members.
+    #: An array of members. Maximum of 500 members can be provided. To add more members, use the `Update a Group
+    #: <https://developer.webex.com/docs/api/v1/groups/update-a-group>`_ API to
+    #: add additional members.
     members: Optional[list[DepartmentResponseWithId]] = None
 
 
@@ -10024,7 +11401,8 @@ class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation(ApiMo
 
 
 class HistoricalDataRelatedToMeetingsResponseMetrics(ApiModel):
-    #: Total number of meetings held over the selected date range. includes Webex Meetings, Webex Events, Webex Support, and Webex Training sessions
+    #: Total number of meetings held over the selected date range. includes Webex Meetings, Webex Events, Webex
+    #: Support, and Webex Training sessions
     #: example: 123.0
     total_meetings: Optional[int] = None
     #: Total number of joins by participant and devices from all Webex meetings over the selected date range
@@ -10325,7 +11703,7 @@ class Users(ApiModel):
     display_name: Optional[str] = None
 
 
-class LicenseWithUsers(ApiModel):
+class LicensewithUsers(ApiModel):
     #: A unique identifier for the license.
     #: example: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh
     id: Optional[str] = None
@@ -10377,7 +11755,8 @@ class LicenseRequest(ApiModel):
     #: Operation type. The default operation is `add` if no operation is specified.
     #: example: add
     operation: Optional[LicenseRequestOperation] = None
-    #: Properties for the license. Either `phoneNumber` or `extension` are mandatory for assigning Webex Calling licenses. If `phoneNumber` is not provided then `locationId` is mandatory.
+    #: Properties for the license. Either `phoneNumber` or `extension` are mandatory for assigning Webex Calling
+    #: licenses. If `phoneNumber` is not provided then `locationId` is mandatory.
     properties: Optional[LicenseProperties] = None
 
 
@@ -10390,7 +11769,8 @@ class SiteUrlsRequest(ApiModel):
     #: Attendee access on the site.
     #: example: mysite.webex.com
     site_url: Optional[str] = None
-    #: Account type. Only `attendee` type is supported. For host account, remove attendee and assign the license on that site.
+    #: Account type. Only `attendee` type is supported. For host account, remove attendee and assign the license on
+    #: that site.
     #: example: attendee
     account_type: Optional[SiteUrlsRequestAccountType] = None
     #: Operation type. The default operation is `add` if no operation is specified.
@@ -10405,7 +11785,8 @@ class PatchUserLicenses(ApiModel):
     #: A unique identifier for the user.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
     person_id: Optional[str] = None
-    #: The ID of the organization to which the licenses and siteUrls belong. If not specified, the organization ID from the OAuth token is used.
+    #: The ID of the organization to which the licenses and siteUrls belong. If not specified, the organization ID from
+    #: the OAuth token is used.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     org_id: Optional[str] = None
     #: An array of licenses to be assigned to the user.
@@ -10445,19 +11826,27 @@ class UserLicensesResponse(ApiModel):
     licenses: Optional[list[str]] = None
     #: An array of `siteUrls` and their `accountType` that are assigned to this user.
     site_urls: Optional[list[SiteResponse]] = None
-    #: An array of license strings that are in pending state. This is only applicable to users outside the organization.
+    #: An array of license strings that are in pending state. This is only applicable to users outside the
+    #: organization.
     #: example: ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYWJj', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWFiY2Rl']
     pending_licenses: Optional[list[str]] = None
-    #: An array of `siteUrls` and their `accountType` that are in pending state. This is only applicable to users outside the organization.
+    #: An array of `siteUrls` and their `accountType` that are in pending state. This is only applicable to users
+    #: outside the organization.
     pending_site_urls: Optional[list[SiteResponse]] = None
+
+
+class GetLicenseDetailsIncludeAssignedTo(str, Enum):
+    user = 'user'
 
 
 class CallingPermissionObjectCallType(str, Enum):
     #: Controls calls within your own company.
     internal_call = 'INTERNAL_CALL'
-    #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the originating caller, usually free of charge from a landline.
+    #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the
+    #: originating caller, usually free of charge from a landline.
     toll_free = 'TOLL_FREE'
-    #: Controls calls to locations outside of the Long Distance areas that require an international calling code before the number is dialed.
+    #: Controls calls to locations outside of the Long Distance areas that require an international calling code before
+    #: the number is dialed.
     international = 'INTERNATIONAL'
     #: Controls calls requiring Operator Assistance.
     operator_assisted = 'OPERATOR_ASSISTED'
@@ -10482,11 +11871,14 @@ class CallingPermissionObjectAction(str, Enum):
     block = 'BLOCK'
     #: Callers must enter the authorization code that you set before placing an outgoing call.
     auth_code = 'AUTH_CODE'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number `autoTransferNumber1`.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number `autoTransferNumber1`.
     transfer_number_1 = 'TRANSFER_NUMBER_1'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number `autoTransferNumber2`.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number `autoTransferNumber2`.
     transfer_number_2 = 'TRANSFER_NUMBER_2'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number `autoTransferNumber3`.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number `autoTransferNumber3`.
     transfer_number_3 = 'TRANSFER_NUMBER_3'
 
 
@@ -10509,29 +11901,23 @@ class GeneratePasswordPostResponse(ApiModel):
 
 
 class GetAutoTransferNumberObject(ApiModel):
-    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_1` will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_1` will be transferred
+    #: to this number.
     #: example: 1234456789
     auto_transfer_number1: Optional[str] = None
-    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_2` will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_2` will be transferred
+    #: to this number.
     #: example: 2234567891
     auto_transfer_number2: Optional[str] = None
-    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_3` will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_3` will be transferred
+    #: to this number.
     #: example: 3234567891
     auto_transfer_number3: Optional[str] = None
 
 
-class GetLocationAccessCodeObjectAccessCodes(ApiModel):
-    #: Access code number.
-    #: example: 123
-    code: Optional[datetime] = None
-    #: Access code description.
-    #: example: Main Access Code
-    description: Optional[str] = None
-
-
 class GetLocationAccessCodeObject(ApiModel):
     #: Access code details
-    access_codes: Optional[GetLocationAccessCodeObjectAccessCodes] = None
+    access_codes: Optional[AuthorizationCode] = None
 
 
 class GetLocationInterceptObjectIncomingType(str, Enum):
@@ -10585,7 +11971,8 @@ class GetLocationInterceptObjectOutgoing(ApiModel):
 
 
 class GetLocationInterceptObject(ApiModel):
-    #: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that person configures.
+    #: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that
+    #: person configures.
     #: example: True
     enabled: Optional[bool] = None
     #: Inbound call details.
@@ -10594,39 +11981,22 @@ class GetLocationInterceptObject(ApiModel):
     outgoing: Optional[GetLocationInterceptObjectOutgoing] = None
 
 
-class RouteIdentity(ApiModel):
-    #: ID of the route type.
-    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    id: Optional[str] = None
-    #: A unique name for the route identity.
-    #: example: route_identity_name
-    name: Optional[str] = None
-    #: Type associated with the identity.
-    type: Optional[RouteType] = None
-
-
 class InternalDialingGet(ApiModel):
-    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the
+    #: selected route group/trunk as premises calls.
     #: example: True
     enable_unknown_extension_route_policy: Optional[bool] = None
     #: The selected route group/trunk as premises calls.
     unknown_extension_route_identity: Optional[RouteIdentity] = None
 
 
-class UnknownExtensionRouteIdentity(ApiModel):
-    #: ID of the route type.
-    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    id: Optional[str] = None
-    #: Type associated with the identity.
-    type: Optional[RouteType] = None
-
-
 class InternalDialingPut(ApiModel):
-    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the
+    #: selected route group/trunk as premises calls.
     #: example: True
     enable_unknown_extension_route_policy: Optional[bool] = None
     #: Type associated with the identity.
-    unknown_extension_route_identity: Optional[UnknownExtensionRouteIdentity] = None
+    unknown_extension_route_identity: Optional[GetTelephonyLocationObjectConnection] = None
 
 
 class PasswordGenerate(str, Enum):
@@ -10819,7 +12189,8 @@ class ModifyScheduleEventListObject(ApiModel):
     #: End time of event. Mandatory if the event is not all day.
     #: example: 14:20
     end_time: Optional[datetime] = None
-    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are not defined.
+    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are
+    #: not defined.
     all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None
@@ -10841,7 +12212,8 @@ class ModifyScheduleEventObject(ApiModel):
     #: End time of event. Mandatory if the event is not all day.
     #: example: 14:20
     end_time: Optional[datetime] = None
-    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are not defined.
+    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are
+    #: not defined.
     all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None
@@ -10971,14 +12343,19 @@ class GetVoicePortalPasscodeRuleObject(ApiModel):
     failed_attempts: Optional[GetVoicePortalPasscodeRuleObjectFailedAttempts] = None
     #: Settings for previous passcode usage.
     block_previous_passcodes: Optional[GetVoicemailRulesObjectBlockPreviousPasscodes] = None
-    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
+    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
+    #: 408408).
     #: + enabled: true (boolean) - If enabled, passcode should not contain repeated digits.
-    #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1. The maximum value is 6.
+    #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1.
+    #: The maximum value is 6.
     block_repeated_digits: Optional[AttachmentAction] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
-    #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a row.
-    #: + numberOfAscendingDigits: `3` (number) -  Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
-    #: + numberOfDescendingDigits: `3` (number) -  Number of descending digits in sequence. The minimum value is 2. The maximum value is 5.
+    #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a
+    #: row.
+    #: + numberOfAscendingDigits: `3` (number) -  Number of ascending digits in sequence. The minimum value is 2. The
+    #: maximum value is 5.
+    #: + numberOfDescendingDigits: `3` (number) -  Number of descending digits in sequence. The minimum value is 2. The
+    #: maximum value is 5.
     block_contiguous_sequences: Optional[AttachmentAction] = None
     #: Allowed length of the passcode.
     length: Optional[GetVoicemailRulesObjectDefaultVoicemailPinRulesLength] = None
@@ -11137,301 +12514,14 @@ class ListVoicemailgroupResponse1(ApiModel):
     voicemail_groups: Optional[list[GetVoicemailGroupObject1]] = None
 
 
-class ArrayOfExtensionsObject(ApiModel):
-    #: Array of extensions that will be validated.
-    extensions: Optional[list[str]] = None
-
-
-class CallBackEffectiveLevel(str, Enum):
-    #: Location TN.
-    location_number = 'LOCATION_NUMBER'
-    #: Assigned number of a user or workspace in the location.
-    location_member_number = 'LOCATION_MEMBER_NUMBER'
-    _none_ = 'NONE'
-
-
-class CallBackQuality(str, Enum):
-    recommended = 'RECOMMENDED'
-    not_recommended = 'NOT_RECOMMENDED'
-    invalid = 'INVALID'
-
-
-class CallBackSelected(str, Enum):
-    #: Location TN.
-    location_number = 'LOCATION_NUMBER'
-    #: Assigned number of a user or workspace in the location.
-    location_member_number = 'LOCATION_MEMBER_NUMBER'
-
-
-class ExtensionStatusObjectState(str, Enum):
-    #: Extension is valid.
-    valid = 'VALID'
-    #: Extension already assigned to another group.
-    duplicate = 'DUPLICATE'
-    #: Extension already exists in the request body and was already verified.
-    duplicate_in_list = 'DUPLICATE_IN_LIST'
-    #: Extension is invalid.
-    invalid = 'INVALID'
-
-
-class ExtensionStatusObject(ApiModel):
-    #: Unique extension which will be validated at the location level.
-    #: example: 407721
-    extension: Optional[str] = None
-    #: State of the extension after it was validated.
-    #: example: VALID
-    state: Optional[ExtensionStatusObjectState] = None
-    #: Error code of the state in case extension is not valid.
-    #: example: 9495.0
-    error_code: Optional[int] = None
-    #: Message assigned to the error code.
-    #: example: [Error 9495] The extension is not available. It is already assigned as a Call Park Extension: 407721.
-    message: Optional[str] = None
-
-
-class GetLocationCallBackNumberObjectLocationInfo(ApiModel):
-    #: The location DN.
-    #: example: +12145551767
-    phone_number: Optional[str] = None
-    #: The name of the location.
-    #: example: CPAPI_Dev_Test_Location_DND
-    name: Optional[str] = None
-    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying fallback rules as necessary.
-    #: example: LOCATION_NUMBER
-    effective_level: Optional[CallBackEffectiveLevel] = None
-    #: Location calling line ID (CLID) number. Avaliable only when number is present and quality would be invalid.
-    #: example: +12145551767
-    effective_value: Optional[str] = None
-    #: Used to represent whether a number is a recommended ECBN.
-    #: example: RECOMMENDED
-    quality: Optional[CallBackQuality] = None
-
-
-class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
-    #: The member DN.
-    #: example: +12145551767
-    phone_number: Optional[str] = None
-    #: The member first name.
-    #: example: Jim
-    first_name: Optional[str] = None
-    #: The member last name. Always contains `.` if the member is a place.
-    #: example: Grey
-    last_name: Optional[str] = None
-    #: Member ID of user/place within the location.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MmQ3YTY3MS00YmVlLTQ2MDItOGVkOC1jOTFmNjU5NjcxZGI
-    member_id: Optional[str] = None
-    #: Member Type.
-    #: example: PEOPLE
-    member_type: Optional[MemberType] = None
-    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying fallback rules as necessary.
-    #: example: LOCATION_MEMBER_NUMBER
-    effective_level: Optional[CallBackEffectiveLevel] = None
-    #: Location CLID number. Avaliable only when number is present and quality would be invalid.
-    #: example: +12145551767
-    effective_value: Optional[str] = None
-    #: Used to represent whether a number is a recommended ECBN.
-    #: example: RECOMMENDED
-    quality: Optional[CallBackQuality] = None
-
-
-class GetLocationCallBackNumberObject(ApiModel):
-    #: Data relevant to this location.
-    location_info: Optional[GetLocationCallBackNumberObjectLocationInfo] = None
-    #: Data relevant to the user/place (member) selected for ECBN.
-    location_member_info: Optional[GetLocationCallBackNumberObjectLocationMemberInfo] = None
-    #: Selected number type to configure emergency call back.
-    #: example: LOCATION_MEMBER_NUMBER
-    selected: Optional[CallBackSelected] = None
-
-
-class GetMusicOnHoldObjectGreeting2(str, Enum):
-    #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets the customer know they are still connected.
-    system = 'SYSTEM'
-    #: Play previously uploaded custom music when call is placed on hold or parked.
-    custom = 'CUSTOM'
-
-
-class GetMusicOnHoldObject2(ApiModel):
-    #: If enabled, music will be played when call is placed on hold.
-    #: example: True
-    call_hold_enabled: Optional[bool] = None
-    #: If enabled, music will be played when call is parked.
-    #: example: True
-    call_park_enabled: Optional[bool] = None
-    #: Greeting type for the location.
-    #: example: SYSTEM
-    greeting: Optional[GetMusicOnHoldObjectGreeting2] = None
-    #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
-    audio_file: Optional[AudioAnnouncementFileObject2] = None
-
-
-class GetPrivateNetworkConnectObjectNetworkConnectionType(str, Enum):
-    #: Use public internet for the location's connection type.
-    public_internet = 'PUBLIC_INTERNET'
-    #: Use private network connect for the location's connection type.
-    private_network = 'PRIVATE_NETWORK'
-
-
-class GetPrivateNetworkConnectObject(ApiModel):
-    #: Network Connection Type for the location.
-    #: example: PUBLIC_INTERNET
-    network_connection_type: Optional[GetPrivateNetworkConnectObjectNetworkConnectionType] = None
-
-
-class GetTelephonyLocationObjectCallingLineId(ApiModel):
-    #: Group calling line ID name. By default the Org name.
-    #: example: 'Denver Incoming'
-    name: Optional[str] = None
-    #: Directory Number / Main number in E.164 Format.
-    #: example: '+12145555698'
-    phone_number: Optional[str] = None
-
-
-class GetTelephonyLocationObject(ApiModel):
-    #: A unique identifier for the location.
-    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfRk9SV0FSRElOR19TRUxFQ1RJVkVfUlVMRS9kR1Z6ZEZKMWJHVTA
-    id: Optional[str] = None
-    #: The name of the location.
-    #: example: 'Denver'
-    name: Optional[str] = None
-    #: Location's phone announcement language.
-    #: example: 'fr_fr'
-    announcement_language: Optional[str] = None
-    #: Location calling line information.
-    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
-    #: Connection details are only returned for local PSTN types of `TRUNK` or `ROUTE_GROUP`.
-    connection: Optional[UnknownExtensionRouteIdentity] = None
-    #: External Caller ID Name value. Unicode characters.
-    #: example: 'Big Corp Denver'
-    external_caller_id_name: Optional[str] = None
-    #: Limit on the number of people at the location, Read-Only.
-    #: example: 500000.0
-    user_limit: Optional[int] = None
-    #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish the location of a device when you make an emergency call.
-    #: example: 'Rcdn'
-    p_access_network_info: Optional[str] = None
-    #: Must dial to reach an outside line, default is None.
-    #: example: 'Rcdn'
-    outside_dial_digit: Optional[str] = None
-    #: Must dial a prefix when calling between locations having same extension within same location.
-    #: example: '2'
-    routing_prefix: Optional[datetime] = None
-    #: IP Address, hostname, or domain. Read-Only.
-    #: example: '98079822.int10.bcld.webex.com'
-    default_domain: Optional[str] = None
-    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
-    #: example: '+14158952369'
-    charge_number: Optional[str] = None
-
-
-class ListLocationObject(ApiModel):
-    #: A unique identifier for the location.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
-    id: Optional[str] = None
-    #: The name of the location.
-    #: example: 'Denver'
-    name: Optional[str] = None
-    #: Must dial to reach an outside line, default is None.
-    #: example: '12'
-    outside_dial_digit: Optional[datetime] = None
-    #: Must dial a prefix when calling between locations having the same extension within the same location.
-    #: example: '2'
-    routing_prefix: Optional[datetime] = None
-    #: Location calling line information.
-    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
-    #: True if E911 setup is required.
-    #: example: True
-    e911_setup_required: Optional[bool] = None
-
-
-class PostLocationAnnouncementLanguageObject(ApiModel):
-    #: Set to `true` to change announcement language for existing people and workspaces.
-    agent_enabled: Optional[bool] = None
-    #: Set to `true` to change announcement language for existing feature configurations.
-    service_enabled: Optional[bool] = None
-    #: Language code.
-    #: example: en_us
-    announcement_language_code: Optional[str] = None
-
-
-class PostLocationCallingRequestAddress(ApiModel):
-    #: Address 1 of the location.
-    #: example: 771 Alder Drive
-    address1: Optional[str] = None
-    #: Address 2 of the location.
-    #: example: Cisco Site 5
-    address2: Optional[str] = None
-    #: City of the location.
-    #: example: Milpitas
-    city: Optional[str] = None
-    #: State code of the location.
-    #: example: CA
-    state: Optional[str] = None
-    #: Postal code of the location.
-    #: example: 95035
-    postal_code: Optional[str] = None
-    #: ISO-3166 2-Letter country code of the location.
-    #: example: US
-    country: Optional[str] = None
-
-
-class PostLocationCallingRequest(ApiModel):
-    #: A unique identifier for the location.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
-    id: Optional[str] = None
-    #: The name of the location.
-    #: example: 'Denver'
-    name: Optional[str] = None
-    #: Time zone associated with this location. Refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for the format.
-    #: example: 'America/Chicago'
-    time_zone: Optional[str] = None
-    #: Default email language.
-    #: example: 'en_us'
-    preferred_language: Optional[str] = None
-    #: Location's phone announcement language.
-    #: example: 'fr_fr'
-    announcement_language: Optional[str] = None
-    #: The address of the location.
-    address: Optional[PostLocationCallingRequestAddress] = None
-
-
-class ExtentionStatusObject(ApiModel):
-    #: Indicates the extention ID for the status.
-    #: example: 1234
-    extension: Optional[datetime] = None
-    #: Indicates the status for the given extention id.
-    #: example: VALID
-    state: Optional[ExtensionStatusObjectState] = None
-    #: Error Code.
-    #: example: 59475.0
-    error_code: Optional[int] = None
-    #: example: The extension is not available. It is already assigned to a virtual extension
-    message: Optional[str] = None
-
-
-class PostValidateExtensionResponse(ApiModel):
-    #: OK , ERRORS
-    status: Optional[DialPatternValidationStatus] = None
-    extension_status: Optional[list[ExtentionStatusObject]] = None
-
-
-class PutLocationCallBackNumberObject(ApiModel):
-    #: Selected number type to configure emergency call back.
-    #: example: LOCATION_MEMBER_NUMBER
-    selected: Optional[CallBackSelected] = None
-    #: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is selected.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hOTc0MzVjZi0zYTZmLTRmNGYtOWU1OC00OTI2OTQ5MDkwMWY
-    location_member_id: Optional[str] = None
-
-
-class PutTelephonyLocationObject(ApiModel):
+class PutTelephonyLocationObject1(ApiModel):
     #: Location's phone announcement language.
     #: example: 'fr_fr'
     announcement_language: Optional[str] = None
     #: Location calling line information.
     calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
     #: Connection details can only be modified to and from local PSTN types of `TRUNK` and `ROUTE_GROUP`.
-    connection: Optional[UnknownExtensionRouteIdentity] = None
+    connection: Optional[GetTelephonyLocationObjectConnection] = None
     #: Denve' (string) - External Caller ID Name value. Unicode characters.
     #: example: 'Big Corp
     external_caller_id_name: Optional[str] = None
@@ -11444,35 +12534,13 @@ class PutTelephonyLocationObject(ApiModel):
     #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
     #: example: '2'
     routing_prefix: Optional[datetime] = None
-    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
+    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
+    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
     #: example: '+14158952369'
     charge_number: Optional[str] = None
 
 
-class StatusOfExtensionsObject(ApiModel):
-    #: Status of the validated array of extensions
-    #: example: OK
-    status: Optional[DialPatternValidationStatus] = None
-    #: Array of extensions statuses.
-    extension_status: Optional[list[ExtensionStatusObject]] = None
-
-
-class ListLocationsWebexCallingDetailsResponse(ApiModel):
-    #: Array of locations.
-    locations: Optional[list[ListLocationObject]] = None
-
-
-class ReadTheListOfDialPatternsResponse(ApiModel):
-    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by optional wildcard characters.
-    dial_patterns: Optional[list[str]] = None
-
-
-class ReadTheListOfRoutingChoicesResponse(ApiModel):
-    #: Array of route identities.
-    route_identities: Optional[list[RouteIdentity]] = None
-
-
-class Location5(ApiModel):
+class Location7(ApiModel):
     #: A unique identifier for the location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2M5N2VlMDQ5LTM1OWItNGM3OC04NDU0LTA1OGMyZWRlMjU2Mw
     id: Optional[str] = None
@@ -11502,7 +12570,8 @@ class PutCommonLocationObject(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
+    #: Time zone associated with this location, refer to this `link
+    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.
@@ -11516,7 +12585,8 @@ class PostCommonLocationObject(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
+    #: Time zone associated with this location, refer to this `link
+    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.
@@ -11539,7 +12609,7 @@ class PostCommonLocationObject(ApiModel):
 
 
 class LocationsCollectionResponse(ApiModel):
-    items: Optional[list[Location5]] = None
+    items: Optional[list[Location7]] = None
 
 
 class Floor(ApiModel):
@@ -11590,16 +12660,20 @@ class ChatObject(ApiModel):
     #: A unique identifier for the chat snippet.
     #: example: 1aea8390-e375-4547-b7ff-58ecd9e0b03d
     id: Optional[str] = None
-    #: Chat time for the chat snippet in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: Chat time for the chat snippet in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:22:34Z
     chat_time: Optional[datetime] = None
     #: The text of the chat snippet.
     #: example: hi
     text: Optional[str] = None
-    #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the chat belongs.
+    #: A unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the chat belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
-    #: Whether the type of the chat is private, public or group. Private chat is for the 1:1 chat. Public chat is for the message which is sent to all the people in the meeting. Group chat is for the message which is sent to a small group of people, like a message to "host and presenter".
+    #: Whether the type of the chat is private, public or group. Private chat is for the 1:1 chat. Public chat is for
+    #: the message which is sent to all the people in the meeting. Group chat is for the message which is sent to a
+    #: small group of people, like a message to "host and presenter".
     #: example: private
     type: Optional[str] = None
     #: Information of the sender of the chat snippet.
@@ -11617,7 +12691,8 @@ class ClosedCaptionObject(ApiModel):
     #: A unique identifier for the closed caption.
     #: example: 195d64646ad14be2924ea50f541fd91d
     id: Optional[str] = None
-    #: Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the closed captions belong to.
+    #: Unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the closed captions belong to.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
     meeting_id: Optional[str] = None
     #: The download link for the closed caption vtt file.
@@ -11626,7 +12701,8 @@ class ClosedCaptionObject(ApiModel):
     #: The download link for the closed caption txt file.
     #: example: http://site-example.webex.com/v1/meetingClosedCaptions/195d64646ad14be2924ea50f541fd91d/download?format=txt
     txt_download_link: Optional[str] = None
-    #: Start time for the meeting closed caption in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: Start time for the meeting closed caption in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2020-06-01T20:30:15.042Z
     start: Optional[datetime] = None
 
@@ -11635,7 +12711,8 @@ class SnippetObject(ApiModel):
     #: A unique identifier for the closed caption snippet.
     #: example: 195d64646ad14be2924ea50f541fd91d_00001
     id: Optional[str] = None
-    #: Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) which the closed captions belong to.
+    #: Unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the closed captions belong to.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
     meeting_id: Optional[str] = None
     #: Text for the snippet.
@@ -11683,13 +12760,24 @@ class UpdateInviteeObject(ApiModel):
     #: Email address for meeting invitee.
     #: example: john.andersen@example.com
     email: Optional[str] = None
-    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In the Webex app, if the email has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`. In a Webex site, if `displayName` is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`.
-    #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName` associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName` which is specified by the invitee who does not have a Webex account.
+    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In the Webex app, if
+    #: the email has been associated with an existing Webex account, the display name associated with the Webex
+    #: account will be used; otherwise, the `email` will be used as `displayName`. In a Webex site, if `displayName`
+    #: is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been
+    #: associated with an existing Webex account, the display name associated with the Webex account will be used;
+    #: otherwise, the `email` will be used as `displayName`.
+    #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName`
+    #: associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName`
+    #: which is specified by the invitee who does not have a Webex account.
     #: example: John Andersen
     display_name: Optional[str] = None
-    #: Whether or not the invitee is a designated alternate host for the meeting. See [Add Alternate Hosts for Cisco Webex Meetings](https://help.webex.com/b5z6he/) for more details.
+    #: Whether or not the invitee is a designated alternate host for the meeting. See
+    #: `Add Alternate Hosts for Cisco Webex Meetings
+    #: <https://help.webex.com/b5z6he/>`_ for more details.
     co_host: Optional[bool] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage
+    #: to be the meeting host.
     #: example: brenda.song@example.com
     host_email: Optional[str] = None
     #: If `true`, send an email to the invitee.
@@ -11700,19 +12788,35 @@ class UpdateInviteeObject(ApiModel):
 
 
 class CreateInviteeObject(ApiModel):
-    #: Unique identifier for the meeting to which a person is being invited. This attribute only applies to meeting series and scheduled meeting. If it's a meeting series, the meeting invitee is invited to the entire meeting series; if it's a scheduled meeting, the meeting invitee is invited to this individual scheduled meeting. It doesn't apply to an ended or ongoing meeting instance. The meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API.
+    #: Unique identifier for the meeting to which a person is being invited. This attribute only applies to meeting
+    #: series and scheduled meeting. If it's a meeting series, the meeting invitee is invited to the entire meeting
+    #: series; if it's a scheduled meeting, the meeting invitee is invited to this individual scheduled meeting. It
+    #: doesn't apply to an ended or ongoing meeting instance. The meeting ID of a scheduled `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is
+    #: not supported for this API.
     #: example: 870f51ff287b41be84648412901e0402
     meeting_id: Optional[str] = None
     #: Email address for meeting invitee.
     #: example: john.andersen@example.com
     email: Optional[str] = None
-    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In the Webex app, if the email has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`. In a Webex site, if `displayName` is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`.
-    #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName` associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName` which is specified by the invitee who does not have a Webex account.
+    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In the Webex app, if
+    #: the email has been associated with an existing Webex account, the display name associated with the Webex
+    #: account will be used; otherwise, the `email` will be used as `displayName`. In a Webex site, if `displayName`
+    #: is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been
+    #: associated with an existing Webex account, the display name associated with the Webex account will be used;
+    #: otherwise, the `email` will be used as `displayName`.
+    #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName`
+    #: associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName`
+    #: which is specified by the invitee who does not have a Webex account.
     #: example: John Andersen
     display_name: Optional[str] = None
-    #: Whether or not the invitee is a designated alternate host for the meeting. See [Add Alternate Hosts for Cisco Webex Meetings](https://help.webex.com/b5z6he/) for more details.
+    #: Whether or not the invitee is a designated alternate host for the meeting. See
+    #: `Add Alternate Hosts for Cisco Webex Meetings
+    #: <https://help.webex.com/b5z6he/>`_ for more details.
     co_host: Optional[bool] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage
+    #: to be the meeting host.
     #: example: brenda.song@example.com
     host_email: Optional[str] = None
     #: If `true`, send an email to the invitee.
@@ -11726,17 +12830,29 @@ class CreateInviteesItemResponseObject(ApiModel):
     #: Unique identifier for meeting invitee.
     #: example: 870f51ff287b41be84648412901e0402_2628962
     id: Optional[str] = None
-    #: Unique identifier for the meeting to which a person is being invited. This attribute only applies to meeting series and scheduled meeting. If it's a meeting series, the meeting invitee is invited to the entire meeting series; if it's a scheduled meeting, the meeting invitee is invited to this individual scheduled meeting. It doesn't apply to an ended or ongoing meeting instance.
+    #: Unique identifier for the meeting to which a person is being invited. This attribute only applies to meeting
+    #: series and scheduled meeting. If it's a meeting series, the meeting invitee is invited to the entire meeting
+    #: series; if it's a scheduled meeting, the meeting invitee is invited to this individual scheduled meeting. It
+    #: doesn't apply to an ended or ongoing meeting instance.
     #: example: 870f51ff287b41be84648412901e0402
     meeting_id: Optional[str] = None
     #: Email address for meeting invitee.
     #: example: john.andersen@example.com
     email: Optional[str] = None
-    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In the Webex App, if the email has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`. In Webex site, if `displayName` is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`.
-    #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName` associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName` which is specified by the invitee who does not have a Webex account.
+    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In the Webex App, if
+    #: the email has been associated with an existing Webex account, the display name associated with the Webex
+    #: account will be used; otherwise, the `email` will be used as `displayName`. In Webex site, if `displayName` is
+    #: specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been associated
+    #: with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the
+    #: `email` will be used as `displayName`.
+    #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName`
+    #: associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName`
+    #: which is specified by the invitee who does not have a Webex account.
     #: example: John Andersen
     display_name: Optional[str] = None
-    #: Whether or not the invitee is a designated alternate host for the meeting. See [Add Alternate Hosts for Cisco Webex Meetings](https://help.webex.com/b5z6he/) for more details.
+    #: Whether or not the invitee is a designated alternate host for the meeting. See
+    #: `Add Alternate Hosts for Cisco Webex Meetings
+    #: <https://help.webex.com/b5z6he/>`_ for more details.
     co_host: Optional[bool] = None
     #: If `true`, the invitee is a designated panelist for the event meeting.
     panelist: Optional[bool] = None
@@ -11746,11 +12862,20 @@ class CreateInviteesItemObject(ApiModel):
     #: Email address for meeting invitee.
     #: example: john.andersen@example.com
     email: Optional[str] = None
-    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In Webex App, if the email has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`. In Webex site, if `displayName` is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been associated with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the `email` will be used as `displayName`.
-    #: Please note that if the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName` associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName` which is specified by the invitee who does not have a Webex account.
+    #: Display name for meeting invitee. The maximum length of `displayName` is 128 characters. In Webex App, if the
+    #: email has been associated with an existing Webex account, the display name associated with the Webex account
+    #: will be used; otherwise, the `email` will be used as `displayName`. In Webex site, if `displayName` is
+    #: specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been associated
+    #: with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the
+    #: `email` will be used as `displayName`.
+    #: Please note that if the invitee has an existing Webex account, the `displayName` shown in the meeting will be
+    #: the `displayName` associated with the Webex account; otherwise, `displayName` shown in the meeting will be the
+    #: `displayName` which is specified by the invitee who does not have a Webex account.
     #: example: John Andersen
     display_name: Optional[str] = None
-    #: Whether or not invitee is a designated alternate host for the meeting. See [Add Alternate Hosts for Cisco Webex Meetings](https://help.webex.com/b5z6he/) for more details.
+    #: Whether or not invitee is a designated alternate host for the meeting. See
+    #: `Add Alternate Hosts for Cisco Webex Meetings
+    #: <https://help.webex.com/b5z6he/>`_ for more details.
     co_host: Optional[bool] = None
     #: If `true`, send an email to the invitee.
     #: example: True
@@ -11760,10 +12885,17 @@ class CreateInviteesItemObject(ApiModel):
 
 
 class CreateInviteesObject(ApiModel):
-    #: Unique identifier for the meeting to which the people are being invited. This attribute only applies to meeting series and scheduled meetings. If it's a meeting series, the meeting invitees are invited to the entire meeting series; if it's a scheduled meeting, the meeting invitees are invited to this individual scheduled meeting. It doesn't apply to an ended or ongoing meeting instance. The meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is not supported for this API.
+    #: Unique identifier for the meeting to which the people are being invited. This attribute only applies to meeting
+    #: series and scheduled meetings. If it's a meeting series, the meeting invitees are invited to the entire meeting
+    #: series; if it's a scheduled meeting, the meeting invitees are invited to this individual scheduled meeting. It
+    #: doesn't apply to an ended or ongoing meeting instance. The meeting ID of a scheduled `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is
+    #: not supported for this API.
     #: example: 870f51ff287b41be84648412901e0402
     meeting_id: Optional[str] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage
+    #: to be the meeting host.
     #: example: brenda.song@example.com
     host_email: Optional[str] = None
     #: Meeting invitees to be inserted.
@@ -11812,10 +12944,15 @@ class Device1(ApiModel):
     #: The audio type that the participant is using.
     #: example: pstn
     audio_type: Optional[DeviceAudioType] = None
-    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-    01T00:00:00.000Z` the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need real-time joined     events, please refer to the webhooks guide.
+    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-    01T00:00:00.000Z` the
+    #: meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need
+    #: real-time joined     events, please refer to the webhooks guide.
     #: example: 2019-04-23T17:31:00.000Z
     joined_time: Optional[datetime] = None
-    #: The time the device left the meeting, `leftTime` is the exact moment when a specific devi    ce left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `leftTime` will     be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks guide.
+    #: The time the device left the meeting, `leftTime` is the exact moment when a specific devi    ce left the
+    #: meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and
+    #: the `leftTime` will     be filled in after the meeting ended. If you need real-time left events, please refer
+    #: to the webhooks guide.
     #: example: 2019-04-23T17:32:00.000Z
     left_time: Optional[datetime] = None
     #: The duration in seconds the device stayed in the meeting.
@@ -11824,7 +12961,10 @@ class Device1(ApiModel):
     #: The PSTN call type in which the device joined the meeting.
     #: example: callIn
     call_type: Optional[DeviceCallType] = None
-    #: The PSTN phone number from which the device joined the meeting. Only [compliance officer](/docs/compliance#compliance) can retrieve the `phoneNumber`. The meeting host and admin users cannot retrieve it. NOTE: The `phoneNumber` will be returned after the meeting ends; it is not returned while the meeting is in progress.
+    #: The PSTN phone number from which the device joined the meeting. Only `compliance officer
+    #: <https://developer.webex.com/docs/compliance#compliance>`_ can retrieve the
+    #: `phoneNumber`. The meeting host and admin users cannot retrieve it. NOTE: The `phoneNumber` will be returned
+    #: after the meeting ends; it is not returned while the meeting is in progress.
     #: example: 745273328
     phone_number: Optional[str] = None
 
@@ -11841,7 +12981,8 @@ class Participant(ApiModel):
     host: Optional[bool] = None
     #: Whether or not the participant has host privilege in the meeting.
     co_host: Optional[bool] = None
-    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated with a Webex space.
+    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
+    #: with a Webex space.
     space_moderator: Optional[bool] = None
     #: The email address of the participant.
     #: example: joeDoe@cisco.com
@@ -11859,13 +13000,18 @@ class Participant(ApiModel):
     #: The status of the participant's video.
     #: example: on
     video: Optional[CallMembershipAudio] = None
-    #: The status of the participant in the meeting. The value of `state` is `breakoutSession` which is only returned when the meeting is in progress and the breakout session is enabled.
+    #: The status of the participant in the meeting. The value of `state` is `breakoutSession` which is only returned
+    #: when the meeting is in progress and the breakout session is enabled.
     #: example: lobby
     state: Optional[ParticipantState] = None
-    #: The time the participant joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need real-time join events, please refer to the webhooks guide.
+    #: The time the participant joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z`
+    #: the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need
+    #: real-time join events, please refer to the webhooks guide.
     #: example: 2022-10-25T09:00:00Z
     joined_time: Optional[datetime] = None
-    #: The time the participant left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks guide.
+    #: The time the participant left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the
+    #: meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need
+    #: real-time left events, please refer to the webhooks guide.
     #: example: 2022-10-25T09:30:00Z
     left_time: Optional[datetime] = None
     #: The site URL.
@@ -11878,7 +13024,8 @@ class Participant(ApiModel):
     #: example: janeDoe@cisco.com
     host_email: Optional[str] = None
     devices: Optional[list[Device1]] = None
-    #: The source ID of the participant. The `sourceId` is from the [Create Invitation Sources](/docs/api/v1/meetings/create-invitation-sources) API.
+    #: The source ID of the participant. The `sourceId` is from the `Create Invitation Sources
+    #: <https://developer.webex.com/docs/api/v1/meetings/create-invitation-sources>`_ API.
     #: example: cisco
     source_id: Optional[str] = None
 
@@ -11900,10 +13047,15 @@ class InProgressDevice(ApiModel):
     #: The audio type that the participant is using.
     #: example: pstn
     audio_type: Optional[DeviceAudioType] = None
-    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need real-time joined events, please refer to the webhooks guide.
+    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the
+    #: meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need
+    #: real-time joined events, please refer to the webhooks guide.
     #: example: 2019-04-23T17:31:00.000Z
     joined_time: Optional[datetime] = None
-    #: The time the device left the meeting, `leftTime` is the exact moment when a specific device left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks guide.
+    #: The time the device left the meeting, `leftTime` is the exact moment when a specific device left the meeting. If
+    #: the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the
+    #: `leftTime` will be filled in after the meeting ended. If you need real-time left events, please refer to the
+    #: webhooks guide.
     #: example: 2019-04-23T17:32:00.000Z
     left_time: Optional[datetime] = None
 
@@ -11920,7 +13072,8 @@ class InProgressParticipant(ApiModel):
     host: Optional[bool] = None
     #: Whether or not the participant has host privilege in the meeting.
     co_host: Optional[bool] = None
-    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated with a Webex space.
+    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
+    #: with a Webex space.
     space_moderator: Optional[bool] = None
     #: The email address of the participant.
     #: example: joeDoe@cisco.com
@@ -11954,7 +13107,8 @@ class AdmitParticipant(ApiModel):
     #: The ID that identifies the meeting participant.
     #: example: 560d7b784f5143e3be2fc3064a5c4999_I_204252993233618782_23e16d67-17f3-3ef1-b830-f33d17c0232e
     participant_id: Optional[str] = None
-    #: The breakout session ID that identifies which breakout session to admit the participant into. Admit into the main session if the value is empty.
+    #: The breakout session ID that identifies which breakout session to admit the participant into. Admit into the
+    #: main session if the value is empty.
     #: example: 23e16d67-17f3-3ef1-b830-f33d17c0232e
     breakout_session_id: Optional[str] = None
 
@@ -11979,7 +13133,8 @@ class Participant1(ApiModel):
     host: Optional[bool] = None
     #: Whether or not the participant has host privilege in the meeting.
     co_host: Optional[bool] = None
-    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated with a Webex space.
+    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
+    #: with a Webex space.
     space_moderator: Optional[bool] = None
     #: The email address of the participant.
     #: example: joeDoe@cisco.com
@@ -11997,16 +13152,21 @@ class Participant1(ApiModel):
     #: The status of the participant's video.
     #: example: on
     video: Optional[CallMembershipAudio] = None
-    #: The status of the participant in the meeting. The value of `state` is `breakoutSession` which is only returned when the meeting is in progress and the breakout session is enabled.
+    #: The status of the participant in the meeting. The value of `state` is `breakoutSession` which is only returned
+    #: when the meeting is in progress and the breakout session is enabled.
     #: example: lobby
     state: Optional[ParticipantState] = None
     #: The ID of the breakout session including the participant.
     #: example: 2e373567-465b-8530-a18a-7025e1871d40
     breakout_session_id: Optional[str] = None
-    #: The time the participant joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need real-time join events, please refer to the webhooks guide.
+    #: The time the participant joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z`
+    #: the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need
+    #: real-time join events, please refer to the webhooks guide.
     #: example: 2022-10-25T09:00:00Z
     joined_time: Optional[datetime] = None
-    #: The time the participant left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks guide.
+    #: The time the participant left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the
+    #: meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need
+    #: real-time left events, please refer to the webhooks guide.
     #: example: 2022-10-25T09:30:00Z
     left_time: Optional[datetime] = None
     #: The site URL.
@@ -12019,7 +13179,8 @@ class Participant1(ApiModel):
     #: example: janeDoe@cisco.com
     host_email: Optional[str] = None
     devices: Optional[list[Device1]] = None
-    #: The source ID of the participant. The `sourceId` is from the [Create Invitation Sources](/docs/api/v1/meetings/create-invitation-sources) API.
+    #: The source ID of the participant. The `sourceId` is from the `Create Invitation Sources
+    #: <https://developer.webex.com/docs/api/v1/meetings/create-invitation-sources>`_ API.
     #: example: cisco
     source_id: Optional[str] = None
 
@@ -12080,13 +13241,16 @@ class Poll(ApiModel):
     #: A unique identifier for the poll.
     #: example: 1aea8390-e375-4547-b7ff-58ecd9e0b03d
     id: Optional[str] = None
-    #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the poll belongs.
+    #: A unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the poll belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
-    #: The date and time the poll started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the poll started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:22:34Z
     start_time: Optional[datetime] = None
-    #: The date and time the poll ended in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the poll ended in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:25:51Z
     end_time: Optional[datetime] = None
     #: The length of time in the alarm box, in seconds.
@@ -12178,7 +13342,8 @@ class PollResult(ApiModel):
     #: A unique identifier for the poll.
     #: example: 1aea8390-e375-4547-b7ff-58ecd9e0b03d
     id: Optional[str] = None
-    #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the poll belongs.
+    #: A unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the poll belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
@@ -12187,10 +13352,12 @@ class PollResult(ApiModel):
     #: The total number of respondents in the poll.
     #: example: 10.0
     total_respondents: Optional[int] = None
-    #: The date and time the poll started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the poll started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:25:34Z
     start_time: Optional[datetime] = None
-    #: The date and time the poll ended in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the poll ended in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:28:34Z
     end_time: Optional[datetime] = None
     #: The duration of the poll, in seconds.
@@ -12218,10 +13385,12 @@ class RespondentCollectionResponse(ApiModel):
 
 
 class MeetingPreferenceObjectPersonalMeetingRoomCoHosts(ApiModel):
-    #: Email address for cohost. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Email address for cohost. This attribute can be modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     #: example: john.andersen@example.com
     email: Optional[str] = None
-    #: Display name for cohost. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Display name for cohost. This attribute can be modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     #: example: John Andersen
     display_name: Optional[str] = None
 
@@ -12244,40 +13413,67 @@ class MeetingPreferenceObjectPersonalMeetingRoomTelephonyCallInNumbers(ApiModel)
 
 
 class MeetingPreferenceObjectPersonalMeetingRoomTelephony(ApiModel):
-    #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or the global call-in number, followed by the value of the `accessCode`.
+    #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or
+    #: the global call-in number, followed by the value of the `accessCode`.
     #: example: 1234567890
     access_code: Optional[str] = None
     #: Array of call-in numbers for joining teleconference from a phone.
     call_in_numbers: Optional[list[MeetingPreferenceObjectPersonalMeetingRoomTelephonyCallInNumbers]] = None
-    #: [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) information of global call-in numbers for joining teleconference from a phone.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ information of global call-in numbers for joining teleconference from a phone.
     links: Optional[Link] = None
 
 
 class MeetingPreferenceObjectPersonalMeetingRoom(ApiModel):
-    #: Personal Meeting Room topic. The length of `topic` must be between 1 and 128 characters. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Personal Meeting Room topic. The length of `topic` must be between 1 and 128 characters. This attribute can be
+    #: modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     #: example: John's PMR
     topic: Optional[str] = None
-    #: PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It cannot contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as 1111. The predefined length for host PIN can be viewed in user's `My Personal Room` page. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It cannot
+    #: contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as 1111. The
+    #: predefined length for host PIN can be viewed in user's `My Personal Room` page. This attribute can be modified
+    #: with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     #: example: 4325
     host_pin: Optional[datetime] = None
     #: Personal Meeting Room link. It cannot be empty. ***Note***: This is a read-only attribute.
     #: example: https://site4-example.webex.com/meet/john
     personal_meeting_room_link: Optional[str] = None
-    #: Option to automatically lock the Personal Room a number of minutes after a meeting starts. When a room is locked, invitees cannot enter until the owner admits them. The period after which the meeting is locked is defined by `autoLockMinutes`. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Option to automatically lock the Personal Room a number of minutes after a meeting starts. When a room is
+    #: locked, invitees cannot enter until the owner admits them. The period after which the meeting is locked is
+    #: defined by `autoLockMinutes`. This attribute can be modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     enabled_auto_lock: Optional[bool] = None
-    #: Number of minutes after which the Personal Room is locked if `enabledAutoLock` is enabled. Valid options are 0, 5, 10, 15 and 20. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Number of minutes after which the Personal Room is locked if `enabledAutoLock` is enabled. Valid options are 0,
+    #: 5, 10, 15 and 20. This attribute can be modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     auto_lock_minutes: Optional[int] = None
-    #: Flag to enable notifying the owner of a Personal Room when someone enters the Personal Room lobby while the owner is not in the room. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Flag to enable notifying the owner of a Personal Room when someone enters the Personal Room lobby while the
+    #: owner is not in the room. This attribute can be modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     enabled_notify_host: Optional[bool] = None
-    #: Flag allowing other invitees to host a meeting in the Personal Room without the owner. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Flag allowing other invitees to host a meeting in the Personal Room without the owner. This attribute can be
+    #: modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     support_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the Personal Room. The target site is user's preferred site. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: Personal Room. The target site is user's preferred site. This attribute can be modified with the
+    #: `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     support_anyone_as_co_host: Optional[bool] = None
-    #: Whether or not to allow the first attendee with a host account on the target site to become a cohost when joining the Personal Room. The target site is user's preferred site. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Whether or not to allow the first attendee with a host account on the target site to become a cohost when
+    #: joining the Personal Room. The target site is user's preferred site. This attribute can be modified with the
+    #: `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the user's organization to start or join the meeting without a prompt. This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Whether or not to allow authenticated video devices in the user's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     allow_authenticated_devices: Optional[bool] = None
-    #: Array defining cohosts for the room if both `supportAnyoneAsCoHost` and `allowFirstUserToBeCoHost` are `false` This attribute can be modified with the [Update Personal Meeting Room Options](/docs/api/v1/meeting-preferences/update-personal-meeting-room-options) API.
+    #: Array defining cohosts for the room if both `supportAnyoneAsCoHost` and `allowFirstUserToBeCoHost` are `false`
+    #: This attribute can be modified with the `Update Personal Meeting Room Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options>`_ API.
     co_hosts: Optional[list[MeetingPreferenceObjectPersonalMeetingRoomCoHosts]] = None
     #: SIP address for callback from a video system.
     #: example: john.andersen@example.com
@@ -12302,68 +13498,116 @@ class MeetingPreferenceObjectAudioDefaultAudioType(str, Enum):
 
 
 class MeetingPreferenceObjectAudioOfficeNumber(ApiModel):
-    #: Country code for the phone number. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Country code for the phone number. This attribute can be modified with the with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     country_code: Optional[str] = None
-    #: Phone number. It cannot be longer than 30 characters. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Phone number. It cannot be longer than 30 characters. This attribute can be modified with the with the
+    #: `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     number: Optional[str] = None
-    #: Flag identifying the phone number as the one that will be used to dial into a teleconference. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Flag identifying the phone number as the one that will be used to dial into a teleconference. This attribute can
+    #: be modified with the with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     enabled_call_in_authentication: Optional[bool] = None
-    #: Flag to enable/disable Call Me number display on the meeting client. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API. ***Note***: This feature is only effective if the site supports the ***Call Me*** feature.
+    #: Flag to enable/disable Call Me number display on the meeting client. This attribute can be modified with the
+    #: with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API. ***Note***: This feature is only effective if the site supports the ***Call
+    #: Me*** feature.
     enabled_call_me: Optional[bool] = None
 
 
 class MeetingPreferenceObjectAudio(ApiModel):
-    #: Default audio type. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Default audio type. This attribute can be modified with the with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     default_audio_type: Optional[MeetingPreferenceObjectAudioDefaultAudioType] = None
-    #: Phone number and other information for the teleconference provider to be used, along with instructions for invitees. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Phone number and other information for the teleconference provider to be used, along with instructions for
+    #: invitees. This attribute can be modified with the with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     other_teleconference_description: Optional[str] = None
-    #: Flag to enable/disable global call ins. ***Note***: If the site does not support global call-ins, you cannot set this option. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Flag to enable/disable global call ins. ***Note***: If the site does not support global call-ins, you cannot set
+    #: this option. This attribute can be modified with the with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     enabled_global_call_in: Optional[bool] = None
-    #: Flag to enable/disable call-ins from toll-free numbers.  ***Note***: If the site does not support calls from toll-free numbers, you cannot set this option. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Flag to enable/disable call-ins from toll-free numbers.  ***Note***: If the site does not support calls from
+    #: toll-free numbers, you cannot set this option. This attribute can be modified with the with the
+    #: `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     enabled_toll_free: Optional[bool] = None
-    #: Flag to enable/disable automatically connecting to audio using a computer. The meeting host can enable/disable this option. When this option is set to `true`, the user is automatically connected to audio via a computer when they start or join a Webex Meetings meeting on a desktop. `This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Flag to enable/disable automatically connecting to audio using a computer. The meeting host can enable/disable
+    #: this option. When this option is set to `true`, the user is automatically connected to audio via a computer
+    #: when they start or join a Webex Meetings meeting on a desktop. `This attribute can be modified with the with
+    #: the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     enabled_auto_connection: Optional[bool] = None
-    #: PIN to provide a secondary level of authentication for calls where the host is using the phone and may need to invite additional invitees. It must be exactly 4 digits. It cannot contain sequential digits, such as 1234 or 4321, or repeat a digit 4 times, such as 1111. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: PIN to provide a secondary level of authentication for calls where the host is using the phone and may need to
+    #: invite additional invitees. It must be exactly 4 digits. It cannot contain sequential digits, such as 1234 or
+    #: 4321, or repeat a digit 4 times, such as 1111. This attribute can be modified with the with the
+    #: `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     audio_pin: Optional[str] = None
-    #: Office phone number. We recommend that phone numbers be specified to facilitate connecting via audio. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Office phone number. We recommend that phone numbers be specified to facilitate connecting via audio. This
+    #: attribute can be modified with the with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     office_number: Optional[MeetingPreferenceObjectAudioOfficeNumber] = None
-    #: Mobile phone number. We recommend that phone numbers be specified to facilitate connecting via audio. This attribute can be modified with the with the [Update Audio Options](/docs/api/v1/meeting-preferences/update-audio-options) API.
+    #: Mobile phone number. We recommend that phone numbers be specified to facilitate connecting via audio. This
+    #: attribute can be modified with the with the `Update Audio Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options>`_ API.
     mobile_number: Optional[MeetingPreferenceObjectAudioOfficeNumber] = None
 
 
 class MeetingPreferenceObjectVideoVideoDevices(ApiModel):
-    #: Video system name. It cannot be empty. This attribute can be modified with the [Update Video Options](/docs/api/v1/meeting-preferences/update-video-options) API.
+    #: Video system name. It cannot be empty. This attribute can be modified with the `Update Video Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-video-options>`_ API.
     #: example: device1
     device_name: Optional[str] = None
-    #: Video address. It cannot be empty and must be in valid email format. This attribute can be modified with the [Update Video Options](/docs/api/v1/meeting-preferences/update-video-options) API.
+    #: Video address. It cannot be empty and must be in valid email format. This attribute can be modified with the
+    #: `Update Video Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-video-options>`_ API.
     #: example: device1@example.com
     device_address: Optional[str] = None
-    #: Flag identifying the device as the default video device. If user's video device list is not empty, one and only one device must be set as default. This attribute can be modified with the [Update Video Options](/docs/api/v1/meeting-preferences/update-video-options) API.
+    #: Flag identifying the device as the default video device. If user's video device list is not empty, one and only
+    #: one device must be set as default. This attribute can be modified with the `Update Video Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-video-options>`_ API.
     #: example: True
     is_default: Optional[bool] = None
 
 
 class MeetingPreferenceObjectVideo(ApiModel):
-    #: Array of video devices. This attribute can be modified with the [Update Video Options](/docs/api/v1/meeting-preferences/update-video-options) API.
+    #: Array of video devices. This attribute can be modified with the `Update Video Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-video-options>`_ API.
     video_devices: Optional[list[MeetingPreferenceObjectVideoVideoDevices]] = None
 
 
 class MeetingPreferenceObjectSites(ApiModel):
-    #: Access URL for the site. ***Note***: This is a read-only attribute. The value can be assigned as user's default site with the [Update Default Site](/docs/api/v1/meeting-preferences/update-default-site) API.
+    #: Access URL for the site. ***Note***: This is a read-only attribute. The value can be assigned as user's default
+    #: site with the `Update Default Site
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-default-site>`_ API.
     #: example: site1-example.webex.com
     site_url: Optional[str] = None
-    #: Flag identifying the site as the default site. Users can list meetings and recordings, and create meetings on the default site.
+    #: Flag identifying the site as the default site. Users can list meetings and recordings, and create meetings on
+    #: the default site.
     default: Optional[bool] = None
 
 
 class SchedulingOptionsObject(ApiModel):
-    #: Flag to enable/disable ***Join Before Host***. The period during which invitees can join before the start time is defined by `autoLockMinutes`. This attribute can be modified with the [Update Scheduling Options](/docs/api/v1/meeting-preferences/update-scheduling-options) API. ***Note***: This feature is only effective if the site supports the ***Join Before Host*** feature. This attribute can be modified with the [Update Scheduling Options](/docs/api/v1/meeting-preferences/update-scheduling-options) API.
+    #: Flag to enable/disable ***Join Before Host***. The period during which invitees can join before the start time
+    #: is defined by `autoLockMinutes`. This attribute can be modified with the `Update Scheduling Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-scheduling-options>`_ API.
+    #: ***Note***: This feature is only effective if the site supports the ***Join Before Host*** feature. This
+    #: attribute can be modified with the `Update Scheduling Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-scheduling-options>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Number of minutes before the start time that an invitee can join a meeting if `enabledJoinBeforeHost` is true. Valid options are 0, 5, 10 and 15. This attribute can be modified with the [Update Scheduling Options](/docs/api/v1/meeting-preferences/update-scheduling-options) API.
+    #: Number of minutes before the start time that an invitee can join a meeting if `enabledJoinBeforeHost` is true.
+    #: Valid options are 0, 5, 10 and 15. This attribute can be modified with the `Update Scheduling Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-scheduling-options>`_ API.
     join_before_host_minutes: Optional[int] = None
-    #: Flag to enable/disable the automatic sharing of the meeting recording with invitees when it is available. This attribute can be modified with the [Update Scheduling Options](/docs/api/v1/meeting-preferences/update-scheduling-options) API.
+    #: Flag to enable/disable the automatic sharing of the meeting recording with invitees when it is available. This
+    #: attribute can be modified with the `Update Scheduling Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-scheduling-options>`_ API.
     enabled_auto_share_recording: Optional[bool] = None
-    #: Flag to automatically enable Webex Assistant whenever you start a meeting. This attribute can be modified with the [Update Scheduling Options](/docs/api/v1/meeting-preferences/update-scheduling-options) API.
+    #: Flag to automatically enable Webex Assistant whenever you start a meeting. This attribute can be modified with
+    #: the `Update Scheduling Options
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-scheduling-options>`_ API.
     enabled_webex_assistant_by_default: Optional[bool] = None
 
 
@@ -12372,7 +13616,9 @@ class MeetingPreferenceObject(ApiModel):
     personal_meeting_room: Optional[MeetingPreferenceObjectPersonalMeetingRoom] = None
     #: Audio Preferences. ***Note***: These audio settings do not apply to Personal Room meetings
     audio: Optional[MeetingPreferenceObjectAudio] = None
-    #: Information for video conferencing systems used to connect to Webex meetings. ***Note***: The ***Call My Video System*** feature is available only if it has been purchased for your site and your administrator has enabled it.
+    #: Information for video conferencing systems used to connect to Webex meetings. ***Note***: The ***Call My Video
+    #: System*** feature is available only if it has been purchased for your site and your administrator has enabled
+    #: it.
     video: Optional[MeetingPreferenceObjectVideo] = None
     #: Meeting scheduling options.
     scheduling_options: Optional[SchedulingOptionsObject] = None
@@ -12381,7 +13627,10 @@ class MeetingPreferenceObject(ApiModel):
 
 
 class SitesObject(ApiModel):
-    #: Array of sites for the user. Users can have one site or multiple sites. This concept is specific to Webex Meetings. Any `siteUrl` in the site list can be assigned as user's default site with the [Update Default Site](/docs/api/v1/meeting-preferences/update-default-site) API.
+    #: Array of sites for the user. Users can have one site or multiple sites. This concept is specific to Webex
+    #: Meetings. Any `siteUrl` in the site list can be assigned as user's default site with the `Update Default Site
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/update-default-site>`_
+    #: API.
     sites: Optional[list[MeetingPreferenceObjectSites]] = None
 
 
@@ -12395,27 +13644,83 @@ class UpdatePMRObject(ApiModel):
     #: Personal Meeting Room topic to be updated.
     #: example: John's PMR
     topic: Optional[str] = None
-    #: Updated PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It cannot contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as 1111. The predefined length for host PIN can be viewed in user's `My Personal Room` page and it can only be changed by site administrator.
+    #: Updated PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It
+    #: cannot contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as
+    #: 1111. The predefined length for host PIN can be viewed in user's `My Personal Room` page and it can only be
+    #: changed by site administrator.
     #: example: 4325
     host_pin: Optional[datetime] = None
-    #: Update for option to automatically lock the Personal Room a number of minutes after a meeting starts. When a room is locked, invitees cannot enter until the owner admits them. The period after which the meeting is locked is defined by `autoLockMinutes`.
+    #: Update for option to automatically lock the Personal Room a number of minutes after a meeting starts. When a
+    #: room is locked, invitees cannot enter until the owner admits them. The period after which the meeting is locked
+    #: is defined by `autoLockMinutes`.
     enabled_auto_lock: Optional[bool] = None
-    #: Updated number of minutes after which the Personal Room is locked if `enabledAutoLock` is enabled. Valid options are 0, 5, 10, 15 and 20.
+    #: Updated number of minutes after which the Personal Room is locked if `enabledAutoLock` is enabled. Valid options
+    #: are 0, 5, 10, 15 and 20.
     auto_lock_minutes: Optional[int] = None
-    #: Update for flag to enable notifying the owner of a Personal Room when someone enters the Personal Room lobby while the owner is not in the room.
+    #: Update for flag to enable notifying the owner of a Personal Room when someone enters the Personal Room lobby
+    #: while the owner is not in the room.
     #: example: True
     enabled_notify_host: Optional[bool] = None
     #: Update for flag allowing other invitees to host a meetingCoHost in the Personal Room without the owner.
     #: example: True
     support_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the Personal Room. The target site is user's preferred site.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: Personal Room. The target site is user's preferred site.
     support_anyone_as_co_host: Optional[bool] = None
-    #: Whether or not to allow the first attendee with a host account on the target site to become a cohost when joining the Personal Room. The target site is user's preferred site.
+    #: Whether or not to allow the first attendee with a host account on the target site to become a cohost when
+    #: joining the Personal Room. The target site is user's preferred site.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the user's organization to start or join the meeting without a prompt.
+    #: Whether or not to allow authenticated video devices in the user's organization to start or join the meeting
+    #: without a prompt.
     allow_authenticated_devices: Optional[bool] = None
-    #: Updated array defining cohosts for the room if both `supportAnyoneAsCoHost` and `allowFirstUserToBeCoHost` are `false`
+    #: Updated array defining cohosts for the room if both `supportAnyoneAsCoHost` and `allowFirstUserToBeCoHost` are
+    #: `false`
     co_hosts: Optional[list[MeetingPreferenceObjectPersonalMeetingRoomCoHosts]] = None
+
+
+class PMRIDObject(ApiModel):
+    #: Email address of the meeting host whose personal room ID will be refreshed.
+    #: example: john.andersen@example.com
+    email: Optional[str] = None
+    #: Unique identifier for the meeting host whose personal room ID will be refreshed.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8yNWJiZjgzMS01YmU5LTRjMjUtYjRiMC05YjU5MmM4YTA4NmI
+    person_id: Optional[str] = None
+    #: Whether or not to automatically refresh the personal room ID by the site's settings. Refresh the personal room
+    #: ID by the site's settings automatically if `systemGenerated` is true; otherwise, replace the existing personal
+    #: room ID with the specified value if `systemGenerated` is false or not specified.
+    system_generated: Optional[bool] = None
+    #: New personal room ID specified by the admin user.
+    #: example: prABCD23670651
+    personal_meeting_room_id: Optional[str] = None
+
+
+class BatchRefreshPMRIDObject(ApiModel):
+    #: Site URL to refresh the personal room IDs.
+    #: example: example.webex.com
+    site_url: Optional[str] = None
+    #: Information of whose personal room IDs are to be refreshed and how to refresh. The maximum size of `items` is
+    #: 100.
+    personal_meeting_room_ids: Optional[list[PMRIDObject]] = None
+
+
+class PMRIDResponseObject(ApiModel):
+    #: Email address for the meeting host whose personal room ID has been refreshed.
+    #: example: john.andersen@example.com
+    email: Optional[str] = None
+    #: Unique identifier for the meeting host whose personal room ID has been refreshed.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8yNWJiZjgzMS01YmU5LTRjMjUtYjRiMC05YjU5MmM4YTA4NmI
+    person_id: Optional[str] = None
+    #: Refreshed personal room ID.
+    #: example: prABCD23670651
+    personal_meeting_room_id: Optional[str] = None
+
+
+class BatchRefreshPMRIDResponseObject(ApiModel):
+    #: URL of the Webex site.
+    #: example: example.webex.com
+    site_url: Optional[str] = None
+    #: Information for the refreshed personal room IDs.
+    personal_meeting_room_ids: Optional[list[PMRIDResponseObject]] = None
 
 
 class AnswerObject(ApiModel):
@@ -12447,7 +13752,8 @@ class QAObject(ApiModel):
     #: A unique identifier for the question.
     #: example: 1aea8390-e375-4547-b7ff-58ecd9e0b03d
     id: Optional[str] = None
-    #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the Q&A belongs.
+    #: A unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the Q&A belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
@@ -12737,16 +14043,20 @@ class TranscriptObject(ApiModel):
     #: URL of the Webex site from which the API lists meeting transcripts.
     #: example: example.webex.com
     site_url: Optional[str] = None
-    #: Start time for the meeting transcript in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: Start time for the meeting transcript in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2020-06-01T20:30:15.042Z
     start_time: Optional[datetime] = None
     #: The meeting's topic.
     #: example: John's Meeting
     meeting_topic: Optional[str] = None
-    #: Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the transcripts belong.
+    #: Unique identifier for the `meeting instance
+    #: <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the transcripts belong.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
     meeting_id: Optional[str] = None
-    #: Unique identifier for scheduled meeting with which the current meeting is associated. Only apples to a meeting instance which is happening or has happened. This is the `id` of the scheduled meeting with which the instance is associated.
+    #: Unique identifier for scheduled meeting with which the current meeting is associated. Only apples to a meeting
+    #: instance which is happening or has happened. This is the `id` of the scheduled meeting with which the instance
+    #: is associated.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_20210401T232500Z
     scheduled_meeting_id: Optional[str] = None
     #: Unique identifier for the parent meeting series to which the recording belongs.
@@ -12795,7 +14105,8 @@ class UpdateSnippetObject(ApiModel):
 
 
 class DeleteTranscriptObject(ApiModel):
-    #: Reason for deleting a transcript. Only required when a Compliance Officer is operating on another user's transcript.
+    #: Reason for deleting a transcript. Only required when a Compliance Officer is operating on another user's
+    #: transcript.
     #: example: audit
     reason: Optional[str] = None
     #: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
@@ -12850,10 +14161,12 @@ class MeetingUsageReportObject(ApiModel):
     #: Meeting title.
     #: example: John's Meeting
     meeting_title: Optional[str] = None
-    #: The date and time when the meeting was started. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the meeting was started. It's in the timezone specified in the request header or in the
+    #: `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:26:30+08:00
     start: Optional[datetime] = None
-    #: The date and time when the meeting was ended. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the meeting was ended. It's in the timezone specified in the request header or in the
+    #: `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:46:30+08:00
     end: Optional[datetime] = None
     #: Duration of the meeting in minutes.
@@ -12930,10 +14243,12 @@ class MeetingAttendeeReportObject(ApiModel):
     #: Attendee's email.
     #: example: John Andersen
     email: Optional[str] = None
-    #: The date and time when the attendee joined the meeting. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the attendee joined the meeting. It's in the timezone specified in the request header or
+    #: in the `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:26:30+08:00
     joined_time: Optional[datetime] = None
-    #: The date and time when the attendee left the meeting. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the attendee left the meeting. It's in the timezone specified in the request header or in
+    #: the `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:46:30+08:00
     left_time: Optional[datetime] = None
     #: Duration of the attendee in the meeting in minutes.
@@ -13042,7 +14357,9 @@ class ScheduleStartCodeObjectType(str, Enum):
     admin_set = 'adminSet'
     #: The value cannot be used.
     not_used = 'notUsed'
-    #: This value only applies to the service of `All`. When the type of `All` for a tracking code is `notApplicable`, there are different types for different services. For example, `required` for `MeetingCenter`, `optional` for `EventCenter` and `notUsed` for others.
+    #: This value only applies to the service of `All`. When the type of `All` for a tracking code is `notApplicable`,
+    #: there are different types for different services. For example, `required` for `MeetingCenter`, `optional` for
+    #: `EventCenter` and `notUsed` for others.
     not_applicable = 'notApplicable'
     none_ = 'none'
 
@@ -13088,11 +14405,14 @@ class CreateOrUpdateTrackingCodeObject(ApiModel):
     site_url: Optional[str] = None
     #: Tracking code option list. The maximum size of `options` is 500.
     options: Optional[list[OptionsForTrackingCodeObject]] = None
-    #: Select an option for how users can provide a code value. Please note that if users set `inputMode` as `hostProfileSelect`, `scheduleStartCode` should be `null`, which means `hostProfileSelect` only applies to "Host Profile".
+    #: Select an option for how users can provide a code value. Please note that if users set `inputMode` as
+    #: `hostProfileSelect`, `scheduleStartCode` should be `null`, which means `hostProfileSelect` only applies to
+    #: "Host Profile".
     input_mode: Optional[GetTrackingCodeObjectInputMode] = None
     #: Type for the host profile.
     host_profile_code: Optional[GetTrackingCodeObjectHostProfileCode] = None
-    #: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The maximum size of `scheduleStartCodes` is 5.
+    #: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The
+    #: maximum size of `scheduleStartCodes` is 5.
     schedule_start_codes: Optional[list[ScheduleStartCodeObject]] = None
 
 
@@ -13125,10 +14445,12 @@ class UpdateTrackingCodeForUserObject(ApiModel):
     #: Site URL for the tracking code.
     #: example: example.webex.com
     site_url: Optional[str] = None
-    #: Unique identifier for the user. At least one parameter of `personId` or `email` is required. `personId` must precede `email` if both are specified.
+    #: Unique identifier for the user. At least one parameter of `personId` or `email` is required. `personId` must
+    #: precede `email` if both are specified.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xOGJiOWNjMC0zMWM2LTQ3MzYtYmE4OC0wMDk5ZmQzNDNmODE
     person_id: Optional[str] = None
-    #: Email address for the user. At least one parameter of `personId` or `email` is required. `personId` must precede `email` if both are specified.
+    #: Email address for the user. At least one parameter of `personId` or `email` is required. `personId` must precede
+    #: `email` if both are specified.
     #: example: john.andersen@example.com
     email: Optional[str] = None
     #: Tracking code information for updates.
@@ -13139,10 +14461,14 @@ class InviteeObjectForCreateMeeting(ApiModel):
     #: Email address of meeting invitee.
     #: example: brenda.song@example.com
     email: Optional[str] = None
-    #: Display name of meeting invitee. The maximum length of `displayName` is 128 characters. If not specified but the email has been registered, user's registered name for the email will be taken as `displayName`. If not specified and the email hasn't been registered, the email will be taken as `displayName`.
+    #: Display name of meeting invitee. The maximum length of `displayName` is 128 characters. If not specified but the
+    #: email has been registered, user's registered name for the email will be taken as `displayName`. If not
+    #: specified and the email hasn't been registered, the email will be taken as `displayName`.
     #: example: Brenda Song
     display_name: Optional[str] = None
-    #: Whether or not invitee is allowed to be a cohost for the meeting. `coHost` for each invitee is `true` by default if `roomId` is specified when creating a meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as a non-cohost invitee.
+    #: Whether or not invitee is allowed to be a cohost for the meeting. `coHost` for each invitee is `true` by default
+    #: if `roomId` is specified when creating a meeting, and anyone in the invitee list that is not qualified to be a
+    #: cohost will be invited as a non-cohost invitee.
     co_host: Optional[bool] = None
     #: Whether or not an invitee is allowed to be a panelist. Only applies to webinars.
     panelist: Optional[bool] = None
@@ -13152,10 +14478,14 @@ class InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting(ApiModel)
     #: Unique identifier for meeting interpreter.
     #: example: OGQ0OGRiM2U3ZTAxNDZiMGFjYzJjMzYxNDNmNGZhN2RfZTA5MTJiZDBjNWVlNDA4YjgxMTZlMjU4Zjg2NWIzZmM
     id: Optional[str] = None
-    #: Forms a set of simultaneous interpretation channels together with `languageCode2`. Standard language format from [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code. Read [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for details.
+    #: Forms a set of simultaneous interpretation channels together with `languageCode2`. Standard language format from
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: en
     language_code1: Optional[str] = None
-    #: Forms a set of simultaneous interpretation channels together with `languageCode1`. Standard language format from [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code. Read [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for details.
+    #: Forms a set of simultaneous interpretation channels together with `languageCode1`. Standard language format from
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: de
     language_code2: Optional[str] = None
     #: Email address of meeting interpreter.
@@ -13167,10 +14497,14 @@ class InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting(ApiModel)
 
 
 class InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting(ApiModel):
-    #: Forms a set of simultaneous interpretation channels together with `languageCode2`. Standard language format from [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code. Read [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for details.
+    #: Forms a set of simultaneous interpretation channels together with `languageCode2`. Standard language format from
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: en
     language_code1: Optional[str] = None
-    #: Forms a set of simultaneous interpretation channels together with `languageCode1`. Standard language format from [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code. Read [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for details.
+    #: Forms a set of simultaneous interpretation channels together with `languageCode1`. Standard language format from
+    #: `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_ code. Read `ISO 639-1
     #: example: de
     language_code2: Optional[str] = None
     #: Email address of meeting interpreter.
@@ -13182,7 +14516,9 @@ class InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting(ApiM
 
 
 class MeetingSeriesObjectMeetingType(str, Enum):
-    #: Primary instance of a scheduled series of meetings which consists of one or more scheduled meetings based on a `recurrence` rule. When a non-recurring meeting is scheduled with no `recurrence`, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling.
+    #: Primary instance of a scheduled series of meetings which consists of one or more scheduled meetings based on a
+    #: `recurrence` rule. When a non-recurring meeting is scheduled with no `recurrence`, its `meetingType` is also
+    #: `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling.
     meeting_series = 'meetingSeries'
     #: Instance from a primary meeting series.
     scheduled_meeting = 'scheduledMeeting'
@@ -13191,30 +14527,38 @@ class MeetingSeriesObjectMeetingType(str, Enum):
 
 
 class MeetingSeriesObjectState(str, Enum):
-    #: Only applies to a meeting series. Indicates that one or more future scheduled meetings exist for this meeting series.
+    #: Only applies to a meeting series. Indicates that one or more future scheduled meetings exist for this meeting
+    #: series.
     active = 'active'
     #: Only applies to scheduled meeting. Indicates that the meeting is scheduled in the future.
     scheduled = 'scheduled'
     #: Only applies to scheduled meeting. Indicates that this scheduled meeting is ready to start or join immediately.
     ready = 'ready'
-    #: Only applies to meeting instances. Indicates that a locked meeting has been joined by participants, but no hosts have joined.
+    #: Only applies to meeting instances. Indicates that a locked meeting has been joined by participants, but no hosts
+    #: have joined.
     lobby = 'lobby'
-    #: Applies to meeting series and meeting instances. For a meeting series, indicates that an instance of this series is happening now. For a meeting instance, indicates that the meeting has been joined and unlocked.
+    #: Applies to meeting series and meeting instances. For a meeting series, indicates that an instance of this series
+    #: is happening now. For a meeting instance, indicates that the meeting has been joined and unlocked.
     in_progress = 'inProgress'
-    #: Applies to scheduled meetings and meeting instances. For scheduled meetings, indicates that the meeting was started and is now over. For meeting instances, indicates that the meeting instance has concluded.
+    #: Applies to scheduled meetings and meeting instances. For scheduled meetings, indicates that the meeting was
+    #: started and is now over. For meeting instances, indicates that the meeting instance has concluded.
     ended = 'ended'
-    #: This state only applies to scheduled meetings. Indicates that the meeting was scheduled in the past but never happened.
+    #: This state only applies to scheduled meetings. Indicates that the meeting was scheduled in the past but never
+    #: happened.
     missed = 'missed'
     #: This state only applies to a meeting series. Indicates that all scheduled meetings of this series have passed.
     expired = 'expired'
 
 
 class MeetingSeriesObjectUnlockedMeetingJoinSecurity(str, Enum):
-    #: If the value of `unlockedMeetingJoinSecurity` attribute is `allowJoin`, people can join the unlocked meeting directly.
+    #: If the value of `unlockedMeetingJoinSecurity` attribute is `allowJoin`, people can join the unlocked meeting
+    #: directly.
     allow_join = 'allowJoin'
-    #: If the value of `unlockedMeetingJoinSecurity` attribute is `allowJoinWithLobby`, people will wait in the lobby until the host admits them.
+    #: If the value of `unlockedMeetingJoinSecurity` attribute is `allowJoinWithLobby`, people will wait in the lobby
+    #: until the host admits them.
     allow_join_with_lobby = 'allowJoinWithLobby'
-    #: If the value of `unlockedMeetingJoinSecurity` attribute is `blockFromJoin`, people can't join the unlocked meeting.
+    #: If the value of `unlockedMeetingJoinSecurity` attribute is `blockFromJoin`, people can't join the unlocked
+    #: meeting.
     block_from_join = 'blockFromJoin'
 
 
@@ -13223,17 +14567,21 @@ class MeetingSeriesObjectScheduledType(str, Enum):
     meeting = 'meeting'
     #: If the value of `scheduledType` attribute is `webinar`, it is a webinar meeting.
     webinar = 'webinar'
-    #: If the value of `scheduledType` attribute is `personalRoomMeeting`, it is a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: If the value of `scheduledType` attribute is `personalRoomMeeting`, it is a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     personal_room_meeting = 'personalRoomMeeting'
 
 
 class MeetingSeriesObjectTelephony(ApiModel):
-    #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or the global call-in number, followed by the value of the `accessCode`.
+    #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or
+    #: the global call-in number, followed by the value of the `accessCode`.
     #: example: 1234567890
     access_code: Optional[str] = None
     #: Array of call-in numbers for joining a teleconference from a phone.
     call_in_numbers: Optional[list[MeetingPreferenceObjectPersonalMeetingRoomTelephonyCallInNumbers]] = None
-    #: [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) information of global call-in numbers for joining a teleconference from a phone.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ information of global call-in numbers for joining a teleconference from a phone.
     links: Optional[list[Link]] = None
 
 
@@ -13251,19 +14599,27 @@ class MeetingSeriesObjectMeetingOptions(ApiModel):
     #: Whether or not to allow any attendee to have video in the meeting. Also depends on the session type.
     #: example: True
     enabled_video: Optional[bool] = None
-    #: Whether or not to allow any attendee to poll in the meeting. Can only be set `true` for a webinar. The value of this attribute depends on the session type for a meeting. Please contact your site admin if this attribute is not available.
+    #: Whether or not to allow any attendee to poll in the meeting. Can only be set `true` for a webinar. The value of
+    #: this attribute depends on the session type for a meeting. Please contact your site admin if this attribute is
+    #: not available.
     enabled_polling: Optional[bool] = None
-    #: Whether or not to allow any attendee to take notes in the meeting. The value of this attribute also depends on the session type.
+    #: Whether or not to allow any attendee to take notes in the meeting. The value of this attribute also depends on
+    #: the session type.
     #: example: True
     enabled_note: Optional[bool] = None
-    #: Whether note taking is enabled. If the value of `enabledNote` is false, users can not set this attribute and get default value `allowAll`.
+    #: Whether note taking is enabled. If the value of `enabledNote` is false, users can not set this attribute and get
+    #: default value `allowAll`.
     #: example: allowAll
     note_type: Optional[MeetingSeriesObjectMeetingOptionsNoteType] = None
-    #: Whether or not to allow any attendee to have closed captions in the meeting. The value of this attribute also depends on the session type.
+    #: Whether or not to allow any attendee to have closed captions in the meeting. The value of this attribute also
+    #: depends on the session type.
     enabled_closed_captions: Optional[bool] = None
-    #: Whether or not to allow any attendee to transfer files in the meeting. The value of this attribute also depends on the session type.
+    #: Whether or not to allow any attendee to transfer files in the meeting. The value of this attribute also depends
+    #: on the session type.
     enabled_file_transfer: Optional[bool] = None
-    #: Whether or not to allow any attendee to share [Universal Communications Format](https://www.cisco.com/c/en/us/td/docs/collaboration/training_center/wbs30/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions_chapter_0110.pdf) media files in the meeting. The value of this attribute also depends on the sessionType.
+    #: Whether or not to allow any attendee to share `Universal Communications Format
+    #: <https://www.cisco.com/c/en/us/td/docs/collaboration/training_center/wbs30/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions/WebEx_BK_TE1FB6C1_00_training-center-frequently-asked-questions_chapter_0110.pdf>`_ media files in the meeting. The
+    #: value of this attribute also depends on the sessionType.
     enabled_ucfrich_media: Optional[bool] = Field(alias='enabledUCFRichMedia', default=None)
 
 
@@ -13271,23 +14627,29 @@ class MeetingSeriesObjectAttendeePrivileges(ApiModel):
     #: Whether or not to allow any attendee to share content in the meeting.
     #: example: True
     enabled_share_content: Optional[bool] = None
-    #: Whether or not to allow any attendee to save shared documents, slides, or whiteboards when they are shared as files in the content viewer instead of in a window or application.
+    #: Whether or not to allow any attendee to save shared documents, slides, or whiteboards when they are shared as
+    #: files in the content viewer instead of in a window or application.
     enabled_save_document: Optional[bool] = None
-    #: Whether or not to allow any attendee to print shared documents, slides, or whiteboards when they are shared as files in the content viewer instead of in a window or application.
+    #: Whether or not to allow any attendee to print shared documents, slides, or whiteboards when they are shared as
+    #: files in the content viewer instead of in a window or application.
     enabled_print_document: Optional[bool] = None
-    #: Whether or not to allow any attendee to annotate shared documents, slides, or whiteboards when they are shared as files in the content viewer instead of in a window or application.
+    #: Whether or not to allow any attendee to annotate shared documents, slides, or whiteboards when they are shared
+    #: as files in the content viewer instead of in a window or application.
     enabled_annotate: Optional[bool] = None
     #: Whether or not to allow any attendee to view participants.
     #: example: True
     enabled_view_participant_list: Optional[bool] = None
-    #: Whether or not to allow any attendee to see a small preview image of any page of shared documents or slides when they are shared as files in the content viewer instead of in a window or application.
+    #: Whether or not to allow any attendee to see a small preview image of any page of shared documents or slides when
+    #: they are shared as files in the content viewer instead of in a window or application.
     enabled_view_thumbnails: Optional[bool] = None
     #: Whether or not to allow any attendee to control applications, web browsers, or desktops remotely.
     #: example: True
     enabled_remote_control: Optional[bool] = None
-    #: Whether or not to allow any attendee to view any shared documents or slides when they are shared as files in the content viewer instead of in a window or application.
+    #: Whether or not to allow any attendee to view any shared documents or slides when they are shared as files in the
+    #: content viewer instead of in a window or application.
     enabled_view_any_document: Optional[bool] = None
-    #: Whether or not to allow any attendee to scroll through any page of shared documents or slides when they are shared as files in the content viewer instead of in a window or application.
+    #: Whether or not to allow any attendee to scroll through any page of shared documents or slides when they are
+    #: shared as files in the content viewer instead of in a window or application.
     enabled_view_any_page: Optional[bool] = None
     #: Whether or not to allow any attendee to contact the operator privately.
     enabled_contact_operator_privately: Optional[bool] = None
@@ -13360,7 +14722,8 @@ class CustomizedQuestionForGetMeetingRules(ApiModel):
     #: Whether to check the case of values.
     #: example: True
     match_case: Optional[bool] = None
-    #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be ordered together.
+    #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be
+    #: ordered together.
     #: example: 1.0
     order: Optional[int] = None
 
@@ -13377,9 +14740,11 @@ class CustomizedQuestionForGetMeeting(ApiModel):
     required: Optional[bool] = None
     #: Type of the question being asked.
     type: Optional[CustomizedQuestionForCreateMeetingType] = None
-    #: The maximum length of a string that can be entered by the user, ranging from `0` to `999`. Only required by `singleLineTextBox` and `multiLineTextBox`.
+    #: The maximum length of a string that can be entered by the user, ranging from `0` to `999`. Only required by
+    #: `singleLineTextBox` and `multiLineTextBox`.
     max_length: Optional[int] = None
-    #: TThe content of `options`. Required if the question type is one of `checkbox`, `dropdownList`, or `radioButtons`.
+    #: TThe content of `options`. Required if the question type is one of `checkbox`, `dropdownList`, or
+    #: `radioButtons`.
     options: Optional[list[QuestionOptionObject]] = None
     #: The automatic approval rules for customized questions.
     rules: Optional[list[CustomizedQuestionForGetMeetingRules]] = None
@@ -13428,7 +14793,8 @@ class StandardRegistrationApproveRule(ApiModel):
     #: Whether to check the case of values.
     #: example: True
     match_case: Optional[bool] = None
-    #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be ordered together.
+    #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be
+    #: ordered together.
     #: example: 1.0
     order: Optional[int] = None
 
@@ -13465,7 +14831,10 @@ class MeetingSeriesObjectRegistration(ApiModel):
     require_work_phone: Optional[bool] = None
     #: Whether or not a registrant's fax number is shown or required for meeting registration.
     require_fax: Optional[bool] = None
-    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level. The default maximum number of participants for webinars is 10000, but the actual maximum number of participants is limited by the user capacity.
+    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for
+    #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
+    #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
+    #: is limited by the user capacity.
     #: example: 1000.0
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
@@ -13484,7 +14853,8 @@ class MeetingSeriesObjectSimultaneousInterpretation(ApiModel):
 class MeetingSeriesObjectAudioConnectionOptionsAudioConnectionType(str, Enum):
     #: Provide a hybrid audio option, allowing attendees to join using their computer audio or a phone.
     webex_audio = 'webexAudio'
-    #: Only restricts attendees to join the audio portion of the meeting using their computer instead of a telephone option.
+    #: Only restricts attendees to join the audio portion of the meeting using their computer instead of a telephone
+    #: option.
     vo_ip = 'VoIP'
     #: Other teleconference services.
     other = 'other'
@@ -13511,9 +14881,11 @@ class MeetingSeriesObjectAudioConnectionOptions(ApiModel):
     #: Whether or not to show global call-in numbers to attendees.
     #: example: True
     enabled_global_call_in: Optional[bool] = None
-    #: Whether or not to allow attendees to receive a call-back and call-in is available. Can only be set `true` for a webinar.
+    #: Whether or not to allow attendees to receive a call-back and call-in is available. Can only be set `true` for a
+    #: webinar.
     enabled_audience_call_back: Optional[bool] = None
-    #: Select the sound you want users who have a phone audio connection to hear when someone enters or exits the meeting.
+    #: Select the sound you want users who have a phone audio connection to hear when someone enters or exits the
+    #: meeting.
     #: example: beep
     entry_and_exit_tone: Optional[MeetingSeriesObjectAudioConnectionOptionsEntryAndExitTone] = None
     #: Whether or not to allow the host to unmute participants.
@@ -13526,22 +14898,32 @@ class MeetingSeriesObjectAudioConnectionOptions(ApiModel):
 
 
 class MeetingSeriesObject(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -13550,16 +14932,40 @@ class MeetingSeriesObject(ApiModel):
     #: Meeting state.
     #: example: active
     state: Optional[MeetingSeriesObjectState] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meeting is a meeting series, `start` is the date and time the first meeting of the series starts. If the meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meeting is a scheduled meeting from a meeting series, `start` is the date and time when that scheduled meeting starts. If the meeting is a meeting instance that has happened or is happening, `start` is the date and time that the instance actually starts. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meeting is a meeting series, `start` is the date and
+    #: time the first meeting of the series starts. If the meeting is a meeting series and the `current` filter is
+    #: true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meeting is a
+    #: scheduled meeting from a meeting series, `start` is the date and time when that scheduled meeting starts. If
+    #: the meeting is a meeting instance that has happened or is happening, `start` is the date and time that the
+    #: instance actually starts. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in ISO 8601 compliant format. If the meeting is a meeting series, `end` is the date and time the first meeting of the series ends. If the meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meeting is a scheduled meeting from a meeting series, `end` is the date and time when that scheduled meeting ends. If the meeting is a meeting instance that has happened, `end` is the date and time that instance actually ends. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in ISO 8601 compliant format. If the meeting is a meeting series, `end` is the date and
+    #: time the first meeting of the series ends. If the meeting is a meeting series and the current filter is true,
+    #: `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meeting is a scheduled
+    #: meeting from a meeting series, `end` is the date and time when that scheduled meeting ends. If the meeting is a
+    #: meeting instance that has happened, `end` is the date and time that instance actually ends. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". For a non-recurring meeting which has no `recurrence`, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling.
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only
+    #: the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+    #: is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". For a
+    #: non-recurring meeting which has no `recurrence`, its `meetingType` is also `meetingSeries` which is a meeting
+    #: series with only one occurrence in Webex meeting modeling.
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -13577,7 +14983,8 @@ class MeetingSeriesObject(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -13589,15 +14996,32 @@ class MeetingSeriesObject(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -13610,15 +15034,23 @@ class MeetingSeriesObject(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -13629,9 +15061,16 @@ class MeetingSeriesObject(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Information for callbacks from a meeting to phone or for joining a teleconference using a phone.
     telephony: Optional[MeetingSeriesObjectTelephony] = None
@@ -13639,15 +15078,23 @@ class MeetingSeriesObject(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before Host` option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order
+    #: to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When
+    #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before
+    #: Host` option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for a meeting.
     simultaneous_interpretation: Optional[MeetingSeriesObjectSimultaneousInterpretation] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) Breakout Sessions information for meeting.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ Breakout Sessions information for meeting.
     links: Optional[list[Link]] = None
     #: Tracking codes information.
     tracking_codes: Optional[list[MeetingUsageReportTrackingCodeObject]] = None
@@ -13691,28 +15138,41 @@ class MeetingSeriesObjectWithAdhocRegistration(ApiModel):
     require_work_phone: Optional[bool] = None
     #: Whether or not a registrant's fax number is required for meeting registration.
     require_fax: Optional[bool] = None
-    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level. The default maximum number of participants for webinars is 10000, but the actual maximum number of participants is limited by the user capacity.
+    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for
+    #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
+    #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
+    #: is limited by the user capacity.
     #: example: 1000.0
     max_register_num: Optional[int] = None
 
 
 class MeetingSeriesObjectWithAdhoc(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -13723,16 +15183,42 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     state: Optional[MeetingSeriesObjectState] = None
     #: If `true`, the meeting is ad-hoc.
     adhoc: Optional[bool] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`, `start` is the scheduled start time of the first occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`, `start` is the scheduled start time of the first occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is `true`, `start` is the scheduled start time of the ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If the meetingType of this meeting is `meeting`, `start` is the actual start time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of this meeting is `meetingSeries`, and
+    #: `current` is not specified or is `false`, `start` is the scheduled start time of the first occurrence of this
+    #: series. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`,
+    #: `start` is the scheduled start time of the first occurrence of this series. If the meetingType of this meeting
+    #: is `meetingSeries`, and `current` is `true`, `start` is the scheduled start time of the ongoing or upcoming
+    #: occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `start` is the scheduled
+    #: start time of this occurrence. If the meetingType of this meeting is `meeting`, `start` is the actual start
+    #: time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meeting is a meeting series, `end` is the date and time the first meeting of the series ends. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`, `end` is the scheduled end time of the first occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is `true`, `end` is the scheduled end time of the ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the meetingType of this meeting is `meeting`, `end` is the actual end time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meeting is a meeting series, `end` is the date and
+    #: time the first meeting of the series ends. If the meetingType of this meeting is `meetingSeries`, and `current`
+    #: is not specified or is `false`, `end` is the scheduled end time of the first occurrence of this series. If the
+    #: meetingType of this meeting is `meetingSeries`, and `current` is `true`, `end` is the scheduled end time of the
+    #: ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `end`
+    #: is the scheduled end time of this occurrence. If the meetingType of this meeting is `meeting`, `end` is the
+    #: actual end time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only
+    #: the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+    #: is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -13750,7 +15236,8 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -13762,15 +15249,32 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -13783,15 +15287,23 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -13802,9 +15314,16 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -13824,9 +15343,16 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before Host` option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order
+    #: to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When
+    #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before
+    #: Host` option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for the meeting.
     simultaneous_interpretation: Optional[MeetingSeriesObjectSimultaneousInterpretation] = None
@@ -13841,22 +15367,32 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
 
 
 class MeetingSeriesObjectForListMeeting(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -13865,16 +15401,38 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Meeting state.
     #: example: active
     state: Optional[MeetingSeriesObjectState] = None
-    #: Time zone of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: Time zone of `start` and `end`, conforming with the `IANA time zone database
+    #: <https://www.iana.org/time-zones>`_.
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `start` is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `start`
+    #: is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If
+    #: the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If
+    #: the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `end` is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `end`
+    #: is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the
+    #: meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the
+    #: meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_
+    #: API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or
+    #: date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported
+    #: and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -13892,7 +15450,8 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -13904,15 +15463,32 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -13925,15 +15501,23 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -13944,9 +15528,16 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -13966,9 +15557,16 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before Host` option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order
+    #: to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When
+    #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before
+    #: Host` option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for the meeting.
     simultaneous_interpretation: Optional[MeetingSeriesObjectSimultaneousInterpretation] = None
@@ -13983,28 +15581,42 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
 
 
 class ScheduledMeetingObject(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Unique identifier for meeting series. It only apples to scheduled meeting and meeting instance. If it's a scheduled meeting from a series or a meeting instance that is happening or has happened, the `meetingSeriesId` is the `id` of the primary series.
+    #: Unique identifier for meeting series. It only apples to scheduled meeting and meeting instance. If it's a
+    #: scheduled meeting from a series or a meeting instance that is happening or has happened, the `meetingSeriesId`
+    #: is the `id` of the primary series.
     #: example: dfb45ece33264639a7bc3dd9535d53f7
     meeting_series_id: Optional[str] = None
-    #: Unique identifier for scheduled meeting which current meeting is associated with. It only apples to meeting instance which is happening or has happened. It's the `id` of the scheduled meeting this instance is associated with.
+    #: Unique identifier for scheduled meeting which current meeting is associated with. It only apples to meeting
+    #: instance which is happening or has happened. It's the `id` of the scheduled meeting this instance is associated
+    #: with.
     #: example: dfb45ece33264639a7bc3dd9535d53f7
     scheduled_meeting_id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -14013,15 +15625,32 @@ class ScheduledMeetingObject(ApiModel):
     #: Meeting state.
     #: example: scheduled
     state: Optional[MeetingSeriesObjectState] = None
-    #: This state only applies to scheduled meeting. Flag identifying whether or not the scheduled meeting has been modified.
+    #: This state only applies to scheduled meeting. Flag identifying whether or not the scheduled meeting has been
+    #: modified.
     is_modified: Optional[bool] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `start` is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `start`
+    #: is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If
+    #: the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If
+    #: the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `end` is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `end`
+    #: is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the
+    #: meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the
+    #: meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
     #: Unique identifier for the meeting host.
@@ -14039,7 +15668,8 @@ class ScheduledMeetingObject(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -14051,15 +15681,32 @@ class ScheduledMeetingObject(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -14072,15 +15719,23 @@ class ScheduledMeetingObject(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join webinar meeting from audio and video devices.
@@ -14091,9 +15746,16 @@ class ScheduledMeetingObject(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -14113,13 +15775,23 @@ class ScheduledMeetingObject(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before Host option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details.    + autoAcceptRequest: `false` (boolean,optional) - Whether or not meeting registration requests are accepted automatically.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join
+    #: the meeting. Meeting invitees will receive an email with a registration link for the registration. When the
+    #: registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before
+    #: Host option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.    +
+    #: autoAcceptRequest: `false` (boolean,optional) - Whether or not meeting registration requests are accepted
+    #: automatically.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
-    #: External keys created by an integration application in its domain, for example, Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its domain, for example, Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) Breakout Sessions information for meeting.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ Breakout Sessions information for meeting.
     links: Optional[list[Link]] = None
     #: Tracking codes information.
     tracking_codes: Optional[list[MeetingUsageReportTrackingCodeObject]] = None
@@ -14138,30 +15810,62 @@ class UpdateMeetingObject(ApiModel):
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details.
+    #: Meeting password. Must conform to the site's password complexity settings. Read `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: Date and time for the start of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `start` cannot be before current date and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Refer to the [Webex Meetings](/docs/meetings#restrictions-on-updating-a-meeting) guide for more information about restrictions on updating date and time for a meeting. Please note that when a meeting is being updated, `start` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time, `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`, and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to `2022-03-01T11:32:00+08:00`.
+    #: Date and time for the start of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before current date
+    #: and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Refer to the `Webex Meetings
+    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date and time for
+    #: a meeting. Please note that when a meeting is being updated, `start` of the meeting will be accurate to
+    #: minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time,
+    #: `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and
+    #: milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of
+    #: `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`,
+    #: and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to
+    #: `2022-03-01T11:32:00+08:00`.
     #: example: 2020-05-15T20:30:00-08:00
     start: Optional[datetime] = None
-    #: Date and time for the end of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `end` cannot be before current date and time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Refer to the [Webex Meetings](/docs/meetings#restrictions-on-updating-a-meeting) guide for more information about restrictions on updating date and time for a meeting. Please note that when a meeting is being updated, `end` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to `2022-03-01T11:52:00+08:00`.
+    #: Date and time for the end of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `end` cannot be before current date and
+    #: time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Refer to the `Webex Meetings
+    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date and time for
+    #: a meeting. Please note that when a meeting is being updated, `end` of the meeting will be accurate to minutes,
+    #: not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For
+    #: instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to
+    #: `2022-03-01T11:52:00+08:00`.
     #: example: 2020-05-15T21:30:00-08:00
     end: Optional[datetime] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in which the meeting was originally scheduled (conforming with the [IANA time zone database](https://www.iana.org/time-zones)).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the `IANA time zone database
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly `recurrence` rule
+    #: are not supported, only the first day or date specified is taken. For example,
+    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as
+    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=20
     recurrence: Optional[str] = None
     #: Whether or not meeting is recorded automatically.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's user's preferred site.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: user's preferred site.
     allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true.
+    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This
+    #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`,
+    #: `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not
+    #: specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -14174,12 +15878,18 @@ class UpdateMeetingObject(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required while scheduling webinar meeting. All available meeting session types enabled for the user can be retrieved by [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required while scheduling webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved by
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: Whether or not to automatically lock the meeting after it starts.
@@ -14187,34 +15897,58 @@ class UpdateMeetingObject(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's user's preferred site.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: user's preferred site.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not to send emails to host and invitees. It is an optional field and default value is true.
     #: example: True
     send_email: Optional[bool] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be
+    #: the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
-    #: URL of the Webex site which the meeting is updated on. If not specified, the meeting is created on user's preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List` API.
+    #: URL of the Webex site which the meeting is updated on. If not specified, the meeting is created on user's
+    #: preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List`
+    #: API.
     #: example: example.webex.com
     site_url: Optional[str] = None
     #: Meeting Options.
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters long. Please note that an empty or null `integrationTags` will delete all existing integration tags for the meeting implicitly. Developer can update integration tags for a `meetingSeries` but he cannot update it for a `scheduledMeeting` or a `meeting` instance.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The
+    #: maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters
+    #: long. Please note that an empty or null `integrationTags` will delete all existing integration tags for the
+    #: meeting implicitly. Developer can update integration tags for a `meetingSeries` but he cannot update it for a
+    #: `scheduledMeeting` or a `meeting` instance.
     integration_tags: Optional[list[str]] = None
-    #: Whether or not breakout sessions are enabled. If the value of `enabledBreakoutSessions` is false, users can not set breakout sessions. If the value of `enabledBreakoutSessions` is true, users can update breakout sessions using the [Update Breakout Sessions](/docs/api/v1/meetings/{meetingId}/breakoutSessions) API. Updating breakout sessions are not supported by this API.
+    #: Whether or not breakout sessions are enabled. If the value of `enabledBreakoutSessions` is false, users can not
+    #: set breakout sessions. If the value of `enabledBreakoutSessions` is true, users can update breakout sessions
+    #: using the `Update Breakout Sessions
+    #: <https://developer.webex.com/docs/api/v1/meetings/{meetingId}/breakoutSessions>`_ API. Updating breakout sessions are not supported by this API.
     enabled_breakout_sessions: Optional[bool] = None
-    #: Tracking codes information. All available tracking codes and their options for the specified site can be retrieved by [List Meeting Tracking Codes](/docs/api/v1/meetings/list-meeting-tracking-codes) API. If an optional tracking code is missing from the `trackingCodes` array and there's a default option for this tracking code, the default option is assigned automatically. If the `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
+    #: Tracking codes information. All available tracking codes and their options for the specified site can be
+    #: retrieved by `List Meeting Tracking Codes
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes>`_ API. If an optional tracking code is missing from the `trackingCodes`
+    #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
+    #: `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level
+    #: value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
     tracking_codes: Optional[list[MeetingUsageReportTrackingCodeObject]] = None
     #: Audio connection options.
     audio_connection_options: Optional[MeetingSeriesObjectAudioConnectionOptions] = None
-    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType` attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered for the webinar.
+    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType`
+    #: attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered
+    #: for the webinar.
     require_attendee_login: Optional[bool] = None
-    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true` if `requireAttendeeLogin` is `false`.
+    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the
+    #: value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true`
+    #: if `requireAttendeeLogin` is `false`.
     restrict_to_invitees: Optional[bool] = None
 
 
@@ -14248,7 +15982,8 @@ class CustomizedQuestionForCreateMeeting(ApiModel):
     required: Optional[bool] = None
     #: Type of the question being asked.
     type: Optional[CustomizedQuestionForCreateMeetingType] = None
-    #: The maximum length of a string that can be entered by the user, ranging from `0` to `999`. Only required by `singleLineTextBox` and `multiLineTextBox`.
+    #: The maximum length of a string that can be entered by the user, ranging from `0` to `999`. Only required by
+    #: `singleLineTextBox` and `multiLineTextBox`.
     max_length: Optional[int] = None
     #: The content of `options`. Required if the question type is one of `checkbox`, `dropdownList`, or `radioButtons`.
     options: Optional[list[CustomizedQuestionForCreateMeetingOptions]] = None
@@ -14259,7 +15994,8 @@ class CustomizedQuestionForCreateMeeting(ApiModel):
 class CreateMeetingObjectRegistration(ApiModel):
     #: Whether or not meeting registration request is accepted automatically.
     auto_accept_request: Optional[bool] = None
-    #: Whether or not a registrant's first name is required for meeting registration. This option must always be `true`.
+    #: Whether or not a registrant's first name is required for meeting registration. This option must always be
+    #: `true`.
     #: example: True
     require_first_name: Optional[bool] = None
     #: Whether or not a registrant's last name is required for meeting registration. This option must always be `true`.
@@ -14288,7 +16024,10 @@ class CreateMeetingObjectRegistration(ApiModel):
     require_work_phone: Optional[bool] = None
     #: Whether or not a registrant's fax number is shown or required for meeting registration.
     require_fax: Optional[bool] = None
-    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level. The default maximum number of participants for webinars is 10000, but the actual maximum number of participants is limited by the user capacity.
+    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for
+    #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
+    #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
+    #: is limited by the user capacity.
     #: example: 1000.0
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
@@ -14308,113 +16047,211 @@ class BreakoutSessionObject(ApiModel):
     #: Name for breakout session.
     #: example: Breakout Session Name
     name: Optional[str] = None
-    #: Invitees for breakout session. Please note that one invitee cannot be assigned to more than one breakout session.
+    #: Invitees for breakout session. Please note that one invitee cannot be assigned to more than one breakout
+    #: session.
     invitees: Optional[list[str]] = None
 
 
 class CreateMeetingObject(ApiModel):
-    #: Whether or not to create an ad-hoc meeting for the room specified by `roomId`. When `true`, `roomId` is required.
+    #: Whether or not to create an ad-hoc meeting for the room specified by `roomId`. When `true`, `roomId` is
+    #: required.
     adhoc: Optional[bool] = None
-    #: Unique identifier for the Webex space which the meeting is to be associated with. It can be retrieved by [List Rooms](/docs/api/v1/rooms/list-rooms). `roomId` is required when `adhoc` is `true`. When `roomId` is specified, the parameter `hostEmail` will be ignored.
+    #: Unique identifier for the Webex space which the meeting is to be associated with. It can be retrieved by
+    #: `List Rooms
+    #: <https://developer.webex.com/docs/api/v1/rooms/list-rooms>`_. `roomId` is required when `adhoc` is `true`. When `roomId` is specified, the parameter `hostEmail`
+    #: will be ignored.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Unique identifier for meeting template. Please note that `start` and `end` are optional when `templateId` is specified. The list of meeting templates that is available for the authenticated user can be retrieved from [List Meeting Templates](/docs/api/v1/meetings/list-meeting-templates). This parameter is ignored for an ad-hoc meeting.
+    #: Unique identifier for meeting template. Please note that `start` and `end` are optional when `templateId` is
+    #: specified. The list of meeting templates that is available for the authenticated user can be retrieved from
+    #: `List Meeting Templates
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-templates>`_. This parameter is ignored for an ad-hoc meeting.
     #: example: N2Q3ZWE1ZjQyYjkyMWVhY2UwNTM4NmNhMjRhZDczMGU6VS0yMDA5NzItTUMtZW5fVVM
     template_id: Optional[str] = None
-    #: Meeting title. The title can be a maximum of 128 characters long. The default value for an ad-hoc meeting is the user's name if not specified.
+    #: Meeting title. The title can be a maximum of 128 characters long. The default value for an ad-hoc meeting is the
+    #: user's name if not specified.
     #: example: John's Meeting
     title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Meeting password. Must conform to the site's password complexity settings. Read `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details.
+    #: If not specified, a random password conforming to the site's password rules will be generated automatically.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: Date and time for the start of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `start` cannot be before current date and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Please note that when a meeting is being scheduled, `start` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time, `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`, and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to `2022-03-01T11:32:00+08:00`. The default value for an ad-hoc meeting is 5 minutes after the current time and the user's input value will be ignored. An ad-hoc meeting can be started immediately even if the `start` is 5 minutes after the current time.
+    #: Date and time for the start of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before current date
+    #: and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Please note that when a meeting is being scheduled, `start` of the meeting will be accurate to minutes,
+    #: not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time, `start` will
+    #: be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and milliseconds stripped
+    #: off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of
+    #: `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`,
+    #: and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to
+    #: `2022-03-01T11:32:00+08:00`. The default value for an ad-hoc meeting is 5 minutes after the current time and
+    #: the user's input value will be ignored. An ad-hoc meeting can be started immediately even if the `start` is 5
+    #: minutes after the current time.
     #: example: 2020-05-15T20:30:00-08:00
     start: Optional[datetime] = None
-    #: Date and time for the end of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `end` cannot be before current date and time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Please note that when a meeting is being scheduled, `end` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to `2022-03-01T11:52:00+08:00`. The default value for an ad-hoc meeting is 20 minutes after the current time and the user's input value will be ignored.
+    #: Date and time for the end of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `end` cannot be before current date and
+    #: time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Please note that when a meeting is being scheduled, `end` of the meeting will be accurate to minutes,
+    #: not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For
+    #: instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to
+    #: `2022-03-01T11:52:00+08:00`. The default value for an ad-hoc meeting is 20 minutes after the current time and
+    #: the user's input value will be ignored.
     #: example: 2020-05-15T21:30:00-08:00
     end: Optional[datetime] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in which the meeting was originally scheduled (conforming with the [IANA time zone database](https://www.iana.org/time-zones)). The default value for an ad-hoc meeting is `UTC` and the user's input value will be ignored.
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the `IANA time zone database
+    #: default value for an ad-hoc meeting is `UTC` and the user's input value will be ignored.
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)), applying only to meeting series. It doesn't apply to a scheduled meeting or an ended or ongoing meeting instance. This parameter is ignored for an ad-hoc meeting. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_), applying only to meeting series. It doesn't apply to
+    #: a scheduled meeting or an ended or ongoing meeting instance. This parameter is ignored for an ad-hoc meeting.
+    #: Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date
+    #: specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it
+    #: will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=20
     recurrence: Optional[str] = None
     #: Whether or not meeting is recorded automatically.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's the user's preferred site. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: the user's preferred site. The default value for an ad-hoc meeting is `true` and the user's input value will be
+    #: ignored.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The default value
+    #: for an ad-hoc meeting is `true` and the user's input value will be ignored.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This
+    #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. The default value for an
+    #: ad-hoc meeting is `true` and the user's input value will be ignored.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. This attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default value for an ad-hoc meeting is 0 and the user's input value will be ignored.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. This
+    #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default value for an ad-hoc meeting is 0 and the user's input value will be ignored.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
-    #: Whether or not to exclude the meeting password from the email invitation. This parameter is ignored for an ad-hoc meeting.
+    #: Whether or not to exclude the meeting password from the email invitation. This parameter is ignored for an
+    #: ad-hoc meeting.
     exclude_password: Optional[bool] = None
-    #: Whether or not to allow the meeting to be listed on the public calendar. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to allow the meeting to be listed on the public calendar. The default value for an ad-hoc meeting
+    #: is `false` and the user's input value will be ignored.
     public_meeting: Optional[bool] = None
-    #: The number of minutes before the meeting begins, that an email reminder is sent to the host. This parameter is ignored for an ad-hoc meeting.
+    #: The number of minutes before the meeting begins, that an email reminder is sent to the host. This parameter is
+    #: ignored for an ad-hoc meeting.
     #: example: 10.0
     reminder_time: Optional[int] = None
-    #: Specifies how the people who aren't on the invite can join the unlocked meeting. The default value for an ad-hoc meeting is `allowJoinWithLobby` and the user's input value will be ignored.
+    #: Specifies how the people who aren't on the invite can join the unlocked meeting. The default value for an ad-hoc
+    #: meeting is `allowJoinWithLobby` and the user's input value will be ignored.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings). If not specified, it's a regular meeting by default. The default value for an ad-hoc meeting is `meeting` and the user's input value will be ignored.
+    #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a
+    #: meeting scheduled in the user's `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_. If not specified, it's a regular meeting by default. The default
+    #: value for an ad-hoc meeting is `meeting` and the user's input value will be ignored.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled. This parameter is ignored for an ad-hoc meeting.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically. This parameter is ignored for an ad-hoc meeting.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically. This parameter is ignored for an ad-hoc meeting.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
-    #: Whether or not to automatically lock the meeting after it starts. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to automatically lock the meeting after it starts. The default value for an ad-hoc meeting is
+    #: `false` and the user's input value will be ignored.
     enable_automatic_lock: Optional[bool] = None
-    #: The number of minutes after the meeting begins, for automatically locking it. The default value for an ad-hoc meeting is null and the user's input value will be ignored.
+    #: The number of minutes after the meeting begins, for automatically locking it. The default value for an ad-hoc
+    #: meeting is null and the user's input value will be ignored.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's user's preferred site. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: user's preferred site. The default value for an ad-hoc meeting is `false` and the user's input value will be
+    #: ignored.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
     allow_authenticated_devices: Optional[bool] = None
-    #: Invitees for meeting. The maximum size of invitees is 1000. If `roomId` is specified and `invitees` is missing, all the members in the space are invited implicitly. If both `roomId` and `invitees` are specified, only those in the `invitees` list are invited. `coHost` for each invitee is `true` by default if `roomId` is specified when creating a meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as a non-cohost invitee. The user's input value will be ignored for an ad-hoc meeting and the the members of the room specified by `roomId` except "me" will be used by default.
+    #: Invitees for meeting. The maximum size of invitees is 1000. If `roomId` is specified and `invitees` is missing,
+    #: all the members in the space are invited implicitly. If both `roomId` and `invitees` are specified, only those
+    #: in the `invitees` list are invited. `coHost` for each invitee is `true` by default if `roomId` is specified
+    #: when creating a meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as
+    #: a non-cohost invitee. The user's input value will be ignored for an ad-hoc meeting and the the members of the
+    #: room specified by `roomId` except "me" will be used by default.
     invitees: Optional[list[InviteeObjectForCreateMeeting]] = None
-    #: Whether or not to send emails to host and invitees. It is an optional field and default value is true. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to send emails to host and invitees. It is an optional field and default value is true. The
+    #: default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
     #: example: True
     send_email: Optional[bool] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be
+    #: the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
-    #: URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List` API.
+    #: URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's
+    #: preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List`
+    #: API.
     #: example: example.webex.com
     site_url: Optional[str] = None
     #: Meeting Options.
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before Host option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details. This parameter is ignored for an ad-hoc meeting.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join
+    #: the meeting. Meeting invitees will receive an email with a registration link for the registration. When the
+    #: registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before
+    #: Host option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details. This
+    #: parameter is ignored for an ad-hoc meeting.
     registration: Optional[CreateMeetingObjectRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters long. This parameter is ignored for an ad-hoc meeting.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The
+    #: maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters
+    #: long. This parameter is ignored for an ad-hoc meeting.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for a meeting.
     simultaneous_interpretation: Optional[CreateMeetingObjectSimultaneousInterpretation] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops, classrooms, or for when you need a moment to talk privately with a few participants outside of the main session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout session is not supported for a meeting with simultaneous interpretation.
+    #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of
+    #: participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops,
+    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main
+    #: session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if
+    #: hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout
+    #: session is not supported for a meeting with simultaneous interpretation.
     breakout_sessions: Optional[list[BreakoutSessionObject]] = None
-    #: Tracking codes information. All available tracking codes and their options for the specified site can be retrieved by [List Meeting Tracking Codes](/docs/api/v1/meetings/list-meeting-tracking-codes) API. If an optional tracking code is missing from the `trackingCodes` array and there's a default option for this tracking code, the default option is assigned automatically. If the `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
+    #: Tracking codes information. All available tracking codes and their options for the specified site can be
+    #: retrieved by `List Meeting Tracking Codes
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes>`_ API. If an optional tracking code is missing from the `trackingCodes`
+    #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
+    #: `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level
+    #: value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
     tracking_codes: Optional[list[MeetingUsageReportTrackingCodeObject]] = None
     #: Audio connection options.
     audio_connection_options: Optional[MeetingSeriesObjectAudioConnectionOptions] = None
-    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType` attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered for the webinar.
+    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType`
+    #: attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered
+    #: for the webinar.
     require_attendee_login: Optional[bool] = None
-    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true` if `requireAttendeeLogin` is `false`.
+    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the
+    #: value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true`
+    #: if `requireAttendeeLogin` is `false`.
     restrict_to_invitees: Optional[bool] = None
 
 
@@ -14460,7 +16297,9 @@ class DetailedTemplateObject(ApiModel):
     is_default: Optional[bool] = None
     #: Whether or not the meeting template is a standard template.
     is_standard: Optional[bool] = None
-    #: Meeting object which is used to create a meeting by the meeting template. Please note that the meeting object should be used to create a meeting immediately after retrieval since the `start` and `end` may be invalid quickly after generation.
+    #: Meeting object which is used to create a meeting by the meeting template. Please note that the meeting object
+    #: should be used to create a meeting immediately after retrieval since the `start` and `end` may be invalid
+    #: quickly after generation.
     meeting: Optional[CreateMeetingObject] = None
 
 
@@ -14476,7 +16315,8 @@ class Control(ApiModel):
 
 
 class Registration(ApiModel):
-    #: Whether or not a registrant's first name is required for meeting registration. This option must always be `true`.
+    #: Whether or not a registrant's first name is required for meeting registration. This option must always be
+    #: `true`.
     #: example: True
     require_first_name: Optional[bool] = None
     #: Whether or not a registrant's last name is required for meeting registration. This option must always be `true`.
@@ -14530,46 +16370,46 @@ class CustomizedRegistrant(ApiModel):
 
 class RegistrantFormObject(ApiModel):
     #: The registrant's first name.
-    #: example: 'Bob'
+    #: example: Bob
     first_name: Optional[str] = None
     #: The registrant's last name. (Required)
-    #: example: 'Lee'
+    #: example: Lee
     last_name: Optional[str] = None
     #: The registrant's email.
-    #: example: 'bob@example.com'
+    #: example: bob@example.com
     email: Optional[str] = None
     #: If `true` send email to the registrant. Default: `true`.
     #: example: True
     send_email: Optional[bool] = None
     #: The registrant's job title. Registration options define whether or not this is required.
-    #: example: 'manager'
+    #: example: manager
     job_title: Optional[str] = None
     #: The registrant's company. Registration options define whether or not this is required.
-    #: example: 'Cisco Systems, Inc.'
+    #: example: Cisco Systems, Inc.
     company_name: Optional[str] = None
     #: The registrant's first address line. Registration options define whether or not this is required.
-    #: example: 'address1 string'
+    #: example: address1 string
     address1: Optional[str] = None
     #: The registrant's second address line. Registration options define whether or not this is required.
-    #: example: 'address2 string'
+    #: example: address2 string
     address2: Optional[str] = None
     #: The registrant's city name. Registration options define whether or not this is required.
-    #: example: 'New York'
+    #: example: New York
     city: Optional[str] = None
     #: The registrant's state. Registration options define whether or not this is required.
-    #: example: 'New York'
+    #: example: New York
     state: Optional[str] = None
     #: The registrant's postal code. Registration options define whether or not this is required.
     #: example: 123456.0
     zip_code: Optional[int] = None
     #: The America is not a country or a specific region. Registration options define whether or not this is required.
-    #: example: 'United States'
+    #: example: United States
     country_region: Optional[str] = None
     #: The registrant's work phone number. Registration options define whether or not this is required.
-    #: example: '+1 123456'
+    #: example: +1 123456
     work_phone: Optional[str] = None
     #: The registrant's FAX number. Registration options define whether or not this is required.
-    #: example: '123456'
+    #: example: 123456
     fax: Optional[str] = None
     #: The registrant's answers for customized questions. Registration options define whether or not this is required.
     customized_questions: Optional[list[CustomizedRegistrant]] = None
@@ -14635,7 +16475,8 @@ class Registrant(ApiModel):
     registration_time: Optional[datetime] = None
     #: Registrant's answers for customized questions, Registration options define whether or not this is required.
     customized_questions: Optional[list[CustomizedRegistrant]] = None
-    #: Registrant's source id.The `sourceId` is from [Create Invitation Sources](/docs/api/v1/meetings/create-invitation-sources) API.
+    #: Registrant's source id.The `sourceId` is from `Create Invitation Sources
+    #: <https://developer.webex.com/docs/api/v1/meetings/create-invitation-sources>`_ API.
     #: example: cisco
     source_id: Optional[str] = None
 
@@ -14750,19 +16591,28 @@ class MeetingSessionTypeObject(ApiModel):
 
 
 class UpdateInterpreterObject(ApiModel):
-    #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language channel. The language codes conform with [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes).
+    #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language
+    #: channel. The language codes conform with `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.
     #: example: en
     language_code1: Optional[str] = None
-    #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language channel. The language codes conform with [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes).
+    #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language
+    #: channel. The language codes conform with `ISO 639-1
+    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.
     #: example: de
     language_code2: Optional[str] = None
-    #: Email address of meeting interpreter. If not specified, it'll be an empty interpreter for the bi-directional language channel. Please note that multiple interpreters with different emails can be assigned to the same bi-directional language channel, but the same email cannot be assigned to more than one interpreter.
+    #: Email address of meeting interpreter. If not specified, it'll be an empty interpreter for the bi-directional
+    #: language channel. Please note that multiple interpreters with different emails can be assigned to the same
+    #: bi-directional language channel, but the same email cannot be assigned to more than one interpreter.
     #: example: marcus.tuchel@example.com
     email: Optional[str] = None
-    #: Display name of meeting interpreter. If the interpreter is already an invitee of the meeting and it has a different display name, that invitee's display name will be overwritten by this attribute.
+    #: Display name of meeting interpreter. If the interpreter is already an invitee of the meeting and it has a
+    #: different display name, that invitee's display name will be overwritten by this attribute.
     #: example: Tuchel
     display_name: Optional[str] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage
+    #: to be the meeting host.
     #: example: brenda.song@example.com
     host_email: Optional[str] = None
     #: If `true`, send email to the interpreter.
@@ -14771,13 +16621,20 @@ class UpdateInterpreterObject(ApiModel):
 
 
 class UpdateMeetingBreakoutSessionsObject(ApiModel):
-    #: Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API will return details for a meeting that is hosted by that user.
+    #: Email address for the meeting host. This parameter is only used if the user or application calling the API has
+    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API
+    #: will return details for a meeting that is hosted by that user.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: Whether or not to send emails to host and invitees. It is an optional field and default value is true.
     #: example: True
     send_email: Optional[bool] = None
-    #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops, classrooms, or for when you need a moment to talk privately with a few participants outside of the main session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout session is not supported for a meeting with simultaneous interpretation.
+    #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of
+    #: participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops,
+    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main
+    #: session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if
+    #: hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout
+    #: session is not supported for a meeting with simultaneous interpretation.
     items: Optional[list[BreakoutSessionObject]] = None
 
 
@@ -14788,7 +16645,8 @@ class GetBreakoutSessionObject(ApiModel):
     #: Name for breakout session.
     #: example: Breakout Session Name
     name: Optional[str] = None
-    #: Invitees for a breakout session. Only applies to meeting series and scheduled meetings. Doesn't apply to ongoing or ended meeting instances.
+    #: Invitees for a breakout session. Only applies to meeting series and scheduled meetings. Doesn't apply to ongoing
+    #: or ended meeting instances.
     invitees: Optional[list[str]] = None
 
 
@@ -14798,24 +16656,35 @@ class GetBreakoutSessionsObject(ApiModel):
 
 
 class JoinMeetingObject(ApiModel):
-    #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is also supported for this API.
+    #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't
+    #: apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is also supported for this API.
     #: example: 98d8c2212c9d62b162b9565932735e58_I_231409844992607809
     meeting_id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1e
     web_link: Optional[str] = None
     #: Whether or not to redirect to `joinLink`. It is an optional field and default value is true.
     join_directly: Optional[bool] = None
-    #: Email address of meeting participant. If `email` is specified, the link is generated for the user of `email`; otherwise, it's generated for the user calling the API. `email` is required for a [guest issuer](https://developer.webex.com/docs/guest-issuer).
+    #: Email address of meeting participant. If `email` is specified, the link is generated for the user of `email`;
+    #: otherwise, it's generated for the user calling the API. `email` is required for a `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
     #: example: brenda.song@example.com
     email: Optional[str] = None
-    #: Display name of meeting participant. If `email` is specified and `displayName` is empty, the display name is the same as `email`. The maximum length of `displayName` is 128 characters. `displayName` is required for a [guest issuer](https://developer.webex.com/docs/guest-issuer).
+    #: Display name of meeting participant. If `email` is specified and `displayName` is empty, the display name is the
+    #: same as `email`. The maximum length of `displayName` is 128 characters. `displayName` is required for a
+    #: `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
     #: example: Brenda Song
     display_name: Optional[str] = None
-    #: It's required when the meeting is protected by a password and the current user is not privileged to view it if they are not a host, cohost or invitee of the meeting.
+    #: It's required when the meeting is protected by a password and the current user is not privileged to view it if
+    #: they are not a host, cohost or invitee of the meeting.
     #: example: BgJep@43
     password: Optional[str] = None
     #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
@@ -14824,7 +16693,8 @@ class JoinMeetingObject(ApiModel):
 
 
 class JoinMeetingLinkObject(ApiModel):
-    #: The link is used to start a meeting as the meeting host. Only the meeting host or cohost can generate the `startLink`.
+    #: The link is used to start a meeting as the meeting host. Only the meeting host or cohost can generate the
+    #: `startLink`.
     #: example: https://example.dmz.webex.com/wbxmjs/joinservice/sites/example/meeting/download/b9dd6cac53564877b65589cc17d4233e?siteurl=example&integrationJoinToken=QUhTSwAAAIVboyqJZyO/aObaDYnIe0wkyteQTUFUGkboab2OL/M30apxnba6ZI4G37P0uvRMihtrYnt9wk+Wgj4GMTjeKJ0YuiEsi1PYJ9AfQcft60Mt/N6q6jEC+aldJ5PfmR+ic9dsgRn6Pgz9AmyjMSCr/3Zx7VOJXKPzWHZIc4q0EqOqDyUnWu5aEtJUldB/kZYKtUrbPUj4KUQKbc60e0tGt/St3uuBBVCuf7P45GmmyVk+b3xqlol2aUokcKlYtIig8It/NDIY5sCvCg+GHxtoEWHRGVj3+0lhNXiQfNe1vTRH7w==
     start_link: Optional[str] = None
     #: The link is used to join the meeting.
@@ -14858,19 +16728,24 @@ class QuestionObject(ApiModel):
     #: Type for the question.
     #: example: text
     type: Optional[QuestionObjectType] = None
-    #: The lowest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is not `rating`.
+    #: The lowest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is
+    #: not `rating`.
     #: example: 1.0
     from_score: Optional[int] = None
-    #: The lowest score label of the rating question. This attribute will be ingnored, if the value of `type` attribute is not `rating`.
+    #: The lowest score label of the rating question. This attribute will be ingnored, if the value of `type` attribute
+    #: is not `rating`.
     #: example: disagree
     from_label: Optional[str] = None
-    #: The highest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is not `rating`.
+    #: The highest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is
+    #: not `rating`.
     #: example: 5.0
     to_score: Optional[int] = None
-    #: The highest score label of the rating question. This attribute will be ingnored, if the value of `type` attribute is not `rating`.
+    #: The highest score label of the rating question. This attribute will be ingnored, if the value of `type`
+    #: attribute is not `rating`.
     #: example: agree
     to_label: Optional[str] = None
-    #: Options for the question. This attribute will be ingnored, if the value of `type` attribute is `text` or `rating`.
+    #: Options for the question. This attribute will be ingnored, if the value of `type` attribute is `text` or
+    #: `rating`.
     options: Optional[list[QuestionOptionObject]] = None
 
 
@@ -14932,10 +16807,13 @@ class SurveyResultObject(ApiModel):
 
 
 class RegistrationForUpdate(ApiModel):
-    #: - Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API will return an update for a meeting that is hosted by that user.
+    #: - Email address for the meeting host. This parameter is only used if the user or application calling the API has
+    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API
+    #: will return an update for a meeting that is hosted by that user.
     #: example: 'john.andersen@example.com'
     host_email: Optional[str] = None
-    #: Whether or not a registrant's first name is required for meeting registration. This option must always be `true`.
+    #: Whether or not a registrant's first name is required for meeting registration. This option must always be
+    #: `true`.
     #: example: True
     require_first_name: Optional[bool] = None
     #: Whether or not a registrant's last name is required for meeting registration. This option must always be `true`.
@@ -14964,7 +16842,10 @@ class RegistrationForUpdate(ApiModel):
     require_work_phone: Optional[bool] = None
     #: Whether or not a registrant's fax number is shown or required for meeting registration.
     require_fax: Optional[bool] = None
-    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level. The default maximum number of participants for webinars is 10000, but the actual maximum number of participants is limited by the user capacity.
+    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for
+    #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
+    #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
+    #: is limited by the user capacity.
     #: example: 1000.0
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
@@ -14992,10 +16873,12 @@ class InvitationSourceObject(ApiModel):
     #: Email for invitation source.
     #: example: john001@example.com
     source_email: Optional[str] = None
-    #: The link bound to `sourceId` can directly join the meeting.If the meeting requires registration,`joinLink` is not returned.
+    #: The link bound to `sourceId` can directly join the meeting.If the meeting requires registration,`joinLink` is
+    #: not returned.
     #: example: https://sqdemo56.dmz.webex.com/sqdemo56/j.php?MTID=m6d75f1c875b3e3c5d18c7598036bdd8b
     join_link: Optional[str] = None
-    #: The link bound to `sourceId` can directly register the meeting.If the meeting requires registration,`registerLink` is returned.
+    #: The link bound to `sourceId` can directly register the meeting.If the meeting requires
+    #: registration,`registerLink` is returned.
     #: example: https://sqdemo56.dmz.webex.com/sqdemo56/j.php?RGID=rb05b31307b5b820e16594da9d1cfc588
     register_link: Optional[str] = None
 
@@ -15010,7 +16893,12 @@ class MeetingTrackingCodesObject(ApiModel):
     #: Site URL for the tracking code.
     #: example: example.webex.com
     site_url: Optional[str] = None
-    #: Tracking code option list. The options here differ from those in the [site-level tracking codes](/docs/api/v1/tracking-codes/get-a-tracking-code) and the [user-level tracking codes](/docs/api/v1/tracking-codes/get-user-tracking-codes). It is the result of a selective combination of the two. If there's user-level value for a tracking code, the user-level value becomes the default option for the tracking code, and the site-level default value becomes non-default.
+    #: Tracking code option list. The options here differ from those in the `site-level tracking codes
+    #: <https://developer.webex.com/docs/api/v1/tracking-codes/get-a-tracking-code>`_ and the
+    #: `user-level tracking codes
+    #: <https://developer.webex.com/docs/api/v1/tracking-codes/get-user-tracking-codes>`_. It is the result of a selective combination of the two. If there's user-level value
+    #: for a tracking code, the user-level value becomes the default option for the tracking code, and the site-level
+    #: default value becomes non-default.
     options: Optional[list[OptionsForTrackingCodeObject]] = None
     #: The input mode in which the tracking code value can be assigned.
     input_mode: Optional[GetTrackingCodeObjectInputMode] = None
@@ -15024,7 +16912,11 @@ class ReassignMeetingRequestObject(ApiModel):
     #: Email address of the new meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
-    #: List of meeting series IDs to be reassigned the new host. The size is between 1 and 100. All the meetings of `meetingIds` should belong to the same site, which is the `siteUrl` in the request header, if specified, or the admin user's preferred site, if not specified. All available Webex sites and the preferred sites of a user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: List of meeting series IDs to be reassigned the new host. The size is between 1 and 100. All the meetings of
+    #: `meetingIds` should belong to the same site, which is the `siteUrl` in the request header, if specified, or the
+    #: admin user's preferred site, if not specified. All available Webex sites and the preferred sites of a user can
+    #: be retrieved by `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     meeting_ids: Optional[list[str]] = None
 
 
@@ -15119,22 +17011,32 @@ class ReassignMeetingsToANewHostResponse(ApiModel):
 
 
 class MeetingSeriesObject1(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -15143,16 +17045,40 @@ class MeetingSeriesObject1(ApiModel):
     #: Meeting state.
     #: example: active
     state: Optional[MeetingSeriesObjectState] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meeting is a meeting series, `start` is the date and time the first meeting of the series starts. If the meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meeting is a scheduled meeting from a meeting series, `start` is the date and time when that scheduled meeting starts. If the meeting is a meeting instance that has happened or is happening, `start` is the date and time that the instance actually starts. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meeting is a meeting series, `start` is the date and
+    #: time the first meeting of the series starts. If the meeting is a meeting series and the `current` filter is
+    #: true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meeting is a
+    #: scheduled meeting from a meeting series, `start` is the date and time when that scheduled meeting starts. If
+    #: the meeting is a meeting instance that has happened or is happening, `start` is the date and time that the
+    #: instance actually starts. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in ISO 8601 compliant format. If the meeting is a meeting series, `end` is the date and time the first meeting of the series ends. If the meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meeting is a scheduled meeting from a meeting series, `end` is the date and time when that scheduled meeting ends. If the meeting is a meeting instance that has happened, `end` is the date and time that instance actually ends. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in ISO 8601 compliant format. If the meeting is a meeting series, `end` is the date and
+    #: time the first meeting of the series ends. If the meeting is a meeting series and the current filter is true,
+    #: `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meeting is a scheduled
+    #: meeting from a meeting series, `end` is the date and time when that scheduled meeting ends. If the meeting is a
+    #: meeting instance that has happened, `end` is the date and time that instance actually ends. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". For a non-recurring meeting which has no `recurrence`, its `meetingType` is also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling.
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only
+    #: the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+    #: is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10". For a
+    #: non-recurring meeting which has no `recurrence`, its `meetingType` is also `meetingSeries` which is a meeting
+    #: series with only one occurrence in Webex meeting modeling.
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -15170,7 +17096,8 @@ class MeetingSeriesObject1(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -15182,15 +17109,32 @@ class MeetingSeriesObject1(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -15203,15 +17147,23 @@ class MeetingSeriesObject1(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -15222,9 +17174,16 @@ class MeetingSeriesObject1(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Information for callbacks from a meeting to phone or for joining a teleconference using a phone.
     telephony: Optional[MeetingSeriesObjectTelephony] = None
@@ -15232,15 +17191,23 @@ class MeetingSeriesObject1(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a `recurrence` field or no `password` or when the feature toggle `DecoupleJBHWithRegistration` is disabled the `Join Before Host` option is enabled for the meeting, See Register for a Meeting in Cisco Webex Meetings for details.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order
+    #: to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When
+    #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no `password` or when the feature
+    #: toggle `DecoupleJBHWithRegistration` is disabled the `Join Before Host` option is enabled for the meeting, See
+    #: Register for a Meeting in Cisco Webex Meetings for details.
     registration: Optional[MeetingSeriesObjectRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for a meeting.
     simultaneous_interpretation: Optional[MeetingSeriesObjectSimultaneousInterpretation] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) Breakout Sessions information for meeting.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ Breakout Sessions information for meeting.
     links: Optional[list[Link]] = None
     #: Tracking codes information.
     tracking_codes: Optional[list[MeetingUsageReportTrackingCodeObject]] = None
@@ -15255,22 +17222,32 @@ class MeetingSeriesObject1(ApiModel):
 
 
 class MeetingSeriesObjectWithAdhoc1(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -15281,16 +17258,42 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     state: Optional[MeetingSeriesObjectState] = None
     #: If `true`, the meeting is ad-hoc.
     adhoc: Optional[bool] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`, `start` is the scheduled start time of the first occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`, `start` is the scheduled start time of the first occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is `true`, `start` is the scheduled start time of the ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If the meetingType of this meeting is `meeting`, `start` is the actual start time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of this meeting is `meetingSeries`, and
+    #: `current` is not specified or is `false`, `start` is the scheduled start time of the first occurrence of this
+    #: series. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`,
+    #: `start` is the scheduled start time of the first occurrence of this series. If the meetingType of this meeting
+    #: is `meetingSeries`, and `current` is `true`, `start` is the scheduled start time of the ongoing or upcoming
+    #: occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `start` is the scheduled
+    #: start time of this occurrence. If the meetingType of this meeting is `meeting`, `start` is the actual start
+    #: time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meeting is a meeting series, `end` is the date and time the first meeting of the series ends. If the meetingType of this meeting is `meetingSeries`, and `current` is not specified or is `false`, `end` is the scheduled end time of the first occurrence of this series. If the meetingType of this meeting is `meetingSeries`, and `current` is `true`, `end` is the scheduled end time of the ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the meetingType of this meeting is `meeting`, `end` is the actual end time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meeting is a meeting series, `end` is the date and
+    #: time the first meeting of the series ends. If the meetingType of this meeting is `meetingSeries`, and `current`
+    #: is not specified or is `false`, `end` is the scheduled end time of the first occurrence of this series. If the
+    #: meetingType of this meeting is `meetingSeries`, and `current` is `true`, `end` is the scheduled end time of the
+    #: ongoing or upcoming occurrence in this series. If the meetingType of this meeting is `scheduledMeeting`, `end`
+    #: is the scheduled end time of this occurrence. If the meetingType of this meeting is `meeting`, `end` is the
+    #: actual end time of this meeting instance. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only
+    #: the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+    #: is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -15308,7 +17311,8 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -15320,15 +17324,32 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -15341,15 +17362,23 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -15360,9 +17389,16 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -15382,9 +17418,16 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before Host` option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order
+    #: to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When
+    #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before
+    #: Host` option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for the meeting.
     simultaneous_interpretation: Optional[MeetingSeriesObjectSimultaneousInterpretation] = None
@@ -15401,22 +17444,32 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
 
 
 class MeetingSeriesObjectForListMeeting1(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -15425,16 +17478,38 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: Meeting state.
     #: example: active
     state: Optional[MeetingSeriesObjectState] = None
-    #: Time zone of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: Time zone of `start` and `end`, conforming with the `IANA time zone database
+    #: <https://www.iana.org/time-zones>`_.
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `start` is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `start`
+    #: is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If
+    #: the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If
+    #: the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `end` is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `end`
+    #: is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the
+    #: meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the
+    #: meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_
+    #: API. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or
+    #: date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported
+    #: and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=10
     recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
@@ -15452,7 +17527,8 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -15464,15 +17540,32 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the  [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the  `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -15485,15 +17578,23 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
@@ -15504,9 +17605,16 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -15526,9 +17634,16 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before Host` option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order
+    #: to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When
+    #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a `recurrence` field or no password, or the `Join Before
+    #: Host` option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for the meeting.
     simultaneous_interpretation: Optional[MeetingSeriesObjectSimultaneousInterpretation] = None
@@ -15545,28 +17660,42 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
 
 
 class ScheduledMeetingObject1(ApiModel):
-    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance that is in progress or has concluded, the `id` is used to identify that instance.
+    #: Unique identifier for meeting. For a meeting series, the `id` is used to identify the entire series. For
+    #: scheduled meetings from a series, the `id` is used to identify that scheduled meeting. For a meeting instance
+    #: that is in progress or has concluded, the `id` is used to identify that instance.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
     id: Optional[str] = None
-    #: Unique identifier for meeting series. It only apples to scheduled meeting and meeting instance. If it's a scheduled meeting from a series or a meeting instance that is happening or has happened, the `meetingSeriesId` is the `id` of the primary series.
+    #: Unique identifier for meeting series. It only apples to scheduled meeting and meeting instance. If it's a
+    #: scheduled meeting from a series or a meeting instance that is happening or has happened, the `meetingSeriesId`
+    #: is the `id` of the primary series.
     #: example: dfb45ece33264639a7bc3dd9535d53f7
     meeting_series_id: Optional[str] = None
-    #: Unique identifier for scheduled meeting which current meeting is associated with. It only apples to meeting instance which is happening or has happened. It's the `id` of the scheduled meeting this instance is associated with.
+    #: Unique identifier for scheduled meeting which current meeting is associated with. It only apples to meeting
+    #: instance which is happening or has happened. It's the `id` of the scheduled meeting this instance is associated
+    #: with.
     #: example: dfb45ece33264639a7bc3dd9535d53f7
     scheduled_meeting_id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
+    #: meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
+    #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
+    #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
+    #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
     #: example: 12345678
     phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
@@ -15575,15 +17704,32 @@ class ScheduledMeetingObject1(ApiModel):
     #: Meeting state.
     #: example: scheduled
     state: Optional[MeetingSeriesObjectState] = None
-    #: This state only applies to scheduled meeting. Flag identifying whether or not the scheduled meeting has been modified.
+    #: This state only applies to scheduled meeting. Flag identifying whether or not the scheduled meeting has been
+    #: modified.
     is_modified: Optional[bool] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) of `start` and `end`, conforming with the [IANA time zone database](https://www.iana.org/time-zones).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ of `start` and `end`, conforming with the `IANA time zone database
     #: example: UTC
     timezone: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `start` is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `start`
+    #: is the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: `current` filter is true, `start` is the date and time the upcoming or ongoing meeting of the series starts. If
+    #: the meetingType of a meeting is `scheduledMeeting`, `start` is the scheduled start time of this occurrence. If
+    #: the meetingType of a meeting is `meeting`, `start` is the actual start time of the meeting instance. Can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
-    #: End time for a meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. If the meetingType of a meeting is `meetingSeries`, `end` is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: End time for a meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If the meetingType of a meeting is `meetingSeries`, `end`
+    #: is the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
+    #: current filter is true, `end` is the date and time the upcoming or ongoing meeting of the series ends. If the
+    #: meetingType of a meeting is `scheduledMeeting`, `end` is the scheduled end time of this occurrence. If the
+    #: meetingType of a meeting is `meeting`, `end` is the actual end time of the meeting instance. If a meeting
+    #: instance is in progress, `end` is not available. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     #: example: 2019-03-18T12:26:30Z
     end: Optional[datetime] = None
     #: Unique identifier for the meeting host.
@@ -15601,7 +17747,8 @@ class ScheduledMeetingObject1(ApiModel):
     #: Site URL for the meeting.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1
     web_link: Optional[str] = None
     #: SIP address for callback from a video system.
@@ -15613,15 +17760,32 @@ class ScheduledMeetingObject1(ApiModel):
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
+    #: using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by a `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowAnyUserToBeCoHost` attribute can be modified for a meeting series or a
+    #: scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
+    #: `enabledJoinBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
+    #: the `enabledJoinBeforeHost` attribute is set to `true`. The `enableConnectAudioBeforeHost` attribute can be
+    #: modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. The `joinBeforeHostMinutes` attribute can
+    #: be modified for a meeting series or a scheduled meeting using the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default is `0` if not specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -15634,15 +17798,23 @@ class ScheduledMeetingObject1(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings).
+    #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join webinar meeting from audio and video devices.
@@ -15653,9 +17825,16 @@ class ScheduledMeetingObject1(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified, it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or a scheduled meeting uisng the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
+    #: it's a user's preferred site. The `allowFirstUserToBeCoHost` attribute can be modified for a meeting series or
+    #: a scheduled meeting uisng the `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the [Update a Meeting](/docs/api/v1/meetings/update-a-meeting) API.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the
+    #: `Update a Meeting
+    #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not this meeting instance has chat.
     has_chat: Optional[bool] = None
@@ -15675,13 +17854,23 @@ class ScheduledMeetingObject1(ApiModel):
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before Host option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details.    + autoAcceptRequest: `false` (boolean,optional) - Whether or not meeting registration requests are accepted automatically.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join
+    #: the meeting. Meeting invitees will receive an email with a registration link for the registration. When the
+    #: registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before
+    #: Host option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details.    +
+    #: autoAcceptRequest: `false` (boolean,optional) - Whether or not meeting registration requests are accepted
+    #: automatically.
     registration: Optional[MeetingSeriesObjectWithAdhocRegistration] = None
-    #: External keys created by an integration application in its domain, for example, Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc.
+    #: External keys created by an integration application in its domain, for example, Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc.
     integration_tags: Optional[list[str]] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) Breakout Sessions information for meeting.
+    #: `HATEOAS
+    #: <https://en.wikipedia.org/wiki/HATEOAS>`_ Breakout Sessions information for meeting.
     links: Optional[list[Link]] = None
     #: Whether or not audio watermark is enabled.
     enabled_audio_watermark: Optional[bool] = None
@@ -15702,30 +17891,62 @@ class UpdateMeetingObject1(ApiModel):
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details.
+    #: Meeting password. Must conform to the site's password complexity settings. Read `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: Date and time for the start of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `start` cannot be before current date and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Refer to the [Webex Meetings](/docs/meetings#restrictions-on-updating-a-meeting) guide for more information about restrictions on updating date and time for a meeting. Please note that when a meeting is being updated, `start` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time, `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`, and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to `2022-03-01T11:32:00+08:00`.
+    #: Date and time for the start of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before current date
+    #: and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Refer to the `Webex Meetings
+    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date and time for
+    #: a meeting. Please note that when a meeting is being updated, `start` of the meeting will be accurate to
+    #: minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time,
+    #: `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and
+    #: milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of
+    #: `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`,
+    #: and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to
+    #: `2022-03-01T11:32:00+08:00`.
     #: example: 2020-05-15T20:30:00-08:00
     start: Optional[datetime] = None
-    #: Date and time for the end of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `end` cannot be before current date and time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Refer to the [Webex Meetings](/docs/meetings#restrictions-on-updating-a-meeting) guide for more information about restrictions on updating date and time for a meeting. Please note that when a meeting is being updated, `end` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to `2022-03-01T11:52:00+08:00`.
+    #: Date and time for the end of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `end` cannot be before current date and
+    #: time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Refer to the `Webex Meetings
+    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date and time for
+    #: a meeting. Please note that when a meeting is being updated, `end` of the meeting will be accurate to minutes,
+    #: not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For
+    #: instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to
+    #: `2022-03-01T11:52:00+08:00`.
     #: example: 2020-05-15T21:30:00-08:00
     end: Optional[datetime] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in which the meeting was originally scheduled (conforming with the [IANA time zone database](https://www.iana.org/time-zones)).
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the `IANA time zone database
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
+    #: meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly `recurrence` rule
+    #: are not supported, only the first day or date specified is taken. For example,
+    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as
+    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=20
     recurrence: Optional[str] = None
     #: Whether or not meeting is recorded automatically.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's user's preferred site.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: user's preferred site.
     allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true.
+    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This
+    #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not specified.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
+    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`,
+    #: `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not
+    #: specified.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
@@ -15738,12 +17959,18 @@ class UpdateMeetingObject1(ApiModel):
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required while scheduling webinar meeting. All available meeting session types enabled for the user can be retrieved by [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required while scheduling webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved by
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
     #: Whether or not to automatically lock the meeting after it starts.
@@ -15751,144 +17978,265 @@ class UpdateMeetingObject1(ApiModel):
     #: The number of minutes after the meeting begins, for automatically locking it.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's user's preferred site.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: user's preferred site.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt.
     allow_authenticated_devices: Optional[bool] = None
     #: Whether or not to send emails to host and invitees. It is an optional field and default value is true.
     #: example: True
     send_email: Optional[bool] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be
+    #: the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
-    #: URL of the Webex site which the meeting is updated on. If not specified, the meeting is created on user's preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List` API.
+    #: URL of the Webex site which the meeting is updated on. If not specified, the meeting is created on user's
+    #: preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List`
+    #: API.
     #: example: example.webex.com
     site_url: Optional[str] = None
     #: Meeting Options.
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters long. Please note that an empty or null `integrationTags` will delete all existing integration tags for the meeting implicitly. Developer can update integration tags for a `meetingSeries` but he cannot update it for a `scheduledMeeting` or a `meeting` instance.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The
+    #: maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters
+    #: long. Please note that an empty or null `integrationTags` will delete all existing integration tags for the
+    #: meeting implicitly. Developer can update integration tags for a `meetingSeries` but he cannot update it for a
+    #: `scheduledMeeting` or a `meeting` instance.
     integration_tags: Optional[list[str]] = None
-    #: Whether or not breakout sessions are enabled. If the value of `enabledBreakoutSessions` is false, users can not set breakout sessions. If the value of `enabledBreakoutSessions` is true, users can update breakout sessions using the [Update Breakout Sessions](/docs/api/v1/meetings/{meetingId}/breakoutSessions) API. Updating breakout sessions are not supported by this API.
+    #: Whether or not breakout sessions are enabled. If the value of `enabledBreakoutSessions` is false, users can not
+    #: set breakout sessions. If the value of `enabledBreakoutSessions` is true, users can update breakout sessions
+    #: using the `Update Breakout Sessions
+    #: <https://developer.webex.com/docs/api/v1/meetings/{meetingId}/breakoutSessions>`_ API. Updating breakout sessions are not supported by this API.
     enabled_breakout_sessions: Optional[bool] = None
-    #: Tracking codes information. All available tracking codes and their options for the specified site can be retrieved by [List Meeting Tracking Codes](/docs/api/v1/meetings/list-meeting-tracking-codes) API. If an optional tracking code is missing from the `trackingCodes` array and there's a default option for this tracking code, the default option is assigned automatically. If the `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
+    #: Tracking codes information. All available tracking codes and their options for the specified site can be
+    #: retrieved by `List Meeting Tracking Codes
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes>`_ API. If an optional tracking code is missing from the `trackingCodes`
+    #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
+    #: `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level
+    #: value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
     tracking_codes: Optional[list[MeetingUsageReportTrackingCodeObject]] = None
     #: Whether or not audio watermark is enabled.
     enabled_audio_watermark: Optional[bool] = None
     #: Audio connection options.
     audio_connection_options: Optional[MeetingSeriesObjectAudioConnectionOptions] = None
-    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType` attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered for the webinar.
+    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType`
+    #: attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered
+    #: for the webinar.
     require_attendee_login: Optional[bool] = None
-    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true` if `requireAttendeeLogin` is `false`.
+    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the
+    #: value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true`
+    #: if `requireAttendeeLogin` is `false`.
     restrict_to_invitees: Optional[bool] = None
 
 
 class CreateMeetingObject1(ApiModel):
-    #: Whether or not to create an ad-hoc meeting for the room specified by `roomId`. When `true`, `roomId` is required.
+    #: Whether or not to create an ad-hoc meeting for the room specified by `roomId`. When `true`, `roomId` is
+    #: required.
     adhoc: Optional[bool] = None
-    #: Unique identifier for the Webex space which the meeting is to be associated with. It can be retrieved by [List Rooms](/docs/api/v1/rooms/list-rooms). `roomId` is required when `adhoc` is `true`. When `roomId` is specified, the parameter `hostEmail` will be ignored.
+    #: Unique identifier for the Webex space which the meeting is to be associated with. It can be retrieved by
+    #: `List Rooms
+    #: <https://developer.webex.com/docs/api/v1/rooms/list-rooms>`_. `roomId` is required when `adhoc` is `true`. When `roomId` is specified, the parameter `hostEmail`
+    #: will be ignored.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vNDMzZjk0ZjAtOTZhNi0xMWViLWJhOTctOTU3OTNjZDhiY2Q2
     room_id: Optional[str] = None
-    #: Unique identifier for meeting template. Please note that `start` and `end` are optional when `templateId` is specified. The list of meeting templates that is available for the authenticated user can be retrieved from [List Meeting Templates](/docs/api/v1/meetings/list-meeting-templates). This parameter is ignored for an ad-hoc meeting.
+    #: Unique identifier for meeting template. Please note that `start` and `end` are optional when `templateId` is
+    #: specified. The list of meeting templates that is available for the authenticated user can be retrieved from
+    #: `List Meeting Templates
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-templates>`_. This parameter is ignored for an ad-hoc meeting.
     #: example: N2Q3ZWE1ZjQyYjkyMWVhY2UwNTM4NmNhMjRhZDczMGU6VS0yMDA5NzItTUMtZW5fVVM
     template_id: Optional[str] = None
-    #: Meeting title. The title can be a maximum of 128 characters long. The default value for an ad-hoc meeting is the user's name if not specified.
+    #: Meeting title. The title can be a maximum of 128 characters long. The default value for an ad-hoc meeting is the
+    #: user's name if not specified.
     #: example: John's Meeting
     title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long.
     #: example: John's Agenda
     agenda: Optional[str] = None
-    #: Meeting password. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically.
+    #: Meeting password. Must conform to the site's password complexity settings. Read `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details.
+    #: If not specified, a random password conforming to the site's password rules will be generated automatically.
     #: example: BgJep@43
     password: Optional[str] = None
-    #: Date and time for the start of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `start` cannot be before current date and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Please note that when a meeting is being scheduled, `start` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time, `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`, and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to `2022-03-01T11:32:00+08:00`. The default value for an ad-hoc meeting is 5 minutes after the current time and the user's input value will be ignored. An ad-hoc meeting can be started immediately even if the `start` is 5 minutes after the current time.
+    #: Date and time for the start of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before current date
+    #: and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Please note that when a meeting is being scheduled, `start` of the meeting will be accurate to minutes,
+    #: not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time, `start` will
+    #: be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and milliseconds stripped
+    #: off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of
+    #: `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`,
+    #: and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to
+    #: `2022-03-01T11:32:00+08:00`. The default value for an ad-hoc meeting is 5 minutes after the current time and
+    #: the user's input value will be ignored. An ad-hoc meeting can be started immediately even if the `start` is 5
+    #: minutes after the current time.
     #: example: 2020-05-15T20:30:00-08:00
     start: Optional[datetime] = None
-    #: Date and time for the end of meeting in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. `end` cannot be before current date and time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24 hours. Please note that when a meeting is being scheduled, `end` of the meeting will be accurate to minutes, not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to `2022-03-01T11:52:00+08:00`. The default value for an ad-hoc meeting is 20 minutes after the current time and the user's input value will be ignored.
+    #: Date and time for the end of meeting in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `end` cannot be before current date and
+    #: time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
+    #: hours. Please note that when a meeting is being scheduled, `end` of the meeting will be accurate to minutes,
+    #: not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For
+    #: instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to
+    #: `2022-03-01T11:52:00+08:00`. The default value for an ad-hoc meeting is 20 minutes after the current time and
+    #: the user's input value will be ignored.
     #: example: 2020-05-15T21:30:00-08:00
     end: Optional[datetime] = None
-    #: [Time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) in which the meeting was originally scheduled (conforming with the [IANA time zone database](https://www.iana.org/time-zones)). The default value for an ad-hoc meeting is `UTC` and the user's input value will be ignored.
+    #: `Time zone
+    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the `IANA time zone database
+    #: default value for an ad-hoc meeting is `UTC` and the user's input value will be ignored.
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
-    #: Meeting series recurrence rule (conforming with [RFC 2445](https://www.ietf.org/rfc/rfc2445.txt)), applying only to meeting series. It doesn't apply to a scheduled meeting or an ended or ongoing meeting instance. This parameter is ignored for an ad-hoc meeting. Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
+    #: Meeting series recurrence rule (conforming with `RFC 2445
+    #: <https://www.ietf.org/rfc/rfc2445.txt>`_), applying only to meeting series. It doesn't apply to
+    #: a scheduled meeting or an ended or ongoing meeting instance. This parameter is ignored for an ad-hoc meeting.
+    #: Multiple days or dates for monthly or yearly `recurrence` rule are not supported, only the first day or date
+    #: specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it
+    #: will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     #: example: FREQ=DAILY;INTERVAL=1;COUNT=20
     recurrence: Optional[str] = None
     #: Whether or not meeting is recorded automatically.
     enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's the user's preferred site. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
+    #: meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: the user's preferred site. The default value for an ad-hoc meeting is `true` and the user's input value will be
+    #: ignored.
     allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The default value
+    #: for an ad-hoc meeting is `true` and the user's input value will be ignored.
     enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This
+    #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. The default value for an
+    #: ad-hoc meeting is `true` and the user's input value will be ignored.
     enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. This attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default value for an ad-hoc meeting is 0 and the user's input value will be ignored.
+    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. This
+    #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a
+    #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
+    #: default value for an ad-hoc meeting is 0 and the user's input value will be ignored.
     #: example: 15.0
     join_before_host_minutes: Optional[int] = None
-    #: Whether or not to exclude the meeting password from the email invitation. This parameter is ignored for an ad-hoc meeting.
+    #: Whether or not to exclude the meeting password from the email invitation. This parameter is ignored for an
+    #: ad-hoc meeting.
     exclude_password: Optional[bool] = None
-    #: Whether or not to allow the meeting to be listed on the public calendar. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to allow the meeting to be listed on the public calendar. The default value for an ad-hoc meeting
+    #: is `false` and the user's input value will be ignored.
     public_meeting: Optional[bool] = None
-    #: The number of minutes before the meeting begins, that an email reminder is sent to the host. This parameter is ignored for an ad-hoc meeting.
+    #: The number of minutes before the meeting begins, that an email reminder is sent to the host. This parameter is
+    #: ignored for an ad-hoc meeting.
     #: example: 10.0
     reminder_time: Optional[int] = None
-    #: Specifies how the people who aren't on the invite can join the unlocked meeting. The default value for an ad-hoc meeting is `allowJoinWithLobby` and the user's input value will be ignored.
+    #: Specifies how the people who aren't on the invite can join the unlocked meeting. The default value for an ad-hoc
+    #: meeting is `allowJoinWithLobby` and the user's input value will be ignored.
     #: example: allowJoin
     unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar meeting. All available meeting session types enabled for the user can be retrieved using the [List Meeting Session Types](/docs/api/v1/meetings/list-meeting-session-types) API.
+    #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
+    #: meeting. All available meeting session types enabled for the user can be retrieved using the
+    #: `List Meeting Session Types
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
     #: example: 3.0
     session_type_id: Optional[int] = None
-    #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a meeting scheduled in the user's [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings). If not specified, it's a regular meeting by default. The default value for an ad-hoc meeting is `meeting` and the user's input value will be ignored.
+    #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a
+    #: meeting scheduled in the user's `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_. If not specified, it's a regular meeting by default. The default
+    #: value for an ad-hoc meeting is `meeting` and the user's input value will be ignored.
     #: example: meeting
     scheduled_type: Optional[MeetingSeriesObjectScheduledType] = None
     #: Whether or not webcast view is enabled. This parameter is ignored for an ad-hoc meeting.
     enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read [password management](https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration) for details. If not specified, a random password conforming to the site's password rules will be generated automatically. This parameter is ignored for an ad-hoc meeting.
+    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
+    #: `password management
+    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
+    #: will be generated automatically. This parameter is ignored for an ad-hoc meeting.
     #: example: GwLqa@78
     panelist_password: Optional[str] = None
-    #: Whether or not to automatically lock the meeting after it starts. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to automatically lock the meeting after it starts. The default value for an ad-hoc meeting is
+    #: `false` and the user's input value will be ignored.
     enable_automatic_lock: Optional[bool] = None
-    #: The number of minutes after the meeting begins, for automatically locking it. The default value for an ad-hoc meeting is null and the user's input value will be ignored.
+    #: The number of minutes after the meeting begins, for automatically locking it. The default value for an ad-hoc
+    #: meeting is null and the user's input value will be ignored.
     #: example: 10.0
     automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's user's preferred site. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
+    #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
+    #: user's preferred site. The default value for an ad-hoc meeting is `false` and the user's input value will be
+    #: ignored.
     allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting without a prompt. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
+    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
+    #: without a prompt. The default value for an ad-hoc meeting is `true` and the user's input value will be ignored.
     allow_authenticated_devices: Optional[bool] = None
-    #: Invitees for meeting. The maximum size of invitees is 1000. If `roomId` is specified and `invitees` is missing, all the members in the space are invited implicitly. If both `roomId` and `invitees` are specified, only those in the `invitees` list are invited. `coHost` for each invitee is `true` by default if `roomId` is specified when creating a meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as a non-cohost invitee. The user's input value will be ignored for an ad-hoc meeting and the the members of the room specified by `roomId` except "me" will be used by default.
+    #: Invitees for meeting. The maximum size of invitees is 1000. If `roomId` is specified and `invitees` is missing,
+    #: all the members in the space are invited implicitly. If both `roomId` and `invitees` are specified, only those
+    #: in the `invitees` list are invited. `coHost` for each invitee is `true` by default if `roomId` is specified
+    #: when creating a meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as
+    #: a non-cohost invitee. The user's input value will be ignored for an ad-hoc meeting and the the members of the
+    #: room specified by `roomId` except "me" will be used by default.
     invitees: Optional[list[InviteeObjectForCreateMeeting]] = None
-    #: Whether or not to send emails to host and invitees. It is an optional field and default value is true. The default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
+    #: Whether or not to send emails to host and invitees. It is an optional field and default value is true. The
+    #: default value for an ad-hoc meeting is `false` and the user's input value will be ignored.
     #: example: True
     send_email: Optional[bool] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
+    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
+    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be
+    #: the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
-    #: URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List` API.
+    #: URL of the Webex site which the meeting is created on. If not specified, the meeting is created on user's
+    #: preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List`
+    #: API.
     #: example: example.webex.com
     site_url: Optional[str] = None
     #: Meeting Options.
     meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
     #: Attendee Privileges. This attribute is not supported for a webinar.
     attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When the registration form has been submitted and approved, an email with a real meeting link will be received. By clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before Host option is enabled for the meeting. See [Register for a Meeting in Cisco Webex Meetings](https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings) for details. This parameter is ignored for an ad-hoc meeting.
+    #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join
+    #: the meeting. Meeting invitees will receive an email with a registration link for the registration. When the
+    #: registration form has been submitted and approved, an email with a real meeting link will be received. By
+    #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
+    #: apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before
+    #: Host option is enabled for the meeting. See `Register for a Meeting in Cisco Webex Meetings
+    #: <https://help.webex.com/en-us/nmgmeff/Register-for-a-Meeting-in-Cisco-Webex-Meetings>`_ for details. This
+    #: parameter is ignored for an ad-hoc meeting.
     registration: Optional[CreateMeetingObjectRegistration] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters long. This parameter is ignored for an ad-hoc meeting.
+    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
+    #: Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The
+    #: maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters
+    #: long. This parameter is ignored for an ad-hoc meeting.
     integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for a meeting.
     simultaneous_interpretation: Optional[CreateMeetingObjectSimultaneousInterpretation] = None
     #: Whether or not breakout sessions are enabled.
     enabled_breakout_sessions: Optional[bool] = None
-    #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops, classrooms, or for when you need a moment to talk privately with a few participants outside of the main session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout session is not supported for a meeting with simultaneous interpretation.
+    #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of
+    #: participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops,
+    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main
+    #: session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if
+    #: hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout
+    #: session is not supported for a meeting with simultaneous interpretation.
     breakout_sessions: Optional[list[BreakoutSessionObject]] = None
     #: Whether or not audio watermark is enabled.
     enabled_audio_watermark: Optional[bool] = None
-    #: Tracking codes information. All available tracking codes and their options for the specified site can be retrieved by [List Meeting Tracking Codes](/docs/api/v1/meetings/list-meeting-tracking-codes) API. If an optional tracking code is missing from the `trackingCodes` array and there's a default option for this tracking code, the default option is assigned automatically. If the `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
+    #: Tracking codes information. All available tracking codes and their options for the specified site can be
+    #: retrieved by `List Meeting Tracking Codes
+    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes>`_ API. If an optional tracking code is missing from the `trackingCodes`
+    #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
+    #: `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level
+    #: value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
     tracking_codes: Optional[list[MeetingUsageReportTrackingCodeObject]] = None
     #: Audio connection options.
     audio_connection_options: Optional[MeetingSeriesObjectAudioConnectionOptions] = None
-    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType` attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered for the webinar.
+    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType`
+    #: attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered
+    #: for the webinar.
     require_attendee_login: Optional[bool] = None
-    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true` if `requireAttendeeLogin` is `false`.
+    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the
+    #: value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true`
+    #: if `requireAttendeeLogin` is `false`.
     restrict_to_invitees: Optional[bool] = None
 
 
@@ -15912,7 +18260,9 @@ class DetailedTemplateObject1(ApiModel):
     is_default: Optional[bool] = None
     #: Whether or not the meeting template is a standard template.
     is_standard: Optional[bool] = None
-    #: Meeting object which is used to create a meeting by the meeting template. Please note that the meeting object should be used to create a meeting immediately after retrieval since the `start` and `end` may be invalid quickly after generation.
+    #: Meeting object which is used to create a meeting by the meeting template. Please note that the meeting object
+    #: should be used to create a meeting immediately after retrieval since the `start` and `end` may be invalid
+    #: quickly after generation.
     meeting: Optional[CreateMeetingObject1] = None
 
 
@@ -15967,33 +18317,47 @@ class Registrant1(ApiModel):
     registration_time: Optional[datetime] = None
     #: Registrant's answers for customized questions, Registration options define whether or not this is required.
     customized_questions: Optional[list[CustomizedRegistrant]] = None
-    #: Registrant's source id.The `sourceId` is from [Create Invitation Sources](/docs/api/v1/meetings/create-invitation-sources) API.
+    #: Registrant's source id.The `sourceId` is from `Create Invitation Sources
+    #: <https://developer.webex.com/docs/api/v1/meetings/create-invitation-sources>`_ API.
     #: example: cisco
     source_id: Optional[str] = None
-    #: Registrant's registration ID. Registrants have a special number to identify a registrations if it is webinar-enabled and enabled registration ID.
+    #: Registrant's registration ID. Registrants have a special number to identify a registrations if it is
+    #: webinar-enabled and enabled registration ID.
     #: example: 1111
     registration_id: Optional[datetime] = None
 
 
 class JoinMeetingObject1(ApiModel):
-    #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled [personal room](https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings) meeting is also supported for this API.
+    #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't
+    #: apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is also supported for this API.
     #: example: 98d8c2212c9d62b162b9565932735e58_I_231409844992607809
     meeting_id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting instances which have ended.
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
     #: example: 123456789
     meeting_number: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or join.
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
     #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1e
     web_link: Optional[str] = None
     #: Whether or not to redirect to `joinLink`. It is an optional field and default value is true.
     join_directly: Optional[bool] = None
-    #: Email address of meeting participant. If `email` is specified, the link is generated for the user of `email`; otherwise, the API returns the link for the user calling the API. `email` is required for a [guest issuer](https://developer.webex.com/docs/guest-issuer).
+    #: Email address of meeting participant. If `email` is specified, the link is generated for the user of `email`;
+    #: otherwise, the API returns the link for the user calling the API. `email` is required for a `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
     #: example: brenda.song@example.com
     email: Optional[str] = None
-    #: Display name of meeting participant. If `displayName` is specified, `email` must be specified as well. If `email` is specified and `displayName` is not, display name is the same as `email`. If neither `displayName` nor `email` is specified, the API returns the link for the user calling the API. The maximum length of `displayName` is 128 characters. `displayName` is required for a [guest issuer](https://developer.webex.com/docs/guest-issuer).
+    #: Display name of meeting participant. If `displayName` is specified, `email` must be specified as well. If
+    #: `email` is specified and `displayName` is not, display name is the same as `email`. If neither `displayName`
+    #: nor `email` is specified, the API returns the link for the user calling the API. The maximum length of
+    #: `displayName` is 128 characters. `displayName` is required for a `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
     #: example: Brenda Song
     display_name: Optional[str] = None
-    #: Required when the meeting is protected by a password and the current user is not privileged to view it if they are not a host, cohost, or invitee.
+    #: Required when the meeting is protected by a password and the current user is not privileged to view it if they
+    #: are not a host, cohost, or invitee.
     #: example: BgJep@43
     password: Optional[str] = None
     #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
@@ -16005,13 +18369,29 @@ class JoinMeetingObject1(ApiModel):
 
 
 class SurveyLinkRequestObject(ApiModel):
-    #: Email address for the meeting host. This parameter is only used if the user or application calling the API has the admin on-behalf-of scopes. An admin can specify the email of the meeting host who is in a site he manages and the API returns post survey links on behalf of the meeting host.
+    #: Email address for the meeting host. This parameter is only used if the user or application calling the API has
+    #: the admin on-behalf-of scopes. An admin can specify the email of the meeting host who is in a site he manages
+    #: and the API returns post survey links on behalf of the meeting host.
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
-    #: Start date and time (inclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format for the meeting objects being requested and conforms with the `timezone` in the request header if specified. `meetingStartTimeFrom` cannot be after `meetingStartTimeTo`. Only applies when `meetingId` is not an instance ID. The API generates survey links for the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and `meetingStartTimeTo`. If not specified, `meetingStartTimeFrom` equals `meetingStartTimeTo` minus `1` month; if `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is `1` month before the current date and time.
+    #: Start date and time (inclusive) in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format for the meeting objects being requested and
+    #: conforms with the `timezone` in the request header if specified. `meetingStartTimeFrom` cannot be after
+    #: `meetingStartTimeTo`. Only applies when `meetingId` is not an instance ID. The API generates survey links for
+    #: the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and
+    #: `meetingStartTimeTo`. If not specified, `meetingStartTimeFrom` equals `meetingStartTimeTo` minus `1` month; if
+    #: `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is `1` month before
+    #: the current date and time.
     #: example: 2019-03-18T09:30:00Z
     meeting_start_time_from: Optional[datetime] = None
-    #: End date and time (exclusive) in any [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format for the meeting objects being requested and conforms with the `timezone` in the request header if specified. `meetingStartTimeTo` cannot be prior to `meetingStartTimeFrom`. Only applies when `meetingId` is not an instance ID. The API generates survey links for the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and `meetingStartTimeTo`. If not specified, `meetingStartTimeTo` equals `meetingStartTimeFrom` plus `1` month; if `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is the current date and time.
+    #: End date and time (exclusive) in any `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format for the meeting objects being requested and
+    #: conforms with the `timezone` in the request header if specified. `meetingStartTimeTo` cannot be prior to
+    #: `meetingStartTimeFrom`. Only applies when `meetingId` is not an instance ID. The API generates survey links for
+    #: the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and
+    #: `meetingStartTimeTo`. If not specified, `meetingStartTimeTo` equals `meetingStartTimeFrom` plus `1` month; if
+    #: `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is the current date
+    #: and time.
     #: example: 2019-03-25T09:30:00Z
     meeting_start_time_to: Optional[datetime] = None
     #: Participants' email list. The maximum size of `emails` is 100.
@@ -16045,6 +18425,142 @@ class ListMeetingRegistrantsResponse1(ApiModel):
 class GetMeetingSurveyLinksResponse(ApiModel):
     #: Survey link array
     items: Optional[list[SurveyLinkObject]] = None
+
+
+class Registration2(ApiModel):
+    #: Whether or not meeting registration requests are accepted automatically.
+    auto_accept_request: Optional[bool] = None
+    #: Whether or not a registrant's first name is required for meeting registration. This option must always be
+    #: `true`.
+    #: example: True
+    require_first_name: Optional[bool] = None
+    #: Whether or not a registrant's last name is required for meeting registration. This option must always be `true`.
+    #: example: True
+    require_last_name: Optional[bool] = None
+    #: Whether or not a registrant's email is required for meeting registration. This option must always be `true`.
+    #: example: True
+    require_email: Optional[bool] = None
+    #: Whether or not a registrant's job title is shown or required for meeting registration.
+    require_job_title: Optional[bool] = None
+    #: Whether or not a registrant's company name is shown or required for meeting registration.
+    require_company_name: Optional[bool] = None
+    #: Whether or not a registrant's first address field is shown or required for meeting registration.
+    require_address1: Optional[bool] = None
+    #: Whether or not a registrant's second address field is shown or required for meeting registration.
+    require_address2: Optional[bool] = None
+    #: Whether or not a registrant's city is shown or required for meeting registration.
+    require_city: Optional[bool] = None
+    #: Whether or not a registrant's state is shown or required for meeting registration.
+    require_state: Optional[bool] = None
+    #: Whether or not a registrant's postal code is shown or required for meeting registration.
+    require_zip_code: Optional[bool] = None
+    #: Whether or not a registrant's country or region is shown or required for meeting registration.
+    require_country_region: Optional[bool] = None
+    #: Whether or not a registrant's work phone number is shown or required for meeting registration.
+    require_work_phone: Optional[bool] = None
+    #: Whether or not a registrant's fax number is shown or required for meeting registration.
+    require_fax: Optional[bool] = None
+    #: Customized questions for meeting registration.
+    customized_questions: Optional[list[CustomizedQuestionForGetMeeting]] = None
+    #: The approval rules for standard questions.
+    rules: Optional[list[StandardRegistrationApproveRule]] = None
+
+
+class JoinMeetingObject2(ApiModel):
+    #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't
+    #: apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled
+    #: `personal room
+    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is also supported for this API.
+    #: example: 98d8c2212c9d62b162b9565932735e58_I_231409844992607809
+    meeting_id: Optional[str] = None
+    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
+    #: instances which have ended.
+    #: example: 123456789
+    meeting_number: Optional[str] = None
+    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
+    #: join.
+    #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1e
+    web_link: Optional[str] = None
+    #: Whether or not to redirect to `joinLink`. It is an optional field and default value is true.
+    join_directly: Optional[bool] = None
+    #: Email address of meeting participant. If `email` is specified, the link is generated for the user of `email`;
+    #: otherwise, the API returns the link for the user calling the API. `email` is required for a `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
+    #: example: brenda.song@example.com
+    email: Optional[str] = None
+    #: Display name of meeting participant. If `displayName` is specified, `email` must be specified as well. If
+    #: `email` is specified and `displayName` is not, display name is the same as `email`. If neither `displayName`
+    #: nor `email` is specified, the API returns the link for the user calling the API. The maximum length of
+    #: `displayName` is 128 characters. `displayName` is required for a `guest issuer
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
+    #: example: Brenda Song
+    display_name: Optional[str] = None
+    #: Required when the meeting is protected by a password and the current user is not privileged to view it if they
+    #: are not a host, cohost, or invitee.
+    #: example: BgJep@43
+    password: Optional[str] = None
+    #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
+    #: example: 5.0
+    expiration_minutes: Optional[int] = None
+    #: Required when the meeting is webinar-enabled and enabled registration ID.
+    #: example: 1111
+    registration_id: Optional[datetime] = None
+    #: Email address for the meeting host. This attribute should be set if the user or application calling the API has
+    #: the admin on-behalf-of scopes. This parameter is required for a `Service App
+    #: <https://developer.webex.com/docs/service-apps>`_. It only applies to meetings, not
+    #: webinars.
+    #: example: john.andersen@example.com
+    host_email: Optional[str] = None
+
+
+class RegistrationForUpdate2(ApiModel):
+    #: - Email address for the meeting host. This parameter is only used if the user or application calling the API has
+    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API
+    #: will return an update for a meeting that is hosted by that user.
+    #: example: 'john.andersen@example.com'
+    host_email: Optional[str] = None
+    #: Whether or not meeting registration requests are accepted automatically.
+    auto_accept_request: Optional[bool] = None
+    #: Whether or not a registrant's first name is required for meeting registration. This option must always be
+    #: `true`.
+    #: example: True
+    require_first_name: Optional[bool] = None
+    #: Whether or not a registrant's last name is required for meeting registration. This option must always be `true`.
+    #: example: True
+    require_last_name: Optional[bool] = None
+    #: Whether or not a registrant's email is required for meeting registration. This option must always be `true`.
+    #: example: True
+    require_email: Optional[bool] = None
+    #: Whether or not a registrant's job title is shown or required for meeting registration.
+    require_job_title: Optional[bool] = None
+    #: Whether or not a registrant's company name is shown or required for meeting registration.
+    require_company_name: Optional[bool] = None
+    #: Whether or not a registrant's first address field is shown or required for meeting registration.
+    require_address1: Optional[bool] = None
+    #: Whether or not a registrant's second address field is shown or required for meeting registration.
+    require_address2: Optional[bool] = None
+    #: Whether or not a registrant's city is shown or required for meeting registration.
+    require_city: Optional[bool] = None
+    #: Whether or not a registrant's state is shown or required for meeting registration.
+    require_state: Optional[bool] = None
+    #: Whether or not a registrant's postal code is shown or required for meeting registration.
+    require_zip_code: Optional[bool] = None
+    #: Whether or not a registrant's country or region is shown or required for meeting registration.
+    require_country_region: Optional[bool] = None
+    #: Whether or not a registrant's work phone number is shown or required for meeting registration.
+    require_work_phone: Optional[bool] = None
+    #: Whether or not a registrant's fax number is shown or required for meeting registration.
+    require_fax: Optional[bool] = None
+    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for
+    #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
+    #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
+    #: is limited by the user capacity.
+    #: example: 1000.0
+    max_register_num: Optional[int] = None
+    #: Customized questions for meeting registration.
+    customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None
+    #: The approval rule for standard questions.
+    rules: Optional[list[StandardRegistrationApproveRule]] = None
 
 
 class Membership(ApiModel):
@@ -16125,13 +18641,16 @@ class Message(ApiModel):
     #: The email address of the recipient when sending a private 1:1 message.
     #: example: julie@example.com
     to_person_email: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published on http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
     #: The message, in Markdown format.
     #: example: **PROJECT UPDATE** A new project plan has been published [here](http://example.com/s/lf5vj). The PM for this project is <@personEmail:mike@example.com> and the Engineering Manager is <@personEmail:jane@example.com>.
     markdown: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/api/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/api/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: Content attachments attached to the message.
@@ -16163,13 +18682,16 @@ class DirectMessage(ApiModel):
     #: The type of room. Will always be `direct`.
     #: example: direct
     room_type: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: Hey there, what do you think of this project update presentation (http://sharepoint.example.com/presentation.pptx)?
     text: Optional[str] = None
     #: The message, in Markdown format.
     #: example: Hey there, what do you think of [this project update presentation](http://sharepoint.example.com/presentation.pptx)?
     markdown: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/api/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/api/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -16249,7 +18771,8 @@ class Message1(ApiModel):
     #: The email address of the recipient when sending a private 1:1 message.
     #: example: julie@example.com
     to_person_email: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published om http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
     #: The message, in Markdown format.
@@ -16258,7 +18781,9 @@ class Message1(ApiModel):
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     #: example: <p><strong>PROJECT UPDATE</strong> A new project plan has been published <a href=\"http://example.com/s/lf5vj\" rel=\"nofollow\">here</a>. The PM for this project is mike@example.com and the Engineering Manager is jane@example.com.</p>
     html: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -16273,15 +18798,18 @@ class Message1(ApiModel):
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
     mentioned_groups: Optional[list[str]] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
+    #: Message content attachments attached to the message. See the `Cards Guide
+    #: <https://developer.webex.com/docs/api/guides/cards>`_ for more information.
     attachments: Optional[list[Attachment1]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
-    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file
+    #: not posted using the voice clip feature.
     is_voice_clip: Optional[bool] = None
 
 
@@ -16298,7 +18826,8 @@ class ListMessage(ApiModel):
     #: The type of room.
     #: example: group
     room_type: Optional[ECMFolderRoomType] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published on http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
     #: The message, in Markdown format.
@@ -16307,7 +18836,9 @@ class ListMessage(ApiModel):
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     #: example: <p><strong>PROJECT UPDATE</strong> A new project plan has been published <a href=\"http://example.com/s/lf5vj\" rel=\"nofollow\">here</a>. The PM for this project is mike@example.com and the Engineering Manager is jane@example.com.</p>
     html: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -16322,15 +18853,18 @@ class ListMessage(ApiModel):
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
     mentioned_groups: Optional[list[str]] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
+    #: Message content attachments attached to the message. See the `Cards Guide
+    #: <https://developer.webex.com/docs/api/guides/cards>`_ for more information.
     attachments: Optional[list[Attachment1]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
-    #: `true` if the audio file is a voice clip recorded by the client; `false` if the audio file is a standard audio file not posted using the voice clip feature.
+    #: `true` if the audio file is a voice clip recorded by the client; `false` if the audio file is a standard audio
+    #: file not posted using the voice clip feature.
     is_voice_clip: Optional[bool] = None
 
 
@@ -16347,7 +18881,8 @@ class DirectMessage1(ApiModel):
     #: The type of room. Will always be `direct`.
     #: example: direct
     room_type: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: Hey there, what do you think of this project update presentation (http://sharepoint.example.com/presentation.pptx)?
     text: Optional[str] = None
     #: The message, in Markdown format.
@@ -16356,7 +18891,9 @@ class DirectMessage1(ApiModel):
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     #: example: <p>Hey there, what do you think of <a href=\"http://sharepoint.example.com/presentation.pptx\" rel=\"nofollow\">this project update presentation</a>?</p>
     html: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/api/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see `Message Attachments
+    #: <https://developer.webex.com/docs/api/basics#message-attachments>`_.
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -16365,15 +18902,18 @@ class DirectMessage1(ApiModel):
     #: The email address of the message author.
     #: example: matt@example.com
     person_email: Optional[str] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
+    #: Message content attachments attached to the message. See the `Cards Guide
+    #: <https://developer.webex.com/docs/api/guides/cards>`_ for more information.
     attachments: Optional[list[Attachment1]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
-    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file
+    #: not posted using the voice clip feature.
     is_voice_clip: Optional[bool] = None
 
 
@@ -16406,6 +18946,12 @@ class AdminBatchStartJobObject(ApiModel):
     target_location_id: Optional[str] = None
     #: Indicates the numbers to be moved from source to target locations.
     number_list: Optional[list[NumberItem]] = None
+
+
+class MoveNumberValidationError(ApiModel):
+    #: Unique identifier to track the HTTP requests.
+    tracking_id: Optional[str] = None
+    error: Optional[Error1] = None
 
 
 class NumberState(str, Enum):
@@ -16456,11 +19002,6 @@ class NumberListGetObject2(ApiModel):
     owner: Optional[NumberListGetObjectOwner] = None
 
 
-class NumbersDelete(ApiModel):
-    #: List of phone numbers that need to be deleted.
-    phone_numbers: Optional[list[str]] = None
-
-
 class State(str, Enum):
     #: Active state.
     _active_ = 'ACTIVE'
@@ -16468,7 +19009,7 @@ class State(str, Enum):
     _inactive_ = 'INACTIVE'
 
 
-class NumbersPost(ApiModel):
+class NumbersPost1(ApiModel):
     #: List of phone numbers that need to be added.
     phone_numbers: Optional[list[str]] = None
     #: State of the phone numbers.
@@ -16477,12 +19018,12 @@ class NumbersPost(ApiModel):
 
 class ValidateNumbersResponse(ApiModel):
     #: Indicates the status of the numbers.
-    status: Optional[DialPatternValidationStatus] = None
+    status: Optional[PostValidateExtensionResponseStatus] = None
     #: An array of number objects with number details.
     numbers: Optional[list[Number]] = None
 
 
-class GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse2(ApiModel):
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse1(ApiModel):
     #: Array of phone numbers.
     phone_numbers: Optional[NumberListGetObject2] = None
 
@@ -16788,7 +19329,7 @@ class OrganizationSupportedContentType(str, Enum):
     hybrid = 'hybrid'
 
 
-class Organization2(ApiModel):
+class Organization3(ApiModel):
     #: A unique identifier for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     id: Optional[str] = None
@@ -16804,10 +19345,10 @@ class Organization2(ApiModel):
 
 
 class OrganizationCollectionResponse(ApiModel):
-    items: Optional[list[Organization2]] = None
+    items: Optional[list[Organization3]] = None
 
 
-class Organization3(ApiModel):
+class Organization4(ApiModel):
     #: A unique identifier for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     id: Optional[str] = None
@@ -16832,10 +19373,10 @@ class Organization3(ApiModel):
 
 
 class OrganizationCollectionResponse1(ApiModel):
-    items: Optional[list[Organization3]] = None
+    items: Optional[list[Organization4]] = None
 
 
-class Organization4(ApiModel):
+class Organization5(ApiModel):
     #: A unique identifier for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     id: Optional[str] = None
@@ -16848,7 +19389,7 @@ class Organization4(ApiModel):
 
 
 class OrganizationCollectionResponse2(ApiModel):
-    items: Optional[list[Organization4]] = None
+    items: Optional[list[Organization5]] = None
 
 
 class IdentityManagedOrg(ApiModel):
@@ -16886,7 +19427,7 @@ class ManagedOrgsResponse(ApiModel):
     items: Optional[list[IdentityManagedOrg]] = None
 
 
-class PartnerAdminsForOrgResponse(ApiModel):
+class PartneradminsfororgResponse(ApiModel):
     #: An array of partner admin user details.
     items: Optional[list[PartnerAdminUser]] = None
 
@@ -16894,7 +19435,8 @@ class PartnerAdminsForOrgResponse(ApiModel):
 class PersonPhoneNumbersType(str, Enum):
     #: Work phone number of the person.
     work = 'work'
-    #: Work extension of the person. For the Webex Calling person, the value will have a routing prefix along with the extension.
+    #: Work extension of the person. For the Webex Calling person, the value will have a routing prefix along with the
+    #: extension.
     work_extension = 'work_extension'
     #: Mobile number of the person.
     mobile = 'mobile'
@@ -16965,7 +19507,8 @@ class PersonType(str, Enum):
     person = 'person'
     #: Account is a bot user
     bot = 'bot'
-    #: Account is a [guest user](/docs/guest-issuer)
+    #: Account is a `guest user
+    #: <https://developer.webex.com/docs/guest-issuer>`_
     appuser = 'appuser'
 
 
@@ -16987,7 +19530,8 @@ class Person1(ApiModel):
     #: The full name of the person.
     #: example: John Andersen
     display_name: Optional[str] = None
-    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be present.
+    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be
+    #: present.
     #: example: John
     nick_name: Optional[str] = None
     #: The first name of the person.
@@ -17028,10 +19572,14 @@ class Person1(ApiModel):
     #: The date and time the person was last changed.
     #: example: 2015-10-18T14:26:16.000Z
     last_modified: Optional[datetime] = None
-    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be present
+    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be
+    #: present
     #: example: America/Denver
     timezone: Optional[str] = None
-    #: The date and time of the person's last activity within Webex. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/).
+    #: The date and time of the person's last activity within Webex. This will only be returned for people within your
+    #: organization or an organization you manage. Presence information will not be shown if the authenticated user
+    #: has `disabled status sharing
+    #: <https://help.webex.com/nkzs6wl/>`_.
     #: example: 2015-10-18T14:26:16.028Z
     last_activity: Optional[datetime] = None
     #: One or several site names where this user has a role (host or attendee)
@@ -17040,13 +19588,21 @@ class Person1(ApiModel):
     #: The users sip addresses. Read-only.
     #: example: ['{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}']
     sip_addresses: Optional[list[str]] = None
-    #: The current presence status of the person. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/).
+    #: Identifier for intra-domain federation with other XMPP based messenger systems.
+    #: example: user@example.com
+    xmpp_federation_jid: Optional[str] = None
+    #: The current presence status of the person. This will only be returned for people within your organization or an
+    #: organization you manage. Presence information will not be shown if the authenticated user has
+    #: `disabled status sharing
+    #: <https://help.webex.com/nkzs6wl/>`_.
     #: example: active
     status: Optional[PersonStatus] = None
-    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned
+    #: if the authenticated user is an admin user for the person's organization.
     #: example: false
     invite_pending: Optional[PersonInvitePending] = None
-    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an
+    #: admin user for the person's organization.
     #: example: true
     login_enabled: Optional[PersonInvitePending] = None
     #: The type of person account, such as person or bot.
@@ -17125,7 +19681,9 @@ class RecordingReportSummaryObject(ApiModel):
     #: The recording's topic.
     #: example: John's Meeting
     topic: Optional[str] = None
-    #: The date and time the recording started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. the time is the record button was clicked in the meeting.
+    #: The date and time the recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. the time is the record button was clicked
+    #: in the meeting.
     #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Site URL for the recording.
@@ -17155,7 +19713,8 @@ class RecordingReportObject(ApiModel):
     #: The email address of the person who accessed the recording.
     #: example: john.andersen@example.com
     email: Optional[str] = None
-    #: The date and time the recording was accessed in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the recording was accessed in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2019-01-27T17:40:20Z
     access_time: Optional[datetime] = None
     #: Whether or not the recording was viewed by the person.
@@ -17176,7 +19735,8 @@ class RecordingAchriveSummaryObject(ApiModel):
     #: Meeting title.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: The date and time in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format that when the archive was created by the system.
+    #: The date and time in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format that when the archive was created by the system.
     #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
 
@@ -17200,13 +19760,16 @@ class MeetingRecordingArchiveParticipant(ApiModel):
 
 
 class MeetingRecordingArchiveChat(ApiModel):
-    #: Whether the type of the chat is private, public or group. Private chat is for the 1:1 chat. Public chat is for the message which is sent to all the people in the meeting. Group chat is for the message which is sent to a small group of people, like a message to the "host and presenter".
+    #: Whether the type of the chat is private, public or group. Private chat is for the 1:1 chat. Public chat is for
+    #: the message which is sent to all the people in the meeting. Group chat is for the message which is sent to a
+    #: small group of people, like a message to the "host and presenter".
     #: example: private
     type: Optional[str] = None
     #: Display name for the sender of the chat snippet.
     #: example: John Andersen
     sender_name: Optional[str] = None
-    #: Chat time for the chat snippet in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: Chat time for the chat snippet in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:22:34Z
     chat_time: Optional[datetime] = None
     #: Information of the receivers of the chat snippet.
@@ -17298,10 +19861,12 @@ class MeetingRecordingArchivePoll(ApiModel):
     #: The type of the question.
     #: example: single
     type: Optional[str] = None
-    #: The date and time the poll started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the poll started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:25:34Z
     start_time: Optional[datetime] = None
-    #: The date and time the poll ended in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the poll ended in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:28:34Z
     end_time: Optional[datetime] = None
     #: The content of the meeting archive poll;
@@ -17321,7 +19886,8 @@ class MeetingRecordingArchiveQAAnswer(ApiModel):
     #: The email of the person who answered the question.
     #: example: alex.green@example.com
     email: Optional[str] = None
-    #: The date and time the question answered in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the question answered in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:52:34Z
     answer_time: Optional[datetime] = None
     #: The text of the answer.
@@ -17333,13 +19899,16 @@ class MeetingRecordingArchiveQA(ApiModel):
     #: The priority of the Q and A.
     #: example: NA
     priority: Optional[str] = None
-    #: Whether the type of the Q and A is private, public, or group. Private Q and A is for the 1:1 chat. Public Q and A are for the message which is sent to all the people in the meeting. Group Q and A are for the message which is sent to a small group of people, like a Q and A to "host and presenter".
+    #: Whether the type of the Q and A is private, public, or group. Private Q and A is for the 1:1 chat. Public Q and
+    #: A are for the message which is sent to all the people in the meeting. Group Q and A are for the message which
+    #: is sent to a small group of people, like a Q and A to "host and presenter".
     #: example: private
     type: Optional[str] = None
     #: The email of the user who asked the question.
     #: example: john.andersen@example.com`
     display_name: Optional[str] = None
-    #: The date and time the question was created in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time the question was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2021-07-06T09:22:34Z
     question_time: Optional[datetime] = None
     #: Information of the user who asked the question.
@@ -17430,7 +19999,8 @@ class RecordingArchiveReportObject(ApiModel):
     #: Meeting title.
     #: example: John's Meeting
     title: Optional[str] = None
-    #: Start time for meeting in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: Start time for meeting in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     #: example: 2019-03-18T11:26:30Z
     start: Optional[datetime] = None
     #: End time for a meeting in ISO 8601 compliant format.
@@ -17472,36 +20042,45 @@ class ListMeetingArchiveSummariesResponse(ApiModel):
 class RecordingObjectFormat(str, Enum):
     #: Recording file format is MP4.
     mp4 = 'MP4'
-    #: Recording file format is ARF, a private format of Webex recordings. This format requires the Cisco ARF recording player.
+    #: Recording file format is ARF, a proprietary Webex recording format.
     arf = 'ARF'
+    #: The recording file is uploaded manually.
+    uploaded = 'UPLOADED'
 
 
 class RecordingObject(ApiModel):
     #: A unique identifier for the recording.
     #: example: 4f914b1dfe3c4d11a61730f18c0f5387
     id: Optional[str] = None
-    #: Unique identifier for the parent ended meeting instance which the recording belongs to.
+    #: Unique identifier for the recording's ended meeting instance.
     #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
     meeting_id: Optional[str] = None
-    #: Unique identifier for the parent scheduled meeting which the recording belongs to.
+    #: Unique identifier for the recording's scheduled meeting instance.
     #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
     scheduled_meeting_id: Optional[str] = None
-    #: Unique identifier for the parent meeting series which the recording belongs to.
+    #: Unique identifier for the recording's meeting series.
     #: example: f91b6edce9864428af084977b7c68291
     meeting_series_id: Optional[str] = None
     #: The recording's topic.
     #: example: John's Meeting
     topic: Optional[str] = None
-    #: The date and time recording was created in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. Please note that it's not the time the record button was clicked in meeting but the time the recording file was generated offline.
+    #: The date and time recording was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. Please note that it's not the time the
+    #: record button was clicked in meeting but the time the recording file was generated offline.
     #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
-    #: The date and time recording started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. It indicates when the record button was clicked in the meeting.
+    #: The date and time recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. It indicates when the record button was
+    #: clicked in the meeting.
     #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Site URL for the recording.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: The download link for recording. This attribute is not available if **Prevent downloading** has been turned on for the recording being requested. The **Prevent downloading** option can be viewed and set by a site admin on [Control Hub](https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub).
+    #: The download link for recording. This attribute is not available if **Prevent downloading** has been turned on
+    #: for the recording being requested. The **Prevent downloading** option can be viewed and set by a site admin on
+    #: `Control Hub
+    #: <https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub>`_.
     #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
     download_url: Optional[str] = None
     #: The playback link for recording.
@@ -17523,19 +20102,95 @@ class RecordingObject(ApiModel):
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
-    #: External keys of the parent meeting created by an integration application. They could be Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own domain.
+    #: External keys of the parent meeting created by an integration application. They could be Zendesk ticket IDs,
+    #: Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own
+    #: domain.
+    integration_tags: Optional[list[str]] = None
+    status: Optional[TranscriptObjectStatus] = None
+
+
+class RecordingObjectForAdminAndCO(ApiModel):
+    #: A unique identifier for the recording.
+    #: example: 4f914b1dfe3c4d11a61730f18c0f5387
+    id: Optional[str] = None
+    #: Unique identifier for the recording's ended meeting instance.
+    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
+    meeting_id: Optional[str] = None
+    #: Unique identifier for the recording's scheduled meeting instance.
+    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
+    scheduled_meeting_id: Optional[str] = None
+    #: Unique identifier for the recording's meeting series.
+    #: example: f91b6edce9864428af084977b7c68291
+    meeting_series_id: Optional[str] = None
+    #: The recording's topic.
+    #: example: John's Meeting
+    topic: Optional[str] = None
+    #: The date and time recording was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. Please note that it's not the time the
+    #: record button was clicked in meeting but the time the recording file was generated offline.
+    #: example: 2019-01-27T17:43:24Z
+    create_time: Optional[datetime] = None
+    #: The date and time recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. It indicates when the record button was
+    #: clicked in the meeting.
+    #: example: 2019-01-27T17:40:20Z
+    time_recorded: Optional[datetime] = None
+    #: Display name for the meeting host.
+    #: example: John Andersen
+    host_display_name: Optional[str] = None
+    #: Email address for the meeting host.
+    #: example: john.andersen@example.com
+    host_email: Optional[str] = None
+    #: Site URL for the recording.
+    #: example: site4-example.webex.com
+    site_url: Optional[str] = None
+    #: The download link for recording. This attribute is not available if **Prevent downloading** has been turned on
+    #: for the recording being requested. The **Prevent downloading** option can be viewed and set by a site admin on
+    #: `Control Hub
+    #: <https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub>`_.
+    #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
+    download_url: Optional[str] = None
+    #: The playback link for recording.
+    #: example: https://site4-example.webex.com/site4/ldr.php?RCID=7a8a476b29a32cd1e06dfa6c81970f19
+    playback_url: Optional[str] = None
+    #: The recording's password.
+    #: example: BgJep@43
+    password: Optional[str] = None
+    #: example: MP4
+    format: Optional[RecordingObjectFormat] = None
+    #: The service type for the recording.
+    #: example: MeetingCenter
+    service_type: Optional[MeetingUsageReportObjectServiceType] = None
+    #: The duration of the recording, in seconds.
+    #: example: 4472.0
+    duration_seconds: Optional[int] = None
+    #: The size of the recording file, in bytes.
+    #: example: 248023188.0
+    size_bytes: Optional[int] = None
+    #: Whether or not the recording has been shared to the current user.
+    share_to_me: Optional[bool] = None
+    #: External keys of the parent meeting created by an integration application. They could be Zendesk ticket IDs,
+    #: Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own
+    #: domain.
     integration_tags: Optional[list[str]] = None
     status: Optional[TranscriptObjectStatus] = None
 
 
 class RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks(ApiModel):
-    #: The download link for recording MP4/ARF file without HTML page rendering in browser or HTTP redirect. Expires 3 hours after the API request.
+    #: The download link for recording MP4/ARF file without HTML page rendering in browser or HTTP redirect. Expires 3
+    #: hours after the API request.
     recording_download_link: Optional[str] = None
-    #: The download link for recording audio file without HTML page rendering in browser or HTTP redirect. This attribute is not available if **Prevent Downloading** has been turned on for the recording being requested. Expires 3 hours after the API request.
+    #: The download link for recording audio file without HTML page rendering in browser or HTTP redirect. This
+    #: attribute is not available if **Prevent Downloading** has been turned on for the recording being requested.
+    #: Expires 3 hours after the API request.
     audio_download_link: Optional[str] = None
-    #: The download link for recording transcript file without HTML page rendering in browser or HTTP redirect. This attribute is not available if **Prevent Downloading** has been turned on for the recording being requested. Expires 3 hours after the API request.
+    #: The download link for recording transcript file without HTML page rendering in browser or HTTP redirect. This
+    #: attribute is not available if **Prevent Downloading** has been turned on for the recording being requested.
+    #: Expires 3 hours after the API request.
     transcript_download_link: Optional[str] = None
-    #: The date and time when `recordingDownloadLink`, `audioDownloadLink`, and `transcriptDownloadLink` expire in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: The date and time when `recordingDownloadLink`, `audioDownloadLink`, and `transcriptDownloadLink` expire in
+    #: `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
     expiration: Optional[str] = None
 
 
@@ -17544,7 +20199,8 @@ class RecordingObjectWithDirectDownloadLinksStatus(str, Enum):
     available = 'available'
     #: Recording has been moved to the recycle bin.
     deleted = 'deleted'
-    #: Recording has been purged from the recycle bin. Please note that only a compliance officer can access recordings with a `purged` status.
+    #: Recording has been purged from the recycle bin. Please note that only a compliance officer can access recordings
+    #: with a `purged` status.
     purged = 'purged'
     none_ = 'none'
 
@@ -17553,28 +20209,34 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: A unique identifier for recording.
     #: example: 7ee40776779243b4b3da448d941b34dc
     id: Optional[str] = None
-    #: Unique identifier for the parent ended meeting instance which the recording belongs to.
+    #: Unique identifier for the recording's ended meeting instance.
     #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
     meeting_id: Optional[str] = None
-    #: Unique identifier for the parent scheduled meeting which the recording belongs to.
+    #: Unique identifier for the recording's scheduled meeting instance.
     #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
     scheduled_meeting_id: Optional[str] = None
-    #: Unique identifier for the parent meeting series which the recording belongs to.
+    #: Unique identifier for the recording's meeting series.
     #: example: f91b6edce9864428af084977b7c68291
     meeting_series_id: Optional[str] = None
     #: The recording's topic.
     #: example: John's Meeting
     topic: Optional[str] = None
-    #: The date and time recording was created in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. Please note that it's not the time the record button was clicked in meeting but the time the recording file was generated offline.
+    #: The date and time recording was created in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. Please note that it's not the time the
+    #: record button was clicked in meeting but the time the recording file was generated offline.
     #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
-    #: The date and time recording started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. It indicates when the record button was clicked in the meeting.
+    #: The date and time recording started in `ISO 8601
+    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. It indicates when the record button was
+    #: clicked in the meeting.
     #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Site URL for the recording.
     #: example: site4-example.webex.com
     site_url: Optional[str] = None
-    #: The download link for the recording. This attribute is not available if `prevent downloading` has been turned on for the recording being requested. The `prevent downloading` option can be viewed and set on page when editing a recording.
+    #: The download link for the recording. This attribute is not available if `prevent downloading` has been turned on
+    #: for the recording being requested. The `prevent downloading` option can be viewed and set on page when editing
+    #: a recording.
     #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
     download_url: Optional[str] = None
     #: The playback link for recording.
@@ -17595,39 +20257,66 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
-    #: The download links for MP4/ARF, audio, and transcript of the recording without HTML page rendering in browser or HTTP redirect. This attribute is not available if the user is not a [Compliance Officer](/docs/compliance#compliance) and **Prevent Downloading** has been turned on for the recording being requested. The Prevent Downloading option can be viewed and set on page when editing a recording. Note that there are various products in [Webex Suite](https://www.cisco.com/c/en/us/products/conferencing/product_comparison.html) such as "Webex Meetings", "Webex Training" and "Webex Events".
+    #: The download links for MP4/ARF, audio, and transcript of the recording without HTML page rendering in browser or
+    #: HTTP redirect. This attribute is not available if the user is not a `Compliance Officer
+    #: <https://developer.webex.com/docs/compliance#compliance>`_ and **Prevent
+    #: Downloading** has been turned on for the recording being requested. The Prevent Downloading option can be
+    #: viewed and set on page when editing a recording. Note that there are various products in `Webex Suite
+    #: <https://www.cisco.com/c/en/us/products/conferencing/product_comparison.html>`_ such as
+    #: "Webex Meetings", "Webex Training" and "Webex Events".
     temporary_direct_download_links: Optional[RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks] = None
-    #: External keys of the parent meeting created by an integration application. The key can be Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own domain.
+    #: External keys of the parent meeting created by an integration application. The key can be Zendesk ticket IDs,
+    #: Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own
+    #: domain.
     integration_tags: Optional[list[str]] = None
     status: Optional[RecordingObjectWithDirectDownloadLinksStatus] = None
 
 
 class BulkSoftDeleteRecordingObject(ApiModel):
-    #: Recording IDs for removing recordings into the recycle bin in batch. Please note that all the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
+    #: Recording IDs for removing recordings into the recycle bin in batch. Please note that all the recording IDs
+    #: should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
     recording_ids: Optional[list[str]] = None
-    #: URL of the Webex site from which the API deletes recordings. If not specified, the API deletes recordings from the user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: URL of the Webex site from which the API deletes recordings. If not specified, the API deletes recordings from
+    #: the user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by the
+    #: `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     #: example: example.webex.com
     site_url: Optional[str] = None
 
 
 class BulkRestoreRecordingObject(ApiModel):
-    #: If not specified or `false`, restores the recordings specified by `recordingIds`. If `true`, restores all recordings from the recycle bin.
+    #: If not specified or `false`, restores the recordings specified by `recordingIds`. If `true`, restores all
+    #: recordings from the recycle bin.
     restore_all: Optional[bool] = None
-    #: Recording IDs for recovering recordings from the recycle bin in batch. Note that all the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
+    #: Recording IDs for recovering recordings from the recycle bin in batch. Note that all the recording IDs should
+    #: belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
     recording_ids: Optional[list[str]] = None
-    #: URL of the Webex site from which the API restores recordings. If not specified, the API restores recordings from a user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: URL of the Webex site from which the API restores recordings. If not specified, the API restores recordings from
+    #: a user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by
+    #: `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     #: example: example.webex.com
     site_url: Optional[str] = None
 
 
 class BulkPurgeRecordingObject(ApiModel):
-    #: If not specified or `false`, purges the recordings specified by `recordingIds`. If `true`, purges all recordings from the recycle bin.
+    #: If not specified or `false`, purges the recordings specified by `recordingIds`. If `true`, purges all recordings
+    #: from the recycle bin.
     purge_all: Optional[bool] = None
-    #: Recording IDs for purging recordings from the recycle bin in batch. Note that all the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
+    #: Recording IDs for purging recordings from the recycle bin in batch. Note that all the recording IDs should
+    #: belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
     recording_ids: Optional[list[str]] = None
-    #: URL of the Webex site from which the API purges recordings. If not specified, the API purges recordings from user's preferred site. All available Webex sites and preferred sites of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: URL of the Webex site from which the API purges recordings. If not specified, the API purges recordings from
+    #: user's preferred site. All available Webex sites and preferred sites of the user can be retrieved by
+    #: `Get Site List
+    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
     #: example: example.webex.com
     site_url: Optional[str] = None
+
+
+class ListRecordingsFormat(str, Enum):
+    mp4 = 'MP4'
+    arf = 'ARF'
 
 
 class ListRecordingsStatus(str, Enum):
@@ -17638,6 +20327,11 @@ class ListRecordingsStatus(str, Enum):
 class ListRecordingsResponse(ApiModel):
     #: An array of recording objects.
     items: Optional[list[RecordingObject]] = None
+
+
+class ListRecordingsForAnAdminOrComplianceOfficerResponse(ApiModel):
+    #: An array of recording objects.
+    items: Optional[list[RecordingObjectForAdminAndCO]] = None
 
 
 class ValidationRules(ApiModel):
@@ -17674,16 +20368,25 @@ class Template2(ApiModel):
 
 
 class CDR(ApiModel):
+    #: Whether the call leg was answered after a redirection. Possible values:
+    #: - Yes
+    #: - No
+    #: - Yes-PostRedirection
+    #: example: Yes
+    answer_indicator: Optional[str] = Field(alias='Answer indicator', default=None)
     #: The time the call was answered. Time is in UTC.
     #: example: 2020-05-14T11:01:17.551Z
     answer_time: Optional[datetime] = Field(alias='Answer time', default=None)
-    #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered, and one will be answered.
+    #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered, and one will
+    #: be answered.
     #: example: true
     answered: Optional[str] = Field(alias='Answered', default=None)
-    #: The authorization code admin created for a location or site for users to use. Collected by the Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
+    #: The authorization code admin created for a location or site for users to use. Collected by the
+    #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     #: example: 107
     authorization_code: Optional[datetime] = Field(alias='Authorization code', default=None)
-    #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if necessary.
+    #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if
+    #: necessary.
     #: example: SSE1101163211405201218829100@10.177.4.29
     call_id: Optional[str] = Field(alias='Call ID', default=None)
     #: Identifies whether the call was set up or disconnected normally. Possible values:
@@ -17695,7 +20398,8 @@ class CDR(ApiModel):
     #: Additional information about the Call outcome returned.
     #: example: Normal
     call_outcome_reason: Optional[str] = Field(alias='Call outcome reason', default=None)
-    #: Indicates the time at which the call transfer service was invoked during the call. The invocation time is shown using the UTC/GMT time zone format.
+    #: Indicates the time at which the call transfer service was invoked during the call. The invocation time is shown
+    #: using the UTC/GMT time zone format.
     #: example: 2023-06-05T18:21:29.707Z
     call_transfer_time: Optional[datetime] = Field(alias='Call transfer Time', default=None)
     #: Type of call. For example:
@@ -17712,16 +20416,20 @@ class CDR(ApiModel):
     #: - SIP_MOBILE
     #: example: SIP_ENTERPRISE
     call_type: Optional[str] = Field(alias='Call type', default=None)
-    #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called party.
+    #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called
+    #: party.
     #: example: CALLEDCLIDGOESHERE
     called_line_id: Optional[str] = Field(alias='Called line ID', default=None)
-    #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the called party.
+    #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the
+    #: called party.
     #: example: 2002
     called_number: Optional[datetime] = Field(alias='Called number', default=None)
-    #: For incoming calls, the calling line ID of the calling party. For outgoing calls, it's the calling line ID of the user.
+    #: For incoming calls, the calling line ID of the calling party. For outgoing calls, it's the calling line ID of
+    #: the user.
     #: example: YOURCLIDGOESHERE
     calling_line_id: Optional[str] = Field(alias='Calling line ID', default=None)
-    #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of the user.
+    #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of
+    #: the user.
     #: example: 2001
     calling_number: Optional[datetime] = Field(alias='Calling number', default=None)
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
@@ -17749,8 +20457,10 @@ class CDR(ApiModel):
     #: This field reports multiple call dial possibilities:
     #: - Feature access codes (FAC) used for invoking features such as Last Number Redial or a Call Return.
     #: - An extension that got dialed and a mis-dialed keypad digit from a device/app.
-    #: - When a user must dial an outside access code (for example, 9+) before dialing a number, this access code is also reported, as well as the digits dialed thereafter.
-    #: Note that when pre-translations have no effect, the dialed digits field contains the same data as the called number field.
+    #: - When a user must dial an outside access code (for example, 9+) before dialing a number, this access code is
+    #: also reported, as well as the digits dialed thereafter.
+    #: Note that when pre-translations have no effect, the dialed digits field contains the same data as the called
+    #: number field.
     #: This field is only used for originating (outgoing) Calls and is not available for terminating (incoming) Calls.
     #: example: 1246
     dialed_digits: Optional[datetime] = Field(alias='Dialed digits', default=None)
@@ -17762,22 +20472,49 @@ class CDR(ApiModel):
     #: The length of the call in seconds.
     #: example: 36.0
     duration: Optional[int] = Field(alias='Duration', default=None)
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
+    #: - The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
+    #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #: compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #: - The Local SessionID is generated from the Originating user agent.
+    #: - The Remote SessionID is generated from the Terminating user agent.
+    #: - The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #: - The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
+    #: example: 82bb753300105000a0000242be131609
+    final_local_session_id: Optional[str] = Field(alias='Final local SessionID', default=None)
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
+    #: - The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
+    #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #: compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #: - The Local SessionID is generated from the Originating user agent.
+    #: - The Remote SessionID is generated from the Terminating user agent.
+    #: - The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #: - The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
+    #: example: cfe67b8a00105000a0000242be131609
+    final_remote_session_id: Optional[str] = Field(alias='Final remote SessionID', default=None)
     #: Inbound trunk may be presented in Originating and Terminating records.
     #: example: InTrunk
     inbound_trunk: Optional[str] = Field(alias='Inbound trunk', default=None)
     #: The country code of the dialed number. This is only populated for international calls.
     #: example: US
     international_country: Optional[str] = Field(alias='International country', default=None)
-    #: A unique identifier that is used to correlate CDRs and call legs with each other. This ID is used in conjunction with:
+    #: A unique identifier that is used to correlate CDRs and call legs with each other. This ID is used in conjunction
+    #: with:
     #: - Remote call ID: To identify the remote CDR of a call leg.
     #: - Transfer related call ID: To identify the call transferred leg.
     #: example: 113104021:0
     local_call_id: Optional[str] = Field(alias='Local call ID', default=None)
-    #: Each call consists of two UUIDs known as Local Session ID and Remote Session ID.
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
     #: - The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
-    #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #: compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
     #: - The Local SessionID is generated from the Originating user agent.
     #: - The Remote SessionID is generated from the Terminating user agent.
+    #: - The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #: - The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
     #: example: 82bb753300105000a0000242be131609
     local_session_id: Optional[str] = Field(alias='Local SessionID', default=None)
     #: Location of the report.
@@ -17786,7 +20523,8 @@ class CDR(ApiModel):
     #: The device model type the user is using to make or receive the call.
     #: example: 8851-3PCC
     model: Optional[str] = Field(alias='Model', default=None)
-    #: A unique identifier that shows if other CDRs are in the same call leg. Two CDRs belong in the same call leg if they have the same Network call ID.
+    #: A unique identifier that shows if other CDRs are in the same call leg. Two CDRs belong in the same call leg if
+    #: they have the same Network call ID.
     #: example: BW2356451711108231501755806@10.21.0.192
     network_call_id: Optional[str] = Field(alias='Network call ID', default=None)
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
@@ -17795,16 +20533,19 @@ class CDR(ApiModel):
     #: Call redirection reason for the original called number. For example:
     #: - Unconditional: Call Forward Always (CFA) service, Group night forwarding.
     #: - NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
-    #: - Deflection: Indication that a call was redirected. Possible causes could be Blind transfer, Auto attendant transfer, Transfer out of a Call center etc.
+    #: - Deflection: Indication that a call was redirected. Possible causes could be Blind transfer, Auto attendant
+    #: transfer, Transfer out of a Call center etc.
     #: - TimeOfDay: Call scheduled period of automated redirection. CF/selective, group night forwarding.
     #: - UserBusy: DND enabled or the user willingly declined the call. CF/busy or voicemail/busy.
-    #: - FollowMe: Automated redirection to a personal redirecting service which could be Simultaneous Ringing, Sequential Ringing, Office Anywhere, or Remote Office.
+    #: - FollowMe: Automated redirection to a personal redirecting service which could be Simultaneous Ringing,
+    #: Sequential Ringing, Office Anywhere, or Remote Office.
     #: - CallQueue: A call center call to an agent or a user (a member of the call queue).
     #: - HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
     #: - Unavailable: To voicemail, when the user has no app or device.
     #: - Unrecognized: Unable to determine the reason.
     #: - Unknown: Call forward by phone with no reason.
-    #: - ExplicitIdxxx: Enterprise voice portal redirection to the user’s home voice portal. The “xxx” portion is the digits collected from the caller, identifying the target mailbox (Extension or DN).
+    #: - ExplicitIdxxx: Enterprise voice portal redirection to the user’s home voice portal. The “xxx” portion is the
+    #: digits collected from the caller, identifying the target mailbox (Extension or DN).
     #: - ImplicitId: Indicates an enterprise voice portal redirection to the user’s home voice portal.
     #: example: UserBusy
     original_reason: Optional[str] = Field(alias='Original reason', default=None)
@@ -17814,77 +20555,113 @@ class CDR(ApiModel):
     #: Outbound trunk may be presented in Originating and Terminating records.
     #: example: OutTrunk
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk', default=None)
+    #: The time the call was finished, in UTC.
+    #: example: 2023-10-12 21:22:32.621
+    release_time: Optional[datetime] = Field(alias='Release time', default=None)
+    #: The length of ringing before the call was answered or timed out, in seconds.
+    #: example: 23.0
+    ring_duration: Optional[int] = Field(alias='Ring duration', default=None)
     #: Call Redirection Reason for the redirecting number. For example:
     #: - Unconditional: Call Forward Always (CFA) service.
     #: - NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
-    #: - Deflection: Indication that a call was redirected. Possible causes could be Blind transfer, Auto attendant transfer, Transfer out of a Call center etc.
+    #: - Deflection: Indication that a call was redirected. Possible causes could be Blind transfer, Auto attendant
+    #: transfer, Transfer out of a Call center etc.
     #: - TimeOfDay: Call scheduled period of automated redirection. CF/Selective.
     #: - UserBusy: DND enabled or user willingly declined the call. CF/busy or Voicemail/busy.
-    #: - FollowMe: Automated redirection to a personal redirecting service which could be Simultaneous Ringing, Sequential Ringing, Office Anywhere, or Remote Office.
+    #: - FollowMe: Automated redirection to a personal redirecting service which could be Simultaneous Ringing,
+    #: Sequential Ringing, Office Anywhere, or Remote Office.
     #: - CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
     #: - HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
     #: - Unavailable: To voicemail, when the user has no app or device.
     #: - Unrecognized: Unable to determine the reason.
     #: - Unknown: Call forward by phone with no reason.
-    #: - ExplicitIdxxx: Enterprise voice portal redirection to the user’s home voice portal. The “xxx” portion is the digits collected from the caller, identifying the target mailbox (Extension or DN).
+    #: - ExplicitIdxxx: Enterprise voice portal redirection to the user’s home voice portal. The “xxx” portion is the
+    #: digits collected from the caller, identifying the target mailbox (Extension or DN).
     #: - ImplicitId: Indicates an enterprise voice portal redirection to the user’s home voice portal.
     #: example: Unavailable
     redirect_reason: Optional[str] = Field(alias='Redirect reason', default=None)
-    #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls, simultaneous rings, etc.
+    #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies
+    #: who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
+    #: simultaneous rings, etc.
     #: example: +13343822691
     redirecting_number: Optional[str] = Field(alias='Redirecting number', default=None)
-    #: Call identifier of a different call that was created by this call because of a service activation. The value is the same as the Local call ID field of the related call. You can use this field to correlate multiple call legs connected through other services.
+    #: Call identifier of a different call that was created by this call because of a service activation. The value is
+    #: the same as the Local call ID field of the related call. You can use this field to correlate multiple call legs
+    #: connected through other services.
     #: example: 760583469:0
     related_call_id: Optional[str] = Field(alias='Related call ID', default=None)
-    #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or redirected via a different call. For example:
-    #: - ConsultativeTransfer: While on a call, the call was transferred to another user by announcing it first. meaning the person was given a heads up or asked if they're interested in taking the call and then transferred.
-    #: - CallForwardSelective: Call Forward as per the defined schedule. Might be based on factors like a specific time, specific callers or to a VM. It always takes precedence over Call Forwarding.
+    #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or
+    #: redirected via a different call. For example:
+    #: - ConsultativeTransfer: While on a call, the call was transferred to another user by announcing it first.
+    #: meaning the person was given a heads up or asked if they're interested in taking the call and then transferred.
+    #: - CallForwardSelective: Call Forward as per the defined schedule. Might be based on factors like a specific
+    #: time, specific callers or to a VM. It always takes precedence over Call Forwarding.
     #: - CallForwardAlways: Calls are unconditionally forwarded to a defined phone number or to VM.
     #: - CallForwardNoAnswer: The party was not available to take the call.
     #: - CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
     #: - HuntGroup: A hunt group based call to an agent or a user (denotes a member of the hunt group).
-    #: - CallPickup: The user part of a pickup group or pickup attempted by this user against a ringing call for a different user or extension.
+    #: - CallPickup: The user part of a pickup group or pickup attempted by this user against a ringing call for a
+    #: different user or extension.
     #: - CalllPark: An ongoing call was parked, assigned with a parked number (not the user’s phone number).
-    #: - CallParkRetrieve: Call park retrieval attempt by the user, either for a different extension or against the user’s own extension.
-    #: - Deflection: Indication that a call was redirected. Possible causes could be Blind transfer, Auto-attendant transfer, Transfer out of a Call center, etc.
+    #: - CallParkRetrieve: Call park retrieval attempt by the user, either for a different extension or against the
+    #: user’s own extension.
+    #: - Deflection: Indication that a call was redirected. Possible causes could be Blind transfer, Auto-attendant
+    #: transfer, Transfer out of a Call center, etc.
     #: - FaxDeposit: Indicates a FAX was transmitted to the FAX service.
-    #: - PushNotificationRetrieval: Push notification feature usage indication. Means that a push notification was sent to wake up the client and get ready to receive a call.
+    #: - PushNotificationRetrieval: Push notification feature usage indication. Means that a push notification was sent
+    #: to wake up the client and get ready to receive a call.
     #: - BargeIn: Indicates the user barged-in to someone else’s call.
     #: - VoiceXMLScriptTermination: Route Point feature usage indication.
     #: - AnywhereLocation: Indicates call origination towards the single number reach location.
     #: - AnywherePortal: Indicates call origination towards the “user” identified by the single number reach portal.
     #: - Unrecognized: Unable to determine the reason.
-    #: - CallForwardBusy: The user willingly declined the call, or DND was enabled that then redirected the call to a defined phone number or voice mail.
+    #: - CallForwardBusy: The user willingly declined the call, or DND was enabled that then redirected the call to a
+    #: defined phone number or voice mail.
     #: - CallForwardNotReachable: Hunt group redirection for an agent who is not reachable.
     #: - CallRetrieve: The user triggered the call retrieve option to pick up a call that was parked.
-    #: - CallRecording: The user initiated the call recording service that triggered Start/Pause/Resume/Stop recording options.
-    #: - DirectedCallPickup: Indicates this user belonged to a call pickup group who answered the call or answered when another member of the call pickup group in a location was busy.
-    #: - Executive: The user has been configured using the Executive/Executive assistant service who is allowed to handle calls on someone else's behalf. Also known as Boss-admin.
-    #: - ExecutiveAssistantInitiateCall: The user has been configured as an Executive assistant who placed or initiated the call on someone else’s (Boss admin's) behalf.
-    #: - ExecutiveAssistantDivert: The user has been configured as an Executive assistant who had call forwarding enabled to a defined phone number.
-    #: - ExecutiveForward: The Executive (Boss-admin) had a call forward setting enabled to a defined number. Generally triggered when an ExecutiveAssistant did not pick a call.
-    #: - ExecutiveAssistantCallPush: The user has been configured as an Executive assistant who received a call and pushed that call out (using #63) to the Executive’s (Boss-admin's) number.
+    #: - CallRecording: The user initiated the call recording service that triggered Start/Pause/Resume/Stop recording
+    #: options.
+    #: - DirectedCallPickup: Indicates this user belonged to a call pickup group who answered the call or answered when
+    #: another member of the call pickup group in a location was busy.
+    #: - Executive: The user has been configured using the Executive/Executive assistant service who is allowed to
+    #: handle calls on someone else's behalf. Also known as Boss-admin.
+    #: - ExecutiveAssistantInitiateCall: The user has been configured as an Executive assistant who placed or initiated
+    #: the call on someone else’s (Boss admin's) behalf.
+    #: - ExecutiveAssistantDivert: The user has been configured as an Executive assistant who had call forwarding
+    #: enabled to a defined phone number.
+    #: - ExecutiveForward: The Executive (Boss-admin) had a call forward setting enabled to a defined number. Generally
+    #: triggered when an ExecutiveAssistant did not pick a call.
+    #: - ExecutiveAssistantCallPush: The user has been configured as an Executive assistant who received a call and
+    #: pushed that call out (using #63) to the Executive’s (Boss-admin's) number.
     #: - Remote Office: Indicates the call was made to reach the remote location of the user.
     #: - RoutePoint: Indicates an incoming and queued call to an agent (for incoming calls to the route point).
-    #: - SequentialRing: Indicates this user is in the list of phone numbers, which are alerted sequentially upon receiving an incoming call that matches a set of criteria.
-    #: - SimultaneousRingPersonal: Indicates this user was in the list of multiple destinations that are to ring simultaneously when any calls are received on their phone number (the first destination answered is connected).
+    #: - SequentialRing: Indicates this user is in the list of phone numbers, which are alerted sequentially upon
+    #: receiving an incoming call that matches a set of criteria.
+    #: - SimultaneousRingPersonal: Indicates this user was in the list of multiple destinations that are to ring
+    #: simultaneously when any calls are received on their phone number (the first destination answered is connected).
     #: - CCMonitoringBI: The indication that a Call Queue supervisor invoked silent monitoring.
     #: example: CallQueue
     related_reason: Optional[str] = Field(alias='Related reason', default=None)
     #: Indicates which party released the call first. The possible values are:
     #: - Local: Used when the local user has released the call first.
     #: - Remote: Used when the far-end party releases the call first.
-    #: - Unknown: Used when the call has partial information or is unable to gather enough information about the party who released the call. It could be because of situations like force lock or because of a session audit failure.
+    #: - Unknown: Used when the call has partial information or is unable to gather enough information about the party
+    #: who released the call. It could be because of situations like force lock or because of a session audit failure.
     #: example: Remote
     releasing_party: Optional[str] = Field(alias='Releasing party', default=None)
-    #: A unique identifier that is used to correlate CDRs and call legs with each other. This ID is used in conjunction with Local call ID to identity the local CDR of a call leg.
+    #: A unique identifier that is used to correlate CDRs and call legs with each other. This ID is used in conjunction
+    #: with Local call ID to identity the local CDR of a call leg.
     #: example: 113103977:0
     remote_call_id: Optional[str] = Field(alias='Remote call ID', default=None)
-    #: Each call consists of two UUIDs known as Local Session ID and Remote Session ID.
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
     #: - The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
-    #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #: compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
     #: - The Local SessionID is generated from the Originating user agent.
     #: - The Remote SessionID is generated from the Terminating user agent.
+    #: - The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #: - The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
     #: example: 6bf2f47800105000a0000242be13160a
     remote_session_id: Optional[str] = Field(alias='Remote SessionID', default=None)
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
@@ -17893,7 +20670,9 @@ class CDR(ApiModel):
     #: The time this report was created. Time is in UTC.
     #: example: 2020-05-14T11:01:52.723Z
     report_time: Optional[datetime] = Field(alias='Report time', default=None)
-    #: If present, this field's only reported in Originating records. Route group identifies the route group used for outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex Calling (dial plan or unknown extension).
+    #: If present, this field's only reported in Originating records. Route group identifies the route group used for
+    #: outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex
+    #: Calling (dial plan or unknown extension).
     #: example: RouteGrpAA
     route_group: Optional[str] = Field(alias='Route group', default=None)
     #: The main number for the user's site where the call was made or received.
@@ -17908,21 +20687,25 @@ class CDR(ApiModel):
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
     #: example: 2020-05-14T11:01:16.545Z
     start_time: Optional[datetime] = Field(alias='Start time', default=None)
-    #: If the call is TO or FROM a mobile phone using Webex Go, the Client type will show SIP, and Sub client type will show MOBILE_NETWORK.
+    #: If the call is TO or FROM a mobile phone using Webex Go, the Client type will show SIP, and Sub client type will
+    #: show MOBILE_NETWORK.
     #: example: MOBILE_NETWORK
     sub_client_type: Optional[str] = Field(alias='Sub client type', default=None)
-    #: Call identifier of a different call that was involved in the transfer. You can share this ID with Cisco TAC to help them pinpoint parties who were involved in the call transfer.
+    #: Call identifier of a different call that was involved in the transfer. You can share this ID with Cisco TAC to
+    #: help them pinpoint parties who were involved in the call transfer.
     #: example: 2340586843:0A
     transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID', default=None)
     #: The user who made or received the call.
     #: example: John Andersen
     user: Optional[str] = Field(alias='User', default=None)
-    #: Represents the E.164 number of the user generating a CDR. If the user has no number assigned to them, then their extension will be displayed instead.
+    #: Represents the E.164 number of the user generating a CDR. If the user has no number assigned to them, then their
+    #: extension will be displayed instead.
     #: example: +81546668399
     user_number: Optional[str] = Field(alias='User number', default=None)
     #: The type of user (user or workspace) that made or received the call. For example:
     #: - AutomatedAttendantVideo: Automated Attendant Video IVR group service.
-    #: - Anchor: A Webex Calling user number made or received that is integrated with Webex Contact Center. An "anchor" is created to facilitate the call routing flow between WxC and WxCC.
+    #: - Anchor: A Webex Calling user number made or received that is integrated with Webex Contact Center. An "anchor"
+    #: is created to facilitate the call routing flow between WxC and WxCC.
     #: - BroadworksAnywhere: Single number reach (Office anywhere) service.
     #: - VoiceMailRetrieval: Voice Mail group service.
     #: - LocalGateway: A local gateway-based user who made or received the call.
@@ -18094,15 +20877,18 @@ class Room(ApiModel):
     #: The date and time the room was created.
     #: example: 2016-04-21T19:01:55.966Z
     created: Optional[datetime] = None
-    #: The ID of the organization which owns this room. See [Webex Data](/docs/api/guides/compliance#webex-teams-data) in the [Compliance Guide](/docs/api/guides/compliance) for more information.
+    #: The ID of the organization which owns this room. See `Webex Data
+    #: <https://developer.webex.com/docs/api/guides/compliance#webex-teams-data>`_ in the `Compliance Guide
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     owner_id: Optional[str] = None
-    #: Space classification ID represents the space's current classification.  It can be attached during space creation time, and can be modified at the request of an authorized user.
+    #: Space classification ID represents the space's current classification.  It can be attached during space creation
+    #: time, and can be modified at the request of an authorized user.
     #: example: Y2lzY29zcGFyazovL3VzL0NMQVNTSUZJQ0FUSU9OL2YyMDUyZTgyLTU0ZjgtMTFlYS1hMmUzLTJlNzI4Y2U4ODEyNQ
     classification_id: Optional[str] = None
     #: Indicates when a space is in Announcement Mode where only moderators can post messages
     is_announcement_only: Optional[bool] = None
-    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in
+    #: this space, while maintaing historical data.
     is_read_only: Optional[bool] = None
     #: The room is public and therefore discoverable within the org. Anyone can find and join that room.
     #: example: True
@@ -18159,7 +20945,8 @@ class BulkUserOperations(ApiModel):
     #: The HTTP method of the current operation.
     #: example: PATCH
     method: Optional[BulkUserOperationsMethod] = None
-    #: The resource's relative path. If the method is POST, the value must specify a resource type endpoint, for example `/Users` or `/Groups`. All other method values must specify the path to a specific resource.
+    #: The resource's relative path. If the method is POST, the value must specify a resource type endpoint, for
+    #: example `/Users` or `/Groups`. All other method values must specify the path to a specific resource.
     #: example: /Users/2819c223-7f76-453a-919d-413861904646
     path: Optional[str] = None
     #: The Resource JSON data as it appears for a single POST or PATCH resource operation.
@@ -18174,7 +20961,8 @@ class BulkUser(ApiModel):
     #: Input JSON schemas.
     #: example: ['urn:ietf:params:scim:api:messages:2.0:BulkRequest']
     schemas: Optional[list[str]] = None
-    #: An integer specifying the maximum number of errors that the service provider will accept before the operation is terminated and an error response is returned.
+    #: An integer specifying the maximum number of errors that the service provider will accept before the operation is
+    #: terminated and an error response is returned.
     #: example: 99.0
     fail_on_errors: Optional[int] = None
     #: Contains a list of bulk operations for POST/PATCH/DELETE operations.
@@ -18392,7 +21180,8 @@ class PostUserUrnietfparamsscimschemasextensionenterprise20User(ApiModel):
     #: Identifies the name of a department.
     #: example: department 789
     department: Optional[str] = None
-    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.
+    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an
+    #: organization.
     #: example: 518-8888-888
     employee_number: Optional[str] = None
     #: The user's manager.
@@ -18461,19 +21250,23 @@ class UserTypeObject(str, Enum):
 
 
 class NameObject(ApiModel):
-    #: The given name of the user, or first name in most Western languages (e.g., "Sarah" given the full name "Ms. Sarah J Henderson, III").
+    #: The given name of the user, or first name in most Western languages (e.g., "Sarah" given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: Sarah
     given_name: Optional[str] = None
-    #: The family name of the user, or last name in most Western languages (e.g., "Henderson" given the full name "Ms. Sarah J Henderson, III").
+    #: The family name of the user, or last name in most Western languages (e.g., "Henderson" given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: Henderson
     family_name: Optional[str] = None
     #: The middle name(s) of the user (e.g., "Jane" given the full name "Ms. Sarah J Henderson, III").
     #: example: Jane
     middle_name: Optional[str] = None
-    #: The honorific prefix(es) of the user, or title in most Western languages (e.g., "Ms." given the full name "Ms. Sarah J Henderson, III").
+    #: The honorific prefix(es) of the user, or title in most Western languages (e.g., "Ms." given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: Mr.
     honorific_prefix: Optional[str] = None
-    #: The honorific suffix(es) of the user, or suffix in most Western languages (e.g., "III" given the full name "Ms. Sarah J Henderson, III").
+    #: The honorific suffix(es) of the user, or suffix in most Western languages (e.g., "III" given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: III
     honorific_suffix: Optional[str] = None
 
@@ -18482,7 +21275,8 @@ class PutUserPhoneNumbers(ApiModel):
     #: phone number.
     #: example: 400 123 1234
     value: Optional[str] = None
-    #: We support the following types of phone numbers: 'mobile', 'work', 'fax', 'work_extension', 'alternate1', 'alternate2'.  Alternate 1 and Alternate 2 are types inherited from Webex meeting sites.
+    #: We support the following types of phone numbers: 'mobile', 'work', 'fax', 'work_extension', 'alternate1',
+    #: 'alternate2'.  Alternate 1 and Alternate 2 are types inherited from Webex meeting sites.
     #: example: work
     type: Optional[ContactPhoneNumbersType] = None
     #: A human-readable name, primarily used for display purposes.
@@ -18524,34 +21318,18 @@ class EmailObject(ApiModel):
     #: A human-readable description, primarily used for display purposes.
     #: example: home email description
     display: Optional[str] = None
-    #: A Boolean value indicating the email status. If the type is work and primary is true, the value must equal "userName".
+    #: A Boolean value indicating the email status. If the type is work and primary is true, the value must equal
+    #: "userName".
     primary: Optional[bool] = None
-
-
-class RoleObjectType(str, Enum):
-    #: Webex Identity roles: "id_full_admin", "id_user_admin", "id_readonly_admin", "id_device_admin".
-    cirole = 'cirole'
-    #: service registered role.
-    servicerole = 'servicerole'
-
-
-class RoleObject(ApiModel):
-    #: The role value.
-    #: example: id_full_admin
-    value: Optional[str] = None
-    #: The type of the role.
-    #: example: cirole
-    type: Optional[RoleObjectType] = None
-    #: A human-readable description, primarily used for display purposes.
-    #: example: role description
-    display: Optional[str] = None
 
 
 class PostUser(ApiModel):
     #: Input JSON schemas.
     #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
     schemas: Optional[list[str]] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to be unique within Webex.
+    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
+    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
+    #: is required to be unique within Webex.
     #: example: user1@example.com
     user_name: Optional[str] = None
     #: The type of the user.
@@ -18563,15 +21341,21 @@ class PostUser(ApiModel):
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
+    #: Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
-    #: The user's time zone specified in the [IANA timezone](https://nodatime.org/timezones) timezone format, for example, "America/Los_Angeles".
+    #: The user's time zone specified in the `IANA timezone
+    #: <https://nodatime.org/timezones>`_ timezone format, for example, "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
@@ -18594,10 +21378,9 @@ class PostUser(ApiModel):
     photos: Optional[list[PhotoObject]] = None
     #: User's physical mailing address.
     addresses: Optional[list[PersonAddresses]] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email address must be the same value as the user's userName.
+    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
+    #: address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
-    #: A list of roles for the user that collectively represent who the user is.
-    roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extension
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
@@ -18608,7 +21391,9 @@ class PutUser(ApiModel):
     #: Input JSON schemas.
     #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
     schemas: Optional[list[str]] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to b unique within Webex.
+    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
+    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
+    #: is required to b unique within Webex.
     #: example: user1Changed@example.com
     user_name: Optional[str] = None
     #: The type of the user.
@@ -18620,15 +21405,21 @@ class PutUser(ApiModel):
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United States, fr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the  [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
+    #: Acceptable values for this field are based on the  `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
-    #: The user's time zone specified in the [IANA timezone](https://nodatime.org/timezones) timezone format. e.g: "America/Los_Angeles".
+    #: The user's time zone specified in the `IANA timezone
+    #: <https://nodatime.org/timezones>`_ timezone format. e.g: "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
@@ -18649,10 +21440,9 @@ class PutUser(ApiModel):
     photos: Optional[list[PhotoObject]] = None
     #: A physical mailing address of user.
     addresses: Optional[list[PersonAddresses]] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email address must be the same value as the user's userName.
+    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
+    #: address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
-    #: A list of roles for the user that collectively represent who the user is.
-    roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extention
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: cisco extention of SCIM 2
@@ -18684,7 +21474,8 @@ class GetUserResponseUrnietfparamsscimschemasextensionenterprise20User(ApiModel)
     #: Identifies the name of a department.
     #: example: department 789
     department: Optional[str] = None
-    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.
+    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an
+    #: organization.
     #: example: 518-8888-888
     employee_number: Optional[str] = None
     #: The user's manager.
@@ -18698,14 +21489,14 @@ class GetUserResponse(ApiModel):
     #: Webex Identity assigned user identifier.
     #: example: 3426a8e3-d414-4bf0-a493-4f6787632a13
     id: Optional[str] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to be unique within Webex.
+    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
+    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
+    #: is required to be unique within Webex.
     #: example: user1@example.com
     user_name: Optional[str] = None
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: A list of roles for the user that collectively represent who the user is.
-    roles: Optional[list[RoleObject]] = None
     #: The components of the user's real name.
     name: Optional[NameObject] = None
     #: The value to display or show the user's name in Webex.
@@ -18714,7 +21505,8 @@ class GetUserResponse(ApiModel):
     #: A casual name of the user.  The value Bob when the user's formal name is Robert.
     #: example: JoJo
     nick_name: Optional[str] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email address must be the same value as the user's userName.
+    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
+    #: address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
     #: The type of the user.
     #: example: user
@@ -18725,18 +21517,24 @@ class GetUserResponse(ApiModel):
     #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
     #: example: Sales manager
     title: Optional[str] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
+    #: Acceptable values for this field are based on the `ISO-696
+    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+    #: followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
     #: External identity.
     #: example: externalIdValue
     external_id: Optional[str] = None
-    #: The user's time zone specified in the [IANA timezone](https://nodatime.org/timezones) timezone format, for example, "America/Los_Angeles".
+    #: The user's time zone specified in the `IANA timezone
+    #: <https://nodatime.org/timezones>`_ timezone format, for example, "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
@@ -18749,6 +21547,25 @@ class GetUserResponse(ApiModel):
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[GetUserResponseUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
     urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+
+
+class RoleObjectType(str, Enum):
+    #: Webex Identity roles: "id_full_admin", "id_user_admin", "id_readonly_admin", "id_device_admin".
+    cirole = 'cirole'
+    #: service registered role.
+    servicerole = 'servicerole'
+
+
+class RoleObject(ApiModel):
+    #: The role value.
+    #: example: id_full_admin
+    value: Optional[str] = None
+    #: The type of the role.
+    #: example: cirole
+    type: Optional[RoleObjectType] = None
+    #: A human-readable description, primarily used for display purposes.
+    #: example: role description
+    display: Optional[str] = None
 
 
 class SearchUserResponse(ApiModel):
@@ -18924,9 +21741,11 @@ class GetMeetingConfigurationCommonSettingObjectSecurityOptions(ApiModel):
 class GetMeetingConfigurationCommonSettingObject(ApiModel):
     #: Site Options on Webex Administration.
     site_options: Optional[GetMeetingConfigurationCommonSettingObjectSiteOptions] = None
-    #: Telephony Configuration on WebEx Super Admin (These options are read-only, unable to update by Update Common Settings API).
+    #: Telephony Configuration on WebEx Super Admin (These options are read-only, unable to update by Update Common
+    #: Settings API).
     telephony_config: Optional[GetMeetingConfigurationCommonSettingObjectTelephonyConfig] = None
-    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but individual users can change them).
+    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but
+    #: individual users can change them).
     default_scheduler_options: Optional[GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions] = None
     #: Schedule Meeting Options on Webex Administration.
     schedule_meeting_options: Optional[GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions] = None
@@ -18937,7 +21756,8 @@ class GetMeetingConfigurationCommonSettingObject(ApiModel):
 class UpdateMeetingConfigurationCommonSettingObject(ApiModel):
     #: Site Options on Webex Administration.
     site_options: Optional[GetMeetingConfigurationCommonSettingObjectSiteOptions] = None
-    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but individual users can change them).
+    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but
+    #: individual users can change them).
     default_scheduler_options: Optional[GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions] = None
     #: Schedule Meeting Options on Webex Administration.
     schedule_meeting_options: Optional[GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions] = None
@@ -19060,15 +21880,19 @@ class CallQueueObject1(ApiModel):
 
 
 class AgentAvaliableCallQueueIdList1(ApiModel):
-    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
+    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for
+    #: outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number
+    #: setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
     available_queues: Optional[list[CallQueueObject1]] = None
 
 
 class AgentCallQueueId1(ApiModel):
-    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
+    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that
+    #: it is using the agent's configured Caller ID.
     #: example: True
     queue_caller_id_enabled: Optional[bool] = None
-    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
+    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when
+    #: `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
     selected_queue: Optional[CallQueueObject1] = None
 
 
@@ -19164,7 +21988,7 @@ class BargeInInfo(ApiModel):
     tone_enabled: Optional[bool] = None
 
 
-class CallForwardingPutCallForwardingNoAnswer1(ApiModel):
+class CallForwardingInfoCallForwardingNoAnswer(ApiModel):
     #: "No Answer" call forwarding is enabled or disabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -19174,23 +21998,62 @@ class CallForwardingPutCallForwardingNoAnswer1(ApiModel):
     #: Number of rings before the call will be forwarded if unanswered.
     #: example: 3.0
     number_of_rings: Optional[int] = None
-    #: Enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: System-wide maximum number of rings allowed for `numberOfRings` setting.
+    #: example: 15.0
+    system_max_number_of_rings: Optional[int] = None
+    #: Indicates the enabled or disabled state of sending incoming calls to destination number's voicemail if the
+    #: destination is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
-class CallForwardingPutCallForwarding1(ApiModel):
+class CallForwardingInfoCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
-    always: Optional[CallForwardingPutCallForwardingAlways] = None
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person is busy.
+    always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
+    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person
+    #: is busy.
     busy: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    no_answer: Optional[CallForwardingPutCallForwardingNoAnswer1] = None
+    no_answer: Optional[CallForwardingInfoCallForwardingNoAnswer] = None
 
 
-class CallForwardingPut1(ApiModel):
+class CallForwardingInfo(ApiModel):
     #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
-    call_forwarding: Optional[CallForwardingPutCallForwarding1] = None
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.
+    call_forwarding: Optional[CallForwardingInfoCallForwarding] = None
+    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
+    #: reason, such as power outage, failed Internet connection, or wiring problem.
+    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
+
+
+class CallForwardingPutCallForwardingNoAnswer(ApiModel):
+    #: "No Answer" call forwarding is enabled or disabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Destination for "No Answer" call forwarding.
+    #: example: 2225551212
+    destination: Optional[str] = None
+    #: Number of rings before the call will be forwarded if unanswered.
+    #: example: 3.0
+    number_of_rings: Optional[int] = None
+    #: Enables and disables sending incoming to destination number's voicemail if the destination is an internal phone
+    #: number and that number has the voicemail service enabled.
+    destination_voicemail_enabled: Optional[bool] = None
+
+
+class CallForwardingPutCallForwarding(ApiModel):
+    #: Settings for forwarding all incoming calls to the destination you choose.
+    always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
+    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person
+    #: is busy.
+    busy: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
+    #: Settings for forwarding which only occurs when you are away or not answering your phone.
+    no_answer: Optional[CallForwardingPutCallForwardingNoAnswer] = None
+
+
+class CallForwardingPut(ApiModel):
+    #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
+    call_forwarding: Optional[CallForwardingPutCallForwarding] = None
+    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
+    #: reason, such as a power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
 
 
@@ -19331,7 +22194,8 @@ class CallerIdPut(ApiModel):
     #: Designates which type of External Caller Id Name policy is used. Default is `DIRECT_LINE`.
     #: example: DIRECT_LINE
     external_caller_id_name_policy: Optional[ListVirtualLineObjectExternalCallerIdNamePolicy] = None
-    #: Person's custom External Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: Person's custom External Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not
+    #: allowed.
     #: example: Hakim Custom
     custom_external_caller_id_name: Optional[str] = None
 
@@ -19358,7 +22222,8 @@ class EndpointIdType(ApiModel):
 
 
 class EventLongDetailsRecurrenceRecurDaily(ApiModel):
-    #: Recurring interval in days. The number of days after the start when an event will repeat.  Repetitions cannot overlap.
+    #: Recurring interval in days. The number of days after the start when an event will repeat.  Repetitions cannot
+    #: overlap.
     #: example: 1.0
     recur_interval: Optional[int] = None
 
@@ -19388,10 +22253,12 @@ class EventLongDetailsRecurrence(ApiModel):
     #: True if the event repeats forever. Requires either `recurDaily` or `recurWeekly` to be specified.
     #: example: True
     recur_for_ever: Optional[bool] = None
-    #: End date for the recurring event in the format of `YYYY-MM-DD`. Requires either `recurDaily` or `recurWeekly` to be specified.
+    #: End date for the recurring event in the format of `YYYY-MM-DD`. Requires either `recurDaily` or `recurWeekly` to
+    #: be specified.
     #: example: 2020-03-18
     recur_end_date: Optional[datetime] = None
-    #: End recurrence after the event has repeated the specified number of times. Requires either `recurDaily` or `recurWeekly` to be specified.
+    #: End recurrence after the event has repeated the specified number of times. Requires either `recurDaily` or
+    #: `recurWeekly` to be specified.
     #: example: 1.0
     recur_end_occurrence: Optional[int] = None
     #: Specifies the number of days between the start of each recurrence. Not allowed with `recurWeekly`.
@@ -19404,16 +22271,20 @@ class EventLongDetails(ApiModel):
     #: Name for the event.
     #: example: Day_Shift
     name: Optional[str] = None
-    #: Start date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
+    #: Start date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is
+    #: required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
     start_date: Optional[datetime] = None
-    #: End date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
+    #: End date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required
+    #: if the `allDayEnabled` field is present.
     #: example: 2020-03-18
     end_date: Optional[datetime] = None
-    #: Start time of the event in the format of `HH:MM` (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
+    #: Start time of the event in the format of `HH:MM` (24 hours format).  This field is required if the
+    #: `allDayEnabled` field is false or omitted.
     #: example: 08:00
     start_time: Optional[datetime] = None
-    #: End time of the event in the format of `HH:MM` (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
+    #: End time of the event in the format of `HH:MM` (24 hours format).  This field is required if the `allDayEnabled`
+    #: field is false or omitted.
     #: example: 17:00
     end_time: Optional[datetime] = None
     #: True if it is all-day event.
@@ -19432,7 +22303,8 @@ class GetSharedLineMemberItem1(ApiModel):
     #: Last name of person or workspace.
     #: example: Doe
     last_name: Optional[str] = None
-    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the future update.
+    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the
+    #: future update.
     #: example: 2056852221
     phone_number: Optional[str] = None
     #: Phone extension of a person or workspace.
@@ -19459,20 +22331,23 @@ class GetSharedLineMemberItem1(ApiModel):
     #: Registration remote IP for the line port.
     #: example: 198.168.0.2
     remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
-    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
+    #: can only make calls to the predefined number set in hotlineDestination.
     #: example: True
     hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
     hotline_destination: Optional[datetime] = None
-    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all the endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
+    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
+    #: the endpoints on the device. When set to `false`, a call decline request is only declined at the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
     line_label: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    member_type: Optional[MemberType] = None
+    member_type: Optional[MemberType1] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -19517,10 +22392,12 @@ class GetCallingBehaviorObjectEffectiveBehaviorType(str, Enum):
 
 
 class GetCallingBehaviorObject(ApiModel):
-    #: The current Calling Behavior setting for the person. If `null`, the effective Calling Behavior will be the Organization's current default.
+    #: The current Calling Behavior setting for the person. If `null`, the effective Calling Behavior will be the
+    #: Organization's current default.
     #: example: CALL_WITH_APP_REGISTERED_FOR_CISCOTEL
     behavior_type: Optional[GetCallingBehaviorObjectBehaviorType] = None
-    #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if the user's `behaviorType` is set to `null`.
+    #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if
+    #: the user's `behaviorType` is set to `null`.
     #: example: NATIVE_WEBEX_TEAMS_CALLING
     effective_behavior_type: Optional[GetCallingBehaviorObjectEffectiveBehaviorType] = None
     #: The UC Manager Profile ID.
@@ -19535,16 +22412,20 @@ class GetEvent(ApiModel):
     #: Name for the event.
     #: example: Day_Shift
     name: Optional[str] = None
-    #: Start date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
+    #: Start date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is
+    #: required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
     start_date: Optional[datetime] = None
-    #: End date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
+    #: End date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required
+    #: if the `allDayEnabled` field is present.
     #: example: 2020-03-18
     end_date: Optional[datetime] = None
-    #: Start time of the event in the format of `HH:MM` (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
+    #: Start time of the event in the format of `HH:MM` (24 hours format).  This field is required if the
+    #: `allDayEnabled` field is false or omitted.
     #: example: 08:00
     start_time: Optional[datetime] = None
-    #: End time of the event in the format of `HH:MM `(24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
+    #: End time of the event in the format of `HH:MM `(24 hours format).  This field is required if the `allDayEnabled`
+    #: field is false or omitted.
     #: example: 17:00
     end_time: Optional[datetime] = None
     #: True if it is all-day event.
@@ -19567,7 +22448,7 @@ class GetMonitoredElementsObjectMember1(ApiModel):
     #: example: John Nelson
     display_name: Optional[str] = None
     #: Indicates whether the type is `PEOPLE`, `PLACE` or `VIRTUAL_LINE`.
-    type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
+    type: Optional[MemberType] = None
     #: The email address of the monitored person, place or virtual line.
     #: example: john.nelson@gmail.com
     email: Optional[str] = None
@@ -19637,7 +22518,8 @@ class IncomingPermissionSettingExternalTransfer(str, Enum):
 
 
 class IncomingPermissionSetting(ApiModel):
-    #: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather than the organizational defaults.
+    #: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather
+    #: than the organizational defaults.
     use_custom_enabled: Optional[bool] = None
     #: Specifies the transfer behavior for incoming, external calls.
     #: example: ALLOW_ALL_EXTERNAL
@@ -19676,7 +22558,8 @@ class OutgoingCallingPermissionsSetting(ApiModel):
 
 
 class PatchCallingBehaviorObject(ApiModel):
-    #: The new Calling Behavior setting for the person (case-insensitive). If `null`, the effective Calling Behavior will be the Organization's current default.
+    #: The new Calling Behavior setting for the person (case-insensitive). If `null`, the effective Calling Behavior
+    #: will be the Organization's current default.
     #: example: NATIVE_WEBEX_TEAMS_CALLING
     behavior_type: Optional[GetCallingBehaviorObjectBehaviorType] = None
     #: The UC Manager Profile ID. Specifying null results in the organizational default being applied.
@@ -19689,7 +22572,7 @@ class PhoneNumber(ApiModel):
     #: example: True
     primary: Optional[bool] = None
     #: Either 'ADD' to add phone numbers or 'DELETE' to remove phone numbers.
-    action: Optional[ActionOnRouteList] = None
+    action: Optional[Action] = None
     #: Phone numbers that are assigned.
     #: example: +12145553567
     direct_number: Optional[str] = None
@@ -19715,7 +22598,8 @@ class PrivacyGet1(ApiModel):
 
 
 class PushToTalkInfo1(ApiModel):
-    #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and answers the call automatically.
+    #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and
+    #: answers the call automatically.
     #: example: True
     allow_auto_answer: Optional[bool] = None
     #: Specifies the connection type to be used.
@@ -19758,13 +22642,16 @@ class PutSharedLineMemberItem(ApiModel):
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
     line_weight: Optional[int] = None
-    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in `hotlineDestination`.
+    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
+    #: can only make calls to the predefined number set in `hotlineDestination`.
     #: example: True
     hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
     hotline_destination: Optional[datetime] = None
-    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all the endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
+    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
+    #: the endpoints on the device. When set to `false`, a call decline request is only declined at the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
@@ -19777,10 +22664,12 @@ class PutSharedLineMemberList(ApiModel):
 
 
 class PutAgentCallQueueId(ApiModel):
-    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
+    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that
+    #: it is using the agent's configured Caller ID.
     #: example: True
     queue_caller_id_enabled: Optional[bool] = None
-    #: Use the queue's caller ID for outgoing calls. Optional when queueCallerIdEnabled is false, required when it's true.
+    #: Use the queue's caller ID for outgoing calls. Optional when queueCallerIdEnabled is false, required when it's
+    #: true.
     selected_queue: Optional[Location] = None
 
 
@@ -19791,16 +22680,20 @@ class PutEvent(ApiModel):
     #: Name for the event.
     #: example: Day_Shift
     name: Optional[str] = None
-    #: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the `allDayEnabled` field is present.
+    #: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required
+    #: if the `allDayEnabled` field is present.
     #: example: 2020-03-18
     start_date: Optional[datetime] = None
-    #: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the `allDayEnabled` field is present.
+    #: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if
+    #: the `allDayEnabled` field is present.
     #: example: 2020-03-18
     end_date: Optional[datetime] = None
-    #: Start time of the event in the format of HH:MM (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
+    #: Start time of the event in the format of HH:MM (24 hours format).  This field is required if the `allDayEnabled`
+    #: field is false or omitted.
     #: example: 08:00
     start_time: Optional[datetime] = None
-    #: End time of the event in the format of HH:MM (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
+    #: End time of the event in the format of HH:MM (24 hours format).  This field is required if the `allDayEnabled`
+    #: field is false or omitted.
     #: example: 17:00
     end_time: Optional[datetime] = None
     #: True if it is all-day event.
@@ -19890,7 +22783,9 @@ class VoiceMailPartyInformation(ApiModel):
     #: The party's name. Only present when the name is available and privacy is not enabled.
     #: example: John Smith
     name: Optional[str] = None
-    #: The party's number. Only present when the number is available and privacy is not enabled. The number can be digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`, `*73`, and `user@company.domain`.
+    #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
+    #: digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`, `*73`, and
+    #: `user@company.domain`.
     #: example: +12223334444
     number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
@@ -19910,7 +22805,8 @@ class VoiceMessageDetails(ApiModel):
     #: The duration (in seconds) of the voicemail message.  Duration is not present for a FAX message.
     #: example: 38.0
     duration: Optional[int] = None
-    #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the calling party.
+    #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the
+    #: calling party.
     calling_party: Optional[VoiceMailPartyInformation] = None
     #: `true` if the voicemail message is urgent.
     urgent: Optional[bool] = None
@@ -19973,7 +22869,8 @@ class VoicemailInfoMessageStorage(ApiModel):
     #: Designates which type of voicemail message storage is used.
     #: example: INTERNAL
     storage_type: Optional[GetLocationVoicemailGroupObjectMessageStorageStorageType] = None
-    #: External email address to which the new voicemail audio will be sent.  A value for this field must be provided in the request if a `storageType` of `EXTERNAL` is given in the request.
+    #: External email address to which the new voicemail audio will be sent.  A value for this field must be provided
+    #: in the request if a `storageType` of `EXTERNAL` is given in the request.
     #: example: dummy@example.com
     external_email: Optional[str] = None
 
@@ -19982,7 +22879,8 @@ class VoicemailInfoFaxMessage(ApiModel):
     #: When `true` FAX messages for new voicemails will be sent to the designated number.
     #: example: True
     enabled: Optional[bool] = None
-    #: Designates phone number for the FAX. A value for this field must be provided in the request if faxMessage `enabled` field is given as `true` in the request.
+    #: Designates phone number for the FAX. A value for this field must be provided in the request if faxMessage
+    #: `enabled` field is given as `true` in the request.
     #: example: 2025551212
     phone_number: Optional[str] = None
     #: Designates optional extension for the FAX.
@@ -20055,7 +22953,9 @@ class Endpoints(ApiModel):
     id: Optional[str] = None
     #: Enumeration that indicates if the endpoint is of type `DEVICE` or `APPLICATION`.
     type: Optional[DeviceType1] = None
-    #: The `name` filed in the response is calculated using device tag. Admins have the ability to set tags for devices. If a `name=<value>` tag is set, for example “name=home phone“, then the `<value>` is included in the `name` field of the API response. In this example “home phone”.
+    #: The `name` filed in the response is calculated using device tag. Admins have the ability to set tags for
+    #: devices. If a `name=<value>` tag is set, for example “name=home phone“, then the `<value>` is included in the
+    #: `name` field of the API response. In this example “home phone”.
     #: example: Cisco 8865 (Phone in reception area)
     name: Optional[str] = None
 
@@ -20066,6 +22966,207 @@ class EndpointInformation(ApiModel):
     preferred_answer_endpoint_id: Optional[str] = None
     #: Array of endpoints available to the person.
     endpoints: Optional[list[Endpoints]] = None
+
+
+class CountObject2(ApiModel):
+    #: Indicates the total number of user moves requested.
+    total_moves: Optional[int] = None
+    #: Indicates the total number of user moves completed.
+    moved: Optional[int] = None
+    #: Indicates the total number of user moves that failed.
+    failed: Optional[int] = None
+
+
+class ErrorOrImpactItem(ApiModel):
+    #: Error or Impact code.
+    code: Optional[int] = None
+    #: Message string with more error or impact information.
+    message: Optional[int] = None
+
+
+class JobExecutionStatusObject3(ApiModel):
+    #: Unique identifier that identifies each instance of the job.
+    id: Optional[int] = None
+    #: The date and time with seconds, the job has started in UTC format.
+    start_time: Optional[str] = None
+    #: The date and time with seconds, the job has ended in UTC format.
+    end_time: Optional[str] = None
+    #: The date and time with seconds, the job has last updated in UTC format post one of the step execution
+    #: completion.
+    last_updated: Optional[str] = None
+    #: Displays status for overall steps that are part of the job.
+    status_message: Optional[str] = None
+    #: Exit Code for a job.
+    exit_code: Optional[str] = None
+    #: The date and time with seconds, the job has created in UTC format.
+    created_time: Optional[str] = None
+    #: Time lapsed in seconds since the job execution started.
+    time_elapsed: Optional[str] = None
+    #: Status of each step within a job.
+    step_execution_statuses: Optional[list[StepExecutionStatuses]] = None
+
+
+class JobDetailsResponse(ApiModel):
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject3]] = None
+    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of
+    #: invocation.
+    latest_execution_status: Optional[str] = None
+    #: Job statistics.
+    counts: Optional[CountObject2] = None
+    #: Reference ID for the file that holds the errors and impacts.
+    csv_file: Optional[str] = None
+    #: The date and time with seconds, the file expires in UTC format.
+    csv_file_expiry_time: Optional[str] = None
+    #: 'text/csv',  Format of the file generated.
+    file_format: Optional[str] = None
+
+
+class JobDetailsResponseById(ApiModel):
+    #: Job name.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject3]] = None
+    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of
+    #: invocation.
+    latest_execution_status: Optional[str] = None
+    #: Job statistics.
+    counts: Optional[CountObject2] = None
+    #: Reference ID for the file that holds the errors and impacts.
+    csv_file: Optional[str] = None
+    #: The date and time with seconds, the file expires in UTC format.
+    csv_file_expiry_time: Optional[str] = None
+    #: 'text/csv',  Format of the file generated.
+    file_format: Optional[str] = None
+    #: URL to the CSV file containing errors and impacts.
+    csv_file_download_url: Optional[str] = None
+
+
+class JobListResponse2(ApiModel):
+    #: Lists all jobs for the customer in order of most recent one to oldest one irrespective of its status.
+    items: Optional[list[JobDetailsResponse]] = None
+
+
+class MoveUsersErrorResponse(ApiModel):
+    #: List of error items.
+    error: Optional[list[ErrorOrImpactItem]] = None
+
+
+class UserItem(ApiModel):
+    #: User ID to be moved.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzUyMjNiYmVkLTQyYzktNDU0ZC1hMWYzLTdmYWQ1Y2M3ZTZlMw
+    user_id: Optional[str] = None
+    #: Extension to be moved.
+    #: example: 28544
+    extension: Optional[str] = None
+
+
+class UsersListItem(ApiModel):
+    #: The target location for the user move.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA
+    location_id: Optional[str] = None
+    #: When `true`, validate the user move. When `false`, perform the user move.
+    validate: Optional[bool] = None
+    #: A list of users to be moved.
+    users: Optional[list[UserItem]] = None
+
+
+class MoveUsersStartJobObject(ApiModel):
+    #: The user to be moved from the source location.
+    users_list: Optional[list[UsersListItem]] = None
+
+
+class StartJobExecutionStatusObject(ApiModel):
+    #: Unique identifier that identifies each instance of the job.
+    id: Optional[int] = None
+    #: The date and time with seconds, the job has started in UTC format.
+    start_time: Optional[str] = None
+    #: The date and time with seconds, the job has last updated in UTC format post one of the step execution
+    #: completion.
+    last_updated: Optional[str] = None
+    #: Displays status for overall steps that are part of the job.
+    status_message: Optional[str] = None
+    #: Exit Code for a job.
+    exit_code: Optional[str] = None
+    #: The date and time with seconds, the job has been created in UTC format.
+    created_time: Optional[str] = None
+    #: Time lapsed in seconds since the job execution started.
+    time_elapsed: Optional[str] = None
+
+
+class StartJobResponseObject(ApiModel):
+    #: Job name.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[StartJobExecutionStatusObject]] = None
+    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of
+    #: invocation.
+    latest_execution_status: Optional[str] = None
+    #: Job statistics.
+    counts: Optional[CountObject2] = None
+
+
+class MoveUsersStartJobResponse(ApiModel):
+    #: Response for the user move.
+    response: Optional[StartJobResponseObject] = None
+
+
+class UserListItem(ApiModel):
+    #: Associated user ID for the validation response.
+    user_id: Optional[str] = None
+    #: List of impacts for the user move.
+    impacts: Optional[list[ErrorOrImpactItem]] = None
+    #: List of errors for the user move.
+    errors: Optional[list[ErrorOrImpactItem]] = None
+
+
+class MoveUsersValidationResponse(ApiModel):
+    #: Response for the user move validation.
+    response: Optional[list[UserListItem]] = None
+
+
+class UserHotelingRequestPatch(ApiModel):
+    #: Modify person Device Hoteling Setting.
+    hoteling: Optional[Hoteling] = None
 
 
 class RetrieveExecutiveAssistantSettingsForAPersonResponseType(str, Enum):
@@ -20081,6 +23182,24 @@ class RetrieveExecutiveAssistantSettingsForAPersonResponse(ApiModel):
     #: Indicates the Executive Assistant type.
     #: example: EXECUTIVE
     type: Optional[RetrieveExecutiveAssistantSettingsForAPersonResponseType] = None
+
+
+class GetMessageSummaryResponse(ApiModel):
+    #: The number of new (unread) voicemail messages.
+    #: example: 2.0
+    new_messages: Optional[int] = None
+    #: The number of old (read) voicemail messages.
+    #: example: 5.0
+    old_messages: Optional[int] = None
+    #: The number of new (unread) urgent voicemail messages.
+    new_urgent_messages: Optional[int] = None
+    #: The number of old (read) urgent voicemail messages.
+    #: example: 1.0
+    old_urgent_messages: Optional[int] = None
+
+
+class ListMessagesResponse(ApiModel):
+    items: Optional[list[VoiceMessageDetails]] = None
 
 
 class ClusterClientTypeDistributionDetailsBlr1a(ApiModel):
@@ -20113,7 +23232,7 @@ class ClientTypeDistributionTrend1(ApiModel):
     clusters: Optional[list[ClusterClientTypeDistributionBlr1]] = None
 
 
-class ClientTypeDistributionCollectionForOrg(ApiModel):
+class ClienttypedistributionCollectionforOrg(ApiModel):
     #: The unique ID for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNmQ4OTRmNy0yYjU3LTQzYzEtYWNlZS1kNDdlNjc3NjE0MTQ
     org_id: Optional[str] = None
@@ -20130,8 +23249,8 @@ class ClientTypeDistributionCollectionForOrg(ApiModel):
     items: Optional[list[ClientTypeDistributionTrend1]] = None
 
 
-class ClientTypeDistributionForOrg(ApiModel):
-    items: Optional[list[ClientTypeDistributionCollectionForOrg]] = None
+class ClienttypedistributionforOrg(ApiModel):
+    items: Optional[list[ClienttypedistributionCollectionforOrg]] = None
 
 
 class ClusterAvailableTimeline(ApiModel):
@@ -20289,7 +23408,7 @@ class SingleNodeAvailability(ApiModel):
     items: Optional[list[SingleNodeAvailabilityCollection]] = None
 
 
-class MediaSignallingTestResultFailure(ApiModel):
+class MediaSignallingtestResultFailure(ApiModel):
     #: The name of the test.
     #: example: Media Signalling
     test_name: Optional[str] = None
@@ -20309,10 +23428,10 @@ class MediaHealthMonitoringTestResultsFailure(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT01NQU5EX0lELzJjM2M5ZjllLTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhYzo2NTJmNmMxMC01NjgxLTExZWQtOTkyZS1kNTY5YzlkMDlhNzU
     id: Optional[str] = None
     #: Test results of Media Signalling, SIP Signalling, Media Cascade runs.
-    test_results: Optional[list[MediaSignallingTestResultFailure]] = None
+    test_results: Optional[list[MediaSignallingtestResultFailure]] = None
 
 
-class MediaHealthMonitoringSecondNode(ApiModel):
+class MediaHealthMonitoringsecondnode(ApiModel):
     #: Unique ID of the Video Mesh node.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT05ORUNUT1IvMmMzYzlmOTUtNzNkOS00NDYwLWE2NjgtMDQ3MTYyZmYxYmFkOjE1NmRmNzg5Yzg1NTRkNTVhMjc1ZGY5OTc4Zjk5MDJk
     node_id: Optional[str] = None
@@ -20323,7 +23442,7 @@ class MediaHealthMonitoringSecondNode(ApiModel):
     mhm_test_results: Optional[list[MediaHealthMonitoringTestResultsFailure]] = None
 
 
-class MediaHealthMonitoringForFirstCluster(ApiModel):
+class MediaHealthMonitoringforfirstcluster(ApiModel):
     #: Unique ID of the Video Mesh cluster.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DTFVTVEVSLzJjM2M5Zjk1LTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhZDpmMWJmMGI1MC0yMDUyLTQ3ZmUtYjg3ZC01MTFjMmZlNzQ3MWI=
     cluster_id: Optional[str] = None
@@ -20331,15 +23450,15 @@ class MediaHealthMonitoringForFirstCluster(ApiModel):
     #: example: banglore
     cluster_name: Optional[str] = None
     #: The Video Mesh nodes in the cluster.
-    nodes: Optional[list[MediaHealthMonitoringSecondNode]] = None
+    nodes: Optional[list[MediaHealthMonitoringsecondnode]] = None
 
 
-class MediaHealthMonitoringClusters(ApiModel):
+class MediaHealthMonitoringclusters(ApiModel):
     #: The list of Video Mesh clusters.
-    clusters: Optional[list[MediaHealthMonitoringForFirstCluster]] = None
+    clusters: Optional[list[MediaHealthMonitoringforfirstcluster]] = None
 
 
-class MediaHealthMonitoringResultsCollectionForOrganization(ApiModel):
+class MediaHealthMonitoringResultsCollectionfororganization(ApiModel):
     #: Unique ID of the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8yYzNjOWY5NS03M2Q5LTQ0NjAtYTY2OC0wNDcxNjJmZjFiYWQ=
     org_id: Optional[str] = None
@@ -20350,14 +23469,14 @@ class MediaHealthMonitoringResultsCollectionForOrganization(ApiModel):
     #: example: 2023-01-20T15:53:00Z
     to_: Optional[datetime] = None
     #: Media Health Monitoring Tool test results.
-    items: Optional[list[MediaHealthMonitoringClusters]] = None
+    items: Optional[list[MediaHealthMonitoringclusters]] = None
 
 
-class MediaHealthMonitoringResultsForOrganization(ApiModel):
-    items: Optional[list[MediaHealthMonitoringResultsCollectionForOrganization]] = None
+class MediaHealthMonitoringResultsforOrganization(ApiModel):
+    items: Optional[list[MediaHealthMonitoringResultsCollectionfororganization]] = None
 
 
-class MediaSignallingTestResultSuccess(ApiModel):
+class MediaSignallingtestResultSuccess(ApiModel):
     #: The name of the test.
     #: example: Media Signalling
     test_name: Optional[str] = None
@@ -20374,7 +23493,7 @@ class MediaHealthMonitoringTestResultsSuccess(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT01NQU5EX0lELzJjM2M5ZjllLTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhYzo2NTJmNmMxMC01NjgxLTExZWQtOTkyZS1kNTY5YzlkMDlhNzU
     id: Optional[str] = None
     #: Test results of Media Signalling, SIP Signalling, Media Cascade runs.
-    test_results: Optional[list[MediaSignallingTestResultSuccess]] = None
+    test_results: Optional[list[MediaSignallingtestResultSuccess]] = None
 
 
 class OverflowDetails1(ApiModel):
@@ -20397,7 +23516,7 @@ class CloudOverflowTrend1(ApiModel):
     overflow_details: Optional[list[OverflowDetails1]] = None
 
 
-class OverflowToCloudCollection(ApiModel):
+class OverflowtoCloudCollection(ApiModel):
     #: The unique ID for the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNmQ4OTRmNy0yYjU3LTQzYzEtYWNlZS1kNDdlNjc3NjE0MTQ
     org_id: Optional[str] = None
@@ -20414,8 +23533,8 @@ class OverflowToCloudCollection(ApiModel):
     items: Optional[list[CloudOverflowTrend1]] = None
 
 
-class OverflowToCloud(ApiModel):
-    items: Optional[list[OverflowToCloudCollection]] = None
+class OverflowtoCloud(ApiModel):
+    items: Optional[list[OverflowtoCloudCollection]] = None
 
 
 class ClusterRedirectDetailsBlr1a(ApiModel):
@@ -20465,7 +23584,7 @@ class RedirectCollectionForOrg(ApiModel):
     items: Optional[list[RedirectTrend1]] = None
 
 
-class RedirectForOrg(ApiModel):
+class RedirectforOrg(ApiModel):
     items: Optional[list[RedirectCollectionForOrg]] = None
 
 
@@ -20523,7 +23642,7 @@ class ClustersUtilization(ApiModel):
     items: Optional[list[ClusterUtilizationCollection]] = None
 
 
-class ReachabilityTestResultsSuccess(ApiModel):
+class ReachabilityTestresultsSuccess(ApiModel):
     #: Destination IP address.
     #: example: 1.1.1.1
     ip_address: Optional[str] = None
@@ -20535,7 +23654,7 @@ class ReachabilityTestResultsSuccess(ApiModel):
     reachable: Optional[bool] = None
 
 
-class ReachabilityTestResultsStunResults1(ApiModel):
+class ReachabilityTestresultsStunresults1(ApiModel):
     #: The timestamp of the test run.
     #: example: 2022-03-15T15:53:00Z
     timestamp: Optional[datetime] = None
@@ -20546,20 +23665,20 @@ class ReachabilityTestResultsStunResults1(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT01NQU5EX0lELzJjM2M5ZjllLTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhYzo2NTJmNmMxMC01NjgxLTExZWQtOTkyZS1kNTY5YzlkMDlhNzU
     id: Optional[str] = None
     #: List of UDP ports being checked in Reachability test.
-    udp: Optional[list[ReachabilityTestResultsSuccess]] = None
+    udp: Optional[list[ReachabilityTestresultsSuccess]] = None
     #: List of TCP ports being checked in Reachability test.
-    tcp: Optional[list[ReachabilityTestResultsSuccess]] = None
+    tcp: Optional[list[ReachabilityTestresultsSuccess]] = None
 
 
-class ReachabilityTestResultsDestinationCluster(ApiModel):
+class ReachabilityTestresultsdestinationcluster(ApiModel):
     #: Cloud Webex cluster against which Reachability test is being executed.
     #: example: Amsterdam Cluster
     destination_cluster: Optional[str] = None
     #: STUN test results for a Video Mesh cluster.
-    stun_results: Optional[list[ReachabilityTestResultsStunResults1]] = None
+    stun_results: Optional[list[ReachabilityTestresultsStunresults1]] = None
 
 
-class ReachabilityTestResultsFirstNode(ApiModel):
+class ReachabilityTestresultsfirstnode(ApiModel):
     #: Unique ID of the Video Mesh node.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT05ORUNUT1IvMmMzYzlmOTUtNzNkOS00NDYwLWE2NjgtMDQ3MTYyZmYxYmFkOjE1NmRmNzg5Yzg1NTRkNTVhMjc1ZGY5OTc4Zjk5MDJk
     node_id: Optional[str] = None
@@ -20567,10 +23686,10 @@ class ReachabilityTestResultsFirstNode(ApiModel):
     #: example: xyz.company.com
     host_name_or_ip: Optional[str] = Field(alias='hostNameOrIP', default=None)
     #: Reachability test results for a single Video Mesh node.
-    test_results: Optional[list[ReachabilityTestResultsDestinationCluster]] = None
+    test_results: Optional[list[ReachabilityTestresultsdestinationcluster]] = None
 
 
-class ReachabilityTestResultsForFirstCluster(ApiModel):
+class ReachabilityTestResultsforfirstcluster(ApiModel):
     #: Unique ID of the Video Mesh cluster.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DTFVTVEVSLzJjM2M5Zjk1LTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhZDpmMWJmMGI1MC0yMDUyLTQ3ZmUtYjg3ZC01MTFjMmZlNzQ3MWI=
     cluster_id: Optional[str] = None
@@ -20578,15 +23697,15 @@ class ReachabilityTestResultsForFirstCluster(ApiModel):
     #: example: banglore
     cluster_name: Optional[str] = None
     #: The Video Mesh nodes in the cluster.
-    nodes: Optional[list[ReachabilityTestResultsFirstNode]] = None
+    nodes: Optional[list[ReachabilityTestresultsfirstnode]] = None
 
 
-class ReachabilityTestResultsForCluster1(ApiModel):
+class ReachabilityTestResultsforcluster(ApiModel):
     #: List of Video Mesh clusters.
-    clusters: Optional[list[ReachabilityTestResultsForFirstCluster]] = None
+    clusters: Optional[list[ReachabilityTestResultsforfirstcluster]] = None
 
 
-class ReachabilityTestResultsForOrganization(ApiModel):
+class ReachabilityTestresultsfororganization(ApiModel):
     #: Unique ID of the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8yYzNjOWY5NS03M2Q5LTQ0NjAtYTY2OC0wNDcxNjJmZjFiYWQ=
     org_id: Optional[str] = None
@@ -20597,11 +23716,11 @@ class ReachabilityTestResultsForOrganization(ApiModel):
     #: example: 2023-01-20T15:53:00Z
     to_: Optional[datetime] = None
     #: Reachability test results data.
-    items: Optional[list[ReachabilityTestResultsForCluster1]] = None
+    items: Optional[list[ReachabilityTestResultsforcluster]] = None
 
 
 class ReachabilityTestResults(ApiModel):
-    items: Optional[list[ReachabilityTestResultsForOrganization]] = None
+    items: Optional[list[ReachabilityTestresultsfororganization]] = None
 
 
 class BlrNodeLocation(ApiModel):
@@ -20686,7 +23805,7 @@ class TriggeredTestResult(ApiModel):
     #: Unique ID of the organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8yYzNjOWY5NS03M2Q5LTQ0NjAtYTY2OC0wNDcxNjJmZjFiYWQ=
     org_id: Optional[str] = None
-    results: Optional[list[MediaHealthMonitoringClusters]] = None
+    results: Optional[list[MediaHealthMonitoringclusters]] = None
 
 
 class NodeStatusList1Status(str, Enum):
@@ -20718,9 +23837,11 @@ class TriggeredTestStatus1(ApiModel):
 
 
 class TriggerOnDemandBodyType(str, Enum):
-    #: Used to test whether the media ports within the Video Mesh node are open, and whether the Video Mesh node is able to reach the cloud clusters pertaining to the media containers via those ports.
+    #: Used to test whether the media ports within the Video Mesh node are open, and whether the Video Mesh node is
+    #: able to reach the cloud clusters pertaining to the media containers via those ports.
     reachability_test = 'ReachabilityTest'
-    #: Used to test the network environment of the Video Mesh node by running various connectivity, bandwidth, and DNS resolution tests against Webex Cloud and ThirdParty Cloud (Docker) services.
+    #: Used to test the network environment of the Video Mesh node by running various connectivity, bandwidth, and DNS
+    #: resolution tests against Webex Cloud and ThirdParty Cloud (Docker) services.
     network_test = 'NetworkTest'
     #: Used to test the meetings and call health of Video Mesh nodes using signalling and cascading methods.
     media_health_monitor_test = 'MediaHealthMonitorTest'
@@ -20961,88 +24082,6 @@ class ReadTheListOfVirtualLinesResponse1(ApiModel):
     virtual_lines: Optional[list[ListVirtualLineObject1]] = None
 
 
-class ReportIdType(str, Enum):
-    user = 'USER'
-    customer = 'CUSTOMER'
-    partner = 'PARTNER'
-
-
-class ReportId2(ApiModel):
-    #: A unique report ID that corresponds to a billing report.
-    #: example: 'Y2lzY29zcGFyazovL3VzL0JJTExJTkdfUkVQT1JULzViOGQ1MThhLThmMDAtNDUxYi1hNDA2LWVhZjQ5YjRhN2ZhOA'
-    id: Optional[str] = None
-    #: Billing report startDate.
-    #: example: 2021-05-21
-    billing_start_date: Optional[datetime] = None
-    #: Billing report endDate.
-    #: example: 2021-05-30
-    billing_end_date: Optional[datetime] = None
-    #: Billing Report Type
-    #: example: PARTNER
-    type: Optional[ReportIdType] = None
-
-
-class Report3(ApiModel):
-    #: A unique report ID that corresponds to a billing report.
-    #: example: 'Y2lzY29zcGFyazovL3VzL0JJTExJTkdfUkVQT1JULzViOGQ1MThhLThmMDAtNDUxYi1hNDA2LWVhZjQ5YjRhN2ZhOA'
-    id: Optional[str] = None
-    #: Billing report `startDate`.
-    #: example: 2021-05-21
-    billing_start_date: Optional[datetime] = None
-    #: Billing report `endDate`.
-    #: example: 2021-05-30
-    billing_end_date: Optional[datetime] = None
-    #: Billing Report Type
-    #: example: PARTNER
-    type: Optional[ReportIdType] = None
-    #: The date and time the report was generated.
-    #: example: 2021-06-16T12:40:33.109Z
-    created: Optional[datetime] = None
-    #: The person ID of the partner administrator who created the report.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8wYWNkMzg3NS00ZTEyLTRkNzctYjk4MS1lMzg5ZmQ4ODQ2YzA
-    created_by: Optional[str] = None
-    #: The status of the billing report.
-    #: example: COMPLETED
-    status: Optional[ReportStatus] = None
-    #: The URL for partners to download the billing report.
-    #: example: https://billing-reports-int-us-east-1.webexcontent.com/a366de9b-3204-4140-8181-25808d360e36/WHOLESALE/340177d1-7f25-41e1-a39f-ad63ec1103a5.csv?Expires=1624978489&Signature=Syp3vrVeMx4P6MeMtm8e1bQaeAdHFe-c7NeHERWh5-qJGLZ1T8Dvl2ee-M8OsFf~z6Yepz94e2Hh1HDVailD0Uryl8SgiM~jl0cBh7L0PmSe~i9oFA0eJ0MulkqGSMVf7ZHhxY55xYMgIBZIERkWm3CqQNDg5BS4EaXapKfOnmFegf36OokCM63m5uOK8-csk08IkZhwo2Z0l1JMtuWYEaLh4dgMHoe~xgH3YmDSSCWInFYaEifUAfgi2YAYS6nP9Zq4BTliBq62XBaehOE1gBrhy4RdwD-3WSs2oD-BdpoRpuGzo3FZzDLVEvd0S2D6gTcHljOHodQKxe-u0BXPWQ__&Key-Pair-Id=APKAJADAKLCI2FW2U32Q
-    temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
-    #: List of errors that occurred during report generation.
-    #: **Note:**
-    #: * This list captures errors that occurred during asynchronous or background report generation, after the request has been accepted and a `202 OK` response is returned.
-    errors: Optional[list[ReportError]] = None
-
-
-class ListReport2(ApiModel):
-    #: A unique report id that corresponds to a billing report.
-    #: example: 'Y2lzY29zcGFyazovL3VzL0JJTExJTkdfUkVQT1JULzViOGQ1MThhLThmMDAtNDUxYi1hNDA2LWVhZjQ5YjRhN2ZhOA'
-    id: Optional[str] = None
-    #: Billing report startDate.
-    #: example: 2021-05-21
-    billing_start_date: Optional[datetime] = None
-    #: Billing report endDate.
-    #: example: 2021-05-30
-    billing_end_date: Optional[datetime] = None
-    #: The status of the billing report
-    #: example: COMPLETED
-    status: Optional[ReportStatus] = None
-    #: Billing Report Type.
-    #: example: PARTNER
-    type: Optional[ReportIdType] = None
-
-
-class WholesaleBillingReportsListResponse(ApiModel):
-    #: An array of report objects.
-    items: Optional[list[ListReport2]] = None
-
-
-class ListWholesaleBillingReportsSortBy(str, Enum):
-    id = 'id'
-    billing_start_date = 'billingStartDate'
-    billing_end_date = 'billingEndDate'
-    status = 'status'
-
-
 class SkillCreateRequestLanguages(str, Enum):
     en = 'en'
     es = 'es'
@@ -21092,21 +24131,29 @@ class DeveloperRegistrationUpdateRequest(ApiModel):
 
 
 class WebhookResource(str, Enum):
-    #: The [Attachment Actions](/docs/api/v1/attachment-actions) resource.
+    #: The `Attachment Actions
+    #: <https://developer.webex.com/docs/api/v1/attachment-actions>`_ resource.
     attachment_actions = 'attachmentActions'
-    #: The [Memberships](/docs/api/v1/memberships) resource.
+    #: The `Memberships
+    #: <https://developer.webex.com/docs/api/v1/memberships>`_ resource.
     memberships = 'memberships'
-    #: The [Messages](/docs/api/v1/messages) resource.
+    #: The `Messages
+    #: <https://developer.webex.com/docs/api/v1/messages>`_ resource.
     messages = 'messages'
-    #: The [Rooms](/docs/api/v1/rooms) resource.
+    #: The `Rooms
+    #: <https://developer.webex.com/docs/api/v1/rooms>`_ resource.
     rooms = 'rooms'
-    #: The [Meetings](/docs/api/v1/meetings) resource.
+    #: The `Meetings
+    #: <https://developer.webex.com/docs/api/v1/meetings>`_ resource.
     meetings = 'meetings'
-    #: The [Recordings](/docs/api/v1/recordings) resource.
+    #: The `Recordings
+    #: <https://developer.webex.com/docs/api/v1/recordings>`_ resource.
     recordings = 'recordings'
-    #: The [Meeting Participants](/docs/api/v1/meeting-participants) resource.
+    #: The `Meeting Participants
+    #: <https://developer.webex.com/docs/api/v1/meeting-participants>`_ resource.
     meeting_participants = 'meetingParticipants'
-    #: The [Meeting Transcripts](/docs/api/v1/meeting-transcripts) resource.
+    #: The `Meeting Transcripts
+    #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_ resource.
     meeting_transcripts = 'meetingTranscripts'
 
 
@@ -21164,13 +24211,99 @@ class Webhook(ApiModel):
     #: The date and time the webhook was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: Specified when creating an org/admin level webhook.
+    #: Specify `org` when creating an org/admin level webhook. Supported for `meetings`, `recordings`,
+    #: `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`, and `messaging`
+    #: (for Compliance Officers and messages with file attachments only - see `inline file DLP
+    #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     #: example: org
     owned_by: Optional[str] = None
 
 
 class WebhookCollectionResponse(ApiModel):
     items: Optional[list[Webhook]] = None
+
+
+class ListReportType(str, Enum):
+    user = 'USER'
+    customer = 'CUSTOMER'
+    partner = 'PARTNER'
+
+
+class ListReport1(ApiModel):
+    #: A unique report id that corresponds to a billing report.
+    #: example: 'Y2lzY29zcGFyazovL3VzL0JJTExJTkdfUkVQT1JULzViOGQ1MThhLThmMDAtNDUxYi1hNDA2LWVhZjQ5YjRhN2ZhOA'
+    id: Optional[str] = None
+    #: Billing report startDate.
+    #: example: 2021-05-21
+    billing_start_date: Optional[datetime] = None
+    #: Billing report endDate.
+    #: example: 2021-05-30
+    billing_end_date: Optional[datetime] = None
+    #: The status of the billing report
+    #: example: COMPLETED
+    status: Optional[ReportStatus] = None
+    #: Billing Report Type.
+    #: example: PARTNER
+    type: Optional[ListReportType] = None
+
+
+class Report2(ApiModel):
+    #: A unique report ID that corresponds to a billing report.
+    #: example: 'Y2lzY29zcGFyazovL3VzL0JJTExJTkdfUkVQT1JULzViOGQ1MThhLThmMDAtNDUxYi1hNDA2LWVhZjQ5YjRhN2ZhOA'
+    id: Optional[str] = None
+    #: Billing report `startDate`.
+    #: example: 2021-05-21
+    billing_start_date: Optional[datetime] = None
+    #: Billing report `endDate`.
+    #: example: 2021-05-30
+    billing_end_date: Optional[datetime] = None
+    #: Billing Report Type
+    #: example: PARTNER
+    type: Optional[ListReportType] = None
+    #: The date and time the report was generated.
+    #: example: 2021-06-16T12:40:33.109Z
+    created: Optional[datetime] = None
+    #: The person ID of the partner administrator who created the report.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8wYWNkMzg3NS00ZTEyLTRkNzctYjk4MS1lMzg5ZmQ4ODQ2YzA
+    created_by: Optional[str] = None
+    #: The status of the billing report.
+    #: example: COMPLETED
+    status: Optional[ReportStatus] = None
+    #: The URL for partners to download the billing report.
+    #: example: https://billing-reports-int-us-east-1.webexcontent.com/a366de9b-3204-4140-8181-25808d360e36/WHOLESALE/340177d1-7f25-41e1-a39f-ad63ec1103a5.csv?Expires=1624978489&Signature=Syp3vrVeMx4P6MeMtm8e1bQaeAdHFe-c7NeHERWh5-qJGLZ1T8Dvl2ee-M8OsFf~z6Yepz94e2Hh1HDVailD0Uryl8SgiM~jl0cBh7L0PmSe~i9oFA0eJ0MulkqGSMVf7ZHhxY55xYMgIBZIERkWm3CqQNDg5BS4EaXapKfOnmFegf36OokCM63m5uOK8-csk08IkZhwo2Z0l1JMtuWYEaLh4dgMHoe~xgH3YmDSSCWInFYaEifUAfgi2YAYS6nP9Zq4BTliBq62XBaehOE1gBrhy4RdwD-3WSs2oD-BdpoRpuGzo3FZzDLVEvd0S2D6gTcHljOHodQKxe-u0BXPWQ__&Key-Pair-Id=APKAJADAKLCI2FW2U32Q
+    temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
+    #: List of errors that occurred during report generation.
+    #: **Note:**
+    #: * This list captures errors that occurred during asynchronous or background report generation, after the request
+    #: has been accepted and a `202 OK` response is returned.
+    errors: Optional[list[ReportError]] = None
+
+
+class ReportId1(ApiModel):
+    #: A unique report ID that corresponds to a billing report.
+    #: example: 'Y2lzY29zcGFyazovL3VzL0JJTExJTkdfUkVQT1JULzViOGQ1MThhLThmMDAtNDUxYi1hNDA2LWVhZjQ5YjRhN2ZhOA'
+    id: Optional[str] = None
+    #: Billing report startDate.
+    #: example: 2021-05-21
+    billing_start_date: Optional[datetime] = None
+    #: Billing report endDate.
+    #: example: 2021-05-30
+    billing_end_date: Optional[datetime] = None
+    #: Billing Report Type
+    #: example: PARTNER
+    type: Optional[ListReportType] = None
+
+
+class WholesaleBillingReportsListResponse(ApiModel):
+    #: An array of report objects.
+    items: Optional[list[ListReport1]] = None
+
+
+class ListWholesaleBillingReportsSortBy(str, Enum):
+    id = 'id'
+    billing_start_date = 'billingStartDate'
+    billing_end_date = 'billingEndDate'
+    status = 'status'
 
 
 class Address(ApiModel):
@@ -21244,13 +24377,17 @@ class Package(ApiModel):
     status: Optional[PackageStatus] = None
     #: List of warnings that occurred during that last attempt to provision/update this customer.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer, *after* the API has been accepted and 202 response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
+    #: *after* the API has been accepted and 202 response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     warnings: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: List of errors that occurred during that last attempt to provision/update this customer.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer, *after* the API has been accepted and 202 response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
+    #: *after* the API has been accepted and 202 response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
 
 
@@ -21259,10 +24396,12 @@ class ResourceDetails(ApiModel):
 
 
 class Customer2(ApiModel):
-    #: A unique Cisco identifier for the customer. This value should be used for the `customerId` parameter in the Wholesale Customers and Wholesale Subscribers API.
+    #: A unique Cisco identifier for the customer. This value should be used for the `customerId` parameter in the
+    #: Wholesale Customers and Wholesale Subscribers API.
     #: example: 'Y2lzY29zcGFyazovL3VzL0VOVEVSUFJJU0UvNTJjZjU3NmQtNjBhOC00MDdhLWIyMmMtNDY3YzUxNTkxOTA4'
     id: Optional[str] = None
-    #: The Organization ID of the enterprise on Cisco Webex, to be used when referencing this customer on other Cisco Webex APIs. Only presented when status is `provisioned`.
+    #: The Organization ID of the enterprise on Cisco Webex, to be used when referencing this customer on other Cisco
+    #: Webex APIs. Only presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
     org_id: Optional[str] = None
     #: External ID of the Customer.
@@ -21278,8 +24417,10 @@ class Customer2(ApiModel):
     resource_details: Optional[ResourceDetails] = None
     #: List of errors that occurred during that last attempt to provision/update this customer.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer, *after* the API has been accepted and 202 response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
+    #: *after* the API has been accepted and 202 response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
 
 
@@ -21289,7 +24430,8 @@ class CustomerListResponse(ApiModel):
 
 
 class ResourceURL(ApiModel):
-    #: A URL which points to the [Get a Wholesale Customer](/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer) endpoint for the provisioned customer.
+    #: A URL which points to the `Get a Wholesale Customer
+    #: <https://developer.webex.com/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer>`_ endpoint for the provisioned customer.
     #: example: "https://webexapis.com/v1/wholesale/customers/Y2lzY29zcGFyazovL3VzL0VOVEVSUFJJU0UvNTJjZjU3NmQtNjBhOC00MDdhLWIyMmMtNDY3YzUxNTkxOTA4"
     url: Optional[str] = None
 
@@ -21368,7 +24510,8 @@ class Subscriber2(ApiModel):
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
     #: *Note:*
     #: + This list captures errors that occurred during provisioning of the subscriber.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The date and time the subscriber was provisioned.
     #: example: 2019-10-18T14:26:16.000Z
@@ -21390,7 +24533,9 @@ class ProvisionAWholesaleCustomerCustomerInfo(ApiModel):
     #: The primary email address of the customer.
     #: example: john.anderson@acme.com
     primary_email: Optional[str] = None
-    #: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language for organization and Webex Meeting Sites. Refer to the [help page](https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wholesale_rtm/wbxbw_b_wholesale-rtm-solution-guide/wbxbw_m_overview-of-webex-wholesale.html#Cisco_Reference.dita_deb994cb-9c48-4488-b352-54495c54ba1e) for more information.
+    #: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language for organization
+    #: and Webex Meeting Sites. Refer to the `help page
+    #: <https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wholesale_rtm/wbxbw_b_wholesale-rtm-solution-guide/wbxbw_m_overview-of-webex-wholesale.html#Cisco_Reference.dita_deb994cb-9c48-4488-b352-54495c54ba1e>`_ for more information.
     #: example: 'en'
     language: Optional[str] = None
 
@@ -21449,25 +24594,32 @@ class ProvisionAWholesaleSubscriberProvisioningParameters(ApiModel):
     #: The last name of the subscriber.
     #: example: Andersen
     last_name: Optional[str] = None
-    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
+    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be
+    #: supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled
+    #: user.
     #: example: +12405551212
     primary_phone_number: Optional[str] = None
-    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
+    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when
+    #: assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
     #: example: 51212
     extension: Optional[str] = None
-    #: A unique identifier for the location. This ID should be retrieved via the [List Locations](/docs/api/v1/locations/list-locations) API.
+    #: A unique identifier for the location. This ID should be retrieved via the `List Locations
+    #: <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ API.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
     location_id: Optional[str] = None
 
 
 class UpdateAWholesaleSubscriberProvisioningParameters(ApiModel):
-    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be supplied when changing from the webex_meetings package to any calling-enabled package.
+    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be
+    #: supplied when changing from the webex_meetings package to any calling-enabled package.
     #: example: +1-240-555-1212
     primary_phone_number: Optional[str] = None
-    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when changing from the webex_meetings package to any calling-enabled package.
+    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when
+    #: changing from the webex_meetings package to any calling-enabled package.
     #: example: 5221
     extension: Optional[datetime] = None
-    #: A unique identifier for the location. This id should be retrieved via the [List Locations](/docs/api/v1/locations/list-locations) API.
+    #: A unique identifier for the location. This id should be retrieved via the `List Locations
+    #: <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ API.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
     location_id: Optional[str] = None
 
@@ -21479,18 +24631,6 @@ class CLIDPolicySelection(str, Enum):
     location_number = 'LOCATION_NUMBER'
     #: Outgoing caller ID will show the value from the `customNumber` field.
     custom = 'CUSTOM'
-
-
-class CallForwardingPlaceSettingPatch(ApiModel):
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
-    busy: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
-    #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    no_answer: Optional[CallForwardingPutCallForwardingNoAnswer] = None
-
-
-class ModifyPlaceCallForwardSettings(ApiModel):
-    #: Call forwarding settings for a Workspace.
-    call_forwarding: Optional[CallForwardingPlaceSettingPatch] = None
 
 
 class ModifyPlaceCallerIdGet(ApiModel):
@@ -21550,7 +24690,7 @@ class MonitoredElementUser1(ApiModel):
     display_name: Optional[str] = None
     #: Type of the person or workspace.
     #: example: PEOPLE
-    type: Optional[MemberType] = None
+    type: Optional[MemberType1] = None
     #: Email of the person or workspace.
     #: example: john.brown@gmail.com
     email: Optional[str] = None
@@ -21618,7 +24758,7 @@ class UserMonitoringGet1(ApiModel):
 
 class UserPlaceAuthorizationCodeListGet(ApiModel):
     #: Indicates the set of activation codes and description.
-    access_codes: Optional[list[GetLocationAccessCodeObjectAccessCodes]] = None
+    access_codes: Optional[list[AuthorizationCode]] = None
 
 
 class ListNumbersAssociatedWithASpecificWorkspaceResponse1(ApiModel):
@@ -21632,7 +24772,7 @@ class ListNumbersAssociatedWithASpecificWorkspaceResponse1(ApiModel):
     organization: Optional[Location] = None
 
 
-class Location8(ApiModel):
+class Location10(ApiModel):
     #: Unique identifier for the location.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9XT1JLU1BBQ0VfTE9DQVRJT04vM2E2ZmYzNzMtNjhhNy00NGU0LTkxZDYtYTI3NDYwZTBhYzVjIzUxOWY2N2E1LTlkOTktNGM2My04YTA5LWI5MTcxY2M2NmJkMQ==
     id: Optional[str] = None
@@ -21685,7 +24825,7 @@ class WorkspaceLocationsCreationRequest(ApiModel):
 
 class WorkspaceLocationsCollectionResponse(ApiModel):
     #: An array of location objects.
-    items: Optional[list[Location8]] = None
+    items: Optional[list[Location10]] = None
 
 
 class AggregatedMetric(ApiModel):
@@ -21918,7 +25058,7 @@ class WorkspaceDeviceHostedMeetings(ApiModel):
     site_url: Optional[str] = None
 
 
-class Workspace3(ApiModel):
+class Workspace4(ApiModel):
     #: Unique identifier for the Workspace.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFUy81MTAxQjA3Qi00RjhGLTRFRjctQjU2NS1EQjE5QzdCNzIzRjc
     id: Optional[str] = None
@@ -21993,7 +25133,8 @@ class WorkspaceCreationRequest(ApiModel):
     #: A friendly name for the workspace.
     #: example: SFO-12 Capanina
     display_name: Optional[str] = None
-    #: `OrgId` associated with the workspace. Only admin users of another organization (such as partners) may use this parameter.
+    #: `OrgId` associated with the workspace. Only admin users of another organization (such as partners) may use this
+    #: parameter.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY
     org_id: Optional[str] = None
     #: Location associated with the workspace. Must be provided when the `floorId` is set.
@@ -22009,9 +25150,11 @@ class WorkspaceCreationRequest(ApiModel):
     type: Optional[WorkspaceType1] = None
     #: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
     sip_address: Optional[str] = None
-    #: Calling types supported on create are `freeCalling`, `webexEdgeForDevices`, `thirdPartySipCalling`, `webexCalling` and `none`. Default is `freeCalling`.
+    #: Calling types supported on create are `freeCalling`, `webexEdgeForDevices`, `thirdPartySipCalling`,
+    #: `webexCalling` and `none`. Default is `freeCalling`.
     calling: Optional[WorkspaceCreationRequestCalling] = None
-    #: Workspace calendar configuration. Provide a type (`microsoft`, `google` or `none`) and an `emailAddress`. Default is `none`.
+    #: Workspace calendar configuration. Provide a type (`microsoft`, `google` or `none`) and an `emailAddress`.
+    #: Default is `none`.
     calendar: Optional[WorkspaceCreationRequestCalendar] = None
     #: Notes associated to the workspace.
     #: example: this is a note
@@ -22059,7 +25202,9 @@ class WorkspaceUpdateRequest(ApiModel):
     #: The type that best describes the workspace.
     #: example: focus
     type: Optional[WorkspaceUpdateRequestType] = None
-    #: An empty/null calendar field will not cause any changes. Provide a type (`microsoft`, `google` or `none`) and an `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none` type does not require an `emailAddress`.
+    #: An empty/null calendar field will not cause any changes. Provide a type (`microsoft`, `google` or `none`) and an
+    #: `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none` type does not require
+    #: an `emailAddress`.
     calendar: Optional[WorkspaceCreationRequestCalendar] = None
     #: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
     sip_address: Optional[str] = None
@@ -22077,7 +25222,7 @@ class WorkspaceUpdateRequest(ApiModel):
 
 class WorkspaceCollectionResponse(ApiModel):
     #: An array of workspace objects.
-    items: Optional[list[Workspace3]] = None
+    items: Optional[list[Workspace4]] = None
 
 
 class SupportAndConfiguredInfo(ApiModel):

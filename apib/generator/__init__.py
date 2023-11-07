@@ -10,8 +10,7 @@ from apib.apib import read_api_blueprint, ApibParseResult
 from apib.python_class import PythonClassRegistry, Endpoint
 from apib.tools import break_line
 
-PREAMBLE = """
-from datetime import datetime
+PREAMBLE = """from datetime import datetime
 from typing import Optional
 
 from pydantic import Field
@@ -65,14 +64,8 @@ class CodeGenerator:
             * dataclasses
             * API classes
         """
-        endpoint_sources = []
-        # work on endpoints in groups by APIB file
-        endpoints_by_apib: dict[str, list[Endpoint]] = \
-            reduce(lambda r, e: r[e[0]].append(e[1]) or r,
-                   self.class_registry.endpoints(),
-                   defaultdict(list))
-
         apis = [api for _, api in self.class_registry.apis()]
+        api_sources = [api.source() for api in apis]
 
         class_names = []
         class_sources = []
@@ -85,7 +78,11 @@ class CodeGenerator:
             class_sources.append(source)
         # __auto__ with all class names
         auto_src = f"""__auto__ = [{", ".join(f"'{c}'" for c in sorted(class_names))}]"""
-        auto_src = '\n'.join(break_line(auto_src, width=120, prefix=' ' * 12))
+        auto_src = '\n'.join(break_line(auto_src, width=120, prefix=' ' * 12, prefix_first_line=''))
         source = '\n\n\n'.join(chain.from_iterable(((PREAMBLE, auto_src), class_sources)))
-        source = source.strip() + '\n'
+        source = source.strip()
+        nl = '\n'
+        source = f'{source}{nl}'
+        # source = f'{source}{nl * 3}{(nl * 2).join(f"{api_source}{nl}    ..." for api_source in api_sources)}'
+
         return source
