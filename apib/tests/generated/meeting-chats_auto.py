@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -54,3 +55,34 @@ class ChatObject(ApiModel):
 class ListMeetingChatsResponse(ApiModel):
     #: Chat array
     items: Optional[list[ChatObject]] = None
+
+
+class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
+    """
+    Meeting Chats
+    
+    Chats are content captured in a meeting when chat messages are sent between the participants within a meeting. This
+    feature allows a Compliance Officer to access the in-meeting chat content.
+    
+    The Compliance Officer can use the Meeting Chats API to retrieve the chats of a meeting and to delete all chats
+    associated with a meeting. `private` chats are text messages between two people. `group` chats are for larger
+    breakout spaces. Meeting chats are different from room messages in that there is no catch-up propagation. For
+    example, if a user joins a meeting late only, chat messages that are created from then on, will be propagated to
+    this user. To understand which user saw which message if they joined late, you have to query the
+    `meetingParticipants` REST resource for the joined/left times and compare to the `meetingsChat` `chatTime` field.
+    
+    The Webex meetings chat functionality and API endpoint described here is
+    "upon-request" and not enabled by default. If you need it enabled for your
+    org, or if you need help, please contact the Webex Developer Support team at
+    devsupport@webex.com.
+    
+    
+    
+    Meetings on the Webex Meetings Suite platform rely on enhanced meeting chat
+    functionality, powered by a different backend. To access meeting chats in the
+    Webex Suite, please see the `meetingMessages
+    <https://developer.webex.com/docs/api/v1/meeting-messages>`_
+    resource.
+    
+    """
+    ...

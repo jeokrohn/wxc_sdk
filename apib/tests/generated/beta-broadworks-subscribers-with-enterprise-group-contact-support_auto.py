@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -114,3 +115,27 @@ class Subscriber(ApiModel):
 class SubscriberListResponse(ApiModel):
     #: An array of Subscriber objects.
     items: Optional[list[Subscriber]] = None
+
+
+class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, base='broadworks/subscribers'):
+    """
+    Beta BroadWorks Subscribers With Enterprise Group Contact Support
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks subscriber information requires an administrator auth token with
+    `spark-admin:broadworks_subscribers_read` scope. Provisioning, updating, and removing subscribers requires an
+    administrator auth token with the `spark-admin:broadworks_subscribers_write` scope.
+    
+    <div>
+    <Callout type="info">Additional Infocodes are given for all success cases. To learn more about the Infocodes used
+    in Broadworks Subscriber Provisioning Precheck APIs, see the `Provisioning Precheck API Info Codes
+    <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#whats-possible-with-webex-for-broadworks-provisioning-precheck-apis>`_
+    guides.</Callout>
+    </div>
+    """
+    ...

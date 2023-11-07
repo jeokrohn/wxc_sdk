@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -195,3 +196,29 @@ class PollResultCollectionResponse(ApiModel):
 
 class RespondentCollectionResponse(ApiModel):
     items: Optional[list[Respondent]] = None
+
+
+class MeetingPollsApi(ApiChild, base='meetings'):
+    """
+    Meeting Polls
+    
+    As a presenter, you can use a poll to create and share questionnaires. Polls can be useful for gathering feedback,
+    taking votes, or testing knowledge.
+    
+    You can use the Meeting Poll API to list meeting polls, the poll's questions, and answers.
+    
+    Currently, these APIs are available to users with one of the meeting host,
+    admin or `Compliance Officer
+    <https://developer.webex.com/docs/compliance#compliance>`_ roles. The polls,
+    polls results, and the list of poll respondents are available within 15
+    minutes following the meeting.
+    
+    
+    
+    The Webex meetings poll functionality and API endpoint described here is
+    "upon-request" and not enabled by default. If you need it enabled for your
+    org, or if you need help, please contact the Webex Developer Support team at
+    devsupport@webex.com.
+    
+    """
+    ...

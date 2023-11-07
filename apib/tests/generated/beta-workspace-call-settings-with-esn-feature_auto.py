@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -150,3 +151,26 @@ class ListNumbersAssociatedWithASpecificWorkspaceResponse(ApiModel):
     location: Optional[Location] = None
     #: Organization object having a unique identifier for the organization and its name.
     organization: Optional[Location] = None
+
+
+class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{workspaceId}/features'):
+    """
+    Beta Workspace Call Settings with ESN Feature
+    
+    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
+    Devices may be associated with workspaces.
+    
+    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace
+    within the organization.
+    
+    Viewing the list of settings in a workspace /v1/workspaces API requires an full, device, or read-only administrator
+    auth token with the `spark-admin:workspaces_read` scope.
+    
+    Adding, updating, or deleting settings in a workspace /v1/workspaces API requires an full or device administrator
+    auth token with the `spark-admin:workspaces_write` scope.
+    
+    This API can also be used by partner administrators acting as administrators of a different organization than their
+    own. In those cases, an `orgId` must be supplied, as indicated in the reference documentation for the relevant
+    endpoints.
+    """
+    ...

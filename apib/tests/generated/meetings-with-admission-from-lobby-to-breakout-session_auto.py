@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -2710,3 +2711,23 @@ class CreateInvitationSourcesResponse(ApiModel):
 class ReassignMeetingsToANewHostResponse(ApiModel):
     #: Array of meeting reassignment results.
     items: Optional[list[ReassignMeetingResponseObject]] = None
+
+
+class MeetingsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, base='meetings'):
+    """
+    Meetings with Admission from Lobby to Breakout Session
+    
+    Meetings are virtual conferences where users can collaborate in real time using audio, video, content sharing,
+    chat, online whiteboards, and to collaborate.
+    
+    This API focuses primarily on the scheduling and management of meetings. You can use the Meetings API to list,
+    create, get, update, and delete meetings.
+    
+    Several types of meeting objects are supported by this API, such as meeting series, scheduled meeting, and ended or
+    in-progress meeting instances. See the `Meetings Overview
+    <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for more information about the types of meetings.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...

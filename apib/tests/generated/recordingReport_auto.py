@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -386,5 +387,16 @@ class GetRecordingAuditReportDetailsResponse(ApiModel):
 
 
 class ListMeetingArchiveSummariesResponse(ApiModel):
-    #: An array of meeting archive summaries objects.
-    items: Optional[list[RecordingAchriveSummaryObject]] = None
+    #: An array of  meeting archive summaries objects.
+    items: Optional [list[RecordingAchriveSummaryObject]] = None
+
+class RecordingReportApi(ApiChild, base='recordingReport'):
+    """
+    Recording Report
+    
+    The recording report API is used to retrieve reports of recording.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...

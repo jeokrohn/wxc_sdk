@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -52,3 +53,16 @@ class ECMFolder(ApiModel):
 
 class ECMFolderCollectionResponse(ApiModel):
     items: Optional[list[ECMFolder]] = None
+
+
+class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
+    """
+    ECM folder linking
+    
+    Enterprise Content Management folder-linking in Webex is how users configure existing OneDrive and SharePoint
+    online folders as the (default or reference) storage backend for spaces. This configuration can be done in our
+    native clients and via API.
+    A space participant will be able to configure an ECM folder for a space. Only one ECM folder per space and only
+    OneDrive and SharePoint online are currently supported.
+    """
+    ...

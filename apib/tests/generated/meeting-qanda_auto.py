@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -83,3 +84,26 @@ class ListMeetingQAndAResponse(ApiModel):
 class ListAnswersOfAQuestionResponse(ApiModel):
     #: An array of answers to a specific question.
     items: Optional[list[AnswerObject]] = None
+
+
+class MeetingQAndAApi(ApiChild, base='meetings/q_and_a'):
+    """
+    Meeting Q and A
+    
+    During a `Question and Answer
+    <https://help.webex.com/en-us/article/nakt8px/Question-and-answer-(Q&A>`_-sessions-in-Webex-Meetings-and-Webex-Webinars) (Q&A) session, attendees can pose
+    questions to hosts, co-hosts, and presenters, who can answer and moderate those questions. You use the Meeting Q&A
+    API to retrieve the questions and the answers in a meeting.
+    
+    Currently, these APIs are available to users with one of the meeting host,
+    admin or `Compliance Officer
+    <https://developer.webex.com/docs/compliance#compliance>`_ roles.
+    
+    
+    
+    The features and APIs described here are available upon-request and is not
+    enabled by default. If would like this feature enabled for your organization
+    please contact the Webex Developer Support team at devsupport@webex.com.
+    
+    """
+    ...

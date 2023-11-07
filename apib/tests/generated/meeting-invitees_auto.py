@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -150,3 +151,17 @@ class CreateInviteesObject(ApiModel):
 class CreateInviteesResponse(ApiModel):
     #: Meeting invitees inserted.
     items: Optional[list[GetInviteeObject]] = None
+
+
+class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
+    """
+    Meeting Invitees
+    
+    This API manages invitees' relationships to a meeting.
+    
+    You can use the Meeting Invitees API to list, create, update, and delete invitees.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...

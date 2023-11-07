@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -130,3 +131,26 @@ class ListPagingGroupObject(ApiModel):
 class ReadTheListOfPagingGroupsResponse(ApiModel):
     #: Array of paging groups.
     location_paging: Optional[list[ListPagingGroupObject]] = None
+
+
+class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Paging Group with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Paging Group supports reading and writing of Webex Calling Paging Group settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...

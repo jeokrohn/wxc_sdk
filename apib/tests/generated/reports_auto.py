@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -55,3 +56,23 @@ class CreateAReportResponse(ApiModel):
     #: The unique identifier for the report.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mYzhjMWFhMS00OTM5LTQ2NjEtODAwMy1hYWE0MzFmZWM0ZmE
     id: Optional[str] = None
+
+
+class ReportsApi(ApiChild, base='reports'):
+    """
+    Reports
+    
+    To access these endpoints, you must use an administrator token with the `analytics:read_all` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. The
+    authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+    
+    To use this endpoint the org needs to be licensed for the Pro Pack.
+    
+    Reports available via `Webex Control Hub
+    <https://admin.webex.com>`_ may be generated and downloaded via the Reports API. To access this API,
+    the authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+    
+    For more information about Reports, see the `Admin API
+    <https://developer.webex.com/docs/admin#reports-api>`_ guide.
+    """
+    ...

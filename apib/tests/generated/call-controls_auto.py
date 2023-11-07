@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -230,3 +231,21 @@ class ListCallsResponse(ApiModel):
 
 class ListCallHistoryResponse(ApiModel):
     items: Optional[list[CallHistoryRecord]] = None
+
+
+class CallControlsApi(ApiChild, base='telephony/calls'):
+    """
+    Call Controls
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Call Control APIs in support of Webex Calling.
+    
+    All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
+    scope.
+    
+    **NOTE**: These APIs support 3rd Party Call Control only.
+    """
+    ...

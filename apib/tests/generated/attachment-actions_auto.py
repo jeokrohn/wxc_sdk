@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -76,3 +77,14 @@ class AttachmentActivity(ApiModel):
     #: The date and time the action was created.
     #: example: 2016-05-10T19:41:00.100Z
     created: Optional[datetime] = None
+
+
+class AttachmentActionsApi(ApiChild, base='attachment/actions'):
+    """
+    Attachment Actions
+    
+    Users create attachment actions by interacting with message attachments such as clicking on a submit button in a
+    `card
+    <https://developer.webex.com/docs/api/guides/cards>`_.
+    """
+    ...

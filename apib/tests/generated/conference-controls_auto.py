@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -53,3 +54,19 @@ class ConferenceDetails(ApiModel):
     type: Optional[ConferenceTypeEnum] = None
     #: The participants in the conference.
     participants: Optional[list[ConferenceParticipant]] = None
+
+
+class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
+    """
+    Beta Conference Controls
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Conference Control APIs in support of Webex Calling.
+    
+    All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
+    scope.
+    """
+    ...

@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -390,3 +391,24 @@ class ReceptionInfo(ApiModel):
     reception_enabled: Optional[bool] = None
     #: List of people, workspaces or virtual lines to monitor.
     monitored_members: Optional[list[MonitoredMemberObject]] = None
+
+
+class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
+    """
+    Beta User Call Settings with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+    
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    """
+    ...

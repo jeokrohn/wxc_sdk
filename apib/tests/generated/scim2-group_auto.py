@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -224,3 +225,16 @@ class GroupMemberResponse(ApiModel):
     start_index: Optional[int] = None
     #: A list of members of this group.
     members: Optional[list[GroupMemberResponseMembers]] = None
+
+
+class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
+    """
+    SCIM 2 Groups
+    
+    Implementation of the SCIM 2.0 group part for group management in a standards based manner. Please also see the
+    `SCIM Specification
+    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with detailed in
+    `SCIM 2.0 schema
+    <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
+    """
+    ...

@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -45,3 +46,12 @@ class GroupMembers(ApiModel):
 
 class Groups(ApiModel):
     items: Optional[list[GroupMembers]] = None
+
+
+class OrganizationGroupsApi(ApiChild, base='organization/groups?orgId={orgId}&displayName={displayName}'):
+    """
+    Organization Groups
+    
+    <!-- feature-toggle-name:license-templates-api-docs -->
+    """
+    ...

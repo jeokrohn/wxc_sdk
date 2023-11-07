@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -143,3 +144,20 @@ class SearchMemberObject(ApiModel):
 class SearchMemberResponse(ApiModel):
     #: List of members available for the device.
     members: Optional[list[SearchMemberObject]] = None
+
+
+class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/devices/{deviceId}'):
+    """
+    Beta Device Call Settings with ESN Feature
+    
+    These APIs manages Webex Calling settings for devices with are of the Webex Calling type.
+    
+    Viewing these read-only device settings requires a full, device, or
+    read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these device settings requires a full or device
+    administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    """
+    ...

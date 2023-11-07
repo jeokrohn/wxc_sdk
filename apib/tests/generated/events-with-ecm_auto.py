@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -74,3 +75,15 @@ class Event(ApiModel):
 
 class EventCollectionResponse(ApiModel):
     items: Optional[list[Event]] = None
+
+
+class EventsApi(ApiChild, base='events'):
+    """
+    Events
+    
+    Events are generated when actions take place within Webex, such as when someone creates or deletes a message.
+    Compliance Officers may use the Events API to retrieve events for all users within an organization. See the
+    `Compliance Guide
+    <https://developer.webex.com/docs/api/guides/compliance>`_ for more information.
+    """
+    ...

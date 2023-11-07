@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -93,3 +94,24 @@ class Issue(ApiModel):
 class IssuesCollectionResponse(ApiModel):
     #: An array of issue objects.
     items: Optional[list[Issue]] = None
+
+
+class IssuesAPIApi(ApiChild, base='issues'):
+    """
+    Issues API
+    
+    Issues are support feedback entries from users of Webex clients and portals.
+    
+    Adding, searching, and viewing Issues requires an auth token with a scope of `support:issues_read`.
+    
+    Updating an issue by a user is also supported, but limited to the `subject` and `description`
+    attributes.
+    
+    Viewing the list of all Issues in the Organization(s) managed by the admin user requires an
+    auth token with scope of `support:org_issues_read`.
+    
+    Updating an Issue's `status` requires an auth token with the `support:org_issues_write` scope.
+    
+    An Issue cannot be deleted, but the `status` can be updated to `CLOSED`.
+    """
+    ...

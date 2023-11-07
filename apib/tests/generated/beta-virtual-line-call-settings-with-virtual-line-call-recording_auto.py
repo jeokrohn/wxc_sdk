@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -100,3 +101,19 @@ class CallRecordingPut(ApiModel):
     repeat: Optional[CallRecordingInfoRepeat] = None
     #: Call Recording starts and stops announcement settings.
     start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
+
+
+class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base='telephony/config/virtualLines/{virtualLineId}/callRecording'):
+    """
+    Beta Virtual Line Call Settings with Virtual Line Call Recording
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Viutual Line Settings supports listing Webex Calling virtual lines.
+    
+    Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read.
+    """
+    ...

@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -274,3 +275,24 @@ class ListCapturesQuery(ApiModel):
     #: Expiration time of returned s3 url (in minutes). Max value is 60.
     #: example: 30.0
     url_expiration: Optional[int] = None
+
+
+class ContactCenterApi(ApiChild, base='contactCenter'):
+    """
+    Contact Center
+    
+    The Webex Contact Center functionality and API endpoints described here are
+    currently pre-release features which are not available to all Webex users. If
+    you have any questions, or if you need help, please contact the Webex
+    Developer Support team at devsupport@webex.com.
+    
+    
+    
+    The set of WxCC API endpoints below allow developers to view Tasks for insights into the interactions between
+    agents and customers, Agents Statistics for details related to specific agents, Queues Statistics for details on
+    specific queues, and Captures for the actual media related to an interaction.
+    
+    These endpoints require an auth token with the `cjp:config_read` scope for organizations with a WxCC license or the
+    `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+    """
+    ...

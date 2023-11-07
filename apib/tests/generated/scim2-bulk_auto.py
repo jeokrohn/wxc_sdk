@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -42,3 +43,13 @@ class BulkUser(ApiModel):
     fail_on_errors: Optional[int] = None
     #: Contains a list of bulk operations for POST/PATCH/DELETE operations.
     operations: Optional[list[BulkUserOperations]] = None
+
+
+class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Bulk'):
+    """
+    Bulk Manage SCIM 2 Users and Groups
+    
+    The bulk API allows you to create, update, and remove multiple users and groups in Webex.  The number of Bulk
+    operations in a single request is limited to 100.
+    """
+    ...

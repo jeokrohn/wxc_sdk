@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -230,3 +231,15 @@ class AdmitParticipantsObject(ApiModel):
 
 class ListMeetingParticipantsResponse(ApiModel):
     items: Optional[list[Participant]] = None
+
+
+class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
+    """
+    Meeting Participants
+    
+    This API manages meeting participants.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#meetings-api-scopes>`_ section of `Meetings Overview
+    """
+    ...

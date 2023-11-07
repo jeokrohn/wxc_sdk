@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -39,3 +40,16 @@ class TeamMembership(ApiModel):
 
 class TeamMembershipCollectionResponse(ApiModel):
     items: Optional[list[TeamMembership]] = None
+
+
+class TeamMembershipsApi(ApiChild, base='team/memberships'):
+    """
+    Team Memberships
+    
+    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're
+    in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a
+    moderator or deleted to remove them from the team.
+    
+    Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
+    """
+    ...

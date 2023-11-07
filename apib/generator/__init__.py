@@ -15,6 +15,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum"""
 
@@ -82,7 +83,7 @@ class CodeGenerator:
         source = '\n\n\n'.join(chain.from_iterable(((PREAMBLE, auto_src), class_sources)))
         source = source.strip()
         nl = '\n'
-        source = f'{source}{nl}'
-        # source = f'{source}{nl * 3}{(nl * 2).join(f"{api_source}{nl}    ..." for api_source in api_sources)}'
+        # source = f'{source}{nl}'
+        source = f'{source}{nl * 3}{(nl * 2).join(f"{api_source}{nl}    ..." for api_source in api_sources)}'
 
         return source

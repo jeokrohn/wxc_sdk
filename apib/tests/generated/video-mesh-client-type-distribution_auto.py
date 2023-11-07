@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -60,3 +61,22 @@ class ClienttypedistributionCollectionforOrg(ApiModel):
 
 class ClienttypedistributionforOrg(ApiModel):
     items: Optional[list[ClienttypedistributionCollectionforOrg]] = None
+
+
+class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientTypeDistribution'):
+    """
+    Video Mesh Client Type Distribution API
+    
+    Video Mesh Developer APIs enable organization admins to view Client Type Distribution details from the Developer
+    Portal or their own monitoring application.
+    
+    <br>
+    
+    <b>NOTE:</b> The APIs will return data for all device types if the "deviceType" request parameter is empty.
+    
+    <br>
+    
+    To obtain the Organization ID needed for these APIs, use the `Organizations API
+    <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_.
+    """
+    ...

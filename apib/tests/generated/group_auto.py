@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -97,3 +98,18 @@ class GroupsCollectionResponse(ApiModel):
     items_per_page: Optional[int] = None
     #: An array of group objects.
     groups: Optional[list[GroupResponse]] = None
+
+
+class GroupsApi(ApiChild, base='groups'):
+    """
+    Groups
+    
+    Groups contain a collection of members in Webex. A member represents a Webex user. A group is used to assign
+    templates and settings to the set of members contained in a group.  To create and manage a group, including adding
+    and removing members from a group, an auth token containing the `identity:groups_rw` is required.  Searching and
+    viewing members of a group requires an auth token with a scope of `identity:groups_read`.
+    
+    To learn more about managing people to use as members in the /groups API please refer to the `People API
+    <https://developer.webex.com/docs/api/v1/people>`_.
+    """
+    ...

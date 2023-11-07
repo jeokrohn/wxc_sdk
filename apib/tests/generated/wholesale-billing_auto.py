@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -110,3 +111,28 @@ class ListWholesaleBillingReportsSortBy(str, Enum):
     billing_start_date = 'billingStartDate'
     billing_end_date = 'billingEndDate'
     status = 'status'
+
+
+class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
+    """
+    Wholesale Billing Reports
+    
+    The Wholesale Billing Report APIs are targeted at Service Providers who sign up for the Webex for Wholesale
+    solution. These APIs provides customer and user breakdown reports to the service providers or partners. Service
+    providers can use these reports to reconcile their monthly invoices.
+    
+    Viewing Webex for Wholesale billing reports information requires a partner administrator auth token with the
+    `spark-admin:wholesale_billing_reports_read` scope. Creating, Deleting billing reports require a partner
+    administrator auth token with the `spark-admin:wholesale_billing_reports_write` scope.
+    
+    Each Webex Developer Sandbox for Webex Wholesale use is limited to a maximum
+    of 10 account users for validation and test purposes only. Cisco may from time
+    to time audit Webex Developer Sandbox accounts and reserves the right to
+    remove users in excess of 10 account users, or terminate the Webex Developer
+    Sandbox environment for any Developer resource misuse. To learn more about the
+    error codes used in Wholesale billing reports API, see the [API Error
+    codes](/docs/api/guides/webex-for-broadworks-and-wholesale-common-guide#api-
+    error-codes) guides.
+    
+    """
+    ...

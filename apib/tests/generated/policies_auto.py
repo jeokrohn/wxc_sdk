@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -59,3 +60,15 @@ class PolicyCollectionResponse(ApiModel):
 class ListPoliciesType(str, Enum):
     default = 'default'
     custom = 'custom'
+
+
+class PoliciesApi(ApiChild, base='policies'):
+    """
+    Policies
+    
+    Policies give organization administrators more control over the integrations available for use within their
+    organization. By default, any user can add an integration for use with Webex. To restrict the usage of
+    integrations within an organization, create policies to define what is either allowed or disallowed by the
+    organization.
+    """
+    ...

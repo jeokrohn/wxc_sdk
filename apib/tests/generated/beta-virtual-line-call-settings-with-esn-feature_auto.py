@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -87,3 +88,19 @@ class ListVirtualLineObject(ApiModel):
 class ReadTheListOfVirtualLinesResponse(ApiModel):
     #: Array of virtual lines.
     virtual_lines: Optional[list[ListVirtualLineObject]] = None
+
+
+class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/virtualLines'):
+    """
+    Beta Virtual Line Call Settings with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Viutual Line Settings supports listing Webex Calling virtual lines.
+    
+    Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read.
+    """
+    ...

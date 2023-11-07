@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -42,3 +43,24 @@ class ResourceGroupMembership(ApiModel):
 
 class ResourceGroupMembershipCollectionResponse(ApiModel):
     items: Optional[list[ResourceGroupMembership]] = None
+
+
+class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
+    """
+    Resource Group Memberships
+    
+    Resource Group Memberships represent a person's relationship to a Resource Group for a particular `Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_
+    license. Users assigned a new license will be automatically placed in a "default" Resource Group. Use this API to
+    list memberships for all people in an organization or update memberships to use a different Resource Group.
+    
+    Searching and viewing Resource Group Memberships requires an administrator auth token with the
+    `spark-admin:resource_group_memberships_read` scope. Updating memberships requires an administrator auth token
+    with the `spark-admin:resource_group_memberships_write` scope.
+    
+    To manage Resource Groups, see the `Resource Groups API
+    <https://developer.webex.com/docs/api/v1/resource-groups>`_. For more information about Resource Groups, see the
+    `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
+    """
+    ...

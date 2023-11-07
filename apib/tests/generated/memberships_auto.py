@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -53,3 +54,17 @@ class Membership(ApiModel):
 
 class MembershipCollectionResponse(ApiModel):
     items: Optional[list[Membership]] = None
+
+
+class MembershipsApi(ApiChild, base='memberships'):
+    """
+    Memberships
+    
+    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in or
+    create memberships to invite someone to a room. Compliance Officers can now also list memberships for
+    `personEmails` where the CO is not part of the room.
+    Memberships can also be updated to make someone a moderator, or deleted, to remove someone from the room.
+    
+    Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
+    """
+    ...

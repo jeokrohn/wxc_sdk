@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -173,3 +174,39 @@ class HistoricalDataRelatedToMeetingsResponse(ApiModel):
     #: example: 2020-08-03
     end_date: Optional[datetime] = None
     metrics: Optional[HistoricalDataRelatedToMeetingsResponseMetrics] = None
+
+
+class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
+    """
+    Historical Analytics APIs
+    
+    The base URL for these APIs is **analytics.webexapis.com**, which does not
+    work with the **Try It** feature. If you have any questions or need help
+    please contact the Webex Developer Support team at devsupport@webex.com.
+    
+    
+    
+    These APIs allow an administrator to pull historical analytics data for meetings, messaging and room devices.
+    
+    This API requires a `Pro Pack for Control Hub
+    <https://help.webex.com/article/np3c1rm>`_ license. API requests require an access token representing an
+    administrator with either a read-only admin or full-admin role for the associated organization. The token must
+    have the `analytics:read_all` scope.
+    
+    By default, the calls to analytics.webexapis.com for historical data are sent to the closest region servers. The
+    other possible region servers are analytics-eu.webexapis.com and analytics-ca.webexapis.com. If the region servers
+    host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code ('Unavailable For Legal
+    Reasons') is returned. The body of the response in this case contains the end point information from where user
+    can get historical data for the user's organization. Below is a sample error message looks in this condition.
+    
+    ```javascript
+    {
+    "message": "This server cannot serve the data for this organization. Please use {another region's VIP}",
+    "errorCode": 451,
+    "trackingId": {trackingId}
+    }
+    ```
+    
+    To use this API the org needs to be licensed for pro pack.
+    """
+    ...

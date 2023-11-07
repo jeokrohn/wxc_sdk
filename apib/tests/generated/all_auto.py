@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -25315,3 +25316,2796 @@ class ExecuteCommandResponse(ApiModel):
     arguments: Optional[ExecuteCommandArguments] = None
     #: xAPI command results
     result: Optional[ExecuteCommandBody] = None
+
+
+class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
+    """
+    Admin Audit Events with Scaling
+    
+    Admin Audit Events are available to full administrators for `certain events
+    <https://help.webex.com/n3b0w6x/>`_ performed in Webex Control Hub.
+    
+    Administrators with accounts created before 2019 who have never logged into `Webex Control Hub
+    <https://admin.webex.com>`_ will need to log into
+    Webex Control Hub at least once to enable access to this API.
+    
+    An administrator account with the `audit:events_read` scope is required to use this API.
+    """
+    ...
+
+class AdminAuditEventsApi(ApiChild, base='adminAudit'):
+    """
+    Admin Audit Events
+    
+    Admin Audit Events are available to full administrators for `certain events
+    <https://help.webex.com/n3b0w6x/>`_ performed in Webex Control Hub.
+    
+    Administrators with accounts created before 2019 who have never logged into `Webex Control Hub
+    <https://admin.webex.com>`_ will need to log into
+    Webex Control Hub at least once to enable access to this API.
+    
+    An administrator account with the `audit:events_read` scope is required to use this API.
+    """
+    ...
+
+class ApplicationUsageApi(ApiChild, base='application/usage'):
+    """
+    Application Usage
+    
+    <!-- feature-toggle-name:policies-api-v2-docs -->
+    """
+    ...
+
+class ApplicationsApi(ApiChild, base='applications'):
+    """
+    Applications
+    
+    <!-- feature-toggle-name:applications-api-docs -->
+    """
+    ...
+
+class AttachmentActionsApi(ApiChild, base='attachment/actions'):
+    """
+    Attachment Actions
+    
+    Users create attachment actions by interacting with message attachments such as clicking on a submit button in a
+    `card
+    <https://developer.webex.com/docs/api/guides/cards>`_.
+    """
+    ...
+
+class AuthorizationsApi(ApiChild, base='authorizations'):
+    """
+    Authorizations
+    
+    Admin API. You need full or user level admin privileges to call this API.
+    
+    
+    
+    Authorizations are user grants to applications to act on the user's behalf. Authorizations are how `Integrations
+    <https://developer.webex.com/docs/integrations>`_ get
+    authorized with specific `access scopes
+    <https://developer.webex.com/docs/integrations#scopes>`_ in the oAuth client life-cycle. Integrations and some of the Webex service
+    portals, like `developer.webex.com
+    <https://developer.webex.com/>`_, are all oAuth clients, each with their unique `clientId`.
+    
+    Your application receives an API `access token
+    <https://developer.webex.com/docs/integrations#getting-an-access-token>`_ and a `refresh token
+    used to call Webex APIs for which the user authorized the scopes. Access tokens expire fairly frequently, while
+    refresh tokens (when being regularly used) will be refreshed to last forever (see `Using the Refresh Token
+    <https://developer.webex.com/docs/integrations#using-the-refresh-token>`_ for
+    details).
+    
+    In this API an authorization is synonymous with an `API access token
+    <https://developer.webex.com/docs/integrations#getting-an-access-token>`_.
+    
+    To provide admins with fine-grained token management control, you use the `/authorizations
+    <https://developer.webex.com/docs/api/v1/authorizations>`_ API with
+    the `DELETE` HTTP method to revoke access and refresh tokens.
+    
+    Deleting a refresh token will revoke all associated access tokens as well. Deleting an access token will revoke the
+    developers ability to call the APIs with it.
+    Webex subsystems may cache the validity of the token for a short while longer after the authorization was deleted.
+    
+    Admins can revoke user authorizations for users in their organization. When an admin deletes their own token, the
+    `clientId` used to auhtorize the request must match the `clientId` used to generate the token.
+    
+    To use the authorizations API in an Integration the scopes must include:
+    `identity:tokens_write`,`identity:tokens_read`.
+    """
+    ...
+
+class BetaBroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadworks/enterprises'):
+    """
+    Beta BroadWorks Enterprises With Delete Org Improvements
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks enterprise information requires an administrator auth token with
+    `spark-admin:broadworks_enterprises_read` scope.
+    Updating directory sync configuration or trigger directory sync for a Webex for BroadWorks enterprise require an
+    administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
+    """
+    ...
+
+class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, base='broadworks/enterprises'):
+    """
+    Beta BroadWorks Enterprises With Enterprise Group Contact Support
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks enterprise information requires an administrator auth token with
+    `spark-admin:broadworks_enterprises_read` scope.
+    Updating directory sync configuration or trigger directory sync for a Webex for BroadWorks enterprise require an
+    administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
+    """
+    ...
+
+class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base='broadworks/enterprises'):
+    """
+    Beta BroadWorks Enterprises with List Enterprises Enhancements
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks enterprise information requires an administrator auth token with
+    `spark-admin:broadworks_enterprises_read` scope.
+    Updating directory sync configuration or trigger directory sync for a Webex for BroadWorks enterprise require an
+    administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
+    """
+    ...
+
+class BetaBroadWorksEnterprisesWithOrgCreationTimestampApi(ApiChild, base='broadworks/enterprises'):
+    """
+    Beta BroadWorks Enterprises with Org Creation Timestamp
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks enterprise information requires an administrator auth token with
+    `spark-admin:broadworks_enterprises_read` scope.
+    Updating directory sync configuration or trigger directory sync for a Webex for BroadWorks enterprise require an
+    administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
+    """
+    ...
+
+class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, base='broadworks/subscribers'):
+    """
+    Beta BroadWorks Subscribers With Enterprise Group Contact Support
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks subscriber information requires an administrator auth token with
+    `spark-admin:broadworks_subscribers_read` scope. Provisioning, updating, and removing subscribers requires an
+    administrator auth token with the `spark-admin:broadworks_subscribers_write` scope.
+    
+    <div>
+    <Callout type="info">Additional Infocodes are given for all success cases. To learn more about the Infocodes used
+    in Broadworks Subscriber Provisioning Precheck APIs, see the `Provisioning Precheck API Info Codes
+    <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#whats-possible-with-webex-for-broadworks-provisioning-precheck-apis>`_
+    guides.</Callout>
+    </div>
+    """
+    ...
+
+class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/calls'):
+    """
+    Beta Call Controls with Mute and Unmute Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Call Control APIs in support of Webex Calling.
+    
+    All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
+    scope.
+    
+    **NOTE**: These APIs support 3rd Party Call Control only.
+    """
+    ...
+
+class BetaCallRoutingWithRoutingPrefixUpdateApi(ApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
+    """
+    Beta Call Routing with Routing Prefix Update
+    
+    <!-- feature-toggle-name:wxc-support-extensions-m2-106132 -->
+    """
+    ...
+
+class BetaDECTDevicesSettingsApi(ApiChild, base='telephony/config'):
+    """
+    Beta DECT Devices Settings
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    DECT APIs allow the admin to create a DECT network, and add base stations and handsets to the DECT network. People,
+    places and virtual lines member types are supported on handset lines in the DECT network. Currently, APIs support
+    Cisco DECT device models only.
+    
+    Viewing and searching  DECT settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Adding and modifying these DECT settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    """
+    ...
+
+class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/departments'):
+    """
+    Beta Departments with Department Features
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Webex Calling Organization Settings support reading and writing of Webex Calling settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `OrgId`
+    query parameter.
+    
+    Only organization settings with department-related fields are listed.  For department membership, please refer to
+    `Get Group Members API
+    <https://developer.webex.com/docs/api/v1/groups/get-group-members>`_ to retrieve members of a department group.
+    
+    The use of the `/groups` API for departments is supported in a read-only
+    manner only. Modification of a department via the `/groups` API is
+    unsupported.
+    
+    """
+    ...
+
+class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/devices/{deviceId}'):
+    """
+    Beta Device Call Settings with ESN Feature
+    
+    These APIs manages Webex Calling settings for devices with are of the Webex Calling type.
+    
+    Viewing these read-only device settings requires a full, device, or
+    read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these device settings requires a full or device
+    administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    """
+    ...
+
+class BetaFeaturesAnnouncementRepositoryWithLocationAdminSupportApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Announcement Repository with Location Admin Support
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Announcement Repository support reading and writing of Webex Calling Announcement Repository settings for
+    a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator or location administrator
+    auth token with a scope of `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Auto Attendant with Department Features
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Auto Attendant with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Call Park with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Park supports reading and writing of Webex Calling Call Park settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/locations/{locationId}/callPickups'):
+    """
+    Beta Features:  Call Pickup with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Pickup supports reading and writing of Webex Calling Call Pickup settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Call Queue with Department Features
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Call Queue with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesCallRecordingWithComplianceAnnouncementFeaturePhase3Api(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Call Recording with Compliance Announcement Feature Phase 3
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Recording supports reading and writing of Webex Calling Call Recording settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, base='telephony/config/locations/{locationId}/callRecording/complianceAnnouncement'):
+    """
+    Beta Features:  Call Recording with Compliance Announcement Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Recording supports reading and writing of Webex Calling Call Recording settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='telephony/config/locations/{locationId}/huntGroups'):
+    """
+    Beta Features:  Hunt Group with Configure On-prem Phone Numbers
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Hunt Group with Department Features
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesHuntGroupWithESNFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Hunt Group with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesHuntGroupWithSelectCallerIDFeatureApi(ApiChild, base='telephony/config/locations/{locationId}/huntGroups'):
+    """
+    Beta Features:  Hunt Group with Select Caller ID Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesPagingGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Paging Group with Department Features
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Paging Group supports reading and writing of Webex Calling Paging Group settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta Features:  Paging Group with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Paging Group supports reading and writing of Webex Calling Paging Group settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesReceptionistClientApi(ApiChild, base='telephony/config/locations/{locationId}/receptionistContacts/directories'):
+    """
+    Features:  Receptionist Client
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Receptionist Client supports reading and writing of Webex Calling Receptionist Client settings for a
+    specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeatureCallPickupsWithCallPickupNotificationApi(ApiChild, base='telephony/config/locations/{locationId}/callPickups'):
+    """
+    Beta Feature: Call Pickups with Call Pickup Notification
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Users who are added to a call pickup can answer calls when another member of the call pickup is busy.
+    Features: Call Pickup supports reading and writing of Webex Calling Call Pickup settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta Location Call Settings:  Voicemail with ESN Feature
+    
+    Location Call Settings: Voicemail supports reading and writing of Webex
+    Calling Location Voicemail settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaLocationCallSettingsWithRoutingPrefixUpdateApi(ApiChild, base='telephony/config'):
+    """
+    Beta Location Call Settings with Routing Prefix Update
+    
+    Location Call Settings supports reading and writing of Webex Calling Location settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
+    """
+    Beta Numbers with ESN Feature
+    
+    Numbers supports reading and writing of Webex Calling phone numbers for a
+    specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaFeaturesNumbersWithMNOWebexEnabledMobilePlansFeatureApi(ApiChild, base='telephony/config/numbers'):
+    """
+    Beta Features: Numbers with MNO Webex Enabled Mobile Plans Feature
+    
+    Numbers supports reading and writing of Webex Calling phone numbers for a
+    specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaNumbersWithNonIntegratedCCPApi(ApiChild, base='telephony/config/locations/{locationId}/numbers'):
+    """
+    Beta Numbers with Non-Integrated CCP
+    
+    Numbers supports reading and writing of Webex Calling phone numbers for a
+    specific organization.
+    
+    Non-Integrated CCP locations are supported for adding the numbers, activating the numbers and deleting the numbers.
+    These locations are able to import the carrier provisioned numbers into Cisco.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/config/people/{personId}/features/callBridge'):
+    """
+    Beta User Call Settings with Call Bridge Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+    
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    """
+    ...
+
+class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='people/{personId}/features/callRecording'):
+    """
+    Beta User Call Settings with Compliance Announcement Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+    
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    """
+    ...
+
+class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/people/{personId}'):
+    """
+    Beta User Call Settings with Department Features
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+    
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    """
+    ...
+
+class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
+    """
+    Beta User Call Settings with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+    
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    """
+    ...
+
+class BetaUserCallSettingsWithLocationAdminSupportApi(ApiChild, base='telephony/config/people/{personId}/musicOnHold'):
+    """
+    Beta User Call Settings with Location Admin Support
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator or location administrator auth token with a scope
+    of `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by
+    a person to read their own settings.
+    
+    Configuring People settings requires a full or user administrator or location administrator auth token with the
+    `spark-admin:people_write` scope or, for select APIs, a user auth token with `spark:people_write` scope can be
+    used by a person to update their own settings.
+    """
+    ...
+
+class BetaUserCallSettingsWithSelectCallerIDFeatureApi(ApiChild, base='telephony/config'):
+    """
+    Beta User Call Settings with Select Caller ID Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their settings.
+    
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their settings.
+    """
+    ...
+
+class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/virtualLines'):
+    """
+    Beta Virtual Line Call Settings with ESN Feature
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Viutual Line Settings supports listing Webex Calling virtual lines.
+    
+    Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read.
+    """
+    ...
+
+class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base='telephony/config/virtualLines/{virtualLineId}/callRecording'):
+    """
+    Beta Virtual Line Call Settings with Virtual Line Call Recording
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Viutual Line Settings supports listing Webex Calling virtual lines.
+    
+    Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read.
+    """
+    ...
+
+class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesale/deviceFulfillment'):
+    """
+    Beta Wholesale Device Fulfillment with Distributors
+    
+    """
+    ...
+
+class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/workspaces/{workspaceId}'):
+    """
+    Beta Workspace Call Settings with Department Features
+    
+    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
+    Devices may be associated with workspaces.
+    
+    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace
+    within the organization.
+    
+    Viewing the list of settings in a workspace /v1/workspaces API requires an full, device, or read-only administrator
+    auth token with the `spark-admin:workspaces_read` scope.
+    
+    Adding, updating, or deleting settings in a workspace /v1/workspaces API requires an full or device administrator
+    auth token with the `spark-admin:workspaces_write` scope.
+    
+    This API can also be used by partner administrators acting as administrators of a different organization than their
+    own. In those cases, an `orgId` must be supplied, as indicated in the reference documentation for the relevant
+    endpoints.
+    """
+    ...
+
+class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{workspaceId}/features'):
+    """
+    Beta Workspace Call Settings with ESN Feature
+    
+    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
+    Devices may be associated with workspaces.
+    
+    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace
+    within the organization.
+    
+    Viewing the list of settings in a workspace /v1/workspaces API requires an full, device, or read-only administrator
+    auth token with the `spark-admin:workspaces_read` scope.
+    
+    Adding, updating, or deleting settings in a workspace /v1/workspaces API requires an full or device administrator
+    auth token with the `spark-admin:workspaces_write` scope.
+    
+    This API can also be used by partner administrators acting as administrators of a different organization than their
+    own. In those cases, an `orgId` must be supplied, as indicated in the reference documentation for the relevant
+    endpoints.
+    """
+    ...
+
+class BetaWorkspaceCallSettingsWithLocationAdminSupportApi(ApiChild, base='telephony/config/workspaces/{workspaceId}/musicOnHold'):
+    """
+    Beta Workspace Call Settings with Location Admin Support
+    
+    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
+    Devices may be associated with workspaces.
+    
+    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace
+    within the organization.
+    
+    Viewing the list of settings in a workspace /v1/workspaces API requires an full, device, or read-only administrator
+    or location administrator  auth token with the `spark-admin:workspaces_read` scope.
+    
+    Adding, updating, or deleting settings in a workspace /v1/workspaces API requires an full or device administrator
+    auth token with the `spark-admin:workspaces_write` scope.
+    
+    This API can also be used by partner administrators acting as administrators of a different organization than their
+    own. In those cases, an `orgId` must be supplied, as indicated in the reference documentation for the relevant
+    endpoints.
+    """
+    ...
+
+class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
+    """
+    BroadWorks Billing Reports
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. These APIs helps Service Providers to generate monthly billing reports with user billing data.
+    Service Providers can use these reports to reconcile their monthly invoice. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks billing reports information requires a partner administrator auth token with
+    `spark-admin:broadworks_billing_reports_read` scope. Creating, Deleting billing reports require a partner
+    administrator auth token with `spark-admin:broadworks_billing_reports_write` scope.
+    """
+    ...
+
+class BroadWorksEnterprisesApi(ApiChild, base='broadworks/enterprises'):
+    """
+    BroadWorks Enterprises
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks enterprise information requires an administrator auth token with
+    `spark-admin:broadworks_enterprises_read` scope.
+    Updating directory sync configuration or trigger directory sync for a Webex for BroadWorks enterprise require an
+    administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
+    """
+    ...
+
+class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
+    """
+    BroadWorks Subscribers
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks subscriber information requires an administrator auth token with
+    `spark-admin:broadworks_subscribers_read` scope. Provisioning, updating, and removing subscribers requires an
+    administrator auth token with the `spark-admin:broadworks_subscribers_write` scope.
+    
+    <div>
+    <Callout type="info">Additional Infocodes are given for all success cases. To learn more about the Infocodes used
+    in Broadworks Subscriber Provisioning Precheck APIs, see the `Provisioning Precheck API Info Codes
+    <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#whats-possible-with-webex-for-broadworks-provisioning-precheck-apis>`_
+    guides.</Callout>
+    </div>
+    """
+    ...
+
+class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
+    """
+    BroadWorks Workspaces
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Cisco Webex Services for their workspaces. Please
+    note these APIs require a
+    functional BroadWorks system configured for Webex for BroadWorks. Read more about using this API at
+    https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Provisioning, updating, and removing workspaces requires an administrator auth token with the
+    `spark-admin:places_write` scope.
+    """
+    ...
+
+class CallControlsApi(ApiChild, base='telephony/calls'):
+    """
+    Call Controls
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Call Control APIs in support of Webex Calling.
+    
+    All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
+    scope.
+    
+    **NOTE**: These APIs support 3rd Party Call Control only.
+    """
+    ...
+
+class CallMembershipsApi(ApiChild, base='call/memberships'):
+    """
+    Call Memberships
+    
+    The Call Memberships functionality and API endpoints described here are
+    currently pre-release features which are not available to all Webex users. If
+    you have any questions, or if you need help, please contact the Webex
+    Developer Support team at devsupport@webex.com.
+    
+    
+    
+    Call Memberships represent a person's relationship to a call. Use this API to list members of any call that you're
+    in or have been invited to.
+    
+    To see information about calls, use the `Calls API
+    <https://developer.webex.com/docs/api/v1/calls>`_.
+    
+    For more information about Calls and Call Memberships, see the `Calls
+    <https://developer.webex.com/docs/api/guides/calls>`_ guide.
+    """
+    ...
+
+class CallQualitiesApi(ApiChild, base='call/qualities'):
+    """
+    Call Qualities
+    
+    After a meeting has ended, meeting quality information is available for review by organization administrators.
+    Quality information is available 30 minutes after a meeting has ended and may be retrieved for up to 30 days. To
+    retrieve quality information, you must use an administrator API access token with the
+    `spark-admin:call_qualities_read` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_.
+    
+    For more information, see the `Calls
+    <https://developer.webex.com/docs/api/guides/calls>`_ guide.
+    """
+    ...
+
+class CallRoutingApi(ApiChild, base='telephony/config'):
+    """
+    Call Routing
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Routing supports reading and writing of Webex Calling On-premises, also known as Local Gateway, Call
+    Routing PSTN settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
+    """
+    Calling Service Settings
+    
+    Calling Service Settings supports reading and writing of Webex Calling service settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class CallsApi(ApiChild, base='calls'):
+    """
+    Calls
+    
+    The Calls functionality and API endpoints described here are currently pre-
+    release features which are not available to all Webex users. If you have any
+    questions, or if you need help, please contact the Webex Developer Support
+    team at devsupport@webex.com.
+    
+    
+    
+    Calls represent real-time, collaborative meetings between two or more people. Calls take place in permanent or
+    temporary Webex `Spaces (rooms)
+    <https://developer.webex.com/docs/api/v1/rooms>`_. To see the participants of a call, use the `Call Memberships API
+    
+    For more information about Calls, see the `Calls
+    <https://developer.webex.com/docs/api/guides/calls>`_ guide.
+    """
+    ...
+
+class ClassificationsApi(ApiChild, base='classifications'):
+    """
+    Classifications
+    
+    Each Webex organization has its own `Space Classification
+    <https://help.webex.com/en-us/article/nlcju6g/Data-classifications-for-spaces-in-Webex-App>`_ object that contains exactly five (5) space
+    classifications.
+    """
+    ...
+
+class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
+    """
+    Beta Conference Controls
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Conference Control APIs in support of Webex Calling.
+    
+    All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
+    scope.
+    """
+    ...
+
+class ContactCenterApi(ApiChild, base='contactCenter'):
+    """
+    Contact Center
+    
+    The Webex Contact Center functionality and API endpoints described here are
+    currently pre-release features which are not available to all Webex users. If
+    you have any questions, or if you need help, please contact the Webex
+    Developer Support team at devsupport@webex.com.
+    
+    
+    
+    This set of WxCC API endpoints allow developers to use `AI API` for entity recognition, `Analytics API` to fetch
+    session and activity based records for customer and agent in WxCC and `Media API` for providing agent/customer
+    interaction recordings.
+    """
+    ...
+
+class ContactCenterApi(ApiChild, base='contactCenter'):
+    """
+    Contact Center
+    
+    The Webex Contact Center functionality and API endpoints described here are
+    currently pre-release features which are not available to all Webex users. If
+    you have any questions, or if you need help, please contact the Webex
+    Developer Support team at devsupport@webex.com.
+    
+    
+    
+    The set of WxCC API endpoints below allow developers to view Tasks for insights into the interactions between
+    agents and customers, Agents Statistics for details related to specific agents, Queues Statistics for details on
+    specific queues, and Captures for the actual media related to an interaction.
+    
+    These endpoints require an auth token with the `cjp:config_read` scope for organizations with a WxCC license or the
+    `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+    """
+    ...
+
+class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
+    """
+    Device Call Settings
+    
+    These APIs manages Webex Calling settings for devices with are of the Webex Calling type.
+    
+    Viewing these read-only device settings requires a full, device, or
+    read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these device settings requires a full or device
+    administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    """
+    ...
+
+class DevicesApi(ApiChild, base='devices'):
+    """
+    Devices
+    
+    Devices represent cloud-registered Webex RoomOS devices and Webex Calling phones. Devices may be associated with
+    `Workspaces
+    <https://developer.webex.com/docs/api/v1/workspaces>`_.
+    
+    The following scopes are required for performing the specified actions:
+    
+    * Searching and viewing details for devices requires an auth token with the `spark:devices_read` scope.
+    
+    * Updating or deleting your devices requires an auth token with the `spark:devices_write` scope.
+    
+    * Viewing the list of all devices in an organization requires an administrator auth token with the
+    `spark-admin:devices_read` scope.
+    
+    * Adding, updating, or deleting all devices in an organization requires an administrator auth token with the
+    `spark-admin:devices_write` scope.
+    
+    * Generating an activation code requires an auth token with the `identity:placeonetimepassword_create` scope.
+    """
+    ...
+
+class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
+    """
+    ECM folder linking
+    
+    Enterprise Content Management folder-linking in Webex is how users configure existing OneDrive and SharePoint
+    online folders as the (default or reference) storage backend for spaces. This configuration can be done in our
+    native clients and via API.
+    A space participant will be able to configure an ECM folder for a space. Only one ECM folder per space and only
+    OneDrive and SharePoint online are currently supported.
+    """
+    ...
+
+class EventsApi(ApiChild, base='events'):
+    """
+    Events
+    
+    Events are generated when actions take place within Webex, such as when someone creates or deletes a message.
+    Compliance Officers may use the Events API to retrieve events for all users within an organization. See the
+    `Compliance Guide
+    <https://developer.webex.com/docs/api/guides/compliance>`_ for more information.
+    """
+    ...
+
+class EventsApi(ApiChild, base='events'):
+    """
+    Events
+    
+    Events are generated when actions take place within Webex, such as when someone creates or deletes a message.
+    
+    The Events API can only be used by a Compliance Officer with an API access token that contains the
+    `spark-compliance:events_read` scope. See the `Compliance Guide
+    <https://developer.webex.com/docs/compliance#compliance>`_ for more information.
+    """
+    ...
+
+class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Announcement Repository
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Announcement Repository support reading and writing of Webex Calling Announcement Repository settings for
+    a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Auto Attendant
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesCallParkApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Call Park
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Park supports reading and writing of Webex Calling Call Park settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{locationId}/callPickups'):
+    """
+    Features:  Call Pickup
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Pickup supports reading and writing of Webex Calling Call Pickup settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Call Queue
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Call Recording
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Recording supports reading and writing of Webex Calling Call Recording settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Hunt Group
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Paging Group
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Paging Group supports reading and writing of Webex Calling Paging Group settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class FilesApi(ApiChild, base='files/{fileId}'):
+    """
+    Files
+    
+    <!-- feature-toggle-name:files-api -->
+    """
+    ...
+
+class GroupsApi(ApiChild, base='groups'):
+    """
+    Groups
+    
+    Groups contain a collection of members in Webex. A member represents a Webex user. A group is used to assign
+    templates and settings to the set of members contained in a group.  To create and manage a group, including adding
+    and removing members from a group, an auth token containing the `identity:groups_rw` is required.  Searching and
+    viewing members of a group requires an auth token with a scope of `identity:groups_read`.
+    
+    To learn more about managing people to use as members in the /groups API please refer to the `People API
+    <https://developer.webex.com/docs/api/v1/people>`_.
+    """
+    ...
+
+class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
+    """
+    Historical Analytics APIs
+    
+    The base URL for these APIs is **analytics.webexapis.com**, which does not
+    work with the **Try It** feature. If you have any questions or need help
+    please contact the Webex Developer Support team at devsupport@webex.com.
+    
+    
+    
+    These APIs allow an administrator to pull historical analytics data for meetings, messaging and room devices.
+    
+    This API requires a `Pro Pack for Control Hub
+    <https://help.webex.com/article/np3c1rm>`_ license. API requests require an access token representing an
+    administrator with either a read-only admin or full-admin role for the associated organization. The token must
+    have the `analytics:read_all` scope.
+    
+    By default, the calls to analytics.webexapis.com for historical data are sent to the closest region servers. The
+    other possible region servers are analytics-eu.webexapis.com and analytics-ca.webexapis.com. If the region servers
+    host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code ('Unavailable For Legal
+    Reasons') is returned. The body of the response in this case contains the end point information from where user
+    can get historical data for the user's organization. Below is a sample error message looks in this condition.
+    
+    ```javascript
+    {
+    "message": "This server cannot serve the data for this organization. Please use {another region's VIP}",
+    "errorCode": 451,
+    "trackingId": {trackingId}
+    }
+    ```
+    
+    To use this API the org needs to be licensed for pro pack.
+    """
+    ...
+
+class HybridClustersApi(ApiChild, base='hybrid/clusters'):
+    """
+    Hybrid Clusters
+    
+    `Hybrid Clusters
+    <https://www.cisco.com/c/en/us/solutions/collaboration/webex-hybrid-services/index.html>`_ are groups of hosts, and the connectors these hosts contain, that are managed as a unit.  All the
+    connectors of a single type in a cluster share the same configuration.
+    
+    Listing and viewing Hybrid Clusters requires an administrator auth token with the
+    `spark-admin:hybrid_clusters_read` scope.
+    
+    Hybrid Clusters are associated with Resource Groups. See the `Resource Groups API
+    <https://developer.webex.com/docs/api/v1/resource-groups>`_ for more information.
+    """
+    ...
+
+class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
+    """
+    Hybrid Connectors
+    
+    `Hybrid Connectors
+    <https://www.cisco.com/c/en/us/solutions/collaboration/webex-hybrid-services/index.html>`_ are pieces of software that run on-premise and provide a link between the Webex Cloud and
+    on-premise resources.
+    
+    For example, the Calendar Connector enables the linking of information from an on-premise Exchange server with the
+    Webex Cloud. It allows, among other things, for the cloud to set up a Webex meeting when a user specifies `@webex`
+    as the *Location* of a meeting in Outlook.
+    
+    Listing and viewing Hybrid Connectors requires an administrator auth token with the
+    `spark-admin:hybrid_connectors_read` scope.
+    
+    Use this API to list the connectors configured in an organization and to determine if any connectors have any
+    `unresolved alarms
+    <https://help.webex.com/nuej5gfb/>`_ associated with them.
+    """
+    ...
+
+class IssuesAPIApi(ApiChild, base='issues'):
+    """
+    Issues API
+    
+    Issues are support feedback entries from users of Webex clients and portals.
+    
+    Adding, searching, and viewing Issues requires an auth token with a scope of `support:issues_read`.
+    
+    Updating an issue by a user is also supported, but limited to the `subject` and `description`
+    attributes.
+    
+    Viewing the list of all Issues in the Organization(s) managed by the admin user requires an
+    auth token with scope of `support:org_issues_read`.
+    
+    Updating an Issue's `status` requires an auth token with the `support:org_issues_write` scope.
+    
+    An Issue cannot be deleted, but the `status` can be updated to `CLOSED`.
+    """
+    ...
+
+class LicensesApi(ApiChild, base='licenses'):
+    """
+    Licenses
+    
+    An allowance for features and services that are provided to users on a Webex services subscription. Cisco and its
+    partners manage the amount of licenses provided to administrators and users. License can be assigned only by
+    admins.
+    
+    Viewing the list of all licenses in your organization and viewing license details requires an administrator auth
+    token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:licenses_read`.
+    
+    Updating the licenses of users requires an administrator auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:people_write`.
+    
+    To learn about how to allocate Hybrid Services licenses, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
+    """
+    ...
+
+class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locations/{locationId}'):
+    """
+    Location Call Settings:  Call Handling
+    
+    Location Call Settings: Call Handling supports reading and writing of Webex
+    Calling Location settings involving permissions and intercepting of inbound and
+    outbound calls for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/locations/{locationId}/schedules'):
+    """
+    Location Call Settings:  Schedules
+    
+    Location Call Settings: Schedules supports reading and writing of Webex
+    Calling Location Schedule and Event settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
+    """
+    Location Call Settings:  Voicemail
+    
+    Location Call Settings: Voicemail supports reading and writing of Webex
+    Calling Location Voicemail settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class LocationCallSettingsApi(ApiChild, base='telephony/config'):
+    """
+    Location Call Settings
+    
+    Location Call Settings  supports reading and writing of Webex Calling Location settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class LocationsApi(ApiChild, base='locations'):
+    """
+    Locations
+    
+    Locations allow you to organize users and workspaces based on a physical location. You can configure both calling
+    and workspace management functions into the same location. To enable a location for Webex Calling, use the
+    `Enable a Location for Webex Calling
+    <https://developer.webex.com/docs/api/v1/location-call-settings/enable-a-location-for-webex-calling>`_ API.
+    You can also create and inspect locations in Webex Control Hub. See `Locations on Control Hub
+    <https://help.webex.com/en-us/article/ajh6iy/Locations-in-Control-Hub>`_ for more information.
+    """
+    ...
+
+class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
+    """
+    Meeting Chats
+    
+    Chats are content captured in a meeting when chat messages are sent between the participants within a meeting. This
+    feature allows a Compliance Officer to access the in-meeting chat content.
+    
+    The Compliance Officer can use the Meeting Chats API to retrieve the chats of a meeting and to delete all chats
+    associated with a meeting. `private` chats are text messages between two people. `group` chats are for larger
+    breakout spaces. Meeting chats are different from room messages in that there is no catch-up propagation. For
+    example, if a user joins a meeting late only, chat messages that are created from then on, will be propagated to
+    this user. To understand which user saw which message if they joined late, you have to query the
+    `meetingParticipants` REST resource for the joined/left times and compare to the `meetingsChat` `chatTime` field.
+    
+    The Webex meetings chat functionality and API endpoint described here is
+    "upon-request" and not enabled by default. If you need it enabled for your
+    org, or if you need help, please contact the Webex Developer Support team at
+    devsupport@webex.com.
+    
+    
+    
+    Meetings on the Webex Meetings Suite platform rely on enhanced meeting chat
+    functionality, powered by a different backend. To access meeting chats in the
+    Webex Suite, please see the `meetingMessages
+    <https://developer.webex.com/docs/api/v1/meeting-messages>`_
+    resource.
+    
+    """
+    ...
+
+class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
+    """
+    Meeting Closed Captions
+    
+    Meeting Closed Captions APIs are enabled upon request, and are not available
+    by default. Please contact the Webex Developer Support team at
+    devsupport@webex.com if you would like to enable this feature for your
+    organization.
+    
+    
+    
+    Meeting closed captions are the automatic transcriptions of what is being said during a meeting in real-time.
+    Closed captions appear after being enabled during a meeting and can be translated to a participant's language.
+    
+    A closed caption snippet is a short text snippet from a meeting closed caption which was spoken by a particular
+    participant in the meeting. A meeting's closed captions consists of many snippets.
+    
+    The Closed Captions API manages meeting closed captions and snippets. You can list meeting closed captions, as well
+    as list and download snippets. Closed captions can  be retrieved in either Web Video Text Tracks (VTT) or plain
+    text (TXT) format via the download links provided by the `vttDownloadLink` and `txtDownloadlink` response
+    properties, respectively.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#meetings-api-scopes>`_ section of `Meetings Overview
+    
+    **Notes:**
+    
+    * Currently, closed caption APIs are only supported for the `Compliance Officer
+    <https://developer.webex.com/docs/compliance#compliance>`_ role.
+    
+    * Closed captions will be available 15 minutes after the meeting is finished.
+    """
+    ...
+
+class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
+    """
+    Meeting Invitees
+    
+    This API manages invitees' relationships to a meeting.
+    
+    You can use the Meeting Invitees API to list, create, update, and delete invitees.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...
+
+class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
+    """
+    Meeting Messages
+    
+    Meeting messages are how we communicate through text within an active `Webex Suite meeting
+    <https://help.webex.com/en-us/article/m61d8eb/Webex-App-%7C-About-the-Webex-Suite-meeting-platform>`_ or space bound meeting.
+    
+    The meeting messages are stored in the `/events API
+    <https://developer.webex.com/docs/api/v1/events/list-events>`_ with the associated resource type: `meetingMessages`
+    
+    By default direct messages between two participants in a meeting are treated as ephemeral. Public messages will be
+    archived in the /events API, but `can be made ephemeral
+    <https://help.webex.com/en-us/article/o1rrjk/Save-or-clear-your-organization's-in-meeting-chats-after-a-meeting>`_ as well.
+    
+    In a Webex meeting, each meeting message is displayed on its own line along with a timestamp and sender
+    information.
+    
+    Message can contain plain text and `rich text
+    <https://developer.webex.com/docs/basics#formatting-messages>`_
+    """
+    ...
+
+class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, base='meetingParticipants'):
+    """
+    Meeting Participants with Admission from Lobby to Breakout Session
+    
+    This API manages meeting participants.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#meetings-api-scopes>`_ section of `Meetings Overview
+    """
+    ...
+
+class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
+    """
+    Meeting Participants
+    
+    This API manages meeting participants.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#meetings-api-scopes>`_ section of `Meetings Overview
+    """
+    ...
+
+class MeetingPollsApi(ApiChild, base='meetings'):
+    """
+    Meeting Polls
+    
+    As a presenter, you can use a poll to create and share questionnaires. Polls can be useful for gathering feedback,
+    taking votes, or testing knowledge.
+    
+    You can use the Meeting Poll API to list meeting polls, the poll's questions, and answers.
+    
+    Currently, these APIs are available to users with one of the meeting host,
+    admin or `Compliance Officer
+    <https://developer.webex.com/docs/compliance#compliance>`_ roles. The polls,
+    polls results, and the list of poll respondents are available within 15
+    minutes following the meeting.
+    
+    
+    
+    The Webex meetings poll functionality and API endpoint described here is
+    "upon-request" and not enabled by default. If you need it enabled for your
+    org, or if you need help, please contact the Webex Developer Support team at
+    devsupport@webex.com.
+    
+    """
+    ...
+
+class MeetingPreferencesApi(ApiChild, base=''):
+    """
+    Meeting Preferences
+    
+    This API manages a user's meeting preferences, including Personal Meeting Room settings, video and audio settings,
+    meeting scheduling options, and site settings.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#user-level-authentication-and-scopes>`_ section of `Meetings Overview
+    """
+    ...
+
+class MeetingQAndAApi(ApiChild, base='meetings/q_and_a'):
+    """
+    Meeting Q and A
+    
+    During a `Question and Answer
+    <https://help.webex.com/en-us/article/nakt8px/Question-and-answer-(Q&A>`_-sessions-in-Webex-Meetings-and-Webex-Webinars) (Q&A) session, attendees can pose
+    questions to hosts, co-hosts, and presenters, who can answer and moderate those questions. You use the Meeting Q&A
+    API to retrieve the questions and the answers in a meeting.
+    
+    Currently, these APIs are available to users with one of the meeting host,
+    admin or `Compliance Officer
+    <https://developer.webex.com/docs/compliance#compliance>`_ roles.
+    
+    
+    
+    The features and APIs described here are available upon-request and is not
+    enabled by default. If would like this feature enabled for your organization
+    please contact the Webex Developer Support team at devsupport@webex.com.
+    
+    """
+    ...
+
+class MeetingQualitiesApi(ApiChild, base='meeting/qualities'):
+    """
+    Meeting Qualities
+    
+    To retrieve quality information, you must use an administrator token with the `analytics:read_all` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. The
+    authenticated user must be a read-only or full administrator of the organization to which the meeting belongs and
+    must not be an external administrator.
+    
+    To use this endpoint, the org needs to be licensed for the Webex Pro Pack.
+    
+    For CI-Native site, no additional settings are required.
+    
+    For CI-linked site, the admin must also be set as the Full/ReadOnly Site Admin of the site.
+    
+    A minimum Webex and Teams client version is required. For details, see `Troubleshooting Help Doc
+    <https://help.webex.com/en-us/ni3wlvw/Advanced-Diagnostics-and-Troubleshooting-in-Control-Hub-xa>`_.
+    
+    Quality information is available 10 minutes after a meeting has started and may be retrieved for up to 7 days.
+    
+    A rate limit of 1 API call every 5 minutes for the same meeting instance ID applies.
+    """
+    ...
+
+class SessionTypesApi(ApiChild, base='admin/meeting'):
+    """
+    Session Types
+    
+    Session types define the features and options that are available to users for scheduled meetings.
+    
+    The API allows getting site-level session types and modifying user-level session types.
+    
+    Viewing the list of site session types and user session types requires an administrator auth token with
+    `meeting:admin_schedule_read` or `meeting:admin_config_read`. Updating user session types requires an
+    administrator auth token with the `meeting:admin_schedule_write` or `meeting:admin_config_write` scope.
+    """
+    ...
+
+class MeetingTranscriptsApi(ApiChild, base=''):
+    """
+    Meeting Transcripts
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    A meeting transcript is the automatic transcription of a meeting's recordings by our industry-leading
+    speech-to-text engine to capture of what was discussed and decided during the meeting, in text form.
+    
+    A transcript snippet is a short text snippet from a meeting transcript which was spoken by a particular participant
+    in the meeting. A meeting transcript consists of many snippets.
+    
+    This API manages meeting transcripts and snippets. You can use the Transcript API to list meeting transcripts,
+    list, get and update transcript snippets. Transcripts may be retrieved via download link defined by
+    `vttDownloadLink` or `txtDownloadlink` in the response body.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    
+    **NOTE:**
+    1. Listing/Getting/Updating meeting transcript snippets function do not support Admin role.
+    2. The meeting transcript can not be recorded until you turn on the meeting recording. Since August 1, 2023, you
+    also need to turn on the `Webex Assistant
+    <https://www.cisco.com/c/en/us/products/collateral/conferencing/webex-meetings/at-a-glance-c45-744053.html>`_ or the `Closed Captions
+    """
+    ...
+
+class MeetingsSummaryReportApi(ApiChild, base='meetingReports'):
+    """
+    Meetings Summary Report
+    
+    The meeting usage report API is used to retrieve aggregated meeting usage information, like `totalCallInMinutes`,
+    `totalParticipants`, etc. It also includes the meeting `trackingCodes`.
+    
+    The meeting attendee report API is used to retrieve aggregated meeting attendee information, like `joinedTime`,
+    `leftTime`, `duration`, etc.
+    
+    The report data for a meeting should be available within 24 hours after the meeting ended.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...
+
+class TrackingCodesApi(ApiChild, base='admin/meeting'):
+    """
+    Tracking Codes
+    
+    Tracking codes are alphanumeric codes that identify categories of users on a Webex site. With tracking codes, you
+    can analyze usage by various groups within an organization.
+    
+    The authenticated user calling this API must have an Administrator role with the `meeting:admin_schedule_write` and
+    `meeting:admin_schedule_read` scopes.
+    """
+    ...
+
+class MeetingsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, base='meetings'):
+    """
+    Meetings with Admission from Lobby to Breakout Session
+    
+    Meetings are virtual conferences where users can collaborate in real time using audio, video, content sharing,
+    chat, online whiteboards, and to collaborate.
+    
+    This API focuses primarily on the scheduling and management of meetings. You can use the Meetings API to list,
+    create, get, update, and delete meetings.
+    
+    Several types of meeting objects are supported by this API, such as meeting series, scheduled meeting, and ended or
+    in-progress meeting instances. See the `Meetings Overview
+    <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for more information about the types of meetings.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...
+
+class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
+    """
+    Meetings with audio watermark
+    
+    Meetings are virtual conferences where users can collaborate in real time using audio, video, content sharing,
+    chat, online whiteboards, and to collaborate.
+    
+    This API focuses primarily on the scheduling and management of meetings. You can use the Meetings API to list,
+    create, get, update, and delete meetings.
+    
+    Several types of meeting objects are supported by this API, such as meeting series, scheduled meeting, and ended or
+    in-progress meeting instances. See the `Meetings Overview
+    <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for more information about the types of meetings.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...
+
+class MeetingsApi(ApiChild, base='meetings'):
+    """
+    Meetings
+    
+    Meetings are virtual conferences where users can collaborate in real time using audio, video, content sharing,
+    chat, online whiteboards, and to collaborate.
+    
+    This API focuses primarily on the scheduling and management of meetings. You can use the Meetings API to list,
+    create, get, update, and delete meetings.
+    
+    Several types of meeting objects are supported by this API, such as meeting series, scheduled meeting, and ended or
+    in-progress meeting instances. See the `Meetings Overview
+    <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for more information about the types of meetings.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...
+
+class MembershipsApi(ApiChild, base='memberships'):
+    """
+    Memberships
+    
+    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in or
+    create memberships to invite someone to a room. Compliance Officers can now also list memberships for
+    `personEmails` where the CO is not part of the room.
+    Memberships can also be updated to make someone a moderator, or deleted, to remove someone from the room.
+    
+    Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
+    """
+    ...
+
+class MessagesWithECMApi(ApiChild, base='messages'):
+    """
+    Messages with ECM
+    
+    The Enterprise Content Management functionality and API endpoint changes
+    described here are currently pre-release features which are not available to
+    all Webex users. If you have any questions, or if you need help, please
+    contact the Webex Developer Support team at devsupport@webex.com.
+    
+    
+    
+    Messages are how we communicate in a room. In Webex, each message is displayed on its own line along with a
+    timestamp and sender information. Use this API to list, create, and delete messages.
+    
+    Message can contain plain text, `rich text
+    <https://developer.webex.com/docs/api/basics#formatting-messages>`_, and a `file attachment
+    
+    Just like in the Webex app, you must be a member of the room in order to target it with this API.
+    """
+    ...
+
+class MessagesApi(ApiChild, base='messages'):
+    """
+    Messages
+    
+    Messages are how you communicate in a room. In Webex, each message is displayed on its own line along with a
+    timestamp and sender information. Use this API to list, create, update, and delete messages.
+    
+    Message can contain plain text, `rich text
+    <https://developer.webex.com/docs/basics#formatting-messages>`_, and a `file attachment
+    
+    Just like in the Webex app, you must be a member of the room in order to target it with this API.
+    """
+    ...
+
+class NumbersApi(ApiChild, base='telephony/config'):
+    """
+    Numbers
+    
+    Numbers supports reading and writing of Webex Calling phone numbers for a
+    specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/contacts'):
+    """
+    Organization Contacts
+    
+    Organizational contacts are entities that can be created, imported, or synchronized with Webex. Searching and
+    viewing contacts require an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `Identity:contact` or `Identity:SCIM`, while adding,
+    updating, and removing contacts in your Organization requires an administrator auth token with the
+    `Identity:contact` or `Identity:SCIM` scope. An admin can only operate on the contacts list for his org or a
+    managed org.
+    
+    Note: `broadworks-connector` entitled callers are limited to org contacts with either source=`CH` or
+    source=`Webex4Broadworks`, while non-entitled callers are limited to source=`CH`.
+    """
+    ...
+
+class OrganizationGroupsApi(ApiChild, base='organization/groups?orgId={orgId}&displayName={displayName}'):
+    """
+    Organization Groups
+    
+    <!-- feature-toggle-name:license-templates-api-docs -->
+    """
+    ...
+
+class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
+    """
+    Organization License Templates
+    
+    These APIs allow a Webex organization administrator to list, create, update, and delete license templates for their
+    groups. Admins can create org- and group-level templates. If a user is part of a group, they are assigned the
+    group-level templates. Users who are not part of a group will default to org-level templates.
+    
+    To list templates at the organization level you need an admin auth token with a scope of
+    `spark-admin:licenses_read` to view templates at the org level. Adding, updating, and removing templates requires
+    an admin auth token with the `spark-admin:licenses_write` scope.
+    """
+    ...
+
+class OrganizationsWithECMApi(ApiChild, base='organizations'):
+    """
+    Organizations with ECM
+    
+    A set of people in Webex. Organizations may manage other organizations or be managed themselves. Organizations
+    resources can be accessed only by an admin.
+    """
+    ...
+
+class OrganizationsWithXsiApi(ApiChild, base='organizations'):
+    """
+    Organizations with Xsi
+    
+    A set of people in Webex. Organizations may manage other organizations or be managed themselves. This organizations
+    resource can be accessed only by an admin.
+    """
+    ...
+
+class OrganizationsApi(ApiChild, base='organizations'):
+    """
+    Organizations
+    
+    A set of people in Webex. Organizations may manage other organizations or be managed themselves. This organizations
+    resource can be accessed only by an admin.
+    
+    Applications can delete an Organization only after they have been authorized by a user with the
+    `Full Administrator Role
+    <https://help.webex.com/en-us/fs78p5/Assign-Organization-Account-Roles-in-Cisco-Webex-Control-Hub#id_117864>`_ which may be a user in the customer org or a user in a managing partner organization to
+    which the role has been granted. The authorizing admin must grant the `spark-admin:organizations-write` scope.
+    """
+    ...
+
+class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
+    """
+    Partner Administrators
+    
+    Partner organizations that manage their customers through Webex Partner Hub can leverage this API to assign or
+    unassign partner administrator roles to their users, as well as assign or unassign customer organizations to
+    specific partner administrators.
+    Managing other partner administrators in an organization requires the partner full administrator role. The users
+    being acted upon also exist in the partners own organization. To create a user, see `People API
+    <https://developer.webex.com/docs/api/v1/people>`_. The authorizing
+    admin must grant the spark-admin:organizations-read scope for read operations and spark-admin:organizations-write
+    scope for write operations.
+    """
+    ...
+
+class PeopleApi(ApiChild, base='people'):
+    """
+    People
+    
+    People are registered users of Webex. Searching and viewing People requires an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of
+    `spark:people_read`. Viewing the list of all People in your Organization requires an administrator auth token with
+    `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token with
+    the `spark-admin:people_write` and `spark-admin:people_read` scope.
+    
+    A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
+    
+    To learn more about managing people in a room see the `Memberships API
+    <https://developer.webex.com/docs/api/v1/memberships>`_. For information about how to allocate Hybrid
+    Services licenses to people, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
+    """
+    ...
+
+class PoliciesApi(ApiChild, base='policies'):
+    """
+    Policies
+    
+    Policies give organization administrators more control over the integrations available for use within their
+    organization. By default, any user can add an integration for use with Webex. To restrict the usage of
+    integrations within an organization, create policies to define what is either allowed or disallowed by the
+    organization.
+    """
+    ...
+
+class RecordingReportApi(ApiChild, base='recordingReport'):
+    """
+    Recording Report
+    
+    The recording report API is used to retrieve reports of recording.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...
+
+class RecordingsApi(ApiChild, base=''):
+    """
+    Recordings
+    
+    Recordings are meeting content captured in a meeting or files uploaded via the upload page for your Webex site.
+    
+    This API manages recordings. Recordings may be retrieved via download or playback links defined by `downloadUrl` or
+    `playbackUrl` in the response body.
+    
+    When the recording function is paused in the meeting the recording will not contain the pause. If the recording
+    function is stopped and restarted in the meeting, several recordings will be created. These recordings will be
+    consolidate and available all at once.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#user-level-authentication-and-scopes>`_ for the specific scopes required for each API.
+    """
+    ...
+
+class ReportTemplatesApi(ApiChild, base='report/templates'):
+    """
+    Report Templates
+    
+    Report templates are available for use with the `Reports API
+    <https://developer.webex.com/docs/api/v1/reports>`_.
+    
+    To access this endpoint, you must use an administrator token with the `analytics:read_all` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. The authenticated
+    user must be a read-only or full administrator of the organization to which the report belongs.
+    
+    To use this endpoint the organization needs to be licensed for `Pro Pack for Control Hub
+    <https://help.webex.com/article/np3c1rm/Pro-Pack-For-Control-Hub>`_.
+    
+    For more information about Report Templates, see the `Admin API
+    <https://developer.webex.com/docs/admin#reports-api>`_ guide.
+    """
+    ...
+
+class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
+    """
+    Reports: Detailed Call History
+    
+    The base URL for these APIs is **analytics.webexapis.com** (or
+    **analytics-f.webex.com** for Government), which does not work with the API
+    reference's **Try It** feature. If you have any questions or need help please
+    contact the Webex Developer Support team at devsupport@webex.com.
+    
+    
+    
+    To retrieve Detailed Call History information, you must use a token with the `spark-admin:calling_cdr_read` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_.
+    The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator
+    role "Webex Calling Detailed Call History API access" enabled.
+    
+    Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
+    hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
+    am, and is available until 9:46 am two days later.
+    
+    This API is rate-limited to one call every 1 minutes for a given organization ID.
+    
+    Details on the fields returned from this API and their potential values are available at
+    <https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio>. Select the **Report
+    templates** tab, and then in the **Webex Calling reports** section see **Calling Detailed Call History Report**.
+    
+    By default, the calls to analytics.webexapis.com are sent to the closest region's servers. If the region's servers
+    host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code response is returned.
+    The body of the response in this case contains the end point information where a user can get data for the user's
+    organization.
+    """
+    ...
+
+class ReportsApi(ApiChild, base='reports'):
+    """
+    Reports
+    
+    To access these endpoints, you must use an administrator token with the `analytics:read_all` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. The
+    authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+    
+    To use this endpoint the org needs to be licensed for the Pro Pack.
+    
+    Reports available via `Webex Control Hub
+    <https://admin.webex.com>`_ may be generated and downloaded via the Reports API. To access this API,
+    the authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+    
+    For more information about Reports, see the `Admin API
+    <https://developer.webex.com/docs/admin#reports-api>`_ guide.
+    """
+    ...
+
+class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
+    """
+    Resource Group Memberships
+    
+    Resource Group Memberships represent a person's relationship to a Resource Group for a particular `Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_
+    license. Users assigned a new license will be automatically placed in a "default" Resource Group. Use this API to
+    list memberships for all people in an organization or update memberships to use a different Resource Group.
+    
+    Searching and viewing Resource Group Memberships requires an administrator auth token with the
+    `spark-admin:resource_group_memberships_read` scope. Updating memberships requires an administrator auth token
+    with the `spark-admin:resource_group_memberships_write` scope.
+    
+    To manage Resource Groups, see the `Resource Groups API
+    <https://developer.webex.com/docs/api/v1/resource-groups>`_. For more information about Resource Groups, see the
+    `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
+    """
+    ...
+
+class ResourceGroupsApi(ApiChild, base='resourceGroups'):
+    """
+    Resource Groups
+    
+    Resource Groups are collections of on-premise clusters which provide `Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ to a particular subset of
+    people in an organization. If a person has a Hybrid Services license associated with their account, they will be
+    associated with a resource group to use specific on-premise clusters for that service.
+    
+    Searching and viewing Resource Groups requires an administrator auth token with a scope of
+    `spark-admin:resource_groups_read`.
+    
+    To manage the people associated with Resource Groups, see the `Resource Group Memberships API
+    <https://developer.webex.com/docs/api/v1/resource-group-memberships>`_. For more information
+    about Resource Groups, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
+    """
+    ...
+
+class RolesApi(ApiChild, base='roles'):
+    """
+    Roles
+    
+    A persona for an authenticated user, corresponding to a set of privileges within an organization. This roles
+    resource can be accessed only by an admin and shows only roles relevant to an admin.
+    """
+    ...
+
+class RoomTabsApi(ApiChild, base='room/tabs'):
+    """
+    Room Tabs
+    
+    A Room Tab represents a URL shortcut that is added as a persistent tab to a Webex room (space) tab row. Use this
+    API to list tabs of any Webex room that you belong to. Room Tabs can also be updated to point to a different
+    content URL, or deleted to remove the tab from the room.
+    
+    Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
+    """
+    ...
+
+class RoomsApi(ApiChild, base='rooms'):
+    """
+    Rooms
+    
+    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to
+    manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its
+    title or make it public, for example.
+    
+    To create a team room, specify the a `teamId` in the `POST` payload. Note that once a room is added to a team, it
+    cannot be moved. To learn more about managing teams, see the `Teams API
+    <https://developer.webex.com/docs/api/v1/teams>`_.
+    
+    To manage people in a room see the `Memberships API
+    <https://developer.webex.com/docs/api/v1/memberships>`_.
+    
+    To post content see the `Messages API
+    <https://developer.webex.com/docs/api/v1/messages>`_.
+    """
+    ...
+
+class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Bulk'):
+    """
+    Bulk Manage SCIM 2 Users and Groups
+    
+    The bulk API allows you to create, update, and remove multiple users and groups in Webex.  The number of Bulk
+    operations in a single request is limited to 100.
+    """
+    ...
+
+class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
+    """
+    SCIM 2 Groups
+    
+    Implementation of the SCIM 2.0 group part for group management in a standards based manner. Please also see the
+    `SCIM Specification
+    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with detailed in
+    `SCIM 2.0 schema
+    <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
+    """
+    ...
+
+class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
+    """
+    SCIM 2 Users
+    
+    Implementation of the SCIM 2.0 user part for user management in a standards based manner. Please also see the
+    `SCIM Specification
+    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with detailed in
+    `SCIM 2.0 schema
+    <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
+    """
+    ...
+
+class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
+    """
+    Security Audit Events
+    
+    """
+    ...
+
+class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
+    """
+    Site
+    
+    This chapter provides descriptions of the Webex RESTful APIs for the site service, which contains operations like
+    querying and updating common meeting configuration settings.
+    
+    Samples are given for the outbound request messages and expected server response messages. The API calls available
+    as part of the Site service are listed below.
+    
+    You can see the elements that constitute the respective RESTful schema in a separate section below.
+    """
+    ...
+
+class PartnerTagsApi(ApiChild, base='partner/tags'):
+    """
+    Partner Tags
+    
+    Customer organization tags offer a flexible way of identifying and grouping customer organizations. Tags are
+    configured by partners for their customers and are neither visible to other partners nor the customers themselves.
+    To manage tags, the user must have a full partner admin or partner admin role. The authorizing admin must grant
+    the spark-admin:organizations-read scope for read operations and spark-admin:organizations-write scope for write
+    operations.
+    """
+    ...
+
+class TeamMembershipsApi(ApiChild, base='team/memberships'):
+    """
+    Team Memberships
+    
+    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're
+    in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a
+    moderator or deleted to remove them from the team.
+    
+    Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
+    """
+    ...
+
+class TeamsApi(ApiChild, base='teams'):
+    """
+    Teams
+    
+    Teams are groups of people with a set of rooms that are visible to all members of that team. This API is used to
+    manage the teams themselves. Teams are created and deleted with this API. You can also update a team to change its
+    name, for example.
+    
+    To manage people in a team see the `Team Memberships API
+    <https://developer.webex.com/docs/api/v1/team-memberships>`_.
+    
+    To manage team rooms see the `Rooms API
+    <https://developer.webex.com/docs/api/v1/rooms>`_.
+    """
+    ...
+
+class UCMProfileApi(ApiChild, base='telephony/config/callingProfiles'):
+    """
+    UCM Profile
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    UCM Profiles supports reading and writing of UC Profile relatedsettings for a specific organization or person.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    Viewing people settings requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+    
+    Configuring people settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...
+
+class UserCallSettingsApi(ApiChild, base=''):
+    """
+    User Call Settings
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+    
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+    
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    """
+    ...
+
+class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientTypeDistribution'):
+    """
+    Video Mesh Client Type Distribution API
+    
+    Video Mesh Developer APIs enable organization admins to view Client Type Distribution details from the Developer
+    Portal or their own monitoring application.
+    
+    <br>
+    
+    <b>NOTE:</b> The APIs will return data for all device types if the "deviceType" request parameter is empty.
+    
+    <br>
+    
+    To obtain the Organization ID needed for these APIs, use the `Organizations API
+    <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_.
+    """
+    ...
+
+class VideoMeshApi(ApiChild, base='videoMesh'):
+    """
+    Video Mesh
+    
+    The Video Mesh Developer APIs provide the ability for organization admins to retrieve analytics and monitoring
+    data, trigger on-demand troubleshooting tests (Media Health Monitoring Tool, Network, and Reachability), and
+    getting and setting thresholds for Webhook events from the Developer Portal or their own monitoring applications,
+    which can help in quickly isolating and identifying root cause of issues affecting the normal functioning of a
+    customer's Video Mesh Deployment.
+    
+    <br/>
+    
+    <b>NOTE:</b> The Media Health Monitor Test and Reachability Test can be triggered only on clusters that are not
+    reserved for private meetings.
+    
+    <br>
+    
+    To obtain the Organization ID needed for these APIs, use the `Organizations API
+    <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_
+    """
+    ...
+
+class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines'):
+    """
+    Virtual Line Call Settings
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Viutual Line Settings supports listing Webex Calling virtual lines.
+    
+    Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read.
+    """
+    ...
+
+class AssistantSkillsServiceAPIApi(ApiChild, base=''):
+    """
+    Assistant Skills Service API
+    
+    Develop custom skills to use with the Webex Assistant.
+    
+    ## Authentication
+    
+    Uses OAuth v2 Bearer Token / Personal Access Token for its authentication.
+    """
+    ...
+
+class WebhooksApi(ApiChild, base='webhooks'):
+    """
+    Webhooks
+    
+    For Webex for Government (FedRAMP), the following resource types are not
+    available for Webhooks: meetings, recordings, meetingParticipants, and
+    meetingTranscripts.
+    
+    
+    
+    Webhooks allow your app to be notified via HTTP when a specific event occurs in Webex. For example, your app can
+    register a webhook to be notified when a new message is posted into a specific room.
+    
+    Events trigger in near real-time allowing your app and backend IT systems to stay in sync with new content and room
+    activity.
+    
+    Check The `Webhooks Guide
+    <https://developer.webex.com/docs/api/guides/webhooks>`_ and `our blog
+    
+    Long result sets will be split into `pages
+    <https://developer.webex.com/docs/basics#pagination>`_.
+    """
+    ...
+
+class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
+    """
+    Wholesale Billing Reports
+    
+    The Wholesale Billing Report APIs are targeted at Service Providers who sign up for the Webex for Wholesale
+    solution. These APIs provides customer and user breakdown reports to the service providers or partners. Service
+    providers can use these reports to reconcile their monthly invoices.
+    
+    Viewing Webex for Wholesale billing reports information requires a partner administrator auth token with the
+    `spark-admin:wholesale_billing_reports_read` scope. Creating, Deleting billing reports require a partner
+    administrator auth token with the `spark-admin:wholesale_billing_reports_write` scope.
+    
+    Each Webex Developer Sandbox for Webex Wholesale use is limited to a maximum
+    of 10 account users for validation and test purposes only. Cisco may from time
+    to time audit Webex Developer Sandbox accounts and reserves the right to
+    remove users in excess of 10 account users, or terminate the Webex Developer
+    Sandbox environment for any Developer resource misuse. To learn more about the
+    error codes used in Wholesale billing reports API, see the [API Error
+    codes](/docs/api/guides/webex-for-broadworks-and-wholesale-common-guide#api-
+    error-codes) guides.
+    
+    """
+    ...
+
+class WholesaleProvisioningApi(ApiChild, base='wholesale'):
+    """
+    Wholesale Provisioning
+    
+    These are a set of APIs that are specifically targeted at Service Providers who sign up for Webex Wholesale. They
+    enable Service Providers to provision Webex Services for their Customers.
+    
+    Viewing Webex Wholesale customer information requires an administrator API access token with
+    `spark-admin:wholesale_customers_read` scope. Provisioning, updating, and removing customers requires an
+    administrator API token with the `spark-admin:wholesale_customers_write` scope.
+    
+    Additional information codes are given for all success cases. To learn more about the error and info codes used in
+    Wholesale Customer Provisioning Precheck APIs, see the `Provisioning Precheck API Error Codes
+    <https://developer.webex.com/docs/api/guides/webex-for-wholesale#api-error-codes>`_ guide.
+    
+    Each Webex Developer Sandbox for Webex Wholesale use is limited to a maximum
+    of 10 account users for validation and test purposes only. Cisco may from time
+    to time audit Webex Developer Sandbox accounts and reserves the right to
+    remove users in excess of 10 account users, or terminate the Webex Developer
+    Sandbox environment for any Developer resource misuse.
+    
+    """
+    ...
+
+class WorkspaceCallSettingsApi(ApiChild, base=''):
+    """
+    Workspace Call Settings
+    
+    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
+    Devices may be associated with workspaces.
+    
+    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace
+    within the organization.
+    
+    Viewing the list of settings in a workspace /v1/workspaces API requires an full, device, or read-only administrator
+    auth token with the `spark-admin:workspaces_read` scope.
+    
+    Adding, updating, or deleting settings in a workspace /v1/workspaces API requires an full or device administrator
+    auth token with the `spark-admin:workspaces_write` scope.
+    
+    This API can also be used by partner administrators acting as administrators of a different organization than their
+    own. In those cases, an `orgId` must be supplied, as indicated in the reference documentation for the relevant
+    endpoints.
+    """
+    ...
+
+class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
+    """
+    Workspace Locations
+    
+    A `Workspace
+    <https://developer.webex.com/docs/api/v1/workspaces>`_ Location is a physical location with a name, address, country, city, latitude and longitude.
+    
+    Viewing the list of locations in an organization requires an administrator auth token with the
+    `spark-admin:workspace_locations_read` scope. Adding, updating, or deleting workspace locations in an organization
+    requires an administrator auth token with the `spark-admin:workspace_locations_write` scope.
+    
+    The Workspace Locations API can also be used by partner administrators acting as administrators of a different
+    organization than their own. In those cases an `orgId` value must be supplied, as indicated in the reference
+    documentation for the relevant endpoints.
+    """
+    ...
+
+class WorkspaceMetricsApi(ApiChild, base='workspace'):
+    """
+    Workspace Metrics
+    
+    Workspace metrics contain various measurements, such as sound level or temperature, collected by devices in a
+    workspace.
+    
+    Getting the workspace metrics in an organization requires an administrator auth token with the
+    `spark-admin:workspace_metrics_read` scope.
+    """
+    ...
+
+class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
+    """
+    Workspace Personalization
+    
+    **This API collection applies only to Webex Edge registered devices.**
+    
+    The Workspace Personalization API is designed to help administrators enable Personal Mode for `Webex Edge
+    <https://help.webex.com/en-us/article/cy2l2z/Webex-Edge-for-Devices>`_ registered
+    devices. This one-time operation allows for end users to receive calls and meeting notifications directly on their
+    device, without needing to pair. This API aids with the process of the migration from on-premise to
+    cloud-registered personal mode systems.
+    
+    For the personalization of a device to be successful, the following requirements must be satisfied:
+    
+    - The workspace must contain a single, Webex Edge registered, shared mode device.
+    
+    - The workspace must not have any calendars configured.
+    
+    - The device belonging to the workspace must be online.
+    
+    Invoking this API requires the `spark-admin:devices_write`, `spark:xapi_commands`, `spark:xapi_statuses` and
+    `Identity:one_time_password` scopes.
+    """
+    ...
+
+class WorkspacesApi(ApiChild, base='workspaces'):
+    """
+    Workspaces
+    
+    Workspaces represent where people work, such as conference rooms, meeting spaces, lobbies, and lunch rooms. `Devices
+    <https://developer.webex.com/docs/api/v1/devices>`_
+    may be associated with workspaces.
+    
+    Viewing the list of workspaces in an organization requires an administrator auth token with the
+    `spark-admin:workspaces_read` scope. Adding, updating, or deleting workspaces in an organization requires an
+    administrator auth token with the scopes `spark-admin:workspaces_write` and `spark-admin:telephony_config_write`.
+    
+    The Workspaces API can also be used by partner administrators acting as administrators of a different organization
+    than their own. In those cases an `orgId` value must be supplied, as indicated in the reference documentation for
+    the relevant endpoints.
+    """
+    ...
+
+class XAPIApi(ApiChild, base='xapi'):
+    """
+    xAPI
+    
+    The xAPI allows developers to programmatically invoke commands and query the status of devices that run Webex
+    RoomOS software.
+    
+    Executing commands requires an auth token with the `spark:xapi_commands` scope. Querying devices requires an auth
+    token with the `spark:xapi_statuses` scope.
+    
+    All xAPI requests require a `deviceId` which can be obtained using the `Devices API
+    <https://developer.webex.com/docs/api/v1/devices>`_. xAPI commands and statuses are
+    described in the `Cisco Collaboration Endpoint Software API Reference Guide
+    <https://www.cisco.com/c/en/us/support/collaboration-endpoints/spark-room-kit-series/products-command-reference-list.html>`_. For more information about developing
+    applications for cloud connected devices, see the `Device Developers Guide
+    <https://developer.webex.com/docs/api/guides/device-developers-guide>`_.
+    """
+    ...

@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -311,3 +312,25 @@ class ModifyHuntGroupObject(ApiModel):
 class CreateAHuntGroupResponse(ApiModel):
     #: ID of the newly created hunt group.
     id: Optional[str] = None
+
+
+class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='telephony/config/locations/{locationId}/huntGroups'):
+    """
+    Beta Features:  Hunt Group with Configure On-prem Phone Numbers
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...

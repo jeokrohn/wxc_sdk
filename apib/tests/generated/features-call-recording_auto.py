@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -92,3 +93,26 @@ class ModifyCallRecordingTermsOfServiceObject(ApiModel):
     #: Whether or not the call recording terms of service are enabled.
     #: example: True
     terms_of_service_enabled: Optional[bool] = None
+
+
+class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Call Recording
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Call Recording supports reading and writing of Webex Calling Call Recording settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...

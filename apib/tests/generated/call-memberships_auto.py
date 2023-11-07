@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -85,3 +86,26 @@ class ListCallMembershipsCallStatus(str, Enum):
 
 class ListCallMembershipsIsHost(str, Enum):
     true = 'true'
+
+
+class CallMembershipsApi(ApiChild, base='call/memberships'):
+    """
+    Call Memberships
+    
+    The Call Memberships functionality and API endpoints described here are
+    currently pre-release features which are not available to all Webex users. If
+    you have any questions, or if you need help, please contact the Webex
+    Developer Support team at devsupport@webex.com.
+    
+    
+    
+    Call Memberships represent a person's relationship to a call. Use this API to list members of any call that you're
+    in or have been invited to.
+    
+    To see information about calls, use the `Calls API
+    <https://developer.webex.com/docs/api/v1/calls>`_.
+    
+    For more information about Calls and Call Memberships, see the `Calls
+    <https://developer.webex.com/docs/api/guides/calls>`_ guide.
+    """
+    ...

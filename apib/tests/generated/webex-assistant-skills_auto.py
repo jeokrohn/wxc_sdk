@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -57,3 +58,16 @@ class DeveloperRegistrationGetResponse(ApiModel):
 
 class DeveloperRegistrationUpdateRequest(ApiModel):
     invocation_names: Optional[list[str]] = Field(alias='invocation_names', default=None)
+
+
+class AssistantSkillsServiceAPIApi(ApiChild, base=''):
+    """
+    Assistant Skills Service API
+    
+    Develop custom skills to use with the Webex Assistant.
+    
+    ## Authentication
+    
+    Uses OAuth v2 Bearer Token / Personal Access Token for its authentication.
+    """
+    ...

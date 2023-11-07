@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -89,3 +90,19 @@ class AuditEventCollectionResponse(ApiModel):
 class AuditEventCategoryCollectionResponse(ApiModel):
     #: An array of audit event categories.
     event_categories: Optional[list[str]] = None
+
+
+class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
+    """
+    Admin Audit Events with Scaling
+    
+    Admin Audit Events are available to full administrators for `certain events
+    <https://help.webex.com/n3b0w6x/>`_ performed in Webex Control Hub.
+    
+    Administrators with accounts created before 2019 who have never logged into `Webex Control Hub
+    <https://admin.webex.com>`_ will need to log into
+    Webex Control Hub at least once to enable access to this API.
+    
+    An administrator account with the `audit:events_read` scope is required to use this API.
+    """
+    ...

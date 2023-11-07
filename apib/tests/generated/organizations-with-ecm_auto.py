@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -36,3 +37,13 @@ class Organization(ApiModel):
 
 class OrganizationCollectionResponse(ApiModel):
     items: Optional[list[Organization]] = None
+
+
+class OrganizationsWithECMApi(ApiChild, base='organizations'):
+    """
+    Organizations with ECM
+    
+    A set of people in Webex. Organizations may manage other organizations or be managed themselves. Organizations
+    resources can be accessed only by an admin.
+    """
+    ...

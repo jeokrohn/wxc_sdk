@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -48,3 +49,19 @@ class ManagedOrgsResponse(ApiModel):
 class PartneradminsfororgResponse(ApiModel):
     #: An array of partner admin user details.
     items: Optional[list[PartnerAdminUser]] = None
+
+
+class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
+    """
+    Partner Administrators
+    
+    Partner organizations that manage their customers through Webex Partner Hub can leverage this API to assign or
+    unassign partner administrator roles to their users, as well as assign or unassign customer organizations to
+    specific partner administrators.
+    Managing other partner administrators in an organization requires the partner full administrator role. The users
+    being acted upon also exist in the partners own organization. To create a user, see `People API
+    <https://developer.webex.com/docs/api/v1/people>`_. The authorizing
+    admin must grant the spark-admin:organizations-read scope for read operations and spark-admin:organizations-write
+    scope for write operations.
+    """
+    ...

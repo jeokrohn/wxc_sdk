@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -88,3 +89,19 @@ class MediaSessionQuality(ApiModel):
 
 class CallsQualitiesResponse(ApiModel):
     items: Optional[list[MediaSessionQuality]] = None
+
+
+class CallQualitiesApi(ApiChild, base='call/qualities'):
+    """
+    Call Qualities
+    
+    After a meeting has ended, meeting quality information is available for review by organization administrators.
+    Quality information is available 30 minutes after a meeting has ended and may be retrieved for up to 30 days. To
+    retrieve quality information, you must use an administrator API access token with the
+    `spark-admin:call_qualities_read` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_.
+    
+    For more information, see the `Calls
+    <https://developer.webex.com/docs/api/guides/calls>`_ guide.
+    """
+    ...

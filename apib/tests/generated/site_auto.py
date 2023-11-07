@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -146,3 +147,18 @@ class UpdateMeetingConfigurationCommonSettingObject(ApiModel):
     schedule_meeting_options: Optional[GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions] = None
     #: Security Options on Webex Administration.
     security_options: Optional[GetMeetingConfigurationCommonSettingObjectSecurityOptions] = None
+
+
+class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
+    """
+    Site
+    
+    This chapter provides descriptions of the Webex RESTful APIs for the site service, which contains operations like
+    querying and updating common meeting configuration settings.
+    
+    Samples are given for the outbound request messages and expected server response messages. The API calls available
+    as part of the Site service are listed below.
+    
+    You can see the elements that constitute the respective RESTful schema in a separate section below.
+    """
+    ...

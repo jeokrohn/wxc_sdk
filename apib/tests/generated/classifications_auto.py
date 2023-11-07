@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -36,3 +37,14 @@ class HydraClassification(ApiModel):
 
 class OrganizationsSpaceClassificationCollectionResponse(ApiModel):
     items: Optional[list[HydraClassification]] = None
+
+
+class ClassificationsApi(ApiChild, base='classifications'):
+    """
+    Classifications
+    
+    Each Webex organization has its own `Space Classification
+    <https://help.webex.com/en-us/article/nlcju6g/Data-classifications-for-spaces-in-Webex-App>`_ object that contains exactly five (5) space
+    classifications.
+    """
+    ...

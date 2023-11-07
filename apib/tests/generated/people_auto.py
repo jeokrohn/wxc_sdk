@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -208,3 +209,23 @@ class CreateAPersonPhoneNumbers(ApiModel):
     #: The phone number.
     #: example: 408 526 7209
     value: Optional[str] = None
+
+
+class PeopleApi(ApiChild, base='people'):
+    """
+    People
+    
+    People are registered users of Webex. Searching and viewing People requires an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of
+    `spark:people_read`. Viewing the list of all People in your Organization requires an administrator auth token with
+    `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token with
+    the `spark-admin:people_write` and `spark-admin:people_read` scope.
+    
+    A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
+    
+    To learn more about managing people in a room see the `Memberships API
+    <https://developer.webex.com/docs/api/v1/memberships>`_. For information about how to allocate Hybrid
+    Services licenses to people, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
+    """
+    ...

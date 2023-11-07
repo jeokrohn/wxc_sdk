@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -273,3 +274,20 @@ class SearchResponse(ApiModel):
     #: Total number of contacts returned in search results.
     #: example: 1.0
     total: Optional[int] = None
+
+
+class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/contacts'):
+    """
+    Organization Contacts
+    
+    Organizational contacts are entities that can be created, imported, or synchronized with Webex. Searching and
+    viewing contacts require an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `Identity:contact` or `Identity:SCIM`, while adding,
+    updating, and removing contacts in your Organization requires an administrator auth token with the
+    `Identity:contact` or `Identity:SCIM` scope. An admin can only operate on the contacts list for his org or a
+    managed org.
+    
+    Note: `broadworks-connector` entitled callers are limited to org contacts with either source=`CH` or
+    source=`Webex4Broadworks`, while non-entitled callers are limited to source=`CH`.
+    """
+    ...

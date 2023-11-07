@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -27,3 +28,20 @@ class Team(ApiModel):
 
 class TeamCollectionResponse(ApiModel):
     items: Optional[list[Team]] = None
+
+
+class TeamsApi(ApiChild, base='teams'):
+    """
+    Teams
+    
+    Teams are groups of people with a set of rooms that are visible to all members of that team. This API is used to
+    manage the teams themselves. Teams are created and deleted with this API. You can also update a team to change its
+    name, for example.
+    
+    To manage people in a team see the `Team Memberships API
+    <https://developer.webex.com/docs/api/v1/team-memberships>`_.
+    
+    To manage team rooms see the `Rooms API
+    <https://developer.webex.com/docs/api/v1/rooms>`_.
+    """
+    ...

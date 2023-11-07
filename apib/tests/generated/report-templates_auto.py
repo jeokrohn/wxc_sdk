@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -41,3 +42,23 @@ class Template(ApiModel):
     #: example: orgWithoutDate
     identifier: Optional[str] = None
     validations: Optional[ValidationRulesCollection] = None
+
+
+class ReportTemplatesApi(ApiChild, base='report/templates'):
+    """
+    Report Templates
+    
+    Report templates are available for use with the `Reports API
+    <https://developer.webex.com/docs/api/v1/reports>`_.
+    
+    To access this endpoint, you must use an administrator token with the `analytics:read_all` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. The authenticated
+    user must be a read-only or full administrator of the organization to which the report belongs.
+    
+    To use this endpoint the organization needs to be licensed for `Pro Pack for Control Hub
+    <https://help.webex.com/article/np3c1rm/Pro-Pack-For-Control-Hub>`_.
+    
+    For more information about Report Templates, see the `Admin API
+    <https://developer.webex.com/docs/admin#reports-api>`_ guide.
+    """
+    ...

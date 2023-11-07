@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -107,3 +108,25 @@ class ConnectorCollection(ApiModel):
 
 class AlarmCollection(ApiModel):
     items: Optional[list[Alarm]] = None
+
+
+class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
+    """
+    Hybrid Connectors
+    
+    `Hybrid Connectors
+    <https://www.cisco.com/c/en/us/solutions/collaboration/webex-hybrid-services/index.html>`_ are pieces of software that run on-premise and provide a link between the Webex Cloud and
+    on-premise resources.
+    
+    For example, the Calendar Connector enables the linking of information from an on-premise Exchange server with the
+    Webex Cloud. It allows, among other things, for the cloud to set up a Webex meeting when a user specifies `@webex`
+    as the *Location* of a meeting in Outlook.
+    
+    Listing and viewing Hybrid Connectors requires an administrator auth token with the
+    `spark-admin:hybrid_connectors_read` scope.
+    
+    Use this API to list the connectors configured in an organization and to determine if any connectors have any
+    `unresolved alarms
+    <https://help.webex.com/nuej5gfb/>`_ associated with them.
+    """
+    ...

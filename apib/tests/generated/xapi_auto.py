@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -71,3 +72,23 @@ class ExecuteCommandResponse(ApiModel):
     arguments: Optional[ExecuteCommandArguments] = None
     #: xAPI command results
     result: Optional[ExecuteCommandBody] = None
+
+
+class XAPIApi(ApiChild, base='xapi'):
+    """
+    xAPI
+    
+    The xAPI allows developers to programmatically invoke commands and query the status of devices that run Webex
+    RoomOS software.
+    
+    Executing commands requires an auth token with the `spark:xapi_commands` scope. Querying devices requires an auth
+    token with the `spark:xapi_statuses` scope.
+    
+    All xAPI requests require a `deviceId` which can be obtained using the `Devices API
+    <https://developer.webex.com/docs/api/v1/devices>`_. xAPI commands and statuses are
+    described in the `Cisco Collaboration Endpoint Software API Reference Guide
+    <https://www.cisco.com/c/en/us/support/collaboration-endpoints/spark-room-kit-series/products-command-reference-list.html>`_. For more information about developing
+    applications for cloud connected devices, see the `Device Developers Guide
+    <https://developer.webex.com/docs/api/guides/device-developers-guide>`_.
+    """
+    ...

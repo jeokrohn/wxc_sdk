@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -514,3 +515,16 @@ class SearchUserResponse(ApiModel):
     start_index: Optional[int] = None
     #: A list of users with details.
     resources: Optional[list[GetUserResponse]] = Field(alias='Resources', default=None)
+
+
+class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
+    """
+    SCIM 2 Users
+    
+    Implementation of the SCIM 2.0 user part for user management in a standards based manner. Please also see the
+    `SCIM Specification
+    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with detailed in
+    `SCIM 2.0 schema
+    <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
+    """
+    ...

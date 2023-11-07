@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -78,3 +79,38 @@ class ListMeetingClosedCaptionSnippetsResponse(ApiModel):
 class DownloadMeetingClosedCaptionSnippetsFormat(str, Enum):
     vtt = 'vtt'
     txt = 'txt'
+
+
+class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
+    """
+    Meeting Closed Captions
+    
+    Meeting Closed Captions APIs are enabled upon request, and are not available
+    by default. Please contact the Webex Developer Support team at
+    devsupport@webex.com if you would like to enable this feature for your
+    organization.
+    
+    
+    
+    Meeting closed captions are the automatic transcriptions of what is being said during a meeting in real-time.
+    Closed captions appear after being enabled during a meeting and can be translated to a participant's language.
+    
+    A closed caption snippet is a short text snippet from a meeting closed caption which was spoken by a particular
+    participant in the meeting. A meeting's closed captions consists of many snippets.
+    
+    The Closed Captions API manages meeting closed captions and snippets. You can list meeting closed captions, as well
+    as list and download snippets. Closed captions can  be retrieved in either Web Video Text Tracks (VTT) or plain
+    text (TXT) format via the download links provided by the `vttDownloadLink` and `txtDownloadlink` response
+    properties, respectively.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#meetings-api-scopes>`_ section of `Meetings Overview
+    
+    **Notes:**
+    
+    * Currently, closed caption APIs are only supported for the `Compliance Officer
+    <https://developer.webex.com/docs/compliance#compliance>`_ role.
+    
+    * Closed captions will be available 15 minutes after the meeting is finished.
+    """
+    ...

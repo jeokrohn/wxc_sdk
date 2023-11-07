@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -94,3 +95,21 @@ class WorkspaceLocationFloorsCreationRequest(ApiModel):
 class WorkspaceLocationFloorsCollectionResponse(ApiModel):
     #: An array of floor objects.
     items: Optional[list[Floor]] = None
+
+
+class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
+    """
+    Workspace Locations
+    
+    A `Workspace
+    <https://developer.webex.com/docs/api/v1/workspaces>`_ Location is a physical location with a name, address, country, city, latitude and longitude.
+    
+    Viewing the list of locations in an organization requires an administrator auth token with the
+    `spark-admin:workspace_locations_read` scope. Adding, updating, or deleting workspace locations in an organization
+    requires an administrator auth token with the `spark-admin:workspace_locations_write` scope.
+    
+    The Workspace Locations API can also be used by partner administrators acting as administrators of a different
+    organization than their own. In those cases an `orgId` value must be supplied, as indicated in the reference
+    documentation for the relevant endpoints.
+    """
+    ...

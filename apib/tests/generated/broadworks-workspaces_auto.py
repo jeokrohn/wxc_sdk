@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -37,3 +38,23 @@ class WorkspaceResponse(ApiModel):
     #: The date and time the workspace was provisioned.
     #: example: 2019-10-18T14:26:16.000Z
     created: Optional[datetime] = None
+
+
+class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
+    """
+    BroadWorks Workspaces
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Cisco Webex Services for their workspaces. Please
+    note these APIs require a
+    functional BroadWorks system configured for Webex for BroadWorks. Read more about using this API at
+    https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Provisioning, updating, and removing workspaces requires an administrator auth token with the
+    `spark-admin:places_write` scope.
+    """
+    ...

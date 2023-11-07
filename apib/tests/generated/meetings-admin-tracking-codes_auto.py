@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -174,3 +175,16 @@ class UpdateTrackingCodeForUserObject(ApiModel):
     email: Optional[str] = None
     #: Tracking code information for updates.
     tracking_codes: Optional[list[UpdateTrackingCodeItemForUserObject]] = None
+
+
+class TrackingCodesApi(ApiChild, base='admin/meeting'):
+    """
+    Tracking Codes
+    
+    Tracking codes are alphanumeric codes that identify categories of users on a Webex site. With tracking codes, you
+    can analyze usage by various groups within an organization.
+    
+    The authenticated user calling this API must have an Administrator role with the `meeting:admin_schedule_write` and
+    `meeting:admin_schedule_read` scopes.
+    """
+    ...

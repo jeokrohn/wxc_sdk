@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -200,3 +201,11 @@ class OrderRequest(ApiModel):
     shipping_details: Optional[OrderShippingDetails] = None
     #: A list of order line items.
     line_items: Optional[list[OrderRequestLineItem]] = None
+
+
+class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesale/deviceFulfillment'):
+    """
+    Beta Wholesale Device Fulfillment with Distributors
+    
+    """
+    ...

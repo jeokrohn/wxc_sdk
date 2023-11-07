@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -337,3 +338,22 @@ class ListRecordingsResponse(ApiModel):
 class ListRecordingsForAnAdminOrComplianceOfficerResponse(ApiModel):
     #: An array of recording objects.
     items: Optional[list[RecordingObjectForAdminAndCO]] = None
+
+
+class RecordingsApi(ApiChild, base=''):
+    """
+    Recordings
+    
+    Recordings are meeting content captured in a meeting or files uploaded via the upload page for your Webex site.
+    
+    This API manages recordings. Recordings may be retrieved via download or playback links defined by `downloadUrl` or
+    `playbackUrl` in the response body.
+    
+    When the recording function is paused in the meeting the recording will not contain the pause. If the recording
+    function is stopped and restarted in the meeting, several recordings will be created. These recordings will be
+    consolidate and available all at once.
+    
+    Refer to the `Meetings API Scopes
+    <https://developer.webex.com/docs/meetings#user-level-authentication-and-scopes>`_ for the specific scopes required for each API.
+    """
+    ...

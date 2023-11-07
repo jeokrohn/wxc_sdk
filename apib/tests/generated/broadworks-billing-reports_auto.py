@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -75,3 +76,21 @@ class ListReport(ApiModel):
 class BillingReportsListResponse(ApiModel):
     #: An array of reports objects.
     items: Optional[list[ListReport]] = None
+
+
+class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
+    """
+    BroadWorks Billing Reports
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. These APIs helps Service Providers to generate monthly billing reports with user billing data.
+    Service Providers can use these reports to reconcile their monthly invoice. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks billing reports information requires a partner administrator auth token with
+    `spark-admin:broadworks_billing_reports_read` scope. Creating, Deleting billing reports require a partner
+    administrator auth token with `spark-admin:broadworks_billing_reports_write` scope.
+    """
+    ...

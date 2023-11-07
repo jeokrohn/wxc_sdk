@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -96,3 +97,18 @@ class ListSiteSessionTypesResponse(ApiModel):
 class ListUserSessionTypeResponse(ApiModel):
     #: An array of the user's session types.
     items: Optional[list[UserSessionTypes]] = None
+
+
+class SessionTypesApi(ApiChild, base='admin/meeting'):
+    """
+    Session Types
+    
+    Session types define the features and options that are available to users for scheduled meetings.
+    
+    The API allows getting site-level session types and modifying user-level session types.
+    
+    Viewing the list of site session types and user session types requires an administrator auth token with
+    `meeting:admin_schedule_read` or `meeting:admin_config_read`. Updating user session types requires an
+    administrator auth token with the `meeting:admin_schedule_write` or `meeting:admin_config_write` scope.
+    """
+    ...

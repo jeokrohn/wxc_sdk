@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -320,3 +321,21 @@ class AnalyzeEntitiesDocument(ApiModel):
     #: The document's content.
     #: example: My name is John Doe . I am from USA .
     content: Optional[str] = None
+
+
+class ContactCenterApi(ApiChild, base='contactCenter'):
+    """
+    Contact Center
+    
+    The Webex Contact Center functionality and API endpoints described here are
+    currently pre-release features which are not available to all Webex users. If
+    you have any questions, or if you need help, please contact the Webex
+    Developer Support team at devsupport@webex.com.
+    
+    
+    
+    This set of WxCC API endpoints allow developers to use `AI API` for entity recognition, `Analytics API` to fetch
+    session and activity based records for customer and agent in WxCC and `Media API` for providing agent/customer
+    interaction recordings.
+    """
+    ...

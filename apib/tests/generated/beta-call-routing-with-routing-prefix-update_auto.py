@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -104,3 +105,12 @@ class BatchJobError(ApiModel):
     #: row number of failed record.
     item_number: Optional[int] = None
     error: Optional[Error] = None
+
+
+class BetaCallRoutingWithRoutingPrefixUpdateApi(ApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
+    """
+    Beta Call Routing with Routing Prefix Update
+    
+    <!-- feature-toggle-name:wxc-support-extensions-m2-106132 -->
+    """
+    ...

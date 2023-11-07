@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -233,3 +234,18 @@ class ListMessageCollectionResponse(ApiModel):
 
 class DirectMessageCollectionResponse(ApiModel):
     items: Optional[list[DirectMessage]] = None
+
+
+class MessagesApi(ApiChild, base='messages'):
+    """
+    Messages
+    
+    Messages are how you communicate in a room. In Webex, each message is displayed on its own line along with a
+    timestamp and sender information. Use this API to list, create, update, and delete messages.
+    
+    Message can contain plain text, `rich text
+    <https://developer.webex.com/docs/basics#formatting-messages>`_, and a `file attachment
+    
+    Just like in the Webex app, you must be a member of the room in order to target it with this API.
+    """
+    ...

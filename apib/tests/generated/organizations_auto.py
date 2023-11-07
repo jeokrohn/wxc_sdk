@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -24,3 +25,18 @@ class Organization(ApiModel):
 
 class OrganizationCollectionResponse(ApiModel):
     items: Optional[list[Organization]] = None
+
+
+class OrganizationsApi(ApiChild, base='organizations'):
+    """
+    Organizations
+    
+    A set of people in Webex. Organizations may manage other organizations or be managed themselves. This organizations
+    resource can be accessed only by an admin.
+    
+    Applications can delete an Organization only after they have been authorized by a user with the
+    `Full Administrator Role
+    <https://help.webex.com/en-us/fs78p5/Assign-Organization-Account-Roles-in-Cisco-Webex-Control-Hub#id_117864>`_ which may be a user in the customer org or a user in a managing partner organization to
+    which the role has been granted. The authorizing admin must grant the `spark-admin:organizations-write` scope.
+    """
+    ...

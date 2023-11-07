@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -137,3 +138,17 @@ class CreateALocationResponse(ApiModel):
     #: ID of the newly created location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
     id: Optional[str] = None
+
+
+class LocationsApi(ApiChild, base='locations'):
+    """
+    Locations
+    
+    Locations allow you to organize users and workspaces based on a physical location. You can configure both calling
+    and workspace management functions into the same location. To enable a location for Webex Calling, use the
+    `Enable a Location for Webex Calling
+    <https://developer.webex.com/docs/api/v1/location-call-settings/enable-a-location-for-webex-calling>`_ API.
+    You can also create and inspect locations in Webex Control Hub. See `Locations on Control Hub
+    <https://help.webex.com/en-us/article/ajh6iy/Locations-in-Control-Hub>`_ for more information.
+    """
+    ...

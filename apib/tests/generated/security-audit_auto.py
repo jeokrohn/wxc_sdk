@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -59,3 +60,11 @@ class SecurityAuditEvent(ApiModel):
 class SecurityAuditEventCollectionResponse(ApiModel):
     #: array of monitoring Audit events
     items: Optional[list[SecurityAuditEvent]] = None
+
+
+class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
+    """
+    Security Audit Events
+    
+    """
+    ...

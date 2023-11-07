@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -21,3 +22,13 @@ class Role(ApiModel):
 
 class RoleCollectionResponse(ApiModel):
     items: Optional[list[Role]] = None
+
+
+class RolesApi(ApiChild, base='roles'):
+    """
+    Roles
+    
+    A persona for an authenticated user, corresponding to a set of privileges within an organization. This roles
+    resource can be accessed only by an admin and shows only roles relevant to an admin.
+    """
+    ...

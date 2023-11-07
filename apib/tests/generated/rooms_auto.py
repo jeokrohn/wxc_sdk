@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -98,3 +99,24 @@ class ListRoomsSortBy(str, Enum):
     id = 'id'
     lastactivity = 'lastactivity'
     created = 'created'
+
+
+class RoomsApi(ApiChild, base='rooms'):
+    """
+    Rooms
+    
+    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to
+    manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its
+    title or make it public, for example.
+    
+    To create a team room, specify the a `teamId` in the `POST` payload. Note that once a room is added to a team, it
+    cannot be moved. To learn more about managing teams, see the `Teams API
+    <https://developer.webex.com/docs/api/v1/teams>`_.
+    
+    To manage people in a room see the `Memberships API
+    <https://developer.webex.com/docs/api/v1/memberships>`_.
+    
+    To post content see the `Messages API
+    <https://developer.webex.com/docs/api/v1/messages>`_.
+    """
+    ...

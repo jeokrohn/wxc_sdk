@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -41,3 +42,12 @@ class File(ApiModel):
     #: example: external
     content_type: Optional[str] = None
     external_content: Optional[FileExternalContent] = None
+
+
+class FilesApi(ApiChild, base='files/{fileId}'):
+    """
+    Files
+    
+    <!-- feature-toggle-name:files-api -->
+    """
+    ...

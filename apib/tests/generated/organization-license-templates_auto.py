@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -45,3 +46,18 @@ class GroupMembers(ApiModel):
 
 class Groups(ApiModel):
     items: Optional[list[GroupMembers]] = None
+
+
+class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
+    """
+    Organization License Templates
+    
+    These APIs allow a Webex organization administrator to list, create, update, and delete license templates for their
+    groups. Admins can create org- and group-level templates. If a user is part of a group, they are assigned the
+    group-level templates. Users who are not part of a group will default to org-level templates.
+    
+    To list templates at the organization level you need an admin auth token with a scope of
+    `spark-admin:licenses_read` to view templates at the org level. Adding, updating, and removing templates requires
+    an admin auth token with the `spark-admin:licenses_write` scope.
+    """
+    ...

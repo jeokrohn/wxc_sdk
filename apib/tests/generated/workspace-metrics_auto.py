@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -124,3 +125,16 @@ class WorkspaceDurationMetricsResponse(ApiModel):
     #: example: minutes
     unit: Optional[str] = None
     items: Optional[list[DurationMetric]] = None
+
+
+class WorkspaceMetricsApi(ApiChild, base='workspace'):
+    """
+    Workspace Metrics
+    
+    Workspace metrics contain various measurements, such as sound level or temperature, collected by devices in a
+    workspace.
+    
+    Getting the workspace metrics in an organization requires an administrator auth token with the
+    `spark-admin:workspace_metrics_read` scope.
+    """
+    ...

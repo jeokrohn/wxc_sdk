@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -165,3 +166,28 @@ class MediaSessionQuality(ApiModel):
 
 class MeetingQualitiesResponse(ApiModel):
     items: Optional[list[MediaSessionQuality]] = None
+
+
+class MeetingQualitiesApi(ApiChild, base='meeting/qualities'):
+    """
+    Meeting Qualities
+    
+    To retrieve quality information, you must use an administrator token with the `analytics:read_all` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. The
+    authenticated user must be a read-only or full administrator of the organization to which the meeting belongs and
+    must not be an external administrator.
+    
+    To use this endpoint, the org needs to be licensed for the Webex Pro Pack.
+    
+    For CI-Native site, no additional settings are required.
+    
+    For CI-linked site, the admin must also be set as the Full/ReadOnly Site Admin of the site.
+    
+    A minimum Webex and Teams client version is required. For details, see `Troubleshooting Help Doc
+    <https://help.webex.com/en-us/ni3wlvw/Advanced-Diagnostics-and-Troubleshooting-in-Control-Hub-xa>`_.
+    
+    Quality information is available 10 minutes after a meeting has started and may be retrieved for up to 7 days.
+    
+    A rate limit of 1 API call every 5 minutes for the same meeting instance ID applies.
+    """
+    ...

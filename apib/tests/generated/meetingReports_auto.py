@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -197,3 +198,21 @@ class ListMeetingUsageReportsResponse(ApiModel):
 class ListMeetingAttendeeReportsResponse(ApiModel):
     #: An array of meeting attendee report objects.
     items: Optional[list[MeetingAttendeeReportObject]] = None
+
+
+class MeetingsSummaryReportApi(ApiChild, base='meetingReports'):
+    """
+    Meetings Summary Report
+    
+    The meeting usage report API is used to retrieve aggregated meeting usage information, like `totalCallInMinutes`,
+    `totalParticipants`, etc. It also includes the meeting `trackingCodes`.
+    
+    The meeting attendee report API is used to retrieve aggregated meeting attendee information, like `joinedTime`,
+    `leftTime`, `duration`, etc.
+    
+    The report data for a meeting should be available within 24 hours after the meeting ended.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    """
+    ...

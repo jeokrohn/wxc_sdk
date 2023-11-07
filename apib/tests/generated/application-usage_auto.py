@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -74,3 +75,12 @@ class ListApplicationUsageOrderBy(str, Enum):
     policy = 'policy'
     app_name = 'appName'
     name = 'name'
+
+
+class ApplicationUsageApi(ApiChild, base='application/usage'):
+    """
+    Application Usage
+    
+    <!-- feature-toggle-name:policies-api-v2-docs -->
+    """
+    ...

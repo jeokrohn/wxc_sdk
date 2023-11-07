@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -369,3 +370,28 @@ class PrecheckAWholesaleSubscriberProvisioningCustomerInfo(ApiModel):
     #: The primary email address of the customer.
     #: example: "john.anderson@acme.com"
     primary_email: Optional[str] = None
+
+
+class WholesaleProvisioningApi(ApiChild, base='wholesale'):
+    """
+    Wholesale Provisioning
+    
+    These are a set of APIs that are specifically targeted at Service Providers who sign up for Webex Wholesale. They
+    enable Service Providers to provision Webex Services for their Customers.
+    
+    Viewing Webex Wholesale customer information requires an administrator API access token with
+    `spark-admin:wholesale_customers_read` scope. Provisioning, updating, and removing customers requires an
+    administrator API token with the `spark-admin:wholesale_customers_write` scope.
+    
+    Additional information codes are given for all success cases. To learn more about the error and info codes used in
+    Wholesale Customer Provisioning Precheck APIs, see the `Provisioning Precheck API Error Codes
+    <https://developer.webex.com/docs/api/guides/webex-for-wholesale#api-error-codes>`_ guide.
+    
+    Each Webex Developer Sandbox for Webex Wholesale use is limited to a maximum
+    of 10 account users for validation and test purposes only. Cisco may from time
+    to time audit Webex Developer Sandbox accounts and reserves the right to
+    remove users in excess of 10 account users, or terminate the Webex Developer
+    Sandbox environment for any Developer resource misuse.
+    
+    """
+    ...

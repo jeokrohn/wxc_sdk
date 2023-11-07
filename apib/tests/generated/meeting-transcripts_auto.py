@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -111,3 +112,33 @@ class DownloadAMeetingTranscriptFormat(str, Enum):
 class ListSnippetsOfAMeetingTranscriptResponse(ApiModel):
     #: Transcript snippet array
     items: Optional[list[SnippetObject]] = None
+
+
+class MeetingTranscriptsApi(ApiChild, base=''):
+    """
+    Meeting Transcripts
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    A meeting transcript is the automatic transcription of a meeting's recordings by our industry-leading
+    speech-to-text engine to capture of what was discussed and decided during the meeting, in text form.
+    
+    A transcript snippet is a short text snippet from a meeting transcript which was spoken by a particular participant
+    in the meeting. A meeting transcript consists of many snippets.
+    
+    This API manages meeting transcripts and snippets. You can use the Transcript API to list meeting transcripts,
+    list, get and update transcript snippets. Transcripts may be retrieved via download link defined by
+    `vttDownloadLink` or `txtDownloadlink` in the response body.
+    
+    Refer to the `Meetings API Scopes` section of `Meetings Overview
+    <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
+    
+    **NOTE:**
+    1. Listing/Getting/Updating meeting transcript snippets function do not support Admin role.
+    2. The meeting transcript can not be recorded until you turn on the meeting recording. Since August 1, 2023, you
+    also need to turn on the `Webex Assistant
+    <https://www.cisco.com/c/en/us/products/collateral/conferencing/webex-meetings/at-a-glance-c45-744053.html>`_ or the `Closed Captions
+    """
+    ...

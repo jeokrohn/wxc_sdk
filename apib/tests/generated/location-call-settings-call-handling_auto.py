@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -242,3 +243,23 @@ class PutAccessCodeLocationObject(ApiModel):
 class GetLocationOutgoingPermissionResponse(ApiModel):
     #: Array of calling permissions.
     calling_permissions: Optional[list[CallingPermissionObject]] = None
+
+
+class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locations/{locationId}'):
+    """
+    Location Call Settings:  Call Handling
+    
+    Location Call Settings: Call Handling supports reading and writing of Webex
+    Calling Location settings involving permissions and intercepting of inbound and
+    outbound calls for a specific organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+    ...

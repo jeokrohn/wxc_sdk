@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -172,3 +173,25 @@ class TriggerUserDirectorySyncResponse(ApiModel):
     #: The Status of the operation being performed.
     #: example: ADD
     status: Optional[TriggerUserDirectorySyncResponseStatus] = None
+
+
+class BroadWorksEnterprisesApi(ApiChild, base='broadworks/enterprises'):
+    """
+    BroadWorks Enterprises
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    These are a set of APIs that are specifically targeted at BroadWorks Service Providers who sign up to the Webex for
+    BroadWorks solution. They enable Service Providers to provision Webex Services for their subscribers. Please note
+    these APIs require a functional BroadWorks system configured for Webex for BroadWorks. Read more about using this
+    API
+    at https://www.cisco.com/go/WebexBroadworksAPI.
+    
+    Viewing Webex for BroadWorks enterprise information requires an administrator auth token with
+    `spark-admin:broadworks_enterprises_read` scope.
+    Updating directory sync configuration or trigger directory sync for a Webex for BroadWorks enterprise require an
+    administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
+    """
+    ...

@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -52,3 +53,16 @@ class SubscriptionTagsResponse(ApiModel):
     #: boolean flag for trial or not.
     #: example: false
     trial: Optional[str] = None
+
+
+class PartnerTagsApi(ApiChild, base='partner/tags'):
+    """
+    Partner Tags
+    
+    Customer organization tags offer a flexible way of identifying and grouping customer organizations. Tags are
+    configured by partners for their customers and are neither visible to other partners nor the customers themselves.
+    To manage tags, the user must have a full partner admin or partner admin role. The authorizing admin must grant
+    the spark-admin:organizations-read scope for read operations and spark-admin:organizations-write scope for write
+    operations.
+    """
+    ...

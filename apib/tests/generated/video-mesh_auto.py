@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import Field
 
+from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
@@ -873,3 +874,26 @@ class UpdateEventThresholdConfigurationEventThresholdsThresholdConfig(ApiModel):
 class UpdateEventThresholdConfigurationEventThresholds(ApiModel):
     event_threshold_id: Optional[str] = None
     threshold_config: Optional[UpdateEventThresholdConfigurationEventThresholdsThresholdConfig] = None
+
+
+class VideoMeshApi(ApiChild, base='videoMesh'):
+    """
+    Video Mesh
+    
+    The Video Mesh Developer APIs provide the ability for organization admins to retrieve analytics and monitoring
+    data, trigger on-demand troubleshooting tests (Media Health Monitoring Tool, Network, and Reachability), and
+    getting and setting thresholds for Webhook events from the Developer Portal or their own monitoring applications,
+    which can help in quickly isolating and identifying root cause of issues affecting the normal functioning of a
+    customer's Video Mesh Deployment.
+    
+    <br/>
+    
+    <b>NOTE:</b> The Media Health Monitor Test and Reachability Test can be triggered only on clusters that are not
+    reserved for private meetings.
+    
+    <br>
+    
+    To obtain the Organization ID needed for these APIs, use the `Organizations API
+    <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_
+    """
+    ...
