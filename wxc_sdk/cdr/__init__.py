@@ -498,11 +498,10 @@ class DetailedCDRApi(ApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def guess_datetime(dt: Union[datetime, str]) -> datetime:
+        def guess_datetime(dt: Union[datetime, str]) -> str:
             if isinstance(dt, str):
-                r = isoparse(dt)
-            else:
-                r = dt_iso_str(dt)
+                dt = isoparse(dt)
+            r = dt_iso_str(dt)
             return r
 
         params['startTime'] = guess_datetime(start_time)

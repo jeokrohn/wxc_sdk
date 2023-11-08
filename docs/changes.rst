@@ -12,6 +12,7 @@ Release history
 - feat: new API :attr:`wxc_sdk.WebexSimpleApi.authorizations`
 - feat: new CDR fields: :attr:`wxc_sdk.cdr.CDR.ring_duration`, :attr:`wxc_sdk.cdr.CDR.release_time`, :attr:`wxc_sdk.cdr.CDR.answer_indicator`, :attr:`wxc_sdk.cdr.CDR.final_local_session_id`, :attr:`wxc_sdk.cdr.CDR.final_remote_session_id`
 - feat: new :meth:`wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.usage_call_to_extension`
+- fix: corrected handling of Union[datetime, str] in :meth:`wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`
 
 1.16.1
 ------
