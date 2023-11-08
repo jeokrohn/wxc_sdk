@@ -401,6 +401,33 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
+    def usage_call_to_extension(self, trunk_id: str, org_id: str = None, order: str = None,
+                                name: list[str] = None, **params) -> Generator[IdAndName, None, None]:
+        """
+        Get local gateway call to on-premises extension usage for a trunk.
+
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
+        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: ID of the trunk.
+        :param org_id: Organization to which the trunk belongs.
+        :param order: Order the trunks according to the designated fields. Available sort fields are name,
+            and locationName. Sort order is ascending by default
+        :param name: Return the list of trunks matching the local gateway names
+        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id', 'params'})
+        if name:
+            params['name'] = ','.join(name)
+        url = self.ep(f'{trunk_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
     def validate_fqdn_and_domain(self, address: str, domain: str, port: int = None, org_id: str = None):
         """
         Validate Local Gateway FQDN and Domain for the organization trunks.
@@ -426,5 +453,3 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep('actions/fqdnValidation/invoke')
         params = org_id and {'orgId': org_id} or None
         self.post(url=url, params=params, json=body)
-
-    # TODO: are we missing a usage for trunks used for calls to unknown extensions??
