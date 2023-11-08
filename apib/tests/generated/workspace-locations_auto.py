@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -138,6 +139,18 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type city_name: str
         :rtype: list[Location]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if display_name is not None:
+            params['displayName'] = display_name
+        if address is not None:
+            params['address'] = address
+        if country_code is not None:
+            params['countryCode'] = country_code
+        if city_name is not None:
+            params['cityName'] = city_name
+        url = self.ep()
         ...
 
 
@@ -166,6 +179,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type notes: str
         :rtype: :class:`Location`
         """
+        url = self.ep()
         ...
 
 
@@ -180,6 +194,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type location_id: str
         :rtype: :class:`Location`
         """
+        url = self.ep(f'{location_id}')
         ...
 
 
@@ -216,6 +231,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type notes: str
         :rtype: :class:`Location`
         """
+        url = self.ep(f'{location_id}')
         ...
 
 
@@ -231,6 +247,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type location_id: str
         :rtype: None
         """
+        url = self.ep(f'{location_id}')
         ...
 
 
@@ -245,6 +262,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type location_id: str
         :rtype: list[Floor]
         """
+        url = self.ep(f'{location_id}/floors')
         ...
 
 
@@ -264,6 +282,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
+        url = self.ep(f'{location_id}/floors')
         ...
 
 
@@ -280,6 +299,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type floor_id: str
         :rtype: :class:`Floor`
         """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
         ...
 
 
@@ -304,6 +324,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
         ...
 
 
@@ -320,6 +341,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type floor_id: str
         :rtype: None
         """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
         ...
 
     ...

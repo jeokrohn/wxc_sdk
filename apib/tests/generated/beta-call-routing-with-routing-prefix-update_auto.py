@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -130,6 +131,10 @@ class BetaCallRoutingWithRoutingPrefixUpdateApi(ApiChild, base='telephony/config
         :type org_id: str
         :rtype: list[BatchResponse]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
         ...
 
 
@@ -151,6 +156,10 @@ class BetaCallRoutingWithRoutingPrefixUpdateApi(ApiChild, base='telephony/config
         :type org_id: str
         :rtype: :class:`BatchResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}')
         ...
 
 
@@ -172,6 +181,10 @@ class BetaCallRoutingWithRoutingPrefixUpdateApi(ApiChild, base='telephony/config
         :type org_id: str
         :rtype: :class:`BatchJobError`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
         ...
 
     ...

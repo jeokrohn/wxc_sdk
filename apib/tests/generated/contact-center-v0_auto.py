@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -367,6 +368,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type document: AnalyzeEntitiesDocument
         :rtype: :class:`EntityRecognition`
         """
+        url = self.ep('document:analyzeEntities')
         ...
 
 
@@ -416,6 +418,10 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type q: str
         :rtype: :class:`ActivityList`
         """
+        params = {}
+        params['orgId'] = org_id
+        params['q'] = q
+        url = self.ep('aars')
         ...
 
 
@@ -436,6 +442,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: :class:`AgentActivity`
         """
+        params = {}
+        params['orgId'] = org_id
+        url = self.ep(f'aars/{id}')
         ...
 
 
@@ -485,6 +494,10 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type q: str
         :rtype: :class:`ActivityList`
         """
+        params = {}
+        params['orgId'] = org_id
+        params['q'] = q
+        url = self.ep('asrs')
         ...
 
 
@@ -504,6 +517,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: :class:`AgentSession`
         """
+        params = {}
+        params['orgId'] = org_id
+        url = self.ep(f'asrs/{id}')
         ...
 
 
@@ -553,6 +569,10 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type q: str
         :rtype: :class:`ActivityList`
         """
+        params = {}
+        params['orgId'] = org_id
+        params['q'] = q
+        url = self.ep('cars')
         ...
 
 
@@ -572,6 +592,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: :class:`CustomerActivity`
         """
+        params = {}
+        params['orgId'] = org_id
+        url = self.ep(f'cars/{id}')
         ...
 
 
@@ -621,6 +644,10 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type q: str
         :rtype: :class:`ActivityList`
         """
+        params = {}
+        params['orgId'] = org_id
+        params['q'] = q
+        url = self.ep('csrs')
         ...
 
 
@@ -640,6 +667,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: :class:`CustomerSession`
         """
+        params = {}
+        params['orgId'] = org_id
+        url = self.ep(f'csrs/{id}')
         ...
 
 
@@ -660,6 +690,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        params['orgId'] = org_id
+        url = self.ep(f'get-decrypted-recording/{session_id}')
         ...
 
 
@@ -682,6 +715,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        params['orgId'] = org_id
+        url = self.ep(f'get-encrypted-recording/{session_id}/{key_id}')
         ...
 
     ...

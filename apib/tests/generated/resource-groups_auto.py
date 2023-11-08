@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -59,6 +60,10 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
         :type org_id: str
         :rtype: list[ResourceGroup]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
         ...
 
 
@@ -74,6 +79,7 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
         :type resource_group_id: str
         :rtype: :class:`ResourceGroup`
         """
+        url = self.ep(f'{resource_group_id}')
         ...
 
     ...

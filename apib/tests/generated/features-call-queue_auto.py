@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -1077,8 +1078,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     """
 
     def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                     start: int = None, name: str = None, phone_number: str = None,
-                                     **params) -> Generator[ListCallQueueObject, None, None]:
+                                     start: int = None, name: str = None,
+                                     phone_number: str = None) -> list[ListCallQueueObject]:
         """
         Read the List of Call Queues
 
@@ -1107,12 +1108,26 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type name: str
         :param phone_number: Only return call queues with matching primary phone number or extension.
         :type phone_number: str
-        :return: Generator yielding :class:`ListCallQueueObject` instances
+        :rtype: list[ListCallQueueObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('queues')
         ...
 
 
-    def create_a_call_queue(self, location_id: str, name: str, phone_number: str, extension: datetime,
+    def create_a_call_queue(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
                             language_code: str, first_name: str, last_name: str, time_zone: str,
                             call_policies: GetCallQueueCallPolicyObject,
                             queue_settings: CallQueueQueueSettingsGetObject,
@@ -1167,6 +1182,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues')
         ...
 
 
@@ -1195,6 +1214,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         ...
 
 
@@ -1223,12 +1246,16 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         ...
 
 
     def update_a_call_queue(self, location_id: str, queue_id: str, enabled: bool, name: str, language_code: str,
-                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: datetime,
-                            alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
+                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: Union[str,
+                            datetime], alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
                             call_policies: GetCallQueueCallPolicyObject,
                             queue_settings: CallQueueQueueSettingsGetObject,
                             allow_call_waiting_for_agents_enabled: bool,
@@ -1293,6 +1320,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         ...
 
 
@@ -1320,6 +1351,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[GetAnnouncementFileInfo]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements')
         ...
 
 
@@ -1346,6 +1381,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements/{file_name}')
         ...
 
 
@@ -1367,6 +1406,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: CallForwardSettingsGetCallForwarding
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         ...
 
 
@@ -1391,6 +1434,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         ...
 
 
@@ -1441,6 +1488,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules')
         ...
 
 
@@ -1471,6 +1522,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetForwardingRuleObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
         ...
 
 
@@ -1523,6 +1578,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
         ...
 
 
@@ -1553,6 +1612,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
         ...
 
 
@@ -1576,6 +1639,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueHolidayObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
         ...
 
 
@@ -1625,6 +1692,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
         ...
 
 
@@ -1649,12 +1720,16 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueNightServiceObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
         ...
 
 
     def update_a_call_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool,
-                                          action: GetCallQueueHolidayObjectAction, transfer_phone_number: datetime,
-                                          play_announcement_before_enabled: bool,
+                                          action: GetCallQueueHolidayObjectAction, transfer_phone_number: Union[str,
+                                          datetime], play_announcement_before_enabled: bool,
                                           announcement_mode: GetCallQueueNightServiceObjectAnnouncementMode,
                                           audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                           audio_files: list[AudioAnnouncementFileFeatureGetObject],
@@ -1713,6 +1788,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
         ...
 
 
@@ -1736,6 +1815,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueForcedForwardObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
         ...
 
 
@@ -1776,6 +1859,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
         ...
 
 
@@ -1802,6 +1889,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueStrandedCallsObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         ...
 
 
@@ -1838,6 +1929,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         ...
 
     ...

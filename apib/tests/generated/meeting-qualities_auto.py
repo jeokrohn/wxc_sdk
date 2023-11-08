@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -192,8 +193,7 @@ class MeetingQualitiesApi(ApiChild, base='meeting/qualities'):
     A rate limit of 1 API call every 5 minutes for the same meeting instance ID applies.
     """
 
-    def get_meeting_qualities(self, meeting_id: str, max_: int = None, offset: int = None,
-                              **params) -> Generator[MediaSessionQuality, None, None]:
+    def get_meeting_qualities(self, meeting_id: str, **params) -> Generator[MediaSessionQuality, None, None]:
         """
         Get Meeting Qualities
 
@@ -204,12 +204,10 @@ class MeetingQualitiesApi(ApiChild, base='meeting/qualities'):
             obtained via the Meeting List API when meetingType=meeting. The `id` attribute in the Meeting List
             Response is what is needed, for example, `e5dba9613a9d455aa49f6ffdafb6e7db_I_191395283063545470`.
         :type meeting_id: str
-        :param max_: Limit the maximum number of media sessions in the response.
-        :type max_: int
-        :param offset: Offset from the first result that you want to fetch.
-        :type offset: int
         :return: Generator yielding :class:`MediaSessionQuality` instances
         """
+        params['meetingId'] = meeting_id
+        url = self.ep()
         ...
 
     ...

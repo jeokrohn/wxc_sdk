@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -2798,7 +2799,7 @@ class MeetingsApi(ApiChild, base='meetings'):
     """
 
     def create_a_meeting(self, adhoc: bool, room_id: str, template_id: str, title: str, agenda: str, password: str,
-                         start: datetime, end: datetime, timezone: str, recurrence: str,
+                         start: Union[str, datetime], end: Union[str, datetime], timezone: str, recurrence: str,
                          enabled_auto_record_meeting: bool, allow_any_user_to_be_co_host: bool,
                          enabled_join_before_host: bool, enable_connect_audio_before_host: bool,
                          join_before_host_minutes: int, exclude_password: bool, public_meeting: bool,
@@ -3083,6 +3084,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type restrict_to_invitees: bool
         :rtype: :class:`MeetingSeriesObjectWithAdhoc`
         """
+        url = self.ep()
         ...
 
 
@@ -3132,6 +3134,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`MeetingSeriesObjectWithAdhoc`
         """
+        params = {}
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}')
         ...
 
 
@@ -3141,8 +3149,8 @@ class MeetingsApi(ApiChild, base='meetings'):
                       has_chat: bool = None, has_recording: bool = None, has_transcription: bool = None,
                       has_closed_caption: bool = None, has_polls: bool = None, has_qa: bool = None,
                       current: bool = None, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                      max_: int = None, host_email: str = None, site_url: str = None, integration_tag: str = None,
-                      **params) -> Generator[MeetingSeriesObjectForListMeeting, None, None]:
+                      max_: int = None, host_email: str = None, site_url: str = None,
+                      integration_tag: str = None) -> list[MeetingSeriesObjectForListMeeting]:
         """
         List Meetings
 
@@ -3303,8 +3311,56 @@ class MeetingsApi(ApiChild, base='meetings'):
             integration application to query meetings by a key in its own domain such as a Zendesk ticket ID, a Jira
             ID, a Salesforce Opportunity ID, etc.
         :type integration_tag: str
-        :return: Generator yielding :class:`MeetingSeriesObjectForListMeeting` instances
+        :rtype: list[MeetingSeriesObjectForListMeeting]
         """
+        params = {}
+        if meeting_number is not None:
+            params['meetingNumber'] = meeting_number
+        if web_link is not None:
+            params['webLink'] = web_link
+        if room_id is not None:
+            params['roomId'] = room_id
+        if meeting_type is not None:
+            params['meetingType'] = meeting_type
+        if state is not None:
+            params['state'] = state
+        if scheduled_type is not None:
+            params['scheduledType'] = scheduled_type
+        if is_modified is not None:
+            params['isModified'] = str(is_modified).lower()
+        if has_chat is not None:
+            params['hasChat'] = str(has_chat).lower()
+        if has_recording is not None:
+            params['hasRecording'] = str(has_recording).lower()
+        if has_transcription is not None:
+            params['hasTranscription'] = str(has_transcription).lower()
+        if has_closed_caption is not None:
+            params['hasClosedCaption'] = str(has_closed_caption).lower()
+        if has_polls is not None:
+            params['hasPolls'] = str(has_polls).lower()
+        if has_qa is not None:
+            params['hasQA'] = str(has_qa).lower()
+        if current is not None:
+            params['current'] = str(current).lower()
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if integration_tag is not None:
+            params['integrationTag'] = integration_tag
+        url = self.ep()
         ...
 
 
@@ -3314,8 +3370,8 @@ class MeetingsApi(ApiChild, base='meetings'):
                                           state: ListMeetingsOfAMeetingSeriesState = None, is_modified: bool = None,
                                           has_chat: bool = None, has_recording: bool = None,
                                           has_transcription: bool = None, has_closed_caption: bool = None,
-                                          has_polls: bool = None, has_qa: bool = None, host_email: str = None,
-                                          **params) -> Generator[ScheduledMeetingObject, None, None]:
+                                          has_polls: bool = None, has_qa: bool = None,
+                                          host_email: str = None) -> list[ScheduledMeetingObject]:
         """
         List Meetings of a Meeting Series
 
@@ -3408,13 +3464,48 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return meetings that are hosted by that user.
         :type host_email: str
-        :return: Generator yielding :class:`ScheduledMeetingObject` instances
+        :rtype: list[ScheduledMeetingObject]
         """
+        params = {}
+        params['meetingSeriesId'] = meeting_series_id
+        if max_ is not None:
+            params['max'] = max_
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if meeting_type is not None:
+            params['meetingType'] = meeting_type
+        if state is not None:
+            params['state'] = state
+        if is_modified is not None:
+            params['isModified'] = str(is_modified).lower()
+        if has_chat is not None:
+            params['hasChat'] = str(has_chat).lower()
+        if has_recording is not None:
+            params['hasRecording'] = str(has_recording).lower()
+        if has_transcription is not None:
+            params['hasTranscription'] = str(has_transcription).lower()
+        if has_closed_caption is not None:
+            params['hasClosedCaption'] = str(has_closed_caption).lower()
+        if has_polls is not None:
+            params['hasPolls'] = str(has_polls).lower()
+        if has_qa is not None:
+            params['hasQA'] = str(has_qa).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep()
         ...
 
 
-    def patch_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: datetime, end: datetime,
-                        timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
+    def patch_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: Union[str, datetime],
+                        end: Union[str, datetime], timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
                         allow_any_user_to_be_co_host: bool, enabled_join_before_host: bool,
                         enable_connect_audio_before_host: bool, join_before_host_minutes: int, exclude_password: bool,
                         public_meeting: bool, reminder_time: int,
@@ -3599,11 +3690,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type restrict_to_invitees: bool
         :rtype: :class:`MeetingSeriesObject`
         """
+        url = self.ep(f'{meeting_id}')
         ...
 
 
-    def update_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: datetime, end: datetime,
-                         timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
+    def update_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: Union[str, datetime],
+                         end: Union[str, datetime], timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
                          allow_any_user_to_be_co_host: bool, enabled_join_before_host: bool,
                          enable_connect_audio_before_host: bool, join_before_host_minutes: int,
                          exclude_password: bool, public_meeting: bool, reminder_time: int,
@@ -3786,6 +3878,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type restrict_to_invitees: bool
         :rtype: :class:`MeetingSeriesObject`
         """
+        url = self.ep(f'{meeting_id}')
         ...
 
 
@@ -3815,12 +3908,18 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :rtype: None
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if send_email is not None:
+            params['sendEmail'] = str(send_email).lower()
+        url = self.ep(f'{meeting_id}')
         ...
 
 
     def join_a_meeting(self, meeting_id: str, meeting_number: str, web_link: str, join_directly: bool, email: str,
-                       display_name: str, password: str, expiration_minutes: int, registration_id: datetime,
-                       host_email: str) -> JoinMeetingLinkObject:
+                       display_name: str, password: str, expiration_minutes: int, registration_id: Union[str,
+                       datetime], host_email: str) -> JoinMeetingLinkObject:
         """
         Join a Meeting
 
@@ -3886,6 +3985,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`JoinMeetingLinkObject`
         """
+        url = self.ep('join')
         ...
 
 
@@ -3937,6 +4037,20 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type site_url: str
         :rtype: list[TemplateObject]
         """
+        params = {}
+        if template_type is not None:
+            params['templateType'] = template_type
+        if locale is not None:
+            params['locale'] = locale
+        if is_default is not None:
+            params['isDefault'] = str(is_default).lower()
+        if is_standard is not None:
+            params['isStandard'] = str(is_standard).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('templates')
         ...
 
 
@@ -3961,6 +4075,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`DetailedTemplateObject`
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'templates/{template_id}')
         ...
 
 
@@ -3977,6 +4095,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :rtype: :class:`Control`
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        url = self.ep('controls')
         ...
 
 
@@ -4001,6 +4122,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type locked: str
         :rtype: :class:`Control`
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        url = self.ep('controls')
         ...
 
 
@@ -4021,6 +4145,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type site_url: str
         :rtype: list[MeetingSessionTypeObject]
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('sessionTypes')
         ...
 
 
@@ -4044,6 +4174,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type site_url: str
         :rtype: :class:`MeetingSessionTypeObject`
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep(f'sessionTypes/{session_type_id}')
         ...
 
 
@@ -4071,6 +4207,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`Registration`
         """
+        params = {}
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/registration')
         ...
 
 
@@ -4145,6 +4287,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type rules: list[StandardRegistrationApproveRule]
         :rtype: :class:`Registration`
         """
+        url = self.ep(f'{meeting_id}/registration')
         ...
 
 
@@ -4161,6 +4304,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :rtype: None
         """
+        url = self.ep(f'{meeting_id}/registration')
         ...
 
 
@@ -4229,6 +4373,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`RegistrantCreateResponse`
         """
+        params = {}
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/registrants')
         ...
 
 
@@ -4261,6 +4411,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type items: list[RegistrantFormObject]
         :rtype: list[RegistrantCreateResponse]
         """
+        params = {}
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/registrants/bulkInsert')
         ...
 
 
@@ -4290,13 +4446,18 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`Registrant`
         """
+        params = {}
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/registrants/{registrant_id}')
         ...
 
 
     def list_meeting_registrants(self, meeting_id: str, max_: int = None, host_email: str = None, current: bool = None,
                                  email: str = None, registration_time_from: Union[str, datetime] = None,
-                                 registration_time_to: Union[str, datetime] = None,
-                                 **params) -> Generator[Registrant, None, None]:
+                                 registration_time_to: Union[str, datetime] = None) -> list[Registrant]:
         """
         List Meeting Registrants
 
@@ -4332,15 +4493,35 @@ class MeetingsApi(ApiChild, base='meetings'):
             `registrationTimeFrom` plus 7 days. The interval between `registrationTimeFrom` and `registrationTimeTo`
             must be within 90 days.
         :type registration_time_to: Union[str, datetime]
-        :return: Generator yielding :class:`Registrant` instances
+        :rtype: list[Registrant]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if current is not None:
+            params['current'] = str(current).lower()
+        if email is not None:
+            params['email'] = email
+        if registration_time_from is not None:
+            if isinstance(registration_time_from, str):
+                registration_time_from = isoparse(registration_time_from)
+            registration_time_from = dt_iso_str(registration_time_from)
+            params['registrationTimeFrom'] = registration_time_from
+        if registration_time_to is not None:
+            if isinstance(registration_time_to, str):
+                registration_time_to = isoparse(registration_time_to)
+            registration_time_to = dt_iso_str(registration_time_to)
+            params['registrationTimeTo'] = registration_time_to
+        url = self.ep(f'{meeting_id}/registrants')
         ...
 
 
     def query_meeting_registrants(self, meeting_id: str, status: RegistrantStatus,
                                   order_type: QueryRegistrantsOrderType, order_by: QueryRegistrantsOrderBy,
-                                  emails: list[str], max_: int = None, current: bool = None, host_email: str = None,
-                                  **params) -> Generator[Registrant, None, None]:
+                                  emails: list[str], max_: int = None, current: bool = None,
+                                  host_email: str = None) -> list[Registrant]:
         """
         Query Meeting Registrants
 
@@ -4372,8 +4553,16 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for a meeting that is hosted by that user.
         :type host_email: str
-        :return: Generator yielding :class:`Registrant` instances
+        :rtype: list[Registrant]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/registrants/query')
         ...
 
 
@@ -4411,6 +4600,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type registrants: list[Registrants]
         :rtype: None
         """
+        params = {}
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/registrants/{status_op_type}')
         ...
 
 
@@ -4440,6 +4635,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: None
         """
+        params = {}
+        if current is not None:
+            params['current'] = str(current).lower()
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/registrants/{registrant_id}')
         ...
 
 
@@ -4461,6 +4662,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type interpreters: list[InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting]
         :rtype: :class:`MeetingSeriesObjectSimultaneousInterpretation`
         """
+        url = self.ep(f'{meeting_id}/simultaneousInterpretation')
         ...
 
 
@@ -4500,6 +4702,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :rtype: :class:`InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting`
         """
+        url = self.ep(f'{meeting_id}/interpreters')
         ...
 
 
@@ -4521,6 +4724,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting`
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
         ...
 
 
@@ -4551,6 +4758,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: list[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting]
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_id}/interpreters')
         ...
 
 
@@ -4591,6 +4802,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :rtype: :class:`InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting`
         """
+        url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
         ...
 
 
@@ -4614,6 +4826,12 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :rtype: None
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if send_email is not None:
+            params['sendEmail'] = str(send_email).lower()
+        url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
         ...
 
 
@@ -4645,6 +4863,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type items: list[BreakoutSessionObject]
         :rtype: list[GetBreakoutSessionObject]
         """
+        url = self.ep(f'{meeting_id}/breakoutSessions')
         ...
 
 
@@ -4665,6 +4884,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :rtype: list[GetBreakoutSessionObject]
         """
+        url = self.ep(f'{meeting_id}/breakoutSessions')
         ...
 
 
@@ -4685,6 +4905,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :rtype: None
         """
+        params = {}
+        if send_email is not None:
+            params['sendEmail'] = str(send_email).lower()
+        url = self.ep(f'{meeting_id}/breakoutSessions')
         ...
 
 
@@ -4705,12 +4929,13 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :rtype: :class:`SurveyObject`
         """
+        url = self.ep(f'{meeting_id}/survey')
         ...
 
 
     def list_meeting_survey_results(self, meeting_id: str, meeting_start_time_from: Union[str, datetime] = None,
-                                    meeting_start_time_to: Union[str, datetime] = None, max_: int = None,
-                                    **params) -> Generator[SurveyResultObject, None, None]:
+                                    meeting_start_time_to: Union[str, datetime] = None,
+                                    max_: int = None) -> list[SurveyResultObject]:
         """
         List Meeting Survey Results
 
@@ -4748,13 +4973,28 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_start_time_to: Union[str, datetime]
         :param max_: Limit the maximum number of meetings in the response, up to 100.
         :type max_: int
-        :return: Generator yielding :class:`SurveyResultObject` instances
+        :rtype: list[SurveyResultObject]
         """
+        params = {}
+        if meeting_start_time_from is not None:
+            if isinstance(meeting_start_time_from, str):
+                meeting_start_time_from = isoparse(meeting_start_time_from)
+            meeting_start_time_from = dt_iso_str(meeting_start_time_from)
+            params['meetingStartTimeFrom'] = meeting_start_time_from
+        if meeting_start_time_to is not None:
+            if isinstance(meeting_start_time_to, str):
+                meeting_start_time_to = isoparse(meeting_start_time_to)
+            meeting_start_time_to = dt_iso_str(meeting_start_time_to)
+            params['meetingStartTimeTo'] = meeting_start_time_to
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep(f'{meeting_id}/surveyResults')
         ...
 
 
-    def get_meeting_survey_links(self, meeting_id: str, host_email: str, meeting_start_time_from: datetime,
-                                 meeting_start_time_to: datetime, emails: list[str]) -> list[SurveyLinkObject]:
+    def get_meeting_survey_links(self, meeting_id: str, host_email: str, meeting_start_time_from: Union[str, datetime],
+                                 meeting_start_time_to: Union[str, datetime],
+                                 emails: list[str]) -> list[SurveyLinkObject]:
         """
         Get Meeting Survey Links
 
@@ -4795,6 +5035,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type emails: list[str]
         :rtype: list[SurveyLinkObject]
         """
+        url = self.ep(f'{meeting_id}/surveyLinks')
         ...
 
 
@@ -4820,6 +5061,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type items: list[InvitationSourceCreateObject]
         :rtype: list[InvitationSourceObject]
         """
+        url = self.ep(f'{meeting_id}/invitationSources')
         ...
 
 
@@ -4844,6 +5086,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :rtype: list[InvitationSourceObject]
         """
+        url = self.ep(f'{meeting_id}/invitationSources')
         ...
 
 
@@ -4882,6 +5125,13 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`MeetingTrackingCodesObject`
         """
+        params = {}
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        params['service'] = service
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep('trackingCodes')
         ...
 
 
@@ -4944,6 +5194,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_ids: list[str]
         :rtype: list[ReassignMeetingResponseObject]
         """
+        url = self.ep('reassignHost')
         ...
 
     ...

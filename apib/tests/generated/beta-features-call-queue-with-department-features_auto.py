@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -354,8 +355,8 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
 
     def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, max_: int = None,
                                      start: int = None, name: str = None, phone_number: str = None,
-                                     department_id: str = None, department_name: str = None,
-                                     **params) -> Generator[ListCallQueueObject, None, None]:
+                                     department_id: str = None,
+                                     department_name: str = None) -> list[ListCallQueueObject]:
         """
         Read the List of Call Queues
 
@@ -388,8 +389,26 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type department_id: str
         :param department_name: Return only call queues with the matching departmentName.
         :type department_name: str
-        :return: Generator yielding :class:`ListCallQueueObject` instances
+        :rtype: list[ListCallQueueObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if department_id is not None:
+            params['departmentId'] = department_id
+        if department_name is not None:
+            params['departmentName'] = department_name
+        url = self.ep('queues')
         ...
 
 
@@ -418,12 +437,16 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type org_id: str
         :rtype: :class:`GetCallQueueObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         ...
 
 
     def update_a_call_queue(self, location_id: str, queue_id: str, enabled: bool, name: str, language_code: str,
-                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: datetime,
-                            alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
+                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: Union[str,
+                            datetime], alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
                             call_policies: GetCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject,
                             allow_call_waiting_for_agents_enabled: bool, agents: list[PostPersonPlaceObject],
                             department: ModifyCallQueueObjectDepartment, org_id: str = None):
@@ -483,6 +506,10 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         ...
 
     ...

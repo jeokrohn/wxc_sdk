@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -268,8 +269,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
     """
 
     def read_the_list_of_schedules(self, location_id: str, org_id: str = None, type: GetScheduleObjectType = None,
-                                   max_: int = None, start: int = None, name: str = None,
-                                   **params) -> Generator[ListScheduleObject, None, None]:
+                                   max_: int = None, start: int = None, name: str = None) -> list[ListScheduleObject]:
         """
         Read the List of Schedules
 
@@ -293,8 +293,20 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type start: int
         :param name: Only return schedules with the matching name.
         :type name: str
-        :return: Generator yielding :class:`ListScheduleObject` instances
+        :rtype: list[ListScheduleObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if type is not None:
+            params['type'] = type
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        url = self.ep(f'')
         ...
 
 
@@ -321,6 +333,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: :class:`GetScheduleObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{type}/{schedule_id}')
         ...
 
 
@@ -349,6 +365,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'')
         ...
 
 
@@ -381,6 +401,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{type}/{schedule_id}')
         ...
 
 
@@ -406,6 +430,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{type}/{schedule_id}')
         ...
 
 
@@ -434,11 +462,16 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: :class:`GetScheduleEventObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{type}/{schedule_id}/events/{event_id}')
         ...
 
 
     def create_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, name: str,
-                                start_date: datetime, end_date: datetime, start_time: datetime, end_time: datetime,
+                                start_date: Union[str, datetime], end_date: Union[str, datetime],
+                                start_time: Union[str, datetime], end_time: Union[str, datetime],
                                 all_day_enabled: bool, recurrence: RecurrenceObject, org_id: str = None) -> str:
         """
         Create a Schedule Event
@@ -476,13 +509,17 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{type}/{schedule_id}/events')
         ...
 
 
     def update_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, event_id: str,
-                                name: str, start_date: datetime, end_date: datetime, start_time: datetime,
-                                end_time: datetime, all_day_enabled: bool, recurrence: RecurrenceObject,
-                                org_id: str = None) -> str:
+                                name: str, start_date: Union[str, datetime], end_date: Union[str, datetime],
+                                start_time: Union[str, datetime], end_time: Union[str, datetime],
+                                all_day_enabled: bool, recurrence: RecurrenceObject, org_id: str = None) -> str:
         """
         Update a Schedule Event
 
@@ -523,6 +560,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{type}/{schedule_id}/events/{event_id}')
         ...
 
 
@@ -551,6 +592,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{type}/{schedule_id}/events/{event_id}')
         ...
 
     ...

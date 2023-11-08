@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -77,11 +78,15 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :type room_id: str
         :rtype: list[ECMFolder]
         """
+        params = {}
+        params['roomId'] = room_id
+        url = self.ep()
         ...
 
 
-    def create_an_ecm_folder_configuration(self, room_id: str, content_url: str, display_name: str, drive_id: datetime,
-                                           item_id: datetime, default_folder: str) -> ECMFolder:
+    def create_an_ecm_folder_configuration(self, room_id: str, content_url: str, display_name: str,
+                                           drive_id: Union[str, datetime], item_id: Union[str, datetime],
+                                           default_folder: str) -> ECMFolder:
         """
         Create an ECM folder configuration
 
@@ -105,6 +110,7 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :type default_folder: str
         :rtype: :class:`ECMFolder`
         """
+        url = self.ep()
         ...
 
 
@@ -118,11 +124,13 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :type id: str
         :rtype: :class:`ECMFolder`
         """
+        url = self.ep(f'{id}')
         ...
 
 
     def update_an_ecm_linked_folder(self, id: str, room_id: str, content_url: str, display_name: str,
-                                    drive_id: datetime, item_id: datetime, default_folder: str) -> ECMFolder:
+                                    drive_id: Union[str, datetime], item_id: Union[str, datetime],
+                                    default_folder: str) -> ECMFolder:
         """
         Update an ECM Linked Folder
 
@@ -148,6 +156,7 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :type default_folder: str
         :rtype: :class:`ECMFolder`
         """
+        url = self.ep(f'{id}')
         ...
 
 
@@ -161,6 +170,7 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :type id: str
         :rtype: None
         """
+        url = self.ep(f'{id}')
         ...
 
     ...

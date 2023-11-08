@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -41,6 +42,7 @@ class RolesApi(ApiChild, base='roles'):
 
         :rtype: list[Role]
         """
+        url = self.ep()
         ...
 
 
@@ -56,6 +58,7 @@ class RolesApi(ApiChild, base='roles'):
         :type role_id: str
         :rtype: :class:`Role`
         """
+        url = self.ep(f'{role_id}')
         ...
 
     ...

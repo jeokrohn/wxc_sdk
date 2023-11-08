@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -97,6 +98,10 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :type person_email: str
         :rtype: list[Authorization]
         """
+        params = {}
+        params['personId'] = person_id
+        params['personEmail'] = person_email
+        url = self.ep()
         ...
 
 
@@ -113,6 +118,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :type authorization_id: str
         :rtype: None
         """
+        url = self.ep(f'{authorization_id}')
         ...
 
 
@@ -129,6 +135,11 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        params['clientId'] = client_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
         ...
 
     ...

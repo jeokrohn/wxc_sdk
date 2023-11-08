@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -81,7 +82,8 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
     <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_.
     """
 
-    def list_cluster_client_type_distribution_details(self, org_id: str, from_: datetime, to_: datetime,
+    def list_cluster_client_type_distribution_details(self, org_id: str, from_: Union[str, datetime], to_: Union[str,
+                                                      datetime],
                                                       device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
         """
         List Cluster Client Type Distribution details
@@ -104,10 +106,23 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
         :type device_type: str
         :rtype: list[ClienttypedistributionCollectionforOrg]
         """
+        params = {}
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['deviceType'] = device_type
+        url = self.ep()
         ...
 
 
-    def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: datetime, to_: datetime,
+    def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: Union[str, datetime],
+                                                     to_: Union[str, datetime],
                                                      device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
         """
         Get Cluster Client Type Distribution details
@@ -130,6 +145,18 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
         :type device_type: str
         :rtype: list[ClienttypedistributionCollectionforOrg]
         """
+        params = {}
+        params['clusterId'] = cluster_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['deviceType'] = device_type
+        url = self.ep('clusters')
         ...
 
     ...

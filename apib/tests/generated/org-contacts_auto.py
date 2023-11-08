@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -340,6 +341,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type ims: list[ContactIms]
         :rtype: None
         """
+        url = self.ep(f'')
         ...
 
 
@@ -358,6 +360,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type contact_id: str
         :rtype: :class:`ContactResponse`
         """
+        url = self.ep(f'{contact_id}')
         ...
 
 
@@ -409,6 +412,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type ims: list[ContactIms]
         :rtype: None
         """
+        url = self.ep(f'{contact_id}')
         ...
 
 
@@ -428,6 +432,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type contact_id: str
         :rtype: None
         """
+        url = self.ep(f'{contact_id}')
         ...
 
 
@@ -454,6 +459,14 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type source: str
         :rtype: :class:`SearchResponse`
         """
+        params = {}
+        if keyword is not None:
+            params['keyword'] = keyword
+        if limit is not None:
+            params['limit'] = limit
+        if source is not None:
+            params['source'] = source
+        url = self.ep(f'search')
         ...
 
 
@@ -472,6 +485,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type contacts: list[BulkCreateContacts]
         :rtype: None
         """
+        url = self.ep(f'bulk')
         ...
 
 
@@ -490,6 +504,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type object_ids: list[str]
         :rtype: None
         """
+        url = self.ep(f'bulk/delete')
         ...
 
     ...

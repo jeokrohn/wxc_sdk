@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -183,6 +184,10 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
         :type site_url: str
         :rtype: :class:`GetMeetingConfigurationCommonSettingObject`
         """
+        params = {}
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep()
         ...
 
 
@@ -208,6 +213,7 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
         :type security_options: GetMeetingConfigurationCommonSettingObjectSecurityOptions
         :rtype: :class:`GetMeetingConfigurationCommonSettingObject`
         """
+        url = self.ep()
         ...
 
     ...

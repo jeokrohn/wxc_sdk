@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -227,6 +228,18 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
         :type to_: Union[str, datetime]
         :rtype: :class:`HistoricalDataRelatedToMessagingResponse`
         """
+        params = {}
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        url = self.ep('messagingMetrics/dailyTotals')
         ...
 
 
@@ -246,6 +259,18 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
         :type to_: Union[str, datetime]
         :rtype: :class:`HistoricalDataRelatedToRoomDevicesResponse`
         """
+        params = {}
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        url = self.ep('roomDeviceMetrics/dailyTotals')
         ...
 
 
@@ -267,6 +292,19 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
         :type to_: Union[str, datetime]
         :rtype: :class:`HistoricalDataRelatedToMeetingsResponse`
         """
+        params = {}
+        params['siteUrl'] = site_url
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        url = self.ep('meetingsMetrics/aggregates')
         ...
 
     ...

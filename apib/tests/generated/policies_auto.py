@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -75,8 +76,7 @@ class PoliciesApi(ApiChild, base='policies'):
 
     def list_policies(self, type: ListPoliciesType, app_id: list[str] = None, person_id: list[str] = None,
                       org_id: str = None, name: str = None, action: PolicyAction = None, to_: Union[str,
-                      datetime] = None, max_: int = None, cursor: str = None,
-                      **params) -> Generator[Policy, None, None]:
+                      datetime] = None, max_: int = None, cursor: str = None) -> list[Policy]:
         """
         List Policies
 
@@ -104,8 +104,30 @@ class PoliciesApi(ApiChild, base='policies'):
         :type max_: int
         :param cursor: List the next policies after the current cursor.
         :type cursor: str
-        :return: Generator yielding :class:`Policy` instances
+        :rtype: list[Policy]
         """
+        params = {}
+        if app_id is not None:
+            params['appId'] = ','.join(app_id)
+        if person_id is not None:
+            params['personId'] = ','.join(person_id)
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        params['type'] = type
+        if action is not None:
+            params['action'] = action
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        if cursor is not None:
+            params['cursor'] = cursor
+        url = self.ep()
         ...
 
 
@@ -128,6 +150,7 @@ class PoliciesApi(ApiChild, base='policies'):
         :type person_ids: list[str]
         :rtype: :class:`Policy`
         """
+        url = self.ep()
         ...
 
 
@@ -143,6 +166,7 @@ class PoliciesApi(ApiChild, base='policies'):
         :type policy_id: str
         :rtype: :class:`Policy`
         """
+        url = self.ep(f'{policy_id}')
         ...
 
 
@@ -167,6 +191,7 @@ class PoliciesApi(ApiChild, base='policies'):
         :type person_ids: list[str]
         :rtype: :class:`Policy`
         """
+        url = self.ep(f'{policy_id}')
         ...
 
 
@@ -182,6 +207,7 @@ class PoliciesApi(ApiChild, base='policies'):
         :type policy_id: str
         :rtype: None
         """
+        url = self.ep(f'{policy_id}')
         ...
 
     ...

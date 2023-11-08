@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -132,6 +133,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallRecordingObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording')
         ...
 
 
@@ -154,6 +159,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording')
         ...
 
 
@@ -175,6 +184,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallRecordingTermsOfServiceObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'callRecording/vendors/{vendor_id}/termsOfService')
         ...
 
 
@@ -198,6 +211,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'callRecording/vendors/{vendor_id}/termsOfService')
         ...
 
 
@@ -219,6 +236,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetOrgComplianceAnnouncementObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording/complianceAnnouncement')
         ...
 
 
@@ -253,6 +274,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording/complianceAnnouncement')
         ...
 
 
@@ -276,6 +301,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetComplianceAnnouncementObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callRecording/complianceAnnouncement')
         ...
 
 
@@ -315,6 +344,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callRecording/complianceAnnouncement')
         ...
 
     ...

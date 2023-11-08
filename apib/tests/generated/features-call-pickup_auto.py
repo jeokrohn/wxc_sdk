@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -130,8 +131,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
     """
 
     def read_the_list_of_call_pickups(self, location_id: str, org_id: str = None, max_: int = None, start: int = None,
-                                      order: str = None, name: str = None,
-                                      **params) -> Generator[ListCallPickupObject, None, None]:
+                                      order: str = None, name: str = None) -> list[ListCallPickupObject]:
         """
         Read the List of Call Pickups
 
@@ -156,8 +156,20 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         :type order: str
         :param name: Return the list of call pickups that contains the given name. The maximum length is 80.
         :type name: str
-        :return: Generator yielding :class:`ListCallPickupObject` instances
+        :rtype: list[ListCallPickupObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
+        url = self.ep(f'')
         ...
 
 
@@ -184,6 +196,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'')
         ...
 
 
@@ -208,6 +224,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{call_pickup_id}')
         ...
 
 
@@ -233,6 +253,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         :type org_id: str
         :rtype: :class:`GetCallPickupObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{call_pickup_id}')
         ...
 
 
@@ -262,13 +286,17 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{call_pickup_id}')
         ...
 
 
     def get_available_agents_from_call_pickups(self, location_id: str, org_id: str = None,
                                                call_pickup_name: str = None, max_: int = None, start: int = None,
-                                               name: str = None, phone_number: str = None, order: str = None,
-                                               **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
+                                               name: str = None, phone_number: str = None,
+                                               order: str = None) -> list[GetPersonPlaceVirtualLineCallPickupObject]:
         """
         Get available agents from Call Pickups
 
@@ -297,8 +325,24 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
             separated sort order fields may be specified. Available sort fields: `fname`, `lname`, `extension`,
             `number`.
         :type order: str
-        :return: Generator yielding :class:`GetPersonPlaceVirtualLineCallPickupObject` instances
+        :rtype: list[GetPersonPlaceVirtualLineCallPickupObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_pickup_name is not None:
+            params['callPickupName'] = call_pickup_name
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep(f'availableUsers')
         ...
 
     ...

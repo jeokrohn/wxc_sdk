@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -277,6 +278,7 @@ class PostUser(ApiModel):
     #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: 
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
@@ -284,6 +286,7 @@ class PostUser(ApiModel):
     #: Acceptable values for this field are based on the `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: followed by an _ and then the 2 letter country code.  Examples are:
+    #: 
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
@@ -341,6 +344,7 @@ class PutUser(ApiModel):
     #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: 
     #: en_US : for english spoken in the United States, fr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
@@ -348,6 +352,7 @@ class PutUser(ApiModel):
     #: Acceptable values for this field are based on the  `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: followed by an _ and then the 2 letter country code.  Examples are:
+    #: 
     #: en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
@@ -453,6 +458,7 @@ class GetUserResponse(ApiModel):
     #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: 
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
@@ -460,6 +466,7 @@ class GetUserResponse(ApiModel):
     #: Acceptable values for this field are based on the `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: followed by an _ and then the 2 letter country code.  Examples are:
+    #: 
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
@@ -648,6 +655,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
         :rtype: :class:`GetUserResponse`
         """
+        url = self.ep(f'')
         ...
 
 
@@ -693,6 +701,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type user_id: str
         :rtype: :class:`GetUserResponse`
         """
+        url = self.ep(f'{user_id}')
         ...
 
 
@@ -784,6 +793,34 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type group_usage_types: str
         :rtype: :class:`SearchUserResponse`
         """
+        params = {}
+        if filter is not None:
+            params['filter'] = filter
+        if attributes is not None:
+            params['attributes'] = attributes
+        if excluded_attributes is not None:
+            params['excludedAttributes'] = excluded_attributes
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        if sort_order is not None:
+            params['sortOrder'] = sort_order
+        if start_index is not None:
+            if isinstance(start_index, str):
+                start_index = isoparse(start_index)
+            start_index = dt_iso_str(start_index)
+            params['startIndex'] = start_index
+        if count is not None:
+            if isinstance(count, str):
+                count = isoparse(count)
+            count = dt_iso_str(count)
+            params['count'] = count
+        if return_groups is not None:
+            params['returnGroups'] = return_groups
+        if include_group_details is not None:
+            params['includeGroupDetails'] = include_group_details
+        if group_usage_types is not None:
+            params['groupUsageTypes'] = group_usage_types
+        url = self.ep(f'')
         ...
 
 
@@ -902,6 +939,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
         :rtype: :class:`GetUserResponse`
         """
+        url = self.ep(f'{user_id}')
         ...
 
 
@@ -1054,6 +1092,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type operations: list[PatchUserOperations]
         :rtype: :class:`GetUserResponse`
         """
+        url = self.ep(f'{user_id}')
         ...
 
 
@@ -1091,6 +1130,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type user_id: str
         :rtype: None
         """
+        url = self.ep(f'{user_id}')
         ...
 
     ...

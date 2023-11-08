@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -211,10 +212,15 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type site_url: str
         :rtype: list[GetTrackingCodeObject]
         """
+        params = {}
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('config/trackingCodes')
         ...
 
 
-    def get_a_tracking_code(self, tracking_code_id: datetime, site_url: str = None) -> GetTrackingCodeObject:
+    def get_a_tracking_code(self, tracking_code_id: Union[str, datetime],
+                            site_url: str = None) -> GetTrackingCodeObject:
         """
         Get a Tracking Code
 
@@ -238,6 +244,10 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type site_url: str
         :rtype: :class:`GetTrackingCodeObject`
         """
+        params = {}
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep(f'config/trackingCodes/{tracking_code_id}')
         ...
 
 
@@ -296,6 +306,7 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type schedule_start_codes: list[ScheduleStartCodeObject]
         :rtype: :class:`GetTrackingCodeObject`
         """
+        url = self.ep('config/trackingCodes')
         ...
 
 
@@ -354,10 +365,11 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type schedule_start_codes: list[ScheduleStartCodeObject]
         :rtype: :class:`GetTrackingCodeObject`
         """
+        url = self.ep('config/trackingCodes/{trackingCodeId}')
         ...
 
 
-    def delete_a_tracking_code(self, tracking_code_id: datetime, site_url: str):
+    def delete_a_tracking_code(self, tracking_code_id: Union[str, datetime], site_url: str):
         """
         Delete a Tracking Code
 
@@ -380,6 +392,9 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type site_url: str
         :rtype: None
         """
+        params = {}
+        params['siteUrl'] = site_url
+        url = self.ep(f'config/trackingCodes/{tracking_code_id}')
         ...
 
 
@@ -419,6 +434,12 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type person_id: str
         :rtype: :class:`GetTrackingCodeForUserObject`
         """
+        params = {}
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if person_id is not None:
+            params['personId'] = person_id
+        url = self.ep('userconfig/trackingCodes')
         ...
 
 
@@ -460,6 +481,7 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type tracking_codes: list[UpdateTrackingCodeItemForUserObject]
         :rtype: :class:`GetTrackingCodeForUserObject`
         """
+        url = self.ep('userconfig/trackingCodes')
         ...
 
     ...

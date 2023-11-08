@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -117,8 +118,7 @@ class IssuesAPIApi(ApiChild, base='issues'):
     """
 
     def list_issues(self, created_for: str = None, org_id: str = None, from_: Union[str, datetime] = None,
-                    to_: Union[str, datetime] = None, after_issue: str = None, max_: int = None,
-                    **params) -> Generator[Issue, None, None]:
+                    to_: Union[str, datetime] = None, after_issue: str = None, max_: int = None) -> list[Issue]:
         """
         List Issues
 
@@ -149,8 +149,28 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :param max_:
         A limit on the number of issues to be returned in the response.
         :type max_: int
-        :return: Generator yielding :class:`Issue` instances
+        :rtype: list[Issue]
         """
+        params = {}
+        if created_for is not None:
+            params['createdFor'] = created_for
+        if org_id is not None:
+            params['orgId'] = org_id
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if after_issue is not None:
+            params['afterIssue'] = after_issue
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -179,6 +199,7 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :type external_key: str
         :rtype: :class:`Issue`
         """
+        url = self.ep()
         ...
 
 
@@ -194,6 +215,7 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :type id: str
         :rtype: :class:`Issue`
         """
+        url = self.ep(f'{id}')
         ...
 
 
@@ -237,6 +259,7 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :type external_key: str
         :rtype: :class:`Issue`
         """
+        url = self.ep(f'{id}')
         ...
 
     ...

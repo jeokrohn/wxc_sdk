@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -113,7 +114,7 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
     def list_call_memberships(self, call_status: ListCallMembershipsCallStatus, call_id: str = None,
                               is_host: ListCallMembershipsIsHost = None, person_id: str = None,
                               status: CallMembershipStatus = None, from_: Union[str, datetime] = None, to_: Union[str,
-                              datetime] = None, max_: int = None, **params) -> Generator[CallMembership, None, None]:
+                              datetime] = None, max_: int = None) -> list[CallMembership]:
         """
         List Call Memberships
 
@@ -146,8 +147,31 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
         :type to_: Union[str, datetime]
         :param max_: Limit the maximum number of call memberships in the response.
         :type max_: int
-        :return: Generator yielding :class:`CallMembership` instances
+        :rtype: list[CallMembership]
         """
+        params = {}
+        params['callStatus'] = call_status
+        if call_id is not None:
+            params['callId'] = call_id
+        if is_host is not None:
+            params['isHost'] = is_host
+        if person_id is not None:
+            params['personId'] = person_id
+        if status is not None:
+            params['status'] = status
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -163,6 +187,7 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
         :type call_membership_id: str
         :rtype: :class:`CallMembership`
         """
+        url = self.ep(f'{call_membership_id}')
         ...
 
     ...

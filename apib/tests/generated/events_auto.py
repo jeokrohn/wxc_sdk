@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -135,8 +136,8 @@ class EventsApi(ApiChild, base='events'):
     """
 
     def list_events(self, resource: EventResourceEnum = None, type: EventTypeEnum = None, actor_id: str = None,
-                    from_: Union[str, datetime] = None, to_: Union[str, datetime] = None, max_: int = None,
-                    **params) -> Generator[Event, None, None]:
+                    from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
+                    max_: int = None) -> list[Event]:
         """
         List Events
 
@@ -159,8 +160,28 @@ class EventsApi(ApiChild, base='events'):
         :type to_: Union[str, datetime]
         :param max_: Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.
         :type max_: int
-        :return: Generator yielding :class:`Event` instances
+        :rtype: list[Event]
         """
+        params = {}
+        if resource is not None:
+            params['resource'] = resource
+        if type is not None:
+            params['type'] = type
+        if actor_id is not None:
+            params['actorId'] = actor_id
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -176,6 +197,7 @@ class EventsApi(ApiChild, base='events'):
         :type event_id: str
         :rtype: :class:`Event`
         """
+        url = self.ep(f'{event_id}')
         ...
 
     ...

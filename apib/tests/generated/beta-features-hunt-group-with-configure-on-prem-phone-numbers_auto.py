@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -335,7 +336,7 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
     query parameter.
     """
 
-    def create_a_hunt_group(self, location_id: str, name: str, phone_number: str, extension: datetime,
+    def create_a_hunt_group(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
                             language_code: str, first_name: str, last_name: str, time_zone: str,
                             call_policies: PostHuntGroupCallPolicyObject, use_hosted_agent_enabled: bool,
                             use_policy_server_enabled: bool, agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
@@ -386,6 +387,10 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'')
         ...
 
 
@@ -410,11 +415,15 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         :type org_id: str
         :rtype: :class:`GetHuntGroupObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{hunt_group_id}')
         ...
 
 
     def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
-                            extension: datetime, distinctive_ring: bool,
+                            extension: Union[str, datetime], distinctive_ring: bool,
                             alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
                             last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
                             use_policy_server_enabled: bool, agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
@@ -470,6 +479,10 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{hunt_group_id}')
         ...
 
     ...

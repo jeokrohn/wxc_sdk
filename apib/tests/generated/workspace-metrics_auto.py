@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -180,6 +181,26 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
         :type sort_by: WorkspaceMetricsResponseSortBy
         :rtype: :class:`WorkspaceMetricsResponse`
         """
+        params = {}
+        params['workspaceId'] = workspace_id
+        params['metricName'] = metric_name
+        if aggregation is not None:
+            params['aggregation'] = aggregation
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if unit is not None:
+            params['unit'] = unit
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        url = self.ep('etrics')
         ...
 
 
@@ -220,6 +241,23 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
         :type to_: Union[str, datetime]
         :rtype: :class:`WorkspaceDurationMetricsResponse`
         """
+        params = {}
+        params['workspaceId'] = workspace_id
+        if aggregation is not None:
+            params['aggregation'] = aggregation
+        if measurement is not None:
+            params['measurement'] = measurement
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        url = self.ep('urationMetrics')
         ...
 
     ...

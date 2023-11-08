@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -84,6 +85,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_ids: list[str]
         :rtype: None
         """
+        url = self.ep()
         ...
 
 
@@ -97,6 +99,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
 
         :rtype: None
         """
+        url = self.ep()
         ...
 
 
@@ -108,6 +111,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
 
         :rtype: :class:`ConferenceDetails`
         """
+        url = self.ep()
         ...
 
 
@@ -121,6 +125,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('addParticipant')
         ...
 
 
@@ -137,6 +142,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('mute')
         ...
 
 
@@ -153,6 +159,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('unmute')
         ...
 
 
@@ -167,6 +174,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('deafen')
         ...
 
 
@@ -181,6 +189,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('undeafen')
         ...
 
 
@@ -192,6 +201,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
 
         :rtype: None
         """
+        url = self.ep('hold')
         ...
 
 
@@ -203,6 +213,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
 
         :rtype: None
         """
+        url = self.ep('resume')
         ...
 
     ...

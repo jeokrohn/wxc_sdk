@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -46,7 +47,7 @@ class TeamsApi(ApiChild, base='teams'):
     <https://developer.webex.com/docs/api/v1/rooms>`_.
     """
 
-    def list_teams(self, max_: int = None, **params) -> Generator[Team, None, None]:
+    def list_teams(self, max_: int = None) -> list[Team]:
         """
         List Teams
 
@@ -54,8 +55,12 @@ class TeamsApi(ApiChild, base='teams'):
 
         :param max_: Limit the maximum number of teams in the response.
         :type max_: int
-        :return: Generator yielding :class:`Team` instances
+        :rtype: list[Team]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -75,6 +80,7 @@ class TeamsApi(ApiChild, base='teams'):
         :type description: str
         :rtype: :class:`Team`
         """
+        url = self.ep()
         ...
 
 
@@ -92,6 +98,10 @@ class TeamsApi(ApiChild, base='teams'):
         :type description: str
         :rtype: :class:`Team`
         """
+        params = {}
+        if description is not None:
+            params['description'] = description
+        url = self.ep(f'{team_id}')
         ...
 
 
@@ -111,6 +121,7 @@ class TeamsApi(ApiChild, base='teams'):
         :type description: str
         :rtype: :class:`Team`
         """
+        url = self.ep(f'{team_id}')
         ...
 
 
@@ -126,6 +137,7 @@ class TeamsApi(ApiChild, base='teams'):
         :type team_id: str
         :rtype: None
         """
+        url = self.ep(f'{team_id}')
         ...
 
     ...

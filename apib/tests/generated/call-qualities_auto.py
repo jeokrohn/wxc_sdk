@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -106,8 +107,7 @@ class CallQualitiesApi(ApiChild, base='call/qualities'):
     <https://developer.webex.com/docs/api/guides/calls>`_ guide.
     """
 
-    def get_call_qualities(self, call_id: str, max_: int = None,
-                           **params) -> Generator[MediaSessionQuality, None, None]:
+    def get_call_qualities(self, call_id: str, max_: int = None) -> list[MediaSessionQuality]:
         """
         Get Call Qualities
 
@@ -119,8 +119,13 @@ class CallQualitiesApi(ApiChild, base='call/qualities'):
         :type call_id: str
         :param max_: Limit the maximum number of media sessions in the response
         :type max_: int
-        :return: Generator yielding :class:`MediaSessionQuality` instances
+        :rtype: list[MediaSessionQuality]
         """
+        params = {}
+        params['callId'] = call_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
     ...

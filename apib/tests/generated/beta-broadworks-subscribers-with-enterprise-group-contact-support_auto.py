@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -94,9 +95,12 @@ class Subscriber(ApiModel):
     #: example: provisioned
     status: Optional[SubscriberStatus] = None
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
+    #: 
     #: *Note:*
+    #: 
     #: + This list captures errors that occurred during *asynchronous or background* provisioning of the subscriber,
     #: *after* the API has been accepted and 200 OK response returned.
+    #: 
     #: + Any errors that occur during initial API request validation will be captured directly in error response with
     #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
@@ -143,8 +147,8 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
     def list_broad_works_subscribers(self, user_id: str = None, person_id: str = None, email: str = None,
                                      provisioning_id: str = None, sp_enterprise_id: str = None,
                                      last_status_change: str = None, status: SubscriberStatus = None,
-                                     after: str = None, self_activated: bool = None, max_: int = None,
-                                     **params) -> Generator[Subscriber, None, None]:
+                                     after: str = None, self_activated: bool = None,
+                                     max_: int = None) -> list[Subscriber]:
         """
         List BroadWorks Subscribers
 
@@ -176,8 +180,30 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
             to the `Pagination
             <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
         :type max_: int
-        :return: Generator yielding :class:`Subscriber` instances
+        :rtype: list[Subscriber]
         """
+        params = {}
+        if user_id is not None:
+            params['userId'] = user_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if email is not None:
+            params['email'] = email
+        if provisioning_id is not None:
+            params['provisioningId'] = provisioning_id
+        if sp_enterprise_id is not None:
+            params['spEnterpriseId'] = sp_enterprise_id
+        if last_status_change is not None:
+            params['lastStatusChange'] = last_status_change
+        if status is not None:
+            params['status'] = status
+        if after is not None:
+            params['after'] = after
+        if self_activated is not None:
+            params['selfActivated'] = str(self_activated).lower()
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -231,6 +257,7 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type timezone: str
         :rtype: :class:`Subscriber`
         """
+        url = self.ep()
         ...
 
 
@@ -244,6 +271,7 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type subscriber_id: str
         :rtype: :class:`Subscriber`
         """
+        url = self.ep(f'{subscriber_id}')
         ...
 
 
@@ -293,6 +321,7 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type package: str
         :rtype: :class:`Subscriber`
         """
+        url = self.ep(f'{subscriber_id}')
         ...
 
 
@@ -306,6 +335,7 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type subscriber_id: str
         :rtype: None
         """
+        url = self.ep(f'{subscriber_id}')
         ...
 
     ...

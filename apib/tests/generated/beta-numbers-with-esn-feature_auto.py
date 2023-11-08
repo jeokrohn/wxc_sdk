@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -112,8 +113,7 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
                                                                    phone_number_type: str = None, state: str = None,
                                                                    details: bool = None,
                                                                    toll_free_numbers: bool = None,
-                                                                   restricted_non_geo_numbers: bool = None,
-                                                                   **params) -> Generator[NumberObject, None, None]:
+                                                                   restricted_non_geo_numbers: bool = None) -> list[NumberObject]:
         """
         Get Phone Numbers for an Organization with Given Criterias
 
@@ -165,8 +165,44 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
-        :return: Generator yielding :class:`NumberObject` instances
+        :rtype: list[NumberObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if available is not None:
+            params['available'] = str(available).lower()
+        if order is not None:
+            params['order'] = order
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_type is not None:
+            params['ownerType'] = owner_type
+        if extension is not None:
+            params['extension'] = extension
+        if number_type is not None:
+            params['numberType'] = number_type
+        if phone_number_type is not None:
+            params['phoneNumberType'] = phone_number_type
+        if state is not None:
+            params['state'] = state
+        if details is not None:
+            params['details'] = str(details).lower()
+        if toll_free_numbers is not None:
+            params['tollFreeNumbers'] = str(toll_free_numbers).lower()
+        if restricted_non_geo_numbers is not None:
+            params['restrictedNonGeoNumbers'] = str(restricted_non_geo_numbers).lower()
+        url = self.ep()
         ...
 
     ...

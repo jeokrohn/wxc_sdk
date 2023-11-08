@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -134,6 +135,7 @@ class GroupsApi(ApiChild, base='groups'):
         :type members: list[PostMember]
         :rtype: :class:`GroupResponse`
         """
+        url = self.ep()
         ...
 
 
@@ -156,6 +158,7 @@ class GroupsApi(ApiChild, base='groups'):
         :type members: list[PatchMemberWithOperation]
         :rtype: :class:`GroupResponse`
         """
+        url = self.ep(f'{group_id}')
         ...
 
 
@@ -173,6 +176,10 @@ class GroupsApi(ApiChild, base='groups'):
         :type include_members: bool
         :rtype: :class:`GroupResponse`
         """
+        params = {}
+        if include_members is not None:
+            params['includeMembers'] = str(include_members).lower()
+        url = self.ep(f'{group_id}')
         ...
 
 
@@ -214,6 +221,24 @@ class GroupsApi(ApiChild, base='groups'):
         :type count: int
         :rtype: :class:`GroupsCollectionResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if filter is not None:
+            params['filter'] = filter
+        if attributes is not None:
+            params['attributes'] = attributes
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        if sort_order is not None:
+            params['sortOrder'] = sort_order
+        if include_members is not None:
+            params['includeMembers'] = str(include_members).lower()
+        if start_index is not None:
+            params['startIndex'] = start_index
+        if count is not None:
+            params['count'] = count
+        url = self.ep()
         ...
 
 
@@ -236,6 +261,12 @@ class GroupsApi(ApiChild, base='groups'):
         :type count: int
         :rtype: :class:`GroupResponse`
         """
+        params = {}
+        if start_index is not None:
+            params['startIndex'] = start_index
+        if count is not None:
+            params['count'] = count
+        url = self.ep(f'{group_id}/members')
         ...
 
 
@@ -251,6 +282,7 @@ class GroupsApi(ApiChild, base='groups'):
         :type group_id: str
         :rtype: None
         """
+        url = self.ep(f'{group_id}')
         ...
 
     ...

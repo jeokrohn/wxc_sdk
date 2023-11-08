@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -210,8 +211,8 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
     """
 
     def read_the_list_of_paging_groups(self, org_id: str = None, max_: int = None, start: int = None,
-                                       location_id: str = None, name: str = None, phone_number: str = None,
-                                       **params) -> Generator[ListPagingGroupObject, None, None]:
+                                       location_id: str = None, name: str = None,
+                                       phone_number: str = None) -> list[ListPagingGroupObject]:
         """
         Read the List of Paging Groups
 
@@ -236,13 +237,27 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type name: str
         :param phone_number: Return only paging groups with matching primary phone number or extension.
         :type phone_number: str
-        :return: Generator yielding :class:`ListPagingGroupObject` instances
+        :rtype: list[ListPagingGroupObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('paging')
         ...
 
 
-    def create_a_new_paging_group(self, location_id: str, name: str, phone_number: str, extension: datetime,
-                                  language_code: str, first_name: str, last_name: str,
+    def create_a_new_paging_group(self, location_id: str, name: str, phone_number: str, extension: Union[str,
+                                  datetime], language_code: str, first_name: str, last_name: str,
                                   originator_caller_id_enabled: bool, originators: list[str], targets: list[str],
                                   org_id: str = None) -> str:
         """
@@ -288,6 +303,10 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/paging')
         ...
 
 
@@ -312,6 +331,10 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/paging/{paging_id}')
         ...
 
 
@@ -338,11 +361,15 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetPagingGroupObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/paging/{paging_id}')
         ...
 
 
     def update_a_paging_group(self, location_id: str, paging_id: str, enabled: bool, name: str, phone_number: str,
-                              extension: datetime, language_code: str, first_name: str, last_name: str,
+                              extension: Union[str, datetime], language_code: str, first_name: str, last_name: str,
                               originator_caller_id_enabled: bool, originators: list[str], targets: list[str],
                               org_id: str = None):
         """
@@ -390,6 +417,10 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/paging/{paging_id}')
         ...
 
     ...

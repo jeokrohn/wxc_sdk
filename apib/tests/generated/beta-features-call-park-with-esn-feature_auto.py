@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -212,13 +213,17 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallParkObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callParks/{call_park_id}')
         ...
 
 
     def get_available_agents_from_call_parks(self, location_id: str, org_id: str = None, call_park_name: str = None,
                                              max_: int = None, start: int = None, name: str = None,
-                                             phone_number: str = None, order: str = None,
-                                             **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
+                                             phone_number: str = None,
+                                             order: str = None) -> list[GetPersonPlaceVirtualLineCallParksObject]:
         """
         Get available agents from Call Parks
 
@@ -247,15 +252,31 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
             separated sort order fields may be specified. Available sort fields: fname, lname, number and extension.
             The maximum supported sort order value is 3.
         :type order: str
-        :return: Generator yielding :class:`GetPersonPlaceVirtualLineCallParksObject` instances
+        :rtype: list[GetPersonPlaceVirtualLineCallParksObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_park_name is not None:
+            params['callParkName'] = call_park_name
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep(f'locations/{location_id}/callParks/availableUsers')
         ...
 
 
     def read_the_list_of_call_park_extensions(self, org_id: str = None, max_: int = None, start: int = None,
                                               extension: Union[str, datetime] = None, name: str = None,
-                                              location_id: str = None, location_name: str = None, order: str = None,
-                                              **params) -> Generator[ListCallParkExtensionObject, None, None]:
+                                              location_id: str = None, location_name: str = None,
+                                              order: str = None) -> list[ListCallParkExtensionObject]:
         """
         Read the List of Call Park Extensions
 
@@ -285,8 +306,29 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         :param order: Order the available agents according to the designated fields.  Available sort fields:
             `groupName`, `callParkExtension`, `callParkExtensionName`, `callParkExtensionExternalId`.
         :type order: str
-        :return: Generator yielding :class:`ListCallParkExtensionObject` instances
+        :rtype: list[ListCallParkExtensionObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if extension is not None:
+            if isinstance(extension, str):
+                extension = isoparse(extension)
+            extension = dt_iso_str(extension)
+            params['extension'] = extension
+        if name is not None:
+            params['name'] = name
+        if location_id is not None:
+            params['locationId'] = location_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
+        url = self.ep('callParkExtensions')
         ...
 
 
@@ -312,6 +354,10 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallParkExtensionObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callParkExtensions/{call_park_extension_id}')
         ...
 
     ...

@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -232,8 +233,8 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
     """
 
     def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                         start: int = None, name: str = None, phone_number: str = None,
-                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
+                                         start: int = None, name: str = None,
+                                         phone_number: str = None) -> list[ListAutoAttendantObject]:
         """
         Read the List of Auto Attendants
 
@@ -257,8 +258,22 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
         :type name: str
         :param phone_number: Only return auto attendants with the matching phone number.
         :type phone_number: str
-        :return: Generator yielding :class:`ListAutoAttendantObject` instances
+        :rtype: list[ListAutoAttendantObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('autoAttendants')
         ...
 
 
@@ -283,6 +298,10 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
         :type org_id: str
         :rtype: :class:`GetAutoAttendantObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         ...
 
     ...

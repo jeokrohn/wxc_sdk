@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -163,6 +164,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
 
         :rtype: list[Language]
         """
+        url = self.ep('announcementLanguages')
         ...
 
 
@@ -182,6 +184,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicemailSettingsObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('voicemail/settings')
         ...
 
 
@@ -214,6 +220,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('voicemail/settings')
         ...
 
 
@@ -233,6 +243,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicemailRulesObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('voicemail/rules')
         ...
 
 
@@ -269,6 +283,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('voicemail/rules')
         ...
 
     ...

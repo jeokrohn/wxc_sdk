@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -269,6 +270,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('dial')
         ...
 
 
@@ -289,6 +291,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: None
         """
+        url = self.ep('answer')
         ...
 
 
@@ -305,6 +308,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type action: RejectActionEnum
         :rtype: None
         """
+        url = self.ep('reject')
         ...
 
 
@@ -318,6 +322,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('hangup')
         ...
 
 
@@ -331,6 +336,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('hold')
         ...
 
 
@@ -344,6 +350,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('resume')
         ...
 
 
@@ -365,6 +372,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type to_voicemail: str
         :rtype: None
         """
+        url = self.ep('divert')
         ...
 
 
@@ -403,6 +411,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type destination: str
         :rtype: None
         """
+        url = self.ep('transfer')
         ...
 
 
@@ -425,6 +434,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type is_group_park: str
         :rtype: PartyInformation
         """
+        url = self.ep('park')
         ...
 
 
@@ -447,6 +457,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('retrieve')
         ...
 
 
@@ -461,6 +472,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('startRecording')
         ...
 
 
@@ -475,6 +487,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('stopRecording')
         ...
 
 
@@ -489,6 +502,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('pauseRecording')
         ...
 
 
@@ -503,6 +517,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('resumeRecording')
         ...
 
 
@@ -521,6 +536,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type dtmf: Union[str, datetime]
         :rtype: None
         """
+        url = self.ep('transmitDtmf')
         ...
 
 
@@ -535,6 +551,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('push')
         ...
 
 
@@ -557,10 +574,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('pickup')
         ...
 
 
-    def barge_in(self, target: datetime, endpoint_id: str = None) -> DialResponse:
+    def barge_in(self, target: Union[str, datetime], endpoint_id: str = None) -> DialResponse:
         """
         Barge In
 
@@ -577,6 +595,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('bargeIn')
         ...
 
 
@@ -588,6 +607,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :rtype: list[Call]
         """
+        url = self.ep()
         ...
 
 
@@ -601,6 +621,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: :class:`Call`
         """
+        url = self.ep(f'{call_id}')
         ...
 
 
@@ -616,6 +637,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type type: CallHistoryRecordTypeEnum
         :rtype: list[CallHistoryRecord]
         """
+        params = {}
+        if type is not None:
+            params['type'] = type
+        url = self.ep('history')
         ...
 
     ...

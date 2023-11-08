@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -361,8 +362,8 @@ class RecordingsApi(ApiChild, base=''):
     def list_recordings(self, max_: int = None, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
                         meeting_id: str = None, host_email: str = None, site_url: str = None,
                         integration_tag: str = None, topic: str = None, format: ListRecordingsFormat = None,
-                        service_type: RecordingObjectServiceType = None, status: ListRecordingsStatus = None,
-                        **params) -> Generator[RecordingObject, None, None]:
+                        service_type: RecordingObjectServiceType = None,
+                        status: ListRecordingsStatus = None) -> list[RecordingObject]:
         """
         List Recordings
 
@@ -434,8 +435,38 @@ class RecordingsApi(ApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: ListRecordingsStatus
-        :return: Generator yielding :class:`RecordingObject` instances
+        :rtype: list[RecordingObject]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if meeting_id is not None:
+            params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if integration_tag is not None:
+            params['integrationTag'] = integration_tag
+        if topic is not None:
+            params['topic'] = topic
+        if format is not None:
+            params['format'] = format
+        if service_type is not None:
+            params['serviceType'] = service_type
+        if status is not None:
+            params['status'] = status
+        url = self.ep('ecordings')
         ...
 
 
@@ -444,8 +475,7 @@ class RecordingsApi(ApiChild, base=''):
                                                            site_url: str = None, integration_tag: str = None,
                                                            topic: str = None, format: ListRecordingsFormat = None,
                                                            service_type: RecordingObjectServiceType = None,
-                                                           status: ListRecordingsStatus = None,
-                                                           **params) -> Generator[RecordingObjectForAdminAndCO, None, None]:
+                                                           status: ListRecordingsStatus = None) -> list[RecordingObjectForAdminAndCO]:
         """
         List Recordings For an Admin or Compliance Officer
 
@@ -508,8 +538,36 @@ class RecordingsApi(ApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved to the recycle bin.
         :type status: ListRecordingsStatus
-        :return: Generator yielding :class:`RecordingObjectForAdminAndCO` instances
+        :rtype: list[RecordingObjectForAdminAndCO]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if meeting_id is not None:
+            params['meetingId'] = meeting_id
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if integration_tag is not None:
+            params['integrationTag'] = integration_tag
+        if topic is not None:
+            params['topic'] = topic
+        if format is not None:
+            params['format'] = format
+        if service_type is not None:
+            params['serviceType'] = service_type
+        if status is not None:
+            params['status'] = status
+        url = self.ep('dmin/recordings')
         ...
 
 
@@ -537,6 +595,10 @@ class RecordingsApi(ApiChild, base=''):
         :type host_email: str
         :rtype: :class:`RecordingObjectWithDirectDownloadLinks`
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'ecordings/{recording_id}')
         ...
 
 
@@ -565,6 +627,10 @@ class RecordingsApi(ApiChild, base=''):
         :type host_email: str
         :rtype: None
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'ecordings/{recording_id}')
         ...
 
 
@@ -601,6 +667,10 @@ class RecordingsApi(ApiChild, base=''):
         :type host_email: str
         :rtype: None
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep('ecordings/softDelete')
         ...
 
 
@@ -638,6 +708,10 @@ class RecordingsApi(ApiChild, base=''):
         :type host_email: str
         :rtype: None
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep('ecordings/restore')
         ...
 
 
@@ -676,6 +750,10 @@ class RecordingsApi(ApiChild, base=''):
         :type host_email: str
         :rtype: None
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep('ecordings/purge')
         ...
 
     ...

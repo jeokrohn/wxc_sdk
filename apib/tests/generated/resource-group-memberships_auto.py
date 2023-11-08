@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -66,8 +67,8 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
     """
 
     def list_resource_group_memberships(self, license_id: str = None, person_id: str = None, person_org_id: str = None,
-                                        status: ResourceGroupMembershipStatus = None, max_: int = None,
-                                        **params) -> Generator[ResourceGroupMembership, None, None]:
+                                        status: ResourceGroupMembershipStatus = None,
+                                        max_: int = None) -> list[ResourceGroupMembership]:
         """
         List Resource Group Memberships
 
@@ -85,8 +86,20 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         :type status: ResourceGroupMembershipStatus
         :param max_: Limit the maximum number of resource group memberships in the response.
         :type max_: int
-        :return: Generator yielding :class:`ResourceGroupMembership` instances
+        :rtype: list[ResourceGroupMembership]
         """
+        params = {}
+        if license_id is not None:
+            params['licenseId'] = license_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_org_id is not None:
+            params['personOrgId'] = person_org_id
+        if status is not None:
+            params['status'] = status
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -102,6 +115,7 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         :type resource_group_membership_id: str
         :rtype: :class:`ResourceGroupMembership`
         """
+        url = self.ep(f'{resource_group_membership_id}')
         ...
 
 
@@ -134,6 +148,7 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         :type status: ResourceGroupMembershipStatus
         :rtype: :class:`ResourceGroupMembership`
         """
+        url = self.ep(f'{resource_group_membership_id}')
         ...
 
     ...

@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -210,8 +211,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
     
     """
 
-    def list_wholesale_device_catalog(self, max_: int = None, offset: int = None, distributor_id: str = None,
-                                      product_name: str = None, sku: str = None,
+    def list_wholesale_device_catalog(self, distributor_id: str = None, product_name: str = None, sku: str = None,
                                       **params) -> Generator[CatalogResponse, None, None]:
         """
         List Wholesale Device Catalog
@@ -219,13 +219,6 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         List the device fulfillment catalog items associated with a Service Provider. There are a number of filter
         options, which can be combined in a single request.
 
-        :param max_: Limit the maximum number of device fulfillment catalog items returned in the search response, up
-            to 100 per page. Refer to the `Pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
-        :type max_: int
-        :param offset: Offset value to implement `pagination
-            <https://developer.webex.com/docs/basics#pagination>`_.
-        :type offset: int
         :param distributor_id: The distributor ID.
         :type distributor_id: str
         :param product_name: The device product name.
@@ -234,6 +227,13 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :type sku: str
         :return: Generator yielding :class:`CatalogResponse` instances
         """
+        if distributor_id is not None:
+            params['distributorId'] = distributor_id
+        if product_name is not None:
+            params['productName'] = product_name
+        if sku is not None:
+            params['sku'] = sku
+        url = self.ep('deviceCatalog')
         ...
 
 
@@ -247,6 +247,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :type catalog_id: str
         :rtype: :class:`CatalogResponse`
         """
+        url = self.ep(f'deviceCatalog/{catalog_id}')
         ...
 
 
@@ -258,6 +259,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
 
         :rtype: list[DistributorResponse]
         """
+        url = self.ep('distributors')
         ...
 
 
@@ -271,30 +273,29 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :type distributor_id: str
         :rtype: :class:`DistributorDetailsResponse`
         """
+        url = self.ep(f'distributors/{distributor_id}')
         ...
 
 
-    def list_wholesale_device_orders(self, max_: int = None, offset: int = None, org_id: str = None,
-                                     status: str = None, **params) -> Generator[OrderResponse, None, None]:
+    def list_wholesale_device_orders(self, org_id: str = None, status: str = None,
+                                     **params) -> Generator[OrderResponse, None, None]:
         """
         List Wholesale Device Orders
 
         List the device fulfillment orders associated with a Service Provider. There are a number of filter options,
         which can be combined in a single request.
 
-        :param max_: Limit the maximum number of device fulfillment orders returned in the search response, up to 100
-            per page. Refer to the `Pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
-        :type max_: int
-        :param offset: Offset value to implement `pagination
-            <https://developer.webex.com/docs/basics#pagination>`_.
-        :type offset: int
         :param org_id: Wholesale customer ID.
         :type org_id: str
         :param status: The aggregated order status.
         :type status: str
         :return: Generator yielding :class:`OrderResponse` instances
         """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if status is not None:
+            params['status'] = status
+        url = self.ep('orders')
         ...
 
 
@@ -315,6 +316,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :type line_items: list[OrderRequestLineItem]
         :rtype: :class:`OrderResponse`
         """
+        url = self.ep('orders')
         ...
 
 
@@ -328,6 +330,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :type order_number: str
         :rtype: None
         """
+        url = self.ep(f'orders/{order_number}')
         ...
 
 
@@ -341,6 +344,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :type order_number: str
         :rtype: :class:`OrderResponse`
         """
+        url = self.ep(f'orders/{order_number}')
         ...
 
     ...

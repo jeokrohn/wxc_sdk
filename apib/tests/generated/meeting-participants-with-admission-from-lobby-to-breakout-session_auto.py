@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -248,8 +249,7 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
     def list_meeting_participants(self, meeting_id: str, max_: int = None, meeting_start_time_from: Union[str,
                                   datetime] = None, meeting_start_time_to: Union[str, datetime] = None,
                                   host_email: str = None, join_time_from: Union[str, datetime] = None,
-                                  join_time_to: Union[str, datetime] = None,
-                                  **params) -> Generator[Participant, None, None]:
+                                  join_time_to: Union[str, datetime] = None) -> list[Participant]:
         """
         List Meeting Participants
 
@@ -322,8 +322,35 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If `joinTimeTo` is not specified, it equals `joinTimeFrom` plus 7 days. The
             interval between `joinTimeFrom` and `joinTimeTo` must be within 90 days.
         :type join_time_to: Union[str, datetime]
-        :return: Generator yielding :class:`Participant` instances
+        :rtype: list[Participant]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        params['meetingId'] = meeting_id
+        if meeting_start_time_from is not None:
+            if isinstance(meeting_start_time_from, str):
+                meeting_start_time_from = isoparse(meeting_start_time_from)
+            meeting_start_time_from = dt_iso_str(meeting_start_time_from)
+            params['meetingStartTimeFrom'] = meeting_start_time_from
+        if meeting_start_time_to is not None:
+            if isinstance(meeting_start_time_to, str):
+                meeting_start_time_to = isoparse(meeting_start_time_to)
+            meeting_start_time_to = dt_iso_str(meeting_start_time_to)
+            params['meetingStartTimeTo'] = meeting_start_time_to
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if join_time_from is not None:
+            if isinstance(join_time_from, str):
+                join_time_from = isoparse(join_time_from)
+            join_time_from = dt_iso_str(join_time_from)
+            params['joinTimeFrom'] = join_time_from
+        if join_time_to is not None:
+            if isinstance(join_time_to, str):
+                join_time_to = isoparse(join_time_to)
+            join_time_to = dt_iso_str(join_time_to)
+            params['joinTimeTo'] = join_time_to
+        url = self.ep()
         ...
 
 
@@ -395,6 +422,21 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
         :type join_time_to: Union[str, datetime]
         :rtype: list[Participant]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        if meeting_start_time_from is not None:
+            if isinstance(meeting_start_time_from, str):
+                meeting_start_time_from = isoparse(meeting_start_time_from)
+            meeting_start_time_from = dt_iso_str(meeting_start_time_from)
+            params['meetingStartTimeFrom'] = meeting_start_time_from
+        if meeting_start_time_to is not None:
+            if isinstance(meeting_start_time_to, str):
+                meeting_start_time_to = isoparse(meeting_start_time_to)
+            meeting_start_time_to = dt_iso_str(meeting_start_time_to)
+            params['meetingStartTimeTo'] = meeting_start_time_to
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep('query')
         ...
 
 
@@ -416,6 +458,10 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
         :type host_email: str
         :rtype: :class:`Participant`
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{participant_id}')
         ...
 
 
@@ -455,6 +501,7 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
         :type expel: str
         :rtype: :class:`InProgressParticipant`
         """
+        url = self.ep(f'{participant_id}')
         ...
 
 
@@ -476,6 +523,7 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
         :type items: list[AdmitParticipant]
         :rtype: None
         """
+        url = self.ep('admit')
         ...
 
     ...

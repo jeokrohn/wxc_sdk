@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -430,6 +431,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type person_id: str
         :rtype: list[CallQueueObject]
         """
+        url = self.ep(f'elephony/config/people/{person_id}/queues/availableCallerIds')
         ...
 
 
@@ -450,6 +452,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type person_id: str
         :rtype: :class:`AgentCallQueueId`
         """
+        url = self.ep(f'elephony/config/people/{person_id}/queues/callerId')
         ...
 
 
@@ -473,6 +476,10 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`MonitoringSettings`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'eople/{person_id}/features/monitoring')
         ...
 
 
@@ -494,6 +501,10 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`GetNumbers`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'eople/{person_id}/features/numbers')
         ...
 
 
@@ -516,6 +527,10 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`PrivacyGet`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'eople/{person_id}/features/privacy')
         ...
 
 
@@ -539,6 +554,10 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`PushToTalkInfo`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'eople/{person_id}/features/pushToTalk')
         ...
 
 
@@ -562,6 +581,10 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`ReceptionInfo`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'eople/{person_id}/features/reception')
         ...
 
 
@@ -596,6 +619,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type extension: Union[str, datetime]
         :rtype: list[AvailableSharedLineMemberItem]
         """
+        url = self.ep(f'elephony/config/people/{person_id}/applications/{application_id}/availableMembers')
         ...
 
 
@@ -613,6 +637,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type application_id: str
         :rtype: :class:`GetSharedLineMemberList`
         """
+        url = self.ep(f'elephony/config/people/{person_id}/applications/{application_id}/members')
         ...
 
     ...

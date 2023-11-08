@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -139,6 +140,9 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         :type meeting_id: str
         :rtype: list[ClosedCaptionObject]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        url = self.ep()
         ...
 
 
@@ -158,6 +162,9 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         :type meeting_id: str
         :rtype: list[SnippetObject]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        url = self.ep(f'{closed_caption_id}/snippets')
         ...
 
 
@@ -188,6 +195,11 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         :type format: DownloadMeetingClosedCaptionSnippetsFormat
         :rtype: None
         """
+        params = {}
+        if format is not None:
+            params['format'] = format
+        params['meetingId'] = meeting_id
+        url = self.ep(f'{closed_caption_id}/download')
         ...
 
     ...

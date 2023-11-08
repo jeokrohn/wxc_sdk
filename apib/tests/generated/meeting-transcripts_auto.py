@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -145,7 +146,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
 
     def list_meeting_transcripts(self, meeting_id: str = None, host_email: str = None, site_url: str = None,
                                  from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                                 max_: int = None, **params) -> Generator[TranscriptObject, None, None]:
+                                 max_: int = None) -> list[TranscriptObject]:
         """
         List Meeting Transcripts
 
@@ -191,14 +192,34 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :param max_: Maximum number of transcripts to return in a single page. `max` must be equal to or greater than
             `1` and equal to or less than `100`.
         :type max_: int
-        :return: Generator yielding :class:`TranscriptObject` instances
+        :rtype: list[TranscriptObject]
         """
+        params = {}
+        if meeting_id is not None:
+            params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('eetingTranscripts')
         ...
 
 
     def list_meeting_transcripts_for_compliance_officer(self, site_url: str, from_: Union[str, datetime] = None,
-                                                        to_: Union[str, datetime] = None, max_: int = None,
-                                                        **params) -> Generator[TranscriptObject, None, None]:
+                                                        to_: Union[str, datetime] = None,
+                                                        max_: int = None) -> list[TranscriptObject]:
         """
         List Meeting Transcripts For Compliance Officer
 
@@ -226,8 +247,23 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :param max_: Maximum number of transcripts to return in a single page. `max` must be equal to or greater than
             `1` and equal to or less than `100`.
         :type max_: int
-        :return: Generator yielding :class:`TranscriptObject` instances
+        :rtype: list[TranscriptObject]
         """
+        params = {}
+        params['siteUrl'] = site_url
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('dmin/meetingTranscripts')
         ...
 
 
@@ -248,11 +284,16 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type host_email: str
         :rtype: None
         """
+        params = {}
+        if format is not None:
+            params['format'] = format
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'eetingTranscripts/{transcript_id}/download')
         ...
 
 
-    def list_snippets_of_a_meeting_transcript(self, transcript_id: str, max_: int = None,
-                                              **params) -> Generator[SnippetObject, None, None]:
+    def list_snippets_of_a_meeting_transcript(self, transcript_id: str, max_: int = None) -> list[SnippetObject]:
         """
         List Snippets of a Meeting Transcript
 
@@ -264,8 +305,12 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type transcript_id: str
         :param max_: Maximum snippet items to be returned for this query, to support pagination.
         :type max_: int
-        :return: Generator yielding :class:`SnippetObject` instances
+        :rtype: list[SnippetObject]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep(f'eetingTranscripts/{transcript_id}/snippets')
         ...
 
 
@@ -282,6 +327,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type snippet_id: str
         :rtype: :class:`SnippetObject`
         """
+        url = self.ep(f'eetingTranscripts/{transcript_id}/snippets/{snippet_id}')
         ...
 
 
@@ -303,6 +349,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type text: str
         :rtype: :class:`SnippetObject`
         """
+        url = self.ep(f'eetingTranscripts/{transcript_id}/snippets/{snippet_id}')
         ...
 
 
@@ -323,6 +370,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type comment: str
         :rtype: None
         """
+        url = self.ep(f'eetingTranscripts/{transcript_id}')
         ...
 
     ...

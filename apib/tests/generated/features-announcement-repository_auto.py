@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -159,8 +160,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
                                                                                 file_name: str = None,
                                                                                 file_type: str = None,
                                                                                 media_file_type: str = None,
-                                                                                name: str = None,
-                                                                                **params) -> Generator[AnnouncementsListResponse, None, None]:
+                                                                                name: str = None) -> list[AnnouncementsListResponse]:
         """
         Fetch list of announcement greetings on location and organization level
 
@@ -190,8 +190,28 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type media_file_type: str
         :param name: Return the list of announcement files for this announcement label.
         :type name: str
-        :return: Generator yielding :class:`AnnouncementsListResponse` instances
+        :rtype: list[AnnouncementsListResponse]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if order is not None:
+            params['order'] = order
+        if file_name is not None:
+            params['fileName'] = file_name
+        if file_type is not None:
+            params['fileType'] = file_type
+        if media_file_type is not None:
+            params['mediaFileType'] = media_file_type
+        if name is not None:
+            params['name'] = name
+        url = self.ep('announcements')
         ...
 
 
@@ -212,6 +232,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('announcements')
         ...
 
 
@@ -229,6 +253,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementUsageResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('announcements/usage')
         ...
 
 
@@ -246,6 +274,11 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        params['announcementId'] = announcement_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('announcements/{announcementsId}')
         ...
 
 
@@ -267,6 +300,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'announcements/{announcement_id}')
         ...
 
 
@@ -284,6 +321,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'announcements/{announcement_id}')
         ...
 
 
@@ -306,6 +347,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/announcements')
         ...
 
 
@@ -325,6 +370,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementUsageResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/announcements/usage')
         ...
 
 
@@ -342,6 +391,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/announcements/{announcementsId}')
         ...
 
 
@@ -365,6 +418,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         ...
 
 
@@ -385,6 +442,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         ...
 
     ...

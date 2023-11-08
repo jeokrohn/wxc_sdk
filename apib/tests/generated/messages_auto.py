@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -251,8 +252,7 @@ class MessagesApi(ApiChild, base='messages'):
     """
 
     def list_messages(self, room_id: str, parent_id: str = None, mentioned_people: list[str] = None, before: Union[str,
-                      datetime] = None, before_message: str = None, max_: int = None,
-                      **params) -> Generator[ListMessage, None, None]:
+                      datetime] = None, before_message: str = None, max_: int = None) -> list[ListMessage]:
         """
         List Messages
 
@@ -277,8 +277,24 @@ class MessagesApi(ApiChild, base='messages'):
         :type before_message: str
         :param max_: Limit the maximum number of messages in the response.
         :type max_: int
-        :return: Generator yielding :class:`ListMessage` instances
+        :rtype: list[ListMessage]
         """
+        params = {}
+        params['roomId'] = room_id
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if mentioned_people is not None:
+            params['mentionedPeople'] = ','.join(mentioned_people)
+        if before is not None:
+            if isinstance(before, str):
+                before = isoparse(before)
+            before = dt_iso_str(before)
+            params['before'] = before
+        if before_message is not None:
+            params['beforeMessage'] = before_message
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -300,6 +316,14 @@ class MessagesApi(ApiChild, base='messages'):
         :type person_email: str
         :rtype: list[DirectMessage]
         """
+        params = {}
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        url = self.ep('direct')
         ...
 
 
@@ -341,6 +365,7 @@ class MessagesApi(ApiChild, base='messages'):
         :type attachments: list[Attachment]
         :rtype: :class:`Message`
         """
+        url = self.ep()
         ...
 
 
@@ -381,6 +406,7 @@ class MessagesApi(ApiChild, base='messages'):
         :type markdown: str
         :rtype: :class:`ListMessage`
         """
+        url = self.ep(f'{message_id}')
         ...
 
 
@@ -396,6 +422,7 @@ class MessagesApi(ApiChild, base='messages'):
         :type message_id: str
         :rtype: :class:`ListMessage`
         """
+        url = self.ep(f'{message_id}')
         ...
 
 
@@ -411,6 +438,7 @@ class MessagesApi(ApiChild, base='messages'):
         :type message_id: str
         :rtype: None
         """
+        url = self.ep(f'{message_id}')
         ...
 
     ...

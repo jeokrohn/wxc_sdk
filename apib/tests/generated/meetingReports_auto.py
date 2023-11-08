@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -218,8 +219,8 @@ class MeetingsSummaryReportApi(ApiChild, base='meetingReports'):
     """
 
     def list_meeting_usage_reports(self, site_url: str, service_type: str = None, from_: Union[str, datetime] = None,
-                                   to_: Union[str, datetime] = None, max_: int = None,
-                                   **params) -> Generator[MeetingUsageReportObject, None, None]:
+                                   to_: Union[str, datetime] = None,
+                                   max_: int = None) -> list[MeetingUsageReportObject]:
         """
         List Meeting Usage Reports
 
@@ -269,15 +270,31 @@ class MeetingsSummaryReportApi(ApiChild, base='meetingReports'):
         :param max_: Maximum number of meetings to include in the meetings usage report in a single page. `max` must be
             greater than 0 and equal to or less than `1000`.
         :type max_: int
-        :return: Generator yielding :class:`MeetingUsageReportObject` instances
+        :rtype: list[MeetingUsageReportObject]
         """
+        params = {}
+        params['siteUrl'] = site_url
+        if service_type is not None:
+            params['serviceType'] = service_type
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('usage')
         ...
 
 
     def list_meeting_attendee_reports(self, site_url: str, meeting_id: str = None, meeting_number: str = None,
                                       meeting_title: str = None, from_: Union[str, datetime] = None, to_: Union[str,
-                                      datetime] = None, max_: int = None,
-                                      **params) -> Generator[MeetingAttendeeReportObject, None, None]:
+                                      datetime] = None, max_: int = None) -> list[MeetingAttendeeReportObject]:
         """
         List Meeting Attendee Reports
 
@@ -343,8 +360,29 @@ class MeetingsSummaryReportApi(ApiChild, base='meetingReports'):
         :param max_: Maximum number of meeting attendees to include in the meeting attendee report in a single page.
             `max` must be greater than 0 and equal to or less than `1000`.
         :type max_: int
-        :return: Generator yielding :class:`MeetingAttendeeReportObject` instances
+        :rtype: list[MeetingAttendeeReportObject]
         """
+        params = {}
+        params['siteUrl'] = site_url
+        if meeting_id is not None:
+            params['meetingId'] = meeting_id
+        if meeting_number is not None:
+            params['meetingNumber'] = meeting_number
+        if meeting_title is not None:
+            params['meetingTitle'] = meeting_title
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('attendees')
         ...
 
     ...

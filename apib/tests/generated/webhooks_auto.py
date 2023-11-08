@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -128,7 +129,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
     <https://developer.webex.com/docs/basics#pagination>`_.
     """
 
-    def list_webhooks(self, max_: int = None, owned_by: str = None, **params) -> Generator[Webhook, None, None]:
+    def list_webhooks(self, max_: int = None, owned_by: str = None) -> list[Webhook]:
         """
         List Webhooks
 
@@ -138,8 +139,14 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type max_: int
         :param owned_by: Limit the result list to org wide webhooks. Only allowed value is `org`.
         :type owned_by: str
-        :return: Generator yielding :class:`Webhook` instances
+        :rtype: list[Webhook]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        if owned_by is not None:
+            params['ownedBy'] = owned_by
+        url = self.ep()
         ...
 
 
@@ -175,6 +182,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type owned_by: str
         :rtype: :class:`Webhook`
         """
+        url = self.ep()
         ...
 
 
@@ -190,6 +198,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type webhook_id: str
         :rtype: :class:`Webhook`
         """
+        url = self.ep(f'{webhook_id}')
         ...
 
 
@@ -223,6 +232,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type status: WebhookStatus
         :rtype: :class:`Webhook`
         """
+        url = self.ep(f'{webhook_id}')
         ...
 
 
@@ -238,6 +248,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type webhook_id: str
         :rtype: None
         """
+        url = self.ep(f'{webhook_id}')
         ...
 
     ...

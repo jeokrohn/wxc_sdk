@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -72,6 +73,7 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :type org_id: str
         :rtype: list[Template]
         """
+        url = self.ep(f'licenseTemplates?orgId={org_id}')
         ...
 
 
@@ -96,6 +98,7 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :type template_type: TemplateTemplateType
         :rtype: :class:`Template`
         """
+        url = self.ep('licenseTemplates')
         ...
 
 
@@ -120,6 +123,7 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :type groups: list[str]
         :rtype: :class:`Template`
         """
+        url = self.ep(f'licenseTemplates/{license_template_id}')
         ...
 
 
@@ -135,6 +139,7 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :type license_template_id: str
         :rtype: None
         """
+        url = self.ep(f'licenseTemplates/{license_template_id}')
         ...
 
     ...

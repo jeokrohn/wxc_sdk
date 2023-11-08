@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -898,7 +899,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
     <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_
     """
 
-    def list_clusters_availability(self, from_: datetime, to_: datetime,
+    def list_clusters_availability(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                    org_id: str) -> list[ClusterAvailabilityCollection]:
         """
         List Clusters Availability
@@ -916,10 +917,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type org_id: str
         :rtype: list[ClusterAvailabilityCollection]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['orgId'] = org_id
+        url = self.ep('clusters/availability')
         ...
 
 
-    def get_cluster_availability(self, from_: datetime, to_: datetime,
+    def get_cluster_availability(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                  cluster_id: str) -> list[ClusterAvailabilityCollection]:
         """
         Get Cluster Availability
@@ -937,10 +949,20 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type cluster_id: str
         :rtype: list[ClusterAvailabilityCollection]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        url = self.ep(f'clusters/availability/{cluster_id}')
         ...
 
 
-    def list_node_availability(self, from_: datetime, to_: datetime,
+    def list_node_availability(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                cluster_id: str) -> list[NodeAvailabilityCollection]:
         """
         List Node Availability
@@ -958,10 +980,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type cluster_id: str
         :rtype: list[NodeAvailabilityCollection]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['clusterId'] = cluster_id
+        url = self.ep('nodes/availability')
         ...
 
 
-    def get_node_availability(self, from_: datetime, to_: datetime,
+    def get_node_availability(self, from_: Union[str, datetime], to_: Union[str, datetime],
                               node_id: str) -> list[SingleNodeAvailabilityCollection]:
         """
         Get Node Availability
@@ -979,10 +1012,20 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type node_id: str
         :rtype: list[SingleNodeAvailabilityCollection]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        url = self.ep(f'nodes/availability/{node_id}')
         ...
 
 
-    def list_media_health_monitoring_tool_results(self, from_: datetime, to_: datetime,
+    def list_media_health_monitoring_tool_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                   org_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
         """
         List Media Health Monitoring Tool results
@@ -1004,10 +1047,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type org_id: str
         :rtype: list[MediaHealthMonitoringResultsCollectionfororganization]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['orgId'] = org_id
+        url = self.ep('mediaHealthMonitor')
         ...
 
 
-    def list_media_health_monitoring_tool_test_results_v2(self, org_id: str, from_: datetime, to_: datetime,
+    def list_media_health_monitoring_tool_test_results_v2(self, org_id: str, from_: Union[str, datetime],
+                                                          to_: Union[str, datetime],
                                                           trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> MediaHealthMonitoringResultsCollectionfororganization:
         """
         List Media Health Monitoring Tool Test results V2
@@ -1035,10 +1090,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`MediaHealthMonitoringResultsCollectionfororganization`
         """
+        params = {}
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/mediaHealthMonitorTest')
         ...
 
 
-    def get_media_health_monitoring_tool_cluster_results(self, from_: datetime, to_: datetime,
+    def get_media_health_monitoring_tool_cluster_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                          cluster_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
         """
         Get Media Health Monitoring Tool Cluster results
@@ -1061,11 +1128,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type cluster_id: str
         :rtype: list[MediaHealthMonitoringResultsCollectionfororganization]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['clusterId'] = cluster_id
+        url = self.ep('mediaHealthMonitor/clusters')
         ...
 
 
-    def get_media_health_monitoring_tool_test_results_for_clusters_v2(self, cluster_id: str, from_: datetime,
-                                                                      to_: datetime,
+    def get_media_health_monitoring_tool_test_results_for_clusters_v2(self, cluster_id: str, from_: Union[str,
+                                                                      datetime], to_: Union[str, datetime],
                                                                       trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> MediaHealthMonitoringResultsCollectionfororganization:
         """
         Get Media Health Monitoring Tool Test results for clusters V2
@@ -1093,10 +1171,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`MediaHealthMonitoringResultsCollectionfororganization`
         """
+        params = {}
+        params['clusterId'] = cluster_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/mediaHealthMonitorTest/clusters')
         ...
 
 
-    def get_media_health_monitoring_tool_node_results(self, from_: datetime, to_: datetime,
+    def get_media_health_monitoring_tool_node_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                       node_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
         """
         Get Media Health Monitoring Tool Node results
@@ -1119,10 +1209,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type node_id: str
         :rtype: list[MediaHealthMonitoringResultsCollectionfororganization]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['nodeId'] = node_id
+        url = self.ep('mediaHealthMonitor/nodes')
         ...
 
 
-    def get_media_health_monitoring_tool_test_results_for_node_v2(self, node_id: str, from_: datetime, to_: datetime,
+    def get_media_health_monitoring_tool_test_results_for_node_v2(self, node_id: str, from_: Union[str, datetime],
+                                                                  to_: Union[str, datetime],
                                                                   trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> MediaHealthMonitoringResultsCollectionfororganization:
         """
         Get Media Health Monitoring Tool Test results for node V2
@@ -1150,10 +1252,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`MediaHealthMonitoringResultsCollectionfororganization`
         """
+        params = {}
+        params['nodeId'] = node_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/mediaHealthMonitorTest/nodes')
         ...
 
 
-    def list_overflow_to_cloud_details(self, from_: datetime, to_: datetime,
+    def list_overflow_to_cloud_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                        org_id: str) -> list[OverflowtoCloudCollection]:
         """
         List Overflow to Cloud details
@@ -1171,10 +1285,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type org_id: str
         :rtype: list[OverflowtoCloudCollection]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['orgId'] = org_id
+        url = self.ep('cloudOverflow')
         ...
 
 
-    def list_cluster_redirect_details(self, from_: datetime, to_: datetime,
+    def list_cluster_redirect_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                       org_id: str) -> list[RedirectCollectionForOrg]:
         """
         List Cluster Redirect details
@@ -1192,10 +1317,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type org_id: str
         :rtype: list[RedirectCollectionForOrg]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['orgId'] = org_id
+        url = self.ep('callRedirects')
         ...
 
 
-    def get_cluster_redirect_details(self, from_: datetime, to_: datetime,
+    def get_cluster_redirect_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                      cluster_id: str) -> list[RedirectCollectionForOrg]:
         """
         Get Cluster Redirect details
@@ -1213,10 +1349,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type cluster_id: str
         :rtype: list[RedirectCollectionForOrg]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['clusterId'] = cluster_id
+        url = self.ep('clusters/callRedirects')
         ...
 
 
-    def list_clusters_utilization(self, from_: datetime, to_: datetime,
+    def list_clusters_utilization(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                   org_id: str) -> list[ClusterUtilizationCollection]:
         """
         List Clusters Utilization
@@ -1234,10 +1381,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type org_id: str
         :rtype: list[ClusterUtilizationCollection]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['orgId'] = org_id
+        url = self.ep('utilization')
         ...
 
 
-    def get_cluster_utilization_details(self, from_: datetime, to_: datetime,
+    def get_cluster_utilization_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                         cluster_id: str) -> list[ClusterUtilizationCollection]:
         """
         Get Cluster Utilization details
@@ -1255,10 +1413,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type cluster_id: str
         :rtype: list[ClusterUtilizationCollection]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['clusterId'] = cluster_id
+        url = self.ep('clusters/utilization')
         ...
 
 
-    def list_reachability_test_results(self, from_: datetime, to_: datetime,
+    def list_reachability_test_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                        org_id: str) -> list[ReachabilityTestresultsfororganization]:
         """
         List Reachability Test results
@@ -1280,10 +1449,21 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type org_id: str
         :rtype: list[ReachabilityTestresultsfororganization]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['orgId'] = org_id
+        url = self.ep('reachabilityTest')
         ...
 
 
-    def list_reachability_test_results_v2(self, org_id: str, from_: datetime, to_: datetime,
+    def list_reachability_test_results_v2(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
                                           trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ReachabilityTestresultsfororganization:
         """
         List Reachability Test results V2
@@ -1315,10 +1495,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`ReachabilityTestresultsfororganization`
         """
+        params = {}
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/reachabilityTest')
         ...
 
 
-    def get_reachability_test_results_for_cluster(self, from_: datetime, to_: datetime,
+    def get_reachability_test_results_for_cluster(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                   cluster_id: str) -> list[ReachabilityTestresultsfororganization]:
         """
         Get Reachability Test results for Cluster
@@ -1340,10 +1532,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type cluster_id: str
         :rtype: list[ReachabilityTestresultsfororganization]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['clusterId'] = cluster_id
+        url = self.ep('reachabilityTest/clusters')
         ...
 
 
-    def get_reachability_test_results_for_cluster_v2(self, cluster_id: str, from_: datetime, to_: datetime,
+    def get_reachability_test_results_for_cluster_v2(self, cluster_id: str, from_: Union[str, datetime],
+                                                     to_: Union[str, datetime],
                                                      trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ReachabilityTestresultsfororganization:
         """
         Get Reachability Test results for cluster V2
@@ -1375,10 +1579,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`ReachabilityTestresultsfororganization`
         """
+        params = {}
+        params['clusterId'] = cluster_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/reachabilityTest/clusters')
         ...
 
 
-    def get_reachability_test_results_for_node(self, from_: datetime, to_: datetime,
+    def get_reachability_test_results_for_node(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                node_id: str) -> list[ReachabilityTestresultsfororganization]:
         """
         Get Reachability Test results for Node
@@ -1400,10 +1616,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type node_id: str
         :rtype: list[ReachabilityTestresultsfororganization]
         """
+        params = {}
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['nodeId'] = node_id
+        url = self.ep('reachabilityTest/nodes')
         ...
 
 
-    def get_reachability_test_results_for_node_v2(self, node_id: str, from_: datetime, to_: datetime,
+    def get_reachability_test_results_for_node_v2(self, node_id: str, from_: Union[str, datetime], to_: Union[str,
+                                                  datetime],
                                                   trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ReachabilityTestresultsfororganization:
         """
         Get Reachability Test results for node V2
@@ -1435,6 +1663,18 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`ReachabilityTestresultsfororganization`
         """
+        params = {}
+        params['nodeId'] = node_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/reachabilityTest/nodes')
         ...
 
 
@@ -1448,6 +1688,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type org_id: str
         :rtype: list[ClusterDetailsCollection]
         """
+        params = {}
+        params['orgId'] = org_id
+        url = self.ep('clusters')
         ...
 
 
@@ -1461,6 +1704,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type cluster_id: str
         :rtype: list[ClusterDetailsCollection]
         """
+        url = self.ep(f'clusters/{cluster_id}')
         ...
 
 
@@ -1481,6 +1725,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type nodes: list[str]
         :rtype: :class:`TriggeredTestStatus1`
         """
+        url = self.ep(f'triggerTest/clusters/{cluster_id}')
         ...
 
 
@@ -1496,6 +1741,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type type: TriggerOnDemandBodyType
         :rtype: :class:`TriggeredTestStatus1`
         """
+        url = self.ep(f'triggerTest/nodes/{node_id}')
         ...
 
 
@@ -1509,6 +1755,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type command_id: str
         :rtype: :class:`TriggeredTestStatus1`
         """
+        params = {}
+        params['commandId'] = command_id
+        url = self.ep('testStatus')
         ...
 
 
@@ -1525,10 +1774,13 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type command_id: str
         :rtype: :class:`TriggeredTestResult`
         """
+        params = {}
+        params['commandId'] = command_id
+        url = self.ep('testResults')
         ...
 
 
-    def list_network_test_results(self, org_id: str, from_: datetime, to_: datetime,
+    def list_network_test_results(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
                                   trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
         """
         List Network Test results
@@ -1558,10 +1810,23 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`ConnectivityTestResultsObject`
         """
+        params = {}
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/networkTest')
         ...
 
 
-    def get_network_test_results_for_cluster(self, cluster_id: str, from_: datetime, to_: datetime,
+    def get_network_test_results_for_cluster(self, cluster_id: str, from_: Union[str, datetime], to_: Union[str,
+                                             datetime],
                                              trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
         """
         Get Network Test results for cluster
@@ -1591,10 +1856,22 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`ConnectivityTestResultsObject`
         """
+        params = {}
+        params['clusterId'] = cluster_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/networkTest/clusters')
         ...
 
 
-    def get_network_test_results_for_node(self, node_id: str, from_: datetime, to_: datetime,
+    def get_network_test_results_for_node(self, node_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
                                           trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
         """
         Get Network Test results for node
@@ -1624,10 +1901,23 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
         :rtype: :class:`ConnectivityTestResultsObject`
         """
+        params = {}
+        params['nodeId'] = node_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['triggerType'] = trigger_type
+        url = self.ep('testResults/networkTest/nodes')
         ...
 
 
-    def list_cluster_client_type_distribution_details(self, org_id: str, from_: datetime, to_: datetime,
+    def list_cluster_client_type_distribution_details(self, org_id: str, from_: Union[str, datetime], to_: Union[str,
+                                                      datetime],
                                                       device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
         """
         List Cluster Client Type Distribution details
@@ -1650,10 +1940,23 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type device_type: str
         :rtype: list[ClienttypedistributionCollectionforOrg]
         """
+        params = {}
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['deviceType'] = device_type
+        url = self.ep('clientTypeDistribution')
         ...
 
 
-    def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: datetime, to_: datetime,
+    def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: Union[str, datetime],
+                                                     to_: Union[str, datetime],
                                                      device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
         """
         Get Cluster Client Type Distribution details
@@ -1676,6 +1979,18 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type device_type: str
         :rtype: list[ClienttypedistributionCollectionforOrg]
         """
+        params = {}
+        params['clusterId'] = cluster_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        params['deviceType'] = device_type
+        url = self.ep('clientTypeDistribution/clusters')
         ...
 
 
@@ -1698,6 +2013,16 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type event_scope: ListEventThresholdConfigurationEventScope
         :rtype: :class:`GetEventThresholdResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if cluster_id is not None:
+            params['clusterId'] = cluster_id
+        if event_name is not None:
+            params['eventName'] = event_name
+        if event_scope is not None:
+            params['eventScope'] = event_scope
+        url = self.ep('eventThresholds')
         ...
 
 
@@ -1711,6 +2036,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type event_threshold_id: str
         :rtype: :class:`GetEventThresholdResponse`
         """
+        url = self.ep(f'eventThresholds/{event_threshold_id}')
         ...
 
 
@@ -1725,6 +2051,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type event_thresholds: list[UpdateEventThresholdConfigurationEventThresholds]
         :rtype: :class:`BulkUpdateEventThresholdResponse`
         """
+        url = self.ep('eventThresholds')
         ...
 
 
@@ -1740,6 +2067,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type event_threshold_ids: list[str]
         :rtype: :class:`BulkUpdateEventThresholdResponse`
         """
+        url = self.ep('eventThresholds/reset')
         ...
 
     ...

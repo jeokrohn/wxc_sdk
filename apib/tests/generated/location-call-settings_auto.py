@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -462,8 +463,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
     """
 
     def list_locations_webex_calling_details(self, org_id: str = None, max_: int = None, start: int = None,
-                                             name: str = None, order: str = None,
-                                             **params) -> Generator[ListLocationObject, None, None]:
+                                             name: str = None, order: str = None) -> list[ListLocationObject]:
         """
         List Locations Webex Calling Details
 
@@ -483,8 +483,20 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type name: str
         :param order: Sort the list of locations based on `name`, either asc or desc.
         :type order: str
-        :return: Generator yielding :class:`ListLocationObject` instances
+        :rtype: list[ListLocationObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
+        url = self.ep('locations')
         ...
 
 
@@ -520,6 +532,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('locations')
         ...
 
 
@@ -540,6 +556,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetTelephonyLocationObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}')
         ...
 
 
@@ -547,8 +567,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
                                               calling_line_id: GetTelephonyLocationObjectCallingLineId,
                                               connection: GetTelephonyLocationObjectConnection,
                                               external_caller_id_name: str, p_access_network_info: str,
-                                              outside_dial_digit: datetime, routing_prefix: datetime,
-                                              charge_number: str, org_id: str = None):
+                                              outside_dial_digit: Union[str, datetime], routing_prefix: Union[str,
+                                              datetime], charge_number: str, org_id: str = None):
         """
         Update Location Webex Calling Details
 
@@ -586,6 +606,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}')
         ...
 
 
@@ -615,12 +639,15 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
         ...
 
 
     def read_the_list_of_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None,
-                                       max_: int = None, start: int = None, order: str = None,
-                                       **params) -> Generator[str, None, None]:
+                                       max_: int = None, start: int = None, order: str = None) -> list[str]:
         """
         Read the List of Dial Patterns
 
@@ -651,9 +678,20 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :param order: Order the dial patterns according to the designated fields.  Available sort fields:
             `dialPattern`.
         :type order: str
-        :return: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9),
-            followed by optional wildcard characters.
+        :rtype: list[str]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if dial_pattern is not None:
+            params['dialPattern'] = dial_pattern
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if order is not None:
+            params['order'] = order
+        url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
         ...
 
 
@@ -681,6 +719,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/features/emergencyCallbackNumber')
         ...
 
 
@@ -705,6 +747,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/features/emergencyCallbackNumber')
         ...
 
 
@@ -723,6 +769,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`PostValidateExtensionResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('actions/validateExtensions/invoke')
         ...
 
 
@@ -744,6 +794,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`StatusOfExtensionsObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/actions/validateExtensions/invoke')
         ...
 
 
@@ -774,6 +828,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/musicOnHold')
         ...
 
 
@@ -794,6 +852,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetMusicOnHoldObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/musicOnHold')
         ...
 
 
@@ -815,6 +877,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: GetPrivateNetworkConnectObjectNetworkConnectionType
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/privateNetworkConnect')
         ...
 
 
@@ -839,12 +905,16 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/privateNetworkConnect')
         ...
 
 
     def read_the_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None,
                                          trunk_name: str = None, max_: int = None, start: int = None,
-                                         order: str = None, **params) -> Generator[RouteIdentity, None, None]:
+                                         order: str = None) -> list[RouteIdentity]:
         """
         Read the List of Routing Choices
 
@@ -870,8 +940,22 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :param order: Order the route identities according to the designated fields.  Available sort fields:
             `routeName`, `routeType`.
         :type order: str
-        :return: Generator yielding :class:`RouteIdentity` instances
+        :rtype: list[RouteIdentity]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if route_group_name is not None:
+            params['routeGroupName'] = route_group_name
+        if trunk_name is not None:
+            params['trunkName'] = trunk_name
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if order is not None:
+            params['order'] = order
+        url = self.ep('routeChoices')
         ...
 
     ...

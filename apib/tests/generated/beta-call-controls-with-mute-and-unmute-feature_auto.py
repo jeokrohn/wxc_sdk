@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -269,6 +270,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('dial')
         ...
 
 
@@ -289,6 +291,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type endpoint_id: str
         :rtype: None
         """
+        url = self.ep('answer')
         ...
 
 
@@ -305,6 +308,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type action: RejectActionEnum
         :rtype: None
         """
+        url = self.ep('reject')
         ...
 
 
@@ -318,6 +322,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('hangup')
         ...
 
 
@@ -331,6 +336,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('hold')
         ...
 
 
@@ -344,6 +350,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('resume')
         ...
 
 
@@ -365,6 +372,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type to_voicemail: str
         :rtype: None
         """
+        url = self.ep('divert')
         ...
 
 
@@ -403,6 +411,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type destination: str
         :rtype: None
         """
+        url = self.ep('transfer')
         ...
 
 
@@ -425,6 +434,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type is_group_park: str
         :rtype: PartyInformation
         """
+        url = self.ep('park')
         ...
 
 
@@ -447,6 +457,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('retrieve')
         ...
 
 
@@ -461,6 +472,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('startRecording')
         ...
 
 
@@ -475,6 +487,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('stopRecording')
         ...
 
 
@@ -489,6 +502,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('pauseRecording')
         ...
 
 
@@ -503,6 +517,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('resumeRecording')
         ...
 
 
@@ -521,10 +536,11 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type dtmf: Union[str, datetime]
         :rtype: None
         """
+        url = self.ep('transmitDtmf')
         ...
 
 
-    def barge_in(self, target: datetime, endpoint_id: str = None) -> DialResponse:
+    def barge_in(self, target: Union[str, datetime], endpoint_id: str = None) -> DialResponse:
         """
         Barge In
 
@@ -541,6 +557,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('bargeIn')
         ...
 
 
@@ -552,6 +569,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
 
         :rtype: list[Call]
         """
+        url = self.ep()
         ...
 
 
@@ -565,6 +583,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: :class:`Call`
         """
+        url = self.ep(f'{call_id}')
         ...
 
 
@@ -580,6 +599,10 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type type: CallHistoryRecordTypeEnum
         :rtype: list[CallHistoryRecord]
         """
+        params = {}
+        if type is not None:
+            params['type'] = type
+        url = self.ep('history')
         ...
 
 
@@ -602,6 +625,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        url = self.ep('pickup')
         ...
 
 
@@ -616,6 +640,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('push')
         ...
 
 
@@ -629,6 +654,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('mute')
         ...
 
 
@@ -642,6 +668,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type call_id: str
         :rtype: None
         """
+        url = self.ep('unmute')
         ...
 
     ...

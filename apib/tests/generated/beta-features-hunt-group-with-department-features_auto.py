@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -329,8 +330,8 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
 
     def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max_: int = None,
                                      start: int = None, name: str = None, phone_number: str = None,
-                                     department_id: str = None, department_name: str = None,
-                                     **params) -> Generator[ListHuntGroupObject, None, None]:
+                                     department_id: str = None,
+                                     department_name: str = None) -> list[ListHuntGroupObject]:
         """
         Read the List of Hunt Groups
 
@@ -358,8 +359,26 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type department_id: str
         :param department_name: Return only hunt groups with the matching departmentName.
         :type department_name: str
-        :return: Generator yielding :class:`ListHuntGroupObject` instances
+        :rtype: list[ListHuntGroupObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if department_id is not None:
+            params['departmentId'] = department_id
+        if department_name is not None:
+            params['departmentName'] = department_name
+        url = self.ep('huntGroups')
         ...
 
 
@@ -384,11 +403,15 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type org_id: str
         :rtype: :class:`GetHuntGroupObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         ...
 
 
     def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
-                            extension: datetime, distinctive_ring: bool,
+                            extension: Union[str, datetime], distinctive_ring: bool,
                             alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
                             last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
                             agents: list[PostPersonPlaceObject], enabled: bool,
@@ -442,6 +465,10 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         ...
 
     ...

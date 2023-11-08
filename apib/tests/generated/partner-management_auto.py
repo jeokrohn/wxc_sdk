@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -80,6 +81,9 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :type managed_by: str
         :rtype: list[IdentityManagedOrg]
         """
+        params = {}
+        params['managedBy'] = managed_by
+        url = self.ep()
         ...
 
 
@@ -97,6 +101,7 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :type org_id: str
         :rtype: list[PartnerAdminUser]
         """
+        url = self.ep(f'{org_id}/partnerAdmins')
         ...
 
 
@@ -119,6 +124,7 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :type person_id: str
         :rtype: None
         """
+        url = self.ep(f'{org_id}/partnerAdmin/{person_id}/assign')
         ...
 
 
@@ -140,6 +146,7 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :type person_id: str
         :rtype: None
         """
+        url = self.ep(f'{org_id}/partnerAdmin/{person_id}/unassign')
         ...
 
 
@@ -160,6 +167,7 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :type person_id: str
         :rtype: None
         """
+        url = self.ep(f'partnerAdmin/{person_id}')
         ...
 
     ...

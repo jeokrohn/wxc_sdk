@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -164,8 +165,7 @@ class ApplicationsApi(ApiChild, base='applications'):
                           org_submission_status: ApplicationSubmissionStatus = None,
                           order_by: ListApplicationsOrderBy = None, category: str = None, tag: str = None,
                           bot_email: str = None, is_featured: bool = None, is_native: bool = None, max_: int = None,
-                          cursor: str = None, wait_for_ci: bool = None,
-                          **params) -> Generator[Application, None, None]:
+                          cursor: str = None, wait_for_ci: bool = None) -> list[Application]:
         """
         List Applications
 
@@ -206,8 +206,38 @@ class ApplicationsApi(ApiChild, base='applications'):
         :type cursor: str
         :param wait_for_ci: Internal use only.
         :type wait_for_ci: bool
-        :return: Generator yielding :class:`Application` instances
+        :rtype: list[Application]
         """
+        params = {}
+        if type is not None:
+            params['type'] = type
+        if org_id is not None:
+            params['orgId'] = org_id
+        if created_by is not None:
+            params['createdBy'] = created_by
+        if submission_status is not None:
+            params['submissionStatus'] = submission_status
+        if org_submission_status is not None:
+            params['orgSubmissionStatus'] = org_submission_status
+        if order_by is not None:
+            params['orderBy'] = order_by
+        if category is not None:
+            params['category'] = category
+        if tag is not None:
+            params['tag'] = tag
+        if bot_email is not None:
+            params['botEmail'] = bot_email
+        if is_featured is not None:
+            params['isFeatured'] = str(is_featured).lower()
+        if is_native is not None:
+            params['isNative'] = str(is_native).lower()
+        if max_ is not None:
+            params['max'] = max_
+        if cursor is not None:
+            params['cursor'] = cursor
+        if wait_for_ci is not None:
+            params['waitForCI'] = str(wait_for_ci).lower()
+        url = self.ep()
         ...
 
     ...

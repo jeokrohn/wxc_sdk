@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -181,12 +182,16 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         :type org_id: str
         :rtype: :class:`GetMemberResponse`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'members')
         ...
 
 
     def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max_: int = None,
-                       member_name: str = None, phone_number: str = None, extension: Union[str, datetime] = None,
-                       **params) -> Generator[SearchMemberObject, None, None]:
+                       member_name: str = None, phone_number: str = None, extension: Union[str,
+                       datetime] = None) -> list[SearchMemberObject]:
         """
         Search Members
 
@@ -215,8 +220,26 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         :type phone_number: str
         :param extension: Search (Contains) based on extension.
         :type extension: Union[str, datetime]
-        :return: Generator yielding :class:`SearchMemberObject` instances
+        :rtype: list[SearchMemberObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        params['locationId'] = location_id
+        if start is not None:
+            params['start'] = start
+        if max_ is not None:
+            params['max'] = max_
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            if isinstance(extension, str):
+                extension = isoparse(extension)
+            extension = dt_iso_str(extension)
+            params['extension'] = extension
+        url = self.ep(f'availableMembers')
         ...
 
     ...

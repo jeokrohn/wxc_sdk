@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -211,8 +212,8 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
     administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
     """
 
-    def list_broad_works_enterprises(self, sp_enterprise_id: str = None, starts_with: str = None, max_: int = None,
-                                     **params) -> Generator[Enterprise, None, None]:
+    def list_broad_works_enterprises(self, sp_enterprise_id: str = None, starts_with: str = None,
+                                     max_: int = None) -> list[Enterprise]:
         """
         List BroadWorks Enterprises
 
@@ -226,8 +227,16 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type starts_with: str
         :param max_: Limit the number of enterprises returned in the search, up to 1000.
         :type max_: int
-        :return: Generator yielding :class:`Enterprise` instances
+        :rtype: list[Enterprise]
         """
+        params = {}
+        if sp_enterprise_id is not None:
+            params['spEnterpriseId'] = sp_enterprise_id
+        if starts_with is not None:
+            params['startsWith'] = starts_with
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -254,6 +263,7 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type enable_dir_sync: str
         :rtype: :class:`TriggerDirectorySyncResponse`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync')
         ...
 
 
@@ -271,6 +281,7 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type sync_status: str
         :rtype: :class:`TriggerDirectorySyncResponse`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync')
         ...
 
 
@@ -285,6 +296,7 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type id: str
         :rtype: :class:`EnterpriseBroadworksDirectorySync`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync')
         ...
 
 
@@ -301,6 +313,7 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type user_id: str
         :rtype: :class:`TriggerUserDirectorySyncResponse`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync/externalUser')
         ...
 
     ...

@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -56,7 +57,9 @@ class Report(ApiModel):
     #: example: https://billing-reports-int-example.webexcontent.com/a366de9b-3204-4140-8181-25808d360e36/2021/06/16/340177d1-7f25-41e1-a39f-ad63ec1103a5.csv?Expires=1624978489&Signature=Syp3vrVeMx4P6MeMtm8e1bQaeAdHFe-c7NeHERWh5-qJGLZ1T8Dvl2ee-M8OsFf~z6Yepz94e2Hh1HDVailD0Uryl8SgiM~jl0cBh7L0PmSe~i9oFA0eJ0MulkqGSMVf7ZHhxY55xYMgIBZIERkWm3CqQNDg5BS4EaXapKfOnmFegf36OokCM63m5uOK8-csk08IkZhwo2Z0l1JMtuWYEaLh4dgMHoe~xgH3YmDSSCWInFYaEifUAfgi2YAYS6nP9Zq4BTliBq62XBaehOE1gBrhy4RdwD-3WSs2oD-BdpoRpuGzo3FZzDLVEvd0S2D6gTcHljOHodQKxe-u0BXPWQ__&Key-Pair-Id=APKAJADAKLCI2FW2U32Q
     temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
     #: List of errors that occurred during report generation.
+    #: 
     #: **Note:**
+    #: 
     #: * Captures errors that occurred during asynchronous or background report generation, after the request has been
     #: accepted and a `202 OK` response is returned.
     errors: Optional[list[ReportError]] = None
@@ -115,6 +118,20 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :type sort_by: str
         :rtype: list[ListReport]
         """
+        params = {}
+        if before is not None:
+            if isinstance(before, str):
+                before = isoparse(before)
+            before = dt_iso_str(before)
+            params['before'] = before
+        if after is not None:
+            if isinstance(after, str):
+                after = isoparse(after)
+            after = dt_iso_str(after)
+            params['after'] = after
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        url = self.ep()
         ...
 
 
@@ -128,10 +145,11 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :type id: str
         :rtype: :class:`Report`
         """
+        url = self.ep(f'{id}')
         ...
 
 
-    def create_a_broad_works_billing_report(self, billing_period: datetime) -> str:
+    def create_a_broad_works_billing_report(self, billing_period: Union[str, datetime]) -> str:
         """
         Create a BroadWorks Billing Report
 
@@ -141,6 +159,7 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :type billing_period: Union[str, datetime]
         :rtype: str
         """
+        url = self.ep()
         ...
 
 
@@ -154,6 +173,7 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :type id: str
         :rtype: None
         """
+        url = self.ep(f'{id}')
         ...
 
     ...

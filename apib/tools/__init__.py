@@ -55,7 +55,7 @@ def sanitize_class_name(class_name: Optional[str]) -> str:
     return class_name
 
 
-def break_line(line: str, width: int = 120, prefix: str = '', prefix_first_line: str = None) -> Generator[str, None, None]:
+def break_line(line: str, width: int = None, prefix: str = '', prefix_first_line: str = None) -> Generator[str, None, None]:
     """
     Break line in multiple lines of given length
     """
@@ -69,6 +69,7 @@ def break_line(line: str, width: int = 120, prefix: str = '', prefix_first_line:
         # some parts cannot be at start of line
         return False
 
+    width = width or 120
     # convert something like this:
     #   ... this link (https://.....) for the format.
     # to something like this:
@@ -210,14 +211,9 @@ def line_parts(line: str)->Iterator[str]:
 
 
 def lines_for_docstring(docstring: str, text_prefix_for_1st_line: str = '', indent: int = 0,
-                        indent_first_line: int = None) -> Iterable[str]:
+                        indent_first_line: int = 0, width: int = None) -> Iterable[str]:
     """
     Break a docstring in lines where the 1st line has a leading text, make sure that all lines are properly indented
-    :param doc_string:
-    :param text_prefix_for_1st_line:
-    :param indent:
-    :param indent_first_line:
-    :return:
     """
     if not docstring:
         return []
@@ -225,7 +221,8 @@ def lines_for_docstring(docstring: str, text_prefix_for_1st_line: str = '', inde
                                                               repeat('')),
                                                         docstring.splitlines()))
     return chain.from_iterable(break_line(line, prefix=' ' * indent,
-                                          prefix_first_line=' ' * indent_first)
+                                          prefix_first_line=' ' * indent_first,
+                                          width=width)
                                for line, (indent_first, indent) in zip(doc_string_lines,
                                                                        chain([(indent_first_line, indent)],
                                                                              repeat((indent_first_line,

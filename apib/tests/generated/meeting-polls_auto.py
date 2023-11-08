@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -241,11 +242,13 @@ class MeetingPollsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :rtype: list[Poll]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        url = self.ep('polls')
         ...
 
 
-    def get_meeting_poll_results(self, meeting_id: str, max_: int = None,
-                                 **params) -> Generator[PollResult, None, None]:
+    def get_meeting_poll_results(self, meeting_id: str, max_: int = None) -> list[PollResult]:
         """
         Get Meeting PollResults
 
@@ -267,13 +270,18 @@ class MeetingPollsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :param max_: Limit the maximum number of respondents in a meeting in the response, up to 100.
         :type max_: int
-        :return: Generator yielding :class:`PollResult` instances
+        :rtype: list[PollResult]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('pollResults')
         ...
 
 
-    def list_respondents_of_a_question(self, poll_id: str, question_id: str, meeting_id: str, max_: int = None,
-                                       **params) -> Generator[Respondent, None, None]:
+    def list_respondents_of_a_question(self, poll_id: str, question_id: str, meeting_id: str,
+                                       max_: int = None) -> list[Respondent]:
         """
         List Respondents of a Question
 
@@ -297,8 +305,13 @@ class MeetingPollsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :param max_: Limit the maximum number of respondents in a specified question in the response, up to 100.
         :type max_: int
-        :return: Generator yielding :class:`Respondent` instances
+        :rtype: list[Respondent]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep(f'polls/{poll_id}/questions/{question_id}/respondents')
         ...
 
     ...

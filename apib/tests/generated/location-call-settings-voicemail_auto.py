@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -207,11 +208,13 @@ class GetVoicePortalPasscodeRuleObject(ApiModel):
     block_previous_passcodes: Optional[GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes] = None
     #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
     #: 408408).
+    #: 
     #: + enabled: true (boolean) - If enabled, passcode should not contain repeated digits.
     #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1.
     #: The maximum value is 6.
     block_repeated_digits: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
+    #: 
     #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a
     #: row.
     #: + numberOfAscendingDigits: `3` (number) -  Number of ascending digits in sequence. The minimum value is 2. The
@@ -415,6 +418,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: bool
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicemail')
         ...
 
 
@@ -437,6 +444,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicemail')
         ...
 
 
@@ -458,10 +469,14 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicePortalObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicePortal')
         ...
 
 
-    def update_voice_portal(self, location_id: str, name: str, language_code: str, extension: datetime,
+    def update_voice_portal(self, location_id: str, name: str, language_code: str, extension: Union[str, datetime],
                             phone_number: str, first_name: str, last_name: str,
                             passcode: PutVoicePortalObjectPasscode, org_id: str = None):
         """
@@ -495,6 +510,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicePortal')
         ...
 
 
@@ -516,12 +535,15 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicePortalPasscodeRuleObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicePortal/passcodeRules')
         ...
 
 
     def list_voicemail_group(self, location_id: str = None, org_id: str = None, max_: int = None, start: int = None,
-                             name: str = None, phone_number: str = None,
-                             **params) -> Generator[GetVoicemailGroupObject, None, None]:
+                             name: str = None, phone_number: str = None) -> list[GetVoicemailGroupObject]:
         """
         List VoicemailGroup
 
@@ -545,8 +567,22 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type name: str
         :param phone_number: Search (Contains) based on number or extension
         :type phone_number: str
-        :return: Generator yielding :class:`GetVoicemailGroupObject` instances
+        :rtype: list[GetVoicemailGroupObject]
         """
+        params = {}
+        if location_id is not None:
+            params['locationId'] = location_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('voicemailGroups')
         ...
 
 
@@ -571,6 +607,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetLocationVoicemailGroupObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
         ...
 
 
@@ -633,6 +673,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
         ...
 
 
@@ -685,6 +729,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicemailGroups')
         ...
 
 
@@ -705,6 +753,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
         ...
 
     ...

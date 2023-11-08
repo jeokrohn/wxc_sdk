@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -201,7 +202,7 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
 
     def list_broad_works_enterprises(self, sp_enterprise_id: str = None, starts_with: str = None,
                                      last_sync_end_time: str = None, sync_status: str = None, after: str = None,
-                                     max_: int = None, **params) -> Generator[Enterprise, None, None]:
+                                     max_: int = None) -> list[Enterprise]:
         """
         List BroadWorks Enterprises
 
@@ -225,8 +226,22 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type after: str
         :param max_: Limit the number of enterprises returned in the search, up to 1000.
         :type max_: int
-        :return: Generator yielding :class:`Enterprise` instances
+        :rtype: list[Enterprise]
         """
+        params = {}
+        if sp_enterprise_id is not None:
+            params['spEnterpriseId'] = sp_enterprise_id
+        if starts_with is not None:
+            params['startsWith'] = starts_with
+        if last_sync_end_time is not None:
+            params['lastSyncEndTime'] = last_sync_end_time
+        if sync_status is not None:
+            params['syncStatus'] = sync_status
+        if after is not None:
+            params['after'] = after
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -244,6 +259,7 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type enable_dir_sync: str
         :rtype: :class:`TriggerDirectorySyncResponse`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync')
         ...
 
 
@@ -261,6 +277,7 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type sync_status: str
         :rtype: :class:`TriggerDirectorySyncResponse`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync')
         ...
 
 
@@ -275,6 +292,7 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type id: str
         :rtype: :class:`EnterpriseBroadworksDirectorySync`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync')
         ...
 
 
@@ -291,6 +309,7 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type user_id: str
         :rtype: :class:`TriggerUserDirectorySyncResponse`
         """
+        url = self.ep(f'{id}/broadworksDirectorySync/externalUser')
         ...
 
     ...

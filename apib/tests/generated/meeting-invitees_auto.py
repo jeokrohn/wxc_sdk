@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -23,6 +24,7 @@ class UpdateInviteeObject(ApiModel):
     #: is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been
     #: associated with an existing Webex account, the display name associated with the Webex account will be used;
     #: otherwise, the `email` will be used as `displayName`.
+    #: 
     #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName`
     #: associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName`
     #: which is specified by the invitee who does not have a Webex account.
@@ -62,6 +64,7 @@ class CreateInviteeObject(ApiModel):
     #: is specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been
     #: associated with an existing Webex account, the display name associated with the Webex account will be used;
     #: otherwise, the `email` will be used as `displayName`.
+    #: 
     #: If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName`
     #: associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName`
     #: which is specified by the invitee who does not have a Webex account.
@@ -115,6 +118,7 @@ class CreateInviteesItemObject(ApiModel):
     #: specified, it will show `displayName`. If `displayName` is not specified, and the `email` has been associated
     #: with an existing Webex account, the display name associated with the Webex account will be used; otherwise, the
     #: `email` will be used as `displayName`.
+    #: 
     #: Please note that if the invitee has an existing Webex account, the `displayName` shown in the meeting will be
     #: the `displayName` associated with the Webex account; otherwise, `displayName` shown in the meeting will be the
     #: `displayName` which is specified by the invitee who does not have a Webex account.
@@ -166,8 +170,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
     <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
     """
 
-    def list_meeting_invitees(self, meeting_id: str, max_: int = None, host_email: str = None, panelist: str = None,
-                              **params) -> Generator[GetInviteeObject, None, None]:
+    def list_meeting_invitees(self, meeting_id: str, max_: int = None, host_email: str = None,
+                              panelist: str = None) -> list[GetInviteeObject]:
         """
         List Meeting Invitees
 
@@ -200,8 +204,17 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :param panelist: Filter invitees or attendees for webinars only. If `true`, returns invitees. If `false`,
             returns attendees. If `null`, returns both invitees and attendees.
         :type panelist: str
-        :return: Generator yielding :class:`GetInviteeObject` instances
+        :rtype: list[GetInviteeObject]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        if max_ is not None:
+            params['max'] = max_
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if panelist is not None:
+            params['panelist'] = panelist
+        url = self.ep()
         ...
 
 
@@ -248,6 +261,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type panelist: bool
         :rtype: :class:`GetInviteeObject`
         """
+        url = self.ep()
         ...
 
 
@@ -279,6 +293,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type items: list[CreateInviteesItemObject]
         :rtype: list[GetInviteeObject]
         """
+        url = self.ep('bulkInsert')
         ...
 
 
@@ -296,6 +311,10 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type host_email: str
         :rtype: :class:`GetInviteeObject`
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_invitee_id}')
         ...
 
 
@@ -337,6 +356,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type panelist: bool
         :rtype: :class:`GetInviteeObject`
         """
+        url = self.ep(f'{meeting_invitee_id}')
         ...
 
 
@@ -363,6 +383,12 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type send_email: bool
         :rtype: None
         """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if send_email is not None:
+            params['sendEmail'] = str(send_email).lower()
+        url = self.ep(f'{meeting_invitee_id}')
         ...
 
     ...

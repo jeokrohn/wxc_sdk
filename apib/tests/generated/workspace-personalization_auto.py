@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -69,6 +70,7 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
         :type email: str
         :rtype: None
         """
+        url = self.ep(f'personalize')
         ...
 
 
@@ -88,6 +90,7 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
         :type workspace_id: str
         :rtype: :class:`WorkspacePersonalizationTaskResponse`
         """
+        url = self.ep(f'personalizationTask')
         ...
 
     ...

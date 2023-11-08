@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -321,6 +322,17 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type page_size: int
         :rtype: :class:`TasksResponse`
         """
+        params = {}
+        params['from'] = from_
+        if to_ is not None:
+            params['to'] = to_
+        if channel_types is not None:
+            params['channelTypes'] = ','.join(channel_types)
+        if org_id is not None:
+            params['orgId'] = org_id
+        if page_size is not None:
+            params['pageSize'] = page_size
+        url = self.ep('tasks')
         ...
 
 
@@ -348,6 +360,15 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: :class:`AgentStatsResponse`
         """
+        params = {}
+        params['from'] = from_
+        params['to'] = to_
+        if agent_ids is not None:
+            params['agentIds'] = agent_ids
+        if org_id is not None:
+            params['orgId'] = org_id
+        params['interval'] = interval
+        url = self.ep('agents/statistics')
         ...
 
 
@@ -375,6 +396,15 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type org_id: str
         :rtype: :class:`QueueStatsResponse`
         """
+        params = {}
+        params['from'] = from_
+        params['to'] = to_
+        if queue_ids is not None:
+            params['queueIds'] = queue_ids
+        if org_id is not None:
+            params['orgId'] = org_id
+        params['interval'] = interval
+        url = self.ep('queues/statistics')
         ...
 
 
@@ -388,6 +418,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type query: ListCapturesQuery
         :rtype: :class:`ListCapturesResponse`
         """
+        url = self.ep('captures/query')
         ...
 
     ...

@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -123,7 +124,7 @@ class RoomsApi(ApiChild, base='rooms'):
 
     def list_rooms(self, team_id: str = None, type: RoomType = None, org_public_spaces: bool = None, from_: Union[str,
                    datetime] = None, to_: Union[str, datetime] = None, sort_by: ListRoomsSortBy = None,
-                   max_: int = None, **params) -> Generator[Room, None, None]:
+                   max_: int = None) -> list[Room]:
         """
         List Rooms
 
@@ -160,8 +161,30 @@ class RoomsApi(ApiChild, base='rooms'):
         :type sort_by: ListRoomsSortBy
         :param max_: Limit the maximum number of rooms in the response. Value must be between 1 and 1000, inclusive.
         :type max_: int
-        :return: Generator yielding :class:`Room` instances
+        :rtype: list[Room]
         """
+        params = {}
+        if team_id is not None:
+            params['teamId'] = team_id
+        if type is not None:
+            params['type'] = type
+        if org_public_spaces is not None:
+            params['orgPublicSpaces'] = str(org_public_spaces).lower()
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -199,6 +222,7 @@ class RoomsApi(ApiChild, base='rooms'):
         :type is_announcement_only: str
         :rtype: :class:`Room`
         """
+        url = self.ep()
         ...
 
 
@@ -216,6 +240,7 @@ class RoomsApi(ApiChild, base='rooms'):
         :type room_id: str
         :rtype: :class:`Room`
         """
+        url = self.ep(f'{room_id}')
         ...
 
 
@@ -232,6 +257,7 @@ class RoomsApi(ApiChild, base='rooms'):
         :type room_id: str
         :rtype: :class:`RoomMeetingDetails`
         """
+        url = self.ep(f'{room_id}/meetingInfo')
         ...
 
 
@@ -273,6 +299,7 @@ class RoomsApi(ApiChild, base='rooms'):
         :type is_read_only: str
         :rtype: :class:`Room`
         """
+        url = self.ep(f'{room_id}')
         ...
 
 
@@ -292,6 +319,7 @@ class RoomsApi(ApiChild, base='rooms'):
         :type room_id: str
         :rtype: None
         """
+        url = self.ep(f'{room_id}')
         ...
 
     ...

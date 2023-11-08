@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -54,7 +55,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
-    def list_team_memberships(self, team_id: str, max_: int = None, **params) -> Generator[TeamMembership, None, None]:
+    def list_team_memberships(self, team_id: str, max_: int = None) -> list[TeamMembership]:
         """
         List Team Memberships
 
@@ -66,8 +67,13 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type team_id: str
         :param max_: Limit the maximum number of team memberships in the response.
         :type max_: int
-        :return: Generator yielding :class:`TeamMembership` instances
+        :rtype: list[TeamMembership]
         """
+        params = {}
+        params['teamId'] = team_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -88,6 +94,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type is_moderator: str
         :rtype: :class:`TeamMembership`
         """
+        url = self.ep()
         ...
 
 
@@ -103,6 +110,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type membership_id: str
         :rtype: :class:`TeamMembership`
         """
+        url = self.ep(f'{membership_id}')
         ...
 
 
@@ -120,6 +128,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type is_moderator: str
         :rtype: :class:`TeamMembership`
         """
+        url = self.ep(f'{membership_id}')
         ...
 
 
@@ -139,6 +148,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type membership_id: str
         :rtype: None
         """
+        url = self.ep(f'{membership_id}')
         ...
 
     ...

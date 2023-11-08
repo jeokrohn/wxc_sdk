@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -286,6 +287,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type generate: list[PasswordGenerate]
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'actions/generatePassword/invoke')
         ...
 
 
@@ -308,6 +313,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: :class:`InternalDialingGet`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'internalDialing')
         ...
 
 
@@ -337,6 +346,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'internalDialing')
         ...
 
 
@@ -358,6 +371,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: :class:`GetLocationInterceptObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'intercept')
         ...
 
 
@@ -387,6 +404,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'intercept')
         ...
 
 
@@ -409,6 +430,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: list[CallingPermissionObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'outgoingPermission')
         ...
 
 
@@ -433,6 +458,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type calling_permissions: list[CallingPermissionObject]
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'outgoingPermission')
         ...
 
 
@@ -455,6 +484,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: :class:`GetAutoTransferNumberObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'outgoingPermission/autoTransferNumbers')
         ...
 
 
@@ -487,6 +520,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'outgoingPermission/autoTransferNumbers')
         ...
 
 
@@ -508,6 +545,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: GetLocationAccessCodeObjectAccessCodes
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'outgoingPermission/accessCodes')
         ...
 
 
@@ -532,6 +573,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'outgoingPermission/accessCodes')
         ...
 
 
@@ -555,6 +600,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'outgoingPermission/accessCodes')
         ...
 
     ...

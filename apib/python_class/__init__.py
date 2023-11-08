@@ -58,6 +58,71 @@ class Parameter:
             return f'{self.name}_'
         return snake_case(self.name)
 
+    def for_arg_list(self) -> str:
+        """
+        representation of parameter in argument list in def
+        """
+        python_type = self.python_type
+        if python_type == 'datetime':
+            python_type = 'Union[str, datetime]'
+        arg = f'{self.python_name}:&{python_type}'
+        if self.optional:
+            arg = f'{arg}&=&None'
+        return arg
+
+    def for_docstring(self, prefix: str) -> str:
+        """
+        Lines for docstring something like:
+            :param person_id: List authorizations for this user id.
+            :type person_id: str
+        """
+        source = StringIO()
+        # param lines:
+        ' * 1st line has ":param <xyc>: '
+        ' * following lines just have docstring lines'
+        print('\n'.join(lines_for_docstring(docstring=self.docstring,
+                                            text_prefix_for_1st_line=f':param {self.python_name}: ',
+                                            indent=len(prefix) + 4,
+                                            indent_first_line=len(prefix))),
+              file=source)
+        # for datetime: str or datetime
+        python_type = self.python_type
+        if python_type == 'datetime':
+            python_type = 'Union[str, datetime]'
+
+        print(f'{prefix}:type {self.python_name}: {python_type}',
+              file=source,
+              end='')
+        return source.getvalue()
+
+    def for_param_init(self)->str:
+        """
+        Python code for initialization of 'param' variable
+        """
+        lines = []
+        # something like
+        #   params['<name>'] = <python_name>
+        # for datetime and bool some special treatment is required
+        if self.python_type == 'bool':
+            # str(<python
+            python_val = f'str({self.python_name}).lower()'
+        elif self.python_type == 'list[str]':
+            python_val = f"','.join({self.python_name})"
+        else:
+            if self.python_type == 'datetime':
+                # datetime parameters in URLs are something like:
+                #   2018-01-01T13:12:11.789Z
+                lines.append(f"""if isinstance({self.python_name}, str):""")
+                lines.append(f"""    {self.python_name} = isoparse({self.python_name})""")
+                lines.append(f"""{self.python_name} = dt_iso_str({self.python_name})""")
+            python_val = f'{self.python_name}'
+        lines.append(f"params['{self.name}'] = {python_val}")
+        if self.optional:
+            lines = list(chain([f'if {self.python_name} is not None:'],
+                               (f'    {l}' for l in lines)))
+        source = '\n'.join(f'{" " * 8}{l}' for l in lines)
+        return source
+
 
 @dataclass
 class Endpoint:
@@ -98,8 +163,10 @@ class Endpoint:
           * 1st attribute returned is an array of something
           * has "max" query parameters
         """
-        max_parameter = next((p for p in self.href_parameter if p.name == 'max'), None)
-        if max_parameter is None:
+        pagination_parameters = set(p.name
+                                    for p in self.href_parameter
+                                    if p.name in {'max', 'offset'})
+        if pagination_parameters != {'max', 'offset'}:
             return None
         if self.result_referenced_class and self.result == self.result_referenced_class:
             # paginated methods have something like 'EnterpriseListResponse' as result
@@ -110,6 +177,21 @@ class Endpoint:
                 return result_attribute
             log.warning(f'endpoint "{self.name}" has "max" parameter, but 1st result attribute is not a list')
         return None
+
+    def href_parameters_filtered(self)->Iterable[Parameter]:
+        """
+        Href parameter, filtered for paginated methods if needed
+        """
+        if self.paginated:
+            p_filter = {'max', 'offset'}
+        else:
+            p_filter = set()
+        return (p for p in self.href_parameter if p.name not in p_filter)
+
+    @property
+    def params_required(self)->bool:
+        # do we need to pass 'params'?
+        return self.paginated or any((not p.url_parameter for p in self.href_parameters_filtered()))
 
     @property
     def single_result_attribute(self)->Optional['Attribute']:
@@ -122,7 +204,7 @@ class Endpoint:
                 return result_class.attributes[0]
         return None
 
-    def source(self) -> str:
+    def source(self, base: str) -> str:
         """
         Create Python source for endpoint under some class
         """
@@ -135,20 +217,22 @@ class Endpoint:
         # generate def line
         # in the prepared def line use "&" instead of " " for spaces where we don't want to break the line
         def_line = f'def {self.name}('
+
+        # this is by how much we need to indent parameters starting with the 2nd line
         def_lines_prefix = ' ' * (4 + len(def_line))
-        param_line = 'self'
-        for parameter in mandatory_parameters:
-            param_line = f'{param_line}, {parameter.python_name}:&{parameter.python_type}'
-        # now all optional parameters
-        for parameter in chain(self.href_parameter, self.body_parameter):
-            if not parameter.optional:
-                # already taken care of
-                continue
-            # for datetime we accept str or datetime
-            python_type = parameter.python_type
-            if python_type == 'datetime':
-                python_type = 'Union[str, datetime]'
-            param_line = f'{param_line}, {parameter.python_name}:&{python_type}&=&None'
+
+        # comma separated list of all parameters
+        param_line = ', '.join(chain(['self'],
+                                     # optional parameters, href 1st
+                                     (parameter.for_arg_list()
+                                      for parameter in chain(self.href_parameters_filtered(),
+                                                             self.body_parameter)
+                                      if not parameter.optional),
+                                     # mandatory parameters, href 1st
+                                     (parameter.for_arg_list()
+                                      for parameter in chain(self.href_parameters_filtered(),
+                                                             self.body_parameter)
+                                      if parameter.optional)))
 
         # for methods with pagination we want to add a **params parameter
         if paginated := self.paginated:
@@ -167,8 +251,11 @@ class Endpoint:
                 else:
                     r_type = self.result
                 param_line = f'{param_line}&->&{r_type}'
-        def_line = f'{def_line}{param_line}:'
+
+        # now write def with parameters to string
         source = StringIO()
+        def_line = f'{def_line}{param_line}:'
+
         # add lines to source and remove the "&" placeholders
         print('\n'.join(line.replace('&', ' ')
                         for line in break_line(def_line, prefix=def_lines_prefix, prefix_first_line=' ' * 4)),
@@ -181,28 +268,18 @@ class Endpoint:
             print(f'{prefix}{self.title}', file=source)
             print(file=source)
         if self.docstring:
-            print('\n'.join(chain.from_iterable(break_line(l, prefix=prefix) for l in self.docstring.splitlines())),
+            print('\n'.join(chain.from_iterable(break_line(l, prefix=prefix)
+                                                for l in self.docstring.splitlines())),
                   file=source)
             print(file=source)
         # parameter docstrings
-        for parameter in chain(mandatory_parameters,
-                               (p
-                                for p in chain(self.href_parameter, self.body_parameter)
+        for parameter in chain((p for p in chain(self.href_parameters_filtered(),
+                                                 self.body_parameter)
+                                if not p.optional),
+                               (p for p in chain(self.href_parameters_filtered(),
+                                                 self.body_parameter)
                                 if p.optional)):
-            # param lines:
-            ' * 1st line has ":param <xyc>: '
-            ' * following lines just have docstring lines'
-            print('\n'.join(lines_for_docstring(docstring=parameter.docstring,
-                                                text_prefix_for_1st_line=f':param {parameter.python_name}: ',
-                                                indent=len(prefix)+4,
-                                                indent_first_line=len(prefix))),
-                  file=source)
-            # for datetime: str or datetime
-            python_type = parameter.python_type
-            if python_type == 'datetime':
-                python_type = 'Union[str, datetime]'
-
-            print(f'{prefix}:type {parameter.python_name}: {python_type}',
+            print(parameter.for_docstring(prefix=prefix),
                   file=source)
         # also add a return: line
         if paginated:
@@ -227,9 +304,33 @@ class Endpoint:
                       file=source)
         print(f'{prefix}"""', file=source)
 
-        # prepare params
+        # code to prepare params (only href params which are not URL params
+        if self.params_required:
+            if not self.paginated:
+                # methods with pagination have a **params argument
+                print(f'{prefix}params = {{}}', file=source)
+            print('\n'.join(p.for_param_init()
+                            for p in self.href_parameters_filtered()
+                            if not p.url_parameter),
+                  file=source)
 
         # prepare body
+
+        # code to determine URL (make sure to set URL parameters)
+        url = self.url[len(base) + 1:]
+        if any(p.url_parameter for p in self.href_parameter):
+            # massage url parameters in url
+            for p in self.href_parameter:
+                if not p.url_parameter:
+                    continue
+                url = url.replace(f'{{{p.name}}}', f'{{{p.python_name}}}')
+            url = f"f'{url}'"
+        else:
+            if url:
+                url = f"'{url}'"
+        url_line = f"{prefix}url = self.ep({url})"
+        print(url_line,
+              file=source)
 
         # call the method
 
@@ -263,13 +364,11 @@ class Attribute:
         """
         Python source for one class attribute
         """
-        # docstring before attribute looks wsomething like this and is indented by 4 spaces
+        # docstring before attribute looks something like this and is indented by 4 spaces
         #   #: The display name of the organization.
         if self.docstring:
             # break docstring lines to 80 characters
-            lines = list(chain.from_iterable(break_line(ls, prefix='#: ', width=116)
-                                             for line in self.docstring.strip().splitlines()
-                                             if (ls := line.strip())))
+            lines = [f'#: {line}' for line in lines_for_docstring(self.docstring, width=113)]
         else:
             lines = []
         if for_enum:
@@ -402,7 +501,7 @@ class PythonAPI:
         # full API source is head followed by source for each endpoint
         full_api_source = ('\n' * 2).join(s
                                           for s in chain([class_head],
-                                                         (ep.source()
+                                                         (ep.source(base=base)
                                                           for ep in self.endpoints))
                                           if s)
         return full_api_source
@@ -927,10 +1026,19 @@ class PythonClassRegistry:
                 for attr in pc.attributes:
                     if attr.referenced_class:
                         new_class_name = qualident_to_python_name[attr.referenced_class]
-                        new_class_name, _ = self._dereferenced_class(new_class_name)
                         attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
                         attr.referenced_class = new_class_name
             self._classes[python_name] = pc
+
+        # now go through all classes and attributes again and updated to dereferences classes
+        for pc in self._classes.values():
+            if pc.attributes:
+                for attr in pc.attributes:
+                    if attr.referenced_class:
+                        new_class_name = self._dereferenced_class_name(attr.referenced_class)
+                        if new_class_name != attr.referenced_class:
+                            attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
+                            attr.referenced_class = new_class_name
 
         # update class references in endpoints
         for key, endpoint in self.endpoints():

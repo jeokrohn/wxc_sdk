@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -80,6 +81,9 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type type: str
         :rtype: list[TagsObj]
         """
+        params = {}
+        params['type'] = type
+        url = self.ep()
         ...
 
 
@@ -101,6 +105,7 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type tags: list[TagsObj]
         :rtype: list[TagsObj]
         """
+        url = self.ep(f'organizations/{org_id}/assignTags')
         ...
 
 
@@ -116,6 +121,7 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type org_id: str
         :rtype: :class:`CustomerTagsResponse`
         """
+        url = self.ep(f'organizations/{org_id}')
         ...
 
 
@@ -132,6 +138,11 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type max_: int
         :rtype: list[CustomerTagsResponse]
         """
+        params = {}
+        params['tags'] = tags
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('organizations')
         ...
 
 
@@ -156,6 +167,7 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type tags: list[TagsObj]
         :rtype: list[TagsObj]
         """
+        url = self.ep(f'organizations/{org_id}/subscriptions/{subscription_id}/assignTags')
         ...
 
 
@@ -173,6 +185,11 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type max_: int
         :rtype: list[SubscriptionTagsResponse]
         """
+        params = {}
+        params['tags'] = tags
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('subscriptions')
         ...
 
 
@@ -190,6 +207,7 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type subscription_id: str
         :rtype: :class:`SubscriptionTagsResponse`
         """
+        url = self.ep(f'organizations/{org_id}/subscriptions/{subscription_id}')
         ...
 
     ...

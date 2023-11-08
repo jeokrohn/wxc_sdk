@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -52,9 +53,13 @@ class Alarm(ApiModel):
     #: example: 2017-09-15T15:53:00Z
     created: Optional[datetime] = None
     #: The severity level of the alarm:
+    #: 
     #: - `critical`
+    #: 
     #: - `error`
+    #: 
     #: - `warning`
+    #: 
     #: - `alert`
     #: example: warning
     severity: Optional[AlarmSeverity] = None
@@ -83,9 +88,13 @@ class Connector(ApiModel):
     #: example: foo.example.org
     hostname: Optional[str] = None
     #: The status of the connector:
+    #: 
     #: - `operational` indicates that the connector is working as it should.
+    #: 
     #: - `impaired` indicates that the connector has problems with one or more dependent components.
+    #: 
     #: - `outage` indicates that the connector is completely non-functional.
+    #: 
     #: - `maintenanceMode` reports the current maintenance mode state of the connector.
     #: example: operational
     status: Optional[ConnectorStatus] = None
@@ -145,6 +154,10 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
         :type org_id: str
         :rtype: list[Connector]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
         ...
 
 
@@ -160,6 +173,7 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
         :type connector_id: str
         :rtype: :class:`Connector`
         """
+        url = self.ep(f'{connector_id}')
         ...
 
     ...

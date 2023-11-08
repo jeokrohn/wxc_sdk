@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -231,8 +232,8 @@ class PeopleApi(ApiChild, base='people'):
     """
 
     def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None,
-                    roles: str = None, calling_data: bool = None, location_id: str = None, max_: int = None,
-                    **params) -> Generator[Person, None, None]:
+                    roles: str = None, calling_data: bool = None, location_id: str = None,
+                    max_: int = None) -> PersonCollectionResponse:
         """
         List People
 
@@ -280,8 +281,26 @@ class PeopleApi(ApiChild, base='people'):
         :param max_: Limit the maximum number of people in the response. If `callingData`=true, then `max` will not be
             more than 50.
         :type max_: int
-        :return: Generator yielding :class:`Person` instances
+        :rtype: :class:`PersonCollectionResponse`
         """
+        params = {}
+        if email is not None:
+            params['email'] = email
+        if display_name is not None:
+            params['displayName'] = display_name
+        if id is not None:
+            params['id'] = id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if roles is not None:
+            params['roles'] = roles
+        if calling_data is not None:
+            params['callingData'] = str(calling_data).lower()
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -359,6 +378,10 @@ class PeopleApi(ApiChild, base='people'):
         :type site_urls: list[str]
         :rtype: :class:`Person`
         """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = str(calling_data).lower()
+        url = self.ep()
         ...
 
 
@@ -384,6 +407,10 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :rtype: :class:`Person`
         """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = str(calling_data).lower()
+        url = self.ep(f'{person_id}')
         ...
 
 
@@ -479,6 +506,12 @@ class PeopleApi(ApiChild, base='people'):
         :type login_enabled: str
         :rtype: :class:`Person`
         """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = str(calling_data).lower()
+        if show_all_types is not None:
+            params['showAllTypes'] = str(show_all_types).lower()
+        url = self.ep(f'{person_id}')
         ...
 
 
@@ -494,6 +527,7 @@ class PeopleApi(ApiChild, base='people'):
         :type person_id: str
         :rtype: None
         """
+        url = self.ep(f'{person_id}')
         ...
 
 
@@ -511,6 +545,10 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :rtype: :class:`Person`
         """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = str(calling_data).lower()
+        url = self.ep('me')
         ...
 
     ...

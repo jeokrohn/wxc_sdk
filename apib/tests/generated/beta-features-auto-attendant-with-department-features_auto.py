@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -265,8 +266,8 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
 
     def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max_: int = None,
                                          start: int = None, name: str = None, phone_number: str = None,
-                                         department_id: str = None, department_name: str = None,
-                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
+                                         department_id: str = None,
+                                         department_name: str = None) -> list[ListAutoAttendantObject]:
         """
         Read the List of Auto Attendants
 
@@ -294,8 +295,26 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         :type department_id: str
         :param department_name: Return only auto attendants with the matching departmentName.
         :type department_name: str
-        :return: Generator yielding :class:`ListAutoAttendantObject` instances
+        :rtype: list[ListAutoAttendantObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if department_id is not None:
+            params['departmentId'] = department_id
+        if department_name is not None:
+            params['departmentName'] = department_name
+        url = self.ep('autoAttendants')
         ...
 
 
@@ -320,11 +339,15 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         :type org_id: str
         :rtype: :class:`GetAutoAttendantObject`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         ...
 
 
     def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
-                                 extension: datetime, first_name: str, last_name: str,
+                                 extension: Union[str, datetime], first_name: str, last_name: str,
                                  alternate_numbers: list[AlternateNumbersObject], language_code: str,
                                  business_schedule: str, holiday_schedule: str,
                                  extension_dialing: GetAutoAttendantObjectExtensionDialing,
@@ -382,6 +405,10 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         ...
 
     ...

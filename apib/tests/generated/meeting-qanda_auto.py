@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -108,7 +109,7 @@ class MeetingQAndAApi(ApiChild, base='meetings/q_and_a'):
     
     """
 
-    def list_meeting_q_and_a(self, meeting_id: str, max_: int = None, **params) -> Generator[QAObject, None, None]:
+    def list_meeting_q_and_a(self, meeting_id: str, max_: int = None) -> list[QAObject]:
         """
         List Meeting Q and A
 
@@ -130,13 +131,17 @@ class MeetingQAndAApi(ApiChild, base='meetings/q_and_a'):
         :type meeting_id: str
         :param max_: Limits the maximum number of answers in the response, up to 100.
         :type max_: int
-        :return: Generator yielding :class:`QAObject` instances
+        :rtype: list[QAObject]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
-    def list_answers_of_a_question(self, meeting_id: str, question_id: str, max_: int = None,
-                                   **params) -> Generator[AnswerObject, None, None]:
+    def list_answers_of_a_question(self, meeting_id: str, question_id: str, max_: int = None) -> list[AnswerObject]:
         """
         List Answers of a Question
 
@@ -155,8 +160,13 @@ class MeetingQAndAApi(ApiChild, base='meetings/q_and_a'):
         :type question_id: str
         :param max_: Limit the maximum number of Q&A's answers in the response, up to 100.
         :type max_: int
-        :return: Generator yielding :class:`AnswerObject` instances
+        :rtype: list[AnswerObject]
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep(f'{question_id}/answers')
         ...
 
     ...

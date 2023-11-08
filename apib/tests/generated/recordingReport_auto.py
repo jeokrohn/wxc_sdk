@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -404,8 +405,7 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
 
     def list_of_recording_audit_report_summaries(self, max_: int = None, from_: Union[str, datetime] = None,
                                                  to_: Union[str, datetime] = None, host_email: str = None,
-                                                 site_url: str = None,
-                                                 **params) -> Generator[RecordingReportSummaryObject, None, None]:
+                                                 site_url: str = None) -> list[RecordingReportSummaryObject]:
         """
         List of Recording Audit Report Summaries
 
@@ -451,13 +451,31 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
             specified, the API lists summary audit report for recordings from the user's preferred site. All available
             Webex sites and the preferred site of the user can be retrieved by `Get Site List` API.
         :type site_url: str
-        :return: Generator yielding :class:`RecordingReportSummaryObject` instances
+        :rtype: list[RecordingReportSummaryObject]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('accessSummary')
         ...
 
 
-    def get_recording_audit_report_details(self, recording_id: str, host_email: str = None, max_: int = None,
-                                           **params) -> Generator[RecordingReportObject, None, None]:
+    def get_recording_audit_report_details(self, recording_id: str, host_email: str = None,
+                                           max_: int = None) -> list[RecordingReportObject]:
         """
         Get Recording Audit Report Details
 
@@ -481,14 +499,20 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
         :param max_: Maximum number of recording audit report details to return in a single page. `max` must be equal
             to or greater than `1` and equal to or less than `100`.
         :type max_: int
-        :return: Generator yielding :class:`RecordingReportObject` instances
+        :rtype: list[RecordingReportObject]
         """
+        params = {}
+        params['recordingId'] = recording_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep('accessDetail')
         ...
 
 
     def list_meeting_archive_summaries(self, max_: int = None, from_: Union[str, datetime] = None, to_: Union[str,
-                                       datetime] = None, site_url: str = None,
-                                       **params) -> Generator[RecordingAchriveSummaryObject, None, None]:
+                                       datetime] = None, site_url: str = None) -> list[RecordingAchriveSummaryObject]:
         """
         List Meeting Archive Summaries
 
@@ -529,8 +553,24 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
             the API lists meeting archive summaries for recordings from the user's preferred site. All available Webex
             sites and the preferred site of the user can be retrieved by `Get Site List` API.
         :type site_url: str
-        :return: Generator yielding :class:`RecordingAchriveSummaryObject` instances
+        :rtype: list[RecordingAchriveSummaryObject]
         """
+        params = {}
+        if max_ is not None:
+            params['max'] = max_
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('meetingArchiveSummaries')
         ...
 
 
@@ -552,6 +592,7 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
         :type archive_id: str
         :rtype: :class:`RecordingArchiveReportObject`
         """
+        url = self.ep(f'meetingArchives/{archive_id}')
         ...
 
     ...

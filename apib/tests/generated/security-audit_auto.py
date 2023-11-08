@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -69,9 +70,9 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
     
     """
 
-    def list_security_audit_events(self, org_id: str, start_time: datetime, end_time: datetime, actor_id: str = None,
-                                   max_: int = None, event_categories: list[str] = None,
-                                   **params) -> Generator[SecurityAuditEvent, None, None]:
+    def list_security_audit_events(self, org_id: str, start_time: Union[str, datetime], end_time: Union[str, datetime],
+                                   actor_id: str = None, max_: int = None,
+                                   event_categories: list[str] = None) -> list[SecurityAuditEvent]:
         """
         List Security Audit Events
 
@@ -98,8 +99,25 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
         :type max_: int
         :param event_categories: List events, by event categories.
         :type event_categories: list[str]
-        :return: Generator yielding :class:`SecurityAuditEvent` instances
+        :rtype: list[SecurityAuditEvent]
         """
+        params = {}
+        params['orgId'] = org_id
+        if isinstance(start_time, str):
+            start_time = isoparse(start_time)
+        start_time = dt_iso_str(start_time)
+        params['startTime'] = start_time
+        if isinstance(end_time, str):
+            end_time = isoparse(end_time)
+        end_time = dt_iso_str(end_time)
+        params['endTime'] = end_time
+        if actor_id is not None:
+            params['actorId'] = actor_id
+        if max_ is not None:
+            params['max'] = max_
+        if event_categories is not None:
+            params['eventCategories'] = ','.join(event_categories)
+        url = self.ep()
         ...
 
     ...

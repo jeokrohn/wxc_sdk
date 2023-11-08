@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -103,8 +104,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
                                        start: int = None, id: list[str] = None, owner_name: list[str] = None,
                                        phone_number: list[str] = None, location_name: list[str] = None,
                                        order: list[str] = None, has_device_assigned: bool = None,
-                                       has_extension_assigned: bool = None, has_dn_assigned: bool = None,
-                                       **params) -> Generator[ListVirtualLineObject, None, None]:
+                                       has_extension_assigned: bool = None,
+                                       has_dn_assigned: bool = None) -> list[ListVirtualLineObject]:
         """
         Read the List of Virtual Lines
 
@@ -150,8 +151,34 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             a Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
             assigned.
         :type has_dn_assigned: bool
-        :return: Generator yielding :class:`ListVirtualLineObject` instances
+        :rtype: list[ListVirtualLineObject]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = ','.join(location_id)
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if id is not None:
+            params['id'] = ','.join(id)
+        if owner_name is not None:
+            params['ownerName'] = ','.join(owner_name)
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if location_name is not None:
+            params['locationName'] = ','.join(location_name)
+        if order is not None:
+            params['order'] = ','.join(order)
+        if has_device_assigned is not None:
+            params['hasDeviceAssigned'] = str(has_device_assigned).lower()
+        if has_extension_assigned is not None:
+            params['hasExtensionAssigned'] = str(has_extension_assigned).lower()
+        if has_dn_assigned is not None:
+            params['hasDnAssigned'] = str(has_dn_assigned).lower()
+        url = self.ep()
         ...
 
     ...

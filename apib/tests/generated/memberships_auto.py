@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -69,8 +70,8 @@ class MembershipsApi(ApiChild, base='memberships'):
     Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
     """
 
-    def list_memberships(self, room_id: str = None, person_id: str = None, person_email: str = None, max_: int = None,
-                         **params) -> Generator[Membership, None, None]:
+    def list_memberships(self, room_id: str = None, person_id: str = None, person_email: str = None,
+                         max_: int = None) -> list[Membership]:
         """
         List Memberships
 
@@ -99,8 +100,18 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type person_email: str
         :param max_: Limit the maximum number of memberships in the response.
         :type max_: int
-        :return: Generator yielding :class:`Membership` instances
+        :rtype: list[Membership]
         """
+        params = {}
+        if room_id is not None:
+            params['roomId'] = room_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -122,6 +133,7 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type is_moderator: str
         :rtype: :class:`Membership`
         """
+        url = self.ep()
         ...
 
 
@@ -137,6 +149,7 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type membership_id: str
         :rtype: :class:`Membership`
         """
+        url = self.ep(f'{membership_id}')
         ...
 
 
@@ -157,6 +170,7 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type is_room_hidden: str
         :rtype: :class:`Membership`
         """
+        url = self.ep(f'{membership_id}')
         ...
 
 
@@ -176,6 +190,7 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type membership_id: str
         :rtype: None
         """
+        url = self.ep(f'{membership_id}')
         ...
 
     ...

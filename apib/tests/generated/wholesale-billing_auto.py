@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -81,7 +82,9 @@ class Report(ApiModel):
     #: example: https://billing-reports-int-us-east-1.webexcontent.com/a366de9b-3204-4140-8181-25808d360e36/WHOLESALE/340177d1-7f25-41e1-a39f-ad63ec1103a5.csv?Expires=1624978489&Signature=Syp3vrVeMx4P6MeMtm8e1bQaeAdHFe-c7NeHERWh5-qJGLZ1T8Dvl2ee-M8OsFf~z6Yepz94e2Hh1HDVailD0Uryl8SgiM~jl0cBh7L0PmSe~i9oFA0eJ0MulkqGSMVf7ZHhxY55xYMgIBZIERkWm3CqQNDg5BS4EaXapKfOnmFegf36OokCM63m5uOK8-csk08IkZhwo2Z0l1JMtuWYEaLh4dgMHoe~xgH3YmDSSCWInFYaEifUAfgi2YAYS6nP9Zq4BTliBq62XBaehOE1gBrhy4RdwD-3WSs2oD-BdpoRpuGzo3FZzDLVEvd0S2D6gTcHljOHodQKxe-u0BXPWQ__&Key-Pair-Id=APKAJADAKLCI2FW2U32Q
     temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
     #: List of errors that occurred during report generation.
+    #: 
     #: **Note:**
+    #: 
     #: * This list captures errors that occurred during asynchronous or background report generation, after the request
     #: has been accepted and a `202 OK` response is returned.
     errors: Optional[list[ReportError]] = None
@@ -141,7 +144,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
                                        billing_end_date: Union[str, datetime] = None,
                                        sort_by: ListWholesaleBillingReportsSortBy = None, type: ListReportType = None,
                                        status: ListReportStatus = None, max_: int = None,
-                                       sub_partner_org_id: str = None, **params) -> Generator[ListReport, None, None]:
+                                       sub_partner_org_id: str = None) -> list[ListReport]:
         """
         List Wholesale Billing Reports
 
@@ -163,8 +166,30 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :type max_: int
         :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
         :type sub_partner_org_id: str
-        :return: Generator yielding :class:`ListReport` instances
+        :rtype: list[ListReport]
         """
+        params = {}
+        if billing_start_date is not None:
+            if isinstance(billing_start_date, str):
+                billing_start_date = isoparse(billing_start_date)
+            billing_start_date = dt_iso_str(billing_start_date)
+            params['billingStartDate'] = billing_start_date
+        if billing_end_date is not None:
+            if isinstance(billing_end_date, str):
+                billing_end_date = isoparse(billing_end_date)
+            billing_end_date = dt_iso_str(billing_end_date)
+            params['billingEndDate'] = billing_end_date
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        if type is not None:
+            params['type'] = type
+        if status is not None:
+            params['status'] = status
+        if max_ is not None:
+            params['max'] = max_
+        if sub_partner_org_id is not None:
+            params['subPartnerOrgId'] = sub_partner_org_id
+        url = self.ep()
         ...
 
 
@@ -178,11 +203,12 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :type id: str
         :rtype: :class:`Report`
         """
+        url = self.ep(f'{id}')
         ...
 
 
-    def create_a_wholesale_billing_report(self, billing_start_date: datetime, billing_end_date: datetime,
-                                          type: str = None, sub_partner_org_id: str = None) -> ReportId:
+    def create_a_wholesale_billing_report(self, billing_start_date: Union[str, datetime], billing_end_date: Union[str,
+                                          datetime], type: str = None, sub_partner_org_id: str = None) -> ReportId:
         """
         Create a Wholesale Billing Report
 
@@ -198,6 +224,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :type sub_partner_org_id: str
         :rtype: :class:`ReportId`
         """
+        url = self.ep()
         ...
 
 
@@ -211,6 +238,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :type id: str
         :rtype: None
         """
+        url = self.ep(f'{id}')
         ...
 
     ...

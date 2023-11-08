@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -153,7 +154,7 @@ class MessagesWithECMApi(ApiChild, base='messages'):
     """
 
     def list_messages(self, room_id: str, mentioned_people: list[str] = None, before: Union[str, datetime] = None,
-                      before_message: str = None, max_: int = None, **params) -> Generator[Message, None, None]:
+                      before_message: str = None, max_: int = None) -> list[Message]:
         """
         List Messages
 
@@ -177,8 +178,22 @@ class MessagesWithECMApi(ApiChild, base='messages'):
         :type before_message: str
         :param max_: Limit the maximum number of messages in the response.
         :type max_: int
-        :return: Generator yielding :class:`Message` instances
+        :rtype: list[Message]
         """
+        params = {}
+        params['roomId'] = room_id
+        if mentioned_people is not None:
+            params['mentionedPeople'] = ','.join(mentioned_people)
+        if before is not None:
+            if isinstance(before, str):
+                before = isoparse(before)
+            before = dt_iso_str(before)
+            params['before'] = before
+        if before_message is not None:
+            params['beforeMessage'] = before_message
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -199,6 +214,12 @@ class MessagesWithECMApi(ApiChild, base='messages'):
         :type person_email: str
         :rtype: list[DirectMessage]
         """
+        params = {}
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        url = self.ep('direct')
         ...
 
 
@@ -235,6 +256,7 @@ class MessagesWithECMApi(ApiChild, base='messages'):
         :type attachments: list[Attachment]
         :rtype: :class:`Message`
         """
+        url = self.ep()
         ...
 
 
@@ -250,6 +272,7 @@ class MessagesWithECMApi(ApiChild, base='messages'):
         :type message_id: str
         :rtype: :class:`Message`
         """
+        url = self.ep(f'{message_id}')
         ...
 
 
@@ -265,6 +288,7 @@ class MessagesWithECMApi(ApiChild, base='messages'):
         :type message_id: str
         :rtype: None
         """
+        url = self.ep(f'{message_id}')
         ...
 
     ...

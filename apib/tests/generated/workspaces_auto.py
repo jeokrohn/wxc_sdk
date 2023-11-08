@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -347,7 +348,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                         display_name: str = None, capacity: int = None, type: WorkspaceUpdateRequestType = None,
                         start: int = None, max_: int = None, calling: WorkspaceCallingType = None,
                         supported_devices: WorkspaceSupportedDevices = None, calendar: WorkspaceCalendarType = None,
-                        device_hosted_meetings_enabled: bool = None, **params) -> Generator[Workspace, None, None]:
+                        device_hosted_meetings_enabled: bool = None) -> list[Workspace]:
         """
         List Workspaces
 
@@ -385,8 +386,34 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type calendar: WorkspaceCalendarType
         :param device_hosted_meetings_enabled: List workspaces enabled for device hosted meetings.
         :type device_hosted_meetings_enabled: bool
-        :return: Generator yielding :class:`Workspace` instances
+        :rtype: list[Workspace]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
+        if floor_id is not None:
+            params['floorId'] = floor_id
+        if display_name is not None:
+            params['displayName'] = display_name
+        if capacity is not None:
+            params['capacity'] = capacity
+        if type is not None:
+            params['type'] = type
+        if start is not None:
+            params['start'] = start
+        if max_ is not None:
+            params['max'] = max_
+        if calling is not None:
+            params['calling'] = calling
+        if supported_devices is not None:
+            params['supportedDevices'] = supported_devices
+        if calendar is not None:
+            params['calendar'] = calendar
+        if device_hosted_meetings_enabled is not None:
+            params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
+        url = self.ep()
         ...
 
 
@@ -448,6 +475,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type supported_devices: WorkspaceSupportedDevices
         :rtype: :class:`Workspace`
         """
+        url = self.ep()
         ...
 
 
@@ -464,6 +492,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type workspace_id: str
         :rtype: :class:`Workspace`
         """
+        url = self.ep(f'{workspace_id}')
         ...
 
 
@@ -530,6 +559,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_hosted_meetings: WorkspaceDeviceHostedMeetings
         :rtype: :class:`Workspace`
         """
+        url = self.ep(f'{workspace_id}')
         ...
 
 
@@ -546,6 +576,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type workspace_id: str
         :rtype: None
         """
+        url = self.ep(f'{workspace_id}')
         ...
 
 
@@ -565,6 +596,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type workspace_id: str
         :rtype: CapabilityMap
         """
+        url = self.ep(f'{workspace_id}/capabilities')
         ...
 
     ...

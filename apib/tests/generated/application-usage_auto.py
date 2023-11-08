@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -85,8 +86,8 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
     """
 
     def list_application_usage(self, org_id: str = None, app_name: str = None, app_id: str = None,
-                               order_by: ListApplicationUsageOrderBy = None, max_: int = None, cursor: str = None,
-                               **params) -> Generator[ApplicationUsage, None, None]:
+                               order_by: ListApplicationUsageOrderBy = None, max_: int = None,
+                               cursor: str = None) -> list[ApplicationUsage]:
         """
         List Application Usage
 
@@ -109,8 +110,22 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
         :param cursor: The current cursor when `paging
             <https://developer.webex.com/docs/basics#pagination>`_ through long result sets.
         :type cursor: str
-        :return: Generator yielding :class:`ApplicationUsage` instances
+        :rtype: list[ApplicationUsage]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if app_name is not None:
+            params['appName'] = app_name
+        if app_id is not None:
+            params['appId'] = app_id
+        if order_by is not None:
+            params['orderBy'] = order_by
+        if max_ is not None:
+            params['max'] = max_
+        if cursor is not None:
+            params['cursor'] = cursor
+        url = self.ep()
         ...
 
     ...

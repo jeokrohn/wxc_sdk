@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -107,8 +108,8 @@ class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
     An administrator account with the `audit:events_read` scope is required to use this API.
     """
 
-    def list_admin_audit_events(self, org_id: str, from_: datetime, to_: datetime, actor_id: str = None,
-                                max_: int = None, offset: int = None, event_categories: list[str] = None,
+    def list_admin_audit_events(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
+                                actor_id: str = None, event_categories: list[str] = None,
                                 **params) -> Generator[AuditEvent, None, None]:
         """
         List Admin Audit Events
@@ -128,14 +129,24 @@ class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
         :type to_: Union[str, datetime]
         :param actor_id: List events performed by this person, by ID.
         :type actor_id: str
-        :param max_: Limit the maximum number of events in the response. The maximum value is `200`.
-        :type max_: int
-        :param offset: Offset from the first result that you want to fetch.
-        :type offset: int
         :param event_categories: List events, by event categories.
         :type event_categories: list[str]
         :return: Generator yielding :class:`AuditEvent` instances
         """
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        if actor_id is not None:
+            params['actorId'] = actor_id
+        if event_categories is not None:
+            params['eventCategories'] = ','.join(event_categories)
+        url = self.ep('events')
         ...
 
 
@@ -147,6 +158,7 @@ class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
 
         :rtype: list[str]
         """
+        url = self.ep('eventCategories')
         ...
 
     ...

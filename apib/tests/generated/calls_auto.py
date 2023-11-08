@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -67,7 +68,7 @@ class CallsApi(ApiChild, base='calls'):
     """
 
     def list_calls(self, status: CallStatus, room_id: str = None, from_: Union[str, datetime] = None, to_: Union[str,
-                   datetime] = None, max_: int = None, **params) -> Generator[Call, None, None]:
+                   datetime] = None, max_: int = None) -> list[Call]:
         """
         List Calls
 
@@ -90,8 +91,25 @@ class CallsApi(ApiChild, base='calls'):
         :type to_: Union[str, datetime]
         :param max_: Limit the maximum number of calls in the response.
         :type max_: int
-        :return: Generator yielding :class:`Call` instances
+        :rtype: list[Call]
         """
+        params = {}
+        params['status'] = status
+        if room_id is not None:
+            params['roomId'] = room_id
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -107,6 +125,7 @@ class CallsApi(ApiChild, base='calls'):
         :type call_id: str
         :rtype: :class:`Call`
         """
+        url = self.ep(f'{call_id}')
         ...
 
     ...

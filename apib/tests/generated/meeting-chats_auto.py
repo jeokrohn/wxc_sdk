@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -87,8 +88,7 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
     
     """
 
-    def list_meeting_chats(self, meeting_id: str, max_: int = None, offset: int = None,
-                           **params) -> Generator[ChatObject, None, None]:
+    def list_meeting_chats(self, meeting_id: str, **params) -> Generator[ChatObject, None, None]:
         """
         List Meeting Chats
 
@@ -106,12 +106,10 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
             scheduled `personal room
             <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is not supported.
         :type meeting_id: str
-        :param max_: Limit the maximum number of meeting chats in the response, up to 100.
-        :type max_: int
-        :param offset: Offset from the first result that you want to fetch.
-        :type offset: int
         :return: Generator yielding :class:`ChatObject` instances
         """
+        params['meetingId'] = meeting_id
+        url = self.ep()
         ...
 
 
@@ -134,6 +132,9 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
         :type meeting_id: str
         :rtype: None
         """
+        params = {}
+        params['meetingId'] = meeting_id
+        url = self.ep()
         ...
 
     ...

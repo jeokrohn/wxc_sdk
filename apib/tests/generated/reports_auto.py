@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -100,6 +101,24 @@ class ReportsApi(ApiChild, base='reports'):
         :type to_: Union[str, datetime]
         :rtype: list[Report]
         """
+        params = {}
+        if report_id is not None:
+            params['reportId'] = report_id
+        if service is not None:
+            params['service'] = service
+        if template_id is not None:
+            params['templateId'] = template_id
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        url = self.ep()
         ...
 
 
@@ -129,6 +148,7 @@ class ReportsApi(ApiChild, base='reports'):
         :type site_list: str
         :rtype: str
         """
+        url = self.ep()
         ...
 
 
@@ -147,6 +167,7 @@ class ReportsApi(ApiChild, base='reports'):
         :type report_id: str
         :rtype: :class:`Report`
         """
+        url = self.ep(f'{report_id}')
         ...
 
 
@@ -165,6 +186,7 @@ class ReportsApi(ApiChild, base='reports'):
         :type report_id: str
         :rtype: None
         """
+        url = self.ep(f'{report_id}')
         ...
 
     ...

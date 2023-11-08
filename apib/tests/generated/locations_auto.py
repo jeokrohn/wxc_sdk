@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -153,8 +154,7 @@ class LocationsApi(ApiChild, base='locations'):
     <https://help.webex.com/en-us/article/ajh6iy/Locations-in-Control-Hub>`_ for more information.
     """
 
-    def list_locations(self, name: str = None, id: str = None, org_id: str = None, max_: int = None,
-                       **params) -> Generator[Location, None, None]:
+    def list_locations(self, name: str = None, id: str = None, org_id: str = None, max_: int = None) -> list[Location]:
         """
         List Locations
 
@@ -178,8 +178,18 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :param max_: Limit the maximum number of location in the response.
         :type max_: int
-        :return: Generator yielding :class:`Location` instances
+        :rtype: list[Location]
         """
+        params = {}
+        if name is not None:
+            params['name'] = name
+        if id is not None:
+            params['id'] = id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        url = self.ep()
         ...
 
 
@@ -206,12 +216,16 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :rtype: :class:`Location`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}')
         ...
 
 
     def create_a_location(self, name: str, time_zone: str, preferred_language: str, announcement_language: str,
-                          address: LocationAddress, latitude: datetime, longitude: datetime, notes: str,
-                          org_id: str = None) -> str:
+                          address: LocationAddress, latitude: Union[str, datetime], longitude: Union[str, datetime],
+                          notes: str, org_id: str = None) -> str:
         """
         Create a Location
 
@@ -252,6 +266,10 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
         ...
 
 
@@ -284,6 +302,10 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}')
         ...
 
 
@@ -298,6 +320,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type location_id: str
         :rtype: list[Floor]
         """
+        url = self.ep(f'{location_id}/floors')
         ...
 
 
@@ -317,6 +340,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
+        url = self.ep(f'{location_id}/floors')
         ...
 
 
@@ -333,6 +357,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type floor_id: str
         :rtype: :class:`Floor`
         """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
         ...
 
 
@@ -356,6 +381,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
         ...
 
 
@@ -372,6 +398,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type floor_id: str
         :rtype: None
         """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
         ...
 
     ...

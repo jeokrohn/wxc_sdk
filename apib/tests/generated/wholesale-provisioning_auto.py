@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -101,16 +102,22 @@ class Package(ApiModel):
     #: example: provisioned
     status: Optional[PackageStatus] = None
     #: List of warnings that occurred during that last attempt to provision/update this customer.
+    #: 
     #: *Note:*
+    #: 
     #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
     #: *after* the API has been accepted and 202 response returned.
+    #: 
     #: + Any errors that occur during initial API request validation will be captured directly in error response with
     #: appropriate HTTP status code.
     warnings: Optional[list[Error]] = None
     #: List of errors that occurred during that last attempt to provision/update this customer.
+    #: 
     #: *Note:*
+    #: 
     #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
     #: *after* the API has been accepted and 202 response returned.
+    #: 
     #: + Any errors that occur during initial API request validation will be captured directly in error response with
     #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
@@ -141,9 +148,12 @@ class Customer(ApiModel):
     packages: Optional[list[str]] = None
     resource_details: Optional[ResourceDetails] = None
     #: List of errors that occurred during that last attempt to provision/update this customer.
+    #: 
     #: *Note:*
+    #: 
     #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
     #: *after* the API has been accepted and 202 response returned.
+    #: 
     #: + Any errors that occur during initial API request validation will be captured directly in error response with
     #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
@@ -251,8 +261,11 @@ class Subscriber(ApiModel):
     #: example: provisioned
     status: Optional[SubscriberStatus] = None
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
+    #: 
     #: *Note:*
+    #: 
     #: + This list captures errors that occurred during provisioning of the subscriber.
+    #: 
     #: + Any errors that occur during initial API request validation will be captured directly in error response with
     #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
@@ -397,7 +410,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
     """
 
     def list_wholesale_customers(self, external_id: str = None, org_id: str = None, status: list[str] = None,
-                                 offset: int = None, max_: int = None, **params) -> Generator[Customer, None, None]:
+                                 **params) -> Generator[Customer, None, None]:
         """
         List Wholesale Customers
 
@@ -410,12 +423,15 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type org_id: str
         :param status: Customer API status.
         :type status: list[str]
-        :param offset: Offset value for implementing pagination.
-        :type offset: int
-        :param max_: The maximum number of customers returned in the response.
-        :type max_: int
         :return: Generator yielding :class:`Customer` instances
         """
+        if external_id is not None:
+            params['externalId'] = external_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if status is not None:
+            params['status'] = ','.join(status)
+        url = self.ep('customers')
         ...
 
 
@@ -461,6 +477,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
         :rtype: str
         """
+        url = self.ep('customers')
         ...
 
 
@@ -474,6 +491,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type customer_id: str
         :rtype: :class:`Customer`
         """
+        url = self.ep(f'customers/{customer_id}')
         ...
 
 
@@ -508,6 +526,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
         :rtype: str
         """
+        url = self.ep(f'customers/{customer_id}')
         ...
 
 
@@ -521,6 +540,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type customer_id: str
         :rtype: None
         """
+        url = self.ep(f'customers/{customer_id}')
         ...
 
 
@@ -566,10 +586,11 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
         :rtype: :class:`CustomerProvisioningPrecheckResponse`
         """
+        url = self.ep('customers/validate')
         ...
 
 
-    def list_wholesale_sub_partners(self, provisioning_state: str = None, offset: int = None, max_: int = None,
+    def list_wholesale_sub_partners(self, provisioning_state: str = None,
                                     **params) -> Generator[SubPartner, None, None]:
         """
         List Wholesale Sub-partners
@@ -579,33 +600,24 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
 
         :param provisioning_state: Status to filter sub-partners based on provisioning state.
         :type provisioning_state: str
-        :param offset: Offset value for implementing pagination.
-        :type offset: int
-        :param max_: The maximum number of sub-partners returned in the response.
-        :type max_: int
         :return: Generator yielding :class:`SubPartner` instances
         """
+        if provisioning_state is not None:
+            params['provisioningState'] = provisioning_state
+        url = self.ep('subPartners')
         ...
 
 
-    def list_wholesale_subscribers(self, max_: int = None, offset: int = None, customer_id: str = None,
-                                   person_id: str = None, external_customer_id: str = None, email: str = None,
-                                   status: str = None, after: str = None, last_status_change: str = None,
-                                   sort_by: str = None, sort_order: str = None,
-                                   **params) -> Generator[Subscriber, None, None]:
+    def list_wholesale_subscribers(self, customer_id: str = None, person_id: str = None,
+                                   external_customer_id: str = None, email: str = None, status: str = None,
+                                   after: str = None, last_status_change: str = None, sort_by: str = None,
+                                   sort_order: str = None, **params) -> Generator[Subscriber, None, None]:
         """
         List Wholesale Subscribers
 
         This API allows a Service Provider to search for their associated subscribers. There are a number of filter
         options, which can be combined in a single request.
 
-        :param max_: Limit the maximum number of subscribers returned in the search response, up to 100 per page. Refer
-            to the `Pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
-        :type max_: int
-        :param offset: Offset value to implement `pagination
-            <https://developer.webex.com/docs/basics#pagination>`_.
-        :type offset: int
         :param customer_id: Wholesale customer ID.
         :type customer_id: str
         :param person_id: The person ID of the subscriber used in the `/v1/people API
@@ -629,6 +641,25 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type sort_order: str
         :return: Generator yielding :class:`Subscriber` instances
         """
+        if customer_id is not None:
+            params['customerId'] = customer_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if external_customer_id is not None:
+            params['externalCustomerId'] = external_customer_id
+        if email is not None:
+            params['email'] = email
+        if status is not None:
+            params['status'] = status
+        if after is not None:
+            params['after'] = after
+        if last_status_change is not None:
+            params['lastStatusChange'] = last_status_change
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        if sort_order is not None:
+            params['sortOrder'] = sort_order
+        url = self.ep('subscribers')
         ...
 
 
@@ -656,6 +687,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters
         :rtype: :class:`Subscriber`
         """
+        url = self.ep('subscribers')
         ...
 
 
@@ -669,6 +701,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type subscriber_id: str
         :rtype: :class:`Subscriber`
         """
+        url = self.ep(f'subscribers/{subscriber_id}')
         ...
 
 
@@ -695,6 +728,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type provisioning_parameters: UpdateAWholesaleSubscriberProvisioningParameters
         :rtype: :class:`Subscriber`
         """
+        url = self.ep(f'subscribers/{subscriber_id}')
         ...
 
 
@@ -708,6 +742,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type subscriber_id: str
         :rtype: None
         """
+        url = self.ep(f'subscribers/{subscriber_id}')
         ...
 
 
@@ -749,6 +784,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type customer_info: PrecheckAWholesaleSubscriberProvisioningCustomerInfo
         :rtype: :class:`CustomerProvisioningPrecheckResponse`
         """
+        url = self.ep('subscribers/validate')
         ...
 
     ...

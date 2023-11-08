@@ -1,11 +1,12 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Union
 
+from dateutil.parser import isoparse
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -78,7 +79,7 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
     """
 
     def get_a_list_of_departments(self, org_id: str = None, start: int = None, max_: int = None, name: str = None,
-                                  id: str = None, **params) -> Generator[DepartmentResponse, None, None]:
+                                  id: str = None) -> list[DepartmentResponse]:
         """
         Get a List of Departments
 
@@ -100,8 +101,20 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
         :type name: str
         :param id: Specifies the department ID you want to fetch.
         :type id: str
-        :return: Generator yielding :class:`DepartmentResponse` instances
+        :rtype: list[DepartmentResponse]
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if start is not None:
+            params['start'] = start
+        if max_ is not None:
+            params['max'] = max_
+        if name is not None:
+            params['name'] = name
+        if id is not None:
+            params['id'] = id
+        url = self.ep()
         ...
 
 
@@ -122,6 +135,10 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
         :type org_id: str
         :rtype: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
         ...
 
 
@@ -148,6 +165,10 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{department_id}')
         ...
 
 
@@ -169,6 +190,10 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
         :type org_id: str
         :rtype: DepartmentResponseDepartment
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{department_id}')
         ...
 
 
@@ -191,6 +216,10 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{department_id}')
         ...
 
     ...
