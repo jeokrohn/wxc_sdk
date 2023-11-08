@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -350,4 +351,138 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, max_: int = None,
+                                     start: int = None, name: str = None, phone_number: str = None,
+                                     department_id: str = None, department_name: str = None,
+                                     **params) -> Generator[ListCallQueueObject, None, None]:
+        """
+        Read the List of Call Queues
+
+        List all Call Queues for the organization.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List call queues for this organization.
+        :type org_id: str
+        :param location_id: Only return call queues with matching location ID.
+        :type location_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return call queues with the matching name.
+        :type name: str
+        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :type phone_number: str
+        :param department_id: Return only call queues with the matching departmentId.
+        :type department_id: str
+        :param department_name: Return only call queues with the matching departmentName.
+        :type department_name: str
+        :return: Generator yielding :class:`ListCallQueueObject` instances
+        """
+        ...
+
+
+    def get_details_for_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> GetCallQueueObject:
+        """
+        Get Details for a Call Queue
+
+        Retrieve Call Queue details.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned anvinternal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueObject`
+        """
+        ...
+
+
+    def update_a_call_queue(self, location_id: str, queue_id: str, enabled: bool, name: str, language_code: str,
+                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: datetime,
+                            alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
+                            call_policies: GetCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject,
+                            allow_call_waiting_for_agents_enabled: bool, agents: list[PostPersonPlaceObject],
+                            department: ModifyCallQueueObjectDepartment, org_id: str = None):
+        """
+        Update a Call Queue
+
+        Update the designated Call Queue.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Updating a call queue requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param enabled: Whether or not the call queue is enabled.
+        :type enabled: bool
+        :param name: Unique name for the call queue.
+        :type name: str
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone
+            number if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the hunt group.
+        :type time_zone: str
+        :param phone_number: Primary phone number of the call queue.
+        :type phone_number: str
+        :param extension: Extension of the call queue.
+        :type extension: Union[str, datetime]
+        :param alternate_number_settings: The alternate numbers feature allows you to assign multiple phone numbers or
+            extensions to a call queue. Each number will reach the same greeting and each menu will function
+            identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
+            numbers ring into the call queue.
+        :type alternate_number_settings: GetCallQueueObjectAlternateNumberSettings
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: GetCallQueueCallPolicyObject
+        :param queue_settings: Overall call queue settings.
+        :type queue_settings: CallQueueQueueSettingsObject
+        :param allow_call_waiting_for_agents_enabled: Flag to indicate whether call waiting is enabled for agents.
+        :type allow_call_waiting_for_agents_enabled: bool
+        :param agents: People, including workspaces, that are eligible to receive calls.
+        :type agents: list[PostPersonPlaceObject]
+        :param department: Specifies the department information.
+        :type department: ModifyCallQueueObjectDepartment
+        :param org_id: Update call queue settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

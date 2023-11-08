@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -65,4 +66,101 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
     A space participant will be able to configure an ECM folder for a space. Only one ECM folder per space and only
     OneDrive and SharePoint online are currently supported.
     """
+
+    def list_ecm_folder(self, room_id: str) -> list[ECMFolder]:
+        """
+        List ECM folder
+
+        Lists the ECM folder of a room specified by the `roomId` query parameter.
+
+        :param room_id: ID of the room for which to list the ECM folder.
+        :type room_id: str
+        :rtype: list[ECMFolder]
+        """
+        ...
+
+
+    def create_an_ecm_folder_configuration(self, room_id: str, content_url: str, display_name: str, drive_id: datetime,
+                                           item_id: datetime, default_folder: str) -> ECMFolder:
+        """
+        Create an ECM folder configuration
+
+        Adds an existing ECM folder to a room as (default or reference) file storage. There is no data validation
+        happening for the request. Please ensure the correct `driveId` and `itemId.` These can be collected from the
+        MS Graph API. The `contentUrl` and `displayName` are used only for user convenience. The folder will be
+        configured with the MS folder name as `displayName`, and the `contentURL` may be updated or corrected as
+        needed. To assess final configuration, please make a GET request on the linkedFolder.
+
+        :param room_id: A unique identifier for the room.
+        :type room_id: str
+        :param content_url: URL of the ECM folder.
+        :type content_url: str
+        :param display_name: This should match the folder name in the ECM backend.
+        :type display_name: str
+        :param drive_id: Sharepoint or OneDrive drive id. It can be queried via MS Graph APIs.
+        :type drive_id: Union[str, datetime]
+        :param item_id: Sharepoint or OneDrive item id. It can be queried via MS Graph APIs.
+        :type item_id: Union[str, datetime]
+        :param default_folder: Makes the folder the default storage for the space.
+        :type default_folder: str
+        :rtype: :class:`ECMFolder`
+        """
+        ...
+
+
+    def get_ecm_folder_details(self, id: str) -> ECMFolder:
+        """
+        Get ECM Folder Details
+
+        Get details for a room ECM folder with the specified folder id.
+
+        :param id: The unique identifier for the folder.
+        :type id: str
+        :rtype: :class:`ECMFolder`
+        """
+        ...
+
+
+    def update_an_ecm_linked_folder(self, id: str, room_id: str, content_url: str, display_name: str,
+                                    drive_id: datetime, item_id: datetime, default_folder: str) -> ECMFolder:
+        """
+        Update an ECM Linked Folder
+
+        Updates the configuration of the specified Room folder. There is no data validation happening for the request.
+        Please ensure the correct `driveId` and `itemId.` These can be collected from the MS Graph API. The
+        `contentUrl` and `displayName` are used only for user convenience. The folder will be configured with the MS
+        folder name as `displayName`, and the `contentURL` may be updated or corrected as needed. To assess final
+        configuration, please make a GET request on the linkedFolder.
+
+        :param id: The unique identifier for the room folder.
+        :type id: str
+        :param room_id: ID of the room that contains the room tab in question.
+        :type room_id: str
+        :param content_url: Content URL of the folder.
+        :type content_url: str
+        :param display_name: This should match the folder name in the ECM backend.
+        :type display_name: str
+        :param drive_id: Sharepoint or OneDrive drive id. It can be queried via MS Graph APIs.
+        :type drive_id: Union[str, datetime]
+        :param item_id: Sharepoint or OneDrive item id. It can be queried via MS Graph APIs.
+        :type item_id: Union[str, datetime]
+        :param default_folder: Makes the folder the default storage for the space.
+        :type default_folder: str
+        :rtype: :class:`ECMFolder`
+        """
+        ...
+
+
+    def unlink_an_ecm_linked_folder(self, id: str):
+        """
+        Unlink an ECM linked folder
+
+        Unlinks the room-linked folder with the specified ID from the space.
+
+        :param id: The unique identifier for the folder to disassociate from the space.
+        :type id: str
+        :rtype: None
+        """
+        ...
+
     ...

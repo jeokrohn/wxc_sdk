@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -160,4 +161,62 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
     administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
     """
+
+    def get_device_members(self, device_id: str, org_id: str = None) -> GetMemberResponse:
+        """
+        Get Device Members
+
+        Get the list of all the members of the device including primary and secondary users.
+        
+        A device member can be either a person or a workspace. An admin can access the list of member details, modify
+        member details and
+        search for available members on a device.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: Retrieves the list of all members of the device in this organization.
+        :type org_id: str
+        :rtype: :class:`GetMemberResponse`
+        """
+        ...
+
+
+    def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max_: int = None,
+                       member_name: str = None, phone_number: str = None, extension: Union[str, datetime] = None,
+                       **params) -> Generator[SearchMemberObject, None, None]:
+        """
+        Search Members
+
+        Search members that can be assigned to the device.
+        
+        A device member can be either a person or a workspace. A admin can access the list of member details, modify
+        member details and
+        search for available members on a device.
+        
+        This requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param org_id: Retrieves the list of available members on the device in this organization.
+        :type org_id: str
+        :param start: Specifies the offset from the first result that you want to fetch.
+        :type start: int
+        :param max_: Specifies the maximum number of records that you want to fetch.
+        :type max_: int
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: Union[str, datetime]
+        :return: Generator yielding :class:`SearchMemberObject` instances
+        """
+        ...
+
     ...

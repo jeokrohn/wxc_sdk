@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -85,4 +86,54 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
     resource.
     
     """
+
+    def list_meeting_chats(self, meeting_id: str, max_: int = None, offset: int = None,
+                           **params) -> Generator[ChatObject, None, None]:
+        """
+        List Meeting Chats
+
+        Lists the meeting chats of a finished `meeting instance
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ specified by `meetingId`. You can set a maximum number
+        of chats to return.
+        
+        Use this operation to list the chats of a finished `meeting instance
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ when they are ready. Please note that only
+        **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled
+        meetings** and `in-progress` **meeting instances** are not supported.
+
+        :param meeting_id: A unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the chats belong. The meeting ID of a
+            scheduled `personal room
+            <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is not supported.
+        :type meeting_id: str
+        :param max_: Limit the maximum number of meeting chats in the response, up to 100.
+        :type max_: int
+        :param offset: Offset from the first result that you want to fetch.
+        :type offset: int
+        :return: Generator yielding :class:`ChatObject` instances
+        """
+        ...
+
+
+    def delete_meeting_chats(self, meeting_id: str):
+        """
+        Delete Meeting Chats
+
+        Deletes the meeting chats of a finished `meeting instance
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ specified by `meetingId`.
+        
+        Use this operation to delete the chats of a finished `meeting instance
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ when they are ready. Please note that
+        only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled
+        meetings** and `in-progress` **meeting instances** are not supported.
+
+        :param meeting_id: A unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the chats belong. Meeting IDs of a
+            scheduled `personal room
+            <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting are not supported.
+        :type meeting_id: str
+        :rtype: None
+        """
+        ...
+
     ...

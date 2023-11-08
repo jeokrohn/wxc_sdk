@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -190,4 +191,25 @@ class MeetingQualitiesApi(ApiChild, base='meeting/qualities'):
     
     A rate limit of 1 API call every 5 minutes for the same meeting instance ID applies.
     """
+
+    def get_meeting_qualities(self, meeting_id: str, max_: int = None, offset: int = None,
+                              **params) -> Generator[MediaSessionQuality, None, None]:
+        """
+        Get Meeting Qualities
+
+        Get quality data for a meeting, by `meetingId`. Only organization administrators can retrieve meeting quality
+        data.
+
+        :param meeting_id: Unique identifier for the specific meeting instance. **Note:** The `meetingId` can be
+            obtained via the Meeting List API when meetingType=meeting. The `id` attribute in the Meeting List
+            Response is what is needed, for example, `e5dba9613a9d455aa49f6ffdafb6e7db_I_191395283063545470`.
+        :type meeting_id: str
+        :param max_: Limit the maximum number of media sessions in the response.
+        :type max_: int
+        :param offset: Offset from the first result that you want to fetch.
+        :type offset: int
+        :return: Generator yielding :class:`MediaSessionQuality` instances
+        """
+        ...
+
     ...

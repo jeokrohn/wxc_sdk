@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -243,4 +244,238 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
     Refer to the `Meetings API Scopes
     <https://developer.webex.com/docs/meetings#meetings-api-scopes>`_ section of `Meetings Overview
     """
+
+    def list_meeting_participants(self, meeting_id: str, max_: int = None, meeting_start_time_from: Union[str,
+                                  datetime] = None, meeting_start_time_to: Union[str, datetime] = None,
+                                  host_email: str = None, join_time_from: Union[str, datetime] = None,
+                                  join_time_to: Union[str, datetime] = None,
+                                  **params) -> Generator[Participant, None, None]:
+        """
+        List Meeting Participants
+
+        List all participants in an in-progress meeting or an ended meeting. The `meetingId` parameter is required,
+        which is the unique identifier for the meeting.
+        
+        The authenticated user calling this API must either have an Administrator role with the
+        `meeting:admin_participants_read` scope, or be the meeting host.
+        
+        * If the `meetingId` value specified is for a meeting series, the operation returns participants' details for
+        the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo`
+        value are specified, the operation returns participants' details for the last instance in the meeting series
+        in the time range.
+        
+        * If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns
+        participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the
+        `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in
+        the scheduled meeting in the time range.
+        
+        * If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation
+        returns participants' details for that meeting instance.
+        
+        * If the meeting is in progress, the operation returns all the real-time participants. If the meeting is ended,
+        the operation returns all the participants that have joined the meeting.
+        
+        * The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an
+        occurrence ID.
+        
+        * If the webinar is in progress when the attendee has ever been unmuted to speak in the webinar, this attendee
+        becomes a panelist. The operation returns include the people who have been designated as panelists when the
+        webinar is created and have joined the webinar, and the attendees who have joined the webinar and are unmuted
+        to speak in the webinar temporarily. If the webinar is ended, the operation returns all the participants,
+        including all panelists and all attendees who are not panelists.
+        
+        #### Request Header
+        
+        * `timezone`: Time zone for time stamps in the response body, defined in conformance with the
+        `IANA time zone database
+        <https://www.iana.org/time-zones>`_.
+
+        :param meeting_id: The unique identifier for the meeting. Please note that currently meeting ID of a scheduled
+            `personal room
+            <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is not supported for this API.
+        :type meeting_id: str
+        :param max_: Limit the maximum number of participants in the response, up to 100.
+        :type max_: int
+        :param meeting_start_time_from: Meetings start from the specified date and time(exclusive) in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_
+            compliant format. If `meetingStartTimeFrom` is not specified, it equals `meetingStartTimeTo` minus 1
+            month; if `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is 1
+            month before current date and time.
+        :type meeting_start_time_from: Union[str, datetime]
+        :param meeting_start_time_to: Meetings start before the specified date and time(exclusive) in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_
+            compliant format. If `meetingStartTimeTo` is not specified, it equals the result of a comparison,
+            `meetingStartTimeFrom` plus one month and the current time, and the result is the earlier of the two; if
+            `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is current date
+            and time minus 1 month.
+        :type meeting_start_time_to: Union[str, datetime]
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they
+            manage and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
+            in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If `joinTimeFrom` is not specified, it equals `joinTimeTo` minus 7 days.
+        :type join_time_from: Union[str, datetime]
+        :param join_time_to: The time participants join a meeting before the specified date and time (exclusive) in any
+            `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If `joinTimeTo` is not specified, it equals `joinTimeFrom` plus 7 days. The
+            interval between `joinTimeFrom` and `joinTimeTo` must be within 90 days.
+        :type join_time_to: Union[str, datetime]
+        :return: Generator yielding :class:`Participant` instances
+        """
+        ...
+
+
+    def query_meeting_participants_with_email(self, meeting_id: str, meeting_start_time_from: Union[str,
+                                              datetime] = None, meeting_start_time_to: Union[str, datetime] = None,
+                                              host_email: str = None, emails: list[str] = None,
+                                              join_time_from: Union[str, datetime] = None, join_time_to: Union[str,
+                                              datetime] = None) -> list[Participant]:
+        """
+        Query Meeting Participants with Email
+
+        Query participants in a live meeting, or after the meeting, using participant's email. The `meetingId`
+        parameter is the unique identifier for the meeting and is required.
+        
+        The authenticated user calling this API must either have an Administrator role with the
+        `meeting:admin_participants_read` scope, or be the meeting host.
+        
+        * If the `meetingId` value specified is for a meeting series, the operation returns participants' details for
+        the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo`
+        value are specified, the operation returns participants' details for the last instance in the meeting series
+        in the time range.
+        
+        * If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns
+        participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the
+        `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in
+        the scheduled meeting in the time range.
+        
+        * If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation
+        returns participants' details for that meeting instance.
+        
+        * The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an
+        occurrence ID.
+        
+        #### Request Header
+        
+        * `timezone`: Time zone for time stamps in the response body, defined in conformance with the
+        `IANA time zone database
+        <https://www.iana.org/time-zones>`_.
+
+        :param meeting_id: The unique identifier for the meeting.
+        :type meeting_id: str
+        :param meeting_start_time_from: Meetings start from the specified date and time(exclusive) in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_
+            compliant format. If `meetingStartTimeFrom` is not specified, it equals `meetingStartTimeTo` minus 1
+            month; if `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is 1
+            month before current date and time.
+        :type meeting_start_time_from: Union[str, datetime]
+        :param meeting_start_time_to: Meetings start before the specified date and time(exclusive) in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_
+            compliant format. If `meetingStartTimeTo` is not specified, it equals the result of a comparison,
+            `meetingStartTimeFrom` plus one month and the current time, and the result is the earlier of the two; if
+            `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is current date
+            and time minus 1 month.
+        :type meeting_start_time_to: Union[str, datetime]
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they
+            manage and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :param emails: Participants email list
+        :type emails: list[str]
+        :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
+            in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If `joinTimeFrom` is not specified, it equals `joinTimeTo` minus 7 days.
+        :type join_time_from: Union[str, datetime]
+        :param join_time_to: The time participants join a meeting before the specified date and time (exclusive) in any
+            `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If `joinTimeTo` is not specified, it equals `joinTimeFrom` plus 7 days. The
+            interval between `joinTimeFrom` and `joinTimeTo` must be within 90 days.
+        :type join_time_to: Union[str, datetime]
+        :rtype: list[Participant]
+        """
+        ...
+
+
+    def get_meeting_participant_details(self, participant_id: str, host_email: str = None) -> Participant:
+        """
+        Get Meeting Participant Details
+
+        Get a meeting participant details of a live or post meeting. The `participantId` is required to identify the
+        meeting and the participant.
+        
+        The authenticated user calling this API must either have an Administrator role with the
+        `meeting:admin_participants_read` scope, or be the meeting host.
+
+        :param participant_id: The unique identifier for the meeting and the participant.
+        :type participant_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they
+            manage and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :rtype: :class:`Participant`
+        """
+        ...
+
+
+    def update_a_participant(self, participant_id: str, muted: str = None, admit: str = None,
+                             expel: str = None) -> InProgressParticipant:
+        """
+        Update a Participant
+
+        To mute, un-mute, expel, or admit a participant in a live meeting. The `participantId` is required to identify
+        the meeting and the participant.
+        
+        Notes:
+        
+        * The owner of the OAuth token calling this API needs to be the meeting host or co-host.
+        
+        * The `expel` attribute always takes precedence over `admit` and `muted`. The request can have all `expel`,
+        `admit` and `muted` or any of them.
+        
+        <div><Callout type="warning">There is an inconsistent behavior in Webex Meetings App when all active meeting
+        participants join using Webex Meetings App and the host attempts to change meeting participant status using
+        this API. Requests to mute, un-mute, admit, or expel a meeting participant return a successful response and
+        update the state in the API, but the changes will not be applied to the Webex Meetings App participants. The
+        inconsistent behavior in Webex Meetings App will be corrected in a future release.
+        **Workaround**: `Enable closed captions
+        <https://help.webex.com/en-us/article/WBX47352/How-Do-I-Enable-Closed-Captions?>`_ or enable the `Webex Assistant
+
+        :param participant_id: The unique identifier for the meeting and the participant.
+        :type participant_id: str
+        :param muted: The value is true or false, and means to mute or unmute the audio of a participant.
+        :type muted: str
+        :param admit: The value can be true or false. The value of true is to admit a participant to the meeting if the
+            participant is in the lobby, No-Op if the participant is not in the lobby or when the value is set to
+            false.
+        :type admit: str
+        :param expel: The attribute is exclusive and its value can be true or false. The value of true means that the
+            participant will be expelled from the meeting, the value of false means No-Op.
+        :type expel: str
+        :rtype: :class:`InProgressParticipant`
+        """
+        ...
+
+
+    def admit_participants(self, items: list[AdmitParticipant]):
+        """
+        Admit Participants
+
+        To admit participants into a live meeting or its breakout sessions in bulk. If `breakoutSessionId` is null for
+        all the requested participants, they are admitted into the main session of the meeting. If `breakoutSessionId`
+        is not null for all the requested participants, they are admitted into the breakout sessions specified by each
+        `breakoutSessionId`. It's not allowed that some requested participants have `breakoutSessionId` and the others
+        haven't.
+        
+        This API limits the maximum size of `items` in the request body to 100.
+        
+        Each `participantId` of `items` in the request body should have the same prefix of `meetingId`.
+
+
+        :type items: list[AdmitParticipant]
+        :rtype: None
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -411,4 +412,207 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
     scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
     their own settings.
     """
+
+    def retrieve_list_of_call_queue_caller_id_information(self, person_id: str) -> list[CallQueueObject]:
+        """
+        Retrieve List of Call Queue Caller ID information
+
+        Retrieve the list of the person's available call queues and the associated Caller ID information.
+        
+        If the Agent is to enable `queueCallerIdEnabled`, they must choose which queue to use as the source for
+        outgoing Caller ID.  This API returns a list of Call Queues from which the person must select.  If this
+        setting is disabled or the Agent does not belong to any queue, this list will be empty.
+        
+        This API requires a full admin or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :rtype: list[CallQueueObject]
+        """
+        ...
+
+
+    def retrieve_a_call_queue_agent_s_caller_id_information(self, person_id: str) -> AgentCallQueueId:
+        """
+        Retrieve a Call Queue Agent's Caller ID information
+
+        Retrieve a call queue agent's Caller ID information.
+        
+        Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone
+        number or their own configured Caller ID. This API fetches the configured Caller ID for the agent in the
+        system.
+        
+        This API requires a full admin or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :rtype: :class:`AgentCallQueueId`
+        """
+        ...
+
+
+    def retrieve_a_person_s_monitoring_settings(self, person_id: str, org_id: str = None) -> MonitoringSettings:
+        """
+        Retrieve a person's Monitoring Settings
+
+        Retrieves the monitoring settings of the person, which shows specified people, places, virtual lines or call
+        park extenions that are being monitored.
+        Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
+        parked on that extension.
+        
+        This API requires a full, user, or read-only administrator auth token with a scope of
+        `spark-admin:people_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`MonitoringSettings`
+        """
+        ...
+
+
+    def get_a_list_of_phone_numbers_for_a_person(self, person_id: str, org_id: str = None) -> GetNumbers:
+        """
+        Get a List of Phone Numbers for a Person
+
+        Get a person's phone numbers including alternate numbers.
+        
+        A person can have one or more phone numbers and/or extensions via which they can be called.
+        
+        This API requires a full or user administrator auth token with the `spark-admin:people_read` scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`GetNumbers`
+        """
+        ...
+
+
+    def get_a_person_s_privacy_settings(self, person_id: str, org_id: str = None) -> PrivacyGet:
+        """
+        Get a person's Privacy Settings
+
+        Get a person's privacy settings for the specified person ID.
+        
+        The privacy feature enables the person's line to be monitored by others and determine if they can be reached by
+        Auto Attendant services.
+        
+        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`PrivacyGet`
+        """
+        ...
+
+
+    def read_push_to_talk_settings_for_a_person(self, person_id: str, org_id: str = None) -> PushToTalkInfo:
+        """
+        Read Push-to-Talk Settings for a Person
+
+        Retrieve a person's Push-to-Talk settings.
+        
+        Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
+        different parts of your organization.
+        
+        This API requires a full, user, or read-only administrator auth token with a scope of
+        `spark-admin:people_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`PushToTalkInfo`
+        """
+        ...
+
+
+    def read_receptionist_client_settings_for_a_person(self, person_id: str, org_id: str = None) -> ReceptionInfo:
+        """
+        Read Receptionist Client Settings for a Person
+
+        Retrieve a person's Receptionist Client settings.
+        
+        To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as
+        telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
+        
+        This API requires a full, user, or read-only administrator auth token with a scope of
+        `spark-admin:people_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`ReceptionInfo`
+        """
+        ...
+
+
+    def search_shared_line_appearance_members(self, person_id: str, application_id: str, max_: str = None,
+                                              start: str = None, location: str = None, name: str = None,
+                                              number: str = None, order: str = None, extension: Union[str,
+                                              datetime] = None) -> list[AvailableSharedLineMemberItem]:
+        """
+        Search Shared-Line Appearance Members
+
+        Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+        
+        This API requires a full or user administrator auth token with the `spark-admin:people_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :param max_: Number of records per page.
+        :type max_: str
+        :param start: Page number.
+        :type start: str
+        :param location: Location ID for the user.
+        :type location: str
+        :param name: Search for users with names that match the query.
+        :type name: str
+        :param number: Search for users with numbers that match the query.
+        :type number: str
+        :param order: Sort by first name (`fname`) or last name (`lname`).
+        :type order: str
+        :param extension: Search for users with extensions that match the query.
+        :type extension: Union[str, datetime]
+        :rtype: list[AvailableSharedLineMemberItem]
+        """
+        ...
+
+
+    def get_shared_line_appearance_members(self, person_id: str, application_id: str) -> GetSharedLineMemberList:
+        """
+        Get Shared-Line Appearance Members
+
+        Get primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.
+        
+        This API requires a full or user administrator auth token with the `spark-admin:people_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :rtype: :class:`GetSharedLineMemberList`
+        """
+        ...
+
     ...

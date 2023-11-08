@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -215,4 +216,135 @@ class MeetingsSummaryReportApi(ApiChild, base='meetingReports'):
     Refer to the `Meetings API Scopes` section of `Meetings Overview
     <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
     """
+
+    def list_meeting_usage_reports(self, site_url: str, service_type: str = None, from_: Union[str, datetime] = None,
+                                   to_: Union[str, datetime] = None, max_: int = None,
+                                   **params) -> Generator[MeetingUsageReportObject, None, None]:
+        """
+        List Meeting Usage Reports
+
+        List meeting usage reports of all the users on the specified site by an admin. You can specify a date range and
+        the maximum number of meeting usage reports to return.
+        
+        The list returned is sorted in descending order by the date and time the meetings were started.
+        
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        * `siteUrl` is required, and the meeting usage reports of the specified site are listed. All available Webex
+        sites can be retrieved by the `Get Site List
+        <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        
+        #### Request Header
+        
+        * `timezone`: `Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        defined.
+
+        :param site_url: URL of the Webex site which the API lists meeting usage reports from. All available Webex
+            sites can be retrieved by the `Get Site List
+            <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        :type site_url: str
+        :param service_type: Meeting usage report's service-type. If `serviceType` is specified, the API filters
+            meeting usage reports by service-type. If `serviceType` is not specified, the API returns meeting usage
+            reports by `MeetingCenter` by default. Valid values:
+        
+        + `MeetingCenter`
+        
+        + `EventCenter`
+        
+        + `SupportCenter`
+        
+        + `TrainingCenter`
+        :type service_type: str
+        :param from_: Starting date and time for meeting usage reports to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`. The interval between `to` and `from` cannot exceed 30 days and `from` cannot
+            be earlier than 90 days ago.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time for meeting usage reports to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `to`
+            cannot be before `from`. The interval between `to` and `from` cannot exceed 30 days.
+        :type to_: Union[str, datetime]
+        :param max_: Maximum number of meetings to include in the meetings usage report in a single page. `max` must be
+            greater than 0 and equal to or less than `1000`.
+        :type max_: int
+        :return: Generator yielding :class:`MeetingUsageReportObject` instances
+        """
+        ...
+
+
+    def list_meeting_attendee_reports(self, site_url: str, meeting_id: str = None, meeting_number: str = None,
+                                      meeting_title: str = None, from_: Union[str, datetime] = None, to_: Union[str,
+                                      datetime] = None, max_: int = None,
+                                      **params) -> Generator[MeetingAttendeeReportObject, None, None]:
+        """
+        List Meeting Attendee Reports
+
+        Lists of meeting attendee reports by a date range, the maximum number of meeting attendee reports, a meeting
+        ID, a meeting number or a meeting title.
+        
+        If the requesting user is an admin, the API returns meeting attendee reports of the meetings hosted by all the
+        users on the specified site filtered by meeting ID, meeting number or meeting title.
+        
+        If it's a normal meeting host, the API returns meeting attendee reports of the meetings hosted by the user
+        himself on the specified site filtered by meeting ID, meeting number or meeting title.
+        
+        The list returned is grouped by meeting instances. Both the groups and items of each group are sorted in
+        descending order of `joinedTime`. For example, if `meetingId` is specified and it's a meeting series ID, the
+        returned list is grouped by meeting instances of that series. The groups are sorted in descending order of
+        `joinedTime`, and within each group the items are also sorted in descending order of `joinedTime`. Please
+        refer to `Meetings Overview
+        <https://developer.webex.com/docs/meetings>`_ for details of meeting series, scheduled meeting and meeting instance.
+        
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        * `siteUrl` is required, and the meeting attendee reports of the specified site are listed. All available Webex
+        sites can be retrieved by the `Get Site List
+        <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        
+        * `meetingId`, `meetingNumber` and `meetingTitle` are optional parameters to query the meeting attendee
+        reports, but at least one of them should be specified. If more than one parameter in the sequence of
+        `meetingId`, `meetingNumber`, and `meetingTitle` are specified, the first one in the sequence is used.
+        Currently, only ended meeting instance IDs and meeting series IDs are supported for `meetingId`. IDs of
+        scheduled meetings or personal room meetings are not supported.
+        
+        #### Request Header
+        
+        * `timezone`: `Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        defined.
+
+        :param site_url: URL of the Webex site which the API lists meeting attendee reports from. All available Webex
+            sites can be retrieved by the `Get Site List
+            <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        :type site_url: str
+        :param meeting_id: Meeting ID for the meeting attendee reports to return. If specified, return meeting attendee
+            reports of the specified meeting; otherwise, return meeting attendee reports of all meetings. Currently,
+            only ended meeting instance IDs are supported. IDs of meeting series, scheduled meetings or personal room
+            meetings are not supported.
+        :type meeting_id: str
+        :param meeting_number: Meeting number for the meeting attendee reports to return. If specified, return meeting
+            attendee reports of the specified meeting; otherwise, return meeting attendee reports of all meetings.
+        :type meeting_number: str
+        :param meeting_title: Meeting title for the meeting attendee reports to return. If specified, return meeting
+            attendee reports of the specified meeting; otherwise, return meeting attendee reports of all meetings.
+        :type meeting_title: str
+        :param from_: Starting date and time for the meeting attendee reports to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant
+            format. `from` cannot be after `to`. The interval between `to` and `from` cannot exceed 30 days and `from`
+            cannot be earlier than 90 days ago.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time for the meeting attendee reports to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`. The interval between `to` and `from` cannot exceed 30 days.
+        :type to_: Union[str, datetime]
+        :param max_: Maximum number of meeting attendees to include in the meeting attendee report in a single page.
+            `max` must be greater than 0 and equal to or less than `1000`.
+        :type max_: int
+        :return: Generator yielding :class:`MeetingAttendeeReportObject` instances
+        """
+        ...
+
     ...

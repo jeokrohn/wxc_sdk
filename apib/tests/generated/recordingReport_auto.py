@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -387,8 +388,9 @@ class GetRecordingAuditReportDetailsResponse(ApiModel):
 
 
 class ListMeetingArchiveSummariesResponse(ApiModel):
-    #: An array of  meeting archive summaries objects.
-    items: Optional [list[RecordingAchriveSummaryObject]] = None
+    #: An array of meeting archive summaries objects.
+    items: Optional[list[RecordingAchriveSummaryObject]] = None
+
 
 class RecordingReportApi(ApiChild, base='recordingReport'):
     """
@@ -399,4 +401,157 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
     Refer to the `Meetings API Scopes` section of `Meetings Overview
     <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
     """
+
+    def list_of_recording_audit_report_summaries(self, max_: int = None, from_: Union[str, datetime] = None,
+                                                 to_: Union[str, datetime] = None, host_email: str = None,
+                                                 site_url: str = None,
+                                                 **params) -> Generator[RecordingReportSummaryObject, None, None]:
+        """
+        List of Recording Audit Report Summaries
+
+        Lists of recording audit report summaries. You can specify a date range and the maximum number of recording
+        audit report summaries to return.
+        
+        Only recording audit report summaries of meetings hosted by or shared with the authenticated user will be
+        listed.
+        
+        The list returned is sorted in descending order by the date and time that the recordings were created.
+        
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        * If `siteUrl` is specified, the recording audit report summaries of the specified site will be listed;
+        otherwise, recording audit report summaries of the user's preferred site will be listed. All available Webex
+        sites and the preferred site of the user can be retrieved by the `Get Site List` API.
+        
+        #### Request Header
+        
+        * `timezone`: `Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        not defined.
+
+        :param max_: Maximum number of recording audit report summaries to return in a single page. `max` must be equal
+            to or greater than `1` and equal to or less than `100`.
+        :type max_: int
+        :param from_: Starting date and time (inclusive) for recording audit report summaries to return, in any
+            `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot be after `to`. Please note that the interval between `to` and
+            `from` cannot exceed 90 days and the interval between the current time and `from` cannot exceed 365 days.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for recording audit report summaries to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_
+            compliant format. `to` cannot be before `from`. Please note that the interval between `to` and `from`
+            cannot exceed 90 days and the interval between the current time and `from` cannot exceed 365 days.
+        :type to_: Union[str, datetime]
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
+            site they manage and the API will return recording audit report summaries of that user.
+        :type host_email: str
+        :param site_url: URL of the Webex site which the API lists recording audit report summaries from. If not
+            specified, the API lists summary audit report for recordings from the user's preferred site. All available
+            Webex sites and the preferred site of the user can be retrieved by `Get Site List` API.
+        :type site_url: str
+        :return: Generator yielding :class:`RecordingReportSummaryObject` instances
+        """
+        ...
+
+
+    def get_recording_audit_report_details(self, recording_id: str, host_email: str = None, max_: int = None,
+                                           **params) -> Generator[RecordingReportObject, None, None]:
+        """
+        Get Recording Audit Report Details
+
+        Retrieves details for a recording audit report with a specified recording ID.
+        
+        Only recording audit report details of meetings hosted by or shared with the authenticated user may be
+        retrieved.
+        
+        #### Request Header
+        
+        * `timezone`: `Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        not defined.
+
+        :param recording_id: A unique identifier for the recording.
+        :type recording_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
+            site they manage and the API will return recording details of that user.
+        :type host_email: str
+        :param max_: Maximum number of recording audit report details to return in a single page. `max` must be equal
+            to or greater than `1` and equal to or less than `100`.
+        :type max_: int
+        :return: Generator yielding :class:`RecordingReportObject` instances
+        """
+        ...
+
+
+    def list_meeting_archive_summaries(self, max_: int = None, from_: Union[str, datetime] = None, to_: Union[str,
+                                       datetime] = None, site_url: str = None,
+                                       **params) -> Generator[RecordingAchriveSummaryObject, None, None]:
+        """
+        List Meeting Archive Summaries
+
+        Lists of meeting archive summaries. You can specify a date range and the maximum number of meeting archive
+        summaries to return.
+        
+        Meeting archive summaries are only available to full administrators, not even the meeting host.
+        
+        The list returned is sorted in descending order by the date and time that the archives were created.
+        
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        * If `siteUrl` is specified, the meeting archive summaries of the specified site will be listed; otherwise,
+        meeting archive summaries of the user's preferred site will be listed. All available Webex sites and the
+        preferred site of the user can be retrieved by the `Get Site List` API.
+        
+        #### Request Header
+        
+        * `timezone`: `Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        not defined.
+
+        :param max_: Maximum number of meeting archive summaries to return in a single page. `max` must be equal to or
+            greater than `1` and equal to or less than `100`.
+        :type max_: int
+        :param from_: Starting date and time (inclusive) for meeting archive summaries to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_
+            compliant format. `from` cannot be after `to`. Please note that the interval between `to` and `from`
+            cannot exceed 30 days.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for meeting archive summaries to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant
+            format. `to` cannot be before `from`. Please note that the interval between `to` and `from` cannot exceed
+            30 days.
+        :type to_: Union[str, datetime]
+        :param site_url: URL of the Webex site which the API lists meeting archive summaries from. If not specified,
+            the API lists meeting archive summaries for recordings from the user's preferred site. All available Webex
+            sites and the preferred site of the user can be retrieved by `Get Site List` API.
+        :type site_url: str
+        :return: Generator yielding :class:`RecordingAchriveSummaryObject` instances
+        """
+        ...
+
+
+    def get_meeting_archive_details(self, archive_id: str) -> RecordingArchiveReportObject:
+        """
+        Get Meeting Archive Details
+
+        Retrieves details for a meeting archive report with a specified archive ID, which contains recording metadata.
+        
+        Meeting archive details are only available to full administrators, not even the meeting host.
+        
+        #### Request Header
+        
+        * `timezone`: `Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        not defined.
+
+        :param archive_id: A unique identifier for the meeting archive summary.
+        :type archive_id: str
+        :rtype: :class:`RecordingArchiveReportObject`
+        """
+        ...
+
     ...

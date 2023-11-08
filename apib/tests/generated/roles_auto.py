@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -31,4 +32,30 @@ class RolesApi(ApiChild, base='roles'):
     A persona for an authenticated user, corresponding to a set of privileges within an organization. This roles
     resource can be accessed only by an admin and shows only roles relevant to an admin.
     """
+
+    def list_roles(self) -> list[Role]:
+        """
+        List Roles
+
+        List all roles.
+
+        :rtype: list[Role]
+        """
+        ...
+
+
+    def get_role_details(self, role_id: str) -> Role:
+        """
+        Get Role Details
+
+        Shows details for a role, by ID.
+        
+        Specify the role ID in the `roleId` parameter in the URI.
+
+        :param role_id: The unique identifier for the role.
+        :type role_id: str
+        :rtype: :class:`Role`
+        """
+        ...
+
     ...

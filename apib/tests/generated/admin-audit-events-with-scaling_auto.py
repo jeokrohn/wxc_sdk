@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -105,4 +106,47 @@ class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
     
     An administrator account with the `audit:events_read` scope is required to use this API.
     """
+
+    def list_admin_audit_events(self, org_id: str, from_: datetime, to_: datetime, actor_id: str = None,
+                                max_: int = None, offset: int = None, event_categories: list[str] = None,
+                                **params) -> Generator[AuditEvent, None, None]:
+        """
+        List Admin Audit Events
+
+        List admin audit events in your organization. Several query parameters are available to filter the response.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        **NOTE**: A maximum of one year of audit events can be returned per request.
+
+        :param org_id: List events in this organization, by ID.
+        :type org_id: str
+        :param from_: List events which occurred after a specific date and time.
+        :type from_: Union[str, datetime]
+        :param to_: List events which occurred before a specific date and time.
+        :type to_: Union[str, datetime]
+        :param actor_id: List events performed by this person, by ID.
+        :type actor_id: str
+        :param max_: Limit the maximum number of events in the response. The maximum value is `200`.
+        :type max_: int
+        :param offset: Offset from the first result that you want to fetch.
+        :type offset: int
+        :param event_categories: List events, by event categories.
+        :type event_categories: list[str]
+        :return: Generator yielding :class:`AuditEvent` instances
+        """
+        ...
+
+
+    def list_admin_audit_event_categories(self) -> list[str]:
+        """
+        List Admin Audit Event Categories
+
+        Get the list of all admin event categories.
+
+        :rtype: list[str]
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -64,4 +65,101 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
     admin must grant the spark-admin:organizations-read scope for read operations and spark-admin:organizations-write
     scope for write operations.
     """
+
+    def get_all_customers_managed_by_a_partner_admin(self, managed_by: str) -> list[IdentityManagedOrg]:
+        """
+        Get all customers managed by a partner admin
+
+        Get all customers managed by given partner admin, in the `managedBy` request parameter.
+        
+        This API can be used by partner full admin and partner readonly admin.
+        
+        Specify the `personId` in the `managedBy` parameter in the URI.
+
+        :param managed_by: List customer orgs associated with this person ID.
+        :type managed_by: str
+        :rtype: list[IdentityManagedOrg]
+        """
+        ...
+
+
+    def get_all_partner_admins_assigned_to_a_customer(self, org_id: str) -> list[PartnerAdminUser]:
+        """
+        Get all partner admins assigned to a customer
+
+        For a given customer, get all the partner admins with their role details.
+        
+        This API can be used by partner full admin.
+        
+        Specify the `orgId` in the path parameter.
+
+        :param org_id: List partner admins associated with this customer org ID.
+        :type org_id: str
+        :rtype: list[PartnerAdminUser]
+        """
+        ...
+
+
+    def assign_partner_admin_to_a_customer(self, org_id: str, person_id: str):
+        """
+        Assign partner admin to a customer
+
+        Assign a specific partner admin to a customer organization. The partner admin is a user that has the partner
+        administrator role.
+        Other partner roles, such as partner full administrator are not applicable for this API, since this role
+        manages all customer organizations.
+        
+        This API can be used by partner full admin.
+        
+        Specify the `orgId` and the `personId` in the path param.
+
+        :param org_id: The ID of the customer organization.
+        :type org_id: str
+        :param person_id: User ID of the partner admin in the partners org.
+        :type person_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def unassign_partner_admin_from_a_customer(self, org_id: str, person_id: str):
+        """
+        Unassign partner admin from a customer
+
+        Unassign a specific partner admin from a customer organization. The partner admin is a user that has the
+        partner administrator role.
+        Unassigning a customer organization from a partner admin does not remove the role from the user.
+        
+        This API can be used by partner full admin.
+        
+        Specify the `orgId` and the `personId` in the path param.
+
+        :param org_id: The ID of the customer organization.
+        :type org_id: str
+        :param person_id: User ID of the partner admin in the partners org.
+        :type person_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def revoke_all_partner_admin_roles_for_a_given_person_id(self, person_id: str):
+        """
+        Revoke all partner admin roles for a given person ID
+
+        Revoke all partner administrator roles from a user, thereby revoking access to Partner Hub and all managed
+        customer organizations.
+        This action does not grant or revoke Control Hub administrator roles (e.g. full administrator, user and device
+        administrator, etc.).
+        
+        This API can be used by partner full admin.
+        
+        Specify the `personId` in the path param.
+
+        :param person_id: ID of the user whose partner roles needs to be revoked.
+        :type person_id: str
+        :rtype: None
+        """
+        ...
+
     ...

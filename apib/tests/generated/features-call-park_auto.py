@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -276,4 +277,405 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_call_parks(self, location_id: str, org_id: str = None, max_: int = None, start: int = None,
+                                    order: str = None, name: str = None,
+                                    **params) -> Generator[ListCallParkObject, None, None]:
+        """
+        Read the List of Call Parks
+
+        List all Call Parks for the organization.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+        
+        **NOTE**: The Call Park ID will change upon modification of the Call Park name.
+
+        :param location_id: Return the list of call parks for this location.
+        :type location_id: str
+        :param org_id: List call parks for this organization.
+        :type org_id: str
+        :param max_: Limit the number of call parks returned to this maximum count. Default is 2000.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching call parks. Default is 0.
+        :type start: int
+        :param order: Sort the list of call parks by name, either ASC or DSC. Default is ASC.
+        :type order: str
+        :param name: Return the list of call parks that contains the given name. The maximum length is 80.
+        :type name: str
+        :return: Generator yielding :class:`ListCallParkObject` instances
+        """
+        ...
+
+
+    def create_a_call_park(self, location_id: str, name: str, recall: PutRecallHuntGroupObject, agents: list[str],
+                           org_id: str = None) -> str:
+        """
+        Create a Call Park
+
+        Create new Call Parks for the given location.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Creating a call park requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Park ID will change upon modification of the Call Park name.
+
+        :param location_id: Create the call park for this location.
+        :type location_id: str
+        :param name: Unique name for the call park. The maximum length is 80.
+        :type name: str
+        :param recall: Recall options that are added to the call park.
+        :type recall: PutRecallHuntGroupObject
+        :param agents: Array of ID strings of people, workspaces and virtual lines that are added to the call park.
+        :type agents: list[str]
+        :param org_id: Create the call park for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_call_park(self, location_id: str, call_park_id: str, org_id: str = None):
+        """
+        Delete a Call Park
+
+        Delete the designated Call Park.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Deleting a call park requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Park ID will change upon modification of the Call Park name.
+
+        :param location_id: Location from which to delete a call park.
+        :type location_id: str
+        :param call_park_id: Delete the call park with the matching ID.
+        :type call_park_id: str
+        :param org_id: Delete the call park from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_call_park(self, location_id: str, call_park_id: str,
+                                    org_id: str = None) -> GetCallParkObject:
+        """
+        Get Details for a Call Park
+
+        Retrieve Call Park details.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Retrieving call park details requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+        
+        **NOTE**: The Call Park ID will change upon modification of the Call Park name.
+
+        :param location_id: Retrieve settings for a call park in this location.
+        :type location_id: str
+        :param call_park_id: Retrieve settings for a call park with the matching ID.
+        :type call_park_id: str
+        :param org_id: Retrieve call park settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallParkObject`
+        """
+        ...
+
+
+    def update_a_call_park(self, location_id: str, call_park_id: str, name: str, recall: PutRecallHuntGroupObject,
+                           agents: list[str], org_id: str = None) -> str:
+        """
+        Update a Call Park
+
+        Update the designated Call Park.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Updating a call park requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Park ID will change upon modification of the Call Park name.
+
+        :param location_id: Location in which this call park exists.
+        :type location_id: str
+        :param call_park_id: Update settings for a call park with the matching ID.
+        :type call_park_id: str
+        :param name: Unique name for the call park. The maximum length is 80.
+        :type name: str
+        :param recall: Recall options that are added to call park.
+        :type recall: PutRecallHuntGroupObject
+        :param agents: Array of ID strings of people, workspaces and virtual lines that are added to call park.
+        :type agents: list[str]
+        :param org_id: Update call park settings from this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_available_agents_from_call_parks(self, location_id: str, org_id: str = None, call_park_name: str = None,
+                                             max_: int = None, start: int = None, name: str = None,
+                                             phone_number: str = None, order: str = None,
+                                             **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
+        """
+        Get available agents from Call Parks
+
+        Retrieve available agents from call parks for a given location.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Retrieving available agents from call parks requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the available agents for this location.
+        :type location_id: str
+        :param org_id: Return the available agents for this organization.
+        :type org_id: str
+        :param call_park_name: Only return available agents from call parks with the matching name.
+        :type call_park_name: str
+        :param max_: Limit the number of available agents returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching available agents.
+        :type start: int
+        :param name: Only return available agents with the matching name.
+        :type name: str
+        :param phone_number: Only return available agents with the matching primary number.
+        :type phone_number: str
+        :param order: Order the available agents according to the designated fields. Up to three vertical bar (|)
+            separated sort order fields may be specified. Available sort fields: fname, lname, number and extension.
+            The maximum supported sort order value is 3.
+        :type order: str
+        :return: Generator yielding :class:`GetPersonPlaceVirtualLineCallParksObject` instances
+        """
+        ...
+
+
+    def get_available_recall_hunt_groups_from_call_parks(self, location_id: str, org_id: str = None, max_: int = None,
+                                                         start: int = None, name: str = None, order: str = None,
+                                                         **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
+        """
+        Get available recall hunt groups from Call Parks
+
+        Retrieve available recall hunt groups from call parks for a given location.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Retrieving available recall hunt groups from call parks requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the available recall hunt groups for this location.
+        :type location_id: str
+        :param org_id: Return the available recall hunt groups for this organization.
+        :type org_id: str
+        :param max_: Limit the number of available recall hunt groups returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching available recall hunt groups.
+        :type start: int
+        :param name: Only return available recall hunt groups with the matching name.
+        :type name: str
+        :param order: Order the available recall hunt groups according to the designated fields. Available sort fields:
+            lname.
+        :type order: str
+        :return: Generator yielding :class:`GetAvailableRecallHuntGroupsObject` instances
+        """
+        ...
+
+
+    def get_call_park_settings(self, location_id: str, org_id: str = None) -> GetCallParkSettingsObject:
+        """
+        Get Call Park Settings
+
+        Retrieve Call Park Settings from call parks for a given location.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Retrieving settings from call parks requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the call park settings for this location.
+        :type location_id: str
+        :param org_id: Return the call park settings for this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallParkSettingsObject`
+        """
+        ...
+
+
+    def update_call_park_settings(self, location_id: str, call_park_recall: PutRecallHuntGroupObject,
+                                  call_park_settings: CallParkSettingsObject, org_id: str = None):
+        """
+        Update Call Park settings
+
+        Update Call Park settings for the designated location.
+        
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        
+        Updating call park settings requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location for which call park settings will be updated.
+        :type location_id: str
+        :param call_park_recall: Recall options that are added to call park.
+        :type call_park_recall: PutRecallHuntGroupObject
+        :param call_park_settings: Setting controlling call park behavior.
+        :type call_park_settings: CallParkSettingsObject
+        :param org_id: Update call park settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def read_the_list_of_call_park_extensions(self, org_id: str = None, max_: int = None, start: int = None,
+                                              extension: Union[str, datetime] = None, name: str = None,
+                                              location_id: str = None, location_name: str = None, order: str = None,
+                                              **params) -> Generator[ListCallParkExtensionObject, None, None]:
+        """
+        Read the List of Call Park Extensions
+
+        List all Call Park Extensions for the organization.
+        
+        The Call Park service, enabled for all users by default, allows a user to park a call against an available
+        user's extension or to a Call Park Extension. Call Park Extensions are extensions defined within the Call Park
+        service for holding parked calls.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List call park extensions for this organization.
+        :type org_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param extension: Only return call park extensions with the matching extension.
+        :type extension: Union[str, datetime]
+        :param name: Only return call park extensions with the matching name.
+        :type name: str
+        :param location_id: Only return call park extensions with matching location ID.
+        :type location_id: str
+        :param location_name: Only return call park extensions with the matching extension.
+        :type location_name: str
+        :param order: Order the available agents according to the designated fields.  Available sort fields:
+            `groupName`, `callParkExtension`, `callParkExtensionName`, `callParkExtensionExternalId`.
+        :type order: str
+        :return: Generator yielding :class:`ListCallParkExtensionObject` instances
+        """
+        ...
+
+
+    def get_details_for_a_call_park_extension(self, location_id: str, call_park_extension_id: str,
+                                              org_id: str = None) -> GetCallParkExtensionObject:
+        """
+        Get Details for a Call Park Extension
+
+        Retrieve Call Park Extension details.
+        
+        The Call Park service, enabled for all users by default, allows a user to park a call against an available
+        user's extension or to a Call Park Extension. Call Park Extensions are extensions defined within the Call Park
+        service for holding parked calls.
+        
+        Retrieving call park extension details requires a full or read-only administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve details for a call park extension in this location.
+        :type location_id: str
+        :param call_park_extension_id: Retrieve details for a call park extension with the matching ID.
+        :type call_park_extension_id: str
+        :param org_id: Retrieve call park extension details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallParkExtensionObject`
+        """
+        ...
+
+
+    def create_a_call_park_extension(self, location_id: str, name: str, extension: str, org_id: str = None) -> str:
+        """
+        Create a Call Park Extension
+
+        Create new Call Park Extensions for the given location.
+        
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        
+        Creating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the call park extension for this location.
+        :type location_id: str
+        :param name: Name for the call park extension. The maximum length is 30.
+        :type name: str
+        :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
+            maximum length is 6.
+        :type extension: str
+        :param org_id: Create the call park extension for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_call_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None):
+        """
+        Delete a Call Park Extension
+
+        Delete the designated Call Park Extension.
+        
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        
+        Deleting a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which to delete a call park extension.
+        :type location_id: str
+        :param call_park_extension_id: Delete the call park extension with the matching ID.
+        :type call_park_extension_id: str
+        :param org_id: Delete the call park extension from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def update_a_call_park_extension(self, location_id: str, call_park_extension_id: str, name: str, extension: str,
+                                     org_id: str = None):
+        """
+        Update a Call Park Extension
+
+        Update the designated Call Park Extension.
+        
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        
+        Updating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this call park extension exists.
+        :type location_id: str
+        :param call_park_extension_id: Update a call park extension with the matching ID.
+        :type call_park_extension_id: str
+        :param name: Name for the call park extension. The maximum length is 30.
+        :type name: str
+        :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
+            maximum length is 6.
+        :type extension: str
+        :param org_id: Update a call park extension from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

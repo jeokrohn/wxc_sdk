@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -52,4 +53,27 @@ class UCMProfileApi(ApiChild, base='telephony/config/callingProfiles'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_uc_manager_profiles(self, org_id: str = None) -> list[GetManagerProfileObject]:
+        """
+        Read the List of UC Manager Profiles
+
+        List all calling UC Manager Profiles for the organization.
+        
+        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex
+        (Unified CM).
+        
+        The UC Manager Profile has an organization-wide default and may be overridden for individual persons, although
+        currently only setting at a user level is supported by Webex APIs.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:people_read` as this API is designed to be used in conjunction with calling behavior at the user
+        level.
+
+        :param org_id: List manager profiles in this organization.
+        :type org_id: str
+        :rtype: list[GetManagerProfileObject]
+        """
+        ...
+
     ...

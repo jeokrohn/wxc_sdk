@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -8,14 +9,14 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['EnterpriseListResponse', 'EnterpriseListResponseBroadworksDirectorySync',
-            'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus',
-            'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors', 'TriggerDirectorySyncResponse',
-            'TriggerDirectorySyncResponseDirectorySyncStatus', 'TriggerUserDirectorySyncResponse',
-            'TriggerUserDirectorySyncResponseStatus', 'TriggerUserDirectorySyncResponseUserResponse']
+__auto__ = ['Enterprise', 'EnterpriseBroadworksDirectorySync', 'EnterpriseBroadworksDirectorySyncDirectorySyncStatus',
+            'EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors', 'EnterpriseListResponse',
+            'TriggerDirectorySyncResponse', 'TriggerDirectorySyncResponseDirectorySyncStatus',
+            'TriggerUserDirectorySyncResponse', 'TriggerUserDirectorySyncResponseStatus',
+            'TriggerUserDirectorySyncResponseUserResponse']
 
 
-class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors(ApiModel):
+class EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors(ApiModel):
     #: An error code that identifies the reason for the error.
     #: example: 6003.0
     error_code: Optional[int] = None
@@ -24,7 +25,7 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors(Api
     description: Optional[str] = None
 
 
-class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus(ApiModel):
+class EnterpriseBroadworksDirectorySyncDirectorySyncStatus(ApiModel):
     #: The start date and time of the last sync.
     #: example: 2021-04-01T14:49:50.309640Z
     last_sync_start_time: Optional[datetime] = None
@@ -68,7 +69,7 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus(ApiModel)
     #: errors that occurred during *directory sync* of the BroadWorks enterprise, *after* the API has been accepted
     #: and 200 OK response returned. Any errors that occur during initial API request validation will be captured
     #: directly in error response with appropriate HTTP status code.
-    errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
+    errors: Optional[list[EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
     #: example: 5.0
     user_contacts_added: Optional[int] = None
@@ -107,15 +108,15 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus(ApiModel)
     total_org_contacts_in_contact_service: Optional[int] = None
 
 
-class EnterpriseListResponseBroadworksDirectorySync(ApiModel):
+class EnterpriseBroadworksDirectorySync(ApiModel):
     #: The toggle to enable/disable directory sync.
     #: example: True
     enable_dir_sync: Optional[bool] = None
     #: Directory sync status.
-    directory_sync_status: Optional[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus] = None
+    directory_sync_status: Optional[EnterpriseBroadworksDirectorySyncDirectorySyncStatus] = None
 
 
-class EnterpriseListResponse(ApiModel):
+class Enterprise(ApiModel):
     #: A unique Cisco identifier for the enterprise.
     #: example: Y2lzY29zcGFyazovL3VzL0VOVEVSUFJJU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh
     id: Optional[str] = None
@@ -129,7 +130,11 @@ class EnterpriseListResponse(ApiModel):
     #: example: Reseller1+acme
     sp_enterprise_id: Optional[str] = None
     #: BroadWorks Directory sync.
-    broadworks_directory_sync: Optional[EnterpriseListResponseBroadworksDirectorySync] = None
+    broadworks_directory_sync: Optional[EnterpriseBroadworksDirectorySync] = None
+
+
+class EnterpriseListResponse(ApiModel):
+    items: Optional[list[Enterprise]] = None
 
 
 class TriggerDirectorySyncResponseDirectorySyncStatus(ApiModel):
@@ -205,4 +210,97 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
     Updating directory sync configuration or trigger directory sync for a Webex for BroadWorks enterprise require an
     administrator auth token with `spark-admin:broadworks_enterprises_write` scope.
     """
+
+    def list_broad_works_enterprises(self, sp_enterprise_id: str = None, starts_with: str = None, max_: int = None,
+                                     **params) -> Generator[Enterprise, None, None]:
+        """
+        List BroadWorks Enterprises
+
+        List the provisioned enterprises for a Service Provider. This API also allows a Service Provider to search for
+        their provisioned enterprises on Webex. A search on enterprises can be performed using either a full or
+        partial enterprise identifier.
+
+        :param sp_enterprise_id: The Service Provider supplied unique identifier for the subscriber's enterprise.
+        :type sp_enterprise_id: str
+        :param starts_with: The starting string of the enterprise identifiers to match against.
+        :type starts_with: str
+        :param max_: Limit the number of enterprises returned in the search, up to 1000.
+        :type max_: int
+        :return: Generator yielding :class:`Enterprise` instances
+        """
+        ...
+
+
+    def update_directory_sync_for_a_broad_works_enterprise(self, id: str,
+                                                           enable_dir_sync: str) -> TriggerDirectorySyncResponse:
+        """
+        Update Directory Sync for a BroadWorks Enterprise
+
+        This API allows a Partner Admin to update enableDirSync for the customer's Broadworks enterprise on Webex.
+        
+        <div>
+        <Callout type='info'>When `enableDirSync` is set to false, an asynchronous cleanup process will be scheduled
+        after configured minutes to perform a graceful clean up, in case the partner admin invokes the
+        `Organization Deletion
+        <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#organization-deletion>`_ immediately. [Get Directory Sync Status for an Enterprise
+        ](https://developer.webex.com/docs/api/v1/broadworks-enterprises/get-directory-sync-status-for-an-enterprise)
+        can be used to get the status of the cleanup progress.
+        </Callout>
+        </div>
+
+        :param id: A unique identifier for the enterprise in question.
+        :type id: str
+        :param enable_dir_sync: The toggle to enable/disable directory sync.
+        :type enable_dir_sync: str
+        :rtype: :class:`TriggerDirectorySyncResponse`
+        """
+        ...
+
+
+    def trigger_directory_sync_for_an_enterprise(self, id: str, sync_status: str) -> TriggerDirectorySyncResponse:
+        """
+        Trigger Directory Sync for an Enterprise
+
+        This API will allow a Partner Admin to trigger a directory sync for the customer's Broadworks enterprise on
+        Webex.
+
+        :param id: A unique identifier for the enterprise in question.
+        :type id: str
+        :param sync_status: At this time, the only option allowed for this attribute is `SYNC_NOW` which will trigger
+            the directory sync for the BroadWorks enterprise.
+        :type sync_status: str
+        :rtype: :class:`TriggerDirectorySyncResponse`
+        """
+        ...
+
+
+    def get_directory_sync_status_for_an_enterprise(self, id: str) -> EnterpriseBroadworksDirectorySync:
+        """
+        Get Directory Sync Status for an Enterprise
+
+        This API will allow a Partner Admin to  get the most recent directory sync status for a customer's Broadworks
+        enterprise on Webex.
+
+        :param id: A unique identifier for the enterprise in question.
+        :type id: str
+        :rtype: :class:`EnterpriseBroadworksDirectorySync`
+        """
+        ...
+
+
+    def trigger_directory_sync_for_a_user(self, id: str, user_id: str = None) -> TriggerUserDirectorySyncResponse:
+        """
+        Trigger Directory Sync for a User
+
+        This API allows a Partner Admin to trigger a directory sync for an external user (real or virtual user) on
+        Broadworks enterprise with Webex.
+
+        :param id: A unique identifier for the enterprise in question.
+        :type id: str
+        :param user_id: The user ID of the Broadworks user to be synced (A non-webex user).
+        :type user_id: str
+        :rtype: :class:`TriggerUserDirectorySyncResponse`
+        """
+        ...
+
     ...

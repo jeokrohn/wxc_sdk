@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -126,4 +127,117 @@ class WebhooksApi(ApiChild, base='webhooks'):
     Long result sets will be split into `pages
     <https://developer.webex.com/docs/basics#pagination>`_.
     """
+
+    def list_webhooks(self, max_: int = None, owned_by: str = None, **params) -> Generator[Webhook, None, None]:
+        """
+        List Webhooks
+
+        List all of your webhooks.
+
+        :param max_: Limit the maximum number of webhooks in the response.
+        :type max_: int
+        :param owned_by: Limit the result list to org wide webhooks. Only allowed value is `org`.
+        :type owned_by: str
+        :return: Generator yielding :class:`Webhook` instances
+        """
+        ...
+
+
+    def create_a_webhook(self, name: str, target_url: str, resource: WebhookResource, event: WebhookEvent,
+                         filter: str = None, secret: str = None, owned_by: str = None) -> Webhook:
+        """
+        Create a Webhook
+
+        Creates a webhook.
+        
+        To learn more about how to create and use webhooks, see The `Webhooks Guide
+        <https://developer.webex.com/docs/api/guides/webhooks>`_.
+
+        :param name: A user-friendly name for the webhook.
+        :type name: str
+        :param target_url: The URL that receives POST requests for each event.
+        :type target_url: str
+        :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource
+            the webhook is for.
+        :type resource: WebhookResource
+        :param event: The event type for the webhook.
+        :type event: WebhookEvent
+        :param filter: The filter that defines the webhook scope. See `Filtering Webhooks
+            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information.
+        :type filter: str
+        :param secret: The secret used to generate payload signature.
+        :type secret: str
+        :param owned_by: Specify `org` when creating an org/admin level webhook. Supported for `meetings`,
+            `recordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`,
+            and `messaging` (for Compliance Officers and messages with file attachments only - see `inline file DLP
+            <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_)
+            resources.
+        :type owned_by: str
+        :rtype: :class:`Webhook`
+        """
+        ...
+
+
+    def get_webhook_details(self, webhook_id: str) -> Webhook:
+        """
+        Get Webhook Details
+
+        Shows details for a webhook, by ID.
+        
+        Specify the webhook ID in the `webhookId` parameter in the URI.
+
+        :param webhook_id: The unique identifier for the webhook.
+        :type webhook_id: str
+        :rtype: :class:`Webhook`
+        """
+        ...
+
+
+    def update_a_webhook(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None,
+                         status: WebhookStatus = None) -> Webhook:
+        """
+        Update a Webhook
+
+        Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was
+        auto deactivated.
+        The fields that can be updated are `name`, `targetURL`, `secret` and `status`. All other fields, if supplied,
+        are ignored.
+        
+        Specify the webhook ID in the `webhookId` parameter in the URI.
+
+        :param webhook_id: The unique identifier for the webhook.
+        :type webhook_id: str
+        :param name: A user-friendly name for the webhook.
+        :type name: str
+        :param target_url: The URL that receives POST requests for each event.
+        :type target_url: str
+        :param secret: The secret used to generate payload signature.
+        :type secret: str
+        :param owned_by: Specify `org` when creating an org/admin level webhook. Supported for `meetings`,
+            `recordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`,
+            and `messaging` (for Compliance Officers and messages with file attachments only - see `inline file DLP
+            <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_)
+            resources.
+        :type owned_by: str
+        :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
+        :type status: WebhookStatus
+        :rtype: :class:`Webhook`
+        """
+        ...
+
+
+    def delete_a_webhook(self, webhook_id: str):
+        """
+        Delete a Webhook
+
+        Deletes a webhook, by ID.
+        
+        Specify the webhook ID in the `webhookId` parameter in the URI.
+
+        :param webhook_id: The unique identifier for the webhook.
+        :type webhook_id: str
+        :rtype: None
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -150,4 +151,240 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def fetch_list_of_announcement_greetings_on_location_and_organization_level(self, org_id: str = None,
+                                                                                location_id: FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId = None,
+                                                                                max_: int = None, start: int = None,
+                                                                                order: str = None,
+                                                                                file_name: str = None,
+                                                                                file_type: str = None,
+                                                                                media_file_type: str = None,
+                                                                                name: str = None,
+                                                                                **params) -> Generator[AnnouncementsListResponse, None, None]:
+        """
+        Fetch list of announcement greetings on location and organization level
+
+        Fetch a list of binary announcement greetings at an organization as well as location level.
+        
+        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Get announcements in this organization.
+        :type org_id: str
+        :param location_id: Return the list of enterprise or Location announcement files. Without this parameter, the
+            Enterprise level announcements are returned.
+        :type location_id: FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Sort the list according to fileName or fileSize. The default sort will be in Ascending order.
+        :type order: str
+        :param file_name: Return the list of announcements with the given fileName.
+        :type file_name: str
+        :param file_type: Return the list of announcement files for this fileType.
+        :type file_type: str
+        :param media_file_type: Return the list of announcement files for this mediaFileType.
+        :type media_file_type: str
+        :param name: Return the list of announcement files for this announcement label.
+        :type name: str
+        :return: Generator yielding :class:`AnnouncementsListResponse` instances
+        """
+        ...
+
+
+    def upload_a_binary_announcement_greeting_at_organization_level(self, org_id: str = None) -> str:
+        """
+        Upload a binary announcement greeting at organization level
+
+        Upload a binary file to the announcement repository at an organization level.
+        
+        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
+        
+        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
+        Content-Type.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write` .
+
+        :param org_id: Create an announcement in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def fetch_repository_usage_for_announcements_for_an_organization(self,
+                                                                     org_id: str = None) -> AnnouncementUsageResponse:
+        """
+        Fetch repository usage for announcements for an organization
+
+        Retrieves repository usage for announcements for an organization.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Get announcement usage in this organization.
+        :type org_id: str
+        :rtype: :class:`AnnouncementUsageResponse`
+        """
+        ...
+
+
+    def delete_an_announcement_greeting_of_the_organization(self, announcement_id: str, org_id: str = None):
+        """
+        Delete an announcement greeting of the organization
+
+        Delete an announcement greeting for an organization.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Delete an announcement in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def fetch_details_of_a_binary_announcement_greeting_at_the_organization_level(self, announcement_id: str,
+                                                                                  org_id: str = None) -> AnnouncementResponse:
+        """
+        Fetch details of a binary announcement greeting at the organization level
+
+        Fetch details of a binary announcement greeting by its ID at an organization level.
+        
+        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Get an announcement in this organization.
+        :type org_id: str
+        :rtype: :class:`AnnouncementResponse`
+        """
+        ...
+
+
+    def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str, org_id: str = None):
+        """
+        Modify a binary announcement greeting at organization level
+
+        Modify an existing announcement greeting at an organization level.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Modify an announcement in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, org_id: str = None) -> str:
+        """
+        Upload a binary announcement greeting at the location level
+
+        Upload a binary file to the announcement repository at a location level.
+        
+        An admin can upload a file at a location level. This file will be uploaded to the announcement repository.
+        
+        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
+        Content-Type.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write` .
+
+        :param location_id: Unique identifier of a location where an announcement is being created.
+        :type location_id: str
+        :param org_id: Create an announcement for location in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def fetch_repository_usage_for_announcements_in_a_location(self, location_id: str,
+                                                               org_id: str = None) -> AnnouncementUsageResponse:
+        """
+        Fetch repository usage for announcements in a location
+
+        Retrieves repository usage for announcements in a location.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier of a location where an announcement is being created.
+        :type location_id: str
+        :param org_id: Get announcement usage for location in this organization.
+        :type org_id: str
+        :rtype: :class:`AnnouncementUsageResponse`
+        """
+        ...
+
+
+    def delete_an_announcement_greeting_in_a_location(self, location_id: str, org_id: str = None):
+        """
+        Delete an announcement greeting in a location
+
+        Delete an announcement greeting in a location.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier of a location where announcement is being created.
+        :type location_id: str
+        :param org_id: Delete an announcement for location in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def fetch_details_of_a_binary_announcement_greeting_at_location_level(self, location_id: str, announcement_id: str,
+                                                                          org_id: str = None) -> AnnouncementResponse:
+        """
+        Fetch details of a binary announcement greeting at location level
+
+        Fetch details of a binary announcement greeting by its ID at a location level.
+        
+        An admin can upload a file at a location level. This file will be uploaded to the announcement repository.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier of a location where an announcement is being created.
+        :type location_id: str
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Fetch an announcement for location in this organization.
+        :type org_id: str
+        :rtype: :class:`AnnouncementResponse`
+        """
+        ...
+
+
+    def modify_a_binary_announcement_greeting_at_location_level(self, location_id: str, announcement_id: str,
+                                                                org_id: str = None):
+        """
+        Modify a binary announcement greeting at location level
+
+        Modify an existing announcement greeting at a location level.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier of a location where an announcement is being created.
+        :type location_id: str
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Modify an announcement for location in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

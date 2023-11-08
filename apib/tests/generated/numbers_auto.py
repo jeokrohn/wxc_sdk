@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -9,11 +10,10 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['AdminBatchStartJobObject', 'CountObject', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse', 'ItemObject', 'JobExecutionStatusObject',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'ItemObject', 'JobExecutionStatusObject',
             'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'MoveNumberValidationError',
-            'Number', 'NumberItem', 'NumberListGetObject', 'NumberListGetObjectLocation', 'NumberListGetObjectOwner',
-            'NumberState', 'NumbersDelete', 'NumbersPost', 'StartJobResponse', 'State', 'Status',
+            'Number', 'NumberItem', 'NumberListGetObject', 'NumberObject', 'NumberObjectLocation',
+            'NumberObjectOwner', 'NumberState', 'NumbersDelete', 'NumbersPost', 'StartJobResponse', 'State', 'Status',
             'StepExecutionStatusesObject', 'ValidateNumbersResponse']
 
 
@@ -197,7 +197,7 @@ class Number(ApiModel):
     detail: Optional[list[str]] = None
 
 
-class NumberListGetObjectLocation(ApiModel):
+class NumberObjectLocation(ApiModel):
     #: ID of location for phone number.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
     id: Optional[str] = None
@@ -206,7 +206,7 @@ class NumberListGetObjectLocation(ApiModel):
     name: Optional[str] = None
 
 
-class NumberListGetObjectOwner(ApiModel):
+class NumberObjectOwner(ApiModel):
     #: ID of the owner to which PSTN Phone number is assigned.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
@@ -221,7 +221,7 @@ class NumberListGetObjectOwner(ApiModel):
     last_name: Optional[str] = None
 
 
-class NumberListGetObject(ApiModel):
+class NumberObject(ApiModel):
     #: A unique identifier for the PSTN phone number.
     #: example: +12056350001
     phone_number: Optional[str] = None
@@ -240,8 +240,13 @@ class NumberListGetObject(ApiModel):
     #: Indicates if a phone number is a toll free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    location: Optional[NumberListGetObjectLocation] = None
-    owner: Optional[NumberListGetObjectOwner] = None
+    location: Optional[NumberObjectLocation] = None
+    owner: Optional[NumberObjectOwner] = None
+
+
+class NumberListGetObject(ApiModel):
+    #: Array of phone numbers.
+    phone_numbers: Optional[list[NumberObject]] = None
 
 
 class NumbersDelete(ApiModel):
@@ -327,11 +332,6 @@ class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):
     voicemail_group = 'VOICEMAIL_GROUP'
 
 
-class GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse(ApiModel):
-    #: Array of phone numbers.
-    phone_numbers: Optional[NumberListGetObject] = None
-
-
 class NumbersApi(ApiChild, base='telephony/config'):
     """
     Numbers
@@ -348,4 +348,362 @@ class NumbersApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def add_phone_numbers_to_a_location(self, location_id: str, phone_numbers: list[str], state: State,
+                                        org_id: str = None):
+        """
+        Add Phone Numbers to a location
+
+        Adds a specified set of phone numbers to a location for an organization.
+        
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+        
+        Adding a phone number to a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        <br/>
+        
+        <div><Callout type="warning">This API is only supported for Local Gateway (LGW) connected locations. It is not
+        supported and should not be used for non-LGW connected locations because backend data issues may
+        occur.</Callout></div>
+
+        :param location_id: LocationId to which numbers should be added.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers that need to be added.
+        :type phone_numbers: list[str]
+        :param state: State of the phone numbers.
+        :type state: State
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def activate_phone_numbers_in_a_location(self, location_id: str, phone_numbers: list[str], org_id: str = None):
+        """
+        Activate Phone Numbers in a location
+
+        Activate the specified set of phone numbers in a location for an organization.
+        
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+        
+        Activating a phone number in a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        <br/>
+        
+        <div><Callout type="warning">This API is only supported for Local Gateway (LGW) connected locations. It is not
+        supported and should not be used for non-LGW connected locations because backend data issues may
+        occur.</Callout></div>
+
+        :param location_id: `LocationId` to which numbers should be added.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers that need to be added.
+        :type phone_numbers: list[str]
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def remove_phone_numbers_from_a_location(self, location_id: str, phone_numbers: list[str], org_id: str = None):
+        """
+        Remove phone numbers from a location
+
+        Remove the specified set of phone numbers from a location for an organization.
+        
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+        
+        Removing a phone number from a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        <br/>
+        
+        <div><Callout type="warning">This API is only supported for Local Gateway (LGW) connected locations. It is not
+        supported and should not be used for non-LGW connected locations because backend data issues may
+        occur.</Callout></div>
+
+        :param location_id: `LocationId` to which numbers should be added.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers that need to be deleted.
+        :type phone_numbers: list[str]
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def validate_phone_numbers_(self, phone_numbers: list[str], org_id: str = None) -> ValidateNumbersResponse:
+        """
+        Validate phone numbers.
+
+        Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
+        response.
+        
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+        
+        Validating a phone number in an organization requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param phone_numbers: List of phone numbers that need to be added.
+        :type phone_numbers: list[str]
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :rtype: :class:`ValidateNumbersResponse`
+        """
+        ...
+
+
+    def get_phone_numbers_for_an_organization_with_given_criterias(self, org_id: str = None, location_id: str = None,
+                                                                   max_: int = None, start: int = None,
+                                                                   phone_number: str = None, available: bool = None,
+                                                                   order: str = None, owner_name: str = None,
+                                                                   owner_id: str = None,
+                                                                   owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType = None,
+                                                                   extension: str = None, number_type: str = None,
+                                                                   phone_number_type: str = None, state: str = None,
+                                                                   details: bool = None,
+                                                                   toll_free_numbers: bool = None,
+                                                                   restricted_non_geo_numbers: bool = None,
+                                                                   **params) -> Generator[NumberObject, None, None]:
+        """
+        Get Phone Numbers for an Organization with Given Criterias
+
+        List all the phone numbers for the given organization along with the status and owner (if any).
+        
+        PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
+        The owner is the person, workspace, or feature to which the number is assigned.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param max_: Limit the number of phone numbers returned to this maximum count. Default is 2000.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching phone numbers. Default is 0.
+        :type start: int
+        :param phone_number: Search for this `phoneNumber`.
+        :type phone_number: str
+        :param available: Search among the available phone numbers. This parameter cannot be used along with
+            `ownerType` parameter when set to `true`.
+        :type available: bool
+        :param order: Sort the list of phone numbers based on the following:`lastName`,`dn`,`extension`. Default sort
+            will be based on number and extension in an ascending order
+        :type order: str
+        :param owner_name: Return the list of phone numbers that is owned by given `ownerName`. Maximum length is 255.
+        :type owner_name: str
+        :param owner_id: Returns only the matched number/extension entries assigned to the feature with specified
+            uuid/broadsoftId.
+        :type owner_id: str
+        :param owner_type: Returns the list of phone numbers that are of given `ownerType`. Possible input values
+        :type owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType
+        :param extension: Returns the list of PSTN phone numbers with the given extension.
+        :type extension: str
+        :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers. This
+            parameter cannot be used along with `available` or `state`.
+        :type number_type: str
+        :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given `phoneNumberType`.
+        :type phone_number_type: str
+        :param state: Returns the list of PSTN phone numbers with matching state.
+        :type state: str
+        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
+            organization.
+        :type details: bool
+        :param toll_free_numbers: Returns the list of toll free phone numbers.
+        :type toll_free_numbers: bool
+        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
+        :type restricted_non_geo_numbers: bool
+        :return: Generator yielding :class:`NumberObject` instances
+        """
+        ...
+
+
+    def list_manage_numbers_jobs(self, org_id: str = None, start: int = None, max_: int = None,
+                                 **params) -> Generator[StartJobResponse, None, None]:
+        """
+        List Manage Numbers Jobs
+
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
+        of its status.
+        
+        The public API only supports initiating jobs which move numbers between locations.
+        
+        Via Control Hub they can initiate both the move and delete, so this listing can show both.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of Manage Number jobs for this organization.
+        :type org_id: str
+        :param start: Start at the zero-based offset in the list of jobs. Default is 0.
+        :type start: int
+        :param max_: Limit the number of jobs returned to this maximum count. Default is 2000.
+        :type max_: int
+        :return: Generator yielding :class:`StartJobResponse` instances
+        """
+        ...
+
+
+    def initiate_move_number_jobs(self, operation: str, target_location_id: str,
+                                  number_list: list[NumberItem]) -> StartJobResponse:
+        """
+        Initiate Move Number Jobs
+
+        Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
+        actions internally, only MOVE is supported publicly.
+        
+        <br/>
+        
+        In order to move a number,
+        
+        <br/>
+        
+        * The number must be unassigned.
+        
+        * Both locations must have the same PSTN Connection Type.
+        
+        * Both locations must have the same PSTN Provider.
+        
+        * Both locations have to be in the same country.
+        
+        <br/>
+        
+        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move from Cisco PSTN to a location with
+        Cloud Connected PSTN.
+        
+        <br/>
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param operation: Indicates the kind of operation to be carried out.
+        :type operation: str
+        :param target_location_id: The target location within organization where the unassigned numbers will be moved
+            from the source location.
+        :type target_location_id: str
+        :param number_list: Indicates the numbers to be moved from source to target locations.
+        :type number_list: list[NumberItem]
+        :rtype: :class:`StartJobResponse`
+        """
+        ...
+
+
+    def get_manage_numbers_job_status(self, job_id: str = None) -> JobIdResponseObject:
+        """
+        Get Manage Numbers Job Status
+
+        Returns the status and other details of the job.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :rtype: :class:`JobIdResponseObject`
+        """
+        ...
+
+
+    def pause_the_manage_numbers_job(self, job_id: str = None, org_id: str = None):
+        """
+        Pause the Manage Numbers Job
+
+        Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Pause the Manage Numbers job for this `jobId`.
+        :type job_id: str
+        :param org_id: Pause the Manage Numbers job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def resume_the_manage_numbers_job(self, job_id: str = None, org_id: str = None):
+        """
+        Resume the Manage Numbers Job
+
+        Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Resume the Manage Numbers job for this `jobId`.
+        :type job_id: str
+        :param org_id: Resume the Manage Numbers job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def abandon_the_manage_numbers_job(self, job_id: str = None, org_id: str = None):
+        """
+        Abandon the Manage Numbers Job
+
+        Abandon the Manage Numbers Job.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Abandon the Manage Numbers job for this `jobId`.
+        :type job_id: str
+        :param org_id: Abandon the Manage Numbers job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def list_manage_numbers_job_errors(self, job_id: str = None, org_id: str = None, start: int = None,
+                                       max_: int = None, **params) -> Generator[ItemObject, None, None]:
+        """
+        List Manage Numbers Job errors
+
+        Lists all error details of Manage Numbers job. This will not list any errors if `exitCode` is `COMPLETED`. If
+        the status is `COMPLETED_WITH_ERRORS` then this lists the cause of failures.
+        
+        List of possible Errors:
+        
+        + BATCH-1017021 - Failed to move because it is an inactive number.
+        
+        + BATCH-1017022 - Failed to move because the source location and target location have different CCP providers.
+        
+        + BATCH-1017023 - Failed because it is not an unassigned number.
+        
+        + BATCH-1017024 - Failed because it is a main number.
+        
+        + BATCH-1017027 - Manage Numbers Move Operation is not supported.
+        
+        + BATCH-1017031 - Hydra request is supported only for single number move job.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve the error details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        :param start: Specifies the error offset from the first result that you want to fetch.
+        :type start: int
+        :param max_: Specifies the maximum number of records that you want to fetch.
+        :type max_: int
+        :return: Generator yielding :class:`ItemObject` instances
+        """
+        ...
+
     ...

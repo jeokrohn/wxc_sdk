@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -237,4 +238,513 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
     `SCIM 2.0 schema
     <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
     """
+
+    def create_a_group(self, org_id: str, schemas: list[str], display_name: str, external_id: str,
+                       members: list[GroupMemberObject],
+                       urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group) -> GetGroupResponse:
+        """
+        Create a group
+
+        Create a new group for a given organization. The group may optionally be created with group members.
+        
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token returned by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_group_admin`
+        
+        <br/>
+        
+        **Usage**:
+        
+        1. The input JSON must conform to one of the following schemas:
+        - `urn:ietf:params:scim:schemas:core:2.0:Group`
+        - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
+        
+        1. Unrecognized schemas (ID/section) are ignored.
+        
+        1. Read-only attributes provided as input values are ignored.
+
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
+        :param schemas: Input JSON schemas.
+        :type schemas: list[str]
+        :param display_name: A human-readable name for the Group.
+        :type display_name: str
+        :param external_id: An identifier for the resource as defined by the provisioning client.
+        :type external_id: str
+        :param members: A list of members of this group.
+        :type members: list[GroupMemberObject]
+        :param urn_scim_schemas_extension_cisco_webexidentity_2_0_group: The Cisco extension of SCIM 2.
+        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group
+        :rtype: :class:`GetGroupResponse`
+        """
+        ...
+
+
+    def get_a_group(self, org_id: str, group_id: str) -> GetGroupResponse:
+        """
+        Get a group
+
+        Retrieve details for a group, by ID.
+        
+        Optionally, members can be retrieved with this request. The maximum number of members returned is 500.
+        
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `identity:people_read`
+        
+        - `Identity:SCIM`
+        
+        - `Identity:SCIM_read`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_group_admin`
+        
+        - `id_readonly_admin`
+        
+        - `id_device_admin`
+
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
+        :param group_id: A unique identifier for the group.
+        :type group_id: str
+        :rtype: :class:`GetGroupResponse`
+        """
+        ...
+
+
+    def search_groups(self, org_id: str, filter: str = None, attributes: str = None, start_index: int = None,
+                      count: int = None, include_members: bool = None, member_type: str = None, sort_by: str = None,
+                      sort_order: str = None) -> SearchGroupResponse:
+        """
+        Search groups
+
+        Retrieve a list of groups in the organization.
+        
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        <br/>
+        
+        **Authorization**
+        
+        An OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `identity:people_read`
+        
+        - `Identity:SCIM`
+        
+        - `Identity:SCIM_read`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_group_admin`
+        
+        - `id_readonly_admin`
+        
+        - `id_device_admin`
+
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
+        :param filter: The url encoded filter. The example content is 'displayName Eq "group1@example.com" or
+            displayName Eq "group2@example.com"'.
+        For more filter patterns, see https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2. If the value is
+        empty, the API returns all groups under the organization.
+        :type filter: str
+        :param attributes: The attributes to return.
+        :type attributes: str
+        :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
+        :type start_index: int
+        :param count: An integer indicating the desired maximum number of query results per page. The default is 10.
+        :type count: int
+        :param include_members: Default "false". If false, no members returned.
+        :type include_members: bool
+        :param member_type: Filter the members by member type. Sample data: `user`, `machine`, `group`.
+        :type member_type: str
+        :param sort_by: A string indicating the attribute whose value be used to order the returned responses. Now we
+            only allow `displayName, id, meta.lastModified` to sort.
+        :type sort_by: str
+        :param sort_order: A string indicating the order in which the `sortBy` parameter is applied. Allowed values are
+            `ascending` and `descending`.
+        :type sort_order: str
+        :rtype: :class:`SearchGroupResponse`
+        """
+        ...
+
+
+    def get_group_members(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
+                          member_type: str = None) -> GroupMemberResponse:
+        """
+        Get Group Members
+
+        Returns the members of a group.
+        
+        - The default maximum number of members returned is 500.
+        
+        - Control parameters are available to page through the members and to control the size of the results.
+        
+        - Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token returned by the Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `identity:people_read`
+        
+        - `Identity:SCIM`
+        
+        - `Identity:SCIM_read`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_group_admin`
+        
+        - `id_readonly_admin`
+        
+        - `id_device_admin`
+
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
+        :param group_id: A unique identifier for the group.
+        :type group_id: str
+        :param start_index: The index to start for group pagination.
+        :type start_index: int
+        :param count: Non-negative integer that specifies the desired number of search results per page. The maximum
+            value for the count is 500.
+        :type count: int
+        :param member_type: Filter the members by member type. Sample data: `user`, `machine`, `group`.
+        :type member_type: str
+        :rtype: :class:`GroupMemberResponse`
+        """
+        ...
+
+
+    def update_a_group_with_put(self, org_id: str, group_id: str, schemas: list[str], display_name: str,
+                                external_id: str, members: list[GroupMemberObject],
+                                urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group) -> GetGroupResponse:
+        """
+        Update a group with PUT
+
+        Replace the contents of the Group.
+        
+        Specify the group ID in the `groupId` parameter in the URI.
+        
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token returned by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_group_admin`
+        
+        <br/>
+        
+        **Usage**:
+        
+        1. The input JSON must conform to one of the following schemas:
+        - `urn:ietf:params:scim:schemas:core:2.0:Group`
+        - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
+        
+        1. Unrecognized schemas (ID/section) are ignored.
+        
+        1. Read-only attributes provided as input values are ignored.
+        
+        1. The group `id` is not changed.
+        
+        1. All attributes are cleaned up if a new value is not provided by the client.
+        
+        1. The values, `meta` and `created` are not changed.
+
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
+        :param group_id: A unique identifier for the group.
+        :type group_id: str
+        :param schemas: Input JSON schemas.
+        :type schemas: list[str]
+        :param display_name: A human-readable name for the group.
+        :type display_name: str
+        :param external_id: An identifier for the resource as defined by the provisioning client.
+        :type external_id: str
+        :param members: A list of members of this group.
+        :type members: list[GroupMemberObject]
+        :param urn_scim_schemas_extension_cisco_webexidentity_2_0_group: The Cisco extension of SCIM 2.
+        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group
+        :rtype: :class:`GetGroupResponse`
+        """
+        ...
+
+
+    def update_a_group_with_patch(self, org_id: str, group_id: str, schemas: list[str],
+                                  operations: list[PatchGroupOperations]) -> GetGroupResponse:
+        """
+        Update a group with PATCH
+
+        Update group attributes with PATCH.
+        
+        Specify the group ID in the `groupId` parameter in the URI.
+        
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token returned by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_group_admin`
+        
+        <br/>
+        
+        **Usage**:
+        
+        1. The input JSON must conform to one of the following schemas:
+        - `urn:ietf:params:scim:schemas:core:2.0:Group`
+        - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
+        
+        1. Unrecognized schemas (ID/section) are ignored.
+        
+        1. Read-only attributes provided as input values are ignored.
+        
+        1. Each operation on an attribute must be compatible with the attribute's mutability.
+        
+        1. Each PATCH operation represents a single action to be applied to the
+        same SCIM resource specified by the request URI. Operations are
+        applied sequentially in the order they appear in the array. Each
+        operation in the sequence is applied to the target resource; the
+        resulting resource becomes the target of the next operation.
+        Evaluation continues until all operations are successfully applied or
+        until an error condition is encountered.
+        
+        <br/>
+        
+        **Add operations**:
+        
+        The `add` operation is used to add a new attribute value to an existing resource. The operation must contain a
+        `value` member whose content specifies the value to be added. The value may be a quoted value, or it may be a
+        JSON object containing the sub-attributes of the complex attribute specified in the operation's `path`. The
+        result of the add operation depends upon the target location indicated by `path` references:
+        
+        <br/>
+        
+        - If omitted, the target location is assumed to be the resource itself. The `value` parameter contains a set of
+        attributes to be added to the resource.
+        
+        - If the target location does not exist, the attribute and value are added.
+        
+        - If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the
+        `value` parameter.
+        
+        - If the target location specifies a multi-valued attribute, a new value is added to the attribute.
+        
+        - If the target location specifies a single-valued attribute, the existing value is replaced.
+        
+        - If the target location specifies an attribute that does not exist (has no value), the attribute is added with
+        the new value.
+        
+        - If the target location exists, the value is replaced.
+        
+        - If the target location already contains the value specified, no changes should be made to the resource.
+        
+        <br/>
+        
+        **Replace operations**:
+        
+        The `replace` operation replaces the value at the target location specified by the `path`. The operation
+        performs the following functions, depending on the target location specified by `path`:
+        
+        <br/>
+        
+        - If the `path` parameter is omitted, the target is assumed to be the resource itself. In this case, the
+        `value` attribute shall contain a list of one or more attributes that are to be replaced.
+        
+        - If the target location is a single-value attribute, the value of the attribute is replaced.
+        
+        - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
+        are replaced.
+        
+        - If the target location path specifies an attribute that does not exist, the service provider shall treat the
+        operation as an "add".
+        
+        - If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the
+        `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.
+        Sub-attributes that are not specified in the `value` parameters are left unchanged.
+        
+        - If the target location is a multi-valued attribute and a value selection ("valuePath") filter is specified
+        that matches one or more values of the multi-valued attribute, then all matching record values will be
+        replaced.
+        
+        - If the target location is a complex multi-valued attribute with a value selection filter ("valuePath") and a
+        specific sub-attribute (e.g., "addresses[type eq "work"].streetAddress"), the matching sub-attribute of all
+        matching records is replaced.
+        
+        - If the target location is a multi-valued attribute for which a value selection filter ("valuePath") has been
+        supplied and no record match was made, the service provider will indicate the failure by returning HTTP status
+        code 400 and a `scimType` error code of `noTarget`.
+        
+        <br/>
+        
+        **Remove operations**:
+        
+        The `remove` operation removes the value at the target location specified by the required attribute `path`. The
+        operation performs the following functions, depending on the target location specified by `path`:
+        
+        <br/>
+        
+        - If `path` is unspecified, the operation fails with HTTP status code 400 and a "scimType" error code of
+        "noTarget".
+        
+        - If the target location is a single-value attribute, the attribute and its associated value is removed, and
+        the attribute will be considered unassigned.
+        
+        - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
+        are removed, and the attribute SHALL be considered unassigned.
+        
+        - If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the
+        values matched by the filter are removed. If no other values remain after the removal of the selected values,
+        the multi-valued attribute will be considered unassigned.
+        
+        - If the target location is a complex multi-valued attribute and a complex filter is specified based on the
+        attribute`s sub-attributes, the matching records are removed. Sub-attributes whose values have been removed
+        will be considered unassigned. If the complex multi-valued attribute has no remaining records, the attribute
+        will be considered unassigned.
+
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
+        :param group_id: A unique identifier for the group.
+        :type group_id: str
+        :param schemas: Input JSON schemas.
+        :type schemas: list[str]
+        :param operations: A list of patch operations.
+        :type operations: list[PatchGroupOperations]
+        :rtype: :class:`GetGroupResponse`
+        """
+        ...
+
+
+    def delete_a_group(self, org_id: str, group_id: str):
+        """
+        Delete a group
+
+        Remove a group from the system.
+        
+        Specify the group ID in the `groupId` parameter in the URI.
+        
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_group_admin`
+
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
+        :param group_id: A unique identifier for the group.
+        :type group_id: str
+        :rtype: None
+        """
+        ...
+
     ...

@@ -98,6 +98,27 @@ class GeneratorTest(ApibTest):
                 continue
             print(f'{apib_key:{apib_key_len}}: {ep.name:{name_len}} -> {ep.body_class_name.split("%")[-1]}')
 
+    def test_read_all_apib_endpoints_with_pagination(self):
+        logging.getLogger().setLevel(logging.INFO)
+        code_gen = self.codegen_with_all_apib()
+        code_gen.cleanup()
+        apib_key_len = max(len(apib_key) for apib_key, _ in code_gen.all_endpoints())
+        name_len = max(len(ep.name) for _, ep in code_gen.all_endpoints())
+        err = None
+        for apib_key, ep in code_gen.all_endpoints():
+            if not (pag:=ep.paginated):
+                continue
+            try:
+                self.assertIsNotNone(ep.result_referenced_class, 'No referenced result class')
+            except AssertionError as e:
+                print(f'{apib_key:{apib_key_len}}: {ep.name:{name_len}} -> !!! {e}')
+                err = err or e
+            print(f'{apib_key:{apib_key_len}}: {ep.name:{name_len}} -> paginated: {pag.name}/{pag.python_type}')
+            if ep.result_referenced_class != ep.result:
+                print(f'  {" " * (apib_key_len + name_len)} -> {ep.result}/{ep.result_referenced_class}')
+        if err:
+            raise err
+
     def test_003_generate_class_sources_with_endpoints(self):
         logging.getLogger().setLevel(logging.INFO)
 

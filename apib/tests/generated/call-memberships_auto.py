@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -108,4 +109,60 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
     For more information about Calls and Call Memberships, see the `Calls
     <https://developer.webex.com/docs/api/guides/calls>`_ guide.
     """
+
+    def list_call_memberships(self, call_status: ListCallMembershipsCallStatus, call_id: str = None,
+                              is_host: ListCallMembershipsIsHost = None, person_id: str = None,
+                              status: CallMembershipStatus = None, from_: Union[str, datetime] = None, to_: Union[str,
+                              datetime] = None, max_: int = None, **params) -> Generator[CallMembership, None, None]:
+        """
+        List Call Memberships
+
+        List call memberships.
+        
+        By default, lists call memberships for all calls in which the authenticated user is an active participant.
+        Viewing all call memberships in your Organization requires an administrator auth token with the
+        `spark-admin:call_memberships_read` scope.
+        
+        Use query parameters to filter the result set. Results are in descending `created` order.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param call_status: Limit results to call memberships for calls with the specified status.
+        :type call_status: ListCallMembershipsCallStatus
+        :param call_id: Limit results to call memberships for a call, by call ID.
+        :type call_id: str
+        :param is_host: Limit results to call memberships for calls hosted by the authenticated user.
+        :type is_host: ListCallMembershipsIsHost
+        :param person_id: Limit results to call memberships belonging to a person, by person ID.
+        :type person_id: str
+        :param status: Limit to call memberships with the specified status.
+        :type status: CallMembershipStatus
+        :param from_: Limit results to call memberships for calls that started from the inclusive start date, in
+            ISO8601 format.
+        :type from_: Union[str, datetime]
+        :param to_: Limit results to call memberships for calls that ended before the exclusive end date, in ISO8601
+            format.
+        :type to_: Union[str, datetime]
+        :param max_: Limit the maximum number of call memberships in the response.
+        :type max_: int
+        :return: Generator yielding :class:`CallMembership` instances
+        """
+        ...
+
+
+    def get_call_membership_details(self, call_membership_id: str) -> CallMembership:
+        """
+        Get Call Membership Details
+
+        Shows details for a call, by call ID.
+        
+        Specify the call ID in the `callId` parameter in the URI.
+
+        :param call_membership_id: The unique identifier for the call membership.
+        :type call_membership_id: str
+        :rtype: :class:`CallMembership`
+        """
+        ...
+
     ...

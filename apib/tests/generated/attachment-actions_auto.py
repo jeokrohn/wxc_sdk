@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -87,4 +88,37 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
     `card
     <https://developer.webex.com/docs/api/guides/cards>`_.
     """
+
+    def create_an_attachment_action(self, type: AttachmentActivityType, message_id: str,
+                                    inputs: SubmitCardActionInputs) -> AttachmentActivity:
+        """
+        Create an Attachment Action
+
+        Create a new attachment action.
+
+        :param type: The type of action to perform.
+        :type type: AttachmentActivityType
+        :param message_id: The ID of the message which contains the attachment.
+        :type message_id: str
+        :param inputs: The attachment action's inputs.
+        :type inputs: SubmitCardActionInputs
+        :rtype: :class:`AttachmentActivity`
+        """
+        ...
+
+
+    def get_attachment_action_details(self, id: str) -> AttachmentActivity:
+        """
+        Get Attachment Action Details
+
+        Shows details for a attachment action, by ID.
+        
+        Specify the attachment action ID in the `id` URI parameter.
+
+        :param id: A unique identifier for the attachment action.
+        :type id: str
+        :rtype: :class:`AttachmentActivity`
+        """
+        ...
+
     ...

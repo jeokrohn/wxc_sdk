@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -137,4 +138,88 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
     Getting the workspace metrics in an organization requires an administrator auth token with the
     `spark-admin:workspace_metrics_read` scope.
     """
+
+    def workspace_metrics(self, workspace_id: str, metric_name: WorkspaceMetricsResponseMetricName,
+                          aggregation: WorkspaceMetricsResponseAggregation = None, from_: Union[str, datetime] = None,
+                          to_: Union[str, datetime] = None, unit: WorkspaceMetricsResponseUnit = None,
+                          sort_by: WorkspaceMetricsResponseSortBy = None) -> WorkspaceMetricsResponse:
+        """
+        Workspace Metrics
+
+        Get metric data for the specified workspace and metric name, optionally aggregated over a specified time
+        period.
+        
+        * The `workspaceId` and `metricName` parameters indicate which workspace to fetch metrics for and what kind of
+        metrics to get.
+        
+        * When executing an aggregated query, the result bucket start times will be truncated to the start of an hour
+        or a day, depending on
+        the aggregation interval. However, the buckets will not contain data from outside the requested time range. For
+        example, when
+        passing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at
+        `2020-10-21T10:00:00.000Z`,
+        but the bucket would only aggregate data timestamped after `10:34:56`.
+        
+        * For aggregation modes `none` and `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`,
+        the maximum
+        time span is 30 days.
+
+        :param workspace_id: ID of the workspace to get metrics for.
+        :type workspace_id: str
+        :param metric_name: The type of data to extract.
+        :type metric_name: WorkspaceMetricsResponseMetricName
+        :param aggregation: Time unit over which to aggregate measurements.
+        :type aggregation: WorkspaceMetricsResponseAggregation
+        :param from_: List only data points after a specific date and time (ISO 8601 timestamp)
+        :type from_: Union[str, datetime]
+        :param to_: List data points before a specific date and time (ISO 8601 timestamp)
+        :type to_: Union[str, datetime]
+        :param unit: Output data unit (only a valid parameter if `metricName` is `temperature`).
+        :type unit: WorkspaceMetricsResponseUnit
+        :param sort_by: Sort results.
+        :type sort_by: WorkspaceMetricsResponseSortBy
+        :rtype: :class:`WorkspaceMetricsResponse`
+        """
+        ...
+
+
+    def workspace_duration_metrics(self, workspace_id: str,
+                                   aggregation: WorkspaceDurationMetricsResponseAggregation = None,
+                                   measurement: WorkspaceDurationMetricsResponseMeasurement = None, from_: Union[str,
+                                   datetime] = None, to_: Union[str,
+                                   datetime] = None) -> WorkspaceDurationMetricsResponse:
+        """
+        Workspace Duration Metrics
+
+        Get metrics for how much time a workspace has been in the state given by the `measurement` parameter.
+        
+        For example, if the measurement is  `timeBooked` then the duration for which the workspace has been booked is
+        returned. The `workspaceId` parameter indicates which workspace to fetch metrics for. If no `measurement` is
+        given, the default value is `timeUsed`.
+        
+        * When executing a query, the result bucket start times will default to the start of an hour or a day,
+        depending on
+        the aggregation interval. However, the buckets will not contain data from outside the requested time range. For
+        example, when
+        passing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at
+        `2020-10-21T10:00:00.000Z`,
+        but the bucket would only aggregate data timestamped after `10:34:56`.
+        
+        * For aggregation mode `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum
+        time span is 30 days.
+
+        :param workspace_id: ID of the workspace to get metrics for.
+        :type workspace_id: str
+        :param aggregation: Unit of time over which to aggregate measurements.
+        :type aggregation: WorkspaceDurationMetricsResponseAggregation
+        :param measurement: The measurement to return duration for.
+        :type measurement: WorkspaceDurationMetricsResponseMeasurement
+        :param from_: Include data points after a specific date and time (ISO 8601 timestamp).
+        :type from_: Union[str, datetime]
+        :param to_: Include data points before a specific date and time (ISO 8601 timestamp).
+        :type to_: Union[str, datetime]
+        :rtype: :class:`WorkspaceDurationMetricsResponse`
+        """
+        ...
+
     ...

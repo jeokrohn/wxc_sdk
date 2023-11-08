@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -115,4 +116,205 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def get_call_recording_settings(self, org_id: str = None) -> GetCallRecordingObject:
+        """
+        Get Call Recording Settings
+
+        Retrieve Call Recording settings for the organization.
+        
+        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        
+        Retrieving call recording settings requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve call recording settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallRecordingObject`
+        """
+        ...
+
+
+    def update_call_recording_settings(self, enabled: bool, org_id: str = None):
+        """
+        Update Call Recording Settings
+
+        Update Call Recording settings for the organization.
+        
+        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        
+        Updating call recording settings requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        **NOTE**: This API is for Cisco partners only.
+
+        :param enabled: Whether or not the call recording is enabled.
+        :type enabled: bool
+        :param org_id: Retrieve call recording settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_call_recording_terms_of_service_settings(self, vendor_id: str,
+                                                     org_id: str = None) -> GetCallRecordingTermsOfServiceObject:
+        """
+        Get Call Recording Terms Of Service Settings
+
+        Retrieve Call Recording Terms Of Service settings for the organization.
+        
+        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        
+        Retrieving call recording terms of service settings requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param vendor_id: Retrieve call recording terms of service details for the given vendor.
+        :type vendor_id: str
+        :param org_id: Retrieve call recording terms of service details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallRecordingTermsOfServiceObject`
+        """
+        ...
+
+
+    def update_call_recording_terms_of_service_settings(self, vendor_id: str, terms_of_service_enabled: bool,
+                                                        org_id: str = None):
+        """
+        Update Call Recording Terms Of Service Settings
+
+        Update Call Recording Terms Of Service settings for the given vendor.
+        
+        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        
+        Updating call recording terms of service settings requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param vendor_id: Update call recording terms of service settings for the given vendor.
+        :type vendor_id: str
+        :param terms_of_service_enabled: Whether or not the call recording terms of service are enabled.
+        :type terms_of_service_enabled: bool
+        :param org_id: Update call recording terms of service settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_the_organization_compliance_announcement_setting(self,
+                                                                         org_id: str = None) -> GetOrgComplianceAnnouncementObject:
+        """
+        Get Details for the organization compliance announcement setting
+
+        Retrieve the organization compliance announcement settings.
+        
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+        
+        Retrieving organization compliance announcement setting requires a full or read-only administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve compliance announcement setting from this organization.
+        :type org_id: str
+        :rtype: :class:`GetOrgComplianceAnnouncementObject`
+        """
+        ...
+
+
+    def update_the_organization_compliance_announcement(self, inbound_pstncalls_enabled: bool,
+                                                        outbound_pstncalls_enabled: bool,
+                                                        outbound_pstncalls_delay_enabled: bool, delay_in_seconds: int,
+                                                        org_id: str = None):
+        """
+        Update the organization compliance announcement
+
+        Update the organization compliance announcement.
+        
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+        
+        Updating the organization compliance announcement requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param inbound_pstncalls_enabled: Flag to indicate whether the Call Recording START/STOP announcement is played
+            to an inbound caller.
+        :type inbound_pstncalls_enabled: bool
+        :param outbound_pstncalls_enabled: Flag to indicate whether the Call Recording START/STOP announcement is
+            played to an outbound caller.
+        :type outbound_pstncalls_enabled: bool
+        :param outbound_pstncalls_delay_enabled: Flag to indicate whether compliance announcement is played after a
+            specified delay in seconds.
+        :type outbound_pstncalls_delay_enabled: bool
+        :param delay_in_seconds: Number of seconds to wait before playing the compliance announcement.
+        :type delay_in_seconds: int
+        :param org_id: Update the compliance announcement setting from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_the_location_compliance_announcement_setting(self, location_id: str,
+                                                                     org_id: str = None) -> GetComplianceAnnouncementObject:
+        """
+        Get Details for the location compliance announcement setting
+
+        Retrieve the location compliance announcement settings.
+        
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+        
+        Retrieving location compliance announcement setting requires a full or read-only administrator auth token with
+        a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve compliance announcement settings for this location.
+        :type location_id: str
+        :param org_id: Retrieve compliance announcement setting from this organization.
+        :type org_id: str
+        :rtype: :class:`GetComplianceAnnouncementObject`
+        """
+        ...
+
+
+    def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool,
+                                                    use_org_settings_enabled: bool, outbound_pstncalls_enabled: bool,
+                                                    outbound_pstncalls_delay_enabled: bool, delay_in_seconds: int,
+                                                    org_id: str = None):
+        """
+        Update the location compliance announcement
+
+        Update the location compliance announcement.
+        
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+        
+        Updating the location compliance announcement requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Update the compliance announcement settings for this location.
+        :type location_id: str
+        :param inbound_pstncalls_enabled: Flag to indicate whether the Call Recording START/STOP announcement is played
+            to an inbound caller.
+        :type inbound_pstncalls_enabled: bool
+        :param use_org_settings_enabled: Flag to indicate whether to use the customer level compliance announcement
+            default settings.
+        :type use_org_settings_enabled: bool
+        :param outbound_pstncalls_enabled: Flag to indicate whether the Call Recording START/STOP announcement is
+            played to an outbound caller.
+        :type outbound_pstncalls_enabled: bool
+        :param outbound_pstncalls_delay_enabled: Flag to indicate whether compliance announcement is played after a
+            specified delay in seconds.
+        :type outbound_pstncalls_delay_enabled: bool
+        :param delay_in_seconds: Number of seconds to wait before playing the compliance announcement.
+        :type delay_in_seconds: int
+        :param org_id: Update the compliance announcement setting from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -228,4 +229,288 @@ class PeopleApi(ApiChild, base='people'):
     Services licenses to people, see the `Managing Hybrid Services
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
+
+    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None,
+                    roles: str = None, calling_data: bool = None, location_id: str = None, max_: int = None,
+                    **params) -> Generator[Person, None, None]:
+        """
+        List People
+
+        List people in your organization. For most users, either the `email` or `displayName` parameter is required.
+        Admin users can omit these fields and list all users in their organization.
+        
+        Response properties associated with a user's presence status, such as `status` or `lastActivity`, will only be
+        returned for people within your organization or an organization you manage. Presence information will not be
+        returned if the authenticated user has `disabled status sharing
+        <https://help.webex.com/nkzs6wl/>`_.
+        
+        Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as `true`. Admin users can list all users in a location or with a specific phone number. Admin users
+        will receive an enriched payload with additional administrative fields like `licenses`,`roles` etc. These
+        fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
+        
+        Lookup by `email` is only supported for people within the same org or where a partner admin relationship is in
+        place.
+        
+        Lookup by `roles` is only supported for Admin users for the people within the same org.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param email: List people with this email address. For non-admin requests, either this or `displayName` are
+            required. With the exception of partner admins and a managed org relationship, people lookup by email is
+            only available for users in the same org.
+        :type email: str
+        :param display_name: List people whose name starts with this string. For non-admin requests, either this or
+            email are required.
+        :type display_name: str
+        :param id: List people by ID. Accepts up to 85 person IDs separated by commas. If this parameter is provided
+            then presence information (such as the `lastActivity` or `status` properties) will not be included in the
+            response.
+        :type id: str
+        :param org_id: List people in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
+        :type org_id: str
+        :param roles: List of roleIds separated by commas.
+        :type roles: str
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :param location_id: List people present in this location.
+        :type location_id: str
+        :param max_: Limit the maximum number of people in the response. If `callingData`=true, then `max` will not be
+            more than 50.
+        :type max_: int
+        :return: Generator yielding :class:`Person` instances
+        """
+        ...
+
+
+    def create_a_person(self, emails: list[str], calling_data: bool = None,
+                        phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: Union[str, datetime] = None,
+                        location_id: str = None, display_name: str = None, first_name: str = None,
+                        last_name: str = None, avatar: str = None, org_id: str = None, roles: list[str] = None,
+                        licenses: list[str] = None, department: str = None, manager: str = None,
+                        manager_id: str = None, title: str = None, addresses: list[PersonAddresses] = None,
+                        site_urls: list[str] = None) -> Person:
+        """
+        Create a Person
+
+        Create a new user account for a given organization. Only an admin can create a new user account.
+        
+        At least one of the following body parameters is required to create a new user: `displayName`, `firstName`,
+        `lastName`.
+        
+        Currently, users may have only one email address associated with their account. The `emails` parameter is an
+        array, which accepts multiple values to allow for future expansion, but currently only one email address will
+        be used for the new user.
+        
+        Admin users can include `Webex calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as true. It may happen that the POST request with calling data returns a 400 status, but the person
+        was created still. One way to get into this state is if an invalid phone number is assigned to a user. The
+        people API aggregates calls to several other microservices, and one may have failed. A best practice is to
+        check if the user exists before retrying. This can be done with the user's email address and a GET /people.
+        
+        When doing attendee management, append `#attendee` to the `siteUrl` parameter (e.g.
+        `mysite.webex.com#attendee`) to make the new user an attendee for a site.
+        
+        **NOTE**:
+        
+        * For creating a `Webex Calling` user, you must provide `phoneNumbers` or `extension`, `locationId`, and
+        `licenses` string in the same request.
+
+        :param emails: The email addresses of the person. Only one email address is allowed per person.
+        :type emails: list[str]
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling
+            license.
+        :type phone_numbers: list[CreateAPersonPhoneNumbers]
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
+            Calling license.
+        :type extension: Union[str, datetime]
+        :param location_id: The ID of the location for this person.
+        :type location_id: str
+        :param display_name: The full name of the person.
+        :type display_name: str
+        :param first_name: The first name of the person.
+        :type first_name: str
+        :param last_name: The last name of the person.
+        :type last_name: str
+        :param avatar: The URL to the person's avatar in PNG format.
+        :type avatar: str
+        :param org_id: The ID of the organization to which this person belongs.
+        :type org_id: str
+        :param roles: An array of role strings representing the roles to which this admin user belongs.
+        :type roles: list[str]
+        :param licenses: An array of license strings allocated to this person.
+        :type licenses: list[str]
+        :param department: The business department the user belongs to.
+        :type department: str
+        :param manager: A manager identifier.
+        :type manager: str
+        :param manager_id: Person Id of the manager
+        :type manager_id: str
+        :param title: the person's title
+        :type title: str
+        :param addresses: Person's address
+        :type addresses: list[PersonAddresses]
+        :param site_urls: One or several site names where this user has an attendee role. Append `#attendee` to the
+            sitename (eg: mysite.webex.com#attendee)
+        :type site_urls: list[str]
+        :rtype: :class:`Person`
+        """
+        ...
+
+
+    def get_person_details(self, person_id: str, calling_data: bool = None) -> Person:
+        """
+        Get Person Details
+
+        Shows details for a person, by ID.
+        
+        Response properties associated with a user's presence status, such as `status` or `lastActivity`, will only be
+        displayed for people within your organization or an organization you manage. Presence information will not be
+        shown if the authenticated user has `disabled status sharing
+        <https://help.webex.com/nkzs6wl/>`_.
+        
+        Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as `true`.
+        
+        Specify the person ID in the `personId` parameter in the URI.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :rtype: :class:`Person`
+        """
+        ...
+
+
+    def update_a_person(self, person_id: str, display_name: str, calling_data: bool = None,
+                        show_all_types: bool = None, emails: list[str] = None,
+                        phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: Union[str, datetime] = None,
+                        location_id: str = None, first_name: str = None, last_name: str = None, nick_name: str = None,
+                        avatar: str = None, org_id: str = None, roles: list[str] = None, licenses: list[str] = None,
+                        department: str = None, manager: str = None, manager_id: str = None, title: str = None,
+                        addresses: list[PersonAddresses] = None, site_urls: list[str] = None,
+                        login_enabled: str = None) -> Person:
+        """
+        Update a Person
+
+        Update details for a person, by ID.
+        
+        Specify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.
+        
+        Include all details for the person. This action expects all user details to be present in the request. A common
+        approach is to first `GET the person's details
+        <https://developer.webex.com/docs/api/v1/people/get-person-details>`_, make changes, then PUT both the changed and unchanged values.
+        
+        Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as true.
+        
+        When doing attendee management, to update a user from host role to an attendee for a site append `#attendee` to
+        the respective `siteUrl` and remove the meeting host license for this site from the license array.
+        To update a person from an attendee role to a host for a site, add the meeting license for this site in the
+        meeting array, and remove that site from the `siteurl` parameter.
+        
+        To remove the attendee privilege for a user on a meeting site, remove the `sitename#attendee` from the
+        `siteUrl`s array. The `showAllTypes` parameter must be set to `true`.
+        
+        **NOTE**:
+        
+        * The `locationId` can only be set when assigning a calling license to a user. It cannot be changed if a user
+        is already an existing calling user.
+        
+        * The `extension` field should be used to update the Webex Calling extension for a person. The extension value
+        should not include the location routing prefix. The `work_extension` type in the `phoneNumbers` object as seen
+        in the response payload of `List People
+        <https://developer.webex.com/docs/api/v1/people/list-people>`_ or `Get Person Details
+        extension for a person.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param display_name: The full name of the person.
+        :type display_name: str
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :param show_all_types: Include additional user data like `#attendee` role
+        :type show_all_types: bool
+        :param emails: The email addresses of the person. Only one email address is allowed per person.
+        :type emails: list[str]
+        :param phone_numbers: Phone numbers for the person. Can only be set for Webex Calling. Needs a Webex Calling
+            license.
+        :type phone_numbers: list[CreateAPersonPhoneNumbers]
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
+            Calling license
+        :type extension: Union[str, datetime]
+        :param location_id: The ID of the location for this person.
+        :type location_id: str
+        :param first_name: The first name of the person.
+        :type first_name: str
+        :param last_name: The last name of the person.
+        :type last_name: str
+        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update
+            request.
+        :type nick_name: str
+        :param avatar: The URL to the person's avatar in PNG format.
+        :type avatar: str
+        :param org_id: The ID of the organization to which this person belongs.
+        :type org_id: str
+        :param roles: An array of role strings representing the roles to which this admin user belongs.
+        :type roles: list[str]
+        :param licenses: An array of license strings allocated to this person.
+        :type licenses: list[str]
+        :param department: The business department the user belongs to.
+        :type department: str
+        :param manager: A manager identifier
+        :type manager: str
+        :param manager_id: Person Id of the manager
+        :type manager_id: str
+        :param title: the person's title
+        :type title: str
+        :param addresses: Person's address
+        :type addresses: list[PersonAddresses]
+        :param site_urls: One or several site names where this user has a role (host or attendee). Append `#attendee`
+            to the site name to designate the attendee role on that site.
+        :type site_urls: list[str]
+        :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
+            authenticated user is an admin user for the person's organization.
+        :type login_enabled: str
+        :rtype: :class:`Person`
+        """
+        ...
+
+
+    def delete_a_person(self, person_id: str):
+        """
+        Delete a Person
+
+        Remove a person from the system. Only an admin can remove a person.
+        
+        Specify the person ID in the `personId` parameter in the URI.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_my_own_details(self, calling_data: bool = None) -> Person:
+        """
+        Get My Own Details
+
+        Get profile details for the authenticated user. This is the same as GET `/people/{personId}` using the Person
+        ID associated with your Auth token.
+        
+        Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as true.
+
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :rtype: :class:`Person`
+        """
+        ...
+
     ...

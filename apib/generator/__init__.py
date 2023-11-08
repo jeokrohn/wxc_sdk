@@ -10,7 +10,8 @@ from apib.apib import read_api_blueprint, ApibParseResult
 from apib.python_class import PythonClassRegistry, Endpoint
 from apib.tools import break_line
 
-PREAMBLE = """from datetime import datetime
+PREAMBLE = """from collections.abc import Generator
+from datetime import datetime
 from typing import Optional
 
 from pydantic import Field

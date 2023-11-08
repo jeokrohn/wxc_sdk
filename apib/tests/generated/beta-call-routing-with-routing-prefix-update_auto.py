@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -111,6 +112,66 @@ class BetaCallRoutingWithRoutingPrefixUpdateApi(ApiChild, base='telephony/config
     """
     Beta Call Routing with Routing Prefix Update
     
-    <!-- feature-toggle-name:wxc-support-extensions-m2-106132 -->
     """
+
+    def get_a_list_of_update_routing_prefix_jobs(self, org_id: str = None) -> list[BatchResponse]:
+        """
+        Get a List of Update Routing Prefix jobs
+
+        Get the list of all update routing prefix jobs in an organization.
+        
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the update routing prefix jobs in an organization.
+        
+        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of update routing prefix jobs in this organization.
+        :type org_id: str
+        :rtype: list[BatchResponse]
+        """
+        ...
+
+
+    def get_the_job_status_of_update_routing_prefix_job(self, job_id: str, org_id: str = None) -> BatchResponse:
+        """
+        Get the job status of Update Routing Prefix job
+
+        Get the status of the update routing prefix job by its job ID.
+        
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to check the status of update routing prefix job by job ID in an organization.
+        
+        Checking the status of the update routing prefix job in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check update routing prefix job status in this organization.
+        :type org_id: str
+        :rtype: :class:`BatchResponse`
+        """
+        ...
+
+
+    def get_job_errors_for_update_routing_prefix_job(self, job_id: str, org_id: str = None) -> BatchJobError:
+        """
+        Get job errors for update routing prefix job
+
+        GET job errors for the update routing prefix job in an organization.
+        
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
+        
+        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
+        :type org_id: str
+        :rtype: :class:`BatchJobError`
+        """
+        ...
+
     ...

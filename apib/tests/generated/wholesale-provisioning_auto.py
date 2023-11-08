@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -394,4 +395,360 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
     Sandbox environment for any Developer resource misuse.
     
     """
+
+    def list_wholesale_customers(self, external_id: str = None, org_id: str = None, status: list[str] = None,
+                                 offset: int = None, max_: int = None, **params) -> Generator[Customer, None, None]:
+        """
+        List Wholesale Customers
+
+        This API allows a Service Provider to search for their customers. There are a number of filter options, which
+        can be combined in a single request.
+
+        :param external_id: Customer external ID.
+        :type external_id: str
+        :param org_id: The encoded Organization ID for the customer.
+        :type org_id: str
+        :param status: Customer API status.
+        :type status: list[str]
+        :param offset: Offset value for implementing pagination.
+        :type offset: int
+        :param max_: The maximum number of customers returned in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Customer` instances
+        """
+        ...
+
+
+    def provision_a_wholesale_customer(self, provisioning_id: str, packages: list[str], external_id: str,
+                                       address: Address, org_id: str = None,
+                                       customer_info: ProvisionAWholesaleCustomerCustomerInfo = None,
+                                       provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters = None) -> str:
+        """
+        Provision a Wholesale Customer
+
+        Provision a Wholesale customer for Cisco Webex services.
+        
+        This API will allow a Service Provider to map the Wholesale customer and assign the required licenses and
+        entitlements for Webex, Calling and Meetings.
+        
+        The Wholesale customer provisioning is asynchronous and thus a background task is created when this endpoint is
+        invoked.
+        
+        <div>
+        <Callout type='info'>After successful invocation of this endpoint a URL will be returned in the `Location`
+        header, which will point to the `Get a Wholesale Customer
+        <https://developer.webex.com/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer>`_ endpoint for this customer.</Callout>
+        </div>
+
+        :param provisioning_id: This Provisioning ID defines how this customer is to be provisioned for Webex Services.
+        
+        Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen
+        Customer Template
+        on `Webex Control Hub
+        <https://admin.webex.com>`_.
+        :type provisioning_id: str
+        :param packages: The complete list of Webex Wholesale packages to be assigned to the customer.
+        :type packages: list[str]
+        :param external_id: External ID of the Wholesale customer.
+        :type external_id: str
+        :param address: Billing Address of the customer.
+        :type address: Address
+        :param org_id: The Organization ID of the enterprise on Webex. Mandatory for existing customer.
+        :type org_id: str
+        :param customer_info: Mandatory for new customer. Optional if Organization ID is provided.
+        :type customer_info: ProvisionAWholesaleCustomerCustomerInfo
+
+        :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
+        :rtype: str
+        """
+        ...
+
+
+    def get_a_wholesale_customer(self, customer_id: str) -> Customer:
+        """
+        Get a Wholesale Customer
+
+        This API will allow a Service Provider to retrieve details of a provisioned Wholesale customer on Cisco Webex.
+
+        :param customer_id: A unique identifier for the customer in question.
+        :type customer_id: str
+        :rtype: :class:`Customer`
+        """
+        ...
+
+
+    def update_a_wholesale_customer(self, customer_id: str, packages: list[str], external_id: str = None,
+                                    address: Address = None,
+                                    provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters = None) -> str:
+        """
+        Update a Wholesale Customer
+
+        This API allows a Service Provider to update certain details of a provisioned Wholesale customer.
+        
+        The Wholesale customer provisioning is asynchronous and thus a background task is created when this endpoint is
+        invoked.
+        
+        <div>
+        <Callout type='info'>After successful invocation of this endpoint a URL will be returned in the `Location`
+        header, which will point to the `Get a Wholesale Customer
+        <https://developer.webex.com/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer>`_ endpoint for this customer.</Callout>
+        </div>
+
+        :param customer_id: A unique identifier for the customer to be updated.
+        :type customer_id: str
+        :param packages: The complete list of Webex Wholesale packages to be assigned to the customer, including any
+            packages already provisioned. If a package has already been assigned to this customer and is not present
+            in this list, then that package will be removed.
+        :type packages: list[str]
+        :param external_id: External ID of the Wholesale customer.
+        :type external_id: str
+        :param address: Billing Address of the customer.
+        :type address: Address
+        :param provisioning_parameters: Provisioning parameters are required when updating an existing package.
+        :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
+        :rtype: str
+        """
+        ...
+
+
+    def remove_a_wholesale_customer(self, customer_id: str):
+        """
+        Remove a Wholesale Customer
+
+        Allows a Service Provider to remove the mapping between a Wholesale Customer and a Cisco Webex organization.
+
+        :param customer_id: A unique identifier for the customer in question.
+        :type customer_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def precheck_a_wholesale_customer_provisioning(self, address: Address, provisioning_id: str = None,
+                                                   packages: list[str] = None, org_id: str = None,
+                                                   external_id: str = None,
+                                                   customer_info: PrecheckAWholesaleCustomerProvisioningCustomerInfo = None,
+                                                   provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters = None) -> CustomerProvisioningPrecheckResponse:
+        """
+        Precheck a Wholesale Customer Provisioning
+
+        This API will allow the Partner sales team to verify likely success of provisioning a Wholesale customer.
+        
+        <div>
+        <Callout type='info'>
+        The Prerequisite for using this API is to have `wxc-wholesale` entitlement or `webex-wholesale-partner-testing`
+        setting enabled for the Partner Organization. The Provisioning Precheck APIs supports two variants of
+        Wholesale Customer Provisioning Precheck Requests. Please refer to `Using the Provisioning Precheck APIs
+        <https://developer.webex.com/docs/api/guides/webex-for-wholesale#using-the-precheck-provisioning-api>`_
+        section in `Webex for Wholesale
+        <https://developer.webex.com/docs/api/guides/webex-for-wholesale>`_ guide for more information.
+        </Callout>
+        </div>
+
+        :param address: Billing Address of the Wholesale customer.
+        :type address: Address
+        :param provisioning_id: This Provisioning ID defines how this wholesale customer is to be provisioned for Cisco
+            Webex Services.
+        
+        Each Customer Template will have its unique Provisioning ID. This ID will be displayed under the chosen
+        Customer Template
+        on Cisco Webex Control Hub.
+        :type provisioning_id: str
+        :param packages: The complete list of Webex Wholesale packages to be assigned to the Wholesale customer.
+        :type packages: list[str]
+        :param org_id: The Organization ID of the enterprise on Cisco Webex.
+        :type org_id: str
+        :param external_id: External ID of the Wholesale customer.
+        :type external_id: str
+
+        :type customer_info: PrecheckAWholesaleCustomerProvisioningCustomerInfo
+
+        :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
+        :rtype: :class:`CustomerProvisioningPrecheckResponse`
+        """
+        ...
+
+
+    def list_wholesale_sub_partners(self, provisioning_state: str = None, offset: int = None, max_: int = None,
+                                    **params) -> Generator[SubPartner, None, None]:
+        """
+        List Wholesale Sub-partners
+
+        This API allows a Service Provider to list all of their associated sub-partners. There are a number of filter
+        and pagination options that can be combined in a single request.
+
+        :param provisioning_state: Status to filter sub-partners based on provisioning state.
+        :type provisioning_state: str
+        :param offset: Offset value for implementing pagination.
+        :type offset: int
+        :param max_: The maximum number of sub-partners returned in the response.
+        :type max_: int
+        :return: Generator yielding :class:`SubPartner` instances
+        """
+        ...
+
+
+    def list_wholesale_subscribers(self, max_: int = None, offset: int = None, customer_id: str = None,
+                                   person_id: str = None, external_customer_id: str = None, email: str = None,
+                                   status: str = None, after: str = None, last_status_change: str = None,
+                                   sort_by: str = None, sort_order: str = None,
+                                   **params) -> Generator[Subscriber, None, None]:
+        """
+        List Wholesale Subscribers
+
+        This API allows a Service Provider to search for their associated subscribers. There are a number of filter
+        options, which can be combined in a single request.
+
+        :param max_: Limit the maximum number of subscribers returned in the search response, up to 100 per page. Refer
+            to the `Pagination
+            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
+        :type max_: int
+        :param offset: Offset value to implement `pagination
+            <https://developer.webex.com/docs/basics#pagination>`_.
+        :type offset: int
+        :param customer_id: Wholesale customer ID.
+        :type customer_id: str
+        :param person_id: The person ID of the subscriber used in the `/v1/people API
+            <https://developer.webex.com/docs/api/v1/people>`_.
+        :type person_id: str
+        :param external_customer_id: Customer external ID.
+        :type external_customer_id: str
+        :param email: The email address of the subscriber.
+        :type email: str
+        :param status: The provisioning status of the subscriber.
+        :type status: str
+        :param after: Only include subscribers created after this date and time. Epoch time (in milliseconds)
+            preferred, but ISO 8601 date format also accepted.
+        :type after: str
+        :param last_status_change: Only include subscribers with a provisioning status change after this date and time.
+            Epoch time (in milliseconds) preferred, but ISO 8601 date format also accepted.
+        :type last_status_change: str
+        :param sort_by: Supported `sortBy` attributes are `created` and `lastStatusChange`. Default is `created`.
+        :type sort_by: str
+        :param sort_order: Sort by `ASC` (ascending) or `DESC` (descending).
+        :type sort_order: str
+        :return: Generator yielding :class:`Subscriber` instances
+        """
+        ...
+
+
+    def provision_a_wholesale_subscriber(self, customer_id: str, email: str, package: SubscriberPackage,
+                                         provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters) -> Subscriber:
+        """
+        Provision a Wholesale Subscriber
+
+        Provision a new Wholesale subscriber for Cisco Webex services.
+        
+        This API allows a Service Provider to map the Wholesale subscriber to a Cisco Webex Wholesale customer and
+        assign the required licenses and entitlements for Webex, Calling and Meetings.
+        
+        **Note:**
+        If this subscriber is a existing Webex Calling entitled user, the `locationId`, `primaryPhoneNumber` and
+        `extension` are optional and if provided are ignored.
+
+        :param customer_id: ID of the Provisioned Customer for Webex Wholesale.
+        :type customer_id: str
+        :param email: The email address of the subscriber (mandatory for the trusted email provisioning flow).
+        :type email: str
+        :param package: The Webex Wholesale package to be assigned to the subscriber.
+        :type package: SubscriberPackage
+
+        :type provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters
+        :rtype: :class:`Subscriber`
+        """
+        ...
+
+
+    def get_a_wholesale_subscriber(self, subscriber_id: str) -> Subscriber:
+        """
+        Get a Wholesale Subscriber
+
+        This API allow a Service Provider to retrieve details of a provisioned Wholesale subscriber on Cisco Webex.
+
+        :param subscriber_id: A unique identifier for the subscriber in question.
+        :type subscriber_id: str
+        :rtype: :class:`Subscriber`
+        """
+        ...
+
+
+    def update_a_wholesale_subscriber(self, subscriber_id: str, package: SubscriberPackage,
+                                      provisioning_parameters: UpdateAWholesaleSubscriberProvisioningParameters = None) -> Subscriber:
+        """
+        Update a Wholesale Subscriber
+
+        This API allows a Service Provider to update certain details of a provisioned Wholesale subscriber.
+        
+        **Note:**
+        
+        * The `provisioningParameters` attributes should only be supplied when changing from the webex_meetings package
+        to any calling-enabled package.
+        
+        * Even in that scenario, if this subscriber is a existing Webex Calling entitled user, these attributes are
+        optional and if provided are ignored.
+
+        :param subscriber_id: A unique identifier for the subscriber in question.
+        :type subscriber_id: str
+        :param package: The Webex Wholesale package to be assigned to the subscriber.
+        :type package: SubscriberPackage
+
+        :type provisioning_parameters: UpdateAWholesaleSubscriberProvisioningParameters
+        :rtype: :class:`Subscriber`
+        """
+        ...
+
+
+    def remove_a_wholesale_subscriber(self, subscriber_id: str):
+        """
+        Remove a Wholesale Subscriber
+
+        This API allows a Service Provider to remove the mapping between Wholesale Subscriber and a Webex user.
+
+        :param subscriber_id: A unique identifier for the subscriber in question.
+        :type subscriber_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def precheck_a_wholesale_subscriber_provisioning(self, email: str, provisioning_id: str = None,
+                                                     customer_id: str = None, package: SubscriberPackage = None,
+                                                     provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters = None,
+                                                     customer_info: PrecheckAWholesaleSubscriberProvisioningCustomerInfo = None) -> CustomerProvisioningPrecheckResponse:
+        """
+        Precheck a Wholesale Subscriber Provisioning
+
+        This API will allow the Partner sales team to verify likely success of provisioning a wholesale subscriber.
+        
+        <div>
+        <Callout type='info'>
+        The Prerequisite for using this API is to have `wxc-wholesale` entitlement or `webex-wholesale-partner-testing`
+        setting enabled for the Partner Organization. The Provisioning Precheck APIs supports three variants of
+        Wholesale Subscriber Provisioning Precheck Requests. Please refer to `Using the Provisioning Precheck API
+        <https://developer.webex.com/docs/api/guides/webex-for-wholesale#using-the-precheck-provisioning-api>`_
+        section in `Webex for Wholesale
+        <https://developer.webex.com/docs/api/guides/webex-for-wholesale>`_ guide for more information.
+        </Callout>
+        </div>
+
+        :param email: The email address of the subscriber.
+        :type email: str
+        :param provisioning_id: This Provisioning ID defines how this wholesale subscriber is to be provisioned for
+            Cisco Webex Services.
+        
+        Each Customer template has its unique provisioning ID. This ID is displayed under the chosen customer template
+        on Cisco Webex Control Hub.
+        :type provisioning_id: str
+        :param customer_id: ID of the Provisioned Customer for Webex Wholesale.
+        :type customer_id: str
+        :param package: The Webex Wholesale package to be assigned to the subscriber.
+        :type package: SubscriberPackage
+
+        :type provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters
+
+        :type customer_info: PrecheckAWholesaleSubscriberProvisioningCustomerInfo
+        :rtype: :class:`CustomerProvisioningPrecheckResponse`
+        """
+        ...
+
     ...

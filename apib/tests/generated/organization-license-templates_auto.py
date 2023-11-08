@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -60,4 +61,80 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
     `spark-admin:licenses_read` to view templates at the org level. Adding, updating, and removing templates requires
     an admin auth token with the `spark-admin:licenses_write` scope.
     """
+
+    def list_organization_license_templates(self, org_id: str) -> list[Template]:
+        """
+        List Organization License Templates
+
+        Get org level license templates
+
+        :param org_id: A unique identifier for an org
+        :type org_id: str
+        :rtype: list[Template]
+        """
+        ...
+
+
+    def create_an_organization_license_template(self, org_id: str, template_name: str = None,
+                                                licenses: list[str] = None, groups: list[str] = None,
+                                                template_type: TemplateTemplateType = None) -> Template:
+        """
+        Create an Organization License Template
+
+        Create an org/group level license template which could be assigned to users as part of user onboarding.
+        Only group level templates can be associated with groups
+
+        :param org_id: A unique identifier for an org
+        :type org_id: str
+        :param template_name: Name of the org level template
+        :type template_name: str
+        :param licenses: An array of license strings
+        :type licenses: list[str]
+        :param groups: An array of groups
+        :type groups: list[str]
+        :param template_type: Specify the template type to be created
+        :type template_type: TemplateTemplateType
+        :rtype: :class:`Template`
+        """
+        ...
+
+
+    def update_an_organization_license_template(self, license_template_id: str, org_id: str, template_name: str = None,
+                                                licenses: list[str] = None, groups: list[str] = None) -> Template:
+        """
+        Update an Organization License Template
+
+        Update org/group license template
+        
+        Specify the templateId in the `licenseTemplateId` parameter in the URI
+
+        :param license_template_id: A unique identifier of a template
+        :type license_template_id: str
+        :param org_id: A unique identifier for an org
+        :type org_id: str
+        :param template_name: Name of the org level template
+        :type template_name: str
+        :param licenses: An array of license strings
+        :type licenses: list[str]
+        :param groups: An array of groups
+        :type groups: list[str]
+        :rtype: :class:`Template`
+        """
+        ...
+
+
+    def delete_an_organization_license_template(self, license_template_id: str):
+        """
+        Delete an Organization License Template
+
+        Delete an org/group level template
+        
+        Specify the templateId in the `licenseTemplateId` parameter in the URI
+
+        :param license_template_id: A unique identifier of a template
+        :type license_template_id: str
+        :rtype: None
+        """
+        ...
+
     ...

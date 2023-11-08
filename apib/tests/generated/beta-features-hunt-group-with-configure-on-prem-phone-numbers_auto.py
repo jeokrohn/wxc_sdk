@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -333,4 +334,142 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def create_a_hunt_group(self, location_id: str, name: str, phone_number: str, extension: datetime,
+                            language_code: str, first_name: str, last_name: str, time_zone: str,
+                            call_policies: PostHuntGroupCallPolicyObject, use_hosted_agent_enabled: bool,
+                            use_policy_server_enabled: bool, agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
+                            address_agents: list[AddressAgentHuntGroupObject], enabled: bool,
+                            org_id: str = None) -> str:
+        """
+        Create a Hunt Group
+
+        Create new Hunt Groups for the given location.
+        
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        
+        Creating a hunt group requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the hunt group for the given location.
+        :type location_id: str
+        :param name: Unique name for the hunt group.
+        :type name: str
+        :param phone_number: Primary phone number of the hunt group. Either phone number or extension are required.
+        :type phone_number: str
+        :param extension: Primary phone extension of the hunt group. Either phone number or extension are required.
+        :type extension: Union[str, datetime]
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
+            number if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the hunt group.
+        :type time_zone: str
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: PostHuntGroupCallPolicyObject
+        :param use_hosted_agent_enabled: Determines whether hosted or numeric Hunt Group agents are used for this Hunt
+            Group
+        :type use_hosted_agent_enabled: bool
+        :param use_policy_server_enabled: Determines wether to use the Policy Server for this Hunt Group
+        :type use_policy_server_enabled: bool
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
+        :param address_agents: People, workspaces and virtual lines that are eligible to  receive calls, on-prem.
+        :type address_agents: list[AddressAgentHuntGroupObject]
+        :param enabled: Whether or not the hunt group is enabled.
+        :type enabled: bool
+        :param org_id: Create the hunt group for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_details_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                     org_id: str = None) -> GetHuntGroupObject:
+        """
+        Get Details for a Hunt Group
+
+        Retrieve Hunt Group details.
+        
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        
+        Retrieving hunt group details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a hunt group in this location.
+        :type location_id: str
+        :param hunt_group_id: Retrieve settings for the hunt group with this identifier.
+        :type hunt_group_id: str
+        :param org_id: Retrieve hunt group settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetHuntGroupObject`
+        """
+        ...
+
+
+    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
+                            extension: datetime, distinctive_ring: bool,
+                            alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
+                            last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
+                            use_policy_server_enabled: bool, agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
+                            address_agents: list[AddressAgentHuntGroupObject], enabled: bool, org_id: str = None):
+        """
+        Update a Hunt Group
+
+        Update the designated Hunt Group.
+        
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        
+        Updating a hunt group requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Update the hunt group for this location.
+        :type location_id: str
+        :param hunt_group_id: Update settings for the hunt group with the matching ID.
+        :type hunt_group_id: str
+        :param name: Unique name for the hunt group.
+        :type name: str
+        :param phone_number: Primary phone number of the hunt group.
+        :type phone_number: str
+        :param extension: Primary phone extension of the hunt group.
+        :type extension: Union[str, datetime]
+        :param distinctive_ring: Whether or not the hunt group has the distinctive ring option enabled.
+        :type distinctive_ring: bool
+        :param alternate_numbers: The alternate numbers feature allows you to assign multiple phone numbers or
+            extensions to a hunt group. Each number will reach the same greeting and each menu will function
+            identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
+            numbers ring into the hunt group.
+        :type alternate_numbers: list[AlternateNumbersWithPattern]
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
+            number if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the hunt group.
+        :type time_zone: str
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: PostHuntGroupCallPolicyObject
+        :param use_policy_server_enabled: Determines wether to use the Policy Server for this Hunt Group
+        :type use_policy_server_enabled: bool
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
+        :param address_agents: People, workspaces and virtual lines that are eligible to  receive calls, on-prem.
+        :type address_agents: list[AddressAgentHuntGroupObject]
+        :param enabled: Whether or not the hunt group is enabled.
+        :type enabled: bool
+        :param org_id: Update hunt group settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

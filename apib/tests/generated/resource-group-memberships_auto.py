@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -63,4 +64,76 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
     `Managing Hybrid Services
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
+
+    def list_resource_group_memberships(self, license_id: str = None, person_id: str = None, person_org_id: str = None,
+                                        status: ResourceGroupMembershipStatus = None, max_: int = None,
+                                        **params) -> Generator[ResourceGroupMembership, None, None]:
+        """
+        List Resource Group Memberships
+
+        Lists all resource group memberships for an organization.
+        
+        Use query parameters to filter the response.
+
+        :param license_id: List resource group memberships for a license, by ID.
+        :type license_id: str
+        :param person_id: List resource group memberships for a person, by ID.
+        :type person_id: str
+        :param person_org_id: List resource group memberships for an organization, by ID.
+        :type person_org_id: str
+        :param status: Limit resource group memberships to a specific status.
+        :type status: ResourceGroupMembershipStatus
+        :param max_: Limit the maximum number of resource group memberships in the response.
+        :type max_: int
+        :return: Generator yielding :class:`ResourceGroupMembership` instances
+        """
+        ...
+
+
+    def get_resource_group_membership_details(self, resource_group_membership_id: str) -> ResourceGroupMembership:
+        """
+        Get Resource Group Membership Details
+
+        Shows details for a resource group membership, by ID.
+        
+        Specify the resource group membership ID in the `resourceGroupMembershipId` URI parameter.
+
+        :param resource_group_membership_id: The unique identifier for the resource group membership.
+        :type resource_group_membership_id: str
+        :rtype: :class:`ResourceGroupMembership`
+        """
+        ...
+
+
+    def update_a_resource_group_membership(self, resource_group_membership_id: str, resource_group_id: str,
+                                           license_id: str, person_id: str, person_org_id: str,
+                                           status: ResourceGroupMembershipStatus) -> ResourceGroupMembership:
+        """
+        Update a Resource Group Membership
+
+        Updates a resource group membership, by ID.
+        
+        Specify the resource group membership ID in the `resourceGroupMembershipId` URI parameter.
+        
+        Only the `resourceGroupId` can be changed with this action. Resource group memberships with a `status` of
+        "pending" cannot be updated. For more information about resource group memberships, see the
+        `Managing Hybrid Services
+        <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses#webex-resource-groups>`_ guide.
+
+        :param resource_group_membership_id: The unique identifier for the resource group membership.
+        :type resource_group_membership_id: str
+        :param resource_group_id: The resource group ID.
+        :type resource_group_id: str
+        :param license_id: The license ID.
+        :type license_id: str
+        :param person_id: The person ID.
+        :type person_id: str
+        :param person_org_id: The organization ID of the person.
+        :type person_org_id: str
+        :param status: The activation status of the resource group membership.
+        :type status: ResourceGroupMembershipStatus
+        :rtype: :class:`ResourceGroupMembership`
+        """
+        ...
+
     ...

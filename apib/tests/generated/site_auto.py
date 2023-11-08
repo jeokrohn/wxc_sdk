@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -161,4 +162,52 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
     
     You can see the elements that constitute the respective RESTful schema in a separate section below.
     """
+
+    def get_meeting_common_settings_configuration(self,
+                                                  site_url: str = None) -> GetMeetingConfigurationCommonSettingObject:
+        """
+        Get Meeting Common Settings Configuration
+
+        Site administrators can use this API to get a list of functions, options, and privileges that are configured
+        for their Webex service sites.
+        
+        * If `siteUrl` is specified, common settings of the meeting's configuration of the specified site will be
+        queried; otherwise, the API will query from the site administrator's preferred site. All available Webex sites
+        and preferred site of the user can be retrieved by `Get Site List
+        <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+
+        :param site_url: URL of the Webex site which the API queries common settings of the meeting's configuration
+            from. If not specified, the API will query from the site administrator's preferred site. All available
+            Webex sites and the preferred site of the user can be retrieved by the `Get Site List
+            <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        :type site_url: str
+        :rtype: :class:`GetMeetingConfigurationCommonSettingObject`
+        """
+        ...
+
+
+    def update_meeting_common_settings_configuration(self,
+                                                     site_options: GetMeetingConfigurationCommonSettingObjectSiteOptions,
+                                                     default_scheduler_options: GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions,
+                                                     schedule_meeting_options: GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions,
+                                                     security_options: GetMeetingConfigurationCommonSettingObjectSecurityOptions) -> GetMeetingConfigurationCommonSettingObject:
+        """
+        Update Meeting Common Settings Configuration
+
+        Site administrators can use this API to update the option of features, options and privileges that are
+        configured for their WebEx service sites.
+
+        :param site_options: Site Options on Webex Administration.
+        :type site_options: GetMeetingConfigurationCommonSettingObjectSiteOptions
+        :param default_scheduler_options: Default Scheduler Options on Webex Administration (These options are applied
+            to the site as defaults, but individual users can change them).
+        :type default_scheduler_options: GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions
+        :param schedule_meeting_options: Schedule Meeting Options on Webex Administration.
+        :type schedule_meeting_options: GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions
+        :param security_options: Security Options on Webex Administration.
+        :type security_options: GetMeetingConfigurationCommonSettingObjectSecurityOptions
+        :rtype: :class:`GetMeetingConfigurationCommonSettingObject`
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -99,4 +100,66 @@ class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/l
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def get_details_for_a_call_pickup(self, location_id: str, call_pickup_id: str,
+                                      org_id: str = None) -> GetCallPickupObject:
+        """
+        Get Details for a Call Pickup
+
+        Retrieve Call Pickup details.
+        
+        Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
+        
+        Retrieving call pickup details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+        
+        **NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.
+
+        :param location_id: Retrieve settings for a call pickup in this location.
+        :type location_id: str
+        :param call_pickup_id: Retrieve settings for a call pickup with the matching ID.
+        :type call_pickup_id: str
+        :param org_id: Retrieve call pickup settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallPickupObject`
+        """
+        ...
+
+
+    def get_available_agents_from_call_pickups(self, location_id: str, org_id: str = None,
+                                               call_pickup_name: str = None, max_: int = None, start: int = None,
+                                               name: str = None, phone_number: str = None, order: str = None,
+                                               **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
+        """
+        Get available agents from Call Pickups
+
+        Retrieve available agents from call pickups for a given location.
+        
+        Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
+        
+        Retrieving available agents from call pickups requires a full or read-only administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the available agents for this location.
+        :type location_id: str
+        :param org_id: Return the available agents for this organization.
+        :type org_id: str
+        :param call_pickup_name: Only return available agents from call pickups with the matching name.
+        :type call_pickup_name: str
+        :param max_: Limit the number of available agents returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching available agents.
+        :type start: int
+        :param name: Only return available agents with the matching name.
+        :type name: str
+        :param phone_number: Only return available agents with the matching primary number.
+        :type phone_number: str
+        :param order: Order the available agents according to the designated fields. Up to three vertical bar (|)
+            separated sort order fields may be specified. Available sort fields: `fname`, `lname`, `extension`,
+            `number`.
+        :type order: str
+        :return: Generator yielding :class:`GetPersonPlaceVirtualLineCallPickupObject` instances
+        """
+        ...
+
     ...

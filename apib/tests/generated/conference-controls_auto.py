@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -69,4 +70,139 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
     All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
     scope.
     """
+
+    def start_conference(self, call_ids: list[str]):
+        """
+        Start Conference
+
+        Join the user's calls into a conference.  A minimum of two call IDs are required. Each call ID identifies an
+        existing call between the user
+        and a participant to be added to the conference.
+
+        :param call_ids: List of call identifiers of the participants to join into the conference. A minimum of two
+            call IDs are required.
+        :type call_ids: list[str]
+        :rtype: None
+        """
+        ...
+
+
+    def release_conference(self):
+        """
+        Release Conference
+
+        Release the conference (the host and all participants). Note that for a 3WC (three-way call) the `Transfer API
+        <https://developer.webex.com/docs/api/v1/call-controls/transfer>`_
+        can be used to perform an attended transfer so that the participants remain connected.
+
+        :rtype: None
+        """
+        ...
+
+
+    def get_conference_details(self) -> ConferenceDetails:
+        """
+        Get Conference Details
+
+        Get the details of the conference.  An empty JSON object body is returned if there is no conference.
+
+        :rtype: :class:`ConferenceDetails`
+        """
+        ...
+
+
+    def add_participant(self, call_id: str):
+        """
+        Add Participant
+
+        Adds a participant to an existing conference.  The request body contains the participant's call ID.
+
+        :param call_id: The call identifier of the participant to add.
+        :type call_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def mute(self, call_id: str = None):
+        """
+        Mute
+
+        Mutes the host or a participant. Mutes the host when no request body is provided (i.e. media stream from the
+        host will not be transmitted to the conference).  Mutes a participant when the request body contains the
+        participant's call ID (i.e. media stream from the participant will not be transmitted to the conference).
+
+        :param call_id: The call identifier of the participant to mute. The conference host is muted when this
+            attribute is not provided.
+        :type call_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def unmute(self, call_id: str = None):
+        """
+        Unmute
+
+        Unmutes the host or a participant. Unmutes the host when no request body is provided (i.e. media stream from
+        the host will be transmitted to the conference).  Unmutes a participant when the request body contains the
+        participant's call ID (i.e. media stream from the participant will be transmitted to the conference).
+
+        :param call_id: The call identifier of the participant to unmute. The conference host is unmuted when this
+            attribute is not provided.
+        :type call_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def deafen_participant(self, call_id: str):
+        """
+        Deafen Participant
+
+        Deafens a participant (i.e. media stream will not be transmitted to the participant).
+        The request body contains the call ID of the participant to deafen
+
+        :param call_id: The call identifier of the participant to deafen.
+        :type call_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def undeafen_participant(self, call_id: str):
+        """
+        Undeafen Participant
+
+        Undeafens a participant (i.e. resume transmitting the conference media stream to the participant).
+        The request body contains the call ID of the participant to undeafen.
+
+        :param call_id: The call identifier of the participant to undeafen.
+        :type call_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def hold(self):
+        """
+        Hold
+
+        Hold the conference host.  There is no request body.
+
+        :rtype: None
+        """
+        ...
+
+
+    def resume(self):
+        """
+        Resume
+
+        Resumes the held conference host.  There is no request body.
+
+        :rtype: None
+        """
+        ...
+
     ...

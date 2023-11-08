@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -111,4 +112,56 @@ class SessionTypesApi(ApiChild, base='admin/meeting'):
     `meeting:admin_schedule_read` or `meeting:admin_config_read`. Updating user session types requires an
     administrator auth token with the `meeting:admin_schedule_write` or `meeting:admin_config_write` scope.
     """
+
+    def list_site_session_types(self, site_url: str = None) -> list[SiteSessionType]:
+        """
+        List Site Session Types
+
+        List session types for a specific site.
+
+        :param site_url: URL of the Webex site to query. If siteUrl is not specified, the query will use the default
+            site for the admin's authorization token used to make the call.
+        :type site_url: str
+        :rtype: list[SiteSessionType]
+        """
+        ...
+
+
+    def list_user_session_type(self, site_url: str = None, person_id: str = None) -> list[UserSessionTypes]:
+        """
+        List User Session Type
+
+        List session types for a specific user.
+
+        :param site_url: URL of the Webex site to query.
+        :type site_url: str
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :rtype: list[UserSessionTypes]
+        """
+        ...
+
+
+    def update_user_session_types(self, site_url: str, person_id: str, email: str,
+                                  session_type_ids: list[str]) -> UserSessionTypes:
+        """
+        Update User Session Types
+
+        Assign session types to specific users.
+        
+        * At least one of the following body parameters is required to update a specific user session type: `personId`,
+        `email`.
+
+        :param site_url: Site URL for the session type.
+        :type site_url: str
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :param email: The email of the user.
+        :type email: str
+        :param session_type_ids: An array of the session type ID.
+        :type session_type_ids: list[str]
+        :rtype: :class:`UserSessionTypes`
+        """
+        ...
+
     ...

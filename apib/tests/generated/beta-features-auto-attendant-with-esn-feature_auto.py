@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -229,4 +230,59 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max_: int = None,
+                                         start: int = None, name: str = None, phone_number: str = None,
+                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
+        """
+        Read the List of Auto Attendants
+
+        List all Auto Attendants for the organization.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List auto attendants for this organization.
+        :type org_id: str
+        :param location_id: Return the list of auto attendants for this location.
+        :type location_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return auto attendants with the matching name.
+        :type name: str
+        :param phone_number: Only return auto attendants with the matching phone number.
+        :type phone_number: str
+        :return: Generator yielding :class:`ListAutoAttendantObject` instances
+        """
+        ...
+
+
+    def get_details_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                          org_id: str = None) -> GetAutoAttendantObject:
+        """
+        Get Details for an Auto Attendant
+
+        Retrieve an Auto Attendant details.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Retrieving an auto attendant details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve an auto attendant details in this location.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve auto attendant details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetAutoAttendantObject`
+        """
+        ...
+
     ...

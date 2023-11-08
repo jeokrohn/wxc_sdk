@@ -1,7 +1,10 @@
 import re
-from collections.abc import Generator, Iterator
+from collections.abc import Generator, Iterator, Iterable
 
-__all__ = ['break_line', 'remove_links', 'sanitize_class_name', 'remove_html_comments', 'snake_case', 'words_to_camel']
+__all__ = ['break_line', 'remove_links', 'sanitize_class_name', 'remove_html_comments', 'snake_case', 'words_to_camel',
+           'lines_for_docstring', 'remove_div']
+
+from itertools import chain, repeat
 
 from re import Match
 
@@ -39,6 +42,8 @@ def snake_case(s: str) -> str:
     r, _ = re.subn(r'([a-z0-9])([A-Z])', '\\1_\\2', r)
     # add underscore whenever a letter or digit is preceded by non-word character other than underscore
     r, _ = re.subn(r'[^_\w]([A-Za-z0-9])', '_\\1', r)
+    # finally get rid of all unwanted characters
+    r, _ = re.subn(r'[^_\w0-9]', '_', r)
     r = r.lower()
     return r
 
@@ -179,7 +184,7 @@ def remove_html_comments(text: str) -> str:
     :param text:
     :return:
     """
-    text, _ = re.subn(r'<!--.+?-->\s+', '', text, flags=re.MULTILINE)
+    text, _ = re.subn(r'<!--.+?-->\s*', '', text, flags=re.MULTILINE)
     return text
 
 
@@ -202,3 +207,27 @@ def line_parts(line: str)->Iterator[str]:
                         line,
                         re.VERBOSE)
     return (m.group('word') for m in fiter)
+
+
+def lines_for_docstring(docstring: str, text_prefix_for_1st_line: str = '', indent: int = 0,
+                        indent_first_line: int = None) -> Iterable[str]:
+    """
+    Break a docstring in lines where the 1st line has a leading text, make sure that all lines are properly indented
+    :param doc_string:
+    :param text_prefix_for_1st_line:
+    :param indent:
+    :param indent_first_line:
+    :return:
+    """
+    if not docstring:
+        return []
+    doc_string_lines = (f'{p}{line}' for p, line in zip(chain([text_prefix_for_1st_line],
+                                                              repeat('')),
+                                                        docstring.splitlines()))
+    return chain.from_iterable(break_line(line, prefix=' ' * indent,
+                                          prefix_first_line=' ' * indent_first)
+                               for line, (indent_first, indent) in zip(doc_string_lines,
+                                                                       chain([(indent_first_line, indent)],
+                                                                             repeat((indent_first_line,
+                                                                                     indent_first_line)
+                                                                                    ))))

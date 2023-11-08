@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -265,4 +266,291 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_schedules(self, location_id: str, org_id: str = None, type: GetScheduleObjectType = None,
+                                   max_: int = None, start: int = None, name: str = None,
+                                   **params) -> Generator[ListScheduleObject, None, None]:
+        """
+        Read the List of Schedules
+
+        List all schedules for the given location of the organization.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of schedules for this location.
+        :type location_id: str
+        :param org_id: List schedules for this organization.
+        :type org_id: str
+        :param type: Type of the schedule.
+        :type type: GetScheduleObjectType
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return schedules with the matching name.
+        :type name: str
+        :return: Generator yielding :class:`ListScheduleObject` instances
+        """
+        ...
+
+
+    def get_details_for_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str,
+                                   org_id: str = None) -> GetScheduleObject:
+        """
+        Get Details for a Schedule
+
+        Retrieve Schedule details.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Retrieving schedule details requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve schedule details in this location.
+        :type location_id: str
+        :param type: Type of the schedule.
+        :type type: GetScheduleObjectType
+        :param schedule_id: Retrieve the schedule with the matching ID.
+        :type schedule_id: str
+        :param org_id: Retrieve schedule details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetScheduleObject`
+        """
+        ...
+
+
+    def create_a_schedule(self, location_id: str, type: GetScheduleObjectType, name: str,
+                          events: list[ModifyScheduleEventObject], org_id: str = None) -> str:
+        """
+        Create a Schedule
+
+        Create new Schedule for the given location.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Creating a schedule requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the schedule for this location.
+        :type location_id: str
+        :param type: Type of the schedule.
+        :type type: GetScheduleObjectType
+        :param name: Unique name for the schedule.
+        :type name: str
+        :param events: List of schedule events.
+        :type events: list[ModifyScheduleEventObject]
+        :param org_id: Create the schedule for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def update_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, name: str,
+                          events: list[ModifyScheduleEventListObject], org_id: str = None) -> str:
+        """
+        Update a Schedule
+
+        Update the designated schedule.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Updating a schedule requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Schedule ID will change upon modification of the Schedule name.
+
+        :param location_id: Location in which this schedule exists.
+        :type location_id: str
+        :param type: Type of schedule.
+        :type type: GetScheduleObjectType
+        :param schedule_id: Update schedule with the matching ID.
+        :type schedule_id: str
+        :param name: Unique name for the schedule.
+        :type name: str
+        :param events: List of schedule events.
+        :type events: list[ModifyScheduleEventListObject]
+        :param org_id: Update schedule from this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, org_id: str = None):
+        """
+        Delete a Schedule
+
+        Delete the designated Schedule.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Deleting a schedule requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which to delete a schedule.
+        :type location_id: str
+        :param type: Type of the schedule.
+        :type type: GetScheduleObjectType
+        :param schedule_id: Delete the schedule with the matching ID.
+        :type schedule_id: str
+        :param org_id: Delete the schedule from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str,
+                                         event_id: str, org_id: str = None) -> GetScheduleEventObject:
+        """
+        Get Details for a Schedule Event
+
+        Retrieve Schedule Event details.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Retrieving a schedule event's details requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve schedule event details in this location.
+        :type location_id: str
+        :param type: Type of schedule.
+        :type type: GetScheduleObjectType
+        :param schedule_id: Retrieve the schedule event with the matching schedule ID.
+        :type schedule_id: str
+        :param event_id: Retrieve the schedule event with the matching schedule event ID.
+        :type event_id: str
+        :param org_id: Retrieve schedule event details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetScheduleEventObject`
+        """
+        ...
+
+
+    def create_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, name: str,
+                                start_date: datetime, end_date: datetime, start_time: datetime, end_time: datetime,
+                                all_day_enabled: bool, recurrence: RecurrenceObject, org_id: str = None) -> str:
+        """
+        Create a Schedule Event
+
+        Create new Event for the given location Schedule.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Creating a schedule event requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the schedule for this location.
+        :type location_id: str
+        :param type: Type of schedule.
+        :type type: GetScheduleObjectType
+        :param schedule_id: Create event for a given schedule ID.
+        :type schedule_id: str
+        :param name: Name for the event.
+        :type name: str
+        :param start_date: Start Date of Event.
+        :type start_date: Union[str, datetime]
+        :param end_date: End Date of Event.
+        :type end_date: Union[str, datetime]
+        :param start_time: Start time of event. Mandatory if the event is not all day.
+        :type start_time: Union[str, datetime]
+        :param end_time: End time of event. Mandatory if the event is not all day.
+        :type end_time: Union[str, datetime]
+        :param all_day_enabled: An indication of whether given event is an all-day event or not. Mandatory if the
+            `startTime` and `endTime` are not defined.
+        :type all_day_enabled: bool
+        :param recurrence: Recurrence definition.
+        :type recurrence: RecurrenceObject
+        :param org_id: Create the schedule for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def update_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, event_id: str,
+                                name: str, start_date: datetime, end_date: datetime, start_time: datetime,
+                                end_time: datetime, all_day_enabled: bool, recurrence: RecurrenceObject,
+                                org_id: str = None) -> str:
+        """
+        Update a Schedule Event
+
+        Update the designated Schedule Event.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Updating a schedule event requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The schedule event ID will change upon modification of the schedule event name.
+
+        :param location_id: Location in which this schedule event exists.
+        :type location_id: str
+        :param type: Type of schedule.
+        :type type: GetScheduleObjectType
+        :param schedule_id: Update schedule event with the matching schedule ID.
+        :type schedule_id: str
+        :param event_id: Update the schedule event with the matching schedule event ID.
+        :type event_id: str
+        :param name: Name for the event.
+        :type name: str
+        :param start_date: Start date of event.
+        :type start_date: Union[str, datetime]
+        :param end_date: End date of event.
+        :type end_date: Union[str, datetime]
+        :param start_time: Start time of event. Mandatory if the event is not all day.
+        :type start_time: Union[str, datetime]
+        :param end_time: End time of event. Mandatory if the event is not all day.
+        :type end_time: Union[str, datetime]
+        :param all_day_enabled: An indication of whether given event is an all-day event or not. Mandatory if the
+            `startTime` and `endTime` are not defined.
+        :type all_day_enabled: bool
+        :param recurrence: Recurrence definition.
+        :type recurrence: RecurrenceObject
+        :param org_id: Update schedule from this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, event_id: str,
+                                org_id: str = None):
+        """
+        Delete a Schedule Event
+
+        Delete the designated Schedule Event.
+        
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        
+        Deleting a schedule event requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which to delete a schedule.
+        :type location_id: str
+        :param type: Type of schedule.
+        :type type: GetScheduleObjectType
+        :param schedule_id: Delete the schedule with the matching ID.
+        :type schedule_id: str
+        :param event_id: Delete the schedule event with the matching schedule event ID.
+        :type event_id: str
+        :param org_id: Delete the schedule from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -150,4 +151,120 @@ class MessagesWithECMApi(ApiChild, base='messages'):
     
     Just like in the Webex app, you must be a member of the room in order to target it with this API.
     """
+
+    def list_messages(self, room_id: str, mentioned_people: list[str] = None, before: Union[str, datetime] = None,
+                      before_message: str = None, max_: int = None, **params) -> Generator[Message, None, None]:
+        """
+        List Messages
+
+        Lists all messages in a room.
+        
+        Each message includes content attachments if present.
+        
+        The list sorts the messages in descending order by creation date.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param room_id: List messages in a room, by ID.
+        :type room_id: str
+        :param mentioned_people: List messages with these people mentioned, by ID. Use `me` as a shorthand for the
+            current API user.
+        :type mentioned_people: list[str]
+        :param before: List messages sent before a date and time.
+        :type before: Union[str, datetime]
+        :param before_message: List messages sent before a message, by ID.
+        :type before_message: str
+        :param max_: Limit the maximum number of messages in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Message` instances
+        """
+        ...
+
+
+    def list_direct_messages(self, person_id: str = None, person_email: str = None) -> list[DirectMessage]:
+        """
+        List Direct Messages
+
+        Lists all messages in a 1:1 (direct) room.
+        
+        Use the `personId` or `personEmail` query parameter to specify the room. Each message includes content
+        attachments if present.
+        
+        The list sorts the messages in descending order by creation date.
+
+        :param person_id: List messages in a 1:1 room, by person ID.
+        :type person_id: str
+        :param person_email: List messages in a 1:1 room, by person email.
+        :type person_email: str
+        :rtype: list[DirectMessage]
+        """
+        ...
+
+
+    def create_a_message(self, room_id: str = None, to_person_id: str = None, to_person_email: str = None,
+                         text: str = None, markdown: str = None, files: list[str] = None,
+                         attachments: list[Attachment] = None) -> Message:
+        """
+        Create a Message
+
+        Create a plain text or `rich text
+        <https://developer.webex.com/docs/api/basics#formatting-messages>`_ message, and optionally, a `file attachment
+        
+        The `files` parameter is an array, which accepts multiple values to allow for future expansion, but currently
+        only one file may be included with the message.
+
+        :param room_id: The room ID of the message.
+        :type room_id: str
+        :param to_person_id: The person ID of the recipient when sending a private 1:1 message.
+        :type to_person_id: str
+        :param to_person_email: The email address of the recipient when sending a private 1:1 message.
+        :type to_person_email: str
+        :param text: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to
+            provide alternate text for UI clients that do not support rich text. The maximum message length is 7439
+            bytes.
+        :type text: str
+        :param markdown: The message, in Markdown format. The maximum message length is 7439 bytes.
+        :type markdown: str
+        :param files: The public URL to a binary file to be posted into the room. Only one file is allowed per message.
+            Uploaded files are automatically converted into a format that all Webex clients can render. For the
+            supported media types and the behavior of uploads, see the `Message Attachments Guide
+            <https://developer.webex.com/docs/api/basics#message-attachments>`_.
+        :type files: list[str]
+        :param attachments: Content attachments to attach to the message.
+        :type attachments: list[Attachment]
+        :rtype: :class:`Message`
+        """
+        ...
+
+
+    def get_message_details(self, message_id: str) -> Message:
+        """
+        Get Message Details
+
+        Shows details for a message, by message ID.
+        
+        Specify the message ID in the `messageId` parameter in the URI.
+
+        :param message_id: The unique identifier for the message.
+        :type message_id: str
+        :rtype: :class:`Message`
+        """
+        ...
+
+
+    def delete_a_message(self, message_id: str):
+        """
+        Delete a Message
+
+        Deletes a message, by message ID.
+        
+        Specify the message ID in the `messageId` parameter in the URI.
+
+        :param message_id: The unique identifier for the message.
+        :type message_id: str
+        :rtype: None
+        """
+        ...
+
     ...

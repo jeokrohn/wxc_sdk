@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -404,4 +405,41 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
     The body of the response in this case contains the end point information where a user can get data for the user's
     organization.
     """
+
+    def get_detailed_call_history(self, start_time: datetime, end_time: datetime, locations: str = None,
+                                  max_: int = None, **params) -> Generator[CDR, None, None]:
+        """
+        Get Detailed Call History
+
+        Provides Webex Calling Detailed Call History data for your organization.
+        
+        Results can be filtered with the `startTime`, `endTime` and `locations` request parameters. The `startTime` and
+        `endTime` parameters specify the start and end of the time period for the Detailed Call History reports you
+        wish to collect. The API will return all reports that were created between `startTime` and `endTime`.
+        
+        <br/><br/>
+        Response entries may be added as more information is made available for the reports.
+        Values in response items may be extended as more capabilities are added to Webex Calling.
+
+        :param start_time: Time of the first report you wish to collect. (Report time is the time the call finished).
+            **Note:** The specified time must be between 5 minutes ago and 48 hours ago, and be formatted as
+            `YYYY-MM-DDTHH:MM:SS.mmmZ`.
+        :type start_time: Union[str, datetime]
+        :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
+            **Note:** The specified time should be later than `startTime` but no later than 48 hours, and be formatted
+            as `YYYY-MM-DDTHH:MM:SS.mmmZ`.
+        :type end_time: Union[str, datetime]
+        :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
+            provided. Allows you to query reports by location.
+        :type locations: str
+        :param max_: Limit the maximum number of reports per page of the response. The range is 1 to 500. When the API
+            has more reports to return than the max value, the API response will be paginated. Follow the next link
+            contained in the “Link” header within a response to request the next page of results. If there is no next
+            link, all reports for the selected time range have been collected. API requests for the next pages can be
+            requested immediately and do not count towards API rate limiting.
+        :type max_: int
+        :return: Generator yielding :class:`CDR` instances
+        """
+        ...
+
     ...

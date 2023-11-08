@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -295,4 +296,98 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
     These endpoints require an auth token with the `cjp:config_read` scope for organizations with a WxCC license or the
     `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
     """
+
+    def get_tasks(self, from_: int, to_: int = None, channel_types: list[str] = None, org_id: str = None,
+                  page_size: int = None) -> TasksResponse:
+        """
+        Get Tasks
+
+        A Task represents a request or demand for attention/work from agents. Concretely, a telephony Task is an
+        incoming call. For chat, a Task is a chat session. For email, a Task is an email chain. This API returns a
+        list of Tasks (open or closed) within a date range.
+
+        :param from_: Filter tasks created after given epoch timestamp (in milliseconds).
+        :type from_: int
+        :param to_: Filter tasks created before given epoch timestamp (in milliseconds). If unspecified, queries up to
+            the present.
+        :type to_: int
+        :param channel_types: Task channel type(s) permitted in response. Must be lowercase. By default, there is no
+            channelType filtering.
+        :type channel_types: list[str]
+        :param org_id: Organization ID to use for this operation. If unspecified, inferred from token. Token must have
+            permission to interact with this organization.
+        :type org_id: str
+        :param page_size: Maximum page size in response. Max allowable value is 1000.
+        :type page_size: int
+        :rtype: :class:`TasksResponse`
+        """
+        ...
+
+
+    def get_agents_statistics(self, from_: int, to_: int, interval: GetAgentsStatisticsInterval, agent_ids: str = None,
+                              org_id: str = None) -> AgentStatsResponse:
+        """
+        Get Agents Statistics
+
+        Get Agents statistics given a time range.
+
+        :param from_: Start time for the query (in epoch milliseconds). Must have minutes set to one of the 15 minute
+            increments within an hour (i.e. XX:00, XX:15, XX:30, XX:45)(e.g. 12:00, 12:15, 12:30, 12:45)
+        :type from_: int
+        :param to_: End time for the query (in epoch milliseconds). Max of 36 months allowed between `from` and `to`.
+            Must have minutes set to one of the 15 minute increments within an hour (i.e. XX:00, XX:15, XX:30,
+            XX:45)(e.g. 12:00, 12:15, 12:30, 12:45)
+        :type to_: int
+        :param interval: Interval value in minutes.
+        :type interval: GetAgentsStatisticsInterval
+        :param agent_ids: Comma separated list of agent ids. Maximum 100 values permitted. If not supplied, all agents
+            for an organization are returned.
+        :type agent_ids: str
+        :param org_id: Organization ID to use for this operation. If unspecified, inferred from token. Token must have
+            permission to interact with this organization.
+        :type org_id: str
+        :rtype: :class:`AgentStatsResponse`
+        """
+        ...
+
+
+    def get_queues_statistics(self, from_: int, to_: int, interval: GetAgentsStatisticsInterval, queue_ids: str = None,
+                              org_id: str = None) -> QueueStatsResponse:
+        """
+        Get Queues Statistics
+
+        This API will provide queues statistics given a time duration.
+
+        :param from_: Start time for the query (in epoch milliseconds). Must have minutes set to one of the 15 minute
+            increments within an hour (i.e. XX:00, XX:15, XX:30, XX:45)(e.g. 12:00, 12:15, 12:30, 12:45)
+        :type from_: int
+        :param to_: End time for the query (in epoch milliseconds). Max of 36 months allowed between `from` and `to`.
+            Must have minutes set to one of the 15 minute increments within an hour (i.e. XX:00, XX:15, XX:30,
+            XX:45)(e.g. 12:00, 12:15, 12:30, 12:45)
+        :type to_: int
+        :param interval: Interval value in minutes.
+        :type interval: GetAgentsStatisticsInterval
+        :param queue_ids: Comma separated list of queue ids. Maximum 100 values permitted. If not supplied, all queues
+            for an organization are returned.
+        :type queue_ids: str
+        :param org_id: Organization ID to use for this operation. If unspecified, inferred from token. Token must have
+            permission to interact with this organization.
+        :type org_id: str
+        :rtype: :class:`QueueStatsResponse`
+        """
+        ...
+
+
+    def list_captures(self, query: ListCapturesQuery) -> ListCapturesResponse:
+        """
+        List Captures
+
+        Retrieve a list of captures given a set of taskIds. A capture is a specific snippet of media.
+
+
+        :type query: ListCapturesQuery
+        :rtype: :class:`ListCapturesResponse`
+        """
+        ...
+
     ...

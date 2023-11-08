@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -150,4 +151,124 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_announcement_languages(self) -> list[Language]:
+        """
+        Read the List of Announcement Languages
+
+        List all languages supported by Webex Calling for announcements and voice prompts.
+        
+        Retrieving announcement languages requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :rtype: list[Language]
+        """
+        ...
+
+
+    def get_voicemail_settings(self, org_id: str = None) -> GetVoicemailSettingsObject:
+        """
+        Get Voicemail Settings
+
+        Retrieve the organization's voicemail settings.
+        
+        Organizational voicemail settings determines what voicemail features a person can configure and automatic
+        message expiration.
+        
+        Retrieving organization's voicemail settings requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve voicemail settings for this organization.
+        :type org_id: str
+        :rtype: :class:`GetVoicemailSettingsObject`
+        """
+        ...
+
+
+    def update_voicemail_settings(self, message_expiry_enabled: bool, number_of_days_for_message_expiry: int,
+                                  strict_deletion_enabled: bool, voice_message_forwarding_enabled: bool,
+                                  org_id: str = None):
+        """
+        Update Voicemail Settings
+
+        Update the organization's voicemail settings.
+        
+        Organizational voicemail settings determines what voicemail features a person can configure and automatic
+        message expiration.
+        
+        Updating an organization's voicemail settings requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param message_expiry_enabled: Set to `true` to enable voicemail deletion and set the deletion conditions for
+            expired messages.
+        :type message_expiry_enabled: bool
+        :param number_of_days_for_message_expiry: Number of days after which messages expire.
+        :type number_of_days_for_message_expiry: int
+        :param strict_deletion_enabled: Set to `true` to delete all read and unread voicemail messages based on the
+            time frame you set. Set to `false` to keep all the unread voicemail messages.
+        :type strict_deletion_enabled: bool
+        :param voice_message_forwarding_enabled: Set to `true` to allow people to configure the email forwarding of
+            voicemails.
+        :type voice_message_forwarding_enabled: bool
+        :param org_id: Update voicemail settings for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_voicemail_rules(self, org_id: str = None) -> GetVoicemailRulesObject:
+        """
+        Get Voicemail Rules
+
+        Retrieve the organization's voicemail rules.
+        
+        Organizational voicemail rules specify the default passcode requirements. They are provided for informational
+        purposes only and cannot be modified.
+        
+        Retrieving the organization's voicemail rules requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve voicemail rules for this organization.
+        :type org_id: str
+        :rtype: :class:`GetVoicemailRulesObject`
+        """
+        ...
+
+
+    def update_voicemail_rules(self, default_voicemail_pin_enabled: bool, default_voicemail_pin: str,
+                               expire_passcode: GetVoicemailRulesObjectExpirePasscode,
+                               change_passcode: GetVoicemailRulesObjectExpirePasscode,
+                               block_previous_passcodes: GetVoicemailRulesObjectBlockPreviousPasscodes,
+                               org_id: str = None):
+        """
+        Update Voicemail Rules
+
+        Update the organization's default voicemail passcode and/or rules.
+        
+        Organizational voicemail rules specify the default passcode requirements.
+        
+        If you choose to set a default passcode for new people added to your organization, communicate to your people
+        what that passcode is, and that it must be reset before they can access their voicemail. If this feature is
+        not turned on, each new person must initially set their own passcode.
+        
+        Updating an organization's voicemail passcode and/or rules requires a full administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param default_voicemail_pin_enabled: Set to `true` to enable the default voicemail passcode.
+        :type default_voicemail_pin_enabled: bool
+        :param default_voicemail_pin: Default voicemail passcode.
+        :type default_voicemail_pin: str
+        :param expire_passcode: Settings for passcode expiry.
+        :type expire_passcode: GetVoicemailRulesObjectExpirePasscode
+        :param change_passcode: Settings for passcode changes.
+        :type change_passcode: GetVoicemailRulesObjectExpirePasscode
+        :param block_previous_passcodes: Settings for previous passcode usage.
+        :type block_previous_passcodes: GetVoicemailRulesObjectBlockPreviousPasscodes
+        :param org_id: Update voicemail rules for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

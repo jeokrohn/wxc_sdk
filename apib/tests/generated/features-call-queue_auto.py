@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -1074,4 +1075,769 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, max_: int = None,
+                                     start: int = None, name: str = None, phone_number: str = None,
+                                     **params) -> Generator[ListCallQueueObject, None, None]:
+        """
+        Read the List of Call Queues
+
+        List all Call Queues for the organization.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List call queues for this organization.
+        :type org_id: str
+        :param location_id: Only return call queues with matching location ID.
+        :type location_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return call queues with the matching name.
+        :type name: str
+        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :type phone_number: str
+        :return: Generator yielding :class:`ListCallQueueObject` instances
+        """
+        ...
+
+
+    def create_a_call_queue(self, location_id: str, name: str, phone_number: str, extension: datetime,
+                            language_code: str, first_name: str, last_name: str, time_zone: str,
+                            call_policies: GetCallQueueCallPolicyObject,
+                            queue_settings: CallQueueQueueSettingsGetObject,
+                            agents: list[PostPersonPlaceVirtualLineCallQueueObject], allow_agent_join_enabled: bool,
+                            phone_number_for_outgoing_calls_enabled: bool, org_id: str = None) -> str:
+        """
+        Create a Call Queue
+
+        Create new Call Queues for the given location.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Creating a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the call queue for this location.
+        :type location_id: str
+        :param name: Unique name for the call queue.
+        :type name: str
+        :param phone_number: Primary phone number of the call queue. Either a `phoneNumber` or `extension` is
+            mandatory.
+        :type phone_number: str
+        :param extension: Primary phone extension of the call queue. Either a `phoneNumber` or extension is mandatory.
+        :type extension: Union[str, datetime]
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to
+            `phoneNumber` if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the call queue.
+        :type time_zone: str
+        :param call_policies: Policy controlling how calls are routed to `agents`.
+        :type call_policies: GetCallQueueCallPolicyObject
+        :param queue_settings: Overall call queue settings.
+        :type queue_settings: CallQueueQueueSettingsGetObject
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineCallQueueObject]
+        :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
+        :type allow_agent_join_enabled: bool
+        :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
+            to use the queue's Caller ID for outgoing calls.
+        :type phone_number_for_outgoing_calls_enabled: bool
+        :param org_id: Create the call queue for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None):
+        """
+        Delete a Call Queue
+
+        Delete the designated Call Queue.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Deleting a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which to delete a call queue.
+        :type location_id: str
+        :param queue_id: Delete the call queue with the matching ID.
+        :type queue_id: str
+        :param org_id: Delete the call queue from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> GetCallQueueObject:
+        """
+        Get Details for a Call Queue
+
+        Retrieve Call Queue details.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Retrieving call queue details requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueObject`
+        """
+        ...
+
+
+    def update_a_call_queue(self, location_id: str, queue_id: str, enabled: bool, name: str, language_code: str,
+                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: datetime,
+                            alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
+                            call_policies: GetCallQueueCallPolicyObject,
+                            queue_settings: CallQueueQueueSettingsGetObject,
+                            allow_call_waiting_for_agents_enabled: bool,
+                            agents: list[ModifyPersonPlaceVirtualLineCallQueueObject], allow_agent_join_enabled: bool,
+                            phone_number_for_outgoing_calls_enabled: bool, org_id: str = None):
+        """
+        Update a Call Queue
+
+        Update the designated Call Queue.
+        
+        Call queues temporarily hold calls in the cloud when all agents, which
+        can be users or agents, assigned to receive calls from the queue are
+        unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone
+        number outside callers can dial to reach users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach users assigned to the call queue.
+        
+        Updating a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param enabled: Whether or not the call queue is enabled.
+        :type enabled: bool
+        :param name: Unique name for the call queue.
+        :type name: str
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to `.`.
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to the
+            `phoneNumber` if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the hunt group.
+        :type time_zone: str
+        :param phone_number: Primary phone number of the call queue.
+        :type phone_number: str
+        :param extension: Extension of the call queue.
+        :type extension: Union[str, datetime]
+        :param alternate_number_settings: The alternate numbers feature allows you to assign multiple phone numbers or
+            extensions to a call queue. Each number will reach the same greeting and each menu will function
+            identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
+            numbers ring into the call queue.
+        :type alternate_number_settings: GetCallQueueObjectAlternateNumberSettings
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: GetCallQueueCallPolicyObject
+        :param queue_settings: Overall call queue settings.
+        :type queue_settings: CallQueueQueueSettingsGetObject
+        :param allow_call_waiting_for_agents_enabled: Flag to indicate whether call waiting is enabled for agents.
+        :type allow_call_waiting_for_agents_enabled: bool
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[ModifyPersonPlaceVirtualLineCallQueueObject]
+        :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
+        :type allow_agent_join_enabled: bool
+        :param phone_number_for_outgoing_calls_enabled: When `true`, indicates that the agent's configuration allows
+            them to use the queue's Caller ID for outgoing calls.
+        :type phone_number_for_outgoing_calls_enabled: bool
+        :param org_id: Update call queue settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def read_the_list_of_call_queue_announcement_files(self, location_id: str, queue_id: str,
+                                                       org_id: str = None) -> list[GetAnnouncementFileInfo]:
+        """
+        Read the List of Call Queue Announcement Files
+
+        List file info for all Call Queue announcement files associated with this Call Queue.
+        
+        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
+        queue can be configured to play whatever subset of these announcement files is desired.
+        
+        Retrieving this list of files requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+        
+        Note that uploading of announcement files via API is not currently supported, but is available via Webex
+        Control Hub.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Retrieve anouncement files for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve announcement files for a call queue from this organization.
+        :type org_id: str
+        :rtype: list[GetAnnouncementFileInfo]
+        """
+        ...
+
+
+    def delete_a_call_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str,
+                                              org_id: str = None):
+        """
+        Delete a Call Queue Announcement File
+
+        Delete an announcement file for the designated Call Queue.
+        
+        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
+        queue can be configured to play whatever subset of these announcement files is desired.
+        
+        Deleting an announcement file for a call queue requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Delete an announcement for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Delete an announcement for the call queue with this identifier.
+        :type queue_id: str
+
+        :type file_name: str
+        :param org_id: Delete call queue announcement from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
+                                                      org_id: str = None) -> CallForwardSettingsGetCallForwarding:
+        """
+        Get Call Forwarding Settings for a Call Queue
+
+        Retrieve Call Forwarding settings for the designated Call Queue including the list of call forwarding rules.
+        
+        Retrieving call forwarding settings for a call queue requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Retrieve the call forwarding settings for this call queue.
+        :type queue_id: str
+        :param org_id: Retrieve call queue forwarding settings from this organization.
+        :type org_id: str
+        :rtype: CallForwardSettingsGetCallForwarding
+        """
+        ...
+
+
+    def update_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
+                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding,
+                                                         org_id: str = None):
+        """
+        Update Call Forwarding Settings for a Call Queue
+
+        Update Call Forwarding settings for the designated Call Queue.
+        
+        Updating call forwarding settings for a call queue requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update call forwarding settings for this call queue.
+        :type queue_id: str
+        :param call_forwarding: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
+        :type call_forwarding: ModifyCallForwardingObjectCallForwarding
+        :param org_id: Update call queue forwarding settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def create_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, name: str,
+                                                                 enabled: bool, holiday_schedule: str,
+                                                                 business_schedule: str,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
+                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
+                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 org_id: str = None) -> str:
+        """
+        Create a Selective Call Forwarding Rule for a Call Queue
+
+        Create a Selective Call Forwarding Rule for the designated Call Queue.
+        
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
+        
+        Creating a selective call forwarding rule for a call queue requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which the call queue exists.
+        :type location_id: str
+        :param queue_id: Create the rule for this call queue.
+        :type queue_id: str
+        :param name: Unique name for the selective rule in the hunt group.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CreateForwardingRuleObjectForwardTo
+        :param calls_from: Settings related to the rule matching based on incoming caller ID.
+        :type calls_from: CreateForwardingRuleObjectCallsFrom
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CreateForwardingRuleObjectCallsTo
+        :param org_id: Create the call queue rule for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
+                                                            org_id: str = None) -> GetForwardingRuleObject:
+        """
+        Get Selective Call Forwarding Rule for a Call Queue
+
+        Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
+        
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
+        
+        Retrieving a selective call forwarding rule's settings for a call queue requires a full or read-only
+        administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which to call queue exists.
+        :type location_id: str
+        :param queue_id: Retrieve setting for a rule for this call queue.
+        :type queue_id: str
+        :param rule_id: Call queue rule you are retrieving settings for.
+        :type rule_id: str
+        :param org_id: Retrieve call queue rule settings for this organization.
+        :type org_id: str
+        :rtype: :class:`GetForwardingRuleObject`
+        """
+        ...
+
+
+    def update_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
+                                                                 name: str, enabled: bool, holiday_schedule: str,
+                                                                 business_schedule: str,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
+                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
+                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 org_id: str = None) -> str:
+        """
+        Update a Selective Call Forwarding Rule for a Call Queue
+
+        Update a Selective Call Forwarding Rule's settings for the designated Call Queue.
+        
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
+        
+        Updating a selective call forwarding rule's settings for a call queue requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update settings for a rule for this call queue.
+        :type queue_id: str
+        :param rule_id: Call queue rule you are updating settings for.
+        :type rule_id: str
+        :param name: Unique name for the selective rule in the hunt group.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CreateForwardingRuleObjectForwardTo
+        :param calls_from: Settings related the rule matching based on incoming caller ID.
+        :type calls_from: CreateForwardingRuleObjectCallsFrom
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CreateForwardingRuleObjectCallsTo
+        :param org_id: Update call queue rule settings for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
+                                                                 org_id: str = None):
+        """
+        Delete a Selective Call Forwarding Rule for a Call Queue
+
+        Delete a Selective Call Forwarding Rule for the designated Call Queue.
+        
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
+        
+        Deleting a selective call forwarding rule for a call queue requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Delete the rule for this call queue.
+        :type queue_id: str
+        :param rule_id: Call queue rule you are deleting.
+        :type rule_id: str
+        :param org_id: Delete call queue rule from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_call_queue_holiday_service(self, location_id: str, queue_id: str,
+                                                     org_id: str = None) -> GetCallQueueHolidayObject:
+        """
+        Get Details for a Call Queue Holiday Service
+
+        Retrieve Call Queue Holiday Service details.
+        
+        Configure the call queue to route calls differently during the holidays.
+        
+        Retrieving call queue holiday service details requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueHolidayObject`
+        """
+        ...
+
+
+    def update_a_call_queue_holiday_service(self, location_id: str, queue_id: str, holiday_service_enabled: bool,
+                                            action: GetCallQueueHolidayObjectAction,
+                                            holiday_schedule_level: CallQueueHolidaySchedulesObjectScheduleLevel,
+                                            holiday_schedule_name: str, transfer_phone_number: str,
+                                            play_announcement_before_enabled: bool,
+                                            audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                            audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                            org_id: str = None):
+        """
+        Update a Call Queue Holiday Service
+
+        Update the designated Call Queue Holiday Service.
+        
+        Configure the call queue to route calls differently during the holidays.
+        
+        Updating a call queue holiday service requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param holiday_service_enabled: Enable or Disable the call queue holiday service routing policy.
+        :type holiday_service_enabled: bool
+        :param action: Specifies call processing action type.
+        :type action: GetCallQueueHolidayObjectAction
+        :param holiday_schedule_level: Specifies whether the schedule mentioned in `holidayScheduleName` is org or
+            location specific. (Must be from `holidaySchedules` list)
+        :type holiday_schedule_level: CallQueueHolidaySchedulesObjectScheduleLevel
+        :param holiday_schedule_name: Name of the schedule configured for a holiday service as one of from
+            `holidaySchedules` list.
+        :type holiday_schedule_name: str
+        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
+            also be an extension.
+        :type transfer_phone_number: str
+        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
+            action.
+        :type play_announcement_before_enabled: bool
+        :param audio_message_selection: Specifies what type of announcement to be played.
+        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
+        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :param org_id: Update call queue settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_call_queue_night_service(self, location_id: str, queue_id: str,
+                                                   org_id: str = None) -> GetCallQueueNightServiceObject:
+        """
+        Get Details for a Call Queue Night Service
+
+        Retrieve Call Queue Night service details.
+        
+        Configure the call queue to route calls differently during the hours when the queue is not in service. This is
+        determined by a schedule that defines the business hours of the queue.
+        
+        Retrieving call queue details requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue night service with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue night service settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueNightServiceObject`
+        """
+        ...
+
+
+    def update_a_call_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool,
+                                          action: GetCallQueueHolidayObjectAction, transfer_phone_number: datetime,
+                                          play_announcement_before_enabled: bool,
+                                          announcement_mode: GetCallQueueNightServiceObjectAnnouncementMode,
+                                          audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                          audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                          business_hours_name: str,
+                                          business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel,
+                                          force_night_service_enabled: bool,
+                                          manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                          manual_audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                          org_id: str = None):
+        """
+        Update a Call Queue Night Service
+
+        Update Call Queue Night Service details.
+        
+        Configure the call queue to route calls differently during the hours when the queue is not in service. This is
+        determined by a schedule that defines the business hours of the queue.
+        
+        Updating call queue night service details requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue night service with this identifier.
+        :type queue_id: str
+        :param night_service_enabled: Enable or disable call queue night service routing policy.
+        :type night_service_enabled: bool
+        :param action: Specifies call processing action type.
+        :type action: GetCallQueueHolidayObjectAction
+        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
+            also be an extension.
+        :type transfer_phone_number: Union[str, datetime]
+        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
+            action.
+        :type play_announcement_before_enabled: bool
+        :param announcement_mode: Specifies the type of announcements to played.
+        :type announcement_mode: GetCallQueueNightServiceObjectAnnouncementMode
+        :param audio_message_selection: Specifies what type of announcements to be played when `announcementMode` is
+            `NORMAL`.
+        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
+        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :param business_hours_name: Name of the schedule configured for a night service as one of from
+            `businessHourSchedules` list.
+        :type business_hours_name: str
+        :param business_hours_level: Specifies whether the above mentioned schedule is org or location specific. (Must
+            be from `businessHourSchedules` list)
+        :type business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel
+        :param force_night_service_enabled: Force night service regardless of business hour schedule.
+        :type force_night_service_enabled: bool
+        :param manual_audio_message_selection: Specifies what type of announcement to be played when `announcementMode`
+            is `MANUAL`.
+        :type manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param manual_audio_files: List Of pre-configured Audio Files.
+        :type manual_audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :param org_id: Retrieve call queue night service settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_call_queue_forced_forward(self, location_id: str, queue_id: str,
+                                                    org_id: str = None) -> GetCallQueueForcedForwardObject:
+        """
+        Get Details for a Call Queue Forced Forward
+
+        Retrieve Call Queue policy Forced Forward details.
+        
+        This policy allows calls to be temporarily diverted to a configured destination.
+        
+        Retrieving call queue Forced Forward details requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueForcedForwardObject`
+        """
+        ...
+
+
+    def update_a_call_queue_forced_forward_service(self, location_id: str, queue_id: str, forced_forward_enabled: bool,
+                                                   transfer_phone_number: str, play_announcement_before_enabled: bool,
+                                                   audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                                   org_id: str = None):
+        """
+        Update a Call Queue Forced Forward service
+
+        Update the designated Forced Forward Service.
+        
+        If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls
+        that are already in the queue remain queued.
+        The policy can be configured to play an announcement prior to proceeding with the forward.
+        
+        Updating a call queue Forced Forward service requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param forced_forward_enabled: Enable or disable call forced forward service routing policy.
+        :type forced_forward_enabled: bool
+        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
+            also be an extension.
+        :type transfer_phone_number: str
+        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
+            action.
+        :type play_announcement_before_enabled: bool
+        :param audio_message_selection: Specifies what type of announcement to be played.
+        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
+        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :param org_id: Update call queue settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_call_queue_stranded_calls(self, location_id: str, queue_id: str,
+                                                    org_id: str = None) -> GetCallQueueStrandedCallsObject:
+        """
+        Get Details for a Call Queue Stranded Calls
+
+        Allow admin to view default/configured Stranded Calls settings.
+        
+        Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out, then
+        all calls in the queue become stranded.
+        Stranded-Unavailable Policy: This policy allows for the configuration of the processing of calls that are in a
+        staffed queue when all agents are unavailable.
+        
+        Retrieving call queue Stranded Calls details requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueStrandedCallsObject`
+        """
+        ...
+
+
+    def update_a_call_queue_stranded_calls_service(self, location_id: str, queue_id: str,
+                                                   action: GetCallQueueStrandedCallsObjectAction,
+                                                   transfer_phone_number: str,
+                                                   audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                                   org_id: str = None):
+        """
+        Update a Call Queue Stranded Calls service
+
+        Update the designated Call Stranded Calls Service.
+        
+        Allow admin to modify configured Stranded Calls settings.
+        
+        Updating a call queue stranded calls requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param action: Specifies call processing action type.
+        :type action: GetCallQueueStrandedCallsObjectAction
+        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
+            also be an extension.
+        :type transfer_phone_number: str
+        :param audio_message_selection: Specifies what type of announcement to be played.
+        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
+        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :param org_id: Update call queue settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

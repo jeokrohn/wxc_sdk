@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -182,4 +183,119 @@ class BetaFeaturesPagingGroupWithDepartmentFeaturesApi(ApiChild, base='telephony
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_paging_groups(self, org_id: str = None, max_: int = None, start: int = None,
+                                       location_id: str = None, name: str = None, phone_number: str = None,
+                                       department_id: str = None, department_name: str = None,
+                                       **params) -> Generator[ListPagingGroupObject, None, None]:
+        """
+        Read the List of Paging Groups
+
+        List all Paging Groups for the organization.
+        
+        Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List paging groups for this organization.
+        :type org_id: str
+        :param max_: Limit the number of objects returned to this maximum count. Default is 2000
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects. Default is 0
+        :type start: int
+        :param location_id: Return only paging groups with matching location ID. Default is all locations
+        :type location_id: str
+        :param name: Return only paging groups with the matching name.
+        :type name: str
+        :param phone_number: Return only paging groups with matching primary phone number or extension.
+        :type phone_number: str
+        :param department_id: Return only paging groups with the matching departmentId.
+        :type department_id: str
+        :param department_name: Return only paging groups with the matching departmentName.
+        :type department_name: str
+        :return: Generator yielding :class:`ListPagingGroupObject` instances
+        """
+        ...
+
+
+    def get_details_for_a_paging_group(self, location_id: str, paging_id: str,
+                                       org_id: str = None) -> GetPagingGroupObject:
+        """
+        Get Details for a Paging Group
+
+        Retrieve Paging Group details.
+        
+        Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        
+        Retrieving paging group details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a paging group in this location.
+        :type location_id: str
+        :param paging_id: Retrieve settings for the paging group with this identifier.
+        :type paging_id: str
+        :param org_id: Retrieve paging group settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetPagingGroupObject`
+        """
+        ...
+
+
+    def update_a_paging_group(self, location_id: str, paging_id: str, enabled: bool, name: str, phone_number: str,
+                              extension: datetime, language_code: str, first_name: str, last_name: str,
+                              originator_caller_id_enabled: bool, originators: list[str], targets: list[str],
+                              department: UpdatePagingGroupObjectDepartment, org_id: str = None):
+        """
+        Update a Paging Group
+
+        Update the designated Paging Group.
+        
+        Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        
+        Updating a paging group requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Update settings for a paging group in this location.
+        :type location_id: str
+        :param paging_id: Update settings for the paging group with this identifier.
+        :type paging_id: str
+        :param enabled: Whether or not the paging group is enabled.
+        :type enabled: bool
+        :param name: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
+        :type name: str
+        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber
+            or extension is mandatory.
+        :type phone_number: str
+        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or
+            extension is mandatory.
+        :type extension: Union[str, datetime]
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this paging group. Defaults to the
+            phone number if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param originator_caller_id_enabled: Determines what is shown on target users caller ID when a group page is
+            performed. If true shows page originator ID.
+        :type originator_caller_id_enabled: bool
+        :param originators: An array of people and/or workspaces, who may originate pages to this paging group.
+        :type originators: list[str]
+        :param targets: People, including workspaces, that are added to paging group as paging call targets.
+        :type targets: list[str]
+        :param department: Specifies the department information.
+        :type department: UpdatePagingGroupObjectDepartment
+        :param org_id: Update paging group settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

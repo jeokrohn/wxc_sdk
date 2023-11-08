@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -31,4 +32,26 @@ class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
     Message can contain plain text and `rich text
     <https://developer.webex.com/docs/basics#formatting-messages>`_
     """
+
+    def delete_a_meeting_message(self, meeting_message_id: str):
+        """
+        Delete a Meeting Message
+
+        Deletes a Meeting Message from the In Meeting Chat, using its ID.
+        
+        This ID can be retrieved by a Compliance Officer using the `events API
+        <https://developer.webex.com/docs/api/v1/events/list-events>`_ filtering on the `meetingMessages`
+        resource type.
+        
+        NOTE: When viewing the response from the events API, there are 2 `id` fields. The ID to be used here can be
+        found under the `data` field in the response.
+        
+        Specify the `meetingMessage` ID in the `meetingMessageId` parameter in the URI.
+
+        :param meeting_message_id: The unique identifier for the message.
+        :type meeting_message_id: str
+        :rtype: None
+        """
+        ...
+
     ...

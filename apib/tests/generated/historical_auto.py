@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -209,4 +210,63 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
     
     To use this API the org needs to be licensed for pro pack.
     """
+
+    def historical_data_related_to_messaging(self, from_: Union[str, datetime] = None, to_: Union[str,
+                                             datetime] = None) -> HistoricalDataRelatedToMessagingResponse:
+        """
+        Historical Data related to Messaging
+
+        Returns daily aggregates of various metrics related to Webex messaging.
+        
+        <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with
+        the **Try It** feature. </Callout></div>
+
+        :param from_: UTC date starting from which the data needs to be returned.
+        :type from_: Union[str, datetime]
+        :param to_: UTC date up to which the data needs to be returned
+        :type to_: Union[str, datetime]
+        :rtype: :class:`HistoricalDataRelatedToMessagingResponse`
+        """
+        ...
+
+
+    def historical_data_related_to_room_devices(self, from_: Union[str, datetime] = None, to_: Union[str,
+                                                datetime] = None) -> HistoricalDataRelatedToRoomDevicesResponse:
+        """
+        Historical Data related to Room Devices
+
+        Returns daily aggregates of various metrics related to Room Devices.
+        
+        <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with
+        the **Try It** feature. </Callout></div>
+
+        :param from_: Starting UTC Date from which historical data should be returned.
+        :type from_: Union[str, datetime]
+        :param to_: Ending UTC Date for which data should be returned.
+        :type to_: Union[str, datetime]
+        :rtype: :class:`HistoricalDataRelatedToRoomDevicesResponse`
+        """
+        ...
+
+
+    def historical_data_related_to_meetings(self, site_url: str, from_: Union[str, datetime] = None, to_: Union[str,
+                                            datetime] = None) -> HistoricalDataRelatedToMeetingsResponse:
+        """
+        Historical Data related to Meetings
+
+        Return aggregates of various metrics related to meetings for a given Webex site over a specified time range.
+        
+        <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with
+        the **Try It** feature.</Callout></div>
+
+        :param site_url: URL of the Webex site for which historical data is requested.
+        :type site_url: str
+        :param from_: UTC Date starting from which the data needs to be returned
+        :type from_: Union[str, datetime]
+        :param to_: UTC Date up to which the data needs to be returned
+        :type to_: Union[str, datetime]
+        :rtype: :class:`HistoricalDataRelatedToMeetingsResponse`
+        """
+        ...
+
     ...

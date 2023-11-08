@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -290,4 +291,205 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
     Note: `broadworks-connector` entitled callers are limited to org contacts with either source=`CH` or
     source=`Webex4Broadworks`, while non-entitled callers are limited to source=`CH`.
     """
+
+    def create_a_contact(self, org_id: str, schemas: str, display_name: str, first_name: str, last_name: str,
+                         company_name: str, title: str, address: str, avatar_url: str,
+                         primary_contact_method: ContactPrimaryContactMethod, source: ContactSource,
+                         emails: list[ContactEmails], phone_numbers: list[ContactPhoneNumbers],
+                         sip_addresses: list[ContactSipAddresses], ims: list[ContactIms]):
+        """
+        Create a Contact
+
+        Creating a new contact for a given organization requires an org admin role.
+        
+        At least one of the following body parameters: `phoneNumbers`, `emails`, `sipAddresses` is required to create a
+        new contact for source "CH",
+        `displayName` is required to create a new contact for source "Webex4Broadworks".
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param schemas: "urn:cisco:codev:identity:contact:core:1.0".
+        :type schemas: str
+        :param display_name: The full name of the contact.
+        :type display_name: str
+        :param first_name: The first name of the contact.
+        :type first_name: str
+        :param last_name: The last name of the contact.
+        :type last_name: str
+        :param company_name: The company the contact is working for.
+        :type company_name: str
+        :param title: The contact's title.
+        :type title: str
+        :param address: Contact's address.
+        :type address: str
+        :param avatar_url: The URL to the person's avatar in PNG format.
+        :type avatar_url: str
+        :param primary_contact_method: The contact's primary contact method.
+        :type primary_contact_method: ContactPrimaryContactMethod
+        :param source: Where the data come from.
+        :type source: ContactSource
+        :param emails: A list of the user's email addresses with an indicator of the user's primary email address.
+        :type emails: list[ContactEmails]
+        :param phone_numbers: A list of user's phone numbers with an indicator of primary to specify the user's main
+            number.
+        :type phone_numbers: list[ContactPhoneNumbers]
+        :param sip_addresses: The sipAddress values for the user.
+        :type sip_addresses: list[ContactSipAddresses]
+        :param ims: Instant messaging addresses for the user.
+        :type ims: list[ContactIms]
+        :rtype: None
+        """
+        ...
+
+
+    def get_a_contact(self, org_id: str, contact_id: str) -> ContactResponse:
+        """
+        Get a Contact
+
+        Shows details for an organization contact by ID.
+        Specify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId`
+        parameter in the URI.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contact_id: The contact ID.
+        :type contact_id: str
+        :rtype: :class:`ContactResponse`
+        """
+        ...
+
+
+    def update_a_contact(self, org_id: str, contact_id: str, schemas: str, display_name: str, first_name: str,
+                         last_name: str, company_name: str, title: str, address: str, avatar_url: str,
+                         primary_contact_method: ContactPrimaryContactMethod, source: ContactSource,
+                         emails: list[ContactEmails], phone_numbers: list[ContactPhoneNumbers],
+                         sip_addresses: list[ContactSipAddresses], ims: list[ContactIms]):
+        """
+        Update a Contact
+
+        Update details for contact by ID. Only an admin can update a contact.
+        Specify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId`
+        parameter in the URI.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contact_id: The contact ID.
+        :type contact_id: str
+        :param schemas: "urn:cisco:codev:identity:contact:core:1.0".
+        :type schemas: str
+        :param display_name: The full name of the contact.
+        :type display_name: str
+        :param first_name: The first name of the contact.
+        :type first_name: str
+        :param last_name: The last name of the contact.
+        :type last_name: str
+        :param company_name: The company the contact is working for.
+        :type company_name: str
+        :param title: The contact's title.
+        :type title: str
+        :param address: Contact's address.
+        :type address: str
+        :param avatar_url: The URL to the person's avatar in PNG format.
+        :type avatar_url: str
+        :param primary_contact_method: The contact's primary contact method.
+        :type primary_contact_method: ContactPrimaryContactMethod
+        :param source: Where the data come from.
+        :type source: ContactSource
+        :param emails: A list of the user's email addresses with an indicator of the user's primary email address.
+        :type emails: list[ContactEmails]
+        :param phone_numbers: A list of user's phone numbers with an indicator of primary to specify the user's main
+            number.
+        :type phone_numbers: list[ContactPhoneNumbers]
+        :param sip_addresses: The sipAddress values for the user.
+        :type sip_addresses: list[ContactSipAddresses]
+        :param ims: Instant messaging addresses for the user.
+        :type ims: list[ContactIms]
+        :rtype: None
+        """
+        ...
+
+
+    def delete_a_contact(self, org_id: str, contact_id: str):
+        """
+        Delete a Contact
+
+        Remove a contact from the organization. Only an admin can remove a contact.
+        
+        Specify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId`
+        parameter in the URI.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contact_id: The contact ID.
+        :type contact_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def list_contacts(self, org_id: str, keyword: str = None, limit: int = None, source: str = None) -> SearchResponse:
+        """
+        List Contacts
+
+        List contacts in the organization. The default limit is `1000`.
+        
+        `keyword` can be the value of "displayName", "firstName", "lastName", "email". An empty string of `keyword`
+        means get all contacts.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param org_id: The organization ID.
+        :type org_id: str
+        :param keyword: List contacts with a keyword.
+        :type keyword: str
+        :param limit: Limit the maximum number of contact in the response.
+        + Default: 1000
+        :type limit: int
+        :param source: List contacts with source.
+        :type source: str
+        :rtype: :class:`SearchResponse`
+        """
+        ...
+
+
+    def bulk_create_or_update_contacts(self, org_id: str, schemas: str, contacts: list[BulkCreateContacts]):
+        """
+        Bulk Create or Update Contacts
+
+        Create or update contacts in bulk.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param schemas: "urn:cisco:codev:identity:contact:core:1.0".
+        :type schemas: str
+        :param contacts: Contains a list of contacts to be created/updated.
+        :type contacts: list[BulkCreateContacts]
+        :rtype: None
+        """
+        ...
+
+
+    def bulk_delete_contacts(self, org_id: str, schemas: str, object_ids: list[str]):
+        """
+        Bulk Delete Contacts
+
+        Delete contacts in bulk.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param schemas: "urn:cisco:codev:identity:contact:core:1.0".
+        :type schemas: str
+        :param object_ids: List of UUIDs for the contacts.
+        :type object_ids: list[str]
+        :rtype: None
+        """
+        ...
+
     ...

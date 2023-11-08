@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -79,4 +80,56 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
     To obtain the Organization ID needed for these APIs, use the `Organizations API
     <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_.
     """
+
+    def list_cluster_client_type_distribution_details(self, org_id: str, from_: datetime, to_: datetime,
+                                                      device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
+        """
+        List Cluster Client Type Distribution details
+
+        Returns the client type distribution details for all Video Mesh clusters in an organization.
+
+        :param org_id: Unique ID of the organization.
+        :type org_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param device_type: Device type(s).
+        
+        - Possible values:
+        `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
+        :type device_type: str
+        :rtype: list[ClienttypedistributionCollectionforOrg]
+        """
+        ...
+
+
+    def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: datetime, to_: datetime,
+                                                     device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
+        """
+        Get Cluster Client Type Distribution details
+
+        Returns the client type distribution details for a single Video Mesh cluster.
+
+        :param cluster_id: Unique ID of the Video Mesh cluster.
+        :type cluster_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param device_type: Device type(s).
+        
+        - Possible values:
+        `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
+        :type device_type: str
+        :rtype: list[ClienttypedistributionCollectionforOrg]
+        """
+        ...
+
     ...

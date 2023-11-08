@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -262,4 +263,298 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def generate_example_password_for_location(self, location_id: str, org_id: str = None,
+                                               generate: list[PasswordGenerate] = None) -> str:
+        """
+        Generate example password for Location
+
+        Generates an example password using the effective password settings for the location. If you don't specify
+        anything in the `generate` field or don't provide a request body, then you will receive a SIP password by
+        default.
+        
+        Used while creating a trunk and shouldn't be used anywhere else.
+        
+        Generating an example password requires a full or write-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location for which example password has to be generated.
+        :type location_id: str
+        :param org_id: Organization to which the location belongs.
+        :type org_id: str
+        :param generate: password settings array.
+        :type generate: list[PasswordGenerate]
+        :rtype: str
+        """
+        ...
+
+
+    def read_the_internal_dialing_configuration_for_a_location(self, location_id: str,
+                                                               org_id: str = None) -> InternalDialingGet:
+        """
+        Read the Internal Dialing configuration for a location
+
+        Get current configuration for routing unknown extensions to the Premises as internal calls
+        
+        If some users in a location are registered to a PBX, retrieve the setting to route unknown extensions (digits
+        that match the extension length) to the PBX.
+        
+        Retrieving the internal dialing configuration requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: location for which internal calling configuration is being requested
+        :type location_id: str
+        :param org_id: List route identities for this organization.
+        :type org_id: str
+        :rtype: :class:`InternalDialingGet`
+        """
+        ...
+
+
+    def modify_the_internal_dialing_configuration_for_a_location(self, location_id: str,
+                                                                 enable_unknown_extension_route_policy: bool,
+                                                                 unknown_extension_route_identity: UnknownExtensionRouteIdentity,
+                                                                 org_id: str = None):
+        """
+        Modify the Internal Dialing configuration for a location
+
+        Modify current configuration for routing unknown extensions to the premise as internal calls
+        
+        If some users in a location are registered to a PBX, enable the setting to route unknown extensions (digits
+        that match the extension length) to the PBX.
+        
+        Editing the internal dialing configuration requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: location for which internal calling configuration is being requested
+        :type location_id: str
+        :param enable_unknown_extension_route_policy: When enabled, calls made by users at the location to an unknown
+            extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+        :type enable_unknown_extension_route_policy: bool
+        :param unknown_extension_route_identity: Type associated with the identity.
+        :type unknown_extension_route_identity: UnknownExtensionRouteIdentity
+        :param org_id: List route identities for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_location_intercept(self, location_id: str, org_id: str = None) -> GetLocationInterceptObject:
+        """
+        Get Location Intercept
+
+        Retrieve intercept location details for a customer location.
+        
+        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
+        routed to a designated number the person chooses, or to the person's voicemail.
+        
+        Retrieving intercept location details requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve intercept details for this location.
+        :type location_id: str
+        :param org_id: Retrieve intercept location details for a customer location.
+        :type org_id: str
+        :rtype: :class:`GetLocationInterceptObject`
+        """
+        ...
+
+
+    def put_location_intercept(self, location_id: str, enabled: bool, incoming: GetLocationInterceptObjectIncoming,
+                               outgoing: GetLocationInterceptObjectOutgoing, org_id: str = None):
+        """
+        Put Location Intercept
+
+        Modifies the intercept location details for a customer location.
+        
+        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
+        routed to a designated number the user chooses, or to the user's voicemail.
+        
+        Modifying the intercept location details requires a full, user administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Modifies the intercept details for this location.
+        :type location_id: str
+        :param enabled: Enable/disable location intercept. Enable this feature to override any location's Call
+            Intercept settings that a person configures.
+        :type enabled: bool
+        :param incoming: Inbound call details.
+        :type incoming: GetLocationInterceptObjectIncoming
+        :param outgoing: Outbound Call details
+        :type outgoing: GetLocationInterceptObjectOutgoing
+        :param org_id: Modifies the intercept location details for a customer location.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_location_outgoing_permission(self, location_id: str, org_id: str = None) -> list[CallingPermissionObject]:
+        """
+        Get Location Outgoing Permission
+
+        Retrieve the location's outgoing call settings.
+        
+        A location's outgoing call settings allow you to determine the types of calls the people/workspaces at the
+        location are allowed to make, as well as configure the default calling permission for each call type at the
+        location.
+        
+        Retrieving a location's outgoing call settings requires a full, user or read-only administrator or location
+        administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve outgoing call settings for this location.
+        :type location_id: str
+        :param org_id: Retrieve outgoing call settings for this organization.
+        :type org_id: str
+        :rtype: list[CallingPermissionObject]
+        """
+        ...
+
+
+    def update_location_outgoing_permission(self, location_id: str, org_id: str = None,
+                                            calling_permissions: list[CallingPermissionObject] = None):
+        """
+        Update Location Outgoing Permission
+
+        Update the location's outgoing call settings.
+        
+        Location's outgoing call settings allows you to determine the types of calls the people/workspaces at this
+        location are allowed to make and configure the default calling permission for each call type at a location.
+        
+        Updating a location's outgoing call settings requires a full administrator or location administrator auth token
+        with a scope of spark-admin:telephony_config_write.
+
+        :param location_id: Update outgoing call settings for this location.
+        :type location_id: str
+        :param org_id: Update outgoing call settings for this organization.
+        :type org_id: str
+        :param calling_permissions: Array specifying the subset of calling permissions to be updated.
+        :type calling_permissions: list[CallingPermissionObject]
+        :rtype: None
+        """
+        ...
+
+
+    def get_outgoing_permission_auto_transfer_number(self, location_id: str,
+                                                     org_id: str = None) -> GetAutoTransferNumberObject:
+        """
+        Get Outgoing Permission Auto Transfer Number
+
+        Get the transfer numbers for the outbound permission in a location.
+        
+        Outbound permissions can specify which transfer number an outbound call should transfer to via the `action`
+        field.
+        
+        Retrieving an auto transfer number requires a full, user or read-only administrator or location administrator
+        auth token with a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve auto transfer number for this location.
+        :type location_id: str
+        :param org_id: Retrieve auto transfer number for this organization.
+        :type org_id: str
+        :rtype: :class:`GetAutoTransferNumberObject`
+        """
+        ...
+
+
+    def put_outgoing_permission_auto_transfer_number(self, location_id: str, auto_transfer_number1: str,
+                                                     auto_transfer_number2: str, auto_transfer_number3: str,
+                                                     org_id: str = None):
+        """
+        Put Outgoing Permission Auto Transfer Number
+
+        Modifies the transfer numbers for the outbound permission in a location.
+        
+        Outbound permissions can specify which transfer number an outbound call should transfer to via the `action`
+        field.
+        
+        Updating auto transfer number requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: Updating auto transfer number for this location.
+        :type location_id: str
+        :param auto_transfer_number1: Calls placed meeting the criteria in an outbound rule whose `action` is
+            `TRANSFER_NUMBER_1` will be transferred to this number.
+        :type auto_transfer_number1: str
+        :param auto_transfer_number2: Calls placed meeting the criteria in an outbound rule whose `action` is
+            `TRANSFER_NUMBER_2` will be transferred to this number.
+        :type auto_transfer_number2: str
+        :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose `action` is
+            `TRANSFER_NUMBER_3` will be transferred to this number.
+        :type auto_transfer_number3: str
+        :param org_id: Updating auto transfer number for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_outgoing_permission_location_access_code(self, location_id: str,
+                                                     org_id: str = None) -> GetLocationAccessCodeObjectAccessCodes:
+        """
+        Get Outgoing Permission Location Access Code
+
+        Retrieve access codes details for a customer location.
+        
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+        
+        Retrieving access codes details requires a full, user or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param org_id: Retrieve access codes details for a customer location.
+        :type org_id: str
+        :rtype: GetLocationAccessCodeObjectAccessCodes
+        """
+        ...
+
+
+    def create_outgoing_permission_a_new_access_code_for_a_customer_location(self, location_id: str,
+                                                                             access_codes: GetLocationAccessCodeObjectAccessCodes,
+                                                                             org_id: str = None):
+        """
+        Create Outgoing Permission a new access code for a customer location
+
+        Add a new access code for the given location for a customer.
+        
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+        
+        Creating an access code for the given location requires a full or user administrator or location administrator
+        auth token with a scope of spark-admin:telephony_config_write.
+
+        :param location_id: Add new access code for this location.
+        :type location_id: str
+        :param access_codes: Access code details
+        :type access_codes: GetLocationAccessCodeObjectAccessCodes
+        :param org_id: Add new access code for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def delete_outgoing_permission_access_code_location(self, location_id: str, delete_codes: list[str],
+                                                        org_id: str = None):
+        """
+        Delete Outgoing Permission Access Code Location
+
+        Deletes the access code details for a particular location for a customer.
+        
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+        
+        Modifying the access code location details requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Deletes the access code details for this location.
+        :type location_id: str
+        :param delete_codes: Array of string to delete access codes. For example, ["1234","2345"]
+        :type delete_codes: list[str]
+        :param org_id: Deletes the access code details for a customer location.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

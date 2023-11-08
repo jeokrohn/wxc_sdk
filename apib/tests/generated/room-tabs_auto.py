@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -56,4 +57,79 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
     
     Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
     """
+
+    def list_room_tabs(self, room_id: str) -> list[RoomTab]:
+        """
+        List Room Tabs
+
+        Lists all Room Tabs of a room specified by the `roomId` query parameter.
+
+        :param room_id: ID of the room for which to list room tabs.
+        :type room_id: str
+        :rtype: list[RoomTab]
+        """
+        ...
+
+
+    def create_a_room_tab(self, room_id: str, content_url: str, display_name: str) -> RoomTab:
+        """
+        Create a Room Tab
+
+        Add a tab with a specified URL to a room.
+
+        :param room_id: A unique identifier for the room.
+        :type room_id: str
+        :param content_url: URL of the Room Tab. Must use `https` protocol.
+        :type content_url: str
+        :param display_name: User-friendly name for the room tab.
+        :type display_name: str
+        :rtype: :class:`RoomTab`
+        """
+        ...
+
+
+    def get_room_tab_details(self, id: str) -> RoomTab:
+        """
+        Get Room Tab Details
+
+        Get details for a Room Tab with the specified room tab ID.
+
+        :param id: The unique identifier for the Room Tab.
+        :type id: str
+        :rtype: :class:`RoomTab`
+        """
+        ...
+
+
+    def update_a_room_tab(self, id: str, room_id: str, content_url: str, display_name: str) -> RoomTab:
+        """
+        Update a Room Tab
+
+        Updates the content URL of the specified Room Tab ID.
+
+        :param id: The unique identifier for the Room Tab.
+        :type id: str
+        :param room_id: ID of the room that contains the room tab in question.
+        :type room_id: str
+        :param content_url: Content URL of the Room Tab. URL must use `https` protocol.
+        :type content_url: str
+        :param display_name: User-friendly name for the room tab.
+        :type display_name: str
+        :rtype: :class:`RoomTab`
+        """
+        ...
+
+
+    def delete_a_room_tab(self, id: str):
+        """
+        Delete a Room Tab
+
+        Deletes a Room Tab with the specified ID.
+
+        :param id: The unique identifier for the Room Tab to delete.
+        :type id: str
+        :rtype: None
+        """
+        ...
+
     ...

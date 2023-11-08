@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -67,4 +68,114 @@ class MembershipsApi(ApiChild, base='memberships'):
     
     Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
     """
+
+    def list_memberships(self, room_id: str = None, person_id: str = None, person_email: str = None, max_: int = None,
+                         **params) -> Generator[Membership, None, None]:
+        """
+        List Memberships
+
+        Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
+        
+        Use query parameters to filter the response.
+        
+        Use `roomId` to list memberships for a room, by ID.
+        
+        **NOTE**: For moderated team spaces, the list of memberships will include only the space moderators if the user
+        is a team member but not a direct participant of the space.
+        
+        Use either `personId` or `personEmail` to filter the results. The `roomId` parameter is required when using
+        these parameters.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param room_id: List memberships associated with a room, by ID.
+        :type room_id: str
+        :param person_id: List memberships associated with a person, by ID. The `roomId` parameter is required when
+            using this parameter.
+        :type person_id: str
+        :param person_email: List memberships associated with a person, by email address. The `roomId` parameter is
+            required when using this parameter.
+        :type person_email: str
+        :param max_: Limit the maximum number of memberships in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Membership` instances
+        """
+        ...
+
+
+    def create_a_membership(self, room_id: str, person_id: str = None, person_email: str = None,
+                            is_moderator: str = None) -> Membership:
+        """
+        Create a Membership
+
+        Add someone to a room by Person ID or email address, optionally making them a moderator. Compliance Officers
+        cannot add people to empty (team) spaces.
+
+        :param room_id: The room ID.
+        :type room_id: str
+        :param person_id: The person ID.
+        :type person_id: str
+        :param person_email: The email address of the person.
+        :type person_email: str
+        :param is_moderator: Whether or not the participant is a room moderator.
+        :type is_moderator: str
+        :rtype: :class:`Membership`
+        """
+        ...
+
+
+    def get_membership_details(self, membership_id: str) -> Membership:
+        """
+        Get Membership Details
+
+        Get details for a membership by ID.
+        
+        Specify the membership ID in the `membershipId` URI parameter.
+
+        :param membership_id: The unique identifier for the membership.
+        :type membership_id: str
+        :rtype: :class:`Membership`
+        """
+        ...
+
+
+    def update_a_membership(self, membership_id: str, is_moderator: str, is_room_hidden: str) -> Membership:
+        """
+        Update a Membership
+
+        Updates properties for a membership by ID.
+        
+        Specify the membership ID in the `membershipId` URI parameter.
+
+        :param membership_id: The unique identifier for the membership.
+        :type membership_id: str
+        :param is_moderator: Whether or not the participant is a room moderator.
+        :type is_moderator: str
+        :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the
+            room visible again.
+        :type is_room_hidden: str
+        :rtype: :class:`Membership`
+        """
+        ...
+
+
+    def delete_a_membership(self, membership_id: str):
+        """
+        Delete a Membership
+
+        Deletes a membership by ID.
+        
+        Specify the membership ID in the `membershipId` URI parameter.
+        
+        The membership for the last moderator of a `Team
+        <https://developer.webex.com/docs/api/v1/teams>`_'s General space may not be deleted; `promote another user
+        team moderator first.
+
+        :param membership_id: The unique identifier for the membership.
+        :type membership_id: str
+        :rtype: None
+        """
+        ...
+
     ...

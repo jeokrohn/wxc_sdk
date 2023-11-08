@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -12,7 +13,7 @@ __auto__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectE
             'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting',
             'GetLocationVoicemailGroupObjectMessageStorage',
             'GetLocationVoicemailGroupObjectMessageStorageStorageType',
-            'GetLocationVoicemailGroupObjectNotifications', 'GetVoicemailGroupObject', 'ListVoicemailgroupResponse']
+            'GetLocationVoicemailGroupObjectNotifications', 'GetVoicemailGroupObject', 'ListVoicemailGroupResponse']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):
@@ -158,7 +159,7 @@ class GetVoicemailGroupObject(ApiModel):
     toll_free_number: Optional[bool] = None
 
 
-class ListVoicemailgroupResponse(ApiModel):
+class ListVoicemailGroupResponse(ApiModel):
     #: Array of VoicemailGroups.
     voicemail_groups: Optional[list[GetVoicemailGroupObject]] = None
 
@@ -179,4 +180,59 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def list_voicemail_group(self, location_id: str = None, org_id: str = None, max_: int = None, start: int = None,
+                             name: str = None, phone_number: str = None,
+                             **params) -> Generator[GetVoicemailGroupObject, None, None]:
+        """
+        List VoicemailGroup
+
+        List the voicemail group information for the organization.
+        
+        You can create a shared voicemail box and inbound FAX box to
+        assign to users or call routing features like an auto attendant, call queue, or hunt group.
+        
+        Retrieving a voicemail group for the organization requires a full read-only administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Location to which the voicemail group belongs.
+        :type location_id: str
+        :param org_id: Organization to which the voicemail group belongs.
+        :type org_id: str
+        :param max_: Limit the maximum number of events in the response. The maximum value is `200`.
+        :type max_: int
+        :param start: Offset from the first result that you want to fetch.
+        :type start: int
+        :param name: Search (Contains) based on voicemail group name
+        :type name: str
+        :param phone_number: Search (Contains) based on number or extension
+        :type phone_number: str
+        :return: Generator yielding :class:`GetVoicemailGroupObject` instances
+        """
+        ...
+
+
+    def get_location_voicemail_group(self, location_id: str, voicemail_group_id: str,
+                                     org_id: str = None) -> GetLocationVoicemailGroupObject:
+        """
+        Get Location Voicemail Group
+
+        Retrieve voicemail group details for a location.
+        
+        Manage your voicemail group settings for a specific location, like when you want your voicemail to be active,
+        message storage settings, and how you would like to be notified of new voicemail messages.
+        
+        Retrieving voicemail group details requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve voicemail group details for this location.
+        :type location_id: str
+        :param voicemail_group_id: Retrieve voicemail group details for this voicemail group ID.
+        :type voicemail_group_id: str
+        :param org_id: Retrieve voicemail group details for a customer location.
+        :type org_id: str
+        :rtype: :class:`GetLocationVoicemailGroupObject`
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -64,4 +65,48 @@ class CallsApi(ApiChild, base='calls'):
     For more information about Calls, see the `Calls
     <https://developer.webex.com/docs/api/guides/calls>`_ guide.
     """
+
+    def list_calls(self, status: CallStatus, room_id: str = None, from_: Union[str, datetime] = None, to_: Union[str,
+                   datetime] = None, max_: int = None, **params) -> Generator[Call, None, None]:
+        """
+        List Calls
+
+        Lists all calls that the authenticated user either initiated or was invited to.
+        
+        To list currently active calls, use `connected` for the `status` query parameter; for call history, use
+        `disconnected`. Use the `from` and `to` parameters to specify a time period. By default, call information is
+        kept for 90 days.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param status: List calls with this state.
+        :type status: CallStatus
+        :param room_id: List calls placed in the specified room.
+        :type room_id: str
+        :param from_: Limit to calls that started from the inclusive start date, in ISO8601 format.
+        :type from_: Union[str, datetime]
+        :param to_: Limit to calls that ended before the exclusive end date, in ISO8601 format.
+        :type to_: Union[str, datetime]
+        :param max_: Limit the maximum number of calls in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Call` instances
+        """
+        ...
+
+
+    def get_call_details(self, call_id: str) -> Call:
+        """
+        Get Call Details
+
+        Shows details for a call, by call ID.
+        
+        Specify the call ID in the `callId` parameter in the URI.
+
+        :param call_id: The unique identifier for the call.
+        :type call_id: str
+        :rtype: :class:`Call`
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -81,6 +82,35 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
     """
     Application Usage
     
-    <!-- feature-toggle-name:policies-api-v2-docs -->
     """
+
+    def list_application_usage(self, org_id: str = None, app_name: str = None, app_id: str = None,
+                               order_by: ListApplicationUsageOrderBy = None, max_: int = None, cursor: str = None,
+                               **params) -> Generator[ApplicationUsage, None, None]:
+        """
+        List Application Usage
+
+        Lists all applications, optionally filtered by organization ID, application name, or application ID.
+        
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param org_id: List application usage for applications owned by this organization, by ID.
+        :type org_id: str
+        :param app_name: List application usage information for applications with this name.
+        :type app_name: str
+        :param app_id: List application usage for an application, by ID.
+        :type app_id: str
+        :param order_by: Sort results.
+        :type order_by: ListApplicationUsageOrderBy
+        :param max_: Limit the number of records returned in the response. Use `pagination
+            <https://developer.webex.com/docs/basics#pagination>`_ to move through the results.
+        :type max_: int
+        :param cursor: The current cursor when `paging
+            <https://developer.webex.com/docs/basics#pagination>`_ through long result sets.
+        :type cursor: str
+        :return: Generator yielding :class:`ApplicationUsage` instances
+        """
+        ...
+
     ...

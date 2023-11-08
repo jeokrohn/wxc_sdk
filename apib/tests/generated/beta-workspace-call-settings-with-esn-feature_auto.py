@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -173,4 +174,49 @@ class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{wor
     own. In those cases, an `orgId` must be supplied, as indicated in the reference documentation for the relevant
     endpoints.
     """
+
+    def retrieve_monitoring_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> UserMonitoringGet:
+        """
+        Retrieve Monitoring Settings for a Workspace
+
+        Retrieves Monitoring settings for a Workspace.
+        
+        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
+        status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
+        monitored call park extension.
+        
+        This API requires a full or read-only administrator auth token with a scope of `spark-admin:workspaces_read` or
+        a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`UserMonitoringGet`
+        """
+        ...
+
+
+    def list_numbers_associated_with_a_specific_workspace(self, workspace_id: str,
+                                                          org_id: str = None) -> ListNumbersAssociatedWithASpecificWorkspaceResponse:
+        """
+        List numbers associated with a specific workspace
+
+        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
+        the location and organization associated with the workspace.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:workspaces_read`.
+
+        :param workspace_id: List numbers for this workspace.
+        :type workspace_id: str
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            can use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        :rtype: :class:`ListNumbersAssociatedWithASpecificWorkspaceResponse`
+        """
+        ...
+
     ...

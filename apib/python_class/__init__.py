@@ -4,6 +4,7 @@ from collections import defaultdict
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
 from functools import partial
+from io import StringIO
 from itertools import chain
 from operator import attrgetter
 from os.path import commonprefix
@@ -15,12 +16,11 @@ __all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Param
 from urllib.parse import urljoin
 
 import dateutil.parser
-from html2text import html2text
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember
 from apib.apib.classes import ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray, ApibApi
-from apib.tools import break_line, remove_links, sanitize_class_name, snake_case, words_to_camel, \
-    remove_html_comments, remove_div
+from apib.tools import break_line, sanitize_class_name, snake_case, words_to_camel, \
+    remove_html_comments, remove_div, lines_for_docstring
 from wxc_sdk.base import to_camel
 
 log = logging.getLogger(__name__)
@@ -83,10 +83,160 @@ class Endpoint:
     result: str = field(default=None, repr=False)
     # references class if python result type is a class or references a class, e.g. list[SomeObject]
     result_referenced_class: str = field(default=None, repr=False)
+    registry: 'PythonClassRegistry' = field(default=None, repr=False)
 
     @property
     def full_url(self) -> str:
         return urljoin(self.host, self.url)
+
+    @property
+    def paginated(self) -> Optional['Attribute']:
+        """
+        determine whether the method requires pagination. Returns body list attribute or None
+
+        requires pagination if:
+          * 1st attribute returned is an array of something
+          * has "max" query parameters
+        """
+        max_parameter = next((p for p in self.href_parameter if p.name == 'max'), None)
+        if max_parameter is None:
+            return None
+        if self.result_referenced_class and self.result == self.result_referenced_class:
+            # paginated methods have something like 'EnterpriseListResponse' as result
+            result_class = self.registry.get(self.result_referenced_class)
+            # 1st attribute should be a list
+            result_attribute = result_class.attributes[0]
+            if result_attribute.python_type.startswith('list['):
+                return result_attribute
+            log.warning(f'endpoint "{self.name}" has "max" parameter, but 1st result attribute is not a list')
+        return None
+
+    @property
+    def single_result_attribute(self)->Optional['Attribute']:
+        """
+        Check if the result is an object with only one attribute. Then we take that attribute as the result
+        """
+        if self.result_referenced_class and self.result_referenced_class == self.result:
+            result_class = self.registry.get(self.result)
+            if len(result_class.attributes) == 1:
+                return result_class.attributes[0]
+        return None
+
+    def source(self) -> str:
+        """
+        Create Python source for endpoint under some class
+        """
+        # determine list of parameters
+        #   * mandatory parameters first
+        #   * then optional parameters, href before body
+        mandatory_parameters = [p for p in chain(self.href_parameter, self.body_parameter)
+                                if not p.optional]
+
+        # generate def line
+        # in the prepared def line use "&" instead of " " for spaces where we don't want to break the line
+        def_line = f'def {self.name}('
+        def_lines_prefix = ' ' * (4 + len(def_line))
+        param_line = 'self'
+        for parameter in mandatory_parameters:
+            param_line = f'{param_line}, {parameter.python_name}:&{parameter.python_type}'
+        # now all optional parameters
+        for parameter in chain(self.href_parameter, self.body_parameter):
+            if not parameter.optional:
+                # already taken care of
+                continue
+            # for datetime we accept str or datetime
+            python_type = parameter.python_type
+            if python_type == 'datetime':
+                python_type = 'Union[str, datetime]'
+            param_line = f'{param_line}, {parameter.python_name}:&{python_type}&=&None'
+
+        # for methods with pagination we want to add a **params parameter
+        if paginated := self.paginated:
+            # this is something like 'list[AuditEvent]'
+            result_type = paginated.python_type
+            m = re.match(r'^list\[(\w+)]$', result_type)
+            if m is None:
+                raise ValueError(f'Can\'t extract paginated result from "{result_type}"')
+            result_type = m.group(1)
+            param_line = f'{param_line}, **params)&->&Generator[{result_type},&None,&None]'
+        else:
+            param_line = f'{param_line})'
+            if self.result:
+                if sra := self.single_result_attribute:
+                    r_type = sra.python_type
+                else:
+                    r_type = self.result
+                param_line = f'{param_line}&->&{r_type}'
+        def_line = f'{def_line}{param_line}:'
+        source = StringIO()
+        # add lines to source and remove the "&" placeholders
+        print('\n'.join(line.replace('&', ' ')
+                        for line in break_line(def_line, prefix=def_lines_prefix, prefix_first_line=' ' * 4)),
+              file=source)
+
+        # now to the docstring
+        prefix = ' ' * 8
+        print(f'{prefix}"""', file=source)
+        if self.title:
+            print(f'{prefix}{self.title}', file=source)
+            print(file=source)
+        if self.docstring:
+            print('\n'.join(chain.from_iterable(break_line(l, prefix=prefix) for l in self.docstring.splitlines())),
+                  file=source)
+            print(file=source)
+        # parameter docstrings
+        for parameter in chain(mandatory_parameters,
+                               (p
+                                for p in chain(self.href_parameter, self.body_parameter)
+                                if p.optional)):
+            # param lines:
+            ' * 1st line has ":param <xyc>: '
+            ' * following lines just have docstring lines'
+            print('\n'.join(lines_for_docstring(docstring=parameter.docstring,
+                                                text_prefix_for_1st_line=f':param {parameter.python_name}: ',
+                                                indent=len(prefix)+4,
+                                                indent_first_line=len(prefix))),
+                  file=source)
+            # for datetime: str or datetime
+            python_type = parameter.python_type
+            if python_type == 'datetime':
+                python_type = 'Union[str, datetime]'
+
+            print(f'{prefix}:type {parameter.python_name}: {python_type}',
+                  file=source)
+        # also add a return: line
+        if paginated:
+            if not paginated.referenced_class:
+                print('\n'.join(lines_for_docstring(docstring=paginated.docstring,
+                                                    text_prefix_for_1st_line=':return: ',
+                                                    indent=len(prefix)+4,
+                                                    indent_first_line=len(prefix))),
+                      file=source)
+            else:
+                print(f'{prefix}:return: Generator yielding :class:`{paginated.referenced_class}` instances',
+                      file=source)
+        else:
+            if sra := self.single_result_attribute:
+                print(f'{prefix}:rtype: {sra.python_type}',
+                      file=source)
+            elif self.result_referenced_class and self.result_referenced_class == self.result:
+                print(f'{prefix}:rtype: :class:`{self.result_referenced_class}`',
+                      file=source)
+            else:
+                print(f'{prefix}:rtype: {self.result}',
+                      file=source)
+        print(f'{prefix}"""', file=source)
+
+        # prepare params
+
+        # prepare body
+
+        # call the method
+
+        # parse result
+        print(f'{prefix}...', file=source)
+        full_code = source.getvalue()
+        return full_code
 
 
 @dataclass
@@ -113,6 +263,8 @@ class Attribute:
         """
         Python source for one class attribute
         """
+        # docstring before attribute looks wsomething like this and is indented by 4 spaces
+        #   #: The display name of the organization.
         if self.docstring:
             # break docstring lines to 80 characters
             lines = list(chain.from_iterable(break_line(ls, prefix='#: ', width=116)
@@ -121,6 +273,8 @@ class Attribute:
         else:
             lines = []
         if for_enum:
+            # something like:
+            #   wav = 'WAV'
             name = snake_case(self.name)
             if name == 'none':
                 name = 'none_'
@@ -130,15 +284,26 @@ class Attribute:
             value = value.replace("'", '')
             lines.append(f"{name} = '{value}'")
         else:
+            # something like:
+            #   actor_org_name: Optional[str] = None
             attr_name = snake_case(self.name)
             if attr_name in RESERVED_PARAM_NAMES:
                 attr_name = f'{attr_name}_'
+
             if self.sample:
                 lines.append(f'#: example: {self.sample}')
+
+            # something like
+            #   target_name: Optional[str]
             line = f'{attr_name}: Optional[{self.python_type}]'
+
             if to_camel(attr_name) == self.name:
+                # something like:
+                #   target_name: Optional[str] = None
                 line = f'{line} = None'
             else:
+                # something like:
+                #   users_in_ci: Optional[int] = Field(alias='usersInCI', default=None)
                 line = f"{line} = Field(alias='{self.name}', default=None)"
             lines.append(line)
         return '\n'.join(lines)
@@ -233,7 +398,14 @@ class PythonAPI:
         class_head = self.class_template.format(class_name=class_name,
                                                 base=base,
                                                 docstring=docstring)
-        return class_head
+
+        # full API source is head followed by source for each endpoint
+        full_api_source = ('\n' * 2).join(s
+                                          for s in chain([class_head],
+                                                         (ep.source()
+                                                          for ep in self.endpoints))
+                                          if s)
+        return full_api_source
 
 
 @dataclass(init=False)
@@ -279,6 +451,8 @@ class PythonClassRegistry:
         self._apis = dict()
 
     def set_context(self, context: str):
+        if self._context == '-':
+            raise ValueError('context cannot be set after eliminate_redundancies()')
         self._context = context
 
     def qualified_class_name(self, class_name: Optional[str]) -> Optional[str]:
@@ -287,7 +461,7 @@ class PythonClassRegistry:
         """
         if class_name is None:
             return None
-        if '%' in class_name:
+        if self._context == '-' or '%' in class_name:
             return class_name
         return f'{self._context}%{sanitize_class_name(class_name)}'
 
@@ -753,6 +927,7 @@ class PythonClassRegistry:
                 for attr in pc.attributes:
                     if attr.referenced_class:
                         new_class_name = qualident_to_python_name[attr.referenced_class]
+                        new_class_name, _ = self._dereferenced_class(new_class_name)
                         attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
                         attr.referenced_class = new_class_name
             self._classes[python_name] = pc
@@ -763,14 +938,18 @@ class PythonClassRegistry:
             for param in chain(endpoint.body_parameter, endpoint.href_parameter):
                 if param.referenced_class:
                     python_name = qualident_to_python_name[param.referenced_class]
+                    python_name, _ = self._dereferenced_class(python_name)
                     param.python_type = param.python_type.replace(param.referenced_class, python_name)
+                    param.referenced_class = python_name
 
             # result class
             if endpoint.result_referenced_class:
                 python_name = qualident_to_python_name[endpoint.result_referenced_class]
+                python_name, _ = self._dereferenced_class(python_name)
                 endpoint.result = endpoint.result.replace(endpoint.result_referenced_class,
                                                           python_name)
                 endpoint.result_referenced_class = python_name
+        self._context = '-'
 
     def baseclasses_for_common_attribute_sets(self):
         """
@@ -804,7 +983,8 @@ class PythonClassRegistry:
         for transition in parsed_blueprint.api.transitions():
             # come up with a name for the method
             # 'List Admin Audit Events' --> 'list_admin_audit_events'
-            name = '_'.join(transition.title.split()).lower()
+            name = snake_case(transition.title)
+            # name = '_'.join(transition.title.split()).lower()
 
             # href is something like '/adminAudit/events{?orgId,from,to,actorId,max,offset,eventCategories}'
             href = transition.href
@@ -918,7 +1098,8 @@ class PythonClassRegistry:
                                 body_parameter=body_parameters,
                                 body_class_name=body_class_name,
                                 result=result,
-                                result_referenced_class=referenced_class)
+                                result_referenced_class=referenced_class,
+                                registry=self)
             # register endpoint on API
             python_api.add_endpoint(endpoint)
         return

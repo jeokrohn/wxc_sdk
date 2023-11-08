@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -91,4 +92,50 @@ class XAPIApi(ApiChild, base='xapi'):
     applications for cloud connected devices, see the `Device Developers Guide
     <https://developer.webex.com/docs/api/guides/device-developers-guide>`_.
     """
+
+    def query_status(self, device_id: str, name: str) -> QueryStatusResponse:
+        """
+        Query Status
+
+        Query the current status of the Webex RoomOS Device. You specify the target device in the `deviceId` parameter
+        in the URI. The target device is queried for statuses according to the expression in the `name` parameter.
+        
+        See the `xAPI section of the Device Developers Guide
+        <https://developer.webex.com/docs/api/guides/device-developers-guide#xapi>`_ for a description of status expressions.
+
+        :param device_id: The unique identifier for the Webex RoomOS Device.
+        :type device_id: str
+        :param name: Status expression used to query the Webex RoomOS Device. See the
+            `xAPI section of the Device Developers Guide
+            <https://developer.webex.com/docs/api/guides/device-developers-guide#xapi>`_ for a description of status expressions.
+        :type name: str
+        :rtype: :class:`QueryStatusResponse`
+        """
+        ...
+
+
+    def execute_command(self, command_name: str, device_id: str, arguments: ExecuteCommandArguments,
+                        body: ExecuteCommandBody = None) -> ExecuteCommandResponse:
+        """
+        Execute Command
+
+        Executes a command on the Webex RoomOS Device. Specify the command to execute in the `commandName` URI
+        parameter.
+        
+        See the `xAPI section of the Device Developers Guide
+        <https://developer.webex.com/docs/devices#xapi>`_ for a description of command expressions.
+
+        :param command_name: Command to execute on the Webex RoomOS Device.
+        :type command_name: str
+        :param device_id: The unique identifier for the Webex RoomOS Device.
+        :type device_id: str
+        :param arguments: xAPI command arguments
+        :type arguments: ExecuteCommandArguments
+        :param body: xAPI command body, as a complex JSON object or as a string, for example: `import xapi from
+            'xapi';\n\nconsole.log('Hello, World!');\n`
+        :type body: ExecuteCommandBody
+        :rtype: :class:`ExecuteCommandResponse`
+        """
+        ...
+
     ...

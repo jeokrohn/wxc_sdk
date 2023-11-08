@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -48,6 +49,16 @@ class FilesApi(ApiChild, base='files/{fileId}'):
     """
     Files
     
-    <!-- feature-toggle-name:files-api -->
     """
+
+    def get_file_details(self, file_id: str) -> File:
+        """
+        Get File Details
+
+        :param file_id: The unique identifier for the file.
+        :type file_id: str
+        :rtype: :class:`File`
+        """
+        ...
+
     ...

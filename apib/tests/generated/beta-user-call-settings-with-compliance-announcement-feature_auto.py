@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -127,4 +128,70 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
     scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
     their own settings.
     """
+
+    def read_call_recording_settings_for_a_person(self, person_id: str, org_id: str = None) -> CallRecordingInfo:
+        """
+        Read Call Recording Settings for a Person
+
+        Retrieve a person's Call Recording settings.
+        
+        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
+        platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
+        
+        This API requires a full or user administrator auth token with the `spark-admin:people_write` scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`CallRecordingInfo`
+        """
+        ...
+
+
+    def configure_call_recording_settings_for_a_person(self, person_id: str, enabled: bool,
+                                                       record: CallRecordingInfoRecord,
+                                                       record_voicemail_enabled: bool,
+                                                       start_stop_announcement_enabled: bool,
+                                                       notification: CallRecordingInfoNotification,
+                                                       repeat: CallRecordingInfoRepeat,
+                                                       start_stop_announcement: CallRecordingInfoStartStopAnnouncement,
+                                                       org_id: str = None):
+        """
+        Configure Call Recording Settings for a Person
+
+        Configure a person's Call Recording settings.
+        
+        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
+        platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
+        
+        This API requires a full or user administrator auth token with the `spark-admin:people_write` scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param enabled: `true` if call recording is enabled.
+        :type enabled: bool
+        :param record: Call recording scenario.
+        :type record: CallRecordingInfoRecord
+        :param record_voicemail_enabled: When `true`, voicemail messages are also recorded.
+        :type record_voicemail_enabled: bool
+        :param start_stop_announcement_enabled: When enabled, an announcement is played when call recording starts and
+            an announcement is played when call recording ends.
+        :type start_stop_announcement_enabled: bool
+        :param notification: Pause/resume notification settings.
+        :type notification: CallRecordingInfoNotification
+        :param repeat: Beep sound plays periodically.
+        :type repeat: CallRecordingInfoRepeat
+        :param start_stop_announcement: Call Recording starts and stops announcement settings.
+        :type start_stop_announcement: CallRecordingInfoStartStopAnnouncement
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

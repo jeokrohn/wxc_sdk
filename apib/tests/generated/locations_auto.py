@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -151,4 +152,226 @@ class LocationsApi(ApiChild, base='locations'):
     You can also create and inspect locations in Webex Control Hub. See `Locations on Control Hub
     <https://help.webex.com/en-us/article/ajh6iy/Locations-in-Control-Hub>`_ for more information.
     """
+
+    def list_locations(self, name: str = None, id: str = None, org_id: str = None, max_: int = None,
+                       **params) -> Generator[Location, None, None]:
+        """
+        List Locations
+
+        List locations for an organization.
+        
+        * Use query parameters to filter the result set by location name, ID, or organization.
+        
+        * Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        * Searching and viewing locations in your organization requires an administrator or location administrator auth
+        token with any of the following scopes: `spark-admin:locations_read`, `spark-admin:people_read` or
+        `spark-admin:device_read`.
+
+        :param name: List locations whose name contains this string (case-insensitive).
+        :type name: str
+        :param id: List locations by ID.
+        :type id: str
+        :param org_id: List locations in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
+        :type org_id: str
+        :param max_: Limit the maximum number of location in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Location` instances
+        """
+        ...
+
+
+    def get_location_details(self, location_id: str, org_id: str = None) -> Location:
+        """
+        Get Location Details
+
+        Shows details for a location, by ID.
+        
+        * Specify the location ID in the `locationId` parameter in the URI.
+        
+        * Use query parameter `orgId` to filter the result set by organization(optional).
+        
+        * Searching and viewing location in your organization requires an administrator or location administrator auth
+        token with any of the following scopes:
+        
+        * `spark-admin:locations_read`
+        * `spark-admin:people_read`
+        * `spark-admin:device_read`
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param org_id: Get location common attributes for this organization.
+        :type org_id: str
+        :rtype: :class:`Location`
+        """
+        ...
+
+
+    def create_a_location(self, name: str, time_zone: str, preferred_language: str, announcement_language: str,
+                          address: LocationAddress, latitude: datetime, longitude: datetime, notes: str,
+                          org_id: str = None) -> str:
+        """
+        Create a Location
+
+        Create a new Location for a given organization. Only an admin in the organization can create a new Location.
+        
+        * Creating a location in your organization requires a full administrator auth token with a scope of
+        `spark-admin:locations_write`.
+        
+        * Partners may specify `orgId` query parameter to create location in managed organization.
+        
+        * The following body parameters are required to create a new location:
+        * `name`
+        * `timeZone`
+        * `preferredLanguage`
+        * `address`
+        * `announcementLanguage`.
+        
+        * `latitude`, `longitude` and `notes` are optional parameters to create a new location.
+
+        :param name: The name of the location.
+        :type name: str
+        :param time_zone: Time zone associated with this location, refer to this `link
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
+        :type time_zone: str
+        :param preferred_language: Default email language.
+        :type preferred_language: str
+        :param announcement_language: Location's phone announcement language.
+        :type announcement_language: str
+        :param address: The address of the location.
+        :type address: LocationAddress
+        :param latitude: Latitude
+        :type latitude: Union[str, datetime]
+        :param longitude: Longitude
+        :type longitude: Union[str, datetime]
+        :param notes: Notes
+        :type notes: str
+        :param org_id: Create a location common attribute for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def update_a_location(self, location_id: str, name: str, time_zone: str, preferred_language: str,
+                          address: LocationAddress, org_id: str = None):
+        """
+        Update a Location
+
+        Update details for a location, by ID.
+        
+        * Updating a location in your organization requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:locations_write`.
+        
+        * Specify the location ID in the `locationId` parameter in the URI.
+        
+        * Partners may specify `orgId` query parameter to update location in managed organization.
+
+        :param location_id: Update location common attributes for this location.
+        :type location_id: str
+        :param name: The name of the location.
+        :type name: str
+        :param time_zone: Time zone associated with this location, refer to this `link
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
+        :type time_zone: str
+        :param preferred_language: Default email language.
+        :type preferred_language: str
+        :param address: The address of the location.
+        :type address: LocationAddress
+        :param org_id: Update location common attributes for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def list_location_floors(self, location_id: str) -> list[Floor]:
+        """
+        List Location Floors
+
+        List location floors.
+        Requires an administrator auth token with the `spark-admin:locations_read` scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :rtype: list[Floor]
+        """
+        ...
+
+
+    def create_a_location_floor(self, location_id: str, floor_number: int, display_name: str) -> Floor:
+        """
+        Create a Location Floor
+
+        Create a new floor in the given location. The `displayName` parameter is optional, and omitting it will result
+        in the creation of a floor without that value set.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_number: The floor number.
+        :type floor_number: int
+        :param display_name: The floor display name.
+        :type display_name: str
+        :rtype: :class:`Floor`
+        """
+        ...
+
+
+    def get_location_floor_details(self, location_id: str, floor_id: str) -> Floor:
+        """
+        Get Location Floor Details
+
+        Shows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.
+        Requires an administrator auth token with the `spark-admin:locations_read` scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+        :rtype: :class:`Floor`
+        """
+        ...
+
+
+    def update_a_location_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str) -> Floor:
+        """
+        Update a Location Floor
+
+        Updates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all
+        details for the floor returned by a previous call to `Get Location Floor Details
+        <https://developer.webex.com/docs/api/v1/locations/get-location-floor-details>`_. Omitting the optional
+        `displayName` field will result in that field no longer being defined for the floor.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+        :param floor_number: The floor number.
+        :type floor_number: int
+        :param display_name: The floor display name.
+        :type display_name: str
+        :rtype: :class:`Floor`
+        """
+        ...
+
+
+    def delete_a_location_floor(self, location_id: str, floor_id: str):
+        """
+        Delete a Location Floor
+
+        Deletes a floor, by ID.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+        :rtype: None
+        """
+        ...
+
     ...

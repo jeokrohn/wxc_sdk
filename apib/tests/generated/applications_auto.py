@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -156,6 +157,57 @@ class ApplicationsApi(ApiChild, base='applications'):
     """
     Applications
     
-    <!-- feature-toggle-name:applications-api-docs -->
     """
+
+    def list_applications(self, type: ListApplicationsType = None, org_id: str = None, created_by: str = None,
+                          submission_status: ApplicationSubmissionStatus = None,
+                          org_submission_status: ApplicationSubmissionStatus = None,
+                          order_by: ListApplicationsOrderBy = None, category: str = None, tag: str = None,
+                          bot_email: str = None, is_featured: bool = None, is_native: bool = None, max_: int = None,
+                          cursor: str = None, wait_for_ci: bool = None,
+                          **params) -> Generator[Application, None, None]:
+        """
+        List Applications
+
+        Lists all applications.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param type: List applications of this type.
+        :type type: ListApplicationsType
+        :param org_id: List applications owned by this organization, by ID.
+        :type org_id: str
+        :param created_by: List applications created by this person, by ID. Use `me` as a shorthand for the current API
+            user when used with an authentication token.
+        :type created_by: str
+        :param submission_status: List applications with this Webex App Hub submission status.
+        :type submission_status: ApplicationSubmissionStatus
+
+        :type org_submission_status: ApplicationSubmissionStatus
+        :param order_by: Sort results.
+        :type order_by: ListApplicationsOrderBy
+        :param category: List applications which belong to this Webex App Hub category.
+        :type category: str
+
+        :type tag: str
+        :param bot_email: List applications with this bot email.
+        :type bot_email: str
+        :param is_featured: Limit to applications featured in the Webex App Hub.
+        :type is_featured: bool
+        :param is_native: Internal use only.
+        :type is_native: bool
+        :param max_: Limit the number of applications returned in the response. Use `pagination
+            <https://developer.webex.com/docs/basics#pagination>`_ to move through the
+            results.
+        :type max_: int
+        :param cursor: The current cursor when `paging
+            <https://developer.webex.com/docs/basics#pagination>`_ through long result sets.
+        :type cursor: str
+        :param wait_for_ci: Internal use only.
+        :type wait_for_ci: bool
+        :return: Generator yielding :class:`Application` instances
+        """
+        ...
+
     ...

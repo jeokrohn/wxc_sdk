@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -135,4 +136,81 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
     error-codes) guides.
     
     """
+
+    def list_wholesale_billing_reports(self, billing_start_date: Union[str, datetime] = None,
+                                       billing_end_date: Union[str, datetime] = None,
+                                       sort_by: ListWholesaleBillingReportsSortBy = None, type: ListReportType = None,
+                                       status: ListReportStatus = None, max_: int = None,
+                                       sub_partner_org_id: str = None, **params) -> Generator[ListReport, None, None]:
+        """
+        List Wholesale Billing Reports
+
+        Search for associated wholesale billing reconciliation reports.
+
+        :param billing_start_date: Only include billing reports having this billing `startDate`.
+        :type billing_start_date: Union[str, datetime]
+        :param billing_end_date: Only include billing reports having this billing `endDate`.
+        :type billing_end_date: Union[str, datetime]
+        :param sort_by: Sort the reports.
+        :type sort_by: ListWholesaleBillingReportsSortBy
+        :param type: Only include reports of this type.
+        :type type: ListReportType
+        :param status: The status of the billing report
+        :type status: ListReportStatus
+        :param max_: Limit the maximum number of reports returned in the response, up to 100 per page. Refer to the
+            `Pagination
+            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
+        :type max_: int
+        :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
+        :type sub_partner_org_id: str
+        :return: Generator yielding :class:`ListReport` instances
+        """
+        ...
+
+
+    def get_a_wholesale_billing_report(self, id: str) -> Report:
+        """
+        Get a Wholesale Billing Report
+
+        Retrieve a specific wholesale billing reconciliation report.
+
+        :param id: A unique identifier for the report being requested.
+        :type id: str
+        :rtype: :class:`Report`
+        """
+        ...
+
+
+    def create_a_wholesale_billing_report(self, billing_start_date: datetime, billing_end_date: datetime,
+                                          type: str = None, sub_partner_org_id: str = None) -> ReportId:
+        """
+        Create a Wholesale Billing Report
+
+        Generate a wholesale billing reconciliation report.
+
+        :param billing_start_date: The `startDate` (`YYYY-MM-DD`) for which the partner requests the billing report.
+        :type billing_start_date: Union[str, datetime]
+        :param billing_end_date: The `endDate` (`YYYY-MM-DD`) for which the partner requests the billing report.
+        :type billing_end_date: Union[str, datetime]
+        :param type: Create report of the given type, `PARTNER`, `CUSTOMER`, or `USER`. Default: `PARTNER`.
+        :type type: str
+        :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
+        :type sub_partner_org_id: str
+        :rtype: :class:`ReportId`
+        """
+        ...
+
+
+    def delete_a_wholesale_billing_report(self, id: str):
+        """
+        Delete a Wholesale Billing Report
+
+        Delete a monthly reconciliation report by report ID.
+
+        :param id: A unique report ID that corresponds to a billing report.
+        :type id: str
+        :rtype: None
+        """
+        ...
+
     ...

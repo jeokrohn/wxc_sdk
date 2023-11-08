@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -540,4 +541,391 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max_: int = None,
+                                     start: int = None, name: str = None, phone_number: str = None,
+                                     **params) -> Generator[ListHuntGroupObject, None, None]:
+        """
+        Read the List of Hunt Groups
+
+        List all calling Hunt Groups for the organization.
+        
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
+        route to a whole group.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List hunt groups for this organization.
+        :type org_id: str
+        :param location_id: Only return hunt groups with matching location ID.
+        :type location_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return hunt groups with the matching name.
+        :type name: str
+        :param phone_number: Only return hunt groups with the matching primary phone number or extension.
+        :type phone_number: str
+        :return: Generator yielding :class:`ListHuntGroupObject` instances
+        """
+        ...
+
+
+    def create_a_hunt_group(self, location_id: str, name: str, phone_number: str, extension: datetime,
+                            language_code: str, first_name: str, last_name: str, time_zone: str,
+                            call_policies: PostHuntGroupCallPolicyObject,
+                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
+                            org_id: str = None) -> str:
+        """
+        Create a Hunt Group
+
+        Create new Hunt Groups for the given location.
+        
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        
+        Creating a hunt group requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the hunt group for the given location.
+        :type location_id: str
+        :param name: Unique name for the hunt group.
+        :type name: str
+        :param phone_number: Primary phone number of the hunt group. Either phone number or extension are required.
+        :type phone_number: str
+        :param extension: Primary phone extension of the hunt group. Either phone number or extension are required.
+        :type extension: Union[str, datetime]
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
+            number if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the hunt group.
+        :type time_zone: str
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: PostHuntGroupCallPolicyObject
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
+        :param enabled: Whether or not the hunt group is enabled.
+        :type enabled: bool
+        :param org_id: Create the hunt group for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None):
+        """
+        Delete a Hunt Group
+
+        Delete the designated Hunt Group.
+        
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
+        route to a whole group.
+        
+        Deleting a hunt group requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which to delete a hunt group.
+        :type location_id: str
+        :param hunt_group_id: Delete the hunt group with the matching ID.
+        :type hunt_group_id: str
+        :param org_id: Delete the hunt group from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_details_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                     org_id: str = None) -> GetHuntGroupObject:
+        """
+        Get Details for a Hunt Group
+
+        Retrieve Hunt Group details.
+        
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        
+        Retrieving hunt group details requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a hunt group in this location.
+        :type location_id: str
+        :param hunt_group_id: Retrieve settings for the hunt group with this identifier.
+        :type hunt_group_id: str
+        :param org_id: Retrieve hunt group settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetHuntGroupObject`
+        """
+        ...
+
+
+    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
+                            extension: datetime, distinctive_ring: bool,
+                            alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
+                            last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
+                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
+                            org_id: str = None):
+        """
+        Update a Hunt Group
+
+        Update the designated Hunt Group.
+        
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        
+        Updating a hunt group requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Update the hunt group for this location.
+        :type location_id: str
+        :param hunt_group_id: Update settings for the hunt group with the matching ID.
+        :type hunt_group_id: str
+        :param name: Unique name for the hunt group.
+        :type name: str
+        :param phone_number: Primary phone number of the hunt group.
+        :type phone_number: str
+        :param extension: Primary phone extension of the hunt group.
+        :type extension: Union[str, datetime]
+        :param distinctive_ring: Whether or not the hunt group has the distinctive ring option enabled.
+        :type distinctive_ring: bool
+        :param alternate_numbers: The alternate numbers feature allows you to assign multiple phone numbers or
+            extensions to a hunt group. Each number will reach the same greeting and each menu will function
+            identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
+            numbers ring into the hunt group.
+        :type alternate_numbers: list[AlternateNumbersWithPattern]
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
+            number if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the hunt group.
+        :type time_zone: str
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: PostHuntGroupCallPolicyObject
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
+        :param enabled: Whether or not the hunt group is enabled.
+        :type enabled: bool
+        :param org_id: Update hunt group settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                                      org_id: str = None) -> CallForwardSettingsGetCallForwarding:
+        """
+        Get Call Forwarding Settings for a Hunt Group
+
+        Retrieve Call Forwarding settings for the designated Hunt Group including the list of call forwarding rules.
+        
+        Retrieving call forwarding settings for a hunt group requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Location in which this hunt group exists.
+        :type location_id: str
+        :param hunt_group_id: Read the call forwarding settings for this hunt group.
+        :type hunt_group_id: str
+        :param org_id: Retrieve hunt group forwarding settings from this organization.
+        :type org_id: str
+        :rtype: CallForwardSettingsGetCallForwarding
+        """
+        ...
+
+
+    def update_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding,
+                                                         org_id: str = None):
+        """
+        Update Call Forwarding Settings for a Hunt Group
+
+        Update Call Forwarding settings for the designated Hunt Group.
+        
+        Updating call forwarding settings for a hunt group requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which this hunt group exists.
+        :type location_id: str
+        :param hunt_group_id: Update call forwarding settings for this hunt group.
+        :type hunt_group_id: str
+        :param call_forwarding: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
+        :type call_forwarding: ModifyCallForwardingObjectCallForwarding
+        :param org_id: Update hunt group forwarding settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def create_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str,
+                                                                 enabled: bool, holiday_schedule: str,
+                                                                 business_schedule: str,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
+                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
+                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 org_id: str = None) -> str:
+        """
+        Create a Selective Call Forwarding Rule for a Hunt Group
+
+        Create a Selective Call Forwarding Rule for the designated Hunt Group.
+        
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
+        
+        Creating a selective call forwarding rule for a hunt group requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this hunt group exists.
+        :type location_id: str
+        :param hunt_group_id: Create the rule for this hunt group.
+        :type hunt_group_id: str
+        :param name: Unique name for the selective rule in the hunt group.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CreateForwardingRuleObjectForwardTo
+        :param calls_from: Settings related to the rule matching based on incoming caller ID.
+        :type calls_from: CreateForwardingRuleObjectCallsFrom
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CreateForwardingRuleObjectCallsTo
+        :param org_id: Create the hunt group rule for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str,
+                                                            org_id: str = None) -> GetForwardingRuleObject:
+        """
+        Get Selective Call Forwarding Rule for a Hunt Group
+
+        Retrieve a Selective Call Forwarding Rule's settings for the designated Hunt Group.
+        
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
+        
+        Retrieving a selective call forwarding rule's settings for a hunt group requires a full or read-only
+        administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this hunt group exists.
+        :type location_id: str
+        :param hunt_group_id: Retrieve settings for a rule for this hunt group.
+        :type hunt_group_id: str
+        :param rule_id: Hunt group rule you are retrieving settings for.
+        :type rule_id: str
+        :param org_id: Retrieve hunt group rule settings for this organization.
+        :type org_id: str
+        :rtype: :class:`GetForwardingRuleObject`
+        """
+        ...
+
+
+    def update_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                                                 rule_id: str, name: str, enabled: bool,
+                                                                 holiday_schedule: str, business_schedule: str,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
+                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
+                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 org_id: str = None) -> str:
+        """
+        Update a Selective Call Forwarding Rule for a Hunt Group
+
+        Update a Selective Call Forwarding Rule's settings for the designated Hunt Group.
+        
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
+        
+        Updating a selective call forwarding rule's settings for a hunt group requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this hunt group exists.
+        :type location_id: str
+        :param hunt_group_id: Update settings for a rule for this hunt group.
+        :type hunt_group_id: str
+        :param rule_id: Hunt group rule you are updating settings for.
+        :type rule_id: str
+        :param name: Unique name for the selective rule in the hunt group.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CreateForwardingRuleObjectForwardTo
+        :param calls_from: Settings related the rule matching based on incoming caller ID.
+        :type calls_from: CreateForwardingRuleObjectCallsFrom
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CreateForwardingRuleObjectCallsTo
+        :param org_id: Update hunt group rule settings for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                                                 rule_id: str, org_id: str = None):
+        """
+        Delete a Selective Call Forwarding Rule for a Hunt Group
+
+        Delete a Selective Call Forwarding Rule for the designated Hunt Group.
+        
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
+        
+        Deleting a selective call forwarding rule for a hunt group requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this hunt group exists.
+        :type location_id: str
+        :param hunt_group_id: Delete the rule for this hunt group.
+        :type hunt_group_id: str
+        :param rule_id: Hunt group rule you are deleting.
+        :type rule_id: str
+        :param org_id: Delete hunt group rule from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

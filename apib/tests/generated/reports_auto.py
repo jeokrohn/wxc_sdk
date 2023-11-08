@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -75,4 +76,95 @@ class ReportsApi(ApiChild, base='reports'):
     For more information about Reports, see the `Admin API
     <https://developer.webex.com/docs/admin#reports-api>`_ guide.
     """
+
+    def list_reports(self, report_id: str = None, service: str = None, template_id: int = None, from_: Union[str,
+                     datetime] = None, to_: Union[str, datetime] = None) -> list[Report]:
+        """
+        List Reports
+
+        Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
+        and `to` parameters should be provided together.
+        
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param report_id: List reports by ID.
+        :type report_id: str
+        :param service: List reports which use this service.
+        :type service: str
+        :param template_id: List reports with this report template ID.
+        :type template_id: int
+        :param from_: List reports that were created on or after this date.
+        :type from_: Union[str, datetime]
+        :param to_: List reports that were created before this date.
+        :type to_: Union[str, datetime]
+        :rtype: list[Report]
+        """
+        ...
+
+
+    def create_a_report(self, template_id: str, start_date: Union[str, datetime] = None, end_date: Union[str,
+                        datetime] = None, site_list: str = None) -> str:
+        """
+        Create a Report
+
+        Create a new report. For each `templateId`, there are a set of validation rules that need to be followed. For
+        example, for templates belonging to Webex, the user needs to provide `siteUrl`. These validation rules can be
+        retrieved via the `Report Templates API
+        <https://developer.webex.com/docs/api/v1/report-templates>`_.
+        
+        The 'templateId' parameter is a number. However, it is a limitation of developer.webex.com platform that it is
+        passed as a string when you try to test the API from here.
+        
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param template_id: Unique ID representing valid report templates.
+        :type template_id: str
+        :param start_date: Data in the report will be from this date onwards.
+        :type start_date: Union[str, datetime]
+        :param end_date: Data in the report will be until this date.
+        :type end_date: Union[str, datetime]
+        :param site_list: Sites belonging to user's organization. This attribute is needed for site-based templates.
+        :type site_list: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_report_details(self, report_id: str) -> Report:
+        """
+        Get Report Details
+
+        Shows details for a report, by report ID.
+        
+        Specify the report ID in the `reportId` parameter in the URI.
+        
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param report_id: The unique identifier for the report.
+        :type report_id: str
+        :rtype: :class:`Report`
+        """
+        ...
+
+
+    def delete_a_report(self, report_id: str):
+        """
+        Delete a Report
+
+        Remove a report from the system.
+        
+        Specify the report ID in the `reportId` parameter in the URI
+        
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param report_id: The unique identifier for the report.
+        :type report_id: str
+        :rtype: None
+        """
+        ...
+
     ...

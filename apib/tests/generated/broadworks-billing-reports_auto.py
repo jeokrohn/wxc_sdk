@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -93,4 +94,66 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
     `spark-admin:broadworks_billing_reports_read` scope. Creating, Deleting billing reports require a partner
     administrator auth token with `spark-admin:broadworks_billing_reports_write` scope.
     """
+
+    def list_broad_works_billing_reports(self, before: Union[str, datetime] = None, after: Union[str, datetime] = None,
+                                         sort_by: str = None) -> list[ListReport]:
+        """
+        List BroadWorks Billing Reports
+
+        Search for reports. There are a number of filter options which can be combined in a single request.
+
+        :param before: Only include billing reports created before this date.
+        :type before: Union[str, datetime]
+        :param after: Only include billing reports created after this date.
+        :type after: Union[str, datetime]
+        :param sort_by: Sort the reports.
+        
+        + Members:
+        + id
+        + status
+        + billingPeriod
+        :type sort_by: str
+        :rtype: list[ListReport]
+        """
+        ...
+
+
+    def get_a_broad_works_billing_report(self, id: str) -> Report:
+        """
+        Get a BroadWorks Billing Report
+
+        Retrieve a specific billing reconciliation report.
+
+        :param id: A unique identifier for the report in request.
+        :type id: str
+        :rtype: :class:`Report`
+        """
+        ...
+
+
+    def create_a_broad_works_billing_report(self, billing_period: datetime) -> str:
+        """
+        Create a BroadWorks Billing Report
+
+        Generate a monthly reconciliation report.
+
+        :param billing_period: The year and month (`YYYY-MM`) for which the billing report is to be generated.
+        :type billing_period: Union[str, datetime]
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_broad_works_billing_report(self, id: str):
+        """
+        Delete a BroadWorks Billing Report
+
+        Delete a monthly reconciliation report using a report ID.
+
+        :param id: A unique report ID that corresponds to a billing report.
+        :type id: str
+        :rtype: None
+        """
+        ...
+
     ...

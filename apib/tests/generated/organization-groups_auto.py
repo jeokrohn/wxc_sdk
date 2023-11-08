@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -52,6 +53,21 @@ class OrganizationGroupsApi(ApiChild, base='organization/groups?orgId={orgId}&di
     """
     Organization Groups
     
-    <!-- feature-toggle-name:license-templates-api-docs -->
     """
+
+    def list_organization_groups(self, org_id: str) -> list[GroupMembers]:
+        """
+        List Organization Groups
+
+        List the policy groups at an organization level based on a display name pattern.
+        
+        Specify the organization's ID in the `orgId` URI parameter and the group's display name pattern in the
+        `displayName` URI parameter.
+
+        :param org_id: A unique identifier for an org
+        :type org_id: str
+        :rtype: list[GroupMembers]
+        """
+        ...
+
     ...

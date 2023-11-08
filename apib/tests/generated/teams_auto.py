@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -44,4 +45,87 @@ class TeamsApi(ApiChild, base='teams'):
     To manage team rooms see the `Rooms API
     <https://developer.webex.com/docs/api/v1/rooms>`_.
     """
+
+    def list_teams(self, max_: int = None, **params) -> Generator[Team, None, None]:
+        """
+        List Teams
+
+        Lists teams to which the authenticated user belongs.
+
+        :param max_: Limit the maximum number of teams in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Team` instances
+        """
+        ...
+
+
+    def create_a_team(self, name: str, description: str = None) -> Team:
+        """
+        Create a Team
+
+        Creates a team.
+        
+        The authenticated user is automatically added as a member of the team. See the `Team Memberships API
+        <https://developer.webex.com/docs/api/v1/team-memberships>`_ to learn
+        how to add more people to the team.
+
+        :param name: A user-friendly name for the team.
+        :type name: str
+        :param description: The teams description.
+        :type description: str
+        :rtype: :class:`Team`
+        """
+        ...
+
+
+    def get_team_details(self, team_id: str, description: str = None) -> Team:
+        """
+        Get Team Details
+
+        Shows details for a team, by ID.
+        
+        Specify the team ID in the `teamId` parameter in the URI.
+
+        :param team_id: The unique identifier for the team.
+        :type team_id: str
+        :param description: The teams description.
+        :type description: str
+        :rtype: :class:`Team`
+        """
+        ...
+
+
+    def update_a_team(self, team_id: str, name: str, description: str = None) -> Team:
+        """
+        Update a Team
+
+        Updates details for a team, by ID.
+        
+        Specify the team ID in the `teamId` parameter in the URI.
+
+        :param team_id: The unique identifier for the team.
+        :type team_id: str
+        :param name: A user-friendly name for the team.
+        :type name: str
+        :param description: The teams description.
+        :type description: str
+        :rtype: :class:`Team`
+        """
+        ...
+
+
+    def delete_a_team(self, team_id: str):
+        """
+        Delete a Team
+
+        Deletes a team, by ID.
+        
+        Specify the team ID in the `teamId` parameter in the URI.
+
+        :param team_id: The unique identifier for the team.
+        :type team_id: str
+        :rtype: None
+        """
+        ...
+
     ...

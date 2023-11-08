@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -325,4 +326,122 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max_: int = None,
+                                     start: int = None, name: str = None, phone_number: str = None,
+                                     department_id: str = None, department_name: str = None,
+                                     **params) -> Generator[ListHuntGroupObject, None, None]:
+        """
+        Read the List of Hunt Groups
+
+        List all calling Hunt Groups for the organization.
+        
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
+        route to a whole group.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List hunt groups for this organization.
+        :type org_id: str
+        :param location_id: Only return hunt groups with matching location ID.
+        :type location_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return hunt groups with the matching name.
+        :type name: str
+        :param phone_number: Only return hunt groups with the matching primary phone number or extension.
+        :type phone_number: str
+        :param department_id: Return only hunt groups with the matching departmentId.
+        :type department_id: str
+        :param department_name: Return only hunt groups with the matching departmentName.
+        :type department_name: str
+        :return: Generator yielding :class:`ListHuntGroupObject` instances
+        """
+        ...
+
+
+    def get_details_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                     org_id: str = None) -> GetHuntGroupObject:
+        """
+        Get Details for a Hunt Group
+
+        Retrieve Hunt Group details.
+        
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
+        route to a whole group.
+        
+        Retrieving hunt group details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve settings for a hunt group in this location.
+        :type location_id: str
+        :param hunt_group_id: Retrieve settings for the hunt group with this identifier.
+        :type hunt_group_id: str
+        :param org_id: Retrieve hunt group settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetHuntGroupObject`
+        """
+        ...
+
+
+    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
+                            extension: datetime, distinctive_ring: bool,
+                            alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
+                            last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
+                            agents: list[PostPersonPlaceObject], enabled: bool,
+                            department: ModifyHuntGroupObjectDepartment, org_id: str = None):
+        """
+        Update a Hunt Group
+
+        Update the designated Hunt Group.
+        
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
+        route to a whole group.
+        
+        Updating a hunt group requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Update the hunt group for this location.
+        :type location_id: str
+        :param hunt_group_id: Update setting for the hunt group with the matching ID.
+        :type hunt_group_id: str
+        :param name: Unique name for the hunt group.
+        :type name: str
+        :param phone_number: Primary phone number of the hunt group.
+        :type phone_number: str
+        :param extension: Primary phone extension of the hunt group.
+        :type extension: Union[str, datetime]
+        :param distinctive_ring: Whether or not the hunt group has the distinctive ring option enabled.
+        :type distinctive_ring: bool
+        :param alternate_numbers: The alternate numbers feature allows you to assign multiple phone numbers or
+            extensions to a hunt group. Each number will reach the same greeting and each menu will function
+            identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
+            numbers ring into the hunt group.
+        :type alternate_numbers: list[AlternateNumbersWithPattern]
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to ".".
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
+            number if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the hunt group.
+        :type time_zone: str
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: PostHuntGroupCallPolicyObject
+        :param agents: People, including workspaces, that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceObject]
+        :param enabled: Whether or not the hunt group is enabled.
+        :type enabled: bool
+        :param department: Department the huntgroup is assigned to.
+        :type department: ModifyHuntGroupObjectDepartment
+        :param org_id: Update hunt group settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

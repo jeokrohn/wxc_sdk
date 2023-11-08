@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -82,4 +83,52 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
     To use the authorizations API in an Integration the scopes must include:
     `identity:tokens_write`,`identity:tokens_read`.
     """
+
+    def list_authorizations_for_a_user(self, person_id: str, person_email: str) -> list[Authorization]:
+        """
+        List authorizations for a user
+
+        Lists all authorizations for a user. Either `personId` or `personEmail` must be provided. This API does not
+        support pagination.
+
+        :param person_id: List authorizations for this user id.
+        :type person_id: str
+        :param person_email: List authorizations for this user email.
+        :type person_email: str
+        :rtype: list[Authorization]
+        """
+        ...
+
+
+    def delete_authorization(self, authorization_id: str):
+        """
+        Delete authorization
+
+        Deletes an authorization, by authorization ID.
+        
+        Specify the authorization Id in the `authorizationId` parameter in the URI which was listed in the list
+        resource.
+
+        :param authorization_id: The unique identifier for the message.
+        :type authorization_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def delete_authorization_of_org_and_client_id(self, client_id: str, org_id: str = None):
+        """
+        Delete authorization of org and client ID
+
+        Deletes an authorization, by org ID and client ID.
+
+        :param client_id: The unique oAuth client id.
+        :type client_id: str
+        :param org_id: The ID of the organization to which this person belongs.  If no orgId is specified, use orgId
+            from the OAuth token.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

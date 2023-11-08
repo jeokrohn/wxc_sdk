@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -114,4 +115,128 @@ class IssuesAPIApi(ApiChild, base='issues'):
     
     An Issue cannot be deleted, but the `status` can be updated to `CLOSED`.
     """
+
+    def list_issues(self, created_for: str = None, org_id: str = None, from_: Union[str, datetime] = None,
+                    to_: Union[str, datetime] = None, after_issue: str = None, max_: int = None,
+                    **params) -> Generator[Issue, None, None]:
+        """
+        List Issues
+
+        List issues in your organization.
+        
+        Admin users can list all issues for all organizations they manage.
+        Admin users can also use the `createdFor` parameter to list issues for a specific person ID, or use the
+        `orgId` to list issues for a specific organization.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param created_for:
+        List issues created for this person ID.
+        :type created_for: str
+        :param org_id:
+        List issues in this organization. Admins of another organization such as partners might use this parameter.
+        :type org_id: str
+        :param from_:
+        List events which occurred after a specific date and time.
+        :type from_: Union[str, datetime]
+        :param to_:
+        List events which occurred before a specific date and time.
+        :type to_: Union[str, datetime]
+        :param after_issue:
+        List issues created or modified after a specific issue, by ID.
+        :type after_issue: str
+        :param max_:
+        A limit on the number of issues to be returned in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Issue` instances
+        """
+        ...
+
+
+    def create_an_issue(self, subject: str, description: str, type: IssueType = None, log_id: str = None,
+                        meeting_id: str = None, external_key: str = None) -> Issue:
+        """
+        Create an Issue
+
+        Create a new issue.
+        
+        Users can create issues for themselves and
+        admins can create issues for both themselves and on behalf of other users.
+
+        :param subject: The subject title for the issue.
+        :type subject: str
+        :param description: The full description of the issue.
+        :type description: str
+        :param type: The initial type for the issue.
+        :type type: IssueType
+
+        :type log_id: str
+        :param meeting_id: The meeting ID related to the issue.
+        :type meeting_id: str
+        :param external_key: Any custom identifier associated with the issue, such as from an external ticketing
+            system.
+        :type external_key: str
+        :rtype: :class:`Issue`
+        """
+        ...
+
+
+    def get_issue_details(self, id: str) -> Issue:
+        """
+        Get Issue Details
+
+        Show details for an issue, by ID.
+        
+        Specify the issue ID in the `id` parameter in the URI.
+
+        :param id: A unique identifier for the issue.
+        :type id: str
+        :rtype: :class:`Issue`
+        """
+        ...
+
+
+    def update_an_issue(self, id: str, subject: str = None, description: str = None, type: IssueType = None,
+                        status: IssueStatus = None, assignee: str = None, resolution: str = None, log_id: str = None,
+                        meeting_id: str = None, external_key: str = None) -> Issue:
+        """
+        Update an Issue
+
+        Update details for an issue, by ID.
+        
+        Specify the issue ID in the `id` parameter in the URI.
+        Users may update only the `subject` and `description` attributes.
+        Admin users can update the `subject`, `description`, `type`, and `status` attributes.
+        
+        Include all details for the issue. This action expects all issue details to be present in the
+        request. A common approach is to first `GET the issue's details
+        <https://developer.webex.com/docs/api/v1/issues/get-issue-details>`_,
+        make changes, then PUT both the changed and unchanged values.
+
+        :param id: A unique identifier for the issue.
+        :type id: str
+        :param subject: The subject title for the issue.
+        :type subject: str
+        :param description: The full description of the issue.
+        :type description: str
+        :param type: The type for the issue.
+        :type type: IssueType
+        :param status: The status of the issue.
+        :type status: IssueStatus
+        :param assignee: The person ID of user assigned to resolve the issue.
+        :type assignee: str
+        :param resolution: A description of how the issue was resolved.
+        :type resolution: str
+
+        :type log_id: str
+        :param meeting_id: The meeting ID related to the issue.
+        :type meeting_id: str
+        :param external_key: Any custom identifier associated with the issue, such as from an external ticketing
+            system.
+        :type external_key: str
+        :rtype: :class:`Issue`
+        """
+        ...
+
     ...

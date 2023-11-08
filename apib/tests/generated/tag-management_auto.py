@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -65,4 +66,130 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
     the spark-admin:organizations-read scope for read operations and spark-admin:organizations-write scope for write
     operations.
     """
+
+    def retrieve_all_customer_tags(self, type: str) -> list[TagsObj]:
+        """
+        Retrieve all customer tags
+
+        Retrieves all tags which are being used by any customer organizations. Once a tag is unassigned from the last
+        customer, it is automatically removed and is not returned by this API.
+        This API can be used by a partner full admin, a read-only partner, or an partner admin.
+        The `type` can have the value ORGANIZATION or SUBSCRIPTION. If not provided, the value is ORGANIZATION
+
+        :param type: List tags associated with an organization.
+        :type type: str
+        :rtype: list[TagsObj]
+        """
+        ...
+
+
+    def create_or_replace_existing_customer_tags_with_the_provided_ones(self, org_id: str,
+                                                                        tags: list[TagsObj]) -> list[TagsObj]:
+        """
+        Create or Replace existing customer tags with the provided ones
+
+        Assign or replace tag(s) which for a customer organization. If the tag doesn't already exist, a new one is
+        created and assigned to the customer automatically.
+        This API can be used by partner full admins and partner admins.
+        Each tag has a character limit of 25. Currently, there is a limit of 5 tags per organization when creating
+        tags. To remove all the tags, pass an empty array.
+        Specify the customer organization ID in the `orgId` parameter in the URI.
+
+        :param org_id: The unique identifier for the customer organization.
+        :type org_id: str
+        :param tags: An array of tags.
+        :type tags: list[TagsObj]
+        :rtype: list[TagsObj]
+        """
+        ...
+
+
+    def get_customer_organization_s_tags(self, org_id: str) -> CustomerTagsResponse:
+        """
+        Get customer organization's tags
+
+        Retrieve tags associated with a customer organization based on the `orgId` provided.
+        This API can be used by a partner full admin, a read-only partner, or an partner admin.
+        Specify the customer orgId in the `orgId` parameter in the URI.
+
+        :param org_id: Fetch all customers and associated tags for the customer.
+        :type org_id: str
+        :rtype: :class:`CustomerTagsResponse`
+        """
+        ...
+
+
+    def fetch_all_customers_for_a_given_set_of_tags(self, tags: str, max_: int = None) -> list[CustomerTagsResponse]:
+        """
+        Fetch all customers for a given set of tags
+
+        For a set of tags, retrieve all customer organizations that match any one of the tags.
+        This API can be used by a partner full admin, a read-only partner, or an partner admin.
+
+        :param tags: A comma separated list of tags to filter by.
+        :type tags: str
+        :param max_: Value must be between 1 and 100, inclusive.
+        :type max_: int
+        :rtype: list[CustomerTagsResponse]
+        """
+        ...
+
+
+    def create_or_replace_existing_subscription_tags_with_the_provided_ones(self, org_id: str, subscription_id: str,
+                                                                            tags: list[TagsObj]) -> list[TagsObj]:
+        """
+        Create or Replace existing subscription tags with the provided ones
+
+        Assign or replace tags specific to each subscription for an organization. Each organization may have one or
+        more subscriptions.
+        This API can be used by partner full admins and partner admins.
+        Currently there is a limit of 5 tags per subscription when creating tags. To remove all the tags, pass an empty
+        array.
+        Specify the customer organization ID in the `orgId` parameter in the URI and subscription ID in
+        `subscriptionId` parameter
+
+        :param org_id: The unique identifier for the customer organization.
+        :type org_id: str
+        :param subscription_id: The unique identifier for the subscription.
+        :type subscription_id: str
+        :param tags: An array of tags.
+        :type tags: list[TagsObj]
+        :rtype: list[TagsObj]
+        """
+        ...
+
+
+    def subscription_list_on_a_given_tag_name_or_a_set_of_tags(self, tags: str,
+                                                               max_: int = None) -> list[SubscriptionTagsResponse]:
+        """
+        Subscription List on a given tag name or a set of tags
+
+        For a partner organization fetch all it's subscriptions with their tag list for a given tag names.
+        This API can be used by partner full admins, partner admins and admin read-only partners.
+
+        :param tags: A comma separated list of tags to filter by.
+        :type tags: str
+        :param max_: Value must be between 1 and 100, inclusive.
+        :type max_: int
+        :rtype: list[SubscriptionTagsResponse]
+        """
+        ...
+
+
+    def fetch_a_subscription(self, org_id: str, subscription_id: str) -> SubscriptionTagsResponse:
+        """
+        Fetch a Subscription
+
+        For a given partner org, customer org and external subscription id, fetch subscription details with its
+        associated tags.
+        This API can be used by partner full admins, partner admins and admin read-only partners.
+
+        :param org_id: The unique identifier for the customer organization.
+        :type org_id: str
+        :param subscription_id: The unique identifier for the subscription.
+        :type subscription_id: str
+        :rtype: :class:`SubscriptionTagsResponse`
+        """
+        ...
+
     ...

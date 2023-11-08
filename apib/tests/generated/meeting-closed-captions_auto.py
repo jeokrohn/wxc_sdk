@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -113,4 +114,80 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
     
     * Closed captions will be available 15 minutes after the meeting is finished.
     """
+
+    def list_meeting_closed_captions(self, meeting_id: str) -> list[ClosedCaptionObject]:
+        """
+        List Meeting Closed Captions
+
+        Lists closed captions of a finished `meeting instance
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ specified by `meetingId`.
+        
+        * Closed captions are ready 15 minutes after the meeting is finished.
+        
+        * Only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled
+        meetings** and `in-progress` **meeting instances** are not supported.
+        
+        * Currently, a meeting may have only one closed caption associated with its `meetingId`. The response is a
+        closed captions array, which may contain multiple values to allow for future expansion, but currently only one
+        closed caption is included in the response.
+
+        :param meeting_id: Unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the closed captions belong to. This
+            parameter only applies to ended meeting instances. It does not apply to meeting series, scheduled meetings
+            or scheduled `personal room
+            <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meetings.
+        :type meeting_id: str
+        :rtype: list[ClosedCaptionObject]
+        """
+        ...
+
+
+    def list_meeting_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str) -> list[SnippetObject]:
+        """
+        List Meeting Closed Caption Snippets
+
+        Lists snippets of a meeting closed caption specified by `closedCaptionId`.
+
+        :param closed_caption_id: Unique identifier for the meeting closed caption which the snippets belong to.
+        :type closed_caption_id: str
+        :param meeting_id: Unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the closed caption snippets belong to. This
+            parameter only applies to ended meeting instances. It does not apply to meeting series, scheduled meetings
+            or scheduled `personal room
+            <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meetings.
+        :type meeting_id: str
+        :rtype: list[SnippetObject]
+        """
+        ...
+
+
+    def download_meeting_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str,
+                                                 format: DownloadMeetingClosedCaptionSnippetsFormat = None):
+        """
+        Download Meeting Closed Caption Snippets
+
+        Download meeting closed caption snippets from the meeting closed caption specified by `closedCaptionId`
+        formatted either as a Video Text Track (.vtt) file or plain text (.txt) file.
+        
+        #### Request Header
+        
+        * `timezone`: *`Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ for time stamps in response body, defined in conformance with the
+        `IANA time zone database
+        <https://www.iana.org/time-zones>`_. The default value is `UTC` if not specified.*
+
+        :param closed_caption_id: Unique identifier for the meeting closed caption.
+        :type closed_caption_id: str
+        :param meeting_id: Unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the closed caption snippets belong to. This
+            parameter only applies to meeting instances in the `ended` state. It does not apply to meeting series,
+            scheduled meetings or scheduled `personal room
+            <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meetings.
+        :type meeting_id: str
+        :param format: Format for the downloaded meeting closed caption snippets.
+        :type format: DownloadMeetingClosedCaptionSnippetsFormat
+        :rtype: None
+        """
+        ...
+
     ...

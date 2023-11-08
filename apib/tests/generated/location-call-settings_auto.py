@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -459,4 +460,418 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def list_locations_webex_calling_details(self, org_id: str = None, max_: int = None, start: int = None,
+                                             name: str = None, order: str = None,
+                                             **params) -> Generator[ListLocationObject, None, None]:
+        """
+        List Locations Webex Calling Details
+
+        Lists Webex Calling locations for an organization with Webex Calling details.
+        
+        Searching and viewing locations with Webex Calling details in your
+        organization require an administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param org_id: List locations for this organization.
+        :type org_id: str
+        :param max_: Limit the maximum number of locations in the response.
+        :type max_: int
+        :param start: Specify the offset from the first result that you want to fetch.
+        :type start: int
+        :param name: List locations whose name contains this string.
+        :type name: str
+        :param order: Sort the list of locations based on `name`, either asc or desc.
+        :type order: str
+        :return: Generator yielding :class:`ListLocationObject` instances
+        """
+        ...
+
+
+    def enable_a_location_for_webex_calling(self, id: str, name: str, time_zone: str, preferred_language: str,
+                                            announcement_language: str, address: PostLocationCallingRequestAddress,
+                                            org_id: str = None) -> str:
+        """
+        Enable a Location for Webex Calling
+
+        Enable a location by adding it to Webex Calling. This add Webex Calling support to a
+        location created created using the POST /v1/locations API.
+        
+        Locations are used to support calling features which can be defined at the location level.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param id: A unique identifier for the location.
+        :type id: str
+        :param name: The name of the location.
+        :type name: str
+        :param time_zone: Time zone associated with this location. Refer to this `link
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for the format.
+        :type time_zone: str
+        :param preferred_language: Default email language.
+        :type preferred_language: str
+        :param announcement_language: Location's phone announcement language.
+        :type announcement_language: str
+        :param address: The address of the location.
+        :type address: PostLocationCallingRequestAddress
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_location_webex_calling_details(self, location_id: str, org_id: str = None) -> GetTelephonyLocationObject:
+        """
+        Get Location Webex Calling Details
+
+        Shows Webex Calling details for a location, by ID.
+        
+        Specifies the location ID in the locationId parameter in the URI.
+        
+        Searching and viewing locations in your organization requires an administrator auth token with the
+        spark-admin:telephony_config_read scope.
+
+        :param location_id: Retrieve Webex Calling location attributes for this location.
+        :type location_id: str
+        :param org_id: Retrieve Webex Calling location attributes for this organization.
+        :type org_id: str
+        :rtype: :class:`GetTelephonyLocationObject`
+        """
+        ...
+
+
+    def update_location_webex_calling_details(self, location_id: str, announcement_language: str,
+                                              calling_line_id: GetTelephonyLocationObjectCallingLineId,
+                                              connection: GetTelephonyLocationObjectConnection,
+                                              external_caller_id_name: str, p_access_network_info: str,
+                                              outside_dial_digit: datetime, routing_prefix: datetime,
+                                              charge_number: str, org_id: str = None):
+        """
+        Update Location Webex Calling Details
+
+        Update Webex Calling details for a location, by ID.
+        
+        Specifies the location ID in the `locationId` parameter in the URI.
+        
+        Modifying the `connection` via API is only supported for the local PSTN types of `TRUNK` and `ROUTE_GROUP`.
+        
+        Updating a location in your organization requires an administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
+
+        :param location_id: Updating Webex Calling location attributes for this location.
+        :type location_id: str
+        :param announcement_language: Location's phone announcement language.
+        :type announcement_language: str
+        :param calling_line_id: Location calling line information.
+        :type calling_line_id: GetTelephonyLocationObjectCallingLineId
+        :param connection: Connection details can only be modified to and from local PSTN types of `TRUNK` and
+            `ROUTE_GROUP`.
+        :type connection: GetTelephonyLocationObjectConnection
+        :param external_caller_id_name: Denve' (string) - External Caller ID Name value. Unicode characters.
+        :type external_caller_id_name: str
+        :param p_access_network_info: Location Identifier.
+        :type p_access_network_info: str
+        :param outside_dial_digit: Must dial to reach an outside line. Default is None.
+        :type outside_dial_digit: Union[str, datetime]
+        :param routing_prefix: Must dial a prefix when calling between locations having same extension within same
+            location; should be numeric.
+        :type routing_prefix: Union[str, datetime]
+        :param charge_number: Chargeable number for the line placing the call. When this is set, all calls placed from
+            this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
+        :type charge_number: str
+        :param org_id: Updating Webex Calling location attributes for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def change_announcement_language(self, location_id: str, agent_enabled: bool, service_enabled: bool,
+                                     announcement_language_code: str, org_id: str = None):
+        """
+        Change Announcement Language
+
+        Change announcement language for the given location.
+        
+        Change announcement language for current people/workspaces and/or existing feature configurations. This does
+        not change the default announcement language which is applied to new users/workspaces and new feature
+        configurations.
+        
+        Changing the announcement language for the given location requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Change announcement language for this location.
+        :type location_id: str
+        :param agent_enabled: Set to `true` to change announcement language for existing people and workspaces.
+        :type agent_enabled: bool
+        :param service_enabled: Set to `true` to change announcement language for existing feature configurations.
+        :type service_enabled: bool
+        :param announcement_language_code: Language code.
+        :type announcement_language_code: str
+        :param org_id: Change announcement language for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def read_the_list_of_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None,
+                                       max_: int = None, start: int = None, order: str = None,
+                                       **params) -> Generator[str, None, None]:
+        """
+        Read the List of Dial Patterns
+
+        List all Dial Patterns for the organization.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param dial_plan_id: ID of the dial plan.
+        :type dial_plan_id: str
+        :param org_id: ID of the organization to which the dial patterns belong.
+        :type org_id: str
+        :param dial_pattern: An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
+            optional wildcard characters.
+        Valid wildcard characters are `!` (matches any sequence of digits) and `X` (matches a single digit, 0-9).
+        The `!` wildcard can only occur once at the end and only in an E.164 pattern
+        :type dial_pattern: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the dial patterns according to the designated fields.  Available sort fields:
+            `dialPattern`.
+        :type order: str
+        :return: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9),
+            followed by optional wildcard characters.
+        """
+        ...
+
+
+    def get_a_location_emergency_callback_number(self, location_id: str,
+                                                 location_info: GetLocationCallBackNumberObjectLocationInfo,
+                                                 location_member_info: GetLocationCallBackNumberObjectLocationMemberInfo,
+                                                 selected: CallBackSelected, org_id: str = None):
+        """
+        Get a Location Emergency callback number
+
+        Get location emergency callback number.
+        
+        * To retrieve location callback number requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Update location attributes for this location.
+        :type location_id: str
+        :param location_info: Data relevant to this location.
+        :type location_info: GetLocationCallBackNumberObjectLocationInfo
+        :param location_member_info: Data relevant to the user/place (member) selected for ECBN.
+        :type location_member_info: GetLocationCallBackNumberObjectLocationMemberInfo
+        :param selected: Selected number type to configure emergency call back.
+        :type selected: CallBackSelected
+        :param org_id: Update location attributes for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def update_a_location_emergency_callback_number(self, location_id: str, selected: CallBackSelected,
+                                                    location_member_id: str, org_id: str = None):
+        """
+        Update a Location Emergency callback number
+
+        Update details for a location emergency callback number.
+        
+        * Updating a location callback number requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Update location attributes for this location.
+        :type location_id: str
+        :param selected: Selected number type to configure emergency call back.
+        :type selected: CallBackSelected
+        :param location_member_id: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is
+            selected.
+        :type location_member_id: str
+        :param org_id: Update location attributes for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def validate_the_list_of_extensions(self, extensions: list[str],
+                                        org_id: str = None) -> PostValidateExtensionResponse:
+        """
+        Validate the List of Extensions
+
+        Validate the List of Extensions.
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param extensions: Array of Strings of IDs of the Extensions.
+        :type extensions: list[str]
+        :param org_id: Validate Extension for this organization.
+        :type org_id: str
+        :rtype: :class:`PostValidateExtensionResponse`
+        """
+        ...
+
+
+    def validate_extensions(self, location_id: str, extensions: list[str],
+                            org_id: str = None) -> StatusOfExtensionsObject:
+        """
+        Validate Extensions
+
+        Validate extensions for a specific location.
+        
+        Validating extensions requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Validate extensions for this location.
+        :type location_id: str
+        :param extensions: Array of extensions that will be validated.
+        :type extensions: list[str]
+        :param org_id: Validate extensions for this organization.
+        :type org_id: str
+        :rtype: :class:`StatusOfExtensionsObject`
+        """
+        ...
+
+
+    def update_music_on_hold(self, location_id: str, call_hold_enabled: bool, call_park_enabled: bool,
+                             greeting: GetMusicOnHoldObjectGreeting, audio_file: AudioAnnouncementFileGetObject,
+                             org_id: str = None):
+        """
+        Update Music On Hold
+
+        Update the location's music on hold settings.
+        
+        Location music on hold settings allows you to play music when a call is placed on hold or parked.
+        
+        Updating a location's music on hold settings requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Update music on hold settings for this location.
+        :type location_id: str
+        :param call_hold_enabled: If enabled, music will be played when call is placed on hold.
+        :type call_hold_enabled: bool
+        :param call_park_enabled: If enabled, music will be played when call is parked.
+        :type call_park_enabled: bool
+        :param greeting: Greeting type for the location.
+        :type greeting: GetMusicOnHoldObjectGreeting
+        :param audio_file: Announcement Audio File details when greeting is selected to be `CUSTOM`.
+        :type audio_file: AudioAnnouncementFileGetObject
+        :param org_id: Update music on hold settings for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_music_on_hold(self, location_id: str, org_id: str = None) -> GetMusicOnHoldObject:
+        """
+        Get Music On Hold
+
+        Retrieve the location's music on hold settings.
+        
+        Location music on hold settings allows you to play music when a call is placed on hold or parked.
+        
+        Retrieving a location's music on hold settings requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve music on hold settings for this location.
+        :type location_id: str
+        :param org_id: Retrieve music on hold settings for this organization.
+        :type org_id: str
+        :rtype: :class:`GetMusicOnHoldObject`
+        """
+        ...
+
+
+    def get_private_network_connect(self, location_id: str,
+                                    org_id: str = None) -> GetPrivateNetworkConnectObjectNetworkConnectionType:
+        """
+        Get Private Network Connect
+
+        Retrieve the location's network connection type.
+        
+        Network Connection Type determines if the location's network connection is public or private.
+        
+        Retrieving a location's network connection type requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve the network connection type for this location.
+        :type location_id: str
+        :param org_id: Retrieve the network connection type for this organization.
+        :type org_id: str
+        :rtype: GetPrivateNetworkConnectObjectNetworkConnectionType
+        """
+        ...
+
+
+    def update_private_network_connect(self, location_id: str,
+                                       network_connection_type: GetPrivateNetworkConnectObjectNetworkConnectionType,
+                                       org_id: str = None):
+        """
+        Update Private Network Connect
+
+        Update the location's network connection type.
+        
+        Network Connection Type determines if the location's network connection is public or private.
+        
+        Updating a location's network connection type requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Update the network connection type for this location.
+        :type location_id: str
+        :param network_connection_type: Network Connection Type for the location.
+        :type network_connection_type: GetPrivateNetworkConnectObjectNetworkConnectionType
+        :param org_id: Update network connection type for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def read_the_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None,
+                                         trunk_name: str = None, max_: int = None, start: int = None,
+                                         order: str = None, **params) -> Generator[RouteIdentity, None, None]:
+        """
+        Read the List of Routing Choices
+
+        List all Routes for the organization.
+        
+        Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
+        Calling to manage calls between Webex Calling hosted users and premises PBX users. This solution lets you
+        configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List route identities for this organization.
+        :type org_id: str
+        :param route_group_name: Return the list of route identities matching the Route group name..
+        :type route_group_name: str
+        :param trunk_name: Return the list of route identities matching the Trunk name..
+        :type trunk_name: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the route identities according to the designated fields.  Available sort fields:
+            `routeName`, `routeType`.
+        :type order: str
+        :return: Generator yielding :class:`RouteIdentity` instances
+        """
+        ...
+
     ...

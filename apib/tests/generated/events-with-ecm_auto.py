@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -86,4 +87,50 @@ class EventsApi(ApiChild, base='events'):
     `Compliance Guide
     <https://developer.webex.com/docs/api/guides/compliance>`_ for more information.
     """
+
+    def list_events(self, has_attachments: bool, resource: EventResourceEnum = None, type: EventTypeEnum = None,
+                    actor_id: str = None, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
+                    max_: int = None, **params) -> Generator[Event, None, None]:
+        """
+        List Events
+
+        List events in your organization. Several query parameters are available to filter the response.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param has_attachments: If enabled, filters message events to only those that contain the `attachments`
+            attribute.
+        :type has_attachments: bool
+        :param resource: List events with a specific resource type.
+        :type resource: EventResourceEnum
+        :param type: List events with a specific event type.
+        :type type: EventTypeEnum
+        :param actor_id: List events performed by this person, by ID.
+        :type actor_id: str
+        :param from_: List events which occurred after a specific date and time.
+        :type from_: Union[str, datetime]
+        :param to_: List events which occurred before a specific date and time.
+        :type to_: Union[str, datetime]
+        :param max_: Limit the maximum number of events in the response.
+        :type max_: int
+        :return: Generator yielding :class:`Event` instances
+        """
+        ...
+
+
+    def get_event_details(self, event_id: str) -> Event:
+        """
+        Get Event Details
+
+        Shows details for an event, by event ID.
+        
+        Specify the event ID in the `eventId` parameter in the URI.
+
+        :param event_id: The unique identifier for the event.
+        :type event_id: str
+        :rtype: :class:`Event`
+        """
+        ...
+
     ...

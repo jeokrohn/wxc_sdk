@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -44,4 +45,35 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
     about Resource Groups, see the `Managing Hybrid Services
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
+
+    def list_resource_groups(self, org_id: str = None) -> list[ResourceGroup]:
+        """
+        List Resource Groups
+
+        List resource groups.
+        
+        Use query parameters to filter the response.
+
+        :param org_id: List resource groups in this organization. Only admin users of another organization (such as
+            partners) may use this parameter.
+        :type org_id: str
+        :rtype: list[ResourceGroup]
+        """
+        ...
+
+
+    def get_resource_group_details(self, resource_group_id: str) -> ResourceGroup:
+        """
+        Get Resource Group Details
+
+        Shows details for a resource group, by ID.
+        
+        Specify the resource group ID in the `resourceGroupId` parameter in the URI.
+
+        :param resource_group_id: The unique identifier for the resource group.
+        :type resource_group_id: str
+        :rtype: :class:`ResourceGroup`
+        """
+        ...
+
     ...

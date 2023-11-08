@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -504,4 +505,410 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max_: int = None,
+                                         start: int = None, name: str = None, phone_number: str = None,
+                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
+        """
+        Read the List of Auto Attendants
+
+        List all Auto Attendants for the organization.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List auto attendants for this organization.
+        :type org_id: str
+        :param location_id: Return the list of auto attendants for this location.
+        :type location_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return auto attendants with the matching name.
+        :type name: str
+        :param phone_number: Only return auto attendants with the matching phone number.
+        :type phone_number: str
+        :return: Generator yielding :class:`ListAutoAttendantObject` instances
+        """
+        ...
+
+
+    def get_details_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                          org_id: str = None) -> GetAutoAttendantObject:
+        """
+        Get Details for an Auto Attendant
+
+        Retrieve an Auto Attendant details.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Retrieving an auto attendant details requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve an auto attendant details in this location.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve auto attendant details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetAutoAttendantObject`
+        """
+        ...
+
+
+    def create_an_auto_attendant(self, location_id: str, name: str, phone_number: str, extension: datetime,
+                                 first_name: str, last_name: str, alternate_numbers: list[AlternateNumbersObject],
+                                 language_code: str, business_schedule: str, holiday_schedule: str,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
+                                 business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
+                                 org_id: str = None) -> str:
+        """
+        Create an Auto Attendant
+
+        Create new Auto Attendant for the given location.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the auto attendant for this location.
+        :type location_id: str
+        :param name: Unique name for the auto attendant.
+        :type name: str
+        :param phone_number: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
+        :type phone_number: str
+        :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
+        :type extension: Union[str, datetime]
+        :param first_name: First name defined for an auto attendant.
+        :type first_name: str
+        :param last_name: Last name defined for an auto attendant.
+        :type last_name: str
+        :param alternate_numbers: Alternate numbers defined for the auto attendant.
+        :type alternate_numbers: list[AlternateNumbersObject]
+        :param language_code: Language code for the auto attendant.
+        :type language_code: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
+        :param holiday_schedule: Holiday defined for the auto attendant.
+        :type holiday_schedule: str
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
+            `ENTERPRISE`.
+        :type extension_dialing: GetAutoAttendantObjectExtensionDialing
+        :param name_dialing: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+        :type name_dialing: GetAutoAttendantObjectExtensionDialing
+        :param time_zone: Time zone defined for the auto attendant.
+        :type time_zone: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuGetObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuGetObject
+        :param org_id: Create the auto attendant for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
+                                 extension: datetime, first_name: str, last_name: str,
+                                 alternate_numbers: list[AlternateNumbersObject], language_code: str,
+                                 business_schedule: str, holiday_schedule: str,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
+                                 business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
+                                 org_id: str = None):
+        """
+        Update an Auto Attendant
+
+        Update the designated Auto Attendant.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Updating an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Update an auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param name: Unique name for the auto attendant.
+        :type name: str
+        :param phone_number: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
+        :type phone_number: str
+        :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
+        :type extension: Union[str, datetime]
+        :param first_name: First name defined for an auto attendant.
+        :type first_name: str
+        :param last_name: Last name defined for an auto attendant.
+        :type last_name: str
+        :param alternate_numbers: Alternate numbers defined for the auto attendant.
+        :type alternate_numbers: list[AlternateNumbersObject]
+        :param language_code: Language code for the auto attendant.
+        :type language_code: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
+        :param holiday_schedule: Holiday defined for the auto attendant.
+        :type holiday_schedule: str
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
+            `ENTERPRISE`.
+        :type extension_dialing: GetAutoAttendantObjectExtensionDialing
+        :param name_dialing: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+        :type name_dialing: GetAutoAttendantObjectExtensionDialing
+        :param time_zone: Time zone defined for the auto attendant.
+        :type time_zone: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuGetObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuGetObject
+        :param org_id: Update an auto attendant from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def delete_an_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
+        """
+        Delete an Auto Attendant
+
+        Delete the designated Auto Attendant.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Deleting an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which to delete an auto attendant.
+        :type location_id: str
+        :param auto_attendant_id: Delete the auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param org_id: Delete the auto attendant from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                           org_id: str = None) -> AutoAttendantCallForwardSettingsDetailsObject:
+        """
+        Get Call Forwarding Settings for an Auto Attendant
+
+        Retrieve Call Forwarding settings for the designated Auto Attendant including the list of call forwarding
+        rules.
+        
+        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve the call forwarding settings for this auto attendant.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve auto attendant forwarding settings from this organization.
+        :type org_id: str
+        :rtype: AutoAttendantCallForwardSettingsDetailsObject
+        """
+        ...
+
+
+    def update_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                              call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject,
+                                                              org_id: str = None):
+        """
+        Update Call Forwarding Settings for an Auto Attendant
+
+        Update Call Forwarding settings for the designated Auto Attendant.
+        
+        Updating call forwarding settings for an auto attendant requires a full administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Update call forwarding settings for this auto attendant.
+        :type auto_attendant_id: str
+        :param call_forwarding: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
+        :type call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject
+        :param org_id: Update auto attendant forwarding settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def create_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                      name: str, enabled: bool,
+                                                                      business_schedule: str, holiday_schedule: str,
+                                                                      forward_to: CallForwardSelectiveForwardToObject,
+                                                                      calls_from: CallForwardSelectiveCallsFromObject,
+                                                                      calls_to: CallForwardSelectiveCallsToObject,
+                                                                      org_id: str = None) -> str:
+        """
+        Create a Selective Call Forwarding Rule for an Auto Attendant
+
+        Create a Selective Call Forwarding Rule for the designated Auto Attendant.
+        
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        
+        Creating a selective call forwarding rule for an auto attendant requires a full administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which the auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Create the rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param name: Unique name for the selective rule in the auto attendant.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CallForwardSelectiveForwardToObject
+        :param calls_from: Settings related to the rule matching based on incoming caller ID.
+        :type calls_from: CallForwardSelectiveCallsFromObject
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CallForwardSelectiveCallsToObject
+        :param org_id: Create the auto attendant rule for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                 rule_id: str,
+                                                                 org_id: str = None) -> GetAutoAttendantCallForwardSelectiveRuleObject:
+        """
+        Get Selective Call Forwarding Rule for an Auto Attendant
+
+        Retrieve a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
+        
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        
+        Retrieving a selective call forwarding rule's settings for an auto attendant requires a full or read-only
+        administrator or location administrator
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve settings for a rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param rule_id: Auto attendant rule you are retrieving settings for.
+        :type rule_id: str
+        :param org_id: Retrieve auto attendant rule settings for this organization.
+        :type org_id: str
+        :rtype: :class:`GetAutoAttendantCallForwardSelectiveRuleObject`
+        """
+        ...
+
+
+    def update_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                    rule_id: str, name: str, enabled: bool,
+                                                                    business_schedule: str, holiday_schedule: str,
+                                                                    forward_to: CallForwardSelectiveForwardToObject,
+                                                                    calls_from: CallForwardSelectiveCallsFromObject,
+                                                                    calls_to: CallForwardSelectiveCallsToObject,
+                                                                    org_id: str = None) -> str:
+        """
+        Update Selective Call Forwarding Rule for an Auto Attendant
+
+        Update a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
+        
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        
+        Updating a selective call forwarding rule's settings for an auto attendant requires a full administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Update settings for a rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param rule_id: Auto attendant rule you are updating settings for.
+        :type rule_id: str
+        :param name: Unique name for the selective rule in the auto attendant.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CallForwardSelectiveForwardToObject
+        :param calls_from: Settings related the rule matching based on incoming caller ID.
+        :type calls_from: CallForwardSelectiveCallsFromObject
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CallForwardSelectiveCallsToObject
+        :param org_id: Update auto attendant rule settings for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                      rule_id: str, org_id: str = None):
+        """
+        Delete a Selective Call Forwarding Rule for an Auto Attendant
+
+        Delete a Selective Call Forwarding Rule for the designated Auto Attendant.
+        
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        
+        Deleting a selective call forwarding rule for an auto attendant requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Delete the rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param rule_id: Auto attendant rule you are deleting.
+        :type rule_id: str
+        :param org_id: Delete auto attendant rule from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

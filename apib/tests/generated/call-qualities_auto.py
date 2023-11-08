@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -104,4 +105,22 @@ class CallQualitiesApi(ApiChild, base='call/qualities'):
     For more information, see the `Calls
     <https://developer.webex.com/docs/api/guides/calls>`_ guide.
     """
+
+    def get_call_qualities(self, call_id: str, max_: int = None,
+                           **params) -> Generator[MediaSessionQuality, None, None]:
+        """
+        Get Call Qualities
+
+        Provides quality data for a meeting, by `callId`. Only organization administrators can retrieve meeting quality
+        data. Quality information is available 30 minutes after a meeting has ended and may be retrieved for up to 30
+        days.
+
+        :param call_id: The identifier of the call.
+        :type call_id: str
+        :param max_: Limit the maximum number of media sessions in the response
+        :type max_: int
+        :return: Generator yielding :class:`MediaSessionQuality` instances
+        """
+        ...
+
     ...

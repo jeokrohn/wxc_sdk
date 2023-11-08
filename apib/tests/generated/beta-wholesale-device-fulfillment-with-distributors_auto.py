@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -208,4 +209,138 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
     Beta Wholesale Device Fulfillment with Distributors
     
     """
+
+    def list_wholesale_device_catalog(self, max_: int = None, offset: int = None, distributor_id: str = None,
+                                      product_name: str = None, sku: str = None,
+                                      **params) -> Generator[CatalogResponse, None, None]:
+        """
+        List Wholesale Device Catalog
+
+        List the device fulfillment catalog items associated with a Service Provider. There are a number of filter
+        options, which can be combined in a single request.
+
+        :param max_: Limit the maximum number of device fulfillment catalog items returned in the search response, up
+            to 100 per page. Refer to the `Pagination
+            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
+        :type max_: int
+        :param offset: Offset value to implement `pagination
+            <https://developer.webex.com/docs/basics#pagination>`_.
+        :type offset: int
+        :param distributor_id: The distributor ID.
+        :type distributor_id: str
+        :param product_name: The device product name.
+        :type product_name: str
+        :param sku: The device SKU.
+        :type sku: str
+        :return: Generator yielding :class:`CatalogResponse` instances
+        """
+        ...
+
+
+    def get_wholesale_device_catalog_details(self, catalog_id: str) -> CatalogResponse:
+        """
+        Get Wholesale Device Catalog Details
+
+        Retrieve details of a Wholesale device fulfillment catalog item.
+
+        :param catalog_id: A unique identifier for the device fulfillment catalog item.
+        :type catalog_id: str
+        :rtype: :class:`CatalogResponse`
+        """
+        ...
+
+
+    def list_wholesale_device_distributors(self) -> list[DistributorResponse]:
+        """
+        List Wholesale Device Distributors
+
+        List the device fulfillment distributors associated with a Service Provider.
+
+        :rtype: list[DistributorResponse]
+        """
+        ...
+
+
+    def get_wholesale_device_distributor_details(self, distributor_id: str) -> DistributorDetailsResponse:
+        """
+        Get Wholesale Device Distributor Details
+
+        Retrieve distributor information.
+
+        :param distributor_id: The distributor ID.
+        :type distributor_id: str
+        :rtype: :class:`DistributorDetailsResponse`
+        """
+        ...
+
+
+    def list_wholesale_device_orders(self, max_: int = None, offset: int = None, org_id: str = None,
+                                     status: str = None, **params) -> Generator[OrderResponse, None, None]:
+        """
+        List Wholesale Device Orders
+
+        List the device fulfillment orders associated with a Service Provider. There are a number of filter options,
+        which can be combined in a single request.
+
+        :param max_: Limit the maximum number of device fulfillment orders returned in the search response, up to 100
+            per page. Refer to the `Pagination
+            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
+        :type max_: int
+        :param offset: Offset value to implement `pagination
+            <https://developer.webex.com/docs/basics#pagination>`_.
+        :type offset: int
+        :param org_id: Wholesale customer ID.
+        :type org_id: str
+        :param status: The aggregated order status.
+        :type status: str
+        :return: Generator yielding :class:`OrderResponse` instances
+        """
+        ...
+
+
+    def create_a_wholesale_device_order(self, description: str, org_id: str, shipping_details: OrderShippingDetails,
+                                        line_items: list[OrderRequestLineItem]) -> OrderResponse:
+        """
+        Create a Wholesale Device Order
+
+        Create a Wholesale device fulfillment order.
+
+        :param description: Description of the order.
+        :type description: str
+        :param org_id: A unique identifier for the customer.
+        :type org_id: str
+        :param shipping_details: The order delivery shipping details.
+        :type shipping_details: OrderShippingDetails
+        :param line_items: A list of order line items.
+        :type line_items: list[OrderRequestLineItem]
+        :rtype: :class:`OrderResponse`
+        """
+        ...
+
+
+    def cancel_a_wholesale_device_order(self, order_number: str):
+        """
+        Cancel a Wholesale Device Order
+
+        Cancel a Wholesale device fulfillment order.
+
+        :param order_number: A unique identifier for the device fulfillment order.
+        :type order_number: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_a_wholesale_device_order(self, order_number: str) -> OrderResponse:
+        """
+        Get a Wholesale Device Order
+
+        Retrieve details of a Wholesale device fulfillment order.
+
+        :param order_number: A unique identifier for the device fulfillment order.
+        :type order_number: str
+        :rtype: :class:`OrderResponse`
+        """
+        ...
+
     ...

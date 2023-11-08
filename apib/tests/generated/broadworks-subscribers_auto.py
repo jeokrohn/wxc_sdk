@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -160,4 +161,230 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
     guides.</Callout>
     </div>
     """
+
+    def list_broad_works_subscribers(self, user_id: str = None, person_id: str = None, email: str = None,
+                                     provisioning_id: str = None, sp_enterprise_id: str = None,
+                                     last_status_change: str = None, status: SubscriberStatus = None,
+                                     after: str = None, self_activated: bool = None, max_: int = None,
+                                     **params) -> Generator[Subscriber, None, None]:
+        """
+        List BroadWorks Subscribers
+
+        This API lets a Service Provider search for their associated subscribers. There are a number of filter options
+        that can be combined in a single request.
+
+        :param user_id: The user ID of the subscriber on BroadWorks.
+        :type user_id: str
+        :param person_id: The Person ID of the Webex subscriber.
+        :type person_id: str
+        :param email: The email address of the subscriber.
+        :type email: str
+        :param provisioning_id: The Provisioning ID associated with this subscriber.
+        :type provisioning_id: str
+        :param sp_enterprise_id: The Service Provider supplied unique identifier for the subscriber's enterprise.
+        :type sp_enterprise_id: str
+        :param last_status_change: Only include subscribers with a provisioning status change after this date and time.
+            Epoch time (in milliseconds) preferred, but ISO 8601 date format also accepted.
+        :type last_status_change: str
+        :param status: The provisioning status of the subscriber. This Parameter supports multiple comma separated
+            values. For example : status=error,provisioned,provisioning.
+        :type status: SubscriberStatus
+        :param after: Only include subscribers created after this date and time. Epoch time (in milliseconds)
+            preferred, but ISO 8601 date format also accepted.
+        :type after: str
+        :param self_activated: Indicates if the subscriber was self activated, rather than provisioned via these APIs.
+        :type self_activated: bool
+        :param max_: Limit the maximum number of subscribers returned in the search response, up to 100 per page. Refer
+            to the `Pagination
+            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
+        :type max_: int
+        :return: Generator yielding :class:`Subscriber` instances
+        """
+        ...
+
+
+    def provision_a_broad_works_subscriber(self, provisioning_id: str, user_id: str, sp_enterprise_id: str,
+                                           first_name: str, last_name: str, package: SubscriberPackage,
+                                           primary_phone_number: str = None, mobile_phone_number: str = None,
+                                           extension: Union[str, datetime] = None, email: str = None,
+                                           language: str = None, timezone: str = None) -> Subscriber:
+        """
+        Provision a BroadWorks Subscriber
+
+        Provision a new BroadWorks subscriber for Webex services.
+        
+        This API lets a Service Provider map a BroadWorks subscriber to a new or existing Webex user and assign the
+        required licenses and entitlements for Webex and Meetings.
+
+        :param provisioning_id: This Provisioning ID defines how this subscriber is to be provisioned for Webex
+            Services.
+        
+        Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen
+        Customer Template
+        on Webex Partner Hub.
+        :type provisioning_id: str
+        :param user_id: The user ID of the subscriber on BroadWorks.
+        :type user_id: str
+        :param sp_enterprise_id: The Service Provider supplied unique identifier for the subscriber's enterprise.
+        :type sp_enterprise_id: str
+        :param first_name: The first name of the subscriber.
+        :type first_name: str
+        :param last_name: The last name of the subscriber.
+        :type last_name: str
+        :param package: The Webex for BroadWorks package to be assigned to the subscriber.
+        :type package: SubscriberPackage
+        :param primary_phone_number: The primary phone number configured against the subscriber on BroadWorks.
+        :type primary_phone_number: str
+        :param mobile_phone_number: The mobile phone number configured against the subscriber on BroadWorks. Any empty
+            value on update will remove the already configured mobile phone number.
+        :type mobile_phone_number: str
+        :param extension: The extension number configured against the subscriber on BroadWorks.
+        :type extension: Union[str, datetime]
+        :param email: The email address of the subscriber (mandatory for the trusted email provisioning flow).
+        :type email: str
+        :param language: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language
+            for organization and Webex Meeting Sites. Refer to the `help page
+            <https://www.cisco.com/content/en/us/td/docs/voice_ip_comm/cloudCollaboration/wx4bwks/Solution_Guide/wbxbw_b_solution-guide/wbxbw_b_SolutionGuide-PDF_chapter_01.html#Cisco_Reference.dita_f10351e1-f775-418d-a700-ec8487e0a33b>`_ for more information.
+        :type language: str
+        :param timezone: The time zone associated with the subscriber. Refer to the `Webex Meetings Site Timezone
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_
+            section of the `Webex for BroadWorks
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide>`_ guide for more information.
+        :type timezone: str
+        :rtype: :class:`Subscriber`
+        """
+        ...
+
+
+    def get_a_broad_works_subscriber(self, subscriber_id: str) -> Subscriber:
+        """
+        Get a BroadWorks Subscriber
+
+        This API lets a Service Provider retrieve details of a provisioned BroadWorks subscriber on Webex.
+
+        :param subscriber_id: A unique identifier for the subscriber in question.
+        :type subscriber_id: str
+        :rtype: :class:`Subscriber`
+        """
+        ...
+
+
+    def update_a_broad_works_subscriber(self, subscriber_id: str, user_id: str = None, first_name: str = None,
+                                        last_name: str = None, primary_phone_number: str = None,
+                                        mobile_phone_number: str = None, extension: Union[str, datetime] = None,
+                                        timezone: str = None, package: str = None) -> Subscriber:
+        """
+        Update a BroadWorks Subscriber
+
+        This API lets a Service Provider update certain details of a provisioned BroadWorks subscriber
+        on Webex.
+        
+        <div>
+        <Callout type='info'>The updated items will not be immediately reflected in the response body, but can be
+        subsequently obtained via the `Get a BroadWorks Subscriber
+        <https://developer.webex.com/docs/api/v1/broadworks-subscribers/get-a-broadworks-subscriber>`_ API once the status has transitioned from the
+        updating state to the provisioned state.</Callout>
+        </div>
+        
+        o
+
+        :param subscriber_id: A unique identifier for the subscriber in question.
+        :type subscriber_id: str
+        :param user_id: The user ID of the subscriber on BroadWorks.
+        :type user_id: str
+        :param first_name: The first name of the subscriber.
+        :type first_name: str
+        :param last_name: The last name of the subscriber.
+        :type last_name: str
+        :param primary_phone_number: The primary phone number configured against the subscriber on BroadWorks.
+        :type primary_phone_number: str
+        :param mobile_phone_number: The mobile phone number configured against the subscriber on BroadWorks. Any empty
+            value on update will remove the already configured mobile phone number.
+        :type mobile_phone_number: str
+        :param extension: The extension number configured against the subscriber on BroadWorks.
+        :type extension: Union[str, datetime]
+        :param timezone: The time zone associated with the subscriber. Refer to the `Webex Meetings Site Timezone
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_
+            section of the `Webex for BroadWorks
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide>`_ guide for more information.
+        :type timezone: str
+        :param package: The Webex for BroadWorks Package to be assigned to the subscriber.
+        :type package: str
+        :rtype: :class:`Subscriber`
+        """
+        ...
+
+
+    def remove_a_broad_works_subscriber(self, subscriber_id: str):
+        """
+        Remove a BroadWorks Subscriber
+
+        This API will allow a Service Provider to remove the mapping between a BroadWorks Subscriber and Webex user.
+
+        :param subscriber_id: A unique identifier for the subscriber in question.
+        :type subscriber_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def precheck_a_broadworks_subscriber_provisioning(self, email: str, provisioning_id: str = None,
+                                                      user_id: str = None, sp_enterprise_id: str = None,
+                                                      first_name: str = None, last_name: str = None,
+                                                      package: SubscriberPackage = None,
+                                                      primary_phone_number: str = None,
+                                                      mobile_phone_number: str = None, extension: Union[str,
+                                                      datetime] = None, language: str = None, timezone: str = None,
+                                                      customer_info: PrecheckABroadworksSubscriberProvisioningCustomerInfo = None) -> SubscriberProvisioningPrecheckResponse:
+        """
+        Precheck a Broadworks Subscriber Provisioning
+
+        Verify the likely success of provisioning a broadworks subscriber.
+        
+        <div>
+        <Callout type='info'>
+        The Prerequisite for using this API is to have at least one Broadworks Cluster configured against partner using
+        Partner Hub. The Provisioning Precheck APIs supports two variants of Broadworks Provisioning Precheck
+        Requests. Please refer to `Using the Provisioning Precheck API
+        <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#using-the-precheck-provisioning-api>`_ section in `Webex for BroadWorks
+        information.
+        </Callout>
+        </div>
+
+        :param email: The email address of the subscriber.
+        :type email: str
+        :param provisioning_id: Provisioning ID that defines how this subscriber is to be provisioned for Cisco Webex
+            Services. Each Customer Template has its unique Provisioning ID. This ID will be displayed under the
+            chosen Customer Template on Cisco Webex Control Hub.
+        :type provisioning_id: str
+        :param user_id: The user ID of the Broadworks subscriber.
+        :type user_id: str
+        :param sp_enterprise_id: The Service Provider supplied unique identifier for the subscriber's enterprise.
+        :type sp_enterprise_id: str
+        :param first_name: The first name of the subscriber.
+        :type first_name: str
+        :param last_name: The last name of the subscriber.
+        :type last_name: str
+        :param package: The Webex for BroadWorks package to be assigned to the subscriber.
+        :type package: SubscriberPackage
+        :param primary_phone_number: The primary phone number configured for the subscriber on BroadWorks.
+        :type primary_phone_number: str
+        :param mobile_phone_number: The mobile phone number configured against the subscriber on BroadWorks.
+        :type mobile_phone_number: str
+        :param extension: The extension number configured against the subscriber on BroadWorks.
+        :type extension: Union[str, datetime]
+        :param language: The ISO 639-1 language code associated with the subscriber. Reserved for future use. Any value
+            currently specified will be ignored during subscriber provisioning.
+        :type language: str
+        :param timezone: The time zone associated with the subscriber. Refer to the `Webex Meetings Site Timezone
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_
+            section of the `Webex for BroadWorks
+            <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide>`_ guide for more information.
+        :type timezone: str
+
+        :type customer_info: PrecheckABroadworksSubscriberProvisioningCustomerInfo
+        :rtype: :class:`SubscriberProvisioningPrecheckResponse`
+        """
+        ...
+
     ...

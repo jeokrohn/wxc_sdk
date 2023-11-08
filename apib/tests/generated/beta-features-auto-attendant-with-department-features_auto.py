@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -261,4 +262,126 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max_: int = None,
+                                         start: int = None, name: str = None, phone_number: str = None,
+                                         department_id: str = None, department_name: str = None,
+                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
+        """
+        Read the List of Auto Attendants
+
+        List all Auto Attendants for the organization.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List auto attendants for this organization.
+        :type org_id: str
+        :param location_id: Return the list of auto attendants for this location.
+        :type location_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return auto attendants with the matching name.
+        :type name: str
+        :param phone_number: Only return auto attendants with the matching phone number.
+        :type phone_number: str
+        :param department_id: Return only auto attendants with the matching departmentId.
+        :type department_id: str
+        :param department_name: Return only auto attendants with the matching departmentName.
+        :type department_name: str
+        :return: Generator yielding :class:`ListAutoAttendantObject` instances
+        """
+        ...
+
+
+    def get_details_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                          org_id: str = None) -> GetAutoAttendantObject:
+        """
+        Get Details for an Auto Attendant
+
+        Retrieve an Auto Attendant's details.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Retrieving an auto attendant details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve an auto attendant details in this location.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve auto attendant details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetAutoAttendantObject`
+        """
+        ...
+
+
+    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
+                                 extension: datetime, first_name: str, last_name: str,
+                                 alternate_numbers: list[AlternateNumbersObject], language_code: str,
+                                 business_schedule: str, holiday_schedule: str,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
+                                 business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject,
+                                 department: GetAutoAttendantObjectDepartment, org_id: str = None):
+        """
+        Update an Auto Attendant
+
+        Update the designated Auto Attendant.
+        
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        
+        Updating an auto attendant requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Update an auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param name: Unique name for the auto attendant.
+        :type name: str
+        :param phone_number: Auto attendant phone number. Either phone number or extension should be present as
+            mandatory.
+        :type phone_number: str
+        :param extension: Auto attendant extension. Either phone number or extension should be present as mandatory.
+        :type extension: Union[str, datetime]
+        :param first_name: First name defined for an auto attendant.
+        :type first_name: str
+        :param last_name: Last name defined for an auto attendant.
+        :type last_name: str
+        :param alternate_numbers: Alternate numbers defined for the auto attendant.
+        :type alternate_numbers: list[AlternateNumbersObject]
+        :param language_code: Language code for the auto attendant.
+        :type language_code: str
+        :param business_schedule: Business hours for the auto attendant.
+        :type business_schedule: str
+        :param holiday_schedule: Holiday schedule for the auto attendant.
+        :type holiday_schedule: str
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
+            ENTERPRISE.
+        :type extension_dialing: GetAutoAttendantObjectExtensionDialing
+        :param name_dialing: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
+        :type name_dialing: GetAutoAttendantObjectExtensionDialing
+        :param time_zone: Time zone defined for the auto attendant.
+        :type time_zone: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuObject
+        :param department: Specifies the department information.
+        :type department: GetAutoAttendantObjectDepartment
+        :param org_id: Update an auto attendant from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

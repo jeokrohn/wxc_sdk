@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -46,4 +47,31 @@ class OrganizationsWithECMApi(ApiChild, base='organizations'):
     A set of people in Webex. Organizations may manage other organizations or be managed themselves. Organizations
     resources can be accessed only by an admin.
     """
+
+    def list_organizations(self) -> list[Organization]:
+        """
+        List Organizations
+
+        List all organizations visible by your account. The results will not be `paginated
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :rtype: list[Organization]
+        """
+        ...
+
+
+    def get_organization_details(self, org_id: str) -> Organization:
+        """
+        Get Organization Details
+
+        Shows details for an organization, by ID.
+        
+        Specify the org ID in the `orgId` parameter in the URI.
+
+        :param org_id: The unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`Organization`
+        """
+        ...
+
     ...

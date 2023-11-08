@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -12,10 +13,10 @@ __auto__ = ['ActionOnRouteList', 'CallSourceInfo', 'CallSourceType', 'Customer',
             'DeviceType', 'DialPattern', 'DialPatternPut', 'DialPatternStatus', 'DialPatternValidate',
             'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost',
             'DialPlanPut', 'Emergency', 'FeatureAccessCode', 'GetLocalGatewayDialPlanUsageForATrunkResponse',
+            'GetLocationsUsingTheLocalGatewayAsPstnConnectionRoutingResponse',
             'GetRouteGroupsUsingTheLocalGatewayResponse', 'HostedAgent', 'HostedAgentType', 'HostedFeature',
-            'LocalGatewayUsageCount', 'LocalGateways', 'LocationUsageGetResponse',
-            'ModifyNumbersForRouteListResponse', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PostResponse',
-            'PstnNumber', 'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfDialPlansResponse',
+            'LocalGatewayUsageCount', 'LocalGateways', 'ModifyNumbersForRouteListResponse', 'NumberStatus',
+            'OriginatorType', 'PbxUser', 'PostResponse', 'PstnNumber', 'ReadTheListOfDialPlansResponse',
             'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfTrunksResponse',
             'ReadTheRouteListsOfARoutingGroupResponse', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus',
             'ResponseStatusType', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet',
@@ -386,11 +387,6 @@ class LocalGateways(ApiModel):
     priority: Optional[int] = None
 
 
-class LocationUsageGetResponse(ApiModel):
-    #: Location associated with the trunk.
-    location: Optional[Customer] = None
-
-
 class NumberStatus(str, Enum):
     invalid = 'INVALID'
     duplicate = 'DUPLICATE'
@@ -568,9 +564,8 @@ class RouteListGet(ApiModel):
 
 
 class RouteListNumberListGet(ApiModel):
-    #: Number assigned to the Route list.
-    #: example: +2147891122
-    phone_numbers: Optional[str] = None
+    #: Numbers assigned to the Route list.
+    numbers: Optional[list[str]] = None
 
 
 class RouteListNumberPatch(ApiModel):
@@ -898,6 +893,11 @@ class GetLocalGatewayDialPlanUsageForATrunkResponse(ApiModel):
     dial_plans: Optional[list[Customer]] = None
 
 
+class GetLocationsUsingTheLocalGatewayAsPstnConnectionRoutingResponse(ApiModel):
+    #: Array of locations.
+    locations: Optional[list[Customer]] = None
+
+
 class GetRouteGroupsUsingTheLocalGatewayResponse(ApiModel):
     #: Array of route Groups.
     route_group: Optional[list[RouteGroup]] = None
@@ -931,11 +931,6 @@ class ReadTheUsageOfARoutingGroupResponse(ApiModel):
     #: Number of route list locations associated to this route group.
     #: example: 1
     route_list_count: Optional[datetime] = None
-
-
-class ReadTheCallToExtensionLocationsOfARoutingGroupResponse(ApiModel):
-    #: Array of locations.
-    locations: Optional[list[Customer]] = None
 
 
 class ReadTheRouteListsOfARoutingGroupResponse(ApiModel):
@@ -973,4 +968,1035 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
+    def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: datetime,
+                          org_id: str = None, originator_number: str = None) -> TestCallRoutingPostResponse:
+        """
+        Test Call Routing
+
+        Validates that an incoming call can be routed.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Test call routing requires a full or write-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param originator_id: This element is used to identify the originating party.  It can be user UUID or trunk
+            UUID.
+        :type originator_id: str
+        :param originator_type: `USER` or `TRUNK`.
+        :type originator_type: OriginatorType
+        :param destination: This element specifies called party.  It can be any dialable string, for example, an ESN
+            number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+        :type destination: Union[str, datetime]
+        :param org_id: Organization in which we are validating a call routing.
+        :type org_id: str
+        :param originator_number: Only used when originatorType is `TRUNK`. This element could be a phone number or
+            URI.
+        :type originator_number: str
+        :rtype: :class:`TestCallRoutingPostResponse`
+        """
+        ...
+
+
+    def get_local_gateway_dial_plan_usage_for_a_trunk(self, trunk_id: str, org_id: str = None, max_: int = None,
+                                                      start: int = None, order: str = None, name: list[str] = None,
+                                                      **params) -> Generator[Customer, None, None]:
+        """
+        Get Local Gateway Dial Plan Usage for a Trunk
+
+        Get Local Gateway Dial Plan Usage for a Trunk.
+        
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        
+        Retrieving this information requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
+        :return: Generator yielding :class:`Customer` instances
+        """
+        ...
+
+
+    def get_locations_using_the_local_gateway_as_pstn_connection_routing(self, trunk_id: str,
+                                                                         org_id: str = None) -> list[Customer]:
+        """
+        Get Locations Using the Local Gateway as PSTN Connection Routing
+
+        Get Locations Using the Local Gateway as PSTN Connection Routing.
+        
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        
+        Retrieving this information requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :rtype: list[Customer]
+        """
+        ...
+
+
+    def get_route_groups_using_the_local_gateway(self, trunk_id: str, org_id: str = None) -> list[RouteGroup]:
+        """
+        Get Route Groups Using the Local Gateway
+
+        Get Route Groups Using the Local Gateway.
+        
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        
+        Retrieving this information requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :rtype: list[RouteGroup]
+        """
+        ...
+
+
+    def get_local_gateway_usage_count(self, trunk_id: str, org_id: str = None) -> LocalGatewayUsageCount:
+        """
+        Get Local Gateway Usage Count
+
+        Get Local Gateway Usage Count
+        
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        
+        Retrieving this information requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :rtype: :class:`LocalGatewayUsageCount`
+        """
+        ...
+
+
+    def modify_dial_patterns(self, dial_plan_id: str, dial_patterns: list[DialPattern], delete_all_dial_patterns: bool,
+                             org_id: str = None):
+        """
+        Modify Dial Patterns
+
+        Modify dial patterns for the Dial Plan.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Modifying a dial pattern requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param dial_plan_id: ID of the dial plan being modified.
+        :type dial_plan_id: str
+        :param dial_patterns: Array of dial patterns to add or delete. Dial Pattern that is not present in the request
+            is not modified.
+        :type dial_patterns: list[DialPattern]
+        :param delete_all_dial_patterns: Delete all the dial patterns for a dial plan.
+        :type delete_all_dial_patterns: bool
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def validate_a_dial_pattern(self, dial_patterns: list[str], org_id: str = None) -> DialPatternValidateResult:
+        """
+        Validate a Dial Pattern
+
+        Validate a Dial Pattern.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Validating a dial pattern requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param dial_patterns: Array of dial patterns.
+        :type dial_patterns: list[str]
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :rtype: :class:`DialPatternValidateResult`
+        """
+        ...
+
+
+    def read_the_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None,
+                                    trunk_name: str = None, max_: int = None, start: int = None, order: str = None,
+                                    **params) -> Generator[DialPlan, None, None]:
+        """
+        Read the List of Dial Plans
+
+        List all Dial Plans for the organization.
+        
+        Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial
+        plan is associated. Multiple dial patterns can be defined as part of your dial plan.  Dial plans are
+        configured globally for an enterprise and apply to all users, regardless of location.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List dial plans for this organization.
+        :type org_id: str
+        :param dial_plan_name: Return the list of dial plans matching the dial plan name.
+        :type dial_plan_name: str
+        :param route_group_name: Return the list of dial plans matching the Route group name..
+        :type route_group_name: str
+        :param trunk_name: Return the list of dial plans matching the Trunk name..
+        :type trunk_name: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the dial plans according to the designated fields.  Available sort fields: `name`,
+            `routeName`, `routeType`. Sort order is ascending by default
+        :type order: str
+        :return: Generator yielding :class:`DialPlan` instances
+        """
+        ...
+
+
+    def create_a_dial_plan(self, name: str, route_id: str, route_type: RouteType, dial_patterns: list[str],
+                           org_id: str = None) -> str:
+        """
+        Create a Dial Plan
+
+        Create a Dial Plan for the organization.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Creating a dial plan requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param name: A unique name for the dial plan.
+        :type name: str
+        :param route_id: ID of route type associated with the dial plan.
+        :type route_id: str
+        :param route_type: Route Type associated with the dial plan.
+        :type route_type: RouteType
+        :param dial_patterns: An Array of dial patterns.
+        :type dial_patterns: list[str]
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_a_dial_plan(self, dial_plan_id: str, org_id: str = None) -> DialPlanGet:
+        """
+        Get a Dial Plan
+
+        Get a Dial Plan for the organization.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Retrieving a dial plan requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param dial_plan_id: ID of the dial plan.
+        :type dial_plan_id: str
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :rtype: :class:`DialPlanGet`
+        """
+        ...
+
+
+    def modify_a_dial_plan(self, dial_plan_id: str, name: str, route_id: str, route_type: RouteType,
+                           org_id: str = None):
+        """
+        Modify a Dial Plan
+
+        Modify a Dial Plan for the organization.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Modifying a dial plan requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param dial_plan_id: ID of the dial plan being modified.
+        :type dial_plan_id: str
+        :param name: A unique name for the dial plan.
+        :type name: str
+        :param route_id: ID of route type associated with the dial plan.
+        :type route_id: str
+        :param route_type: Route Type associated with the dial plan.
+        :type route_type: RouteType
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def delete_a_dial_plan(self, dial_plan_id: str, org_id: str = None):
+        """
+        Delete a Dial Plan
+
+        Delete a Dial Plan for the organization.
+        
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+        
+        Deleting a dial plan requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param dial_plan_id: ID of the dial plan.
+        :type dial_plan_id: str
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def validate_local_gateway_fqdn_and_domain_for_a_trunk(self, address: str, domain: str, port: int,
+                                                           org_id: str = None):
+        """
+        Validate Local Gateway FQDN and Domain for a Trunk
+
+        Validate Local Gateway FQDN and Domain for the organization trunks.
+        
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        
+        Validating Local Gateway FQDN and Domain requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param address: FQDN or SRV address of the trunk.
+        :type address: str
+        :param domain: Domain name of the trunk.
+        :type domain: str
+        :param port: FQDN port of the trunk.
+        :type port: int
+        :param org_id: Organization to which trunk types belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def read_the_list_of_trunks(self, org_id: str = None, name: list[str] = None, location_name: list[str] = None,
+                                trunk_type: str = None, max_: int = None, start: int = None, order: str = None,
+                                **params) -> Generator[Trunk, None, None]:
+        """
+        Read the List of Trunks
+
+        List all Trunks for the organization.
+        
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List trunks for this organization.
+        :type org_id: str
+        :param name: Return the list of trunks matching the local gateway names.
+        :type name: list[str]
+        :param location_name: Return the list of trunks matching the location names.
+        :type location_name: list[str]
+        :param trunk_type: Return the list of trunks matching the trunk type.
+        :type trunk_type: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the trunks according to the designated fields.  Available sort fields: name, locationName.
+            Sort order is ascending by default
+        :type order: str
+        :return: Generator yielding :class:`Trunk` instances
+        """
+        ...
+
+
+    def create_a_trunk(self, name: str, location_id: str, password: str, dual_identity_support_enabled: bool,
+                       trunk_type: TrunkType, device_type: str, address: str, domain: str, port: int,
+                       max_concurrent_calls: int, org_id: str = None) -> str:
+        """
+        Create a Trunk
+
+        Create a Trunk for the organization.
+        
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        
+        Creating a trunk requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param name: A unique name for the trunk.
+        :type name: str
+        :param location_id: ID of location associated with the trunk.
+        :type location_id: str
+        :param password: A password to use on the trunk.
+        :type password: str
+        :param dual_identity_support_enabled: Dual Identity Support setting impacts the handling of the From header and
+            P-Asserted-Identity header when sending an initial SIP `INVITE` to the trunk for an outbound call.
+        :type dual_identity_support_enabled: bool
+        :param trunk_type: Trunk Type associated with the trunk.
+        :type trunk_type: TrunkType
+        :param device_type: Device type assosiated with trunk.
+        :type device_type: str
+        :param address: FQDN or SRV address. Required to create a static certificate-based trunk.
+        :type address: str
+        :param domain: Domain name. Required to create a static certificate based trunk.
+        :type domain: str
+        :param port: FQDN port. Required to create a static certificate-based trunk.
+        :type port: int
+        :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
+        :type max_concurrent_calls: int
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def get_a_trunk(self, trunk_id: str, org_id: str = None) -> TrunkGet:
+        """
+        Get a Trunk
+
+        Get a Trunk for the organization.
+        
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        
+        Retrieving a trunk requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :rtype: :class:`TrunkGet`
+        """
+        ...
+
+
+    def modify_a_trunk(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool,
+                       max_concurrent_calls: int, org_id: str = None):
+        """
+        Modify a Trunk
+
+        Modify a Trunk for the organization.
+        
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        
+        Modifying a trunk requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param trunk_id: ID of the trunk being modified.
+        :type trunk_id: str
+        :param name: A unique name for the dial plan.
+        :type name: str
+        :param password: A password to use on the trunk.
+        :type password: str
+        :param dual_identity_support_enabled: Determines the behavior of the From and PAI headers on outbound calls.
+        :type dual_identity_support_enabled: bool
+        :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate-based trunk.
+        :type max_concurrent_calls: int
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def delete_a_trunk(self, trunk_id: str, org_id: str = None):
+        """
+        Delete a Trunk
+
+        Delete a Trunk for the organization.
+        
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        
+        Deleting a trunk requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def read_the_list_of_trunk_types(self, org_id: str = None) -> list[TrunkTypeWithDeviceType]:
+        """
+        Read the List of Trunk Types
+
+        List all Trunk Types with Device Types for the organization.
+        
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy. Trunk Types are Registering or Certificate Based and are
+        configured in Call Manager.
+        
+        Retrieving trunk types requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Organization to which the trunk types belong.
+        :type org_id: str
+        :rtype: list[TrunkTypeWithDeviceType]
+        """
+        ...
+
+
+    def read_the_list_of_routing_groups(self, org_id: str = None, name: str = None, max_: int = None,
+                                        start: int = None, order: str = None,
+                                        **params) -> Generator[RouteGroup, None, None]:
+        """
+        Read the List of Routing Groups
+
+        List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
+        redundancy with the connection to the premises.
+        
+        Retrieving this route group list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List route groups for this organization.
+        :type org_id: str
+        :param name: Return the list of route groups matching the Route group name..
+        :type name: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the route groups according to designated fields.  Available sort orders are `asc` and
+            `desc`.
+        :type order: str
+        :return: Generator yielding :class:`RouteGroup` instances
+        """
+        ...
+
+
+    def create_route_group_for_a_organization(self, name: str, local_gateways: list[LocalGateways],
+                                              org_id: str = None) -> str:
+        """
+        Create Route Group for a Organization
+
+        Creates a Route Group for the organization.
+        
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        
+        Creating a Route Group requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param name: A unique name for the Route Group.
+        :type name: str
+        :param local_gateways: Local Gateways that are part of this Route Group.
+        :type local_gateways: list[LocalGateways]
+        :param org_id: Organization to which the Route Group belongs.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def read_a_route_group_for_a_organization(self, route_group_id: str, org_id: str = None) -> RouteGroupGet:
+        """
+        Read a Route Group for a Organization
+
+        Reads a Route Group for the organization based on id.
+        
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        
+        Reading a Route Group requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param route_group_id: Route Group for which details are being requested.
+        :type route_group_id: str
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :rtype: :class:`RouteGroupGet`
+        """
+        ...
+
+
+    def modify_a_route_group_for_a_organization(self, route_group_id: str, name: str,
+                                                local_gateways: list[LocalGateways], org_id: str = None):
+        """
+        Modify a Route Group for a Organization
+
+        Modifies an existing Route Group for an organization based on id.
+        
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        
+        Modifying a Route Group requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param route_group_id: Route Group for which details are being requested.
+        :type route_group_id: str
+        :param name: A unique name for the Route Group.
+        :type name: str
+        :param local_gateways: Local Gateways that are part of this Route Group.
+        :type local_gateways: list[LocalGateways]
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def remove_a_route_group_from_an_organization(self, route_group_id: str, org_id: str = None):
+        """
+        Remove a Route Group from an Organization
+
+        Remove a Route Group from an Organization based on id.
+        
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        
+        Removing a Route Group requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param route_group_id: Route Group for which details are being requested.
+        :type route_group_id: str
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def read_the_usage_of_a_routing_group(self, route_group_id: str,
+                                          org_id: str = None) -> ReadTheUsageOfARoutingGroupResponse:
+        """
+        Read the Usage of a Routing Group
+
+        List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
+        specific Route Group.
+        Users within Call to Extension locations are registered to a PBX which allows you to route unknown extensions
+        (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route Group.
+        PSTN Connections may be a Cisco PSTN, a cloud-connected PSTN, or a premises-based PSTN (local gateway).
+        Dial Plans allow you to route calls to on-premises extensions via your trunk or route group.
+        Route Lists are a list of numbers that can be reached via a route group and can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Retrieving usage information requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param route_group_id: ID of the requested Route group.
+        :type route_group_id: str
+        :param org_id: Organization associated with the specific route group.
+        :type org_id: str
+        :rtype: :class:`ReadTheUsageOfARoutingGroupResponse`
+        """
+        ...
+
+
+    def read_the_call_to_extension_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
+                                                                location_name: str = None, max_: int = None,
+                                                                start: int = None, order: str = None,
+                                                                **params) -> Generator[Customer, None, None]:
+        """
+        Read the Call to Extension Locations of a Routing Group
+
+        List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
+        registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to the
+        PBX using an existing trunk or route group.
+        
+        Retrieving this location list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param route_group_id: ID of the requested Route group.
+        :type route_group_id: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
+        :return: Generator yielding :class:`Customer` instances
+        """
+        ...
+
+
+    def read_the_dial_plan_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
+                                                        location_name: str = None, max_: int = None,
+                                                        start: int = None, order: str = None,
+                                                        **params) -> Generator[Customer, None, None]:
+        """
+        Read the Dial Plan Locations of a Routing Group
+
+        List Dial Plan Locations for a specific route group.
+        
+        Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are
+        configured globally for an enterprise and apply to all users, regardless of location.
+        A Dial Plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns. Specific dial patterns can be defined as part of your dial plan.
+        
+        Retrieving this location list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param route_group_id: ID of the requested Route group.
+        :type route_group_id: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
+        :return: Generator yielding :class:`Customer` instances
+        """
+        ...
+
+
+    def read_the_pstn_connection_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
+                                                              location_name: str = None, max_: int = None,
+                                                              start: int = None, order: str = None,
+                                                              **params) -> Generator[Customer, None, None]:
+        """
+        Read the PSTN Connection Locations of a Routing Group
+
+        List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
+        PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+        
+        Retrieving this Location list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param route_group_id: ID of the requested Route group.
+        :type route_group_id: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
+        :return: Generator yielding :class:`Customer` instances
+        """
+        ...
+
+
+    def read_the_route_lists_of_a_routing_group(self, route_group_id: str, org_id: str = None, name: str = None,
+                                                max_: int = None, start: int = None, order: str = None,
+                                                **params) -> Generator[RouteGroupUsageRouteListGet, None, None]:
+        """
+        Read the Route Lists of a Routing Group
+
+        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
+        Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+        
+        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param route_group_id: ID of the requested Route group.
+        :type route_group_id: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
+        :param name: Return the list of locations matching the location name.
+        :type name: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
+        :return: Generator yielding :class:`RouteGroupUsageRouteListGet` instances
+        """
+        ...
+
+
+    def read_the_list_of_route_lists(self, org_id: str = None, name: list[str] = None, location_id: list[str] = None,
+                                     max_: int = None, start: int = None, order: str = None,
+                                     **params) -> Generator[RouteList, None, None]:
+        """
+        Read the List of Route Lists
+
+        List all Route Lists for the organization.
+        
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Retrieving the Route List requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List all Route List for this organization.
+        :type org_id: str
+        :param name: Return the list of Route List matching the route list name.
+        :type name: list[str]
+        :param location_id: Return the list of Route Lists matching the location id.
+        :type location_id: list[str]
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the Route List according to the designated fields. Available sort fields are `name`, and
+            `locationId`. Sort order is ascending by default
+        :type order: str
+        :return: Generator yielding :class:`RouteList` instances
+        """
+        ...
+
+
+    def create_a_route_list(self, name: str, location_id: str, route_group_id: str, org_id: str = None) -> str:
+        """
+        Create a Route List
+
+        Create a Route List for the organization.
+        
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Creating a Route List requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param name: Name of the Route List
+        :type name: str
+        :param location_id: Location associated with the Route List.
+        :type location_id: str
+        :param route_group_id: ID of the route group associated with Route List.
+        :type route_group_id: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
+        :rtype: str
+        """
+        ...
+
+
+    def delete_a_route_list(self, route_list_id: str, org_id: str = None):
+        """
+        Delete a Route List
+
+        Delete a route list for a customer.
+        
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Deleting a Route List requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param route_list_id: ID of the Route List.
+        :type route_list_id: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_a_route_list(self, route_list_id: str, org_id: str = None) -> RouteListGet:
+        """
+        Get a Route List
+
+        Get a rout list details.
+        
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param route_list_id: ID of the Route List.
+        :type route_list_id: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
+        :rtype: :class:`RouteListGet`
+        """
+        ...
+
+
+    def modify_a_route_list(self, route_list_id: str, name: str, route_group_id: str, org_id: str = None):
+        """
+        Modify a Route List
+
+        Modify the details for a Route List.
+        
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param route_list_id: ID of the Route List.
+        :type route_list_id: str
+        :param name: Route List new name.
+        :type name: str
+        :param route_group_id: New route group ID.
+        :type route_group_id: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None,
+                                      numbers: list[RouteListNumberPatch] = None,
+                                      delete_all_numbers: str = None) -> list[RouteListNumberPatchResponse]:
+        """
+        Modify Numbers for Route List
+
+        Modify numbers for a specific Route List of a Customer.
+        
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param route_list_id: ID of the Route List.
+        :type route_list_id: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
+        :param numbers: Array of the numbers to be deleted/added.
+        :type numbers: list[RouteListNumberPatch]
+        :param delete_all_numbers: If present, the numbers array is ignored and all numbers in the route list are
+            deleted.
+        :type delete_all_numbers: str
+        :rtype: list[RouteListNumberPatchResponse]
+        """
+        ...
+
+
+    def get_numbers_assigned_to_a_route_list(self, route_list_id: str, org_id: str = None, max_: int = None,
+                                             start: int = None, order: str = None, number: str = None,
+                                             **params) -> Generator[str, None, None]:
+        """
+        Get Numbers assigned to a Route List
+
+        Get numbers assigned to a Route List
+        
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param route_list_id: ID of the Route List.
+        :type route_list_id: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the Route Lists according to number, ascending or descending.
+        :type order: str
+        :param number: Number assigned to the route list.
+        :type number: str
+        :return: Numbers assigned to the Route list.
+        """
+        ...
+
+
+    def get_local_gateway_call_to_on_premises_extension_usage_for_a_trunk(self, trunk_id: str, org_id: str = None,
+                                                                          max_: int = None, start: int = None,
+                                                                          order: str = None, name: list[str] = None,
+                                                                          **params) -> Generator[Customer, None, None]:
+        """
+        Get Local Gateway Call to On-Premises Extension Usage for a Trunk
+
+        Get local gateway call to on-premises extension usage for a trunk.
+        
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        
+        Retrieving this information requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
+        :return: Generator yielding :class:`Customer` instances
+        """
+        ...
+
     ...

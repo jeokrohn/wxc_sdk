@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -527,4 +528,569 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
     `SCIM 2.0 schema
     <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
     """
+
+    def create_a_user(self, org_id: str, schemas: list[str], user_name: str, user_type: UserTypeObject, title: str,
+                      active: bool, preferred_language: str, locale: str, timezone: str, profile_url: str,
+                      external_id: str, display_name: str, nick_name: str, name: NameObject,
+                      phone_numbers: list[PutUserPhoneNumbers], photos: list[PhotoObject],
+                      addresses: list[PutUserAddresses], emails: list[EmailObject],
+                      urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User,
+                      urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User) -> GetUserResponse:
+        """
+        Create a user
+
+        The SCIM 2 /Users API provides a programmatic way to manage users in Webex Identity using The Internet
+        Engineering Task Force standard SCIM 2.0 standard as specified by `RFC 7643 SCIM 2.0 Core Schema 
+        <https://datatracker.ietf.org/doc/html/rfc7643>`_ and
+        `RFC 7644 SCIM 2.0 Core Protocol
+        <https://datatracker.ietf.org/doc/html/rfc7644>`_.  The WebEx SCIM 2.0  APIs allow clients supporting the SCIM 2.0 standard to
+        manage users, and groups within Webex.  Webex supports the following SCIM 2.0 Schemas:
+        
+        • urn:ietf:params:scim:schemas:core:2.0:User
+        
+        • urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+        
+        • urn:scim:schemas:extension:cisco:webexidentity:2.0:User
+        
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_user_admin`
+        
+        <br/>
+        
+        **Usage**:
+        
+        1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
+        
+        1. Support 3 schemas :
+        - "urn:ietf:params:scim:schemas:core:2.0:User"
+        - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
+        - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"
+        
+        1. Unrecognized schemas (ID/section) are ignored.
+        
+        1. Read-only attributes provided as input values are ignored.
+
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param schemas: Input JSON schemas.
+        :type schemas: list[str]
+        :param user_name: A unique identifier for the user and is used to authenticate the user in Webex.  This
+            attribute must be set to the user's primary email address.  No other user in Webex may have the same
+            userName value and thus this value is required to be unique within Webex.
+        :type user_name: str
+        :param user_type: The type of the user.
+        :type user_type: UserTypeObject
+        :param title: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant",
+            "Engineer" etc.
+        :type title: str
+        :param active: A boolean value of "true" or "false" indicating whether the user is active in Webex.
+        :type active: bool
+        :param preferred_language: Indicates the user's preferred language.  Acceptable values for this field are based
+            on the `ISO-696
+            <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+            code.  Examples are:
+        
+        en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
+        :type preferred_language: str
+        :param locale: The user's locale which is used to represent the user's currency, time format, and numerical
+            representations.  Acceptable values for this field are based on the `ISO-696
+            <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+            language code followed by an _ and then the 2 letter country code.  Examples are:
+        
+        en_US : for English spoken in the United States or fr_FR: for French spoken in France.
+        :type locale: str
+        :param timezone: The user's time zone specified in the `IANA timezone
+            <https://nodatime.org/timezones>`_ timezone format, for example,
+            "America/Los_Angeles".
+        :type timezone: str
+        :param profile_url: A fully qualified URL pointing to a page representing the user's online profile.
+        :type profile_url: str
+        :param external_id: External identity.
+        :type external_id: str
+        :param display_name: The value to display or show the user's name in Webex.
+        :type display_name: str
+        :param nick_name: A casual name of the user.  The value Bob when the user's formal name is Robert.
+        :type nick_name: str
+        :param name: The components of the user's real name.
+        :type name: NameObject
+        :param phone_numbers: A list of user's phone numbers with an indicator of primary to specify the user's main
+            number.
+        :type phone_numbers: list[PutUserPhoneNumbers]
+        :param photos: A list of photos for the user that represent a thing the user has.
+        :type photos: list[PhotoObject]
+        :param addresses: User's physical mailing address.
+        :type addresses: list[PutUserAddresses]
+        :param emails: A list of the user's email addresses with an indicator of the user's primary email address.  The
+            primary email address must be the same value as the user's userName.
+        :type emails: list[EmailObject]
+        :param urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: SCIM2 enterprise extension
+        :type urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User
+        :param urn_scim_schemas_extension_cisco_webexidentity_2_0_user: The Cisco extension of SCIM 2.
+        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
+        :rtype: :class:`GetUserResponse`
+        """
+        ...
+
+
+    def get_a_user(self, org_id: str, user_id: str) -> GetUserResponse:
+        """
+        Get a user
+
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `identity:people_read`
+        
+        - `Identity:SCIM`
+        
+        - `Identity:SCIM_read`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_user_admin`
+        
+        - `id_readonly_admin`
+        
+        - `id_device_admin`
+        
+        <br/>
+
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param user_id: Webex Identity assigned user identifier.
+        :type user_id: str
+        :rtype: :class:`GetUserResponse`
+        """
+        ...
+
+
+    def search_users(self, org_id: str, filter: str = None, attributes: str = None, excluded_attributes: str = None,
+                     sort_by: str = None, sort_order: str = None, start_index: Union[str, datetime] = None,
+                     count: Union[str, datetime] = None, return_groups: str = None, include_group_details: str = None,
+                     group_usage_types: str = None) -> SearchUserResponse:
+        """
+        Search users
+
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `identity:people_read`
+        
+        - `Identity:SCIM`
+        
+        - `Identity:SCIM_read`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_user_admin`
+        
+        - `id_readonly_admin`
+        
+        - `id_device_admin`
+        
+        <br/>
+
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param filter: The url encoded filter. If the value is empty, the API will return all users under the
+            organization.
+        
+        The examples below show some search filters:
+        
+        - userName eq "user1@example.com"
+        
+        - userName sw "user1@example"
+        
+        - userName ew "example"
+        
+        - phoneNumbers [ type eq "mobile" and value eq "14170120"]
+        
+        - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
+        "0ae87ade-8c8a-4952-af08-318798958d0c"
+        
+        - More filter patterns, please check <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2">
+        filtering </a>.
+        :type filter: str
+        :param attributes: A multi-valued list of strings indicating the names of resource attributes to return in the
+            response, likes 'userName,department,emails'. It supports the SCIM id
+            'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User,userName'. The default is empty, all
+            attributes will be returned
+        :type attributes: str
+        :param excluded_attributes: A multi-valued list of strings indicating the names of resource attributes to be
+            removed from the default set of attributes to return. The default is empty, all attributes will be
+            returned
+        :type excluded_attributes: str
+        :param sort_by: A string indicating the attribute whose value be used to order the returned responses. Now we
+            only allow 'userName, id, meta.lastModified' to sort.
+        :type sort_by: str
+        :param sort_order: A string indicating the order in which the 'sortBy' parameter is applied. Allowed values are
+            'ascending' and 'descending'.
+        :type sort_order: str
+        :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
+        :type start_index: Union[str, datetime]
+        :param count: An integer indicating the desired maximum number of query results per page.  The default is 10.
+        :type count: Union[str, datetime]
+        :param return_groups: Define whether the group information needs to be returned.  The default is false.
+        :type return_groups: str
+        :param include_group_details: Define whether the group information with details need been returned. The default
+            is false.
+        :type include_group_details: str
+        :param group_usage_types: Returns groups with details of the specified group type
+        :type group_usage_types: str
+        :rtype: :class:`SearchUserResponse`
+        """
+        ...
+
+
+    def update_a_user_with_put(self, org_id: str, user_id: str, schemas: list[str], user_name: str,
+                               user_type: UserTypeObject, title: str, active: bool, preferred_language: str,
+                               locale: str, timezone: str, profile_url: str, external_id: str, display_name: str,
+                               nick_name: str, phone_numbers: list[PutUserPhoneNumbers], photos: list[PhotoObject],
+                               addresses: list[PutUserAddresses], emails: list[EmailObject],
+                               urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User,
+                               urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User) -> GetUserResponse:
+        """
+        Update a user with PUT
+
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_user_admin`
+        
+        <br/>
+        
+        **Usage**:
+        
+        1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
+        
+        1. Support 3 schemas :
+        - "urn:ietf:params:scim:schemas:core:2.0:User"
+        - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
+        - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"
+        
+        1. Unrecognized schemas (ID/section) are ignored.
+        
+        1. Read-only attributes provided as input values are ignored.
+        
+        1. User `id` will not be changed.
+        
+        1. `meta`.`created` will not be changed.
+        
+        1. The PUT API replaces the contents of the user's data with the data in the request body.  All attributes
+        specified in the request body will replace all existing attributes for the userId specified in the URL.
+        Should you wish to replace or change some attributes as opposed to all attributes please refer to the SCIM
+        PATCH operation https://developer.webex.com/docs/api/v1/scim2-user/update-a-user-with-patch .
+
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param user_id: Webex Identity assigned user identifier.
+        :type user_id: str
+        :param schemas: Input JSON schemas.
+        :type schemas: list[str]
+        :param user_name: A unique identifier for the user and is used to authenticate the user in Webex.  This
+            attribute must be set to the user's primary email address.  No other user in Webex may have the same
+            userName value and thus this value is required to b unique within Webex.
+        :type user_name: str
+        :param user_type: The type of the user.
+        :type user_type: UserTypeObject
+        :param title: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant",
+            "Engineer" etc.
+        :type title: str
+        :param active: A boolean value of "true" or "false" indicating whether the user is active in Webex.
+        :type active: bool
+        :param preferred_language: Indicates the user's preferred language.  Acceptable values for this field are based
+            on the `ISO-696
+            <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+            code.  Examples are:
+        
+        en_US : for english spoken in the United States, fr_FR: for french spoken in France.
+        :type preferred_language: str
+        :param locale: The user's locale which is used to represent the user's currency, time format, and numerical
+            representations.  Acceptable values for this field are based on the  `ISO-696
+            <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
+            letter language code followed by an _ and then the 2 letter country code.  Examples are:
+        
+        en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
+        :type locale: str
+        :param timezone: The user's time zone specified in the `IANA timezone
+            <https://nodatime.org/timezones>`_ timezone format. e.g:
+            "America/Los_Angeles".
+        :type timezone: str
+        :param profile_url: A fully qualified URL pointing to a page representing the user's online profile.
+        :type profile_url: str
+        :param external_id: External identity.
+        :type external_id: str
+        :param display_name: The value to display or show the user's name in Webex.
+        :type display_name: str
+        :param nick_name: A casual name of the user.  The value Bob when the user's formal name is Robert.
+        :type nick_name: str
+        :param phone_numbers: A list of user's phone numbers with an indicator of primary to specify the users main
+            number.
+        :type phone_numbers: list[PutUserPhoneNumbers]
+        :param photos: A list of photos for the user that represent a thing the user has.
+        :type photos: list[PhotoObject]
+        :param addresses: A physical mailing address of user.
+        :type addresses: list[PutUserAddresses]
+        :param emails: A list of the user's email addresses with an indicator of the user's primary email address.  The
+            primary email address must be the same value as the user's userName.
+        :type emails: list[EmailObject]
+        :param urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: SCIM2 enterprise extention
+        :type urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User
+        :param urn_scim_schemas_extension_cisco_webexidentity_2_0_user: cisco extention of SCIM 2
+        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
+        :rtype: :class:`GetUserResponse`
+        """
+        ...
+
+
+    def update_a_user_with_patch(self, org_id: str, user_id: str, schemas: list[str],
+                                 operations: list[PatchUserOperations]) -> GetUserResponse:
+        """
+        Update a user with PATCH
+
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_user_admin`
+        
+        <br/>
+        
+        **Usage**:
+        
+        1. The PATCH API replaces individual attributes of the user's data in the request body.
+        The PATCH api supports `add`, `remove` and `replace` operations on any individual
+        attribute allowing only specific attributes of the user's object to be modified.
+        
+        1. Each operation against an attribute must be compatible with the attribute's mutability.
+        
+        1. Each PATCH operation represents a single action to be applied to the
+        same SCIM resource specified by the request URI.  Operations are
+        applied sequentially in the order they appear in the array.  Each
+        operation in the sequence is applied to the target resource; the
+        resulting resource becomes the target of the next operation.
+        Evaluation continues until all operations are successfully applied or
+        until an error condition is encountered.
+        
+        <br/>
+        
+        **Add operations**:
+        
+        The `add` operation is used to add a new attribute value to an existing resource.
+        The operation must contain a `value` member whose content specifies the value to be added.
+        The value may be a quoted value, or it may be a JSON object containing the sub-attributes of the complex
+        attribute specified in the operation's `path`.
+        The result of the add operation depends upon the target location indicated by `path` references:
+        
+        <br/>
+        
+        - If omitted, the target location is assumed to be the resource itself.  The `value` parameter contains a set
+        of attributes to be added to the resource.
+        
+        - If the target location does not exist, the attribute and value are added.
+        
+        - If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the
+        `value` parameter.
+        
+        - If the target location specifies a multi-valued attribute, a new value is added to the attribute.
+        
+        - If the target location specifies a single-valued attribute, the existing value is replaced.
+        
+        - If the target location specifies an attribute that does not exist (has no value), the attribute is added with
+        the new value.
+        
+        - If the target location exists, the value is replaced.
+        
+        - If the target location already contains the value specified, no changes should be made to the resource.
+        
+        <br/>
+        
+        **Replace operations**:
+        
+        The `replace` operation replaces the value at the target location specified by the `path`.
+        The operation performs the following functions, depending on the target location specified by `path`:
+        
+        <br/>
+        
+        - If the `path` parameter is omitted, the target is assumed to be the resource itself.  In this case, the
+        `value` attribute shall contain a list of one or more attributes that are to be replaced.
+        
+        - If the target location is a single-value attribute, the value of the attribute is replaced.
+        
+        - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
+        are replaced.
+        
+        - If the target location path specifies an attribute that does not exist, the service provider shall treat the
+        operation as an "add".
+        
+        - If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the
+        `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.
+        Sub-attributes that are not specified in the `value` parameters are left unchanged.
+        
+        - If the target location is a multi-valued attribute and a value selection ("valuePath") filter is specified
+        that matches one or more values of the multi-valued attribute, then all matching record values will be
+        replaced.
+        
+        - If the target location is a complex multi-valued attribute with a value selection filter ("valuePath") and a
+        specific sub-attribute (e.g., "addresses[type eq "work"].streetAddress"), the matching sub-attribute of all
+        matching records is replaced.
+        
+        - If the target location is a multi-valued attribute for which a value selection filter ("valuePath") has been
+        supplied and no record match was made, the service provider will indicate the failure by returning HTTP status
+        code 400 and a `scimType` error code of "noTarget".
+        
+        <br/>
+        
+        **Remove operations**:
+        
+        The `remove` operation removes the value at the target location specified by the required attribute `path`.
+        The operation performs the following functions, depending on the target location specified by `path`:
+        
+        <br/>
+        
+        - If `path` is unspecified, the operation fails with HTTP status code 400 and a "scimType" error code of
+        "noTarget".
+        
+        - If the target location is a single-value attribute, the attribute and its associated value is removed, and
+        the attribute will be considered unassigned.
+        
+        - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
+        are removed, and the attribute SHALL be considered unassigned.
+        
+        - If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the
+        values matched by the filter are removed.  If no other values remain after the removal of the selected values,
+        the multi-valued attribute will be considered unassigned.
+        
+        - If the target location is a complex multi-valued attribute and a complex filter is specified based on the
+        attribute's sub-attributes, the matching records are removed.  Sub-attributes whose values have been removed
+        will be considered unassigned.  If the complex multi-valued attribute has no remaining records, the attribute
+        will be considered unassigned.
+
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param user_id: Webex Identity assigned user identifier.
+        :type user_id: str
+        :param schemas: Input JSON schemas.
+        :type schemas: list[str]
+        :param operations: A list of patch operations.
+        :type operations: list[PatchUserOperations]
+        :rtype: :class:`GetUserResponse`
+        """
+        ...
+
+
+    def delete_a_user(self, org_id: str, user_id: str):
+        """
+        Delete a user
+
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        The following administrators can use this API:
+        
+        - `id_full_admin`
+        
+        - `id_user_admin`
+        
+        <br/>
+
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param user_id: Webex Identity assigned user identifier.
+        :type user_id: str
+        :rtype: None
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -221,4 +222,83 @@ class MeetingPollsApi(ApiChild, base='meetings'):
     devsupport@webex.com.
     
     """
+
+    def list_meeting_polls(self, meeting_id: str) -> list[Poll]:
+        """
+        List Meeting Polls
+
+        Lists all the polls and the poll questions in a meeting when ready.
+        
+        * Only `meeting instances
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
+        
+        * No pagination for this API because we don't expect a large number of questions for each meeting.
+        
+        <div><Callout type="info">Polls are available within 15 minutes following the meeting.</Callout></div>
+
+        :param meeting_id: A unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the polls belong.
+        :type meeting_id: str
+        :rtype: list[Poll]
+        """
+        ...
+
+
+    def get_meeting_poll_results(self, meeting_id: str, max_: int = None,
+                                 **params) -> Generator[PollResult, None, None]:
+        """
+        Get Meeting PollResults
+
+        List the meeting polls, the poll's questions, and answers from the meeting when ready.
+        
+        * Only `meeting instances
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
+        
+        * Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        * This API is paginated by the sum of respondents from all questions in a meeting, these pagination links are
+        returned in the response header.
+        
+        <div><Callout type="info">Polls results are available within 15 minutes following the meeting.</Callout></div>
+
+        :param meeting_id: A unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the polls belong.
+        :type meeting_id: str
+        :param max_: Limit the maximum number of respondents in a meeting in the response, up to 100.
+        :type max_: int
+        :return: Generator yielding :class:`PollResult` instances
+        """
+        ...
+
+
+    def list_respondents_of_a_question(self, poll_id: str, question_id: str, meeting_id: str, max_: int = None,
+                                       **params) -> Generator[Respondent, None, None]:
+        """
+        List Respondents of a Question
+
+        Lists the respondents to a specific questions in a poll.
+        
+        * Only `meeting instances
+        <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
+        
+        * Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+        
+        <div><Callout type="info">The list of poll respondents are available within 15 minutes following the
+        meeting.</Callout></div>
+
+        :param poll_id: A unique identifier for the poll to which the respondents belong.
+        :type poll_id: str
+        :param question_id: A unique identifier for the question to which the respondents belong.
+        :type question_id: str
+        :param meeting_id: A unique identifier for the `meeting instance
+            <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the respondents belong.
+        :type meeting_id: str
+        :param max_: Limit the maximum number of respondents in a specified question in the response, up to 100.
+        :type max_: int
+        :return: Generator yielding :class:`Respondent` instances
+        """
+        ...
+
     ...

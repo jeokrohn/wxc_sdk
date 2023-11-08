@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -47,4 +48,15 @@ class ClassificationsApi(ApiChild, base='classifications'):
     <https://help.webex.com/en-us/article/nlcju6g/Data-classifications-for-spaces-in-Webex-App>`_ object that contains exactly five (5) space
     classifications.
     """
+
+    def list_classifications(self) -> list[HydraClassification]:
+        """
+        List classifications
+
+        List all the space classifications configured in your org.
+
+        :rtype: list[HydraClassification]
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -45,4 +46,41 @@ class HybridClustersApi(ApiChild, base='hybrid/clusters'):
     Hybrid Clusters are associated with Resource Groups. See the `Resource Groups API
     <https://developer.webex.com/docs/api/v1/resource-groups>`_ for more information.
     """
+
+    def list_hybrid_clusters(self, org_id: str = None) -> list[Cluster]:
+        """
+        List Hybrid Clusters
+
+        List hybrid clusters for an organization. If no `orgId` is specified, the default is the organization of the
+        authenticated user.
+        
+        Only an admin auth token with the `spark-admin:hybrid_clusters_read` scope can list clusters.
+
+        :param org_id: List hybrid clusters in this organization. If an organization is not specified, the organization
+            of the caller will be used.
+        :type org_id: str
+        :rtype: list[Cluster]
+        """
+        ...
+
+
+    def get_hybrid_cluster_details(self, hybrid_cluster_id: str, org_id: str = None) -> Cluster:
+        """
+        Get Hybrid Cluster Details
+
+        Shows details for a hybrid cluster, by ID.
+        
+        Only an admin auth token with the `spark-admin:hybrid_clusters_read` scope can see cluster details.
+
+        :param hybrid_cluster_id: The ID of the cluster.
+        :type hybrid_cluster_id: str
+        :param org_id:
+        Find the cluster in this specific organization.
+        If this is not specified, the organization of the caller
+        will be used.
+        :type org_id: str
+        :rtype: :class:`Cluster`
+        """
+        ...
+
     ...

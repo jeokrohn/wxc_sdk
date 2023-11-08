@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -103,4 +104,60 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
     Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
     `spark-admin:telephony_config_read.
     """
+
+    def read_the_list_of_virtual_lines(self, org_id: str = None, location_id: list[str] = None, max_: int = None,
+                                       start: int = None, id: list[str] = None, owner_name: list[str] = None,
+                                       phone_number: list[str] = None, location_name: list[str] = None,
+                                       order: list[str] = None, has_device_assigned: bool = None,
+                                       has_extension_assigned: bool = None, has_dn_assigned: bool = None,
+                                       **params) -> Generator[ListVirtualLineObject, None, None]:
+        """
+        Read the List of Virtual Lines
+
+        List all Virtual Lines for the organization.
+        
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+        
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List virtual lines for this organization.
+        :type org_id: str
+        :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
+            `?locationId=locId1&locationId=locId2`.
+        :type location_id: list[str]
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values -
+            `?id=id1&id=id2`.
+        :type id: list[str]
+        :param owner_name: Return the list of virtual lines matching these owner names. Example for multiple values -
+            `?ownerName=name1&ownerName=name2`.
+        :type owner_name: list[str]
+        :param phone_number: Return the list of virtual lines matching these phone numbers. Example for multiple values
+            - `?phoneNumber=number1&phoneNumber=number2`.
+        :type phone_number: list[str]
+        :param location_name: Return the list of virtual lines matching the location names. Example for multiple values
+            - `?locationName=loc1&locationName=loc2`.
+        :type location_name: list[str]
+        :param order: Return the list of virtual lines based on the order. Default sort will be in an Ascending order.
+            Maximum 3 orders allowed at a time. Example for multiple values - `?order=order1&order=order2`.
+        :type order: list[str]
+        :param has_device_assigned: If `true`, includes only virtual lines with devices assigned. When not explicitly
+            specified, the default includes both virtual lines with devices assigned and not assigned.
+        :type has_device_assigned: bool
+        :param has_extension_assigned: If `true`, includes only virtual lines with an extension assigned. When not
+            explicitly specified, the default includes both virtual lines with extension assigned and not assigned.
+        :type has_extension_assigned: bool
+        :param has_dn_assigned: If `true`, includes only virtual lines with an assigned directory number, also known as
+            a Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
+            assigned.
+        :type has_dn_assigned: bool
+        :return: Generator yielding :class:`ListVirtualLineObject` instances
+        """
+        ...
+
     ...

@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -896,4 +897,849 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
     To obtain the Organization ID needed for these APIs, use the `Organizations API
     <https://developer.webex.com/docs/api/v1/organizations/list-organizations>`_
     """
+
+    def list_clusters_availability(self, from_: datetime, to_: datetime,
+                                   org_id: str) -> list[ClusterAvailabilityCollection]:
+        """
+        List Clusters Availability
+
+        Returns the availability details for all Video Mesh clusters in an organization.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param org_id: The unique ID for the organization.
+        :type org_id: str
+        :rtype: list[ClusterAvailabilityCollection]
+        """
+        ...
+
+
+    def get_cluster_availability(self, from_: datetime, to_: datetime,
+                                 cluster_id: str) -> list[ClusterAvailabilityCollection]:
+        """
+        Get Cluster Availability
+
+        Returns the availability details of a single Video Mesh cluster in an organization.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param cluster_id: The unique Video Mesh clusterID
+        :type cluster_id: str
+        :rtype: list[ClusterAvailabilityCollection]
+        """
+        ...
+
+
+    def list_node_availability(self, from_: datetime, to_: datetime,
+                               cluster_id: str) -> list[NodeAvailabilityCollection]:
+        """
+        List Node Availability
+
+        Returns the availability details of all nodes in a Video Mesh cluster.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param cluster_id: The unique Video Mesh cluster ID.
+        :type cluster_id: str
+        :rtype: list[NodeAvailabilityCollection]
+        """
+        ...
+
+
+    def get_node_availability(self, from_: datetime, to_: datetime,
+                              node_id: str) -> list[SingleNodeAvailabilityCollection]:
+        """
+        Get Node Availability
+
+        Returns the availability details of a single node in a Video Mesh cluster.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param node_id: The unique Video Mesh node ID.
+        :type node_id: str
+        :rtype: list[SingleNodeAvailabilityCollection]
+        """
+        ...
+
+
+    def list_media_health_monitoring_tool_results(self, from_: datetime, to_: datetime,
+                                                  org_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
+        """
+        List Media Health Monitoring Tool results
+
+        <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
+        replacement `List Media Health Monitoring Tool Test results V2 API
+        <https://developer.webex.com/docs/api/v1/video-mesh/list-media-health-monitoring-tool-test-results-v2>`_ for all future projects.</Callout></div>
+        
+        Returns the test results of the Media Health Monitoring Tool tests for an organization.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`. `from` must not be older than 1 week.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param org_id: The unique Video Mesh organization ID.
+        :type org_id: str
+        :rtype: list[MediaHealthMonitoringResultsCollectionfororganization]
+        """
+        ...
+
+
+    def list_media_health_monitoring_tool_test_results_v2(self, org_id: str, from_: datetime, to_: datetime,
+                                                          trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> MediaHealthMonitoringResultsCollectionfororganization:
+        """
+        List Media Health Monitoring Tool Test results V2
+
+        Returns the test results of the Media Health Monitoring Tool tests for an organization.
+        
+        <br/>
+        
+        Changes in V2:
+        
+        <br/>
+        
+        On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
+
+        :param org_id: Unique ID of the organization.
+        :type org_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`MediaHealthMonitoringResultsCollectionfororganization`
+        """
+        ...
+
+
+    def get_media_health_monitoring_tool_cluster_results(self, from_: datetime, to_: datetime,
+                                                         cluster_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
+        """
+        Get Media Health Monitoring Tool Cluster results
+
+        <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
+        replacement `Get Media Health Monitoring Tool Test results for clusters V2 API
+        <https://developer.webex.com/docs/api/v1/video-mesh/get-media-health-monitoring-tool-test-results-for-cluster-v2>`_ for all future
+        projects.</Callout></div>
+        
+        Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh cluster.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`. `from` must not be older than 1 week.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param cluster_id: The unique Video Mesh Cluster ID.
+        :type cluster_id: str
+        :rtype: list[MediaHealthMonitoringResultsCollectionfororganization]
+        """
+        ...
+
+
+    def get_media_health_monitoring_tool_test_results_for_clusters_v2(self, cluster_id: str, from_: datetime,
+                                                                      to_: datetime,
+                                                                      trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> MediaHealthMonitoringResultsCollectionfororganization:
+        """
+        Get Media Health Monitoring Tool Test results for clusters V2
+
+        Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh cluster.
+        
+        <br/>
+        
+        Changes in V2:
+        
+        <br/>
+        
+        On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
+
+        :param cluster_id: Unique ID of the Video Mesh cluster.
+        :type cluster_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`MediaHealthMonitoringResultsCollectionfororganization`
+        """
+        ...
+
+
+    def get_media_health_monitoring_tool_node_results(self, from_: datetime, to_: datetime,
+                                                      node_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
+        """
+        Get Media Health Monitoring Tool Node results
+
+        <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
+        replacement `Get Media Health Monitoring Tool Test results for node V2 API
+        <https://developer.webex.com/docs/api/v1/video-mesh/get-media-health-monitoring-tool-test-results-for-node-v2>`_ for all future
+        projects.</Callout></div>
+        
+        Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh node.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`. `from` must not be older than 1 week.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param node_id: The unique Video Mesh Node ID.
+        :type node_id: str
+        :rtype: list[MediaHealthMonitoringResultsCollectionfororganization]
+        """
+        ...
+
+
+    def get_media_health_monitoring_tool_test_results_for_node_v2(self, node_id: str, from_: datetime, to_: datetime,
+                                                                  trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> MediaHealthMonitoringResultsCollectionfororganization:
+        """
+        Get Media Health Monitoring Tool Test results for node V2
+
+        Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh node.
+        
+        <br/>
+        
+        Changes in V2:
+        
+        <br/>
+        
+        On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
+
+        :param node_id: Unique ID of the Video Mesh node.
+        :type node_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`MediaHealthMonitoringResultsCollectionfororganization`
+        """
+        ...
+
+
+    def list_overflow_to_cloud_details(self, from_: datetime, to_: datetime,
+                                       org_id: str) -> list[OverflowtoCloudCollection]:
+        """
+        List Overflow to Cloud details
+
+        Returns details of overflows to the cloud in an organization.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param org_id: The unique Video Mesh organization ID.
+        :type org_id: str
+        :rtype: list[OverflowtoCloudCollection]
+        """
+        ...
+
+
+    def list_cluster_redirect_details(self, from_: datetime, to_: datetime,
+                                      org_id: str) -> list[RedirectCollectionForOrg]:
+        """
+        List Cluster Redirect details
+
+        Returns the redirect details of all Video Mesh clusters in an organization.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param org_id: The unique Video Mesh organization ID.
+        :type org_id: str
+        :rtype: list[RedirectCollectionForOrg]
+        """
+        ...
+
+
+    def get_cluster_redirect_details(self, from_: datetime, to_: datetime,
+                                     cluster_id: str) -> list[RedirectCollectionForOrg]:
+        """
+        Get Cluster Redirect details
+
+        Returns details of cluster redirects for a single Video Mesh cluster.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param cluster_id: The unique Video Mesh Cluster ID.
+        :type cluster_id: str
+        :rtype: list[RedirectCollectionForOrg]
+        """
+        ...
+
+
+    def list_clusters_utilization(self, from_: datetime, to_: datetime,
+                                  org_id: str) -> list[ClusterUtilizationCollection]:
+        """
+        List Clusters Utilization
+
+        Returns the utilization details of all Video Mesh clusters in an organization.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param org_id: The unique ID for the organization.
+        :type org_id: str
+        :rtype: list[ClusterUtilizationCollection]
+        """
+        ...
+
+
+    def get_cluster_utilization_details(self, from_: datetime, to_: datetime,
+                                        cluster_id: str) -> list[ClusterUtilizationCollection]:
+        """
+        Get Cluster Utilization details
+
+        Returns the utilization details for a single Video Mesh cluster.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param cluster_id: The unique Video Mesh Cluster ID.
+        :type cluster_id: str
+        :rtype: list[ClusterUtilizationCollection]
+        """
+        ...
+
+
+    def list_reachability_test_results(self, from_: datetime, to_: datetime,
+                                       org_id: str) -> list[ReachabilityTestresultsfororganization]:
+        """
+        List Reachability Test results
+
+        <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
+        replacement `List Reachability Test results V2 API
+        <https://developer.webex.com/docs/api/v1/video-mesh/list-reachability-test-results-v2>`_ for all future projects.</Callout></div>
+        
+        Returns the test results of the Reachability tests for an organization.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`.  `from` must not be older than 1 week.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param org_id: The unique ID for the organization.
+        :type org_id: str
+        :rtype: list[ReachabilityTestresultsfororganization]
+        """
+        ...
+
+
+    def list_reachability_test_results_v2(self, org_id: str, from_: datetime, to_: datetime,
+                                          trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ReachabilityTestresultsfororganization:
+        """
+        List Reachability Test results V2
+
+        Returns the test results of the Reachability tests for an organization.
+        
+        <br/>
+        
+        Changes in V2:
+        
+        <br/>
+        
+        1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
+        
+        <br/>
+        
+        2. You can now view the destination IP address of the destination cluster in the JSON response.
+
+        :param org_id: Unique ID of the organization.
+        :type org_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`ReachabilityTestresultsfororganization`
+        """
+        ...
+
+
+    def get_reachability_test_results_for_cluster(self, from_: datetime, to_: datetime,
+                                                  cluster_id: str) -> list[ReachabilityTestresultsfororganization]:
+        """
+        Get Reachability Test results for Cluster
+
+        <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
+        replacement `Get Reachability Test results for cluster V2 API
+        <https://developer.webex.com/docs/api/v1/video-mesh/get-reachability-test-results-for-cluster-v2>`_ for all future projects.</Callout></div>
+        
+        Returns the test results of the Reachability tests for a single Video Mesh cluster.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`. `from` must not be older than 1 week.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param cluster_id: The unique Video Mesh Cluster ID.
+        :type cluster_id: str
+        :rtype: list[ReachabilityTestresultsfororganization]
+        """
+        ...
+
+
+    def get_reachability_test_results_for_cluster_v2(self, cluster_id: str, from_: datetime, to_: datetime,
+                                                     trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ReachabilityTestresultsfororganization:
+        """
+        Get Reachability Test results for cluster V2
+
+        Returns the test results of the Reachability tests for a single Video Mesh cluster.
+        
+        <br/>
+        
+        Changes in V2:
+        
+        <br/>
+        
+        1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
+        
+        <br/>
+        
+        2. You can now view the destination IP address of the destination cluster in the JSON response.
+
+        :param cluster_id: Unique ID of the Video Mesh cluster.
+        :type cluster_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`ReachabilityTestresultsfororganization`
+        """
+        ...
+
+
+    def get_reachability_test_results_for_node(self, from_: datetime, to_: datetime,
+                                               node_id: str) -> list[ReachabilityTestresultsfororganization]:
+        """
+        Get Reachability Test results for Node
+
+        <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
+        replacement `Get Reachability Test results for node V2 API
+        <https://developer.webex.com/docs/api/v1/video-mesh/get-reachability-test-results-for-node-v2>`_ for all future projects.</Callout></div>
+        
+        Returns the test results of the Reachability tests for a single Video Mesh node.
+
+        :param from_: The starting date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot
+            be after `to`. `from` must not be older than 1 week.
+        :type from_: Union[str, datetime]
+        :param to_: The ending date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param node_id: The unique Video Mesh node ID.
+        :type node_id: str
+        :rtype: list[ReachabilityTestresultsfororganization]
+        """
+        ...
+
+
+    def get_reachability_test_results_for_node_v2(self, node_id: str, from_: datetime, to_: datetime,
+                                                  trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ReachabilityTestresultsfororganization:
+        """
+        Get Reachability Test results for node V2
+
+        Returns the test results of the Reachability tests for a single Video Mesh node.
+        
+        <br/>
+        
+        Changes in V2:
+        
+        <br/>
+        
+        1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
+        
+        <br/>
+        
+        2. You can now view the destination IP address of the destination cluster in the JSON response.
+
+        :param node_id: Unique ID of the Video Mesh node.
+        :type node_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`ReachabilityTestresultsfororganization`
+        """
+        ...
+
+
+    def list_cluster_details(self, org_id: str) -> list[ClusterDetailsCollection]:
+        """
+        List Cluster Details
+
+        Returns the cluster details of all Video Mesh clusters in an organization.
+
+        :param org_id: The unique ID for the organization.
+        :type org_id: str
+        :rtype: list[ClusterDetailsCollection]
+        """
+        ...
+
+
+    def get_cluster_details(self, cluster_id: str) -> list[ClusterDetailsCollection]:
+        """
+        Get Cluster Details
+
+        Returns the cluster details for a single Video Mesh cluster.
+
+        :param cluster_id: The unique Video Mesh Cluster ID.
+        :type cluster_id: str
+        :rtype: list[ClusterDetailsCollection]
+        """
+        ...
+
+
+    def trigger_on_demand_test_for_cluster(self, cluster_id: str, type: TriggerOnDemandBodyType,
+                                           nodes: list[str]) -> TriggeredTestStatus1:
+        """
+        Trigger on-demand test for cluster
+
+        Triggers an on-demand test for a cluster.
+        The test is run on a maximum of 10 nodes present in the cluster, chosen at random, or based on input from the
+        user.
+
+        :param cluster_id: Unique ID of the Video Mesh cluster.
+        :type cluster_id: str
+        :param type: Test type to trigger on node.
+        :type type: TriggerOnDemandBodyType
+        :param nodes: List of nodes to test.
+        :type nodes: list[str]
+        :rtype: :class:`TriggeredTestStatus1`
+        """
+        ...
+
+
+    def trigger_on_demand_test_for_node(self, node_id: str, type: TriggerOnDemandBodyType) -> TriggeredTestStatus1:
+        """
+        Trigger on-demand test for node
+
+        Triggers an on-demand test for a node.
+
+        :param node_id: Unique ID of the Video Mesh node.
+        :type node_id: str
+        :param type: Test type to trigger on node.
+        :type type: TriggerOnDemandBodyType
+        :rtype: :class:`TriggeredTestStatus1`
+        """
+        ...
+
+
+    def get_triggered_test_status(self, command_id: str) -> TriggeredTestStatus1:
+        """
+        Get Triggered test status
+
+        Returns the status of the test triggered using the Trigger on-demand test API.
+
+        :param command_id: The unique command ID generated from Trigger on-demand test API.
+        :type command_id: str
+        :rtype: :class:`TriggeredTestStatus1`
+        """
+        ...
+
+
+    def get_triggered_test_results(self, command_id: str) -> TriggeredTestResult:
+        """
+        Get Triggered test results
+
+        Returns the results of the test triggered using the command ID.<br/>
+        <b>NOTE:</b> The response format depends on the type of test triggered and it is the same as that of
+        `NetworkTest API
+        <https://developer.webex.com/docs/api/v1/video-mesh/list-network-test-results>`_, `MediaHealthMonitorTest API
+
+        :param command_id: The unique command ID generated from Trigger on-demand test API.
+        :type command_id: str
+        :rtype: :class:`TriggeredTestResult`
+        """
+        ...
+
+
+    def list_network_test_results(self, org_id: str, from_: datetime, to_: datetime,
+                                  trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
+        """
+        List Network Test results
+
+        Returns the test results of the Network tests triggered for an organization. The tests listed below are run as
+        a part of the Network Test execution on the node.
+        
+        <b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run
+        between the Video Mesh node and cloud services.<br/>
+        <b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS
+        servers configured on the Video Mesh node's network.<br/>
+        <b>HTTPS Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to cloud services via
+        HTTPS protocol.<br/>
+        <b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud
+        services via Websocket.<br/>
+
+        :param org_id: Unique ID of the organization.
+        :type org_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`ConnectivityTestResultsObject`
+        """
+        ...
+
+
+    def get_network_test_results_for_cluster(self, cluster_id: str, from_: datetime, to_: datetime,
+                                             trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
+        """
+        Get Network Test results for cluster
+
+        Returns the test results of the Network tests triggered for a single Video Mesh cluster. The tests listed below
+        are run as a part of the Network Test execution on the node.
+        
+        <b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run
+        between the Video Mesh node and cloud services.<br/>
+        <b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS
+        servers configured on the Video Mesh node's network.<br/>
+        <b>HTTPS Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to cloud services via
+        HTTPS protocol.<br/>
+        <b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud
+        services via Websocket.<br/>
+
+        :param cluster_id: Unique ID of the Video Mesh cluster.
+        :type cluster_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`ConnectivityTestResultsObject`
+        """
+        ...
+
+
+    def get_network_test_results_for_node(self, node_id: str, from_: datetime, to_: datetime,
+                                          trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
+        """
+        Get Network Test results for node
+
+        Returns the test results of the Network tests triggered for a single Video Mesh node. The tests listed below
+        are run as a part of the Network Test execution on the node.
+        
+        <b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run
+        between the Video Mesh node and cloud services.<br/>
+        <b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS
+        servers configured on the Video Mesh node's network.<br/>
+        <b>HTTPS Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to cloud services via
+        HTTPS protocol.<br/>
+        <b>Websocket Connectivity Test</b> - Tests whether the Video Mesh node is able to connect to Webex cloud
+        services via Websocket.<br/>
+
+        :param node_id: Unique ID of the Video Mesh node.
+        :type node_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param trigger_type: Trigger type.
+        :type trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType
+        :rtype: :class:`ConnectivityTestResultsObject`
+        """
+        ...
+
+
+    def list_cluster_client_type_distribution_details(self, org_id: str, from_: datetime, to_: datetime,
+                                                      device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
+        """
+        List Cluster Client Type Distribution details
+
+        Returns the client type distribution details for all Video Mesh clusters in an organization.
+
+        :param org_id: Unique ID of the organization.
+        :type org_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param device_type: Device type(s).
+        
+        - Possible values:
+        `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
+        :type device_type: str
+        :rtype: list[ClienttypedistributionCollectionforOrg]
+        """
+        ...
+
+
+    def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: datetime, to_: datetime,
+                                                     device_type: str) -> list[ClienttypedistributionCollectionforOrg]:
+        """
+        Get Cluster Client Type Distribution details
+
+        Returns the client type distribution details for a single Video Mesh cluster.
+
+        :param cluster_id: Unique ID of the Video Mesh cluster.
+        :type cluster_id: str
+        :param from_: The start date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. The `from`
+            parameter cannot have date and time values that exceed `to`.
+        :type from_: Union[str, datetime]
+        :param to_: The end date and time of the requested data in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+        :type to_: Union[str, datetime]
+        :param device_type: Device type(s).
+        
+        - Possible values:
+        `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
+        :type device_type: str
+        :rtype: list[ClienttypedistributionCollectionforOrg]
+        """
+        ...
+
+
+    def list_event_threshold_configuration(self, org_id: str = None, cluster_id: str = None,
+                                           event_name: ListEventThresholdConfigurationEventName = None,
+                                           event_scope: ListEventThresholdConfigurationEventScope = None) -> GetEventThresholdResponse:
+        """
+        List Event Threshold Configuration
+
+        Returns the event threshold configurations for `orgId` or `clusterId`, with optional filters `eventName` and
+        `eventScope`.
+
+        :param org_id: Unique ID of the Organization.
+        :type org_id: str
+        :param cluster_id: Unique ID of the Video Mesh Cluster.
+        :type cluster_id: str
+        :param event_name: Event name to fetch threshold details.
+        :type event_name: ListEventThresholdConfigurationEventName
+        :param event_scope: Scope name to filter events.
+        :type event_scope: ListEventThresholdConfigurationEventScope
+        :rtype: :class:`GetEventThresholdResponse`
+        """
+        ...
+
+
+    def get_event_threshold_configuration(self, event_threshold_id: str) -> GetEventThresholdResponse:
+        """
+        Get Event Threshold Configuration
+
+        Returns the event threshold configurations for `eventThresholdId`.
+
+        :param event_threshold_id: Unique ID of the event threshold configuration.
+        :type event_threshold_id: str
+        :rtype: :class:`GetEventThresholdResponse`
+        """
+        ...
+
+
+    def update_event_threshold_configuration(self,
+                                             event_thresholds: list[UpdateEventThresholdConfigurationEventThresholds]) -> BulkUpdateEventThresholdResponse:
+        """
+        Update Event Threshold Configuration
+
+        Updates an existing event threshold configuration for given Event Threshold IDs.
+
+
+        :type event_thresholds: list[UpdateEventThresholdConfigurationEventThresholds]
+        :rtype: :class:`BulkUpdateEventThresholdResponse`
+        """
+        ...
+
+
+    def reset_event_threshold_configuration(self, event_threshold_ids: list[str]) -> BulkUpdateEventThresholdResponse:
+        """
+        Reset Event Threshold Configuration
+
+        Resets the existing event threshold configuration for given Event Threshold IDs to default value. To stop
+        receiving webhook events, use the `Webhooks API
+        <docs/api/v1/webhooks>`_ to delete the webhook in question.
+
+
+        :type event_threshold_ids: list[str]
+        :rtype: :class:`BulkUpdateEventThresholdResponse`
+        """
+        ...
+
     ...

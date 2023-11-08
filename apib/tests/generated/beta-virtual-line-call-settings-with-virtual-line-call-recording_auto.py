@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -116,4 +117,67 @@ class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base=
     Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
     `spark-admin:telephony_config_read.
     """
+
+    def read_call_recording_settings_for_a_virtual_line(self, virtual_line_id: str,
+                                                        org_id: str = None) -> CallRecordingInfo:
+        """
+        Read Call Recording Settings for a Virtual Line
+
+        Retrieve Virtual Line's Call Recording settings.
+        
+        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
+        platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
+        
+        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_read` scope.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`CallRecordingInfo`
+        """
+        ...
+
+
+    def configure_call_recording_settings_for_a_virtual_line(self, virtual_line_id: str, enabled: bool,
+                                                             record: CallRecordingInfoRecord,
+                                                             record_voicemail_enabled: bool,
+                                                             notification: CallRecordingInfoNotification,
+                                                             repeat: CallRecordingInfoRepeat,
+                                                             start_stop_announcement: CallRecordingInfoStartStopAnnouncement,
+                                                             org_id: str = None):
+        """
+        Configure Call Recording Settings for a Virtual Line
+
+        Configure virtual line's Call Recording settings.
+        
+        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
+        platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
+        
+        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param enabled: `true` if call recording is enabled.
+        :type enabled: bool
+        :param record: Call recording scenario.
+        :type record: CallRecordingInfoRecord
+        :param record_voicemail_enabled: When `true`, voicemail messages are also recorded.
+        :type record_voicemail_enabled: bool
+        :param notification: Pause/resume notification settings.
+        :type notification: CallRecordingInfoNotification
+        :param repeat: Beep sound plays periodically.
+        :type repeat: CallRecordingInfoRepeat
+        :param start_stop_announcement: Call Recording starts and stops announcement settings.
+        :type start_stop_announcement: CallRecordingInfoStartStopAnnouncement
+        :param org_id: ID of the organization in which the virtual profile resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

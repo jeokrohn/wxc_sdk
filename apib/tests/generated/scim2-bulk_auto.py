@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -52,4 +53,77 @@ class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim/{orgId}/v2/
     The bulk API allows you to create, update, and remove multiple users and groups in Webex.  The number of Bulk
     operations in a single request is limited to 100.
     """
+
+    def user_bulk_api(self, org_id: str, schemas: list[str], fail_on_errors: int,
+                      operations: list[BulkUserOperations]) -> BulkUser:
+        """
+        User bulk API
+
+        <br/>
+        
+        **Authorization**
+        
+        OAuth token rendered by Identity Broker.
+        
+        <br/>
+        
+        One of the following OAuth scopes is required:
+        
+        - `identity:people_rw`
+        
+        - `Identity:SCIM`
+        
+        <br/>
+        
+        **Usage**:
+        
+        1. The input JSON must conform to the following schema: 'urn:ietf:params:scim:api:messages:2.0:BulkRequest'.
+        
+        1. The request must be accompanied with a body in JSON format according to the standard SCIM schema definition.
+        The maximum number of operations in a request is 100; an error is thrown if the limit is exceeded.
+        
+        1. `failOnErrors` parameter
+        
+        An integer specifies the number of errors that the service provider will accept before the operation is
+        terminated and an error response is returned.
+        It is OPTIONAL in a request.
+        Maximum number of operations allowed to fail before the server stops processing the request. The value must be
+        between 1 and 100.
+        
+        1. `operations` parameter
+        
+        Contains a list of bulk operations for POST/PATCH/DELETE operations. (REQUIRED)
+        + `operations.method`
+        
+        The HTTP method of the current operation. Possible values are POST, PATCH or DELETE.
+        + `operations.path`
+        
+        The Resource's relative path. If the method is POST the value must specify a Resource type endpoint;
+        e.g., /Users or /Groups whereas all other method values must specify the path to a specific Resource;
+        e.g., /Users/2819c223-7f76-453a-919d-413861904646.
+        + `operations.data`
+        
+        The Resource data as it would appear for a single POST or PATCH Resource operation.
+        It is REQUIRED in a request when method is POST and PATCH.
+        Refer to corresponding wiki for SCIM 2.0 POST, PATCH and DELETE API.
+        + `operations.bulkId`
+        
+        The transient identifier of a newly created resource, unique within a bulk request and created by the client.
+        The bulkId serves as a surrogate resource id enabling clients to uniquely identify newly created resources in
+        the response and cross-reference new resources in and across operations within a bulk request.
+        It is REQUIRED when "method" is "POST".
+
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param schemas: Input JSON schemas.
+        :type schemas: list[str]
+        :param fail_on_errors: An integer specifying the maximum number of errors that the service provider will accept
+            before the operation is terminated and an error response is returned.
+        :type fail_on_errors: int
+        :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
+        :type operations: list[BulkUserOperations]
+        :rtype: :class:`BulkUser`
+        """
+        ...
+
     ...

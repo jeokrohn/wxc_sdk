@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -338,4 +339,349 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
     session and activity based records for customer and agent in WxCC and `Media API` for providing agent/customer
     interaction recordings.
     """
+
+    def analyze_entities(self, org_id: str, contact_id: str, party_id: str,
+                         document: AnalyzeEntitiesDocument) -> EntityRecognition:
+        """
+        Analyze Entities
+
+        Entity Recognition allows consumers to get named entities for the input call transcript.
+        It requires an auth token with the `cjp:organization` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ to use this end point.
+        
+        Note that each API request:
+        
+        - Only considers the first 3,000 characters in the input for recognition
+        
+        - Return a maximum of 100 entities per request.
+        
+        If the text is too large, it is recommended to break it up into multiple requests to get the entities.
+
+        :param org_id: The ID of the organization.
+        :type org_id: str
+        :param contact_id: The ID of the contact.
+        :type contact_id: str
+        :param party_id: The ID of the call leg/party.
+        :type party_id: str
+        :param document: The document.
+        :type document: AnalyzeEntitiesDocument
+        :rtype: :class:`EntityRecognition`
+        """
+        ...
+
+
+    def get_agent_activity_record_list(self, org_id: str, q: str) -> ActivityList:
+        """
+        Get Agent Activity Record List
+
+        Get a list of agent activity records for the specified query, `q`. The query must be an encoded JSON object.
+        
+        Listing agent activity records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with a
+        WxCC license, or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+
+        :type org_id: str
+        :param q: An encoded json query. Example of json query:
+        
+        ```
+        {
+        "anchorId":"1",
+        "dateBegin": [
+        1514793600000
+        ],
+        "dateEnd": [
+        1530860400000
+        ],
+        "numberOfRecords": 100,
+        "aggregateQueryProperties": {
+        "rowSegmentSet": [
+        {
+        "columnName": "channelType__s",
+        "name": "channelType__s"
+        }
+        ],
+        "columnSegmentSet": []
+        },
+        "activityType": "AAR",
+        "aggregations": [
+        {
+        "id": 0,
+        "aggregationType": "COUNT",
+        "computeColumnName": "agentSessionId__s"
+        }
+        ]
+        }
+        ```
+        :type q: str
+        :rtype: :class:`ActivityList`
+        """
+        ...
+
+
+    def get_agent_activity_record(self, id: str, org_id: str) -> AgentActivity:
+        """
+        Get Agent Activity Record
+
+        Get details of an agent activity for the `id` specified in the URI.
+        
+        Retrieving agent activity records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
+        with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+        :param id: A unique identifier for AAR is required. Must be of the format:
+            `agentSessionId-channelType-timestamp-eventName`.
+        :type id: str
+        :param org_id: The organization ID.
+        :type org_id: str
+        :rtype: :class:`AgentActivity`
+        """
+        ...
+
+
+    def get_agent_session_record_list(self, org_id: str, q: str) -> ActivityList:
+        """
+        Get Agent Session Record List
+
+        Get a list of agent session records for the specified query, `q`. The query must be an encoded JSON object.
+        
+        Listing agent session records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with a
+        WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+
+        :type org_id: str
+        :param q: An encoded JSON query. Example JSON query:
+        
+        ```
+        {
+        "anchorId":"1",
+        "dateBegin": [
+        1514793600000
+        ],
+        "dateEnd": [
+        1530860400000
+        ],
+        "numberOfRecords": 100,
+        "aggregateQueryProperties": {
+        "rowSegmentSet": [
+        {
+        "columnName": "channelType__s",
+        "name": "channelType__s"
+        }
+        ],
+        "columnSegmentSet": []
+        },
+        "activityType": "ASR",
+        "aggregations": [
+        {
+        "id": 0,
+        "aggregationType": "VALUE",
+        "computeColumnName": "agentSessionId"
+        }
+        ]
+        }
+        ```
+        :type q: str
+        :rtype: :class:`ActivityList`
+        """
+        ...
+
+
+    def get_agent_session_record(self, id: str, org_id: str) -> AgentSession:
+        """
+        Get Agent Session Record
+
+        Get details of an agent session record specified by `id` in the URI.
+        
+        Retrieving agent session records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with
+        a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+        :param id: A unique identifier for ASR is required.
+        :type id: str
+        :param org_id: The organization ID.
+        :type org_id: str
+        :rtype: :class:`AgentSession`
+        """
+        ...
+
+
+    def get_customer_activity_record_list(self, org_id: str, q: str) -> ActivityList:
+        """
+        Get Customer Activity Record List
+
+        Get a list of customer activity records for the specified query, `q`. The query must be an encoded JSON object.
+        
+        Listing customer activity records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
+        with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+
+        :type org_id: str
+        :param q: An encoded JSON query. Example JSON query:
+        
+        ```
+        {
+        "anchorId":"1",
+        "dateBegin": [
+        1514793600000
+        ],
+        "dateEnd": [
+        1530860400000
+        ],
+        "numberOfRecords": 100,
+        "aggregateQueryProperties": {
+        "rowSegmentSet": [
+        {
+        "columnName": "channelType__s",
+        "name": "channelType__s"
+        }
+        ],
+        "columnSegmentSet": []
+        },
+        "activityType": "CAR",
+        "aggregations": [
+        {
+        "id": 0,
+        "aggregationType": "COUNT",
+        "computeColumnName": "callSessionId__s"
+        }
+        ]
+        }
+        ```
+        :type q: str
+        :rtype: :class:`ActivityList`
+        """
+        ...
+
+
+    def get_customer_activity_record(self, id: str, org_id: str) -> CustomerActivity:
+        """
+        Get Customer Activity Record
+
+        Get details of a customer activity record by `id` in the URI.
+        
+        Retrieving customer activity records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
+        with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+        :param id: A unique identifier for CAR is required. Must be of the format: callSessionId-timestamp-eventName.
+        :type id: str
+        :param org_id: The organization ID.
+        :type org_id: str
+        :rtype: :class:`CustomerActivity`
+        """
+        ...
+
+
+    def get_customer_session_record_list(self, org_id: str, q: str) -> ActivityList:
+        """
+        Get Customer Session Record List
+
+        Get a list of customer session records for the specified query, `q`. The query must be an encoded JSON object.
+        
+        Listing customer session records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with
+        a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+
+        :type org_id: str
+        :param q: An encoded JSON query. Example JSON query:
+        
+        ```
+        {
+        "anchorId":"1",
+        "dateBegin": [
+        1514793600000
+        ],
+        "dateEnd": [
+        1530860400000
+        ],
+        "numberOfRecords": 100,
+        "aggregateQueryProperties": {
+        "rowSegmentSet": [
+        {
+        "columnName": "channelType__s",
+        "name": "channelType__s"
+        }
+        ],
+        "columnSegmentSet": []
+        },
+        "activityType": "CSR",
+        "aggregations": [
+        {
+        "id": 0,
+        "aggregationType": "COUNT",
+        "computeColumnName": "sid"
+        }
+        ]
+        }
+        ```
+        :type q: str
+        :rtype: :class:`ActivityList`
+        """
+        ...
+
+
+    def get_customer_session_record(self, id: str, org_id: str) -> CustomerSession:
+        """
+        Get Customer Session Record
+
+        Get details of a customer session record for the specified `id`.
+        
+        Retrieving customer session records requires an auth token with the `cjp:config_read` `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
+        with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
+
+        :param id: A unique identifier for CSR is required.
+        :type id: str
+        :param org_id: The organization ID.
+        :type org_id: str
+        :rtype: :class:`CustomerSession`
+        """
+        ...
+
+
+    def get_decrypted_recording(self, session_id: str, org_id: str):
+        """
+        Get Decrypted Recording
+
+        Recording management endpoints allow consumers to retrieve session recordings for customer or agent. It
+        requires an auth token with a `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ of `cjp:config_read` for a WxCC license and `cjp-analyzer:read` for
+        organizations with only a Hybrid Analyzer license.
+        
+        Get decrypted recording of a customer or agent session by ID. Specify `sessionId` in the URI.
+
+        :param session_id: A unique identifier for session recording is required.
+        :type session_id: str
+        :param org_id: The organization ID.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
+
+    def get_encrypted_recording(self, session_id: str, key_id: int, org_id: str):
+        """
+        Get Encrypted Recording
+
+        Recording management endpoints allow consumers to retrieve session recordings for customer or agent. It
+        requires an auth token with a `scope
+        <https://developer.webex.com/docs/integrations#scopes>`_ of `cjp:config_read` for a WxCC license and `cjp-analyzer:read` for
+        organizations having only Hybrid Analyzer license.
+        
+        Get encrypted recording of a customer or agent session by ID. Specify `sessionId` and `keyId` in the URI.
+
+        :param session_id: A unique identifier for session recording is required.
+        :type session_id: str
+        :param key_id: An encryption key is required.
+        :type key_id: int
+        :param org_id: The organization ID.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

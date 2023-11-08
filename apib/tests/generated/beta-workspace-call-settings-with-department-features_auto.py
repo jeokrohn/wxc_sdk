@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -57,4 +58,50 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
     own. In those cases, an `orgId` must be supplied, as indicated in the reference documentation for the relevant
     endpoints.
     """
+
+    def read_department_of_a_workspace(self, workspace_id: str,
+                                       org_id: str = None) -> GetPersonOrWorkspaceDetailsObjectDepartment:
+        """
+        Read Department of a Workspace
+
+        Retrieve a workspace's department membership.
+        
+        An admin can organize people, workspaces, and features by placing them into departments. Departments can span
+        locations.
+        
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param workspace_id: Retrieve department membership of this workspace.
+        :type workspace_id: str
+        :param org_id: Workspace is in this organization.
+        :type org_id: str
+        :rtype: GetPersonOrWorkspaceDetailsObjectDepartment
+        """
+        ...
+
+
+    def update_department_of_a_workspace(self, workspace_id: str,
+                                         department: PutPersonOrWorkspaceDetailsObjectDepartment, org_id: str = None):
+        """
+        Update Department of a Workspace
+
+        Modify a workspace's department membership. A department can only be assigned to WxC workspace.
+        
+        An admin can organize people, workspaces, and features by placing them into departments. Departments can span
+        locations.
+        
+        This API requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param workspace_id: Modify department membership of this workspace.
+        :type workspace_id: str
+        :param department: Specifies the department information.
+        :type department: PutPersonOrWorkspaceDetailsObjectDepartment
+        :param org_id: Workspace is in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

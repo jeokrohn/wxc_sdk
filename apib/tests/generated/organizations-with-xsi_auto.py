@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -46,4 +47,40 @@ class OrganizationsWithXsiApi(ApiChild, base='organizations'):
     A set of people in Webex. Organizations may manage other organizations or be managed themselves. This organizations
     resource can be accessed only by an admin.
     """
+
+    def list_organizations(self, calling_data: bool = None) -> list[Organization]:
+        """
+        List Organizations
+
+        List all organizations visible by your account.
+        
+        If the `callingData` parameter is set to `true` and the base domain (region where the organization is
+        provisioned) is non-null, then the XSI endpoint values will be included in the organization details.
+
+        :param calling_data: Include XSI endpoint values in the response (if applicable) for the organization.
+        :type calling_data: bool
+        :rtype: list[Organization]
+        """
+        ...
+
+
+    def get_organization_details(self, org_id: str, calling_data: bool = None) -> Organization:
+        """
+        Get Organization Details
+
+        Shows details for an organization, by ID.
+        
+        Specify the org ID in the `orgId` parameter in the URI.
+        
+        If the `callingData` parameter is set to `true` and the base domain (region where the organization is
+        provisioned) is non-null, then the XSI endpoint values will be included in the organization details.
+
+        :param org_id: The unique identifier for the organization.
+        :type org_id: str
+        :param calling_data: Include XSI endpoint values in the response (if applicable) for the organization.
+        :type calling_data: bool
+        :rtype: :class:`Organization`
+        """
+        ...
+
     ...

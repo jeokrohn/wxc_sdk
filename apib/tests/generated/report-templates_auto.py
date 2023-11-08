@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -61,4 +62,18 @@ class ReportTemplatesApi(ApiChild, base='report/templates'):
     For more information about Report Templates, see the `Admin API
     <https://developer.webex.com/docs/admin#reports-api>`_ guide.
     """
+
+    def list_report_templates(self) -> list[Template]:
+        """
+        List Report Templates
+
+        List all the available report templates that can be generated.
+        
+        CSV (comma separated value) reports for Webex services are only supported for organizations based in the North
+        American region. Organizations based in other regions will return blank CSV files for any Webex reports.
+
+        :rtype: list[Template]
+        """
+        ...
+
     ...

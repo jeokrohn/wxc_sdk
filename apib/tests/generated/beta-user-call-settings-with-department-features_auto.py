@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -55,4 +56,49 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
     scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
     their own settings.
     """
+
+    def read_department_of_a_person(self, person_id: str,
+                                    org_id: str = None) -> GetPersonOrWorkspaceDetailsObjectDepartment:
+        """
+        Read Department of a Person
+
+        Retrieve a person's department membership.
+        
+        An admin can organize people, workspaces, and features by placing them into departments. Departments can span
+        locations.
+        
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Retrieve department membership of this person.
+        :type person_id: str
+        :param org_id: Person is in this organization.
+        :type org_id: str
+        :rtype: GetPersonOrWorkspaceDetailsObjectDepartment
+        """
+        ...
+
+
+    def update_department_of_a_person(self, person_id: str, department: PutPersonOrWorkspaceDetailsObjectDepartment,
+                                      org_id: str = None):
+        """
+        Update Department of a Person
+
+        Modify a person's department membership.
+        
+        An admin can organize people, workspaces, and features by placing them into departments. Departments can span
+        locations.
+        
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Modify department membership of this person.
+        :type person_id: str
+        :param department: Specifies the department information.
+        :type department: PutPersonOrWorkspaceDetailsObjectDepartment
+        :param org_id: Person is in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        ...
+
     ...

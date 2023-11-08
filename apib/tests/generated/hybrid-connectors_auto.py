@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -129,4 +130,36 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
     `unresolved alarms
     <https://help.webex.com/nuej5gfb/>`_ associated with them.
     """
+
+    def list_hybrid_connectors(self, org_id: str = None) -> list[Connector]:
+        """
+        List Hybrid Connectors
+
+        List hybrid connectors for an organization. If no `orgId` is specified, the default is the organization of the
+        authenticated user.
+        
+        Only an admin auth token with the `spark-admin:hybrid_connectors_read` scope can list connectors.
+
+        :param org_id: List hybrid connectors in this organization. If an organization is not specified, the
+            organization of the caller will be used.
+        :type org_id: str
+        :rtype: list[Connector]
+        """
+        ...
+
+
+    def get_hybrid_connector_details(self, connector_id: str) -> Connector:
+        """
+        Get Hybrid Connector Details
+
+        Shows details for a hybrid connector, by ID.
+        
+        Only an admin auth token with the `spark-admin:hybrid_connectors_read` scope can see connector details.
+
+        :param connector_id: The ID of the connector.
+        :type connector_id: str
+        :rtype: :class:`Connector`
+        """
+        ...
+
     ...

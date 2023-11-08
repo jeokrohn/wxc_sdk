@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
 
@@ -132,4 +133,49 @@ class EventsApi(ApiChild, base='events'):
     `spark-compliance:events_read` scope. See the `Compliance Guide
     <https://developer.webex.com/docs/compliance#compliance>`_ for more information.
     """
+
+    def list_events(self, resource: EventResourceEnum = None, type: EventTypeEnum = None, actor_id: str = None,
+                    from_: Union[str, datetime] = None, to_: Union[str, datetime] = None, max_: int = None,
+                    **params) -> Generator[Event, None, None]:
+        """
+        List Events
+
+        List events in your organization. Several query parameters are available to filter the events returned in the
+        response.
+        
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param resource: List events with a specific resource type.
+        :type resource: EventResourceEnum
+        :param type: List events with a specific event type.
+        :type type: EventTypeEnum
+        :param actor_id: List events performed by this person, by person ID.
+        :type actor_id: str
+        :param from_: List events which occurred after a specific date and time.
+        :type from_: Union[str, datetime]
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
+            future, lists events up to the present.
+        :type to_: Union[str, datetime]
+        :param max_: Limit the maximum number of events in the response. Value must be between 1 and 1000, inclusive.
+        :type max_: int
+        :return: Generator yielding :class:`Event` instances
+        """
+        ...
+
+
+    def get_event_details(self, event_id: str) -> Event:
+        """
+        Get Event Details
+
+        Shows details for an event, by event ID.
+        
+        Specify the event ID in the `eventId` parameter in the URI.
+
+        :param event_id: The unique identifier for the event.
+        :type event_id: str
+        :rtype: :class:`Event`
+        """
+        ...
+
     ...
