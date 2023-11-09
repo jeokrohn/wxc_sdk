@@ -301,11 +301,10 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def guess_datetime(dt: Union[datetime, str]) -> datetime:
+        def guess_datetime(dt: Union[datetime, str]) -> str:
             if isinstance(dt, str):
-                r = isoparse(dt)
-            else:
-                r = dt_iso_str(dt)
+                dt = isoparse(dt)
+            r = dt_iso_str(dt)
             return r
 
         params['startTime'] = guess_datetime(start_time)
@@ -347,11 +346,10 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def guess_datetime(dt: Union[datetime, str]) -> datetime:
+        def guess_datetime(dt: Union[datetime, str]) -> str:
             if isinstance(dt, str):
-                r = isoparse(dt)
-            else:
-                r = dt_iso_str(dt)
+                dt = isoparse(dt)
+            r = dt_iso_str(dt)
             return r
 
         params['startTime'] = guess_datetime(start_time)
@@ -11984,6 +11982,60 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
+    def usage_call_to_extension_gen(self, trunk_id: str, org_id: str = None, order: str = None,
+                                name: List[str] = None, **params) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        Get local gateway call to on-premises extension usage for a trunk.
+
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
+        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: ID of the trunk.
+        :param org_id: Organization to which the trunk belongs.
+        :param order: Order the trunks according to the designated fields. Available sort fields are name,
+            and locationName. Sort order is ascending by default
+        :param name: Return the list of trunks matching the local gateway names
+        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id', 'params'})
+        if name:
+            params['name'] = ','.join(name)
+        url = self.ep(f'{trunk_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_call_to_extension(self, trunk_id: str, org_id: str = None, order: str = None,
+                                name: List[str] = None, **params) -> List[IdAndName]:
+        """
+        Get local gateway call to on-premises extension usage for a trunk.
+
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
+        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: ID of the trunk.
+        :param org_id: Organization to which the trunk belongs.
+        :param order: Order the trunks according to the designated fields. Available sort fields are name,
+            and locationName. Sort order is ascending by default
+        :param name: Return the list of trunks matching the local gateway names
+        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id', 'params'})
+        if name:
+            params['name'] = ','.join(name)
+        url = self.ep(f'{trunk_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
     async def validate_fqdn_and_domain(self, address: str, domain: str, port: int = None, org_id: str = None):
         """
         Validate Local Gateway FQDN and Domain for the organization trunks.
@@ -12009,8 +12061,6 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep('actions/fqdnValidation/invoke')
         params = org_id and {'orgId': org_id} or None
         await self.post(url=url, params=params, json=body)
-
-    # TODO: are we missing a usage for trunks used for calls to unknown extensions??
 
 
 class AsPremisePstnApi(AsApiChild, base='telephony/config/premisePstn'):
@@ -14449,7 +14499,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         on category) and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or
         capacity.
 
-        :param workspace_location_id: Location associated with the workspace
+        :param workspace_location_id: Location associated with the workspace. Can be a lcoation id or a workspace
+            location id.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str
@@ -14498,7 +14549,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         on category) and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or
         capacity.
 
-        :param workspace_location_id: Location associated with the workspace
+        :param workspace_location_id: Location associated with the workspace. Can be a lcoation id or a workspace
+            location id.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str

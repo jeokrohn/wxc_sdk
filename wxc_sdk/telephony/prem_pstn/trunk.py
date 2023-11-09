@@ -402,7 +402,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
     def usage_call_to_extension(self, trunk_id: str, org_id: str = None, order: str = None,
-                                name: list[str] = None, **params) -> Generator[IdAndName, None, None]:
+                                name: List[str] = None, **params) -> Generator[IdAndName, None, None]:
         """
         Get local gateway call to on-premises extension usage for a trunk.
 
