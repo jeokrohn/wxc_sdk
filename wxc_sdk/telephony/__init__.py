@@ -15,6 +15,7 @@ from .callpark_extension import CallparkExtensionApi
 from .callpickup import CallPickupApi
 from .callqueue import CallQueueApi
 from .calls import CallsApi
+from .dect_devices import DECTDevicesApi
 from .devices import TelephonyDevicesApi
 from .huntgroup import HuntGroupApi
 from .jobs import JobsApi
@@ -436,6 +437,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     callpark: CallParkApi
     callpark_extension: CallparkExtensionApi
     callqueue: CallQueueApi
+    dect_devices: DECTDevicesApi
     #: WxC device operations
     devices: TelephonyDevicesApi
     huntgroup: HuntGroupApi
@@ -468,6 +470,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.callpark = CallParkApi(session=session)
         self.callpark_extension = CallparkExtensionApi(session=session)
         self.callqueue = CallQueueApi(session=session)
+        self.dect_devices = DECTDevicesApi(session=session)
         self.devices = TelephonyDevicesApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
         self.jobs = JobsApi(session=session)

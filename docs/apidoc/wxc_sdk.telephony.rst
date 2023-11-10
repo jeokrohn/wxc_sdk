@@ -14,6 +14,7 @@ Subpackages
 
    wxc_sdk.telephony.announcements_repo
    wxc_sdk.telephony.callqueue
+   wxc_sdk.telephony.dect_devices
    wxc_sdk.telephony.devices
    wxc_sdk.telephony.jobs
    wxc_sdk.telephony.location
