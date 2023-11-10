@@ -15,6 +15,7 @@ from unittest import TestCase, skip
 from pydantic import ValidationError, parse_obj_as, BaseModel, model_validator, TypeAdapter
 
 from apib.apib import *
+from apib.python_class import PythonClass, PythonClassRegistry
 
 
 @dataclass(init=False)
@@ -675,7 +676,7 @@ class ReadAPIB(ApibTest):
                 if element.element != 'dataStructure':
                     continue
                 try:
-                    self.assertTrue(isinstance(element, ApibDatastucture))
+                    self.assertTrue(isinstance(element, ApibDatastructure))
                     content = element.content
                     # if isinstance(content, ApibElement):
                     #     if content.element not in {'object', 'enum', 'array'}:
@@ -810,14 +811,13 @@ class ReadAPIB(ApibTest):
         Parse all APIBs
         """
         err = None
-        logging.getLogger().setLevel(logging.DEBUG)
+        logging.getLogger().setLevel(logging.INFO)
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             try:
                 parsed = ApibParseResult.model_validate(data)
             except ValidationError as e:
                 print(f'{path}: {e}')
-                raise
                 err = err or e
                 continue
         if err:
@@ -872,19 +872,32 @@ class ReadAPIB(ApibTest):
         print('\n'.join(sorted(no_docstring)))
         self.assertFalse(err)
 
-    def test_parsed_categories_wo_doctring(self):
+    def test_parsed_categories_check_meta_classes(self):
         """
         look for 'category' elements w/o docstring
         """
         self.stream_handler.setLevel(logging.INFO)
+        meta_classes = set()
+        err = None
+        print()
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             parsed = ApibParseResult.model_validate(data)
-            for el, path, elem_path in parsed.elements_with_path():
-                el: ApibCategory
+            for el_info in parsed.elements_with_path():
+                el = el_info.element
                 if el.element != 'category' or el.copy_content:
                     continue
-                self.assertTrue(False)
+                el: ApibCategory
+                try:
+                    self.assertIsNotNone(el.meta, 'missing meta')
+                    meta_classes.add(el.meta.meta_class)
+                    self.assertEqual('dataStructures', el.meta.meta_class, 'unexpected meta class')
+                except AssertionError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = err or e
+        print(f'meta classes: {", ".join(sorted(meta_classes))}')
+        if err:
+            raise err
 
     def test_parsed_boolean_is_always_child_of_member(self):
         self.stream_handler.setLevel(logging.INFO)
@@ -954,7 +967,7 @@ class ReadAPIB(ApibTest):
                 except ValidationError as e:
                     print(f'{path}, {el_info.elem_path_extended}: {e}')
                     err = err or e
-        print('\n'.join(f'{k}: {v}' for k,v in number_class_counter.items()))
+        print('\n'.join(f'{k}: {v}' for k, v in number_class_counter.items()))
         if err:
             raise err
 
@@ -972,6 +985,8 @@ class ReadAPIB(ApibTest):
                 if el_info.element.element != 'transition':
                     continue
                 elem_path = el_info.elem_path
+                if elem_path == 'parseResult.category.category.resource':
+                    print(el_info.elem_path_extended)
                 transition_paths.add(elem_path)
                 if elem_path not in expected_paths:
                     print(f'{path}: unexpected path for "transition" element: {elem_path}')
@@ -1011,6 +1026,71 @@ class ReadAPIB(ApibTest):
                     parent_with_href = next((el for el in reversed(el_info.data_path)))
                     err = True
         self.assertFalse(err)
+
+    def test_parsed_transition_response_datastructure(self):
+        """
+        Understand transition response datastructures
+        """
+        self.stream_handler.setLevel(logging.INFO)
+        err = None
+        response_datastructure_content_elements_wo_content = set()
+        response_datastructure_content_elements_w_content = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.model_validate(data)
+            for el_info in parsed.elements_with_path():
+                transition = el_info.element
+                if transition.element != 'transition':
+                    continue
+                transition: ApibTransition
+                try:
+                    response_datastructure = transition.http_transaction.response.datastructure
+                    if response_datastructure is None:
+                        # that is fine: this call does not have a response body
+                        continue
+                    # response datastructure always has content
+                    content = response_datastructure.content
+                    # the response datastructure content can have content or no content
+                    if content.content:
+                        # if there is content then the element is either 'array' or 'object'
+                        response_datastructure_content_elements_w_content.add(content.element)
+                        self.assertTrue(content.element in {'array', 'object'},
+                                        f'unexpected content element for datastructure content. Should be "array" or '
+                                        f'"object", is: {content.element}')
+                        if content.element == 'array':
+                            array_content = content.content
+                            self.assertTrue(isinstance(array_content, list),
+                                            f'array content should be list, is: {type(array_content)}')
+                            self.assertEqual(1, len(array_content),
+                                             'len of array content should be one')
+                            array_content_first_element = array_content[0]
+                            # the 1st element should be a reference to a class
+                            self.assertIsNone(array_content_first_element.content)
+                            array_element_class_name = array_content_first_element.element
+                            ds = next((ds for ds in parsed.elements()
+                                       if isinstance(ds, ApibDatastructure) and
+                                       ds.class_name == array_element_class_name),
+                                      None)
+                            self.assertIsNotNone(ds, f'datastructure "{array_element_class_name}" not found')
+                    else:
+                        # In this case the content.element is the name of a datastructure
+                        response_datastructure_content_elements_wo_content.add(content.element)
+                        ds_name = content.element
+                        # try to find the datastructure
+                        ds = next((ds for ds in parsed.elements()
+                                   if isinstance(ds, ApibDatastructure) and ds.class_name == ds_name), None)
+                        self.assertIsNotNone(ds,
+                                             f'Failed to find datastructure "{ds_name}"')
+                except Exception as e:
+                    raise
+                    err = err or e
+        print('Content element values w/o content:')
+        print('\n'.join(sorted(response_datastructure_content_elements_wo_content)))
+        print()
+        print('Content element values w/ content:')
+        print('\n'.join(sorted(response_datastructure_content_elements_w_content)))
+        if err:
+            raise err
 
     def test_parsed_http_transaction_has_request_and_response(self):
         self.stream_handler.setLevel(logging.INFO)
@@ -1057,6 +1137,69 @@ class ReadAPIB(ApibTest):
                 except AssertionError as e:
                     print(f'{path}, {el_info.elem_path_extended}: {e}')
                     err = err or e
+
+        if err:
+            raise err
+
+    def test_parsed_object(self):
+        """
+        check parsed 'object' elements
+        """
+        self.stream_handler.setLevel(logging.INFO)
+        err = None
+        meta_classes = set()
+        parents = set()
+        content_types = set()
+        content_list_members = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.model_validate(data)
+            for el_info in parsed.elements_with_path():
+                object_element: ApibObject = el_info.element
+                if object_element.element.lower() != 'object':
+                    continue
+                try:
+                    content = object_element.content
+                    meta = object_element.meta
+                    if not (object_element.content or object_element.attributes or object_element.meta or
+                            object_element.type_attributes):
+                        # with no content and no meta this is a "generic" object -> Any
+                        # example:
+                        #  - outboundProxy (object, optional) - Contains ...
+                        # this is acceptable
+                        continue
+                    if not content:
+                        # w/o content there has to be meta with an id and nothing else
+                        # in that case the id is the name of the class
+                        self.assertTrue(meta, 'W/o content there has to be meta')
+                        self.assertTrue(meta.id and not (meta.classes or meta.description or meta.title),
+                                        f'unexpected meta: {meta}')
+                    else:
+                        # content is always a list
+                        content_types.add(content.__class__.__name__)
+                        self.assertEqual('list', content.__class__.__name__,
+                                         f'content is not a list: {content.__class__.__name__}')
+                        list_entry_elements = set(c.element for c in content)
+                        content_list_members.update(list_entry_elements)
+                        # list entries are 'member' or 'select'
+                        unexpected_elements = list_entry_elements - {'member', 'select'}
+                        self.assertFalse(unexpected_elements,
+                                         f'unexpected list entry element: '
+                                         f'{", ".join(unexpected_elements)}')
+
+                    if object_element.type_attributes:
+                        self.assertEqual({'fixedType'}, object_element.type_attributes, 'unexpected type_attributes')
+
+                    # collect parents
+                    parent = el_info.elem_path.split('.')[-1]
+                    parents.add(parent)
+                except AssertionError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = err or e
+        print(f'content types: {", ".join(sorted(content_types))}')
+        print(f'content list members: {", ".join(sorted(content_list_members))}')
+        print(f'parents: {", ".join(sorted(parents))}')
+        print('Type attributes')
 
         if err:
             raise err
@@ -1160,58 +1303,14 @@ class ReadAPIB(ApibTest):
         if err:
             raise err
 
-    def test_parsed_object(self):
-        """
-        check parsed 'object' elements
-        """
-        self.stream_handler.setLevel(logging.INFO)
-        err = None
-        meta_classes = set()
-        parents = set()
-        content_types = set()
-        content_list_members = set()
-        for path, data in self.apib_path_and_data():
-            path = os.path.basename(path)
-            parsed = ApibParseResult.model_validate(data)
-            for el_info in parsed.elements_with_path():
-                object_element = el_info.element
-                if object_element.element.lower() != 'object':
-                    continue
-                try:
-                    content = object_element.content
-                    # content is always a list
-                    if content:
-                        content_types.add(content.__class__.__name__)
-                        self.assertEqual('list', content.__class__.__name__)
-                        content_list_members.update(c.element for c in content)
-
-                    # only attribute is 'typeAttributes'
-                    attributes = object_element.attributes
-                    if attributes:
-                        self.assertFalse(set(attributes)-{'typeAttributes'})
-                    # self.assertIsNone(attributes)
-                    foo = 1
-
-                    # collect parents
-                    parent = el_info.elem_path.split('.')[-1]
-                    parents.add(parent)
-                except AssertionError as e:
-                    print(f'{path}, {el_info.elem_path_extended}: {e}')
-                    err = err or e
-        print(f'content types: {", ".join(sorted(content_types))}')
-        print(f'content list members: {", ".join(sorted(content_list_members))}')
-        print(f'parents: {", ".join(sorted(parents))}')
-
-        if err:
-            raise err
-
     def test_parsed_select(self):
         """
         check parsed 'select' elements
         """
-        self.stream_handler.setLevel(logging.INFO)
+        self.stream_handler.setLevel(logging.ERROR)
         err = None
         parents = set()
+        member_value_types = set()
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             parsed = ApibParseResult.model_validate(data)
@@ -1220,43 +1319,78 @@ class ReadAPIB(ApibTest):
                 if select_element.element.lower() != 'select':
                     continue
                 try:
+                    print(f'{path}: {el_info.elem_path_extended}')
                     content = select_element.content
+
                     # content is always a list
-                    self.assertEqual('list', content.__class__.__name__)
+                    self.assertEqual('list', content.__class__.__name__,
+                                     'content not a list')
+
                     # there are no attributes
-                    self.assertIsNone(select_element.attributes)
+                    self.assertIsNone(select_element.attributes,
+                                      'attributes not None')
                     # no meta
-                    self.assertIsNone(select_element.meta)
+                    self.assertIsNone(select_element.meta,
+                                      'meta not None')
 
                     # collect parents
                     parent = el_info.elem_path.split('.')[-1]
                     parents.add(parent)
 
                     # childs are 'option' elements
-                    self.assertTrue(all(c.element == 'option' for c in content))
+                    self.assertTrue(all(c.element == 'option' for c in content),
+                                    'Not all elements are \'option\' elements')
 
                     for option_element in content:
-                        self.assertTrue(isinstance(option_element.content, list))
-                        self.assertEqual(1, len(option_element.content))
-                        member = option_element.content[0]
-                        self.assertEqual('member', member.element)
+                        # # 'option' element content is a single element list
+                        # self.assertTrue(isinstance(option_element.content, list),
+                        #                 'option element content not a list')
+                        # self.assertEqual(1, len(option_element.content),
+                        #                  'option element content list length')
+
+                        # ... and the element in that list is a 'member'
+                        member = option_element.content
+                        self.assertEqual('member', member.element,
+                                         'option element content list element not a \'member\' element')
                         member: ApibMember
-                        self.assertIsNone(member.attributes)
-                        self.assertIsNone(member.content)
+
+                        # ... w/o attributes and content
+                        self.assertIsNone(member.attributes,
+                                          'option element content list element has attributes')
+                        self.assertIsNone(member.content,
+                                          'option element content list element has content')
+
+                        # ... but meta can exist
                         member_meta = member.meta
                         # meta can exist
                         if member_meta:
                             # .. and only has a description
-                            self.assertIsNone(member_meta.classes)
-                            self.assertIsNone(member_meta.id)
-                            self.assertIsNone(member_meta.title)
-                            self.assertIsNotNone(member_meta.description)
-                        self.assertIsNotNone(member.key)
+                            self.assertIsNone(member_meta.classes,
+                                              'meta classes')
+                            self.assertIsNone(member_meta.id,
+                                              'meta id')
+                            self.assertIsNone(member_meta.title,
+                                              'meta title')
+                            self.assertIsNotNone(member_meta.description,
+                                                 'meta description')
+                        # and there is always a key
+                        self.assertIsNotNone(member.key, 'no key')
 
+                        # ... the key is always 'value'
+                        self.assertEqual('value', member.key)
+
+                        # member value can be ....
+                        member_value_types.add(member.value.element)
+
+                        # should not have attributes
+                        self.assertIsNone(member.attributes,
+                                          'member attributes')
+                    # for
                 except AssertionError as e:
                     print(f'{path}, {el_info.elem_path_extended}: {e}')
                     err = err or e
         print(f'parents: {", ".join(sorted(parents))}')
+        print(f'member value types: {", ".join(sorted(member_value_types))}')
 
         if err:
             raise err
@@ -1375,6 +1509,81 @@ class ReadAPIB(ApibTest):
         print(sub)
 
     def test_validate_sourcemap(self):
-        data = [{'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 204}, 'column': {'element': 'number', 'content': 7}}, 'content': 8988}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 204}, 'column': {'element': 'number', 'content': 11}}, 'content': 5}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205}, 'column': {'element': 'number', 'content': 9}}, 'content': 9001}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205}, 'column': {'element': 'number', 'content': 10}}, 'content': 2}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 206}, 'column': {'element': 'number', 'content': 9}}, 'content': 9011}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 206}, 'column': {'element': 'number', 'content': 110}}, 'content': 102}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 207}, 'column': {'element': 'number', 'content': 9}}, 'content': 9121}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 207}, 'column': {'element': 'number', 'content': 38}}, 'content': 30}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 208}, 'column': {'element': 'number', 'content': 9}}, 'content': 9159}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 208}, 'column': {'element': 'number', 'content': 10}}, 'content': 2}]}]
+        data = [{'element': 'array', 'content': [{'element': 'number',
+                                                  'attributes': {'line': {'element': 'number', 'content': 204},
+                                                                 'column': {'element': 'number', 'content': 7}},
+                                                  'content': 8988}, {'element': 'number', 'attributes': {
+            'line': {'element': 'number', 'content': 204}, 'column': {'element': 'number', 'content': 11}},
+                                                                     'content': 5}]}, {'element': 'array', 'content': [
+            {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205},
+                                                 'column': {'element': 'number', 'content': 9}}, 'content': 9001},
+            {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205},
+                                                 'column': {'element': 'number', 'content': 10}}, 'content': 2}]},
+                {'element': 'array', 'content': [{'element': 'number',
+                                                  'attributes': {'line': {'element': 'number', 'content': 206},
+                                                                 'column': {'element': 'number', 'content': 9}},
+                                                  'content': 9011}, {'element': 'number', 'attributes': {
+                    'line': {'element': 'number', 'content': 206}, 'column': {'element': 'number', 'content': 110}},
+                                                                     'content': 102}]}, {'element': 'array',
+                                                                                         'content': [
+                                                                                             {'element': 'number',
+                                                                                              'attributes': {'line': {
+                                                                                                  'element': 'number',
+                                                                                                  'content': 207},
+                                                                                                  'column': {
+                                                                                                      'element':
+                                                                                                          'number',
+                                                                                                      'content': 9}},
+                                                                                              'content': 9121},
+                                                                                             {'element': 'number',
+                                                                                              'attributes': {'line': {
+                                                                                                  'element': 'number',
+                                                                                                  'content': 207},
+                                                                                                  'column': {
+                                                                                                      'element':
+                                                                                                          'number',
+                                                                                                      'content': 38}},
+                                                                                              'content': 30}]},
+                {'element': 'array', 'content': [{'element': 'number',
+                                                  'attributes': {'line': {'element': 'number', 'content': 208},
+                                                                 'column': {'element': 'number', 'content': 9}},
+                                                  'content': 9159}, {'element': 'number', 'attributes': {
+                    'line': {'element': 'number', 'content': 208}, 'column': {'element': 'number', 'content': 10}},
+                                                                     'content': 2}]}]
         parsed_content = TypeAdapter(list[AbibSourceMapNumberArray]).validate_python(data)
         print(parsed_content)
+
+    def test_parsed_structure(self):
+        """
+        understand the structure of APIB files
+        """
+        logging.getLogger().setLevel(logging.WARNING)
+        for apib_path, data in self.apib_path_and_data():
+            apib_path = os.path.basename(apib_path)
+            parsed = ApibParseResult.model_validate(data)
+            for el_info in parsed.elements_with_path():
+                element, path, elem_path = el_info
+                depth = sum(1 for el in elem_path if isinstance(el, ApibElement))
+                index = (((elem_path and isinstance(elem_path[-1], list)) or None) and
+                         next((i for i, el in enumerate(elem_path[-1]) if el == element), None))
+                print(f'{apib_path}: {depth * "  "}{path}')
+
+    @skip('ApibParseResult has no python_classes(); result of refactoring')
+    def test_parsed_python_classes(self):
+        logging.getLogger().setLevel(logging.INFO)
+
+        for apib_path, data in self.apib_path_and_data():
+            apib_path = os.path.basename(apib_path)
+            # if apib_path != 'features-call-queue.apib':
+            #     continue
+            parsed = ApibParseResult.model_validate(data)
+            class_registry = PythonClassRegistry()
+            list(map(class_registry.add, parsed.python_classes()))
+            p_classes = list(class_registry.classes())
+            print(f'{apib_path}: {len(p_classes)} classes')
+            class_registry.eliminate_redundancies()
+            p_classes_after = list(class_registry.classes())
+            print(f'{apib_path}: {len(p_classes_after)} classes after removing redundancies')
+            # try to generate source for all of them
+            list(map(PythonClass.source, p_classes_after))
+            foo = 1

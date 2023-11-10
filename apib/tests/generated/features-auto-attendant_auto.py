@@ -1,0 +1,1013 @@
+from collections.abc import Generator
+from datetime import datetime
+from json import loads
+from typing import Optional, Union
+
+from dateutil.parser import isoparse
+from pydantic import Field, TypeAdapter
+
+from wxc_sdk.api_child import ApiChild
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
+from wxc_sdk.base import SafeEnum as Enum
+
+
+__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject',
+            'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileObjectMediaFileType', 'AudioFileObject',
+            'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject',
+            'CallForwardRulesModifyObject', 'CallForwardRulesObject',
+            'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject',
+            'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject',
+            'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject',
+            'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection',
+            'CreateAnAutoAttendantResponse', 'GetAutoAttendantCallForwardSelectiveRuleObject',
+            'GetAutoAttendantCallForwardSettingsObject', 'GetAutoAttendantObject',
+            'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject',
+            'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction',
+            'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject',
+            'ModifyAutoAttendantCallForwardSelectiveRuleObject', 'ModifyAutoAttendantCallForwardSettingsObject',
+            'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
+
+
+class AlternateNumbersObjectRingPattern(str, Enum):
+    _0 = '0'
+    normal = 'NORMAL'
+    long_long = 'LONG_LONG'
+    short_short_long = 'SHORT_SHORT_LONG'
+    short_long_short = 'SHORT_LONG_SHORT'
+
+
+class AlternateNumbersObject(ApiModel):
+    #: Phone number defined as alternate number.
+    #: example: +19705550028
+    phone_number: Optional[str] = None
+    #: Flag to indicate if auto attendant number is toll-free number.
+    toll_free_number: Optional[bool] = None
+    #: Ring pattern that will be used for the alternate number.
+    #: example: 0
+    ring_pattern: Optional[AlternateNumbersObjectRingPattern] = None
+
+
+class AudioAnnouncementFileObjectMediaFileType(str, Enum):
+    #: WAV File Extension.
+    wav = 'WAV'
+    #: WMA File Extension.
+    wma = 'WMA'
+    #: 3GP File Extension.
+    _3_gp = '3GP'
+
+
+class AudioAnnouncementFileGetObjectLevel(str, Enum):
+    #: Specifies this audio file is configured across organisation.
+    organization = 'ORGANIZATION'
+    #: Specifies this audio file is configured across location.
+    location = 'LOCATION'
+
+
+class AudioAnnouncementFileGetObject(ApiModel):
+    #: A unique identifier for the announcement.
+    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
+    id: Optional[str] = None
+    #: Audio announcement file name.
+    #: example: AUDIO_FILE.wav
+    file_name: Optional[str] = None
+    #: Audio announcement file type.
+    #: example: WAV
+    media_file_type: Optional[AudioAnnouncementFileObjectMediaFileType] = None
+    #: Audio announcement file type location.
+    #: example: ORGANIZATION
+    level: Optional[AudioAnnouncementFileGetObjectLevel] = None
+
+
+class AudioFileObject(ApiModel):
+    #: Announcement audio file name.
+    #: example: AUDIO_FILE.wav
+    name: Optional[str] = None
+    #: Announcement audio file media type.
+    #: example: WAV
+    media_type: Optional[AudioAnnouncementFileObjectMediaFileType] = None
+
+
+class GetCallForwardAlwaysSettingObject(ApiModel):
+    #: `Always` call forwarding is enabled or disabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Destination for `Always` call forwarding. Required if field `enabled` is set to `true`.
+    #: example: +19705550006
+    destination: Optional[str] = None
+    #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
+    ring_reminder_enabled: Optional[bool] = None
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
+    send_to_voicemail_enabled: Optional[bool] = None
+
+
+class CallForwardRulesObject(ApiModel):
+    #: Unique ID for the rule.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfRk9SV0FSRElOR19TRUxFQ1RJVkVfUlVMRS9WR1Z6ZENCU2RXeGw
+    id: Optional[str] = None
+    #: Unique name of rule.
+    #: example: Test Rule
+    name: Optional[str] = None
+    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
+    #: is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls
+    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from
+    #: an unavailable number.
+    #: example: Any private number
+    calls_from: Optional[str] = None
+    #: Comma-separated list of the types of numbers being matched for incoming call destination.
+    #: example: +19705550006
+    calls_to: Optional[str] = None
+    #: Number to which calls will be forwarded if the rule is of type "Forward To" and the incoming call is matched.
+    #: example: +19705550026
+    forward_to: Optional[str] = None
+    #: Reflects if rule is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+
+
+class AutoAttendantCallForwardSettingsDetailsObject(ApiModel):
+    #: Settings for forwarding all incoming calls to the destination you choose.
+    always: Optional[GetCallForwardAlwaysSettingObject] = None
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
+    selective: Optional[GetCallForwardAlwaysSettingObject] = None
+    #: Rules for selectively forwarding calls.
+    rules: Optional[list[CallForwardRulesObject]] = None
+
+
+class CallForwardRulesModifyObject(ApiModel):
+    #: A unique identifier for the auto attendant call forward selective rule.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfRk9SV0FSRElOR19TRUxFQ1RJVkVfUlVMRS9WR1Z6ZENCU2RXeGw
+    id: Optional[str] = None
+    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
+    #: false.
+    #: example: True
+    enabled: Optional[bool] = None
+
+
+class AutoAttendantCallForwardSettingsModifyDetailsObject(ApiModel):
+    #: Settings for forwarding all incoming calls to the destination you choose.
+    always: Optional[GetCallForwardAlwaysSettingObject] = None
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
+    selective: Optional[GetCallForwardAlwaysSettingObject] = None
+    #: Rules for selectively forwarding calls. (Rules which are omitted in the list will not be deleted.)
+    rules: Optional[list[CallForwardRulesModifyObject]] = None
+
+
+class CallForwardSelectiveCallsFromCustomNumbersObject(ApiModel):
+    #: Match if caller ID indicates the call is from a private number.
+    #: example: True
+    private_number_enabled: Optional[bool] = None
+    #: Match if callerID is unavailable.
+    unavailable_number_enabled: Optional[bool] = None
+    #: Array of number strings to be matched against incoming caller ID.
+    #: example: ['["+12147691003", "+12147691004"]']
+    numbers: Optional[list[str]] = None
+
+
+class CallForwardSelectiveCallsFromObjectSelection(str, Enum):
+    #: Rule matches for calls from any number.
+    any = 'ANY'
+    #: Rule matches based on the numbers and options in customNumbers.
+    custom = 'CUSTOM'
+
+
+class CallForwardSelectiveCallsFromObject(ApiModel):
+    #: If `CUSTOM`, use `customNumbers` to specify which incoming caller ID values cause this rule to match. `ANY`
+    #: means any incoming call matches assuming the rule is in effect based on the associated schedules.
+    #: example: CUSTOM
+    selection: Optional[CallForwardSelectiveCallsFromObjectSelection] = None
+    #: Custom rules for matching incoming caller ID information. Mandatory if the selection option is set to `CUSTOM`.
+    custom_numbers: Optional[CallForwardSelectiveCallsFromCustomNumbersObject] = None
+
+
+class CallForwardSelectiveCallsToNumbersObjectType(str, Enum):
+    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is a primary
+    #: number or extension.
+    primary = 'PRIMARY'
+    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is an
+    #: alternate number or extension.
+    alternate = 'ALTERNATE'
+
+
+class CallForwardSelectiveCallsToNumbersObject(ApiModel):
+    #: AutoCalls To phone number. Either phone number or extension should be present as mandatory.
+    #: example: +19705550028
+    phone_number: Optional[str] = None
+    #: Calls To extension.  Either `phoneNumber` or `extension` is mandatory.
+    #: example: 1001
+    extension: Optional[datetime] = None
+    #: Calls to type options.
+    #: example: PRIMARY
+    type: Optional[CallForwardSelectiveCallsToNumbersObjectType] = None
+
+
+class CallForwardSelectiveCallsToObject(ApiModel):
+    #: Array of numbers to be matched against the calling destination number.
+    numbers: Optional[list[CallForwardSelectiveCallsToNumbersObject]] = None
+
+
+class CallForwardSelectiveForwardToObjectSelection(str, Enum):
+    #: When the rule matches, forward to the destination for the auto attendant.
+    forward_to_default_number = 'FORWARD_TO_DEFAULT_NUMBER'
+    #: When the rule matches, forward to the destination for this rule.
+    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
+    #: When the rule matches, do not forward to another number.
+    do_not_forward = 'DO_NOT_FORWARD'
+
+
+class CallForwardSelectiveForwardToObject(ApiModel):
+    #: Phone number used if selection is `FORWARD_TO_SPECIFIED_NUMBER`.
+    #: example: +19705550028
+    phone_number: Optional[str] = None
+    #: Controls what happens when the rule matches.
+    #: example: FORWARD_TO_DEFAULT_NUMBER
+    selection: Optional[CallForwardSelectiveForwardToObjectSelection] = None
+
+
+class GetAutoAttendantCallForwardSelectiveRuleObject(ApiModel):
+    #: Unique ID for the rule.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfRk9SV0FSRElOR19TRUxFQ1RJVkVfUlVMRS9WR1Z6ZENCU2RXeGw
+    id: Optional[str] = None
+    #: Unique name for the selective rule in the auto attendant.
+    #: example: Test Rule
+    name: Optional[str] = None
+    #: Reflects if rule is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+    #: example: AUTOATTENDANT-BUSINESS-HOURS
+    business_schedule: Optional[str] = None
+    #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+    #: example: AUTOATTENDANT-HOLIDAY
+    holiday_schedule: Optional[str] = None
+    #: Controls what happens when the rule matches including the destination number for the call forwarding.
+    forward_to: Optional[CallForwardSelectiveForwardToObject] = None
+    #: Settings related to the rule matching based on incoming caller ID.
+    calls_from: Optional[CallForwardSelectiveCallsFromObject] = None
+    #: Settings related to the rule matching based on the destination number.
+    calls_to: Optional[CallForwardSelectiveCallsToObject] = None
+
+
+class GetAutoAttendantCallForwardSettingsObject(ApiModel):
+    #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
+    call_forwarding: Optional[AutoAttendantCallForwardSettingsDetailsObject] = None
+
+
+class GetAutoAttendantObjectExtensionDialing(str, Enum):
+    enterprise = 'ENTERPRISE'
+    group = 'GROUP'
+
+
+class HoursMenuGetObjectGreeting(str, Enum):
+    default = 'DEFAULT'
+    custom = 'CUSTOM'
+
+
+class KeyConfigurationsGetObjectKey(str, Enum):
+    _0 = '0'
+    _1 = '1'
+    _2 = '2'
+    _3 = '3'
+    _4 = '4'
+    _5 = '5'
+    _6 = '6'
+    _7 = '7'
+    _8 = '8'
+    _9 = '9'
+    none_ = 'none'
+    _ = '#'
+
+
+class KeyConfigurationsGetObjectAction(str, Enum):
+    #: Plays a recorded message and then returns to the current Auto Attendant menu.
+    play_announcement = 'PLAY_ANNOUNCEMENT'
+    #: Transfers the call to the specified number, without playing a transfer prompt.
+    transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
+    #: Plays the message and then transfers the call to the specified number.
+    transfer_without_prompt = 'TRANSFER_WITHOUT_PROMPT'
+    #: Plays the message and then transfers the call to the specified operator number.
+    transfer_to_operator = 'TRANSFER_TO_OPERATOR'
+    #: Prompts the user for an extension, and transfers the user to voice mailbox of the dialed extension.
+    transfer_to_mailbox = 'TRANSFER_TO_MAILBOX'
+    #: Brings the user into the automated name directory.
+    name_dialing = 'NAME_DIALING'
+    #: Prompts the user for an extension, and transfers the user.
+    extension_dialing = 'EXTENSION_DIALING'
+    #: Replays the Auto Attendant greeting.
+    repeat_menu = 'REPEAT_MENU'
+    #: Terminates the call.
+    exit = 'EXIT'
+    #: Return back to the previous menu.
+    return_to_previous_menu = 'RETURN_TO_PREVIOUS_MENU'
+
+
+class KeyConfigurationsGetObject(ApiModel):
+    #: Key assigned to specific menu configuration.
+    #: example: 0
+    key: Optional[KeyConfigurationsGetObjectKey] = None
+    #: Action assigned to specific menu key configuration.
+    #: example: EXIT
+    action: Optional[KeyConfigurationsGetObjectAction] = None
+    #: The description of each menu key.
+    #: example: Exit the menu
+    description: Optional[str] = None
+    #: Value based on actions.
+    #: example: +19705550006
+    value: Optional[str] = None
+    #: Pre-configured announcement audio files when PLAY_ANNOUNCEMENT is set.
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
+
+
+class HoursMenuGetObject(ApiModel):
+    #: Greeting type defined for the auto attendant.
+    #: example: DEFAULT
+    greeting: Optional[HoursMenuGetObjectGreeting] = None
+    #: Flag to indicate if auto attendant extension is enabled or not.
+    #: example: True
+    extension_enabled: Optional[bool] = None
+    #: Announcement Audio File details.
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
+    #: Key configurations defined for the auto attendant.
+    key_configurations: Optional[KeyConfigurationsGetObject] = None
+
+
+class GetAutoAttendantObject(ApiModel):
+    #: A unique identifier for the auto attendant.
+    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
+    id: Optional[str] = None
+    #: Unique name for the auto attendant.
+    #: example: Main Line AA - Test
+    name: Optional[str] = None
+    #: Flag to indicate if auto attendant number is enabled or not.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
+    #: example: +19705550028
+    phone_number: Optional[str] = None
+    #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
+    #: example: 1001
+    extension: Optional[datetime] = None
+    #: Flag to indicate if auto attendant number is toll-free number.
+    toll_free_number: Optional[bool] = None
+    #: First name defined for an auto attendant.
+    #: example: Main Line AA
+    first_name: Optional[str] = None
+    #: Last name defined for an auto attendant.
+    #: example: Test
+    last_name: Optional[str] = None
+    #: Alternate numbers defined for the auto attendant.
+    alternate_numbers: Optional[list[AlternateNumbersObject]] = None
+    #: Language for the auto attendant.
+    #: example: English
+    language: Optional[str] = None
+    #: Language code for the auto attendant.
+    #: example: en_us
+    language_code: Optional[str] = None
+    #: Business hours defined for the auto attendant.
+    #: example: AUTOATTENDANT-BUSINESS-HOURS
+    business_schedule: Optional[str] = None
+    #: Holiday defined for the auto attendant.
+    #: example: AUTOATTENDANT-HOLIDAY
+    holiday_schedule: Optional[str] = None
+    #: Extension dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+    #: example: ENTERPRISE
+    extension_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    #: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+    #: example: ENTERPRISE
+    name_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    #: Time zone defined for the auto attendant.
+    #: example: America/Los_Angeles
+    time_zone: Optional[str] = None
+    #: Business hours menu defined for the auto attendant.
+    business_hours_menu: Optional[HoursMenuGetObject] = None
+    #: After hours menu defined for the auto attendant.
+    after_hours_menu: Optional[HoursMenuGetObject] = None
+
+
+class ListAutoAttendantObject(ApiModel):
+    #: A unique identifier for the auto attendant.
+    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
+    id: Optional[str] = None
+    #: Unique name for the auto attendant.
+    #: example: Main Line AA - Test
+    name: Optional[str] = None
+    #: Name of location for auto attendant.
+    #: example: Houston
+    location_name: Optional[str] = None
+    #: ID of location for auto attendant.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzI2NDE1MA
+    location_id: Optional[str] = None
+    #: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
+    #: example: +19705550028
+    phone_number: Optional[str] = None
+    #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
+    #: example: 1001
+    extension: Optional[datetime] = None
+    #: Flag to indicate if auto attendant number is toll-free number.
+    toll_free_number: Optional[bool] = None
+
+
+class ModifyAutoAttendantCallForwardSelectiveRuleObject(ApiModel):
+    #: Unique name for the selective rule in the auto attendant.
+    #: example: Test Rule New Name
+    name: Optional[str] = None
+    #: Reflects if rule is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+    #: example: AUTOATTENDANT-BUSINESS-HOURS
+    business_schedule: Optional[str] = None
+    #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+    #: example: AUTOATTENDANT-HOLIDAY
+    holiday_schedule: Optional[str] = None
+    #: Controls what happens when the rule matches including the destination number for the call forwarding.
+    forward_to: Optional[CallForwardSelectiveForwardToObject] = None
+    #: Settings related the rule matching based on incoming caller ID.
+    calls_from: Optional[CallForwardSelectiveCallsFromObject] = None
+    #: Settings related to the rule matching based on the destination number.
+    calls_to: Optional[CallForwardSelectiveCallsToObject] = None
+
+
+class ModifyAutoAttendantCallForwardSettingsObject(ApiModel):
+    #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
+    call_forwarding: Optional[AutoAttendantCallForwardSettingsModifyDetailsObject] = None
+
+
+class ModifyAutoAttendantObject(ApiModel):
+    #: Unique name for the auto attendant.
+    #: example: Main Line IA - Test
+    name: Optional[str] = None
+    #: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
+    #: example: +19705550028
+    phone_number: Optional[str] = None
+    #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
+    #: example: 1001
+    extension: Optional[datetime] = None
+    #: First name defined for an auto attendant.
+    #: example: Main Line AA
+    first_name: Optional[str] = None
+    #: Last name defined for an auto attendant.
+    #: example: Test
+    last_name: Optional[str] = None
+    #: Alternate numbers defined for the auto attendant.
+    alternate_numbers: Optional[list[AlternateNumbersObject]] = None
+    #: Language code for the auto attendant.
+    #: example: en_us
+    language_code: Optional[str] = None
+    #: Business hours defined for the auto attendant.
+    #: example: AUTOATTENDANT-BUSINESS-HOURS
+    business_schedule: Optional[str] = None
+    #: Holiday defined for the auto attendant.
+    #: example: AUTOATTENDANT-HOLIDAY
+    holiday_schedule: Optional[str] = None
+    #: Extension dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+    #: example: ENTERPRISE
+    extension_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    #: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+    #: example: ENTERPRISE
+    name_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    #: Time zone defined for the auto attendant.
+    #: example: America/Los_Angeles
+    time_zone: Optional[str] = None
+    #: Business hours menu defined for the auto attendant.
+    business_hours_menu: Optional[HoursMenuGetObject] = None
+    #: After hours menu defined for the auto attendant.
+    after_hours_menu: Optional[HoursMenuGetObject] = None
+
+
+class ReadTheListOfAutoAttendantsResponse(ApiModel):
+    #: Array of auto attendants.
+    auto_attendants: Optional[list[ListAutoAttendantObject]] = None
+
+
+class CreateAnAutoAttendantResponse(ApiModel):
+    #: ID of the newly created auto attendant.
+    id: Optional[str] = None
+
+
+class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
+    """
+    Features:  Auto Attendant
+    
+    Not supported for Webex for Government (FedRAMP)
+    
+    
+    
+    Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
+    organization.
+    
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+    
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+    
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+
+    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, start: int = None,
+                                         name: str = None, phone_number: str = None,
+                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
+        """
+        Read the List of Auto Attendants
+
+        List all Auto Attendants for the organization.
+
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List auto attendants for this organization.
+        :type org_id: str
+        :param location_id: Return the list of auto attendants for this location.
+        :type location_id: str
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return auto attendants with the matching name.
+        :type name: str
+        :param phone_number: Only return auto attendants with the matching phone number.
+        :type phone_number: str
+        :return: Generator yielding :class:`ListAutoAttendantObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('autoAttendants')
+        return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='autoAttendants', params=params)
+
+    def get_details_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                          org_id: str = None) -> GetAutoAttendantObject:
+        """
+        Get Details for an Auto Attendant
+
+        Retrieve an Auto Attendant details.
+
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+
+        Retrieving an auto attendant details requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve an auto attendant details in this location.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve auto attendant details from this organization.
+        :type org_id: str
+        :rtype: :class:`GetAutoAttendantObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
+        data = super().get(url, params=params)
+        r = GetAutoAttendantObject.model_validate(data)
+        return r
+
+    def create_an_auto_attendant(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
+                                 first_name: str, last_name: str, alternate_numbers: list[AlternateNumbersObject],
+                                 language_code: str, business_schedule: str, holiday_schedule: str,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
+                                 business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
+                                 org_id: str = None) -> str:
+        """
+        Create an Auto Attendant
+
+        Create new Auto Attendant for the given location.
+
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+
+        Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Create the auto attendant for this location.
+        :type location_id: str
+        :param name: Unique name for the auto attendant.
+        :type name: str
+        :param phone_number: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
+        :type phone_number: str
+        :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
+        :type extension: Union[str, datetime]
+        :param first_name: First name defined for an auto attendant.
+        :type first_name: str
+        :param last_name: Last name defined for an auto attendant.
+        :type last_name: str
+        :param alternate_numbers: Alternate numbers defined for the auto attendant.
+        :type alternate_numbers: list[AlternateNumbersObject]
+        :param language_code: Language code for the auto attendant.
+        :type language_code: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
+        :param holiday_schedule: Holiday defined for the auto attendant.
+        :type holiday_schedule: str
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
+            `ENTERPRISE`.
+        :type extension_dialing: GetAutoAttendantObjectExtensionDialing
+        :param name_dialing: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+        :type name_dialing: GetAutoAttendantObjectExtensionDialing
+        :param time_zone: Time zone defined for the auto attendant.
+        :type time_zone: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuGetObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuGetObject
+        :param org_id: Create the auto attendant for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['extensionDialing'] = enum_str(extension_dialing)
+        body['nameDialing'] = enum_str(name_dialing)
+        body['timeZone'] = time_zone
+        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+        url = self.ep(f'locations/{location_id}/autoAttendants')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
+                                 extension: Union[str, datetime], first_name: str, last_name: str,
+                                 alternate_numbers: list[AlternateNumbersObject], language_code: str,
+                                 business_schedule: str, holiday_schedule: str,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
+                                 business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
+                                 org_id: str = None):
+        """
+        Update an Auto Attendant
+
+        Update the designated Auto Attendant.
+
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+
+        Updating an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Update an auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param name: Unique name for the auto attendant.
+        :type name: str
+        :param phone_number: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
+        :type phone_number: str
+        :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
+        :type extension: Union[str, datetime]
+        :param first_name: First name defined for an auto attendant.
+        :type first_name: str
+        :param last_name: Last name defined for an auto attendant.
+        :type last_name: str
+        :param alternate_numbers: Alternate numbers defined for the auto attendant.
+        :type alternate_numbers: list[AlternateNumbersObject]
+        :param language_code: Language code for the auto attendant.
+        :type language_code: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
+        :param holiday_schedule: Holiday defined for the auto attendant.
+        :type holiday_schedule: str
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
+            `ENTERPRISE`.
+        :type extension_dialing: GetAutoAttendantObjectExtensionDialing
+        :param name_dialing: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
+        :type name_dialing: GetAutoAttendantObjectExtensionDialing
+        :param time_zone: Time zone defined for the auto attendant.
+        :type time_zone: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuGetObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuGetObject
+        :param org_id: Update an auto attendant from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['extensionDialing'] = enum_str(extension_dialing)
+        body['nameDialing'] = enum_str(name_dialing)
+        body['timeZone'] = time_zone
+        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
+        super().put(url, params=params, json=body)
+
+    def delete_an_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
+        """
+        Delete an Auto Attendant
+
+        Delete the designated Auto Attendant.
+
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+
+        Deleting an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location from which to delete an auto attendant.
+        :type location_id: str
+        :param auto_attendant_id: Delete the auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param org_id: Delete the auto attendant from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
+        super().delete(url, params=params)
+
+    def get_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                           org_id: str = None) -> AutoAttendantCallForwardSettingsDetailsObject:
+        """
+        Get Call Forwarding Settings for an Auto Attendant
+
+        Retrieve Call Forwarding settings for the designated Auto Attendant including the list of call forwarding
+        rules.
+
+        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve the call forwarding settings for this auto attendant.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve auto attendant forwarding settings from this organization.
+        :type org_id: str
+        :rtype: AutoAttendantCallForwardSettingsDetailsObject
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
+        data = super().get(url, params=params)
+        r = AutoAttendantCallForwardSettingsDetailsObject.model_validate(data['callForwarding'])
+        return r
+
+    def update_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                              call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject,
+                                                              org_id: str = None):
+        """
+        Update Call Forwarding Settings for an Auto Attendant
+
+        Update Call Forwarding settings for the designated Auto Attendant.
+
+        Updating call forwarding settings for an auto attendant requires a full administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Update call forwarding settings for this auto attendant.
+        :type auto_attendant_id: str
+        :param call_forwarding: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
+        :type call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject
+        :param org_id: Update auto attendant forwarding settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['callForwarding'] = loads(call_forwarding.model_dump_json())
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
+        super().put(url, params=params, json=body)
+
+    def create_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                      name: str, enabled: bool,
+                                                                      business_schedule: str, holiday_schedule: str,
+                                                                      forward_to: CallForwardSelectiveForwardToObject,
+                                                                      calls_from: CallForwardSelectiveCallsFromObject,
+                                                                      calls_to: CallForwardSelectiveCallsToObject,
+                                                                      org_id: str = None) -> str:
+        """
+        Create a Selective Call Forwarding Rule for an Auto Attendant
+
+        Create a Selective Call Forwarding Rule for the designated Auto Attendant.
+
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+
+        Creating a selective call forwarding rule for an auto attendant requires a full administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which the auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Create the rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param name: Unique name for the selective rule in the auto attendant.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CallForwardSelectiveForwardToObject
+        :param calls_from: Settings related to the rule matching based on incoming caller ID.
+        :type calls_from: CallForwardSelectiveCallsFromObject
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CallForwardSelectiveCallsToObject
+        :param org_id: Create the auto attendant rule for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def get_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                 rule_id: str,
+                                                                 org_id: str = None) -> GetAutoAttendantCallForwardSelectiveRuleObject:
+        """
+        Get Selective Call Forwarding Rule for an Auto Attendant
+
+        Retrieve a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
+
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+
+        Retrieving a selective call forwarding rule's settings for an auto attendant requires a full or read-only
+        administrator or location administrator
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve settings for a rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param rule_id: Auto attendant rule you are retrieving settings for.
+        :type rule_id: str
+        :param org_id: Retrieve auto attendant rule settings for this organization.
+        :type org_id: str
+        :rtype: :class:`GetAutoAttendantCallForwardSelectiveRuleObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
+        data = super().get(url, params=params)
+        r = GetAutoAttendantCallForwardSelectiveRuleObject.model_validate(data)
+        return r
+
+    def update_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                    rule_id: str, name: str, enabled: bool,
+                                                                    business_schedule: str, holiday_schedule: str,
+                                                                    forward_to: CallForwardSelectiveForwardToObject,
+                                                                    calls_from: CallForwardSelectiveCallsFromObject,
+                                                                    calls_to: CallForwardSelectiveCallsToObject,
+                                                                    org_id: str = None) -> str:
+        """
+        Update Selective Call Forwarding Rule for an Auto Attendant
+
+        Update a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
+
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+
+        Updating a selective call forwarding rule's settings for an auto attendant requires a full administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Update settings for a rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param rule_id: Auto attendant rule you are updating settings for.
+        :type rule_id: str
+        :param name: Unique name for the selective rule in the auto attendant.
+        :type name: str
+        :param enabled: Reflects if rule is enabled.
+        :type enabled: bool
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type business_schedule: str
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
+        :type holiday_schedule: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CallForwardSelectiveForwardToObject
+        :param calls_from: Settings related the rule matching based on incoming caller ID.
+        :type calls_from: CallForwardSelectiveCallsFromObject
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CallForwardSelectiveCallsToObject
+        :param org_id: Update auto attendant rule settings for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
+        data = super().put(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def delete_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                                                                      rule_id: str, org_id: str = None):
+        """
+        Delete a Selective Call Forwarding Rule for an Auto Attendant
+
+        Delete a Selective Call Forwarding Rule for the designated Auto Attendant.
+
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+
+        Deleting a selective call forwarding rule for an auto attendant requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Delete the rule for this auto attendant.
+        :type auto_attendant_id: str
+        :param rule_id: Auto attendant rule you are deleting.
+        :type rule_id: str
+        :param org_id: Delete auto attendant rule from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
+        super().delete(url, params=params)
