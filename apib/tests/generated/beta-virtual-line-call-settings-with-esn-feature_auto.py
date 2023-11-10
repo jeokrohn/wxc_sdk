@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -106,20 +107,20 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
     `spark-admin:telephony_config_read.
     """
 
-    def read_the_list_of_virtual_lines(self, org_id: str = None, location_id: list[str] = None, max_: int = None,
-                                       start: int = None, id: list[str] = None, owner_name: list[str] = None,
+    def read_the_list_of_virtual_lines(self, org_id: str = None, location_id: list[str] = None, start: int = None,
+                                       id: list[str] = None, owner_name: list[str] = None,
                                        phone_number: list[str] = None, location_name: list[str] = None,
                                        order: list[str] = None, has_device_assigned: bool = None,
-                                       has_extension_assigned: bool = None,
-                                       has_dn_assigned: bool = None) -> list[ListVirtualLineObject]:
+                                       has_extension_assigned: bool = None, has_dn_assigned: bool = None,
+                                       **params) -> Generator[ListVirtualLineObject, None, None]:
         """
         Read the List of Virtual Lines
 
         List all Virtual Lines for the organization.
-        
+
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -128,8 +129,6 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
         :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
             `?locationId=locId1&locationId=locId2`.
         :type location_id: list[str]
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values -
@@ -157,15 +156,12 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
             a Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
             assigned.
         :type has_dn_assigned: bool
-        :rtype: list[ListVirtualLineObject]
+        :return: Generator yielding :class:`ListVirtualLineObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = ','.join(location_id)
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if id is not None:
@@ -185,6 +181,4 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
         if has_dn_assigned is not None:
             params['hasDnAssigned'] = str(has_dn_assigned).lower()
         url = self.ep()
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=ListVirtualLineObject, item_key='virtualLines', params=params)

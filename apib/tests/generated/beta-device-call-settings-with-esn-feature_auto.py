@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -168,11 +169,11 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         Get Device Members
 
         Get the list of all the members of the device including primary and secondary users.
-        
+
         A device member can be either a person or a workspace. An admin can access the list of member details, modify
         member details and
         search for available members on a device.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -186,21 +187,22 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'members')
-        ...
+        data = super().get(url, params=params)
+        r = GetMemberResponse.model_validate(data)
+        return r
 
-
-    def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max_: int = None,
-                       member_name: str = None, phone_number: str = None, extension: Union[str,
-                       datetime] = None) -> list[SearchMemberObject]:
+    def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None,
+                       member_name: str = None, phone_number: str = None, extension: Union[str, datetime] = None,
+                       **params) -> Generator[SearchMemberObject, None, None]:
         """
         Search Members
 
         Search members that can be assigned to the device.
-        
+
         A device member can be either a person or a workspace. A admin can access the list of member details, modify
         member details and
         search for available members on a device.
-        
+
         This requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -212,24 +214,19 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         :type org_id: str
         :param start: Specifies the offset from the first result that you want to fetch.
         :type start: int
-        :param max_: Specifies the maximum number of records that you want to fetch.
-        :type max_: int
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
         :type phone_number: str
         :param extension: Search (Contains) based on extension.
         :type extension: Union[str, datetime]
-        :rtype: list[SearchMemberObject]
+        :return: Generator yielding :class:`SearchMemberObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         params['locationId'] = location_id
         if start is not None:
             params['start'] = start
-        if max_ is not None:
-            params['max'] = max_
         if member_name is not None:
             params['memberName'] = member_name
         if phone_number is not None:
@@ -240,6 +237,4 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
             extension = dt_iso_str(extension)
             params['extension'] = extension
         url = self.ep(f'availableMembers')
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=SearchMemberObject, item_key='members', params=params)

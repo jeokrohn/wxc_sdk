@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -105,16 +106,21 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         :type inputs: SubmitCardActionInputs
         :rtype: :class:`AttachmentActivity`
         """
+        body = dict()
+        body['type'] = enum_str(type)
+        body['messageId'] = message_id
+        body['inputs'] = loads(inputs.model_dump_json())
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = AttachmentActivity.model_validate(data)
+        return r
 
     def get_attachment_action_details(self, id: str) -> AttachmentActivity:
         """
         Get Attachment Action Details
 
         Shows details for a attachment action, by ID.
-        
+
         Specify the attachment action ID in the `id` URI parameter.
 
         :param id: A unique identifier for the attachment action.
@@ -122,6 +128,6 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         :rtype: :class:`AttachmentActivity`
         """
         url = self.ep(f'{id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = AttachmentActivity.model_validate(data)
+        return r

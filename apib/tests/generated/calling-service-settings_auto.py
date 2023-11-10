@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -158,25 +159,26 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         Read the List of Announcement Languages
 
         List all languages supported by Webex Calling for announcements and voice prompts.
-        
+
         Retrieving announcement languages requires a full or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
 
         :rtype: list[Language]
         """
         url = self.ep('announcementLanguages')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[Language]).validate_python(data['languages'])
+        return r
 
     def get_voicemail_settings(self, org_id: str = None) -> GetVoicemailSettingsObject:
         """
         Get Voicemail Settings
 
         Retrieve the organization's voicemail settings.
-        
+
         Organizational voicemail settings determines what voicemail features a person can configure and automatic
         message expiration.
-        
+
         Retrieving organization's voicemail settings requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -188,8 +190,9 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('voicemail/settings')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetVoicemailSettingsObject.model_validate(data)
+        return r
 
     def update_voicemail_settings(self, message_expiry_enabled: bool, number_of_days_for_message_expiry: int,
                                   strict_deletion_enabled: bool, voice_message_forwarding_enabled: bool,
@@ -198,10 +201,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         Update Voicemail Settings
 
         Update the organization's voicemail settings.
-        
+
         Organizational voicemail settings determines what voicemail features a person can configure and automatic
         message expiration.
-        
+
         Updating an organization's voicemail settings requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -223,19 +226,23 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['messageExpiryEnabled'] = message_expiry_enabled
+        body['numberOfDaysForMessageExpiry'] = number_of_days_for_message_expiry
+        body['strictDeletionEnabled'] = strict_deletion_enabled
+        body['voiceMessageForwardingEnabled'] = voice_message_forwarding_enabled
         url = self.ep('voicemail/settings')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_voicemail_rules(self, org_id: str = None) -> GetVoicemailRulesObject:
         """
         Get Voicemail Rules
 
         Retrieve the organization's voicemail rules.
-        
+
         Organizational voicemail rules specify the default passcode requirements. They are provided for informational
         purposes only and cannot be modified.
-        
+
         Retrieving the organization's voicemail rules requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -247,8 +254,9 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('voicemail/rules')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetVoicemailRulesObject.model_validate(data)
+        return r
 
     def update_voicemail_rules(self, default_voicemail_pin_enabled: bool, default_voicemail_pin: str,
                                expire_passcode: GetVoicemailRulesObjectExpirePasscode,
@@ -259,13 +267,13 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         Update Voicemail Rules
 
         Update the organization's default voicemail passcode and/or rules.
-        
+
         Organizational voicemail rules specify the default passcode requirements.
-        
+
         If you choose to set a default passcode for new people added to your organization, communicate to your people
         what that passcode is, and that it must be reset before they can access their voicemail. If this feature is
         not turned on, each new person must initially set their own passcode.
-        
+
         Updating an organization's voicemail passcode and/or rules requires a full administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
 
@@ -286,7 +294,11 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['defaultVoicemailPinEnabled'] = default_voicemail_pin_enabled
+        body['defaultVoicemailPin'] = default_voicemail_pin
+        body['expirePasscode'] = loads(expire_passcode.model_dump_json())
+        body['changePasscode'] = loads(change_passcode.model_dump_json())
+        body['blockPreviousPasscodes'] = loads(block_previous_passcodes.model_dump_json())
         url = self.ep('voicemail/rules')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

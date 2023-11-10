@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -72,9 +73,9 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         Get all customers managed by a partner admin
 
         Get all customers managed by given partner admin, in the `managedBy` request parameter.
-        
+
         This API can be used by partner full admin and partner readonly admin.
-        
+
         Specify the `personId` in the `managedBy` parameter in the URI.
 
         :param managed_by: List customer orgs associated with this person ID.
@@ -84,17 +85,18 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         params = {}
         params['managedBy'] = managed_by
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[IdentityManagedOrg]).validate_python(data['items'])
+        return r
 
     def get_all_partner_admins_assigned_to_a_customer(self, org_id: str) -> list[PartnerAdminUser]:
         """
         Get all partner admins assigned to a customer
 
         For a given customer, get all the partner admins with their role details.
-        
+
         This API can be used by partner full admin.
-        
+
         Specify the `orgId` in the path parameter.
 
         :param org_id: List partner admins associated with this customer org ID.
@@ -102,8 +104,9 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :rtype: list[PartnerAdminUser]
         """
         url = self.ep(f'{org_id}/partnerAdmins')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[PartnerAdminUser]).validate_python(data['items'])
+        return r
 
     def assign_partner_admin_to_a_customer(self, org_id: str, person_id: str):
         """
@@ -113,9 +116,9 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         administrator role.
         Other partner roles, such as partner full administrator are not applicable for this API, since this role
         manages all customer organizations.
-        
+
         This API can be used by partner full admin.
-        
+
         Specify the `orgId` and the `personId` in the path param.
 
         :param org_id: The ID of the customer organization.
@@ -125,8 +128,7 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :rtype: None
         """
         url = self.ep(f'{org_id}/partnerAdmin/{person_id}/assign')
-        ...
-
+        super().post(url)
 
     def unassign_partner_admin_from_a_customer(self, org_id: str, person_id: str):
         """
@@ -135,9 +137,9 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         Unassign a specific partner admin from a customer organization. The partner admin is a user that has the
         partner administrator role.
         Unassigning a customer organization from a partner admin does not remove the role from the user.
-        
+
         This API can be used by partner full admin.
-        
+
         Specify the `orgId` and the `personId` in the path param.
 
         :param org_id: The ID of the customer organization.
@@ -147,8 +149,7 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :rtype: None
         """
         url = self.ep(f'{org_id}/partnerAdmin/{person_id}/unassign')
-        ...
-
+        super().delete(url)
 
     def revoke_all_partner_admin_roles_for_a_given_person_id(self, person_id: str):
         """
@@ -158,9 +159,9 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         customer organizations.
         This action does not grant or revoke Control Hub administrator roles (e.g. full administrator, user and device
         administrator, etc.).
-        
+
         This API can be used by partner full admin.
-        
+
         Specify the `personId` in the path param.
 
         :param person_id: ID of the user whose partner roles needs to be revoked.
@@ -168,6 +169,4 @@ class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):
         :rtype: None
         """
         url = self.ep(f'partnerAdmin/{person_id}')
-        ...
-
-    ...
+        super().delete(url)

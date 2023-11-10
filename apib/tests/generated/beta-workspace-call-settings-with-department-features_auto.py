@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -66,10 +67,10 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         Read Department of a Workspace
 
         Retrieve a workspace's department membership.
-        
+
         An admin can organize people, workspaces, and features by placing them into departments. Departments can span
         locations.
-        
+
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -83,8 +84,9 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetPersonOrWorkspaceDetailsObjectDepartment.model_validate(data['department'])
+        return r
 
     def update_department_of_a_workspace(self, workspace_id: str,
                                          department: PutPersonOrWorkspaceDetailsObjectDepartment, org_id: str = None):
@@ -92,10 +94,10 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         Update Department of a Workspace
 
         Modify a workspace's department membership. A department can only be assigned to WxC workspace.
-        
+
         An admin can organize people, workspaces, and features by placing them into departments. Departments can span
         locations.
-        
+
         This API requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -110,7 +112,7 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['department'] = loads(department.model_dump_json())
         url = self.ep(f'')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

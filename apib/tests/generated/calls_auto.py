@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -68,16 +69,16 @@ class CallsApi(ApiChild, base='calls'):
     """
 
     def list_calls(self, status: CallStatus, room_id: str = None, from_: Union[str, datetime] = None, to_: Union[str,
-                   datetime] = None, max_: int = None) -> list[Call]:
+                   datetime] = None, **params) -> Generator[Call, None, None]:
         """
         List Calls
 
         Lists all calls that the authenticated user either initiated or was invited to.
-        
+
         To list currently active calls, use `connected` for the `status` query parameter; for call history, use
         `disconnected`. Use the `from` and `to` parameters to specify a time period. By default, call information is
         kept for 90 days.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -89,11 +90,8 @@ class CallsApi(ApiChild, base='calls'):
         :type from_: Union[str, datetime]
         :param to_: Limit to calls that ended before the exclusive end date, in ISO8601 format.
         :type to_: Union[str, datetime]
-        :param max_: Limit the maximum number of calls in the response.
-        :type max_: int
-        :rtype: list[Call]
+        :return: Generator yielding :class:`Call` instances
         """
-        params = {}
         params['status'] = status
         if room_id is not None:
             params['roomId'] = room_id
@@ -107,18 +105,15 @@ class CallsApi(ApiChild, base='calls'):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Call, item_key='items', params=params)
 
     def get_call_details(self, call_id: str) -> Call:
         """
         Get Call Details
 
         Shows details for a call, by call ID.
-        
+
         Specify the call ID in the `callId` parameter in the URI.
 
         :param call_id: The unique identifier for the call.
@@ -126,6 +121,6 @@ class CallsApi(ApiChild, base='calls'):
         :rtype: :class:`Call`
         """
         url = self.ep(f'{call_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = Call.model_validate(data)
+        return r

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -146,20 +147,20 @@ class MeetingTranscriptsApi(ApiChild, base=''):
 
     def list_meeting_transcripts(self, meeting_id: str = None, host_email: str = None, site_url: str = None,
                                  from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                                 max_: int = None) -> list[TranscriptObject]:
+                                 **params) -> Generator[TranscriptObject, None, None]:
         """
         List Meeting Transcripts
 
         Lists available transcripts of an ended `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_.
-        
+
         Use this operation to list transcripts of an ended `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ when they are ready. Please note that only
         **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled
         meetings** and `in-progress` **meeting instances** are not supported.
-        
+
         #### Request Header
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.
@@ -189,12 +190,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
             `to` cannot be before `from`.
         :type to_: Union[str, datetime]
-        :param max_: Maximum number of transcripts to return in a single page. `max` must be equal to or greater than
-            `1` and equal to or less than `100`.
-        :type max_: int
-        :rtype: list[TranscriptObject]
+        :return: Generator yielding :class:`TranscriptObject` instances
         """
-        params = {}
         if meeting_id is not None:
             params['meetingId'] = meeting_id
         if host_email is not None:
@@ -211,25 +208,22 @@ class MeetingTranscriptsApi(ApiChild, base=''):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        if max_ is not None:
-            params['max'] = max_
-        url = self.ep('eetingTranscripts')
-        ...
-
+        url = self.ep('meetingTranscripts')
+        return self.session.follow_pagination(url=url, model=TranscriptObject, item_key='items', params=params)
 
     def list_meeting_transcripts_for_compliance_officer(self, site_url: str, from_: Union[str, datetime] = None,
                                                         to_: Union[str, datetime] = None,
-                                                        max_: int = None) -> list[TranscriptObject]:
+                                                        **params) -> Generator[TranscriptObject, None, None]:
         """
         List Meeting Transcripts For Compliance Officer
 
         Lists available or deleted transcripts of an ended `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for a specific site.
-        
+
         The returned list is sorted in descending order by the date and time that the transcript was created.
-        
+
         #### Request Header
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.
@@ -244,12 +238,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
             `to` cannot be before `from`.
         :type to_: Union[str, datetime]
-        :param max_: Maximum number of transcripts to return in a single page. `max` must be equal to or greater than
-            `1` and equal to or less than `100`.
-        :type max_: int
-        :rtype: list[TranscriptObject]
+        :return: Generator yielding :class:`TranscriptObject` instances
         """
-        params = {}
         params['siteUrl'] = site_url
         if from_ is not None:
             if isinstance(from_, str):
@@ -261,11 +251,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        if max_ is not None:
-            params['max'] = max_
-        url = self.ep('dmin/meetingTranscripts')
-        ...
-
+        url = self.ep('admin/meetingTranscripts')
+        return self.session.follow_pagination(url=url, model=TranscriptObject, item_key='items', params=params)
 
     def download_a_meeting_transcript(self, transcript_id: str, format: DownloadAMeetingTranscriptFormat = None,
                                       host_email: str = None):
@@ -289,30 +276,24 @@ class MeetingTranscriptsApi(ApiChild, base=''):
             params['format'] = format
         if host_email is not None:
             params['hostEmail'] = host_email
-        url = self.ep(f'eetingTranscripts/{transcript_id}/download')
-        ...
+        url = self.ep(f'meetingTranscripts/{transcript_id}/download')
+        super().get(url, params=params)
 
-
-    def list_snippets_of_a_meeting_transcript(self, transcript_id: str, max_: int = None) -> list[SnippetObject]:
+    def list_snippets_of_a_meeting_transcript(self, transcript_id: str,
+                                              **params) -> Generator[SnippetObject, None, None]:
         """
         List Snippets of a Meeting Transcript
 
         Lists snippets of a meeting transcript specified by `transcriptId`.
-        
+
         Use this operation to list snippets of a meeting transcript when they are ready.
 
         :param transcript_id: Unique identifier for the meeting transcript to which the snippets belong.
         :type transcript_id: str
-        :param max_: Maximum snippet items to be returned for this query, to support pagination.
-        :type max_: int
-        :rtype: list[SnippetObject]
+        :return: Generator yielding :class:`SnippetObject` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
-        url = self.ep(f'eetingTranscripts/{transcript_id}/snippets')
-        ...
-
+        url = self.ep(f'meetingTranscripts/{transcript_id}/snippets')
+        return self.session.follow_pagination(url=url, model=SnippetObject, item_key='items', params=params)
 
     def get_a_transcript_snippet(self, transcript_id: str, snippet_id: str) -> SnippetObject:
         """
@@ -327,9 +308,10 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type snippet_id: str
         :rtype: :class:`SnippetObject`
         """
-        url = self.ep(f'eetingTranscripts/{transcript_id}/snippets/{snippet_id}')
-        ...
-
+        url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
+        data = super().get(url)
+        r = SnippetObject.model_validate(data)
+        return r
 
     def update_a_transcript_snippet(self, transcript_id: str, snippet_id: str, reason: str,
                                     text: str) -> SnippetObject:
@@ -349,9 +331,13 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type text: str
         :rtype: :class:`SnippetObject`
         """
-        url = self.ep(f'eetingTranscripts/{transcript_id}/snippets/{snippet_id}')
-        ...
-
+        body = dict()
+        body['reason'] = reason
+        body['text'] = text
+        url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
+        data = super().put(url, json=body)
+        r = SnippetObject.model_validate(data)
+        return r
 
     def delete_a_transcript(self, transcript_id: str, reason: str, comment: str):
         """
@@ -370,7 +356,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type comment: str
         :rtype: None
         """
-        url = self.ep(f'eetingTranscripts/{transcript_id}')
-        ...
-
-    ...
+        body = dict()
+        body['reason'] = reason
+        body['comment'] = comment
+        url = self.ep(f'meetingTranscripts/{transcript_id}')
+        super().delete(url, json=body)

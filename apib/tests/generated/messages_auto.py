@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -252,14 +253,14 @@ class MessagesApi(ApiChild, base='messages'):
     """
 
     def list_messages(self, room_id: str, parent_id: str = None, mentioned_people: list[str] = None, before: Union[str,
-                      datetime] = None, before_message: str = None, max_: int = None) -> list[ListMessage]:
+                      datetime] = None, before_message: str = None, **params) -> Generator[ListMessage, None, None]:
         """
         List Messages
 
         Lists all messages in a room.  Each message will include content attachments if present.
-        
+
         The list sorts the messages in descending order by creation date.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -275,11 +276,8 @@ class MessagesApi(ApiChild, base='messages'):
         :type before: Union[str, datetime]
         :param before_message: List messages sent before a message, by ID.
         :type before_message: str
-        :param max_: Limit the maximum number of messages in the response.
-        :type max_: int
-        :rtype: list[ListMessage]
+        :return: Generator yielding :class:`ListMessage` instances
         """
-        params = {}
         params['roomId'] = room_id
         if parent_id is not None:
             params['parentId'] = parent_id
@@ -292,11 +290,8 @@ class MessagesApi(ApiChild, base='messages'):
             params['before'] = before
         if before_message is not None:
             params['beforeMessage'] = before_message
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListMessage, item_key='items', params=params)
 
     def list_direct_messages(self, parent_id: str = None, person_id: str = None,
                              person_email: str = None) -> list[DirectMessage]:
@@ -305,7 +300,7 @@ class MessagesApi(ApiChild, base='messages'):
 
         List all messages in a 1:1 (direct) room. Use the `personId` or `personEmail` query parameter to specify the
         room. Each message will include content attachments if present.
-        
+
         The list sorts the messages in descending order by creation date.
 
         :param parent_id: List messages with a parent, by ID.
@@ -324,8 +319,9 @@ class MessagesApi(ApiChild, base='messages'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep('direct')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[DirectMessage]).validate_python(data['items'])
+        return r
 
     def create_a_message(self, room_id: str = None, parent_id: str = None, to_person_id: str = None,
                          to_person_email: str = None, text: str = None, markdown: str = None, files: list[str] = None,
@@ -335,7 +331,7 @@ class MessagesApi(ApiChild, base='messages'):
 
         Post a plain text or `rich text
         <https://developer.webex.com/docs/basics#formatting-messages>`_ message, and optionally, a `file attachment
-        
+
         The `files` parameter is an array, which accepts multiple values to allow for future expansion, but currently
         only one file may be included with the message. File previews are only rendered for attachments of 1MB or
         less.
@@ -365,27 +361,37 @@ class MessagesApi(ApiChild, base='messages'):
         :type attachments: list[Attachment]
         :rtype: :class:`Message`
         """
+        body = dict()
+        body['roomId'] = room_id
+        body['parentId'] = parent_id
+        body['toPersonId'] = to_person_id
+        body['toPersonEmail'] = to_person_email
+        body['text'] = text
+        body['markdown'] = markdown
+        body['files'] = files
+        body['attachments'] = loads(TypeAdapter(list[Attachment]).dump_json(attachments))
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Message.model_validate(data)
+        return r
 
     def edit_a_message(self, message_id: str, room_id: str, text: str = None, markdown: str = None) -> ListMessage:
         """
         Edit a Message
 
         Update a message you have posted not more than 10 times.
-        
+
         Specify the `messageId` of the message you want to edit.
-        
+
         Edits of messages containing files or attachments are not currently supported.
         If a user attempts to edit a message containing files or attachments a `400 Bad Request` will be returned by
         the API with a message stating that the feature is currently unsupported.
-        
+
         There is also a maximum number of times a user can edit a message. The maximum currently supported is 10 edits
         per message.
         If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad Request
         with a message stating the edit limit has been reached.
-        
+
         While only the `roomId` and `text` or `markdown` attributes are *required* in the request body, a common
         pattern for editing message is to first call `GET /messages/{id}` for the message you wish to edit and to then
         update the `text` or `markdown` attribute accordingly, passing the updated message object in the request body
@@ -406,16 +412,21 @@ class MessagesApi(ApiChild, base='messages'):
         :type markdown: str
         :rtype: :class:`ListMessage`
         """
+        body = dict()
+        body['roomId'] = room_id
+        body['text'] = text
+        body['markdown'] = markdown
         url = self.ep(f'{message_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = ListMessage.model_validate(data)
+        return r
 
     def get_message_details(self, message_id: str) -> ListMessage:
         """
         Get Message Details
 
         Show details for a message, by message ID.
-        
+
         Specify the message ID in the `messageId` parameter in the URI.
 
         :param message_id: The unique identifier for the message.
@@ -423,15 +434,16 @@ class MessagesApi(ApiChild, base='messages'):
         :rtype: :class:`ListMessage`
         """
         url = self.ep(f'{message_id}')
-        ...
-
+        data = super().get(url)
+        r = ListMessage.model_validate(data)
+        return r
 
     def delete_a_message(self, message_id: str):
         """
         Delete a Message
 
         Delete a message, by message ID.
-        
+
         Specify the message ID in the `messageId` parameter in the URI.
 
         :param message_id: The unique identifier for the message.
@@ -439,6 +451,4 @@ class MessagesApi(ApiChild, base='messages'):
         :rtype: None
         """
         url = self.ep(f'{message_id}')
-        ...
-
-    ...
+        super().delete(url)

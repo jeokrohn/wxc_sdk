@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -54,7 +55,7 @@ class OrganizationsWithXsiApi(ApiChild, base='organizations'):
         List Organizations
 
         List all organizations visible by your account.
-        
+
         If the `callingData` parameter is set to `true` and the base domain (region where the organization is
         provisioned) is non-null, then the XSI endpoint values will be included in the organization details.
 
@@ -66,17 +67,18 @@ class OrganizationsWithXsiApi(ApiChild, base='organizations'):
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Organization]).validate_python(data['items'])
+        return r
 
     def get_organization_details(self, org_id: str, calling_data: bool = None) -> Organization:
         """
         Get Organization Details
 
         Shows details for an organization, by ID.
-        
+
         Specify the org ID in the `orgId` parameter in the URI.
-        
+
         If the `callingData` parameter is set to `true` and the base domain (region where the organization is
         provisioned) is non-null, then the XSI endpoint values will be included in the organization details.
 
@@ -90,6 +92,6 @@ class OrganizationsWithXsiApi(ApiChild, base='organizations'):
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         url = self.ep(f'{org_id}')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = Organization.model_validate(data)
+        return r

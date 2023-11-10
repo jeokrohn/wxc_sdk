@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -124,22 +125,22 @@ class RoomsApi(ApiChild, base='rooms'):
 
     def list_rooms(self, team_id: str = None, type: RoomType = None, org_public_spaces: bool = None, from_: Union[str,
                    datetime] = None, to_: Union[str, datetime] = None, sort_by: ListRoomsSortBy = None,
-                   max_: int = None) -> list[Room]:
+                   **params) -> Generator[Room, None, None]:
         """
         List Rooms
 
         List rooms.
-        
+
         The `title` of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer
         lists 1:1 rooms, the "other" person cannot be determined. This means that the room's title may not be filled
         in. Please use the `memberships API
         <https://developer.webex.com/docs/api/v1/memberships>`_ to list the people in the space.
-        
+
         By default, lists rooms to which the authenticated user belongs.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         Known Limitations:
         The underlying database does not support natural sorting by `lastactivity` and will only sort on limited set of
         results, which are pulled from the database in order of `roomId`. For users or bots in more than 3000 spaces
@@ -159,11 +160,8 @@ class RoomsApi(ApiChild, base='rooms'):
         :type to_: Union[str, datetime]
         :param sort_by: Sort results. Cannot be set in combination with `orgPublicSpaces`.
         :type sort_by: ListRoomsSortBy
-        :param max_: Limit the maximum number of rooms in the response. Value must be between 1 and 1000, inclusive.
-        :type max_: int
-        :rtype: list[Room]
+        :return: Generator yielding :class:`Room` instances
         """
-        params = {}
         if team_id is not None:
             params['teamId'] = team_id
         if type is not None:
@@ -182,11 +180,8 @@ class RoomsApi(ApiChild, base='rooms'):
             params['to'] = to_
         if sort_by is not None:
             params['sortBy'] = sort_by
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Room, item_key='items', params=params)
 
     def create_a_room(self, title: str, team_id: str = None, classification_id: str = None, is_locked: str = None,
                       is_public: str = None, description: str = None, is_announcement_only: str = None) -> Room:
@@ -196,11 +191,11 @@ class RoomsApi(ApiChild, base='rooms'):
         Creates a room. The authenticated user is automatically added as a member of the room. See the `Memberships API
         <https://developer.webex.com/docs/api/v1/memberships>`_
         to learn how to add more people to the room.
-        
+
         To create a 1:1 room, use the `Create Messages
         <https://developer.webex.com/docs/api/v1/messages/create-a-message>`_ endpoint to send a message directly to another person by using
         the `toPersonId` or `toPersonEmail` parameters.
-        
+
         Bots are not able to create and simultaneously classify a room. A bot may update a space classification after a
         person of the same owning organization joined the space as the first human user.
         A space can only be put into announcement mode when it is locked.
@@ -222,18 +217,27 @@ class RoomsApi(ApiChild, base='rooms'):
         :type is_announcement_only: str
         :rtype: :class:`Room`
         """
+        body = dict()
+        body['title'] = title
+        body['teamId'] = team_id
+        body['classificationId'] = classification_id
+        body['isLocked'] = is_locked
+        body['isPublic'] = is_public
+        body['description'] = description
+        body['isAnnouncementOnly'] = is_announcement_only
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Room.model_validate(data)
+        return r
 
     def get_room_details(self, room_id: str) -> Room:
         """
         Get Room Details
 
         Shows details for a room, by ID.
-        
+
         The `title` of the room for 1:1 rooms will be the display name of the other person.
-        
+
         Specify the room ID in the `roomId` parameter in the URI.
 
         :param room_id: The unique identifier for the room.
@@ -241,8 +245,9 @@ class RoomsApi(ApiChild, base='rooms'):
         :rtype: :class:`Room`
         """
         url = self.ep(f'{room_id}')
-        ...
-
+        data = super().get(url)
+        r = Room.model_validate(data)
+        return r
 
     def get_room_meeting_details(self, room_id: str) -> RoomMeetingDetails:
         """
@@ -250,7 +255,7 @@ class RoomsApi(ApiChild, base='rooms'):
 
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in
         numbers.
-        
+
         Specify the room ID in the `roomId` parameter in the URI.
 
         :param room_id: The unique identifier for the room.
@@ -258,8 +263,9 @@ class RoomsApi(ApiChild, base='rooms'):
         :rtype: :class:`RoomMeetingDetails`
         """
         url = self.ep(f'{room_id}/meetingInfo')
-        ...
-
+        data = super().get(url)
+        r = RoomMeetingDetails.model_validate(data)
+        return r
 
     def update_a_room(self, room_id: str, title: str, classification_id: str = None, team_id: str = None,
                       is_locked: str = None, is_public: str = None, description: str = None,
@@ -268,7 +274,7 @@ class RoomsApi(ApiChild, base='rooms'):
         Update a Room
 
         Updates details for a room, by ID.
-        
+
         Specify the room ID in the `roomId` parameter in the URI.
         A space can only be put into announcement mode when it is locked.
         Any space participant or compliance officer can convert a space from public to private. Only a compliance
@@ -299,9 +305,19 @@ class RoomsApi(ApiChild, base='rooms'):
         :type is_read_only: str
         :rtype: :class:`Room`
         """
+        body = dict()
+        body['title'] = title
+        body['classificationId'] = classification_id
+        body['teamId'] = team_id
+        body['isLocked'] = is_locked
+        body['isPublic'] = is_public
+        body['description'] = description
+        body['isAnnouncementOnly'] = is_announcement_only
+        body['isReadOnly'] = is_read_only
         url = self.ep(f'{room_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Room.model_validate(data)
+        return r
 
     def delete_a_room(self, room_id: str):
         """
@@ -310,9 +326,9 @@ class RoomsApi(ApiChild, base='rooms'):
         Deletes a room, by ID. Deleted rooms cannot be recovered.
         As a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed
         from the room instead.
-        
+
         Deleting a room that is part of a team will archive the room instead.
-        
+
         Specify the room ID in the `roomId` parameter in the URI.
 
         :param room_id: The unique identifier for the room.
@@ -320,6 +336,4 @@ class RoomsApi(ApiChild, base='rooms'):
         :rtype: None
         """
         url = self.ep(f'{room_id}')
-        ...
-
-    ...
+        super().delete(url)

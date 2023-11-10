@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -507,17 +508,17 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                         start: int = None, name: str = None,
-                                         phone_number: str = None) -> list[ListAutoAttendantObject]:
+    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, start: int = None,
+                                         name: str = None, phone_number: str = None,
+                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         Read the List of Auto Attendants
 
         List all Auto Attendants for the organization.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
@@ -525,23 +526,18 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param location_id: Return the list of auto attendants for this location.
         :type location_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param name: Only return auto attendants with the matching name.
         :type name: str
         :param phone_number: Only return auto attendants with the matching phone number.
         :type phone_number: str
-        :rtype: list[ListAutoAttendantObject]
+        :return: Generator yielding :class:`ListAutoAttendantObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -549,8 +545,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('autoAttendants')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='autoAttendants', params=params)
 
     def get_details_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                           org_id: str = None) -> GetAutoAttendantObject:
@@ -558,10 +553,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Get Details for an Auto Attendant
 
         Retrieve an Auto Attendant details.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Retrieving an auto attendant details requires a full or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
 
@@ -577,8 +572,9 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetAutoAttendantObject.model_validate(data)
+        return r
 
     def create_an_auto_attendant(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
                                  first_name: str, last_name: str, alternate_numbers: list[AlternateNumbersObject],
@@ -591,10 +587,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Create an Auto Attendant
 
         Create new Auto Attendant for the given location.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -636,9 +632,25 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['extensionDialing'] = enum_str(extension_dialing)
+        body['nameDialing'] = enum_str(name_dialing)
+        body['timeZone'] = time_zone
+        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
                                  extension: Union[str, datetime], first_name: str, last_name: str,
@@ -652,10 +664,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Update an Auto Attendant
 
         Update the designated Auto Attendant.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Updating an auto attendant requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -699,19 +711,33 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['extensionDialing'] = enum_str(extension_dialing)
+        body['nameDialing'] = enum_str(name_dialing)
+        body['timeZone'] = time_zone
+        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def delete_an_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
         """
         Delete an Auto Attendant
 
         Delete the designated Auto Attendant.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Deleting an auto attendant requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -727,8 +753,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                            org_id: str = None) -> AutoAttendantCallForwardSettingsDetailsObject:
@@ -737,7 +762,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
 
         Retrieve Call Forwarding settings for the designated Auto Attendant including the list of call forwarding
         rules.
-        
+
         Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator or
         location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -753,8 +778,9 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
-        ...
-
+        data = super().get(url, params=params)
+        r = AutoAttendantCallForwardSettingsDetailsObject.model_validate(data['callForwarding'])
+        return r
 
     def update_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                               call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject,
@@ -763,7 +789,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Update Call Forwarding Settings for an Auto Attendant
 
         Update Call Forwarding settings for the designated Auto Attendant.
-        
+
         Updating call forwarding settings for an auto attendant requires a full administrator or location administrator
         auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -780,9 +806,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['callForwarding'] = loads(call_forwarding.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def create_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                                       name: str, enabled: bool,
@@ -795,16 +822,16 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Create a Selective Call Forwarding Rule for an Auto Attendant
 
         Create a Selective Call Forwarding Rule for the designated Auto Attendant.
-        
+
         A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the auto attendant's call forwarding
         settings.
-        
+
         Creating a selective call forwarding rule for an auto attendant requires a full administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which the auto attendant exists.
@@ -835,9 +862,18 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                                  rule_id: str,
@@ -846,16 +882,16 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Get Selective Call Forwarding Rule for an Auto Attendant
 
         Retrieve a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
-        
+
         A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the auto attendant's call forwarding
         settings.
-        
+
         Retrieving a selective call forwarding rule's settings for an auto attendant requires a full or read-only
         administrator or location administrator
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this auto attendant exists.
@@ -872,8 +908,9 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetAutoAttendantCallForwardSelectiveRuleObject.model_validate(data)
+        return r
 
     def update_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                                     rule_id: str, name: str, enabled: bool,
@@ -886,16 +923,16 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Update Selective Call Forwarding Rule for an Auto Attendant
 
         Update a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
-        
+
         A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the auto attendant's call forwarding
         settings.
-        
+
         Updating a selective call forwarding rule's settings for an auto attendant requires a full administrator or
         location administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this auto attendant exists.
@@ -928,9 +965,18 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                                       rule_id: str, org_id: str = None):
@@ -938,16 +984,16 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         Delete a Selective Call Forwarding Rule for an Auto Attendant
 
         Delete a Selective Call Forwarding Rule for the designated Auto Attendant.
-        
+
         A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the auto attendant's call forwarding
         settings.
-        
+
         Deleting a selective call forwarding rule for an auto attendant requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this auto attendant exists.
@@ -964,6 +1010,4 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
-    ...
+        super().delete(url, params=params)

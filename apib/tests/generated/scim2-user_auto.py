@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -552,48 +553,48 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         `RFC 7644 SCIM 2.0 Core Protocol
         <https://datatracker.ietf.org/doc/html/rfc7644>`_.  The WebEx SCIM 2.0  APIs allow clients supporting the SCIM 2.0 standard to
         manage users, and groups within Webex.  Webex supports the following SCIM 2.0 Schemas:
-        
+
         • urn:ietf:params:scim:schemas:core:2.0:User
-        
+
         • urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
-        
+
         • urn:scim:schemas:extension:cisco:webexidentity:2.0:User
-        
+
         <br/>
-        
+
         **Authorization**
-        
+
         OAuth token rendered by Identity Broker.
-        
+
         <br/>
-        
+
         One of the following OAuth scopes is required:
-        
+
         - `identity:people_rw`
-        
+
         - `Identity:SCIM`
-        
+
         <br/>
-        
+
         The following administrators can use this API:
-        
+
         - `id_full_admin`
-        
+
         - `id_user_admin`
-        
+
         <br/>
-        
+
         **Usage**:
-        
+
         1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
-        
+
         1. Support 3 schemas :
         - "urn:ietf:params:scim:schemas:core:2.0:User"
         - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
         - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"
-        
+
         1. Unrecognized schemas (ID/section) are ignored.
-        
+
         1. Read-only attributes provided as input values are ignored.
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
@@ -615,14 +616,14 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
             on the `ISO-696
             <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
             code.  Examples are:
-        
+
         en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
         :type preferred_language: str
         :param locale: The user's locale which is used to represent the user's currency, time format, and numerical
             representations.  Acceptable values for this field are based on the `ISO-696
             <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
             language code followed by an _ and then the 2 letter country code.  Examples are:
-        
+
         en_US : for English spoken in the United States or fr_FR: for French spoken in France.
         :type locale: str
         :param timezone: The user's time zone specified in the `IANA timezone
@@ -655,44 +656,65 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
         :rtype: :class:`GetUserResponse`
         """
+        body = dict()
+        body['schemas'] = schemas
+        body['userName'] = user_name
+        body['userType'] = enum_str(user_type)
+        body['title'] = title
+        body['active'] = active
+        body['preferredLanguage'] = preferred_language
+        body['locale'] = locale
+        body['timezone'] = timezone
+        body['profileUrl'] = profile_url
+        body['externalId'] = external_id
+        body['displayName'] = display_name
+        body['nickName'] = nick_name
+        body['name'] = loads(name.model_dump_json())
+        body['phoneNumbers'] = loads(TypeAdapter(list[PutUserPhoneNumbers]).dump_json(phone_numbers))
+        body['photos'] = loads(TypeAdapter(list[PhotoObject]).dump_json(photos))
+        body['addresses'] = loads(TypeAdapter(list[PutUserAddresses]).dump_json(addresses))
+        body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails))
+        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
         url = self.ep(f'')
-        ...
-
+        data = super().post(url, json=body)
+        r = GetUserResponse.model_validate(data)
+        return r
 
     def get_a_user(self, org_id: str, user_id: str) -> GetUserResponse:
         """
         Get a user
 
         <br/>
-        
+
         **Authorization**
-        
+
         OAuth token rendered by Identity Broker.
-        
+
         <br/>
-        
+
         One of the following OAuth scopes is required:
-        
+
         - `identity:people_rw`
-        
+
         - `identity:people_read`
-        
+
         - `Identity:SCIM`
-        
+
         - `Identity:SCIM_read`
-        
+
         <br/>
-        
+
         The following administrators can use this API:
-        
+
         - `id_full_admin`
-        
+
         - `id_user_admin`
-        
+
         - `id_readonly_admin`
-        
+
         - `id_device_admin`
-        
+
         <br/>
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
@@ -702,8 +724,9 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :rtype: :class:`GetUserResponse`
         """
         url = self.ep(f'{user_id}')
-        ...
-
+        data = super().get(url)
+        r = GetUserResponse.model_validate(data)
+        return r
 
     def search_users(self, org_id: str, filter: str = None, attributes: str = None, excluded_attributes: str = None,
                      sort_by: str = None, sort_order: str = None, start_index: Union[str, datetime] = None,
@@ -713,55 +736,55 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         Search users
 
         <br/>
-        
+
         **Authorization**
-        
+
         OAuth token rendered by Identity Broker.
-        
+
         <br/>
-        
+
         One of the following OAuth scopes is required:
-        
+
         - `identity:people_rw`
-        
+
         - `identity:people_read`
-        
+
         - `Identity:SCIM`
-        
+
         - `Identity:SCIM_read`
-        
+
         <br/>
-        
+
         The following administrators can use this API:
-        
+
         - `id_full_admin`
-        
+
         - `id_user_admin`
-        
+
         - `id_readonly_admin`
-        
+
         - `id_device_admin`
-        
+
         <br/>
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
         :param filter: The url encoded filter. If the value is empty, the API will return all users under the
             organization.
-        
+
         The examples below show some search filters:
-        
+
         - userName eq "user1@example.com"
-        
+
         - userName sw "user1@example"
-        
+
         - userName ew "example"
-        
+
         - phoneNumbers [ type eq "mobile" and value eq "14170120"]
-        
+
         - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
         "0ae87ade-8c8a-4952-af08-318798958d0c"
-        
+
         - More filter patterns, please check <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2">
         filtering </a>.
         :type filter: str
@@ -821,8 +844,9 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         if group_usage_types is not None:
             params['groupUsageTypes'] = group_usage_types
         url = self.ep(f'')
-        ...
-
+        data = super().get(url, params=params)
+        r = SearchUserResponse.model_validate(data)
+        return r
 
     def update_a_user_with_put(self, org_id: str, user_id: str, schemas: list[str], user_name: str,
                                user_type: UserTypeObject, title: str, active: bool, preferred_language: str,
@@ -835,46 +859,46 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         Update a user with PUT
 
         <br/>
-        
+
         **Authorization**
-        
+
         OAuth token rendered by Identity Broker.
-        
+
         <br/>
-        
+
         One of the following OAuth scopes is required:
-        
+
         - `identity:people_rw`
-        
+
         - `Identity:SCIM`
-        
+
         <br/>
-        
+
         The following administrators can use this API:
-        
+
         - `id_full_admin`
-        
+
         - `id_user_admin`
-        
+
         <br/>
-        
+
         **Usage**:
-        
+
         1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
-        
+
         1. Support 3 schemas :
         - "urn:ietf:params:scim:schemas:core:2.0:User"
         - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
         - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"
-        
+
         1. Unrecognized schemas (ID/section) are ignored.
-        
+
         1. Read-only attributes provided as input values are ignored.
-        
+
         1. User `id` will not be changed.
-        
+
         1. `meta`.`created` will not be changed.
-        
+
         1. The PUT API replaces the contents of the user's data with the data in the request body.  All attributes
         specified in the request body will replace all existing attributes for the userId specified in the URL.
         Should you wish to replace or change some attributes as opposed to all attributes please refer to the SCIM
@@ -901,14 +925,14 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
             on the `ISO-696
             <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
             code.  Examples are:
-        
+
         en_US : for english spoken in the United States, fr_FR: for french spoken in France.
         :type preferred_language: str
         :param locale: The user's locale which is used to represent the user's currency, time format, and numerical
             representations.  Acceptable values for this field are based on the  `ISO-696
             <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
             letter language code followed by an _ and then the 2 letter country code.  Examples are:
-        
+
         en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
         :type locale: str
         :param timezone: The user's time zone specified in the `IANA timezone
@@ -939,9 +963,29 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
         :rtype: :class:`GetUserResponse`
         """
+        body = dict()
+        body['schemas'] = schemas
+        body['userName'] = user_name
+        body['userType'] = enum_str(user_type)
+        body['title'] = title
+        body['active'] = active
+        body['preferredLanguage'] = preferred_language
+        body['locale'] = locale
+        body['timezone'] = timezone
+        body['profileUrl'] = profile_url
+        body['externalId'] = external_id
+        body['displayName'] = display_name
+        body['nickName'] = nick_name
+        body['phoneNumbers'] = loads(TypeAdapter(list[PutUserPhoneNumbers]).dump_json(phone_numbers))
+        body['photos'] = loads(TypeAdapter(list[PhotoObject]).dump_json(photos))
+        body['addresses'] = loads(TypeAdapter(list[PutUserAddresses]).dump_json(addresses))
+        body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails))
+        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
         url = self.ep(f'{user_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = GetUserResponse.model_validate(data)
+        return r
 
     def update_a_user_with_patch(self, org_id: str, user_id: str, schemas: list[str],
                                  operations: list[PatchUserOperations]) -> GetUserResponse:
@@ -949,37 +993,37 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         Update a user with PATCH
 
         <br/>
-        
+
         **Authorization**
-        
+
         OAuth token rendered by Identity Broker.
-        
+
         <br/>
-        
+
         One of the following OAuth scopes is required:
-        
+
         - `identity:people_rw`
-        
+
         - `Identity:SCIM`
-        
+
         <br/>
-        
+
         The following administrators can use this API:
-        
+
         - `id_full_admin`
-        
+
         - `id_user_admin`
-        
+
         <br/>
-        
+
         **Usage**:
-        
+
         1. The PATCH API replaces individual attributes of the user's data in the request body.
         The PATCH api supports `add`, `remove` and `replace` operations on any individual
         attribute allowing only specific attributes of the user's object to be modified.
-        
+
         1. Each operation against an attribute must be compatible with the attribute's mutability.
-        
+
         1. Each PATCH operation represents a single action to be applied to the
         same SCIM resource specified by the request URI.  Operations are
         applied sequentially in the order they appear in the array.  Each
@@ -987,96 +1031,96 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         resulting resource becomes the target of the next operation.
         Evaluation continues until all operations are successfully applied or
         until an error condition is encountered.
-        
+
         <br/>
-        
+
         **Add operations**:
-        
+
         The `add` operation is used to add a new attribute value to an existing resource.
         The operation must contain a `value` member whose content specifies the value to be added.
         The value may be a quoted value, or it may be a JSON object containing the sub-attributes of the complex
         attribute specified in the operation's `path`.
         The result of the add operation depends upon the target location indicated by `path` references:
-        
+
         <br/>
-        
+
         - If omitted, the target location is assumed to be the resource itself.  The `value` parameter contains a set
         of attributes to be added to the resource.
-        
+
         - If the target location does not exist, the attribute and value are added.
-        
+
         - If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the
         `value` parameter.
-        
+
         - If the target location specifies a multi-valued attribute, a new value is added to the attribute.
-        
+
         - If the target location specifies a single-valued attribute, the existing value is replaced.
-        
+
         - If the target location specifies an attribute that does not exist (has no value), the attribute is added with
         the new value.
-        
+
         - If the target location exists, the value is replaced.
-        
+
         - If the target location already contains the value specified, no changes should be made to the resource.
-        
+
         <br/>
-        
+
         **Replace operations**:
-        
+
         The `replace` operation replaces the value at the target location specified by the `path`.
         The operation performs the following functions, depending on the target location specified by `path`:
-        
+
         <br/>
-        
+
         - If the `path` parameter is omitted, the target is assumed to be the resource itself.  In this case, the
         `value` attribute shall contain a list of one or more attributes that are to be replaced.
-        
+
         - If the target location is a single-value attribute, the value of the attribute is replaced.
-        
+
         - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
         are replaced.
-        
+
         - If the target location path specifies an attribute that does not exist, the service provider shall treat the
         operation as an "add".
-        
+
         - If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the
         `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.
         Sub-attributes that are not specified in the `value` parameters are left unchanged.
-        
+
         - If the target location is a multi-valued attribute and a value selection ("valuePath") filter is specified
         that matches one or more values of the multi-valued attribute, then all matching record values will be
         replaced.
-        
+
         - If the target location is a complex multi-valued attribute with a value selection filter ("valuePath") and a
         specific sub-attribute (e.g., "addresses[type eq "work"].streetAddress"), the matching sub-attribute of all
         matching records is replaced.
-        
+
         - If the target location is a multi-valued attribute for which a value selection filter ("valuePath") has been
         supplied and no record match was made, the service provider will indicate the failure by returning HTTP status
         code 400 and a `scimType` error code of "noTarget".
-        
+
         <br/>
-        
+
         **Remove operations**:
-        
+
         The `remove` operation removes the value at the target location specified by the required attribute `path`.
         The operation performs the following functions, depending on the target location specified by `path`:
-        
+
         <br/>
-        
+
         - If `path` is unspecified, the operation fails with HTTP status code 400 and a "scimType" error code of
         "noTarget".
-        
+
         - If the target location is a single-value attribute, the attribute and its associated value is removed, and
         the attribute will be considered unassigned.
-        
+
         - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
         are removed, and the attribute SHALL be considered unassigned.
-        
+
         - If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the
         values matched by the filter are removed.  If no other values remain after the removal of the selected values,
         the multi-valued attribute will be considered unassigned.
-        
+
         - If the target location is a complex multi-valued attribute and a complex filter is specified based on the
         attribute's sub-attributes, the matching records are removed.  Sub-attributes whose values have been removed
         will be considered unassigned.  If the complex multi-valued attribute has no remaining records, the attribute
@@ -1092,36 +1136,40 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type operations: list[PatchUserOperations]
         :rtype: :class:`GetUserResponse`
         """
+        body = dict()
+        body['schemas'] = schemas
+        body['Operations'] = loads(TypeAdapter(list[PatchUserOperations]).dump_json(operations))
         url = self.ep(f'{user_id}')
-        ...
-
+        data = super().patch(url, json=body)
+        r = GetUserResponse.model_validate(data)
+        return r
 
     def delete_a_user(self, org_id: str, user_id: str):
         """
         Delete a user
 
         <br/>
-        
+
         **Authorization**
-        
+
         OAuth token rendered by Identity Broker.
-        
+
         <br/>
-        
+
         One of the following OAuth scopes is required:
-        
+
         - `identity:people_rw`
-        
+
         - `Identity:SCIM`
-        
+
         <br/>
-        
+
         The following administrators can use this API:
-        
+
         - `id_full_admin`
-        
+
         - `id_user_admin`
-        
+
         <br/>
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
@@ -1131,6 +1179,4 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :rtype: None
         """
         url = self.ep(f'{user_id}')
-        ...
-
-    ...
+        super().delete(url)

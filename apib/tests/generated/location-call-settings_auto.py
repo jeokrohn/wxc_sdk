@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -462,34 +463,30 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def list_locations_webex_calling_details(self, org_id: str = None, max_: int = None, start: int = None,
-                                             name: str = None, order: str = None) -> list[ListLocationObject]:
+    def list_locations_webex_calling_details(self, org_id: str = None, start: int = None, name: str = None,
+                                             order: str = None,
+                                             **params) -> Generator[ListLocationObject, None, None]:
         """
         List Locations Webex Calling Details
 
         Lists Webex Calling locations for an organization with Webex Calling details.
-        
+
         Searching and viewing locations with Webex Calling details in your
         organization require an administrator auth token with the
         `spark-admin:telephony_config_read` scope.
 
         :param org_id: List locations for this organization.
         :type org_id: str
-        :param max_: Limit the maximum number of locations in the response.
-        :type max_: int
         :param start: Specify the offset from the first result that you want to fetch.
         :type start: int
         :param name: List locations whose name contains this string.
         :type name: str
         :param order: Sort the list of locations based on `name`, either asc or desc.
         :type order: str
-        :rtype: list[ListLocationObject]
+        :return: Generator yielding :class:`ListLocationObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -497,8 +494,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         if order is not None:
             params['order'] = order
         url = self.ep('locations')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListLocationObject, item_key='locations', params=params)
 
     def enable_a_location_for_webex_calling(self, id: str, name: str, time_zone: str, preferred_language: str,
                                             announcement_language: str, address: PostLocationCallingRequestAddress,
@@ -508,9 +504,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
 
         Enable a location by adding it to Webex Calling. This add Webex Calling support to a
         location created created using the POST /v1/locations API.
-        
+
         Locations are used to support calling features which can be defined at the location level.
-        
+
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param id: A unique identifier for the location.
@@ -535,18 +531,26 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['id'] = id
+        body['name'] = name
+        body['timeZone'] = time_zone
+        body['preferredLanguage'] = preferred_language
+        body['announcementLanguage'] = announcement_language
+        body['address'] = loads(address.model_dump_json())
         url = self.ep('locations')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_location_webex_calling_details(self, location_id: str, org_id: str = None) -> GetTelephonyLocationObject:
         """
         Get Location Webex Calling Details
 
         Shows Webex Calling details for a location, by ID.
-        
+
         Specifies the location ID in the locationId parameter in the URI.
-        
+
         Searching and viewing locations in your organization requires an administrator auth token with the
         spark-admin:telephony_config_read scope.
 
@@ -560,8 +564,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetTelephonyLocationObject.model_validate(data)
+        return r
 
     def update_location_webex_calling_details(self, location_id: str, announcement_language: str,
                                               calling_line_id: GetTelephonyLocationObjectCallingLineId,
@@ -573,11 +578,11 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Update Location Webex Calling Details
 
         Update Webex Calling details for a location, by ID.
-        
+
         Specifies the location ID in the `locationId` parameter in the URI.
-        
+
         Modifying the `connection` via API is only supported for the local PSTN types of `TRUNK` and `ROUTE_GROUP`.
-        
+
         Updating a location in your organization requires an administrator auth token with the
         `spark-admin:telephony_config_write` scope.
 
@@ -609,9 +614,17 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['announcementLanguage'] = announcement_language
+        body['callingLineId'] = loads(calling_line_id.model_dump_json())
+        body['connection'] = loads(connection.model_dump_json())
+        body['externalCallerIdName'] = external_caller_id_name
+        body['pAccessNetworkInfo'] = p_access_network_info
+        body['outsideDialDigit'] = outside_dial_digit
+        body['routingPrefix'] = routing_prefix
+        body['chargeNumber'] = charge_number
         url = self.ep(f'locations/{location_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def change_announcement_language(self, location_id: str, agent_enabled: bool, service_enabled: bool,
                                      announcement_language_code: str, org_id: str = None):
@@ -619,11 +632,11 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Change Announcement Language
 
         Change announcement language for the given location.
-        
+
         Change announcement language for current people/workspaces and/or existing feature configurations. This does
         not change the default announcement language which is applied to new users/workspaces and new feature
         configurations.
-        
+
         Changing the announcement language for the given location requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -642,23 +655,26 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['agentEnabled'] = agent_enabled
+        body['serviceEnabled'] = service_enabled
+        body['announcementLanguageCode'] = announcement_language_code
         url = self.ep(f'locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
-        ...
-
+        super().post(url, params=params, json=body)
 
     def read_the_list_of_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None,
-                                       max_: int = None, start: int = None, order: str = None) -> list[str]:
+                                       start: int = None, order: str = None, **params) -> Generator[str, None, None]:
         """
         Read the List of Dial Patterns
 
         List all Dial Patterns for the organization.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -671,29 +687,24 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Valid wildcard characters are `!` (matches any sequence of digits) and `X` (matches a single digit, 0-9).
         The `!` wildcard can only occur once at the end and only in an E.164 pattern
         :type dial_pattern: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the dial patterns according to the designated fields.  Available sort fields:
             `dialPattern`.
         :type order: str
-        :rtype: list[str]
+        :return: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9),
+            followed by optional wildcard characters.
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if dial_pattern is not None:
             params['dialPattern'] = dial_pattern
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
-        ...
-
+        return self.session.follow_pagination(url=url, model=None, item_key='dialPatterns', params=params)
 
     def get_a_location_emergency_callback_number(self, location_id: str,
                                                  location_info: GetLocationCallBackNumberObjectLocationInfo,
@@ -703,7 +714,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Get a Location Emergency callback number
 
         Get location emergency callback number.
-        
+
         * To retrieve location callback number requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -722,9 +733,12 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['locationInfo'] = loads(location_info.model_dump_json())
+        body['locationMemberInfo'] = loads(location_member_info.model_dump_json())
+        body['selected'] = enum_str(selected)
         url = self.ep(f'locations/{location_id}/features/emergencyCallbackNumber')
-        ...
-
+        super().get(url, params=params, json=body)
 
     def update_a_location_emergency_callback_number(self, location_id: str, selected: CallBackSelected,
                                                     location_member_id: str, org_id: str = None):
@@ -732,7 +746,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Update a Location Emergency callback number
 
         Update details for a location emergency callback number.
-        
+
         * Updating a location callback number requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
 
@@ -750,9 +764,11 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['selected'] = enum_str(selected)
+        body['locationMemberId'] = location_member_id
         url = self.ep(f'locations/{location_id}/features/emergencyCallbackNumber')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def validate_the_list_of_extensions(self, extensions: list[str],
                                         org_id: str = None) -> PostValidateExtensionResponse:
@@ -772,9 +788,12 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['extensions'] = extensions
         url = self.ep('actions/validateExtensions/invoke')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = PostValidateExtensionResponse.model_validate(data)
+        return r
 
     def validate_extensions(self, location_id: str, extensions: list[str],
                             org_id: str = None) -> StatusOfExtensionsObject:
@@ -782,7 +801,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Validate Extensions
 
         Validate extensions for a specific location.
-        
+
         Validating extensions requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -797,9 +816,12 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['extensions'] = extensions
         url = self.ep(f'locations/{location_id}/actions/validateExtensions/invoke')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = StatusOfExtensionsObject.model_validate(data)
+        return r
 
     def update_music_on_hold(self, location_id: str, call_hold_enabled: bool, call_park_enabled: bool,
                              greeting: GetMusicOnHoldObjectGreeting, audio_file: AudioAnnouncementFileGetObject,
@@ -808,9 +830,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Update Music On Hold
 
         Update the location's music on hold settings.
-        
+
         Location music on hold settings allows you to play music when a call is placed on hold or parked.
-        
+
         Updating a location's music on hold settings requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
@@ -831,18 +853,22 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['callHoldEnabled'] = call_hold_enabled
+        body['callParkEnabled'] = call_park_enabled
+        body['greeting'] = enum_str(greeting)
+        body['audioFile'] = loads(audio_file.model_dump_json())
         url = self.ep(f'locations/{location_id}/musicOnHold')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_music_on_hold(self, location_id: str, org_id: str = None) -> GetMusicOnHoldObject:
         """
         Get Music On Hold
 
         Retrieve the location's music on hold settings.
-        
+
         Location music on hold settings allows you to play music when a call is placed on hold or parked.
-        
+
         Retrieving a location's music on hold settings requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -856,8 +882,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/musicOnHold')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetMusicOnHoldObject.model_validate(data)
+        return r
 
     def get_private_network_connect(self, location_id: str,
                                     org_id: str = None) -> GetPrivateNetworkConnectObjectNetworkConnectionType:
@@ -865,9 +892,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Get Private Network Connect
 
         Retrieve the location's network connection type.
-        
+
         Network Connection Type determines if the location's network connection is public or private.
-        
+
         Retrieving a location's network connection type requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -881,8 +908,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/privateNetworkConnect')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetPrivateNetworkConnectObjectNetworkConnectionType.model_validate(data['networkConnectionType'])
+        return r
 
     def update_private_network_connect(self, location_id: str,
                                        network_connection_type: GetPrivateNetworkConnectObjectNetworkConnectionType,
@@ -891,9 +919,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Update Private Network Connect
 
         Update the location's network connection type.
-        
+
         Network Connection Type determines if the location's network connection is public or private.
-        
+
         Updating a location's network connection type requires a full administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
@@ -908,22 +936,23 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['networkConnectionType'] = enum_str(network_connection_type)
         url = self.ep(f'locations/{location_id}/privateNetworkConnect')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def read_the_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None,
-                                         trunk_name: str = None, max_: int = None, start: int = None,
-                                         order: str = None) -> list[RouteIdentity]:
+                                         trunk_name: str = None, start: int = None, order: str = None,
+                                         **params) -> Generator[RouteIdentity, None, None]:
         """
         Read the List of Routing Choices
 
         List all Routes for the organization.
-        
+
         Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
         Calling to manage calls between Webex Calling hosted users and premises PBX users. This solution lets you
         configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
-        
+
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
@@ -933,29 +962,22 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type route_group_name: str
         :param trunk_name: Return the list of route identities matching the Trunk name..
         :type trunk_name: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the route identities according to the designated fields.  Available sort fields:
             `routeName`, `routeType`.
         :type order: str
-        :rtype: list[RouteIdentity]
+        :return: Generator yielding :class:`RouteIdentity` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if route_group_name is not None:
             params['routeGroupName'] = route_group_name
         if trunk_name is not None:
             params['trunkName'] = trunk_name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('routeChoices')
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=RouteIdentity, item_key='routeIdentities', params=params)

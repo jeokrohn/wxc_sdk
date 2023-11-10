@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -59,15 +60,16 @@ class OrganizationsWithECMApi(ApiChild, base='organizations'):
         :rtype: list[Organization]
         """
         url = self.ep()
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[Organization]).validate_python(data['items'])
+        return r
 
     def get_organization_details(self, org_id: str) -> Organization:
         """
         Get Organization Details
 
         Shows details for an organization, by ID.
-        
+
         Specify the org ID in the `orgId` parameter in the URI.
 
         :param org_id: The unique identifier for the organization.
@@ -75,6 +77,6 @@ class OrganizationsWithECMApi(ApiChild, base='organizations'):
         :rtype: :class:`Organization`
         """
         url = self.ep(f'{org_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = Organization.model_validate(data)
+        return r

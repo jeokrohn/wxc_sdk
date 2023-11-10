@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -245,46 +246,46 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
     <https://developer.webex.com/docs/meetings#meetings-api-scopes>`_ section of `Meetings Overview
     """
 
-    def list_meeting_participants(self, meeting_id: str, max_: int = None, meeting_start_time_from: Union[str,
-                                  datetime] = None, meeting_start_time_to: Union[str, datetime] = None,
-                                  host_email: str = None, join_time_from: Union[str, datetime] = None,
-                                  join_time_to: Union[str, datetime] = None) -> list[Participant]:
+    def list_meeting_participants(self, meeting_id: str, meeting_start_time_from: Union[str, datetime] = None,
+                                  meeting_start_time_to: Union[str, datetime] = None, host_email: str = None,
+                                  join_time_from: Union[str, datetime] = None, join_time_to: Union[str,
+                                  datetime] = None, **params) -> Generator[Participant, None, None]:
         """
         List Meeting Participants
 
         List all participants in an in-progress meeting or an ended meeting. The `meetingId` parameter is required,
         which is the unique identifier for the meeting.
-        
+
         The authenticated user calling this API must either have an Administrator role with the
         `meeting:admin_participants_read` scope, or be the meeting host.
-        
+
         * If the `meetingId` value specified is for a meeting series, the operation returns participants' details for
         the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo`
         value are specified, the operation returns participants' details for the last instance in the meeting series
         in the time range.
-        
+
         * If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns
         participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the
         `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in
         the scheduled meeting in the time range.
-        
+
         * If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation
         returns participants' details for that meeting instance.
-        
+
         * If the meeting is in progress, the operation returns all the real-time participants. If the meeting is ended,
         the operation returns all the participants that have joined the meeting.
-        
+
         * The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an
         occurrence ID.
-        
+
         * If the webinar is in progress when the attendee has ever been unmuted to speak in the webinar, this attendee
         becomes a panelist. The operation returns include the people who have been designated as panelists when the
         webinar is created and have joined the webinar, and the attendees who have joined the webinar and are unmuted
         to speak in the webinar temporarily. If the webinar is ended, the operation returns all the participants,
         including all panelists and all attendees who are not panelists.
-        
+
         #### Request Header
-        
+
         * `timezone`: Time zone for time stamps in the response body, defined in conformance with the
         `IANA time zone database
         <https://www.iana.org/time-zones>`_.
@@ -293,8 +294,6 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             `personal room
             <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is not supported for this API.
         :type meeting_id: str
-        :param max_: Limit the maximum number of participants in the response, up to 100.
-        :type max_: int
         :param meeting_start_time_from: Meetings start from the specified date and time(exclusive) in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_
             compliant format. If `meetingStartTimeFrom` is not specified, it equals `meetingStartTimeTo` minus 1
@@ -321,11 +320,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. If `joinTimeTo` is not specified, it equals `joinTimeFrom` plus 7 days. The
             interval between `joinTimeFrom` and `joinTimeTo` must be within 90 days.
         :type join_time_to: Union[str, datetime]
-        :rtype: list[Participant]
+        :return: Generator yielding :class:`Participant` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         params['meetingId'] = meeting_id
         if meeting_start_time_from is not None:
             if isinstance(meeting_start_time_from, str):
@@ -350,8 +346,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             join_time_to = dt_iso_str(join_time_to)
             params['joinTimeTo'] = join_time_to
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Participant, item_key='items', params=params)
 
     def query_meeting_participants_with_email(self, meeting_id: str, meeting_start_time_from: Union[str,
                                               datetime] = None, meeting_start_time_to: Union[str, datetime] = None,
@@ -363,28 +358,28 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
 
         Query participants in a live meeting, or after the meeting, using participant's email. The `meetingId`
         parameter is the unique identifier for the meeting and is required.
-        
+
         The authenticated user calling this API must either have an Administrator role with the
         `meeting:admin_participants_read` scope, or be the meeting host.
-        
+
         * If the `meetingId` value specified is for a meeting series, the operation returns participants' details for
         the last instance in the meeting series. If the `meetingStartTimeFrom` value and the `meetingStartTimeTo`
         value are specified, the operation returns participants' details for the last instance in the meeting series
         in the time range.
-        
+
         * If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns
         participants' details for that scheduled meeting. If the `meetingStartTimeFrom` value and the
         `meetingStartTimeTo` value are specified, the operation returns participants' details for the last instance in
         the scheduled meeting in the time range.
-        
+
         * If the `meetingId` value specified is for a meeting instance which is in progress or ended, the operation
         returns participants' details for that meeting instance.
-        
+
         * The `meetingStartTimeFrom` and `meetingStartTimeTo` only apply when `meetingId` is a series ID or an
         occurrence ID.
-        
+
         #### Request Header
-        
+
         * `timezone`: Time zone for time stamps in the response body, defined in conformance with the
         `IANA time zone database
         <https://www.iana.org/time-zones>`_.
@@ -435,9 +430,14 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             params['meetingStartTimeTo'] = meeting_start_time_to
         if host_email is not None:
             params['hostEmail'] = host_email
+        body = dict()
+        body['emails'] = emails
+        body['joinTimeFrom'] = join_time_from
+        body['joinTimeTo'] = join_time_to
         url = self.ep('query')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = TypeAdapter(list[Participant]).validate_python(data['items'])
+        return r
 
     def get_meeting_participant_details(self, participant_id: str, host_email: str = None) -> Participant:
         """
@@ -445,7 +445,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
 
         Get a meeting participant details of a live or post meeting. The `participantId` is required to identify the
         meeting and the participant.
-        
+
         The authenticated user calling this API must either have an Administrator role with the
         `meeting:admin_participants_read` scope, or be the meeting host.
 
@@ -461,8 +461,9 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{participant_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = Participant.model_validate(data)
+        return r
 
     def update_a_participant(self, participant_id: str, muted: str = None, admit: str = None,
                              expel: str = None) -> InProgressParticipant:
@@ -471,14 +472,14 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
 
         To mute, un-mute, expel, or admit a participant in a live meeting. The `participantId` is required to identify
         the meeting and the participant.
-        
+
         Notes:
-        
+
         * The owner of the OAuth token calling this API needs to be the meeting host or co-host.
-        
+
         * The `expel` attribute always takes precedence over `admit` and `muted`. The request can have all `expel`,
         `admit` and `muted` or any of them.
-        
+
         <div><Callout type="warning">There is an inconsistent behavior in Webex Meetings App when all active meeting
         participants join using Webex Meetings App and the host attempts to change meeting participant status using
         this API. Requests to mute, un-mute, admit, or expel a meeting participant return a successful response and
@@ -500,25 +501,29 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         :type expel: str
         :rtype: :class:`InProgressParticipant`
         """
+        body = dict()
+        body['muted'] = muted
+        body['admit'] = admit
+        body['expel'] = expel
         url = self.ep(f'{participant_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = InProgressParticipant.model_validate(data)
+        return r
 
     def admit_participants(self, items: list[ParticipantID]):
         """
         Admit Participants
 
         To admit participants into a live meeting in bulk.
-        
-        This API limits the maximum size of `items` in the request body to 100.
-        
-        Each `participantId` of `items` in the request body should have the same prefix of `meetingId`.
 
+        This API limits the maximum size of `items` in the request body to 100.
+
+        Each `participantId` of `items` in the request body should have the same prefix of `meetingId`.
 
         :type items: list[ParticipantID]
         :rtype: None
         """
+        body = dict()
+        body['items'] = loads(TypeAdapter(list[ParticipantID]).dump_json(items))
         url = self.ep('admit')
-        ...
-
-    ...
+        super().post(url, json=body)

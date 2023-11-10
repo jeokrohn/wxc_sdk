@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -202,12 +203,12 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
 
     def list_broad_works_enterprises(self, sp_enterprise_id: str = None, starts_with: str = None,
                                      last_sync_end_time: str = None, sync_status: str = None, after: str = None,
-                                     max_: int = None) -> list[Enterprise]:
+                                     **params) -> Generator[Enterprise, None, None]:
         """
         List BroadWorks Enterprises
 
         List the provisioned enterprises for a Service Provider.
-        
+
         This API also allows a Service Provider to search for their provisioned enterprises on Cisco Webex. There are a
         number of filter options which can be combined in a single request.
 
@@ -224,11 +225,8 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :param after: Only include enterprises created after this date and time. Epoch time (in milliseconds)
             preferred, but ISO 8601 date format also accepted.
         :type after: str
-        :param max_: Limit the number of enterprises returned in the search, up to 1000.
-        :type max_: int
-        :rtype: list[Enterprise]
+        :return: Generator yielding :class:`Enterprise` instances
         """
-        params = {}
         if sp_enterprise_id is not None:
             params['spEnterpriseId'] = sp_enterprise_id
         if starts_with is not None:
@@ -239,11 +237,8 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
             params['syncStatus'] = sync_status
         if after is not None:
             params['after'] = after
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Enterprise, item_key='items', params=params)
 
     def update_directory_sync_for_a_broad_works_enterprise(self, id: str,
                                                            enable_dir_sync: str) -> TriggerDirectorySyncResponse:
@@ -259,9 +254,12 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type enable_dir_sync: str
         :rtype: :class:`TriggerDirectorySyncResponse`
         """
+        body = dict()
+        body['enableDirSync'] = enable_dir_sync
         url = self.ep(f'{id}/broadworksDirectorySync')
-        ...
-
+        data = super().put(url, json=body)
+        r = TriggerDirectorySyncResponse.model_validate(data)
+        return r
 
     def trigger_directory_sync_for_an_enterprise(self, id: str, sync_status: str) -> TriggerDirectorySyncResponse:
         """
@@ -277,9 +275,12 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type sync_status: str
         :rtype: :class:`TriggerDirectorySyncResponse`
         """
+        body = dict()
+        body['syncStatus'] = sync_status
         url = self.ep(f'{id}/broadworksDirectorySync')
-        ...
-
+        data = super().post(url, json=body)
+        r = TriggerDirectorySyncResponse.model_validate(data)
+        return r
 
     def get_directory_sync_status_for_an_enterprise(self, id: str) -> EnterpriseBroadworksDirectorySync:
         """
@@ -293,8 +294,9 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :rtype: :class:`EnterpriseBroadworksDirectorySync`
         """
         url = self.ep(f'{id}/broadworksDirectorySync')
-        ...
-
+        data = super().get(url)
+        r = EnterpriseBroadworksDirectorySync.model_validate(data)
+        return r
 
     def trigger_directory_sync_for_a_user(self, id: str, user_id: str = None) -> TriggerUserDirectorySyncResponse:
         """
@@ -309,7 +311,9 @@ class BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi(ApiChild, base
         :type user_id: str
         :rtype: :class:`TriggerUserDirectorySyncResponse`
         """
+        body = dict()
+        body['userId'] = user_id
         url = self.ep(f'{id}/broadworksDirectorySync/externalUser')
-        ...
-
-    ...
+        data = super().post(url, json=body)
+        r = TriggerUserDirectorySyncResponse.model_validate(data)
+        return r

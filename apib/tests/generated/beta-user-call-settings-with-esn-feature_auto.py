@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -419,11 +420,11 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         Retrieve List of Call Queue Caller ID information
 
         Retrieve the list of the person's available call queues and the associated Caller ID information.
-        
+
         If the Agent is to enable `queueCallerIdEnabled`, they must choose which queue to use as the source for
         outgoing Caller ID.  This API returns a list of Call Queues from which the person must select.  If this
         setting is disabled or the Agent does not belong to any queue, this list will be empty.
-        
+
         This API requires a full admin or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -431,20 +432,21 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type person_id: str
         :rtype: list[CallQueueObject]
         """
-        url = self.ep(f'elephony/config/people/{person_id}/queues/availableCallerIds')
-        ...
-
+        url = self.ep(f'telephony/config/people/{person_id}/queues/availableCallerIds')
+        data = super().get(url)
+        r = TypeAdapter(list[CallQueueObject]).validate_python(data['availableQueues'])
+        return r
 
     def retrieve_a_call_queue_agent_s_caller_id_information(self, person_id: str) -> AgentCallQueueId:
         """
         Retrieve a Call Queue Agent's Caller ID information
 
         Retrieve a call queue agent's Caller ID information.
-        
+
         Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone
         number or their own configured Caller ID. This API fetches the configured Caller ID for the agent in the
         system.
-        
+
         This API requires a full admin or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -452,9 +454,10 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type person_id: str
         :rtype: :class:`AgentCallQueueId`
         """
-        url = self.ep(f'elephony/config/people/{person_id}/queues/callerId')
-        ...
-
+        url = self.ep(f'telephony/config/people/{person_id}/queues/callerId')
+        data = super().get(url)
+        r = AgentCallQueueId.model_validate(data)
+        return r
 
     def retrieve_a_person_s_monitoring_settings(self, person_id: str, org_id: str = None) -> MonitoringSettings:
         """
@@ -464,7 +467,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         park extenions that are being monitored.
         Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
         parked on that extension.
-        
+
         This API requires a full, user, or read-only administrator auth token with a scope of
         `spark-admin:people_read`.
 
@@ -479,18 +482,19 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'eople/{person_id}/features/monitoring')
-        ...
-
+        url = self.ep(f'people/{person_id}/features/monitoring')
+        data = super().get(url, params=params)
+        r = MonitoringSettings.model_validate(data)
+        return r
 
     def get_a_list_of_phone_numbers_for_a_person(self, person_id: str, org_id: str = None) -> GetNumbers:
         """
         Get a List of Phone Numbers for a Person
 
         Get a person's phone numbers including alternate numbers.
-        
+
         A person can have one or more phone numbers and/or extensions via which they can be called.
-        
+
         This API requires a full or user administrator auth token with the `spark-admin:people_read` scope.
 
         :param person_id: Unique identifier for the person.
@@ -504,19 +508,20 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'eople/{person_id}/features/numbers')
-        ...
-
+        url = self.ep(f'people/{person_id}/features/numbers')
+        data = super().get(url, params=params)
+        r = GetNumbers.model_validate(data)
+        return r
 
     def get_a_person_s_privacy_settings(self, person_id: str, org_id: str = None) -> PrivacyGet:
         """
         Get a person's Privacy Settings
 
         Get a person's privacy settings for the specified person ID.
-        
+
         The privacy feature enables the person's line to be monitored by others and determine if they can be reached by
         Auto Attendant services.
-        
+
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
@@ -530,19 +535,20 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'eople/{person_id}/features/privacy')
-        ...
-
+        url = self.ep(f'people/{person_id}/features/privacy')
+        data = super().get(url, params=params)
+        r = PrivacyGet.model_validate(data)
+        return r
 
     def read_push_to_talk_settings_for_a_person(self, person_id: str, org_id: str = None) -> PushToTalkInfo:
         """
         Read Push-to-Talk Settings for a Person
 
         Retrieve a person's Push-to-Talk settings.
-        
+
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
-        
+
         This API requires a full, user, or read-only administrator auth token with a scope of
         `spark-admin:people_read`.
 
@@ -557,19 +563,20 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'eople/{person_id}/features/pushToTalk')
-        ...
-
+        url = self.ep(f'people/{person_id}/features/pushToTalk')
+        data = super().get(url, params=params)
+        r = PushToTalkInfo.model_validate(data)
+        return r
 
     def read_receptionist_client_settings_for_a_person(self, person_id: str, org_id: str = None) -> ReceptionInfo:
         """
         Read Receptionist Client Settings for a Person
 
         Retrieve a person's Receptionist Client settings.
-        
+
         To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as
         telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
-        
+
         This API requires a full, user, or read-only administrator auth token with a scope of
         `spark-admin:people_read`.
 
@@ -584,9 +591,10 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'eople/{person_id}/features/reception')
-        ...
-
+        url = self.ep(f'people/{person_id}/features/reception')
+        data = super().get(url, params=params)
+        r = ReceptionInfo.model_validate(data)
+        return r
 
     def search_shared_line_appearance_members(self, person_id: str, application_id: str, max_: str = None,
                                               start: str = None, location: str = None, name: str = None,
@@ -596,7 +604,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         Search Shared-Line Appearance Members
 
         Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
-        
+
         This API requires a full or user administrator auth token with the `spark-admin:people_read` scope.
 
         :param person_id: A unique identifier for the person.
@@ -619,16 +627,25 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type extension: Union[str, datetime]
         :rtype: list[AvailableSharedLineMemberItem]
         """
-        url = self.ep(f'elephony/config/people/{person_id}/applications/{application_id}/availableMembers')
-        ...
-
+        body = dict()
+        body['max'] = max_
+        body['start'] = start
+        body['location'] = location
+        body['name'] = name
+        body['number'] = number
+        body['order'] = order
+        body['extension'] = extension
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/availableMembers')
+        data = super().get(url, json=body)
+        r = TypeAdapter(list[AvailableSharedLineMemberItem]).validate_python(data['members'])
+        return r
 
     def get_shared_line_appearance_members(self, person_id: str, application_id: str) -> GetSharedLineMemberList:
         """
         Get Shared-Line Appearance Members
 
         Get primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.
-        
+
         This API requires a full or user administrator auth token with the `spark-admin:people_read` scope.
 
         :param person_id: A unique identifier for the person.
@@ -637,7 +654,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :type application_id: str
         :rtype: :class:`GetSharedLineMemberList`
         """
-        url = self.ep(f'elephony/config/people/{person_id}/applications/{application_id}/members')
-        ...
-
-    ...
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
+        data = super().get(url)
+        r = GetSharedLineMemberList.model_validate(data)
+        return r

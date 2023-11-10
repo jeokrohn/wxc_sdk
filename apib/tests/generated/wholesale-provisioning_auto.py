@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -432,8 +433,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         if status is not None:
             params['status'] = ','.join(status)
         url = self.ep('customers')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Customer, item_key='items', params=params)
 
     def provision_a_wholesale_customer(self, provisioning_id: str, packages: list[str], external_id: str,
                                        address: Address, org_id: str = None,
@@ -443,13 +443,13 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         Provision a Wholesale Customer
 
         Provision a Wholesale customer for Cisco Webex services.
-        
+
         This API will allow a Service Provider to map the Wholesale customer and assign the required licenses and
         entitlements for Webex, Calling and Meetings.
-        
+
         The Wholesale customer provisioning is asynchronous and thus a background task is created when this endpoint is
         invoked.
-        
+
         <div>
         <Callout type='info'>After successful invocation of this endpoint a URL will be returned in the `Location`
         header, which will point to the `Get a Wholesale Customer
@@ -457,7 +457,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         </div>
 
         :param provisioning_id: This Provisioning ID defines how this customer is to be provisioned for Webex Services.
-        
+
         Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen
         Customer Template
         on `Webex Control Hub
@@ -473,13 +473,21 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type org_id: str
         :param customer_info: Mandatory for new customer. Optional if Organization ID is provided.
         :type customer_info: ProvisionAWholesaleCustomerCustomerInfo
-
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
         :rtype: str
         """
+        body = dict()
+        body['provisioningId'] = provisioning_id
+        body['packages'] = packages
+        body['orgId'] = org_id
+        body['externalId'] = external_id
+        body['address'] = loads(address.model_dump_json())
+        body['customerInfo'] = loads(customer_info.model_dump_json())
+        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep('customers')
-        ...
-
+        data = super().post(url, json=body)
+        r = data['url']
+        return r
 
     def get_a_wholesale_customer(self, customer_id: str) -> Customer:
         """
@@ -492,8 +500,9 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :rtype: :class:`Customer`
         """
         url = self.ep(f'customers/{customer_id}')
-        ...
-
+        data = super().get(url)
+        r = Customer.model_validate(data)
+        return r
 
     def update_a_wholesale_customer(self, customer_id: str, packages: list[str], external_id: str = None,
                                     address: Address = None,
@@ -502,10 +511,10 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         Update a Wholesale Customer
 
         This API allows a Service Provider to update certain details of a provisioned Wholesale customer.
-        
+
         The Wholesale customer provisioning is asynchronous and thus a background task is created when this endpoint is
         invoked.
-        
+
         <div>
         <Callout type='info'>After successful invocation of this endpoint a URL will be returned in the `Location`
         header, which will point to the `Get a Wholesale Customer
@@ -526,9 +535,15 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
         :rtype: str
         """
+        body = dict()
+        body['externalId'] = external_id
+        body['packages'] = packages
+        body['address'] = loads(address.model_dump_json())
+        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep(f'customers/{customer_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = data['url']
+        return r
 
     def remove_a_wholesale_customer(self, customer_id: str):
         """
@@ -541,8 +556,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :rtype: None
         """
         url = self.ep(f'customers/{customer_id}')
-        ...
-
+        super().delete(url)
 
     def precheck_a_wholesale_customer_provisioning(self, address: Address, provisioning_id: str = None,
                                                    packages: list[str] = None, org_id: str = None,
@@ -553,7 +567,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         Precheck a Wholesale Customer Provisioning
 
         This API will allow the Partner sales team to verify likely success of provisioning a Wholesale customer.
-        
+
         <div>
         <Callout type='info'>
         The Prerequisite for using this API is to have `wxc-wholesale` entitlement or `webex-wholesale-partner-testing`
@@ -569,7 +583,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type address: Address
         :param provisioning_id: This Provisioning ID defines how this wholesale customer is to be provisioned for Cisco
             Webex Services.
-        
+
         Each Customer Template will have its unique Provisioning ID. This ID will be displayed under the chosen
         Customer Template
         on Cisco Webex Control Hub.
@@ -580,15 +594,22 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type org_id: str
         :param external_id: External ID of the Wholesale customer.
         :type external_id: str
-
         :type customer_info: PrecheckAWholesaleCustomerProvisioningCustomerInfo
-
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
         :rtype: :class:`CustomerProvisioningPrecheckResponse`
         """
+        body = dict()
+        body['provisioningId'] = provisioning_id
+        body['packages'] = packages
+        body['orgId'] = org_id
+        body['externalId'] = external_id
+        body['address'] = loads(address.model_dump_json())
+        body['customerInfo'] = loads(customer_info.model_dump_json())
+        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep('customers/validate')
-        ...
-
+        data = super().post(url, json=body)
+        r = CustomerProvisioningPrecheckResponse.model_validate(data)
+        return r
 
     def list_wholesale_sub_partners(self, provisioning_state: str = None,
                                     **params) -> Generator[SubPartner, None, None]:
@@ -605,8 +626,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         if provisioning_state is not None:
             params['provisioningState'] = provisioning_state
         url = self.ep('subPartners')
-        ...
-
+        return self.session.follow_pagination(url=url, model=SubPartner, item_key='items', params=params)
 
     def list_wholesale_subscribers(self, customer_id: str = None, person_id: str = None,
                                    external_customer_id: str = None, email: str = None, status: str = None,
@@ -660,8 +680,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         if sort_order is not None:
             params['sortOrder'] = sort_order
         url = self.ep('subscribers')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Subscriber, item_key='items', params=params)
 
     def provision_a_wholesale_subscriber(self, customer_id: str, email: str, package: SubscriberPackage,
                                          provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters) -> Subscriber:
@@ -669,10 +688,10 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         Provision a Wholesale Subscriber
 
         Provision a new Wholesale subscriber for Cisco Webex services.
-        
+
         This API allows a Service Provider to map the Wholesale subscriber to a Cisco Webex Wholesale customer and
         assign the required licenses and entitlements for Webex, Calling and Meetings.
-        
+
         **Note:**
         If this subscriber is a existing Webex Calling entitled user, the `locationId`, `primaryPhoneNumber` and
         `extension` are optional and if provided are ignored.
@@ -683,13 +702,18 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type email: str
         :param package: The Webex Wholesale package to be assigned to the subscriber.
         :type package: SubscriberPackage
-
         :type provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters
         :rtype: :class:`Subscriber`
         """
+        body = dict()
+        body['customerId'] = customer_id
+        body['email'] = email
+        body['package'] = enum_str(package)
+        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep('subscribers')
-        ...
-
+        data = super().post(url, json=body)
+        r = Subscriber.model_validate(data)
+        return r
 
     def get_a_wholesale_subscriber(self, subscriber_id: str) -> Subscriber:
         """
@@ -702,8 +726,9 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :rtype: :class:`Subscriber`
         """
         url = self.ep(f'subscribers/{subscriber_id}')
-        ...
-
+        data = super().get(url)
+        r = Subscriber.model_validate(data)
+        return r
 
     def update_a_wholesale_subscriber(self, subscriber_id: str, package: SubscriberPackage,
                                       provisioning_parameters: UpdateAWholesaleSubscriberProvisioningParameters = None) -> Subscriber:
@@ -711,12 +736,12 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         Update a Wholesale Subscriber
 
         This API allows a Service Provider to update certain details of a provisioned Wholesale subscriber.
-        
+
         **Note:**
-        
+
         * The `provisioningParameters` attributes should only be supplied when changing from the webex_meetings package
         to any calling-enabled package.
-        
+
         * Even in that scenario, if this subscriber is a existing Webex Calling entitled user, these attributes are
         optional and if provided are ignored.
 
@@ -724,13 +749,16 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type subscriber_id: str
         :param package: The Webex Wholesale package to be assigned to the subscriber.
         :type package: SubscriberPackage
-
         :type provisioning_parameters: UpdateAWholesaleSubscriberProvisioningParameters
         :rtype: :class:`Subscriber`
         """
+        body = dict()
+        body['package'] = enum_str(package)
+        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep(f'subscribers/{subscriber_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Subscriber.model_validate(data)
+        return r
 
     def remove_a_wholesale_subscriber(self, subscriber_id: str):
         """
@@ -743,8 +771,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :rtype: None
         """
         url = self.ep(f'subscribers/{subscriber_id}')
-        ...
-
+        super().delete(url)
 
     def precheck_a_wholesale_subscriber_provisioning(self, email: str, provisioning_id: str = None,
                                                      customer_id: str = None, package: SubscriberPackage = None,
@@ -754,7 +781,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         Precheck a Wholesale Subscriber Provisioning
 
         This API will allow the Partner sales team to verify likely success of provisioning a wholesale subscriber.
-        
+
         <div>
         <Callout type='info'>
         The Prerequisite for using this API is to have `wxc-wholesale` entitlement or `webex-wholesale-partner-testing`
@@ -770,7 +797,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type email: str
         :param provisioning_id: This Provisioning ID defines how this wholesale subscriber is to be provisioned for
             Cisco Webex Services.
-        
+
         Each Customer template has its unique provisioning ID. This ID is displayed under the chosen customer template
         on Cisco Webex Control Hub.
         :type provisioning_id: str
@@ -778,13 +805,18 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type customer_id: str
         :param package: The Webex Wholesale package to be assigned to the subscriber.
         :type package: SubscriberPackage
-
         :type provisioning_parameters: ProvisionAWholesaleSubscriberProvisioningParameters
-
         :type customer_info: PrecheckAWholesaleSubscriberProvisioningCustomerInfo
         :rtype: :class:`CustomerProvisioningPrecheckResponse`
         """
+        body = dict()
+        body['provisioningId'] = provisioning_id
+        body['customerId'] = customer_id
+        body['email'] = email
+        body['package'] = enum_str(package)
+        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
+        body['customerInfo'] = loads(customer_info.model_dump_json())
         url = self.ep('subscribers/validate')
-        ...
-
-    ...
+        data = super().post(url, json=body)
+        r = CustomerProvisioningPrecheckResponse.model_validate(data)
+        return r

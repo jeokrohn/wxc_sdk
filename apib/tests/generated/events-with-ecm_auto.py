@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -91,12 +92,12 @@ class EventsApi(ApiChild, base='events'):
 
     def list_events(self, has_attachments: bool, resource: EventResourceEnum = None, type: EventTypeEnum = None,
                     actor_id: str = None, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                    max_: int = None) -> list[Event]:
+                    **params) -> Generator[Event, None, None]:
         """
         List Events
 
         List events in your organization. Several query parameters are available to filter the response.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -113,11 +114,8 @@ class EventsApi(ApiChild, base='events'):
         :type from_: Union[str, datetime]
         :param to_: List events which occurred before a specific date and time.
         :type to_: Union[str, datetime]
-        :param max_: Limit the maximum number of events in the response.
-        :type max_: int
-        :rtype: list[Event]
+        :return: Generator yielding :class:`Event` instances
         """
-        params = {}
         if resource is not None:
             params['resource'] = resource
         if type is not None:
@@ -135,18 +133,15 @@ class EventsApi(ApiChild, base='events'):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Event, item_key='items', params=params)
 
     def get_event_details(self, event_id: str) -> Event:
         """
         Get Event Details
 
         Shows details for an event, by event ID.
-        
+
         Specify the event ID in the `eventId` parameter in the URI.
 
         :param event_id: The unique identifier for the event.
@@ -154,6 +149,6 @@ class EventsApi(ApiChild, base='events'):
         :rtype: :class:`Event`
         """
         url = self.ep(f'{event_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = Event.model_validate(data)
+        return r

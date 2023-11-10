@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -114,18 +115,18 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
     def list_call_memberships(self, call_status: ListCallMembershipsCallStatus, call_id: str = None,
                               is_host: ListCallMembershipsIsHost = None, person_id: str = None,
                               status: CallMembershipStatus = None, from_: Union[str, datetime] = None, to_: Union[str,
-                              datetime] = None, max_: int = None) -> list[CallMembership]:
+                              datetime] = None, **params) -> Generator[CallMembership, None, None]:
         """
         List Call Memberships
 
         List call memberships.
-        
+
         By default, lists call memberships for all calls in which the authenticated user is an active participant.
         Viewing all call memberships in your Organization requires an administrator auth token with the
         `spark-admin:call_memberships_read` scope.
-        
+
         Use query parameters to filter the result set. Results are in descending `created` order.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -145,11 +146,8 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
         :param to_: Limit results to call memberships for calls that ended before the exclusive end date, in ISO8601
             format.
         :type to_: Union[str, datetime]
-        :param max_: Limit the maximum number of call memberships in the response.
-        :type max_: int
-        :rtype: list[CallMembership]
+        :return: Generator yielding :class:`CallMembership` instances
         """
-        params = {}
         params['callStatus'] = call_status
         if call_id is not None:
             params['callId'] = call_id
@@ -169,18 +167,15 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=CallMembership, item_key='items', params=params)
 
     def get_call_membership_details(self, call_membership_id: str) -> CallMembership:
         """
         Get Call Membership Details
 
         Shows details for a call, by call ID.
-        
+
         Specify the call ID in the `callId` parameter in the URI.
 
         :param call_membership_id: The unique identifier for the call membership.
@@ -188,6 +183,6 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
         :rtype: :class:`CallMembership`
         """
         url = self.ep(f'{call_membership_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = CallMembership.model_validate(data)
+        return r

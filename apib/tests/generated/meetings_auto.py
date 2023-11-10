@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -2823,7 +2824,7 @@ class MeetingsApi(ApiChild, base='meetings'):
 
         Creates a new meeting. Regular users can schedule up to 100 meetings in 24 hours and admin users up to 3000
         overall or 800 for a single user. Please note that the failed requests are also counted toward the limits.
-        
+
         * If the parameter `adhoc` is `true` and `roomId` is specified, an ad-hoc meeting is created for the target
         room. An ad-hoc meeting is a non-recurring instant meeting for the target room which is supposed to be started
         immediately after being created for a quick collaboration. There's only one ad-hoc meeting for a room at the
@@ -2844,9 +2845,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         <https://developer.webex.com/docs/api/v1/meetings/list-meetings-of-a-meeting-series>`_, but the ended
         and ongoing instances of ad-hoc meetings can be listed by `List Meetings
         <https://developer.webex.com/docs/api/v1/meetings/list-meetings>`_ and `List Meetings of a Meeting Series
-        
+
         * If the parameter `adhoc` is `true`, `roomId` is required and the others are optional or ignored.
-        
+
         * The default value of `title` for an ad-hoc meeting is the user's name if not specified. The following
         parameters for an ad-hoc meeting have default values and the user's input values will be ignored:
         `scheduledType` is always `meeting`; `start` and `end` are 5 minutes after the current time and 20 minutes
@@ -2856,30 +2857,30 @@ class MeetingsApi(ApiChild, base='meetings'):
         is the room members except "me"; `joinBeforeHostMinutes` is 5; `automaticLockMinutes` is null;
         `unlockedMeetingJoinSecurity` is `allowJoinWithLobby`. An ad-hoc meeting can be started immediately even if
         the `start` is 5 minutes after the current time.
-        
+
         * The following parameters are not supported and will be ignored for an ad-hoc meeting: `templateId`,
         `recurrence`, `excludePassword`, `reminderTime`, `registration`, `integrationTags`, `enabledWebcastView`, and
         `panelistPassword`.
-        
+
         * If the value of the parameter `recurrence` is null, a non-recurring meeting is created.
-        
+
         * If the parameter `recurrence` has a value, a recurring meeting is created based on the rule defined by the
         value of `recurrence`. For a non-recurring meeting which has no `recurrence` value set, its `meetingType` is
         also `meetingSeries` which is a meeting series with only one occurrence in Webex meeting modeling.
-        
+
         * If the parameter `templateId` has a value, the meeting is created based on the meeting template specified by
         `templateId`. The list of meeting templates that is available for the authenticated user can be retrieved from
         `List Meeting Templates
         <https://developer.webex.com/docs/api/v1/meetings/list-meeting-templates>`_.
-        
+
         * If the parameter `siteUrl` has a value, the meeting is created on the specified site. Otherwise, the meeting
         is created on the user's preferred site. All available Webex sites and preferred site of the user can be
         retrieved by `Get Site List` API.
-        
+
         * If the parameter `scheduledType` equals "personalRoomMeeting", the meeting is created in the user's
         `personal room
         <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_.
-        
+
         * If the parameter `roomId` has a value, the meeting is created for the Webex space specified by `roomId`. If
         `roomId` is specified but the user calling the API is not a member of the Webex space specified by `roomId`,
         the API will fail even if the user has the admin-level scopes or he is calling the API on behalf of another
@@ -3084,9 +3085,53 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type restrict_to_invitees: bool
         :rtype: :class:`MeetingSeriesObjectWithAdhoc`
         """
+        body = dict()
+        body['adhoc'] = adhoc
+        body['roomId'] = room_id
+        body['templateId'] = template_id
+        body['title'] = title
+        body['agenda'] = agenda
+        body['password'] = password
+        body['start'] = start
+        body['end'] = end
+        body['timezone'] = timezone
+        body['recurrence'] = recurrence
+        body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+        body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+        body['enabledJoinBeforeHost'] = enabled_join_before_host
+        body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+        body['joinBeforeHostMinutes'] = join_before_host_minutes
+        body['excludePassword'] = exclude_password
+        body['publicMeeting'] = public_meeting
+        body['reminderTime'] = reminder_time
+        body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
+        body['sessionTypeId'] = session_type_id
+        body['scheduledType'] = enum_str(scheduled_type)
+        body['enabledWebcastView'] = enabled_webcast_view
+        body['panelistPassword'] = panelist_password
+        body['enableAutomaticLock'] = enable_automatic_lock
+        body['automaticLockMinutes'] = automatic_lock_minutes
+        body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+        body['allowAuthenticatedDevices'] = allow_authenticated_devices
+        body['invitees'] = loads(TypeAdapter(list[InviteeObjectForCreateMeeting]).dump_json(invitees))
+        body['sendEmail'] = send_email
+        body['hostEmail'] = host_email
+        body['siteUrl'] = site_url
+        body['meetingOptions'] = loads(meeting_options.model_dump_json())
+        body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
+        body['registration'] = loads(registration.model_dump_json())
+        body['integrationTags'] = integration_tags
+        body['simultaneousInterpretation'] = loads(simultaneous_interpretation.model_dump_json())
+        body['enabledBreakoutSessions'] = enabled_breakout_sessions
+        body['breakoutSessions'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(breakout_sessions))
+        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes))
+        body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
+        body['requireAttendeeLogin'] = require_attendee_login
+        body['restrictToInvitees'] = restrict_to_invitees
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = MeetingSeriesObjectWithAdhoc.model_validate(data)
+        return r
 
     def get_a_meeting(self, meeting_id: str, current: bool = None,
                       host_email: str = None) -> MeetingSeriesObjectWithAdhoc:
@@ -3094,27 +3139,27 @@ class MeetingsApi(ApiChild, base='meetings'):
         Get a Meeting
 
         Retrieves details for a meeting with a specified meeting ID.
-        
+
         * If the `meetingId` value specified is for a meeting series and `current` is `true`, the operation returns
         details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start or
         the upcoming scheduled meeting of the meeting series.
-        
+
         * If the `meetingId` value specified is for a meeting series and `current` is `false` or `current` is not
         specified, the operation returns details for the entire meeting series.
-        
+
         * If the `meetingId` value specified is for a scheduled meeting from a meeting series, the operation returns
         details for that scheduled meeting.
-        
+
         * If the `meetingId` value specified is for a meeting instance which is happening or has happened, the
         operation returns details for that meeting instance.
-        
+
         * `trackingCodes` is not supported for ended meeting instances.
-        
+
         #### Request Header
-        
+
         * `password`: Meeting password. Required when the meeting is protected by a password and the current user is
         not privileged to view it if they are not a host, cohost or invitee of the meeting.
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ for time stamps in response body, defined in conformance with the
         `IANA time zone database
@@ -3140,8 +3185,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = MeetingSeriesObjectWithAdhoc.model_validate(data)
+        return r
 
     def list_meetings(self, meeting_number: str = None, web_link: str = None, room_id: str = None,
                       meeting_type: MeetingSeriesObjectMeetingType = None, state: MeetingSeriesObjectState = None,
@@ -3149,8 +3195,8 @@ class MeetingsApi(ApiChild, base='meetings'):
                       has_chat: bool = None, has_recording: bool = None, has_transcription: bool = None,
                       has_closed_caption: bool = None, has_polls: bool = None, has_qa: bool = None,
                       current: bool = None, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                      max_: int = None, host_email: str = None, site_url: str = None,
-                      integration_tag: str = None) -> list[MeetingSeriesObjectForListMeeting]:
+                      host_email: str = None, site_url: str = None, integration_tag: str = None,
+                      **params) -> Generator[MeetingSeriesObjectForListMeeting, None, None]:
         """
         List Meetings
 
@@ -3161,69 +3207,69 @@ class MeetingsApi(ApiChild, base='meetings'):
         meetings created by `Create a Meeting
         <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ with `adhoc` of `true` and a `roomId` will not be listed, but the ended
         and ongoing ad-hoc meeting instances will be listed.
-        
+
         * If `meetingNumber` is specified, the operation returns an array of meeting objects specified by the
         `meetingNumber`. Each object in the array can be a scheduled meeting or a meeting series depending on whether
         the `current` parameter is `true` or `false`, and each object contains the simultaneous interpretation object.
         When `meetingNumber` is specified, parameters of `from`, `to`, `meetingType`, `state`, `isModified` and
         `siteUrl` will be ignored. Please note that `meetingNumber`, `webLink` and `roomId` are mutually exclusive and
         they cannot be specified simultaneously.
-        
+
         * If `webLink` is specified, the operation returns an array of meeting objects specified by the `webLink`. Each
         object in the array is a scheduled meeting, and each object contains the simultaneous interpretation object.
         When `webLink` is specified, parameters of `current`, `from`, `to`, `meetingType`, `state`, `isModified` and
         `siteUrl` will be ignored. Please note that `meetingNumber`, `webLink` and `roomId` are mutually exclusive and
         they cannot be specified simultaneously.
-        
+
         * If `roomId` is specified, the operation returns an array of meeting objects of the Webex space specified by
         the `roomId`. When `roomId` is specified, parameters of `current`, `meetingType`, `state` and `isModified`
         will be ignored. The meeting objects are queried on the user's preferred site if no `siteUrl` is specified;
         otherwise, queried on the specified site. `meetingNumber`, `webLink` and `roomId` are mutually exclusive and
         they cannot be specified simultaneously.
-        
+
         * If `state` parameter is specified, the returned array only has items in the specified state. If `state` is
         not specified, return items of all states.
-        
+
         * If `meetingType` equals "meetingSeries", the `scheduledType` parameter can be "meeting", "webinar" or null.
         If `scheduledType` is specified, the returned array only has items of the specified scheduled type; otherwise,
         it has items of "meeting" and "webinar".
-        
+
         * If `meetingType` equals "scheduledMeeting", the `scheduledType` parameter can be "meeting", "webinar",
         "personalRoomMeeting" or null. If `scheduledType` is specified, the returned array only has items of the
         specified scheduled type; otherwise, it has items of all scheduled types.
-        
+
         * If `meetingType` equals "meeting", the `scheduledType` parameter can be "meeting", "webinar" or null. If
         `scheduledType` is specified, the returned array only has items of the specified scheduled type; otherwise, it
         has items of "meeting" and "webinar". Please note that ended or in-progress meeting instances of `personal room
         <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_
         also fall into the category of "meeting" `scheduledType`.
-        
+
         * If `isModified` parameter is specified, the returned array only has items which have been modified to
         exceptional meetings. This parameter only applies to scheduled meeting.
-        
+
         * If any of the `hasChat`, `hasRecording`, `hasTranscription`, `hasClosedCaption`, `hasPolls ` and `hasQA`
         parameters is specified, the `meetingType` must be "meeting" and `state` must be "ended". These parameters are
         null by default.
-        
+
         * The `current` parameter only applies to meeting series. If it's `true`, the `start` and `end` attributes of
         each returned meeting series object are for the first scheduled meeting of that series. If it's `true` or not
         specified, the `start` and `end` attributes are for the scheduled meeting which is ready to start or join or
         the upcoming scheduled meeting of that series.
-        
+
         * If `from` and `to` are specified, the operation returns an array of meeting objects in that specified time
         range.
-        
+
         * If the parameter `siteUrl` has a value, the operation lists meetings on the specified site; otherwise, lists
         meetings on the user's all sites. All available Webex sites of the user can be retrieved by `Get Site List`
         API.
-        
+
         * `trackingCodes` is not supported for ended meeting instances.
-        
+
         #### Request Header
-        
+
         * `password`: Meeting password. Required when the meeting is protected by a password and the current user is
         not privileged to view it if they are not a host, cohost or invitee of the meeting.
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ for time stamps in response body, defined in conformance with the
         `IANA time zone database
@@ -3296,9 +3342,6 @@ class MeetingsApi(ApiChild, base='meetings'):
             requested. `to` cannot be before `from`. This parameter will be ignored if `meetingNumber`, `webLink` or
             `roomId` is specified.
         :type to_: Union[str, datetime]
-        :param max_: Limit the maximum number of meetings in the response, up to 100.  This parameter will be ignored
-            if `meetingNumber`, `webLink` or `roomId` is specified.
-        :type max_: int
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for meetings that are hosted by that user.
@@ -3311,9 +3354,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             integration application to query meetings by a key in its own domain such as a Zendesk ticket ID, a Jira
             ID, a Salesforce Opportunity ID, etc.
         :type integration_tag: str
-        :rtype: list[MeetingSeriesObjectForListMeeting]
+        :return: Generator yielding :class:`MeetingSeriesObjectForListMeeting` instances
         """
-        params = {}
         if meeting_number is not None:
             params['meetingNumber'] = meeting_number
         if web_link is not None:
@@ -3352,8 +3394,6 @@ class MeetingsApi(ApiChild, base='meetings'):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        if max_ is not None:
-            params['max'] = max_
         if host_email is not None:
             params['hostEmail'] = host_email
         if site_url is not None:
@@ -3361,17 +3401,16 @@ class MeetingsApi(ApiChild, base='meetings'):
         if integration_tag is not None:
             params['integrationTag'] = integration_tag
         url = self.ep()
-        ...
+        return self.session.follow_pagination(url=url, model=MeetingSeriesObjectForListMeeting, item_key='items', params=params)
 
-
-    def list_meetings_of_a_meeting_series(self, meeting_series_id: str, max_: int = None, from_: Union[str,
-                                          datetime] = None, to_: Union[str, datetime] = None,
+    def list_meetings_of_a_meeting_series(self, meeting_series_id: str, from_: Union[str, datetime] = None,
+                                          to_: Union[str, datetime] = None,
                                           meeting_type: ListMeetingsOfAMeetingSeriesMeetingType = None,
                                           state: ListMeetingsOfAMeetingSeriesState = None, is_modified: bool = None,
                                           has_chat: bool = None, has_recording: bool = None,
                                           has_transcription: bool = None, has_closed_caption: bool = None,
-                                          has_polls: bool = None, has_qa: bool = None,
-                                          host_email: str = None) -> list[ScheduledMeetingObject]:
+                                          has_polls: bool = None, has_qa: bool = None, host_email: str = None,
+                                          **params) -> Generator[ScheduledMeetingObject, None, None]:
         """
         List Meetings of a Meeting Series
 
@@ -3379,30 +3418,30 @@ class MeetingsApi(ApiChild, base='meetings'):
         meetings of an ad-hoc meeting created by `Create a Meeting
         <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ with `adhoc` of `true` and a `roomId` will not be
         listed, but the ended and ongoing meeting instances of it will be listed.
-        
+
         Each _scheduled meeting_ or _meeting_ instance of a _meeting series_ has its own `start`, `end`, etc. Thus, for
         example, when a daily meeting has been scheduled from `2019-04-01` to `2019-04-10`, there are 10 scheduled
         meeting instances in this series, one instance for each day, and each one has its own attributes. When a
         scheduled meeting has been started and ended or is happening, there are even more ended or in-progress meeting
         instances.
-        
+
         Use this operation to list scheduled meeting and meeting instances of a meeting series within a specific date
         range.
-        
+
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         * If any of the `hasChat`, `hasRecording`, `hasTranscription`, `hasClosedCaption`, `hasPolls ` and `hasQA`
         parameters is specified, the `meetingType` must be "meeting" and `state` must be "ended". These parameters are
         null by default.
-        
+
         * `trackingCodes` is not supported for ended meeting instances.
-        
+
         #### Request Header
-        
+
         * `password`: Meeting password. Required when the meeting is protected by a password and the current user is
         not privileged to view it if they are not a host, cohost or invitee of the meeting.
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ for time stamps in response body, defined in conformance with the
         `IANA time zone database
@@ -3412,8 +3451,6 @@ class MeetingsApi(ApiChild, base='meetings'):
             scheduled `personal room
             <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is not supported for this API.
         :type meeting_series_id: str
-        :param max_: Limit the maximum number of meetings in the response, up to 100.
-        :type max_: int
         :param from_: Start date and time (inclusive) for the range for which meetings are to be returned in any
             `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot be after `to`.
@@ -3464,12 +3501,9 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return meetings that are hosted by that user.
         :type host_email: str
-        :rtype: list[ScheduledMeetingObject]
+        :return: Generator yielding :class:`ScheduledMeetingObject` instances
         """
-        params = {}
         params['meetingSeriesId'] = meeting_series_id
-        if max_ is not None:
-            params['max'] = max_
         if from_ is not None:
             if isinstance(from_, str):
                 from_ = isoparse(from_)
@@ -3501,8 +3535,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=ScheduledMeetingObject, item_key='items', params=params)
 
     def patch_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: Union[str, datetime],
                         end: Union[str, datetime], timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
@@ -3525,14 +3558,14 @@ class MeetingsApi(ApiChild, base='meetings'):
         scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by
         `Create a Meeting
         <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ with `adhoc` of `true` and a `roomId` cannot be updated.
-        
+
         * If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting
         without impact on other scheduled meeting of the parent meeting series.
-        
+
         * If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series.
         **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional
         scheduled meeting in this series is cancelled when the meeting series is updated.
-        
+
         * The `agenda`, `recurrence`, and `trackingCodes` attributes can be specified as `null` so that these
         attributes become null and hidden from the response after the patch. Note that it's the keyword `null` not the
         string "null".
@@ -3690,9 +3723,45 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type restrict_to_invitees: bool
         :rtype: :class:`MeetingSeriesObject`
         """
+        body = dict()
+        body['title'] = title
+        body['agenda'] = agenda
+        body['password'] = password
+        body['start'] = start
+        body['end'] = end
+        body['timezone'] = timezone
+        body['recurrence'] = recurrence
+        body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+        body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+        body['enabledJoinBeforeHost'] = enabled_join_before_host
+        body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+        body['joinBeforeHostMinutes'] = join_before_host_minutes
+        body['excludePassword'] = exclude_password
+        body['publicMeeting'] = public_meeting
+        body['reminderTime'] = reminder_time
+        body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
+        body['sessionTypeId'] = session_type_id
+        body['enabledWebcastView'] = enabled_webcast_view
+        body['panelistPassword'] = panelist_password
+        body['enableAutomaticLock'] = enable_automatic_lock
+        body['automaticLockMinutes'] = automatic_lock_minutes
+        body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+        body['allowAuthenticatedDevices'] = allow_authenticated_devices
+        body['sendEmail'] = send_email
+        body['hostEmail'] = host_email
+        body['siteUrl'] = site_url
+        body['meetingOptions'] = loads(meeting_options.model_dump_json())
+        body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
+        body['integrationTags'] = integration_tags
+        body['enabledBreakoutSessions'] = enabled_breakout_sessions
+        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes))
+        body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
+        body['requireAttendeeLogin'] = require_attendee_login
+        body['restrictToInvitees'] = restrict_to_invitees
         url = self.ep(f'{meeting_id}')
-        ...
-
+        data = super().patch(url, json=body)
+        r = MeetingSeriesObject.model_validate(data)
+        return r
 
     def update_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: Union[str, datetime],
                          end: Union[str, datetime], timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
@@ -3716,15 +3785,15 @@ class MeetingsApi(ApiChild, base='meetings'):
         <Callout type="warning">The PUT method is still supported and behaves the same as before, will be deprecated in
         the future. Use the PATCH method instead.</Callout>
         </div>
-        
+
         Updates details for a meeting with a specified meeting ID. This operation applies to meeting series and
         scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by
         `Create a Meeting
         <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ with `adhoc` of `true` and a `roomId` cannot be updated.
-        
+
         * If the `meetingId` value specified is for a scheduled meeting, the operation updates that scheduled meeting
         without impact on other scheduled meeting of the parent meeting series.
-        
+
         * If the `meetingId` value specified is for a meeting series, the operation updates the entire meeting series.
         **Note**: If the value of `start`, `end`, or `recurrence` for the meeting series is changed, any exceptional
         scheduled meeting in this series is cancelled when the meeting series is updated.
@@ -3878,9 +3947,45 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type restrict_to_invitees: bool
         :rtype: :class:`MeetingSeriesObject`
         """
+        body = dict()
+        body['title'] = title
+        body['agenda'] = agenda
+        body['password'] = password
+        body['start'] = start
+        body['end'] = end
+        body['timezone'] = timezone
+        body['recurrence'] = recurrence
+        body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+        body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+        body['enabledJoinBeforeHost'] = enabled_join_before_host
+        body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+        body['joinBeforeHostMinutes'] = join_before_host_minutes
+        body['excludePassword'] = exclude_password
+        body['publicMeeting'] = public_meeting
+        body['reminderTime'] = reminder_time
+        body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
+        body['sessionTypeId'] = session_type_id
+        body['enabledWebcastView'] = enabled_webcast_view
+        body['panelistPassword'] = panelist_password
+        body['enableAutomaticLock'] = enable_automatic_lock
+        body['automaticLockMinutes'] = automatic_lock_minutes
+        body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+        body['allowAuthenticatedDevices'] = allow_authenticated_devices
+        body['sendEmail'] = send_email
+        body['hostEmail'] = host_email
+        body['siteUrl'] = site_url
+        body['meetingOptions'] = loads(meeting_options.model_dump_json())
+        body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
+        body['integrationTags'] = integration_tags
+        body['enabledBreakoutSessions'] = enabled_breakout_sessions
+        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes))
+        body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
+        body['requireAttendeeLogin'] = require_attendee_login
+        body['restrictToInvitees'] = restrict_to_invitees
         url = self.ep(f'{meeting_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = MeetingSeriesObject.model_validate(data)
+        return r
 
     def delete_a_meeting(self, meeting_id: str, host_email: str = None, send_email: bool = None):
         """
@@ -3890,10 +3995,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         to meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc
         meetings created by `Create a Meeting
         <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ with `adhoc` of `true` and a `roomId` cannot be deleted.
-        
+
         * If the `meetingId` value specified is for a scheduled meeting, the operation deletes that scheduled meeting
         without impact on other scheduled meeting of the parent meeting series.
-        
+
         * If the `meetingId` value specified is for a meeting series, the operation deletes the entire meeting series.
 
         :param meeting_id: Unique identifier for the meeting to be deleted. This parameter applies to meeting series
@@ -3914,8 +4019,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if send_email is not None:
             params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def join_a_meeting(self, meeting_id: str, meeting_number: str, web_link: str, join_directly: bool, email: str,
                        display_name: str, password: str, expiration_minutes: int, registration_id: Union[str,
@@ -3925,24 +4029,24 @@ class MeetingsApi(ApiChild, base='meetings'):
 
         Retrieves links for a meeting with a specified `meetingId`, `meetingNumber`, or `webLink` that allow users to
         start or join the meeting directly without logging in and entering a password.
-        
+
         * Please note that `meetingId`, `meetingNumber` and `webLink` are mutually exclusive and they cannot be
         specified simultaneously.
-        
+
         * If `joinDirectly` is true or not specified, the response will have HTTP response code 302 and the request
         will be redirected to `joinLink`; otherwise, the response will have HTTP response code 200 and `joinLink` will
         be returned in response body.
-        
+
         * Only the meeting host or cohost can generate the `startLink`.
-        
+
         * An admin user or a `Service App
         <https://developer.webex.com/docs/service-apps>`_ can generate the `startLink` and `joinLink` on behalf of another meeting host
         using the `hostEmail` parameter. When a `Service App
         <https://developer.webex.com/docs/service-apps>`_ generates the `startLink` and `joinLink`, the `hostEmail`
         parameter is required. The `hostEmail` parameter only applies to meetings, not webinars.
-        
+
         * For Service Apps, `hostEmail` must be provided in the request.
-        
+
         * Generating a join link or a start link before the time specified by `joinBeforeHostMinutes` for a webinar is
         not supported.
 
@@ -3985,9 +4089,21 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :rtype: :class:`JoinMeetingLinkObject`
         """
+        body = dict()
+        body['meetingId'] = meeting_id
+        body['meetingNumber'] = meeting_number
+        body['webLink'] = web_link
+        body['joinDirectly'] = join_directly
+        body['email'] = email
+        body['displayName'] = display_name
+        body['password'] = password
+        body['expirationMinutes'] = expiration_minutes
+        body['registrationId'] = registration_id
+        body['hostEmail'] = host_email
         url = self.ep('join')
-        ...
-
+        data = super().post(url, json=body)
+        r = JoinMeetingLinkObject.model_validate(data)
+        return r
 
     def list_meeting_templates(self, template_type: TemplateObjectTemplateType = None, locale: str = None,
                                is_default: bool = None, is_standard: bool = None, host_email: str = None,
@@ -3996,17 +4112,17 @@ class MeetingsApi(ApiChild, base='meetings'):
         List Meeting Templates
 
         Retrieves the list of meeting templates that is available for the authenticated user.
-        
+
         There are separate lists of meeting templates for different `templateType`, `locale` and `siteUrl`.
-        
+
         * If `templateType` is specified, the operation returns an array of meeting template objects specified by the
         `templateType`; otherwise, returns an array of meeting template objects of all template types.
-        
+
         * If `locale` is specified, the operation returns an array of meeting template objects specified by the
         `locale`; otherwise, returns an array of meeting template objects of the default `en_US` locale. Refer to
         `Meeting Template Locales
         <https://developer.webex.com/docs/meetings#meeting-template-locales>`_ for all the locales supported by Webex.
-        
+
         * If the parameter `siteUrl` has a value, the operation lists meeting templates on the specified site;
         otherwise, lists meeting templates on the user's preferred site. All available Webex sites and preferred site
         of the user can be retrieved by `Get Site List` API.
@@ -4051,17 +4167,18 @@ class MeetingsApi(ApiChild, base='meetings'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('templates')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[TemplateObject]).validate_python(data['items'])
+        return r
 
     def get_a_meeting_template(self, template_id: str, host_email: str = None) -> DetailedTemplateObject:
         """
         Get a Meeting Template
 
         Retrieves details for a meeting template with a specified meeting template ID.
-        
+
         #### Request Header
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ for time stamps in response body, defined in conformance with the
         `IANA time zone database
@@ -4079,8 +4196,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'templates/{template_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = DetailedTemplateObject.model_validate(data)
+        return r
 
     def get_meeting_control_status(self, meeting_id: str) -> Control:
         """
@@ -4098,8 +4216,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         params = {}
         params['meetingId'] = meeting_id
         url = self.ep('controls')
-        ...
-
+        data = super().get(url, params=params)
+        r = Control.model_validate(data)
+        return r
 
     def update_meeting_control_status(self, meeting_id: str, recording_started: str = None,
                                       recording_paused: str = None, locked: str = None) -> Control:
@@ -4124,9 +4243,14 @@ class MeetingsApi(ApiChild, base='meetings'):
         """
         params = {}
         params['meetingId'] = meeting_id
+        body = dict()
+        body['recordingStarted'] = recording_started
+        body['recordingPaused'] = recording_paused
+        body['locked'] = locked
         url = self.ep('controls')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = Control.model_validate(data)
+        return r
 
     def list_meeting_session_types(self, host_email: str = None,
                                    site_url: str = None) -> list[MeetingSessionTypeObject]:
@@ -4151,8 +4275,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('sessionTypes')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[MeetingSessionTypeObject]).validate_python(data['items'])
+        return r
 
     def get_a_meeting_session_type(self, session_type_id: int, host_email: str = None,
                                    site_url: str = None) -> MeetingSessionTypeObject:
@@ -4180,8 +4305,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep(f'sessionTypes/{session_type_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = MeetingSessionTypeObject.model_validate(data)
+        return r
 
     def get_registration_form_for_a_meeting(self, meeting_id: str, current: bool = None,
                                             host_email: str = None) -> Registration:
@@ -4213,8 +4339,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}/registration')
-        ...
-
+        data = super().get(url, params=params)
+        r = Registration.model_validate(data)
+        return r
 
     def update_meeting_registration_form(self, meeting_id: str, host_email: str, auto_accept_request: bool,
                                          require_first_name: bool, require_last_name: bool, require_email: bool,
@@ -4287,9 +4414,29 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type rules: list[StandardRegistrationApproveRule]
         :rtype: :class:`Registration`
         """
+        body = dict()
+        body['hostEmail'] = host_email
+        body['autoAcceptRequest'] = auto_accept_request
+        body['requireFirstName'] = require_first_name
+        body['requireLastName'] = require_last_name
+        body['requireEmail'] = require_email
+        body['requireJobTitle'] = require_job_title
+        body['requireCompanyName'] = require_company_name
+        body['requireAddress1'] = require_address1
+        body['requireAddress2'] = require_address2
+        body['requireCity'] = require_city
+        body['requireState'] = require_state
+        body['requireZipCode'] = require_zip_code
+        body['requireCountryRegion'] = require_country_region
+        body['requireWorkPhone'] = require_work_phone
+        body['requireFax'] = require_fax
+        body['maxRegisterNum'] = max_register_num
+        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedQuestionForCreateMeeting]).dump_json(customized_questions))
+        body['rules'] = loads(TypeAdapter(list[StandardRegistrationApproveRule]).dump_json(rules))
         url = self.ep(f'{meeting_id}/registration')
-        ...
-
+        data = super().put(url, json=body)
+        r = Registration.model_validate(data)
+        return r
 
     def delete_meeting_registration_form(self, meeting_id: str):
         """
@@ -4305,8 +4452,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :rtype: None
         """
         url = self.ep(f'{meeting_id}/registration')
-        ...
-
+        super().delete(url)
 
     def register_a_meeting_registrant(self, meeting_id: str, first_name: str, last_name: str, email: str,
                                       send_email: bool, job_title: str, company_name: str, address1: str,
@@ -4378,9 +4524,26 @@ class MeetingsApi(ApiChild, base='meetings'):
             params['current'] = str(current).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
+        body = dict()
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['email'] = email
+        body['sendEmail'] = send_email
+        body['jobTitle'] = job_title
+        body['companyName'] = company_name
+        body['address1'] = address1
+        body['address2'] = address2
+        body['city'] = city
+        body['state'] = state
+        body['zipCode'] = zip_code
+        body['countryRegion'] = country_region
+        body['workPhone'] = work_phone
+        body['fax'] = fax
+        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedRegistrant]).dump_json(customized_questions))
         url = self.ep(f'{meeting_id}/registrants')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = RegistrantCreateResponse.model_validate(data)
+        return r
 
     def batch_register_meeting_registrants(self, meeting_id: str, current: bool = None, host_email: str = None,
                                            items: list[RegistrantFormObject] = None) -> list[RegistrantCreateResponse]:
@@ -4416,9 +4579,12 @@ class MeetingsApi(ApiChild, base='meetings'):
             params['current'] = str(current).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
+        body = dict()
+        body['items'] = loads(TypeAdapter(list[RegistrantFormObject]).dump_json(items))
         url = self.ep(f'{meeting_id}/registrants/bulkInsert')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = TypeAdapter(list[RegistrantCreateResponse]).validate_python(data['items'])
+        return r
 
     def get_detailed_information_for_a_meeting_registrant(self, meeting_id: str, registrant_id: str,
                                                           current: bool = None, host_email: str = None) -> Registrant:
@@ -4452,12 +4618,14 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}/registrants/{registrant_id}')
-        ...
+        data = super().get(url, params=params)
+        r = Registrant.model_validate(data)
+        return r
 
-
-    def list_meeting_registrants(self, meeting_id: str, max_: int = None, host_email: str = None, current: bool = None,
+    def list_meeting_registrants(self, meeting_id: str, host_email: str = None, current: bool = None,
                                  email: str = None, registration_time_from: Union[str, datetime] = None,
-                                 registration_time_to: Union[str, datetime] = None) -> list[Registrant]:
+                                 registration_time_to: Union[str, datetime] = None,
+                                 **params) -> Generator[Registrant, None, None]:
         """
         List Meeting Registrants
 
@@ -4468,8 +4636,6 @@ class MeetingsApi(ApiChild, base='meetings'):
             supported. See the `Meetings Overview
             <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for more information about meeting types.
         :type meeting_id: str
-        :param max_: Limit the maximum number of registrants in the response, up to 100.
-        :type max_: int
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for a meeting that is hosted by that user.
@@ -4493,11 +4659,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             `registrationTimeFrom` plus 7 days. The interval between `registrationTimeFrom` and `registrationTimeTo`
             must be within 90 days.
         :type registration_time_to: Union[str, datetime]
-        :rtype: list[Registrant]
+        :return: Generator yielding :class:`Registrant` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         if host_email is not None:
             params['hostEmail'] = host_email
         if current is not None:
@@ -4515,13 +4678,12 @@ class MeetingsApi(ApiChild, base='meetings'):
             registration_time_to = dt_iso_str(registration_time_to)
             params['registrationTimeTo'] = registration_time_to
         url = self.ep(f'{meeting_id}/registrants')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Registrant, item_key='items', params=params)
 
     def query_meeting_registrants(self, meeting_id: str, status: RegistrantStatus,
                                   order_type: QueryRegistrantsOrderType, order_by: QueryRegistrantsOrderBy,
-                                  emails: list[str], max_: int = None, current: bool = None,
-                                  host_email: str = None) -> list[Registrant]:
+                                  emails: list[str], current: bool = None, host_email: str = None,
+                                  **params) -> Generator[Registrant, None, None]:
         """
         Query Meeting Registrants
 
@@ -4541,8 +4703,6 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type order_by: QueryRegistrantsOrderBy
         :param emails: List of registrant email addresses.
         :type emails: list[str]
-        :param max_: Limit the maximum number of registrants in the response, up to 100.
-        :type max_: int
         :param current: Whether or not to retrieve only the current scheduled meeting of the meeting series, i.e. the
             meeting ready to join or start or the upcoming meeting of the meeting series. If it's `true`, return
             details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start
@@ -4553,18 +4713,19 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for a meeting that is hosted by that user.
         :type host_email: str
-        :rtype: list[Registrant]
+        :return: Generator yielding :class:`Registrant` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         if current is not None:
             params['current'] = str(current).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
+        body = dict()
+        body['status'] = enum_str(status)
+        body['orderType'] = enum_str(order_type)
+        body['orderBy'] = enum_str(order_by)
+        body['emails'] = emails
         url = self.ep(f'{meeting_id}/registrants/query')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Registrant, item_key='items', params=params, json=body)
 
     def batch_update_meeting_registrants_status(self, meeting_id: str,
                                                 status_op_type: BatchUpdateMeetingRegistrantsStatusStatusOpType,
@@ -4605,9 +4766,11 @@ class MeetingsApi(ApiChild, base='meetings'):
             params['current'] = str(current).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
+        body = dict()
+        body['sendEmail'] = send_email
+        body['registrants'] = loads(TypeAdapter(list[Registrants]).dump_json(registrants))
         url = self.ep(f'{meeting_id}/registrants/{status_op_type}')
-        ...
-
+        super().post(url, params=params, json=body)
 
     def delete_a_meeting_registrant(self, meeting_id: str, registrant_id: str, current: bool = None,
                                     host_email: str = None):
@@ -4641,8 +4804,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}/registrants/{registrant_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def update_meeting_simultaneous_interpretation(self, meeting_id: str, enabled: bool,
                                                    interpreters: list[InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting]) -> MeetingSeriesObjectSimultaneousInterpretation:
@@ -4662,9 +4824,13 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type interpreters: list[InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting]
         :rtype: :class:`MeetingSeriesObjectSimultaneousInterpretation`
         """
+        body = dict()
+        body['enabled'] = enabled
+        body['interpreters'] = loads(TypeAdapter(list[InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting]).dump_json(interpreters))
         url = self.ep(f'{meeting_id}/simultaneousInterpretation')
-        ...
-
+        data = super().put(url, json=body)
+        r = MeetingSeriesObjectSimultaneousInterpretation.model_validate(data)
+        return r
 
     def create_a_meeting_interpreter(self, meeting_id: str, language_code1: str, language_code2: str, email: str,
                                      display_name: str, host_email: str,
@@ -4702,9 +4868,17 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :rtype: :class:`InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting`
         """
+        body = dict()
+        body['languageCode1'] = language_code1
+        body['languageCode2'] = language_code2
+        body['email'] = email
+        body['displayName'] = display_name
+        body['hostEmail'] = host_email
+        body['sendEmail'] = send_email
         url = self.ep(f'{meeting_id}/interpreters')
-        ...
-
+        data = super().post(url, json=body)
+        r = InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.model_validate(data)
+        return r
 
     def get_a_meeting_interpreter(self, meeting_id: str, interpreter_id: str,
                                   host_email: str = None) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
@@ -4728,8 +4902,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.model_validate(data)
+        return r
 
     def list_meeting_interpreters(self, meeting_id: str,
                                   host_email: str = None) -> list[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting]:
@@ -4737,14 +4912,14 @@ class MeetingsApi(ApiChild, base='meetings'):
         List Meeting Interpreters
 
         Lists meeting interpreters for a meeting with a specified `meetingId`.
-        
+
         This operation can be used for meeting series, scheduled meeting and ended or ongoing meeting instance objects.
         If the specified `meetingId` is for a meeting series, the interpreters for the series will be listed; if the
         `meetingId` is for a scheduled meeting, the interpreters for the particular scheduled meeting will be listed;
         if the `meetingId` is for an ended or ongoing meeting instance, the interpreters for the particular meeting
         instance will be listed. See the `Webex Meetings
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ guide for more information about the types of meetings.
-        
+
         The list returned is sorted in descending order by when interpreters were created.
 
         :param meeting_id: Unique identifier for the meeting for which interpreters are being requested. The meeting
@@ -4762,8 +4937,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}/interpreters')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting]).validate_python(data['items'])
+        return r
 
     def update_a_meeting_interpreter(self, meeting_id: str, interpreter_id: str, language_code1: str,
                                      language_code2: str, email: str, display_name: str, host_email: str,
@@ -4802,9 +4978,17 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :rtype: :class:`InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting`
         """
+        body = dict()
+        body['languageCode1'] = language_code1
+        body['languageCode2'] = language_code2
+        body['email'] = email
+        body['displayName'] = display_name
+        body['hostEmail'] = host_email
+        body['sendEmail'] = send_email
         url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.model_validate(data)
+        return r
 
     def delete_a_meeting_interpreter(self, meeting_id: str, interpreter_id: str, host_email: str = None,
                                      send_email: bool = None):
@@ -4832,8 +5016,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if send_email is not None:
             params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def update_meeting_breakout_sessions(self, meeting_id: str, host_email: str, send_email: bool,
                                          items: list[BreakoutSessionObject]) -> list[GetBreakoutSessionObject]:
@@ -4863,16 +5046,21 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type items: list[BreakoutSessionObject]
         :rtype: list[GetBreakoutSessionObject]
         """
+        body = dict()
+        body['hostEmail'] = host_email
+        body['sendEmail'] = send_email
+        body['items'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(items))
         url = self.ep(f'{meeting_id}/breakoutSessions')
-        ...
-
+        data = super().put(url, json=body)
+        r = TypeAdapter(list[GetBreakoutSessionObject]).validate_python(data['items'])
+        return r
 
     def list_meeting_breakout_sessions(self, meeting_id: str) -> list[GetBreakoutSessionObject]:
         """
         List Meeting Breakout Sessions
 
         Lists meeting breakout sessions for a meeting with a specified `meetingId`.
-        
+
         This operation can be used for meeting series, scheduled meeting and ended or ongoing meeting instance objects.
         See the `Webex Meetings
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ guide for more information about the types of meetings.
@@ -4885,8 +5073,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         :rtype: list[GetBreakoutSessionObject]
         """
         url = self.ep(f'{meeting_id}/breakoutSessions')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[GetBreakoutSessionObject]).validate_python(data['items'])
+        return r
 
     def delete_meeting_breakout_sessions(self, meeting_id: str, send_email: bool = None):
         """
@@ -4909,17 +5098,16 @@ class MeetingsApi(ApiChild, base='meetings'):
         if send_email is not None:
             params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_id}/breakoutSessions')
-        ...
-
+        super().delete(url, params=params)
 
     def get_a_meeting_survey(self, meeting_id: str) -> SurveyObject:
         """
         Get a Meeting Survey
 
         Retrieves details for a meeting survey identified by `meetingId`.
-        
+
         #### Request Header
-        
+
         * `hostEmail`: Email address for the meeting host. This parameter is only used if the user or application
         calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a site
         they manage and the API will return survey details of that user.
@@ -4930,23 +5118,24 @@ class MeetingsApi(ApiChild, base='meetings'):
         :rtype: :class:`SurveyObject`
         """
         url = self.ep(f'{meeting_id}/survey')
-        ...
-
+        data = super().get(url)
+        r = SurveyObject.model_validate(data)
+        return r
 
     def list_meeting_survey_results(self, meeting_id: str, meeting_start_time_from: Union[str, datetime] = None,
                                     meeting_start_time_to: Union[str, datetime] = None,
-                                    max_: int = None) -> list[SurveyResultObject]:
+                                    **params) -> Generator[SurveyResultObject, None, None]:
         """
         List Meeting Survey Results
 
         Retrieves results for a meeting survey identified by `meetingId`.
-        
+
         #### Request Header
-        
+
         * `timezone`: Time zone for time stamps in response body, defined in conformance with the
         `IANA time zone database
         <https://www.iana.org/time-zones>`_. The default value is `UTC` if not specified.
-        
+
         * `hostEmail`: Email address for the meeting host. This parameter is only used if the user or application
         calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a site
         they manage and the API will return the survey results of that user.
@@ -4971,11 +5160,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         `meetingStartTimeFrom` is a month ago, the default value for `meetingStartTimeTo` is `1` month after
         `meetingStartTimeFrom`.Otherwise it is the current date and time.
         :type meeting_start_time_to: Union[str, datetime]
-        :param max_: Limit the maximum number of meetings in the response, up to 100.
-        :type max_: int
-        :rtype: list[SurveyResultObject]
+        :return: Generator yielding :class:`SurveyResultObject` instances
         """
-        params = {}
         if meeting_start_time_from is not None:
             if isinstance(meeting_start_time_from, str):
                 meeting_start_time_from = isoparse(meeting_start_time_from)
@@ -4986,11 +5172,8 @@ class MeetingsApi(ApiChild, base='meetings'):
                 meeting_start_time_to = isoparse(meeting_start_time_to)
             meeting_start_time_to = dt_iso_str(meeting_start_time_to)
             params['meetingStartTimeTo'] = meeting_start_time_to
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep(f'{meeting_id}/surveyResults')
-        ...
-
+        return self.session.follow_pagination(url=url, model=SurveyResultObject, item_key='items', params=params)
 
     def get_meeting_survey_links(self, meeting_id: str, host_email: str, meeting_start_time_from: Union[str, datetime],
                                  meeting_start_time_to: Union[str, datetime],
@@ -4999,9 +5182,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         Get Meeting Survey Links
 
         Get survey links of a meeting for different users.
-        
+
         #### Request Header
-        
+
         * `timezone`: Time zone for the `meetingStartTimeFrom` and `meetingStartTimeTo` parameters and defined in
         conformance with the `IANA time zone database
         <https://www.iana.org/time-zones>`_. The default value is `UTC` if not specified.
@@ -5035,9 +5218,15 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type emails: list[str]
         :rtype: list[SurveyLinkObject]
         """
+        body = dict()
+        body['hostEmail'] = host_email
+        body['meetingStartTimeFrom'] = meeting_start_time_from
+        body['meetingStartTimeTo'] = meeting_start_time_to
+        body['emails'] = emails
         url = self.ep(f'{meeting_id}/surveyLinks')
-        ...
-
+        data = super().post(url, json=body)
+        r = TypeAdapter(list[SurveyLinkObject]).validate_python(data['items'])
+        return r
 
     def create_invitation_sources(self, meeting_id: str, host_email: str = None, person_id: str = None,
                                   items: list[InvitationSourceCreateObject] = None) -> list[InvitationSourceObject]:
@@ -5057,26 +5246,30 @@ class MeetingsApi(ApiChild, base='meetings'):
             the API has the admin-level scopes. When used, the admin may specify the email of a user in a site they
             manage to be the meeting host.
         :type person_id: str
-
         :type items: list[InvitationSourceCreateObject]
         :rtype: list[InvitationSourceObject]
         """
+        body = dict()
+        body['hostEmail'] = host_email
+        body['personId'] = person_id
+        body['items'] = loads(TypeAdapter(list[InvitationSourceCreateObject]).dump_json(items))
         url = self.ep(f'{meeting_id}/invitationSources')
-        ...
-
+        data = super().post(url, json=body)
+        r = TypeAdapter(list[InvitationSourceObject]).validate_python(data['items'])
+        return r
 
     def list_invitation_sources(self, meeting_id: str) -> list[InvitationSourceObject]:
         """
         List Invitation Sources
 
         Lists invitation sources for a meeting.
-        
+
         #### Request Header
-        
+
         * `hostEmail`: Email address for the meeting host. This parameter is only used if the user or application
         calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a site
         they manage and the API will return recording details of that user.
-        
+
         * `personId`:  Unique identifier for the meeting host. This attribute should only be set if the user or
         application calling the API has the admin-level scopes. When used, the admin may specify the email of a user
         in a site they manage to be the meeting host.
@@ -5087,8 +5280,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         :rtype: list[InvitationSourceObject]
         """
         url = self.ep(f'{meeting_id}/invitationSources')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[InvitationSourceObject]).validate_python(data['items'])
+        return r
 
     def list_meeting_tracking_codes(self, service: str, site_url: str = None,
                                     host_email: str = None) -> MeetingTrackingCodesObject:
@@ -5097,16 +5291,16 @@ class MeetingsApi(ApiChild, base='meetings'):
 
         Lists tracking codes on a site by a meeting host. The result indicates which tracking codes and what options
         can be used to create or update a meeting on the specified site.
-        
+
         * The `options` here differ from those in the `site-level tracking codes
         <https://developer.webex.com/docs/api/v1/tracking-codes/get-a-tracking-code>`_ and the `user-level tracking codes
         is the result of a selective combination of the two.
-        
+
         * For a tracking code, if there is no user-level tracking code, the API returns the site-level options, and the
         `defaultValue` of the site-level default option is `true`. If there is a user-level tracking code, it is
         merged into the `options`. Meanwhile, the `defaultValue` of this user-level option is `true` and the
         site-level default option becomes non default.
-        
+
         * If `siteUrl` is specified, tracking codes of the specified site will be listed; otherwise, tracking codes of
         the user's preferred site will be listed. All available Webex sites and the preferred sites of a user can be
         retrieved by `Get Site List
@@ -5132,8 +5326,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep('trackingCodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = MeetingTrackingCodesObject.model_validate(data)
+        return r
 
     def reassign_meetings_to_a_new_host(self, host_email: str = None,
                                         meeting_ids: list[str] = None) -> list[ReassignMeetingResponseObject]:
@@ -5141,44 +5336,44 @@ class MeetingsApi(ApiChild, base='meetings'):
         Reassign Meetings to a New Host
 
         Reassigns a list of meetings to a new host by an admin user.
-        
+
         All the meetings of `meetingIds` should belong to the same site, which is the `siteUrl` in the request header,
         if specified, or the admin user's preferred site, if not specified. All available Webex sites and the
         preferred sites of a user can be retrieved by `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         If the user of `hostEmail` is not qualified to be a host of the target site, the API returns an error with the
         HTTP status code `403`. If all the meetings referenced by `meetingIds` have been reassigned the new host
         successfully, the API returns an empty response with the HTTP status code `204`. Otherwise, if all the
         meetings of `meetingIds` fail or some of them fail, the API returns a "Multi-Status" response with status code
         of `207`, and individual errors for each meeting in the response body.
-        
+
         Only IDs of meeting series are supported for the `meetingIds`. IDs of scheduled meetings, meeting instances, or
         scheduled personal room meetings are not supported. See the `Meetings Overview
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for more information about the
         types of meetings.
-        
+
         There are several limitations when reassigning meetings:
-        
+
         * Users cannot assign an in-progress meeting.
-        
+
         * Users cannot assign a meeting to a user who is not a Webex user, or an attendee who does not have host
         privilege.
-        
+
         * Users cannot assign a meeting with calling/callback to a host user who does not have calling/callback
         privileges
-        
+
         * Users cannot assign a meeting with session type A to a host user who does not have session type A privileges.
-        
+
         * Users cannot assign an MC or Webinar to a new host who does not have an MC license or a Webinar license.
-        
+
         * Users cannot assign a TC/EC1.0/SC meeting, or a meeting that is created by on-behalf to a new host.
-        
+
         * Users cannot assign meetings from third-party integrations, such as meetings integrated with Outlook or
         Google.
-        
+
         #### Request Header
-        
+
         * `siteUrl`: Optional request header parameter. All the meetings of `meetingIds` should belong to the site
         referenced by siteUrl if specified. Otherwise, the meetings should belong to the admin user's preferred sites.
         All available Webex sites and the preferred sites of a user can be retrieved by `Get Site List
@@ -5194,7 +5389,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_ids: list[str]
         :rtype: list[ReassignMeetingResponseObject]
         """
+        body = dict()
+        body['hostEmail'] = host_email
+        body['meetingIds'] = meeting_ids
         url = self.ep('reassignHost')
-        ...
-
-    ...
+        data = super().post(url, json=body)
+        r = TypeAdapter(list[ReassignMeetingResponseObject]).validate_python(data['items'])
+        return r

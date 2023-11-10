@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -81,8 +82,9 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         params = {}
         params['roomId'] = room_id
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ECMFolder]).validate_python(data['items'])
+        return r
 
     def create_an_ecm_folder_configuration(self, room_id: str, content_url: str, display_name: str,
                                            drive_id: Union[str, datetime], item_id: Union[str, datetime],
@@ -110,9 +112,17 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :type default_folder: str
         :rtype: :class:`ECMFolder`
         """
+        body = dict()
+        body['roomId'] = room_id
+        body['contentUrl'] = content_url
+        body['displayName'] = display_name
+        body['driveId'] = drive_id
+        body['itemId'] = item_id
+        body['defaultFolder'] = default_folder
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = ECMFolder.model_validate(data)
+        return r
 
     def get_ecm_folder_details(self, id: str) -> ECMFolder:
         """
@@ -125,8 +135,9 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :rtype: :class:`ECMFolder`
         """
         url = self.ep(f'{id}')
-        ...
-
+        data = super().get(url)
+        r = ECMFolder.model_validate(data)
+        return r
 
     def update_an_ecm_linked_folder(self, id: str, room_id: str, content_url: str, display_name: str,
                                     drive_id: Union[str, datetime], item_id: Union[str, datetime],
@@ -156,9 +167,17 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :type default_folder: str
         :rtype: :class:`ECMFolder`
         """
+        body = dict()
+        body['roomId'] = room_id
+        body['contentUrl'] = content_url
+        body['displayName'] = display_name
+        body['driveId'] = drive_id
+        body['itemId'] = item_id
+        body['defaultFolder'] = default_folder
         url = self.ep(f'{id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = ECMFolder.model_validate(data)
+        return r
 
     def unlink_an_ecm_linked_folder(self, id: str):
         """
@@ -171,6 +190,4 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :rtype: None
         """
         url = self.ep(f'{id}')
-        ...
-
-    ...
+        super().delete(url)

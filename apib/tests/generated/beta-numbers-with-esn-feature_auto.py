@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -104,24 +105,24 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
     """
 
     def get_phone_numbers_for_an_organization_with_given_criterias(self, org_id: str = None, location_id: str = None,
-                                                                   max_: int = None, start: int = None,
-                                                                   phone_number: str = None, available: bool = None,
-                                                                   order: str = None, owner_name: str = None,
-                                                                   owner_id: str = None,
+                                                                   start: int = None, phone_number: str = None,
+                                                                   available: bool = None, order: str = None,
+                                                                   owner_name: str = None, owner_id: str = None,
                                                                    owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType = None,
                                                                    extension: str = None, number_type: str = None,
                                                                    phone_number_type: str = None, state: str = None,
                                                                    details: bool = None,
                                                                    toll_free_numbers: bool = None,
-                                                                   restricted_non_geo_numbers: bool = None) -> list[NumberObject]:
+                                                                   restricted_non_geo_numbers: bool = None,
+                                                                   **params) -> Generator[NumberObject, None, None]:
         """
         Get Phone Numbers for an Organization with Given Criterias
 
         List all the phone numbers for the given organization along with the status and owner (if any).
-        
+
         PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
         The owner is the person, workspace, or feature to which the number is assigned.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -130,8 +131,6 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
         :param location_id: Return the list of phone numbers for this location within the given organization. The
             maximum length is 36.
         :type location_id: str
-        :param max_: Limit the number of phone numbers returned to this maximum count. Default is 2000.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching phone numbers. Default is 0.
         :type start: int
         :param phone_number: Search for this `phoneNumber`.
@@ -165,15 +164,12 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
-        :rtype: list[NumberObject]
+        :return: Generator yielding :class:`NumberObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if phone_number is not None:
@@ -203,6 +199,4 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
         if restricted_non_geo_numbers is not None:
             params['restrictedNonGeoNumbers'] = str(restricted_non_geo_numbers).lower()
         url = self.ep()
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=NumberObject, item_key='phoneNumbers', params=params)

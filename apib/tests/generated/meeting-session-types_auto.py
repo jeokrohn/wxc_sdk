@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -129,8 +130,9 @@ class SessionTypesApi(ApiChild, base='admin/meeting'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('config/sessionTypes')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[SiteSessionType]).validate_python(data['items'])
+        return r
 
     def list_user_session_type(self, site_url: str = None, person_id: str = None) -> list[UserSessionTypes]:
         """
@@ -150,8 +152,9 @@ class SessionTypesApi(ApiChild, base='admin/meeting'):
         if person_id is not None:
             params['personId'] = person_id
         url = self.ep('userconfig/sessionTypes')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[UserSessionTypes]).validate_python(data['items'])
+        return r
 
     def update_user_session_types(self, site_url: str, person_id: str, email: str,
                                   session_type_ids: list[str]) -> UserSessionTypes:
@@ -159,7 +162,7 @@ class SessionTypesApi(ApiChild, base='admin/meeting'):
         Update User Session Types
 
         Assign session types to specific users.
-        
+
         * At least one of the following body parameters is required to update a specific user session type: `personId`,
         `email`.
 
@@ -173,7 +176,12 @@ class SessionTypesApi(ApiChild, base='admin/meeting'):
         :type session_type_ids: list[str]
         :rtype: :class:`UserSessionTypes`
         """
+        body = dict()
+        body['siteUrl'] = site_url
+        body['personId'] = person_id
+        body['email'] = email
+        body['sessionTypeIds'] = session_type_ids
         url = self.ep('userconfig/sessionTypes')
-        ...
-
-    ...
+        data = super().put(url, json=body)
+        r = UserSessionTypes.model_validate(data)
+        return r

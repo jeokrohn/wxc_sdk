@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -109,47 +110,42 @@ class MeetingQAndAApi(ApiChild, base='meetings/q_and_a'):
     
     """
 
-    def list_meeting_q_and_a(self, meeting_id: str, max_: int = None) -> list[QAObject]:
+    def list_meeting_q_and_a(self, meeting_id: str, **params) -> Generator[QAObject, None, None]:
         """
         List Meeting Q and A
 
         Lists questions and answers from a meeting, when ready.
-        
+
         Notes:
-        
+
         * Only `meeting instances
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
-        
+
         * Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         * This API is paginated by the sum of answers in a meeting, These pagination links are returned in the response
         header.
 
         :param meeting_id: A unique identifier for the `meeting instance
             <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ which the Q&A belongs to.
         :type meeting_id: str
-        :param max_: Limits the maximum number of answers in the response, up to 100.
-        :type max_: int
-        :rtype: list[QAObject]
+        :return: Generator yielding :class:`QAObject` instances
         """
-        params = {}
         params['meetingId'] = meeting_id
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
+        return self.session.follow_pagination(url=url, model=QAObject, item_key='items', params=params)
 
-
-    def list_answers_of_a_question(self, meeting_id: str, question_id: str, max_: int = None) -> list[AnswerObject]:
+    def list_answers_of_a_question(self, meeting_id: str, question_id: str,
+                                   **params) -> Generator[AnswerObject, None, None]:
         """
         List Answers of a Question
 
         Lists the answers to a specific question asked in a meeting.
-        
+
         * Only `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
-        
+
         * Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -158,15 +154,8 @@ class MeetingQAndAApi(ApiChild, base='meetings/q_and_a'):
         :type meeting_id: str
         :param question_id: The ID of a question.
         :type question_id: str
-        :param max_: Limit the maximum number of Q&A's answers in the response, up to 100.
-        :type max_: int
-        :rtype: list[AnswerObject]
+        :return: Generator yielding :class:`AnswerObject` instances
         """
-        params = {}
         params['meetingId'] = meeting_id
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep(f'{question_id}/answers')
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=AnswerObject, item_key='items', params=params)

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -264,18 +265,18 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
     query parameter.
     """
 
-    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                         start: int = None, name: str = None, phone_number: str = None,
-                                         department_id: str = None,
-                                         department_name: str = None) -> list[ListAutoAttendantObject]:
+    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, start: int = None,
+                                         name: str = None, phone_number: str = None, department_id: str = None,
+                                         department_name: str = None,
+                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         Read the List of Auto Attendants
 
         List all Auto Attendants for the organization.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -283,8 +284,6 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         :type org_id: str
         :param location_id: Return the list of auto attendants for this location.
         :type location_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param name: Only return auto attendants with the matching name.
@@ -295,15 +294,12 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         :type department_id: str
         :param department_name: Return only auto attendants with the matching departmentName.
         :type department_name: str
-        :rtype: list[ListAutoAttendantObject]
+        :return: Generator yielding :class:`ListAutoAttendantObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -315,8 +311,7 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         if department_name is not None:
             params['departmentName'] = department_name
         url = self.ep('autoAttendants')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='autoAttendants', params=params)
 
     def get_details_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                           org_id: str = None) -> GetAutoAttendantObject:
@@ -324,10 +319,10 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         Get Details for an Auto Attendant
 
         Retrieve an Auto Attendant's details.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Retrieving an auto attendant details requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -343,8 +338,9 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetAutoAttendantObject.model_validate(data)
+        return r
 
     def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
                                  extension: Union[str, datetime], first_name: str, last_name: str,
@@ -358,10 +354,10 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         Update an Auto Attendant
 
         Update the designated Auto Attendant.
-        
+
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
+
         Updating an auto attendant requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -408,7 +404,21 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['businessSchedule'] = business_schedule
+        body['holidaySchedule'] = holiday_schedule
+        body['extensionDialing'] = enum_str(extension_dialing)
+        body['nameDialing'] = enum_str(name_dialing)
+        body['timeZone'] = time_zone
+        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+        body['department'] = loads(department.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

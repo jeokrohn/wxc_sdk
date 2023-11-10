@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -135,9 +136,15 @@ class GroupsApi(ApiChild, base='groups'):
         :type members: list[PostMember]
         :rtype: :class:`GroupResponse`
         """
+        body = dict()
+        body['displayName'] = display_name
+        body['orgId'] = org_id
+        body['description'] = description
+        body['members'] = loads(TypeAdapter(list[PostMember]).dump_json(members))
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = GroupResponse.model_validate(data)
+        return r
 
     def update_a_group(self, group_id: str, display_name: str, description: str,
                        members: list[PatchMemberWithOperation]) -> GroupResponse:
@@ -145,7 +152,7 @@ class GroupsApi(ApiChild, base='groups'):
         Update a Group
 
         Update the group details, by ID.
-        
+
         Specify the group ID in the `groupId` parameter in the URI.
 
         :param group_id: A unique identifier for the group.
@@ -158,16 +165,21 @@ class GroupsApi(ApiChild, base='groups'):
         :type members: list[PatchMemberWithOperation]
         :rtype: :class:`GroupResponse`
         """
+        body = dict()
+        body['displayName'] = display_name
+        body['description'] = description
+        body['members'] = loads(TypeAdapter(list[PatchMemberWithOperation]).dump_json(members))
         url = self.ep(f'{group_id}')
-        ...
-
+        data = super().patch(url, json=body)
+        r = GroupResponse.model_validate(data)
+        return r
 
     def get_group_details(self, group_id: str, include_members: bool = None) -> GroupResponse:
         """
         Get Group Details
 
         Get details for a group, by ID.
-        
+
         Optionally, the members may be retrieved with this request. The maximum number of members returned is 500.
 
         :param group_id: A unique identifier for the group.
@@ -180,8 +192,9 @@ class GroupsApi(ApiChild, base='groups'):
         if include_members is not None:
             params['includeMembers'] = str(include_members).lower()
         url = self.ep(f'{group_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GroupResponse.model_validate(data)
+        return r
 
     def list_and_search_groups(self, org_id: str = None, filter: str = None, attributes: str = None,
                                sort_by: str = None, sort_order: str = None, include_members: bool = None,
@@ -190,14 +203,14 @@ class GroupsApi(ApiChild, base='groups'):
         List and Search Groups
 
         List groups in your organization.
-        
+
         * Set the `includeMembers` parameter to `true` to return group members. The total number of members returned is
         limited to 500.
-        
+
         * Use the `startIndex` and `count` parameters to page through result set.
-        
+
         * To search for a specific group use the `filter` parameter.
-        
+
         * Use `sortBy` parameter to sort the responses by `id` or `displayName`.
 
         :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
@@ -239,17 +252,18 @@ class GroupsApi(ApiChild, base='groups'):
         if count is not None:
             params['count'] = count
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = GroupsCollectionResponse.model_validate(data)
+        return r
 
     def get_group_members(self, group_id: str, start_index: int = None, count: int = None) -> GroupResponse:
         """
         Get Group Members
 
         Gets the members of a group.
-        
+
         * The default maximum members returned is 500.
-        
+
         * Control parameters is available to page through the members and to control the size of the results.
 
         :param group_id: A unique identifier for the group.
@@ -267,15 +281,16 @@ class GroupsApi(ApiChild, base='groups'):
         if count is not None:
             params['count'] = count
         url = self.ep(f'{group_id}/members')
-        ...
-
+        data = super().get(url, params=params)
+        r = GroupResponse.model_validate(data)
+        return r
 
     def delete_a_group(self, group_id: str):
         """
         Delete a Group
 
         Remove a group from the system.
-        
+
         Specify the group ID in the `groupId` parameter in the URI.
 
         :param group_id: A unique identifier for the group.
@@ -283,6 +298,4 @@ class GroupsApi(ApiChild, base='groups'):
         :rtype: None
         """
         url = self.ep(f'{group_id}')
-        ...
-
-    ...
+        super().delete(url)

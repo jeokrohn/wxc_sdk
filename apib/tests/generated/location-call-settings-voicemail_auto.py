@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -406,9 +407,9 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         Get Location Voicemail
 
         Retrieve voicemail settings for a specific location.
-        
+
         Location voicemail settings allows you to enable voicemail transcription for a specific location.
-        
+
         Retrieving a location's voicemail settings requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -422,17 +423,18 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicemail')
-        ...
-
+        data = super().get(url, params=params)
+        r = data['voicemailTranscriptionEnabled']
+        return r
 
     def update_location_voicemail(self, location_id: str, voicemail_transcription_enabled: bool, org_id: str = None):
         """
         Update Location Voicemail
 
         Update the voicemail settings for a specific location.
-        
+
         Location voicemail settings allows you to enable voicemail transcription for a specific location.
-        
+
         Updating a location's voicemail settings requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
@@ -447,19 +449,20 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['voicemailTranscriptionEnabled'] = voicemail_transcription_enabled
         url = self.ep(f'locations/{location_id}/voicemail')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_voice_portal(self, location_id: str, org_id: str = None) -> GetVoicePortalObject:
         """
         Get VoicePortal
 
         Retrieve Voice portal information for the location.
-        
+
         Voice portals provide an interactive voice response (IVR)
         system so administrators can manage auto attendant announcements.
-        
+
         Retrieving voice portal information for an organization requires a full read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -473,8 +476,9 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicePortal')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetVoicePortalObject.model_validate(data)
+        return r
 
     def update_voice_portal(self, location_id: str, name: str, language_code: str, extension: Union[str, datetime],
                             phone_number: str, first_name: str, last_name: str,
@@ -483,10 +487,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         Update VoicePortal
 
         Update Voice portal information for the location.
-        
+
         Voice portals provide an interactive voice response (IVR)
         system so administrators can manage auto attendant anouncements.
-        
+
         Updating voice portal information for an organization and/or rules requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -513,19 +517,26 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['languageCode'] = language_code
+        body['extension'] = extension
+        body['phoneNumber'] = phone_number
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['passcode'] = loads(passcode.model_dump_json())
         url = self.ep(f'locations/{location_id}/voicePortal')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_voice_portal_passcode_rule(self, location_id: str, org_id: str = None) -> GetVoicePortalPasscodeRuleObject:
         """
         Get VoicePortal Passcode Rule
 
         Retrieve the voice portal passcode rule for a location.
-        
+
         Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
         anouncements
-        
+
         Retrieving the voice portal passcode rule requires a full read-only administrator or location administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -539,19 +550,20 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicePortal/passcodeRules')
-        ...
+        data = super().get(url, params=params)
+        r = GetVoicePortalPasscodeRuleObject.model_validate(data)
+        return r
 
-
-    def list_voicemail_group(self, location_id: str = None, org_id: str = None, max_: int = None, start: int = None,
-                             name: str = None, phone_number: str = None) -> list[GetVoicemailGroupObject]:
+    def list_voicemail_group(self, location_id: str = None, org_id: str = None, start: int = None, name: str = None,
+                             phone_number: str = None, **params) -> Generator[GetVoicemailGroupObject, None, None]:
         """
         List VoicemailGroup
 
         List the voicemail group information for the organization.
-        
+
         You can create a shared voicemail box and inbound FAX box to
         assign to users or call routing features like an auto attendant, call queue, or hunt group.
-        
+
         Retrieving a voicemail group for the organization requires a full read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -559,23 +571,18 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param org_id: Organization to which the voicemail group belongs.
         :type org_id: str
-        :param max_: Limit the maximum number of events in the response. The maximum value is `200`.
-        :type max_: int
         :param start: Offset from the first result that you want to fetch.
         :type start: int
         :param name: Search (Contains) based on voicemail group name
         :type name: str
         :param phone_number: Search (Contains) based on number or extension
         :type phone_number: str
-        :rtype: list[GetVoicemailGroupObject]
+        :return: Generator yielding :class:`GetVoicemailGroupObject` instances
         """
-        params = {}
         if location_id is not None:
             params['locationId'] = location_id
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -583,8 +590,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('voicemailGroups')
-        ...
-
+        return self.session.follow_pagination(url=url, model=GetVoicemailGroupObject, item_key='voicemailGroups', params=params)
 
     def get_location_voicemail_group(self, location_id: str, voicemail_group_id: str,
                                      org_id: str = None) -> GetLocationVoicemailGroupObject:
@@ -592,10 +598,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         Get Location Voicemail Group
 
         Retrieve voicemail group details for a location.
-        
+
         Manage your voicemail group settings for a specific location, like when you want your voicemail to be active,
         message storage settings, and how you would like to be notified of new voicemail messages.
-        
+
         Retrieving voicemail group details requires a full, user or read-only administrator or location administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -611,8 +617,9 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetLocationVoicemailGroupObject.model_validate(data)
+        return r
 
     def modify_location_voicemail_group(self, location_id: str, voicemail_group_id: str, name: str, phone_number: str,
                                         extension: int, first_name: str, last_name: str, enabled: bool, passcode: int,
@@ -628,10 +635,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         Modify Location Voicemail Group
 
         Modifies the voicemail group location details for a particular location for a customer.
-        
+
         Manage your voicemail settings, like when you want your voicemail to be active, message storage settings, and
         how you would like to be notified of new voicemail messages.
-        
+
         Modifying the voicemail group location details requires a full, user administrator or location administrator
         auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -676,9 +683,24 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['enabled'] = enabled
+        body['passcode'] = passcode
+        body['languageCode'] = language_code
+        body['greeting'] = enum_str(greeting)
+        body['greetingDescription'] = greeting_description
+        body['messageStorage'] = loads(message_storage.model_dump_json())
+        body['notifications'] = loads(notifications.model_dump_json())
+        body['faxMessage'] = loads(fax_message.model_dump_json())
+        body['transferToNumber'] = loads(transfer_to_number.model_dump_json())
+        body['emailCopyOfMessage'] = loads(email_copy_of_message.model_dump_json())
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def create_a_new_voicemail_group_for_a_location(self, location_id: str, name: str, phone_number: str,
                                                     extension: int, first_name: str, last_name: str, passcode: int,
@@ -693,9 +715,9 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         Create a new Voicemail Group for a Location
 
         Create a new voicemail group for the given location for a customer.
-        
+
         A voicemail group can be created for given location for a customer.
-        
+
         Creating a voicemail group for the given location requires a full or user administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -732,16 +754,30 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['passcode'] = passcode
+        body['languageCode'] = language_code
+        body['messageStorage'] = loads(message_storage.model_dump_json())
+        body['notifications'] = loads(notifications.model_dump_json())
+        body['faxMessage'] = loads(fax_message.model_dump_json())
+        body['transferToNumber'] = loads(transfer_to_number.model_dump_json())
+        body['emailCopyOfMessage'] = loads(email_copy_of_message.model_dump_json())
         url = self.ep(f'locations/{location_id}/voicemailGroups')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_voicemail_group_for_a_location(self, location_id: str, voicemail_group_id: str, org_id: str = None):
         """
         Delete a Voicemail Group for a Location
 
         Delete the designated voicemail group.
-        
+
         Deleting a voicemail group requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -757,6 +793,4 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
-        ...
-
-    ...
+        super().delete(url, params=params)

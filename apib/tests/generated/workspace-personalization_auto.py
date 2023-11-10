@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -56,7 +57,7 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
         Personalize a Workspace
 
         Initializes the personalization for a given workspace for the user email provided.
-        
+
         The personalization process is asynchronous and thus a background task is created when this endpoint is
         invoked.
         After successful invocation of this endpoint a personalization task status URL will be returned in the
@@ -70,19 +71,20 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
         :type email: str
         :rtype: None
         """
+        body = dict()
+        body['email'] = email
         url = self.ep(f'personalize')
-        ...
-
+        super().post(url, json=body)
 
     def get_personalization_task(self, workspace_id: str) -> WorkspacePersonalizationTaskResponse:
         """
         Get Personalization Task
 
         Returns the status of a personalization task for a given workspace.
-        
+
         Whilst in progress the endpoint will return `Accepted` and provide a `Retry-After` header indicating the number
         of seconds a client should wait before retrying.
-        
+
         Upon completion of the task, the endpoint will return `OK` with a body detailing if the personalization was
         successful and an error description if appropriate.
 
@@ -91,6 +93,6 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
         :rtype: :class:`WorkspacePersonalizationTaskResponse`
         """
         url = self.ep(f'personalizationTask')
-        ...
-
-    ...
+        data = super().get(url)
+        r = WorkspacePersonalizationTaskResponse.model_validate(data)
+        return r

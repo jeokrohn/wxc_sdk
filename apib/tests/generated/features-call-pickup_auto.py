@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -130,39 +131,34 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
     query parameter.
     """
 
-    def read_the_list_of_call_pickups(self, location_id: str, org_id: str = None, max_: int = None, start: int = None,
-                                      order: str = None, name: str = None) -> list[ListCallPickupObject]:
+    def read_the_list_of_call_pickups(self, location_id: str, org_id: str = None, start: int = None, order: str = None,
+                                      name: str = None, **params) -> Generator[ListCallPickupObject, None, None]:
         """
         Read the List of Call Pickups
 
         List all Call Pickups for the organization.
-        
+
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        
+
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
-        
+
         **NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Return the list of call pickups for this location.
         :type location_id: str
         :param org_id: List call pickups for this organization.
         :type org_id: str
-        :param max_: Limit the number of call pickups returned to this maximum count. Default is 2000.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching call pickups. Default is 0.
         :type start: int
         :param order: Sort the list of call pickups by name, either ASC or DSC. Default is ASC.
         :type order: str
         :param name: Return the list of call pickups that contains the given name. The maximum length is 80.
         :type name: str
-        :rtype: list[ListCallPickupObject]
+        :return: Generator yielding :class:`ListCallPickupObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
@@ -170,20 +166,19 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         if name is not None:
             params['name'] = name
         url = self.ep(f'')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListCallPickupObject, item_key='callPickups', params=params)
 
     def create_a_call_pickup(self, location_id: str, name: str, agents: list[str], org_id: str = None) -> str:
         """
         Create a Call Pickup
 
         Create new Call Pickups for the given location.
-        
+
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        
+
         Creating a call pickup requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Create the call pickup for this location.
@@ -199,21 +194,25 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['agents'] = agents
         url = self.ep(f'')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_call_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None):
         """
         Delete a Call Pickup
 
         Delete the designated Call Pickup.
-        
+
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        
+
         Deleting a call pickup requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Location from which to delete a call pickup.
@@ -228,8 +227,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{call_pickup_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_details_for_a_call_pickup(self, location_id: str, call_pickup_id: str,
                                       org_id: str = None) -> GetCallPickupObject:
@@ -237,12 +235,12 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         Get Details for a Call Pickup
 
         Retrieve Call Pickup details.
-        
+
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        
+
         Retrieving call pickup details requires a full or read-only administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_read`.
-        
+
         **NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Retrieve settings for a call pickup in this location.
@@ -257,8 +255,9 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{call_pickup_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetCallPickupObject.model_validate(data)
+        return r
 
     def update_a_call_pickup(self, location_id: str, call_pickup_id: str, name: str, agents: list[str],
                              org_id: str = None) -> str:
@@ -266,12 +265,12 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         Update a Call Pickup
 
         Update the designated Call Pickup.
-        
+
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        
+
         Updating a call pickup requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Location in which this call pickup exists.
@@ -289,21 +288,25 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['agents'] = agents
         url = self.ep(f'{call_pickup_id}')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_available_agents_from_call_pickups(self, location_id: str, org_id: str = None,
-                                               call_pickup_name: str = None, max_: int = None, start: int = None,
-                                               name: str = None, phone_number: str = None,
-                                               order: str = None) -> list[GetPersonPlaceVirtualLineCallPickupObject]:
+                                               call_pickup_name: str = None, start: int = None, name: str = None,
+                                               phone_number: str = None, order: str = None,
+                                               **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
         """
         Get available agents from Call Pickups
 
         Retrieve available agents from call pickups for a given location.
-        
+
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        
+
         Retrieving available agents from call pickups requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -313,8 +316,6 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         :type org_id: str
         :param call_pickup_name: Only return available agents from call pickups with the matching name.
         :type call_pickup_name: str
-        :param max_: Limit the number of available agents returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching available agents.
         :type start: int
         :param name: Only return available agents with the matching name.
@@ -325,15 +326,12 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
             separated sort order fields may be specified. Available sort fields: `fname`, `lname`, `extension`,
             `number`.
         :type order: str
-        :rtype: list[GetPersonPlaceVirtualLineCallPickupObject]
+        :return: Generator yielding :class:`GetPersonPlaceVirtualLineCallPickupObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if call_pickup_name is not None:
             params['callPickupName'] = call_pickup_name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -343,6 +341,4 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         if order is not None:
             params['order'] = order
         url = self.ep(f'availableUsers')
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallPickupObject, item_key='agents', params=params)

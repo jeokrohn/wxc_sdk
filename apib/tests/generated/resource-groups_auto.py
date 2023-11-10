@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -52,7 +53,7 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
         List Resource Groups
 
         List resource groups.
-        
+
         Use query parameters to filter the response.
 
         :param org_id: List resource groups in this organization. Only admin users of another organization (such as
@@ -64,15 +65,16 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ResourceGroup]).validate_python(data['items'])
+        return r
 
     def get_resource_group_details(self, resource_group_id: str) -> ResourceGroup:
         """
         Get Resource Group Details
 
         Shows details for a resource group, by ID.
-        
+
         Specify the resource group ID in the `resourceGroupId` parameter in the URI.
 
         :param resource_group_id: The unique identifier for the resource group.
@@ -80,6 +82,6 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
         :rtype: :class:`ResourceGroup`
         """
         url = self.ep(f'{resource_group_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = ResourceGroup.model_validate(data)
+        return r

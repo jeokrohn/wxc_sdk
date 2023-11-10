@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -164,13 +165,13 @@ class ApplicationsApi(ApiChild, base='applications'):
                           submission_status: ApplicationSubmissionStatus = None,
                           org_submission_status: ApplicationSubmissionStatus = None,
                           order_by: ListApplicationsOrderBy = None, category: str = None, tag: str = None,
-                          bot_email: str = None, is_featured: bool = None, is_native: bool = None, max_: int = None,
-                          cursor: str = None, wait_for_ci: bool = None) -> list[Application]:
+                          bot_email: str = None, is_featured: bool = None, is_native: bool = None, cursor: str = None,
+                          wait_for_ci: bool = None, **params) -> Generator[Application, None, None]:
         """
         List Applications
 
         Lists all applications.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -183,13 +184,11 @@ class ApplicationsApi(ApiChild, base='applications'):
         :type created_by: str
         :param submission_status: List applications with this Webex App Hub submission status.
         :type submission_status: ApplicationSubmissionStatus
-
         :type org_submission_status: ApplicationSubmissionStatus
         :param order_by: Sort results.
         :type order_by: ListApplicationsOrderBy
         :param category: List applications which belong to this Webex App Hub category.
         :type category: str
-
         :type tag: str
         :param bot_email: List applications with this bot email.
         :type bot_email: str
@@ -197,18 +196,13 @@ class ApplicationsApi(ApiChild, base='applications'):
         :type is_featured: bool
         :param is_native: Internal use only.
         :type is_native: bool
-        :param max_: Limit the number of applications returned in the response. Use `pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ to move through the
-            results.
-        :type max_: int
         :param cursor: The current cursor when `paging
             <https://developer.webex.com/docs/basics#pagination>`_ through long result sets.
         :type cursor: str
         :param wait_for_ci: Internal use only.
         :type wait_for_ci: bool
-        :rtype: list[Application]
+        :return: Generator yielding :class:`Application` instances
         """
-        params = {}
         if type is not None:
             params['type'] = type
         if org_id is not None:
@@ -231,13 +225,9 @@ class ApplicationsApi(ApiChild, base='applications'):
             params['isFeatured'] = str(is_featured).lower()
         if is_native is not None:
             params['isNative'] = str(is_native).lower()
-        if max_ is not None:
-            params['max'] = max_
         if cursor is not None:
             params['cursor'] = cursor
         if wait_for_ci is not None:
             params['waitForCI'] = str(wait_for_ci).lower()
         url = self.ep()
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=Application, item_key='items', params=params)

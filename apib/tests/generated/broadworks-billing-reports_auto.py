@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -110,7 +111,7 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :param after: Only include billing reports created after this date.
         :type after: Union[str, datetime]
         :param sort_by: Sort the reports.
-        
+
         + Members:
         + id
         + status
@@ -132,8 +133,9 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         if sort_by is not None:
             params['sortBy'] = sort_by
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ListReport]).validate_python(data['items'])
+        return r
 
     def get_a_broad_works_billing_report(self, id: str) -> Report:
         """
@@ -146,8 +148,9 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :rtype: :class:`Report`
         """
         url = self.ep(f'{id}')
-        ...
-
+        data = super().get(url)
+        r = Report.model_validate(data)
+        return r
 
     def create_a_broad_works_billing_report(self, billing_period: Union[str, datetime]) -> str:
         """
@@ -159,9 +162,12 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :type billing_period: Union[str, datetime]
         :rtype: str
         """
+        body = dict()
+        body['billingPeriod'] = billing_period
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = data['id']
+        return r
 
     def delete_a_broad_works_billing_report(self, id: str):
         """
@@ -174,6 +180,4 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :rtype: None
         """
         url = self.ep(f'{id}')
-        ...
-
-    ...
+        super().delete(url)

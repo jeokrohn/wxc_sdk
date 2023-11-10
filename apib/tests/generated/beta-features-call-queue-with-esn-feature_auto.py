@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -478,14 +479,14 @@ class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                     start: int = None, name: str = None,
-                                     phone_number: str = None) -> list[ListCallQueueObject]:
+    def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, start: int = None,
+                                     name: str = None, phone_number: str = None,
+                                     **params) -> Generator[ListCallQueueObject, None, None]:
         """
         Read the List of Call Queues
 
         List all Call Queues for the organization.
-        
+
         Call queues temporarily hold calls in the cloud when all agents, which
         can be users or agents, assigned to receive calls from the queue are
         unavailable. Queued calls are routed to an available agent when not on an
@@ -493,7 +494,7 @@ class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -501,23 +502,18 @@ class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param location_id: Only return call queues with matching location ID.
         :type location_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param name: Only return call queues with the matching name.
         :type name: str
         :param phone_number: Only return call queues with matching primary phone number or extension.
         :type phone_number: str
-        :rtype: list[ListCallQueueObject]
+        :return: Generator yielding :class:`ListCallQueueObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -525,15 +521,14 @@ class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('queues')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListCallQueueObject, item_key='queues', params=params)
 
     def get_details_for_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> GetCallQueueObject:
         """
         Get Details for a Call Queue
 
         Retrieve Call Queue details.
-        
+
         Call queues temporarily hold calls in the cloud when all agents, which
         can be users or agents, assigned to receive calls from the queue are
         unavailable. Queued calls are routed to an available agent when not on an
@@ -541,7 +536,7 @@ class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        
+
         Retrieving call queue details requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -557,6 +552,6 @@ class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = GetCallQueueObject.model_validate(data)
+        return r

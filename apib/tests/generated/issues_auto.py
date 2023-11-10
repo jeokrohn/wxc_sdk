@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -118,16 +119,17 @@ class IssuesAPIApi(ApiChild, base='issues'):
     """
 
     def list_issues(self, created_for: str = None, org_id: str = None, from_: Union[str, datetime] = None,
-                    to_: Union[str, datetime] = None, after_issue: str = None, max_: int = None) -> list[Issue]:
+                    to_: Union[str, datetime] = None, after_issue: str = None,
+                    **params) -> Generator[Issue, None, None]:
         """
         List Issues
 
         List issues in your organization.
-        
+
         Admin users can list all issues for all organizations they manage.
         Admin users can also use the `createdFor` parameter to list issues for a specific person ID, or use the
         `orgId` to list issues for a specific organization.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -146,12 +148,8 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :param after_issue:
         List issues created or modified after a specific issue, by ID.
         :type after_issue: str
-        :param max_:
-        A limit on the number of issues to be returned in the response.
-        :type max_: int
-        :rtype: list[Issue]
+        :return: Generator yielding :class:`Issue` instances
         """
-        params = {}
         if created_for is not None:
             params['createdFor'] = created_for
         if org_id is not None:
@@ -168,11 +166,8 @@ class IssuesAPIApi(ApiChild, base='issues'):
             params['to'] = to_
         if after_issue is not None:
             params['afterIssue'] = after_issue
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Issue, item_key='items', params=params)
 
     def create_an_issue(self, subject: str, description: str, type: IssueType = None, log_id: str = None,
                         meeting_id: str = None, external_key: str = None) -> Issue:
@@ -180,7 +175,7 @@ class IssuesAPIApi(ApiChild, base='issues'):
         Create an Issue
 
         Create a new issue.
-        
+
         Users can create issues for themselves and
         admins can create issues for both themselves and on behalf of other users.
 
@@ -190,7 +185,6 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :type description: str
         :param type: The initial type for the issue.
         :type type: IssueType
-
         :type log_id: str
         :param meeting_id: The meeting ID related to the issue.
         :type meeting_id: str
@@ -199,16 +193,24 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :type external_key: str
         :rtype: :class:`Issue`
         """
+        body = dict()
+        body['subject'] = subject
+        body['description'] = description
+        body['type'] = enum_str(type)
+        body['logId'] = log_id
+        body['meetingId'] = meeting_id
+        body['externalKey'] = external_key
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Issue.model_validate(data)
+        return r
 
     def get_issue_details(self, id: str) -> Issue:
         """
         Get Issue Details
 
         Show details for an issue, by ID.
-        
+
         Specify the issue ID in the `id` parameter in the URI.
 
         :param id: A unique identifier for the issue.
@@ -216,8 +218,9 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :rtype: :class:`Issue`
         """
         url = self.ep(f'{id}')
-        ...
-
+        data = super().get(url)
+        r = Issue.model_validate(data)
+        return r
 
     def update_an_issue(self, id: str, subject: str = None, description: str = None, type: IssueType = None,
                         status: IssueStatus = None, assignee: str = None, resolution: str = None, log_id: str = None,
@@ -226,11 +229,11 @@ class IssuesAPIApi(ApiChild, base='issues'):
         Update an Issue
 
         Update details for an issue, by ID.
-        
+
         Specify the issue ID in the `id` parameter in the URI.
         Users may update only the `subject` and `description` attributes.
         Admin users can update the `subject`, `description`, `type`, and `status` attributes.
-        
+
         Include all details for the issue. This action expects all issue details to be present in the
         request. A common approach is to first `GET the issue's details
         <https://developer.webex.com/docs/api/v1/issues/get-issue-details>`_,
@@ -250,7 +253,6 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :type assignee: str
         :param resolution: A description of how the issue was resolved.
         :type resolution: str
-
         :type log_id: str
         :param meeting_id: The meeting ID related to the issue.
         :type meeting_id: str
@@ -259,7 +261,17 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :type external_key: str
         :rtype: :class:`Issue`
         """
+        body = dict()
+        body['subject'] = subject
+        body['description'] = description
+        body['type'] = enum_str(type)
+        body['status'] = enum_str(status)
+        body['assignee'] = assignee
+        body['resolution'] = resolution
+        body['logId'] = log_id
+        body['meetingId'] = meeting_id
+        body['externalKey'] = external_key
         url = self.ep(f'{id}')
-        ...
-
-    ...
+        data = super().put(url, json=body)
+        r = Issue.model_validate(data)
+        return r

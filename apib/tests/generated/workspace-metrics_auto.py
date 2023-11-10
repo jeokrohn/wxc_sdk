@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -149,10 +150,10 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
 
         Get metric data for the specified workspace and metric name, optionally aggregated over a specified time
         period.
-        
+
         * The `workspaceId` and `metricName` parameters indicate which workspace to fetch metrics for and what kind of
         metrics to get.
-        
+
         * When executing an aggregated query, the result bucket start times will be truncated to the start of an hour
         or a day, depending on
         the aggregation interval. However, the buckets will not contain data from outside the requested time range. For
@@ -160,7 +161,7 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
         passing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at
         `2020-10-21T10:00:00.000Z`,
         but the bucket would only aggregate data timestamped after `10:34:56`.
-        
+
         * For aggregation modes `none` and `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`,
         the maximum
         time span is 30 days.
@@ -200,9 +201,10 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
             params['unit'] = unit
         if sort_by is not None:
             params['sortBy'] = sort_by
-        url = self.ep('etrics')
-        ...
-
+        url = self.ep('Metrics')
+        data = super().get(url, params=params)
+        r = WorkspaceMetricsResponse.model_validate(data)
+        return r
 
     def workspace_duration_metrics(self, workspace_id: str,
                                    aggregation: WorkspaceDurationMetricsResponseAggregation = None,
@@ -213,11 +215,11 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
         Workspace Duration Metrics
 
         Get metrics for how much time a workspace has been in the state given by the `measurement` parameter.
-        
+
         For example, if the measurement is  `timeBooked` then the duration for which the workspace has been booked is
         returned. The `workspaceId` parameter indicates which workspace to fetch metrics for. If no `measurement` is
         given, the default value is `timeUsed`.
-        
+
         * When executing a query, the result bucket start times will default to the start of an hour or a day,
         depending on
         the aggregation interval. However, the buckets will not contain data from outside the requested time range. For
@@ -225,7 +227,7 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
         passing `from=2020-10-21T10:34:56.000Z` and `aggregation=hourly`, the first output bucket would start at
         `2020-10-21T10:00:00.000Z`,
         but the bucket would only aggregate data timestamped after `10:34:56`.
-        
+
         * For aggregation mode `hourly`, the maximum time span is 48 hours. For aggregation mode `daily`, the maximum
         time span is 30 days.
 
@@ -257,7 +259,7 @@ class WorkspaceMetricsApi(ApiChild, base='workspace'):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        url = self.ep('urationMetrics')
-        ...
-
-    ...
+        url = self.ep('DurationMetrics')
+        data = super().get(url, params=params)
+        r = WorkspaceDurationMetricsResponse.model_validate(data)
+        return r

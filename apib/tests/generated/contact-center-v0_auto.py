@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -349,13 +350,13 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         Entity Recognition allows consumers to get named entities for the input call transcript.
         It requires an auth token with the `cjp:organization` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ to use this end point.
-        
+
         Note that each API request:
-        
+
         - Only considers the first 3,000 characters in the input for recognition
-        
+
         - Return a maximum of 100 entities per request.
-        
+
         If the text is too large, it is recommended to break it up into multiple requests to get the entities.
 
         :param org_id: The ID of the organization.
@@ -368,24 +369,29 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :type document: AnalyzeEntitiesDocument
         :rtype: :class:`EntityRecognition`
         """
+        body = dict()
+        body['orgId'] = org_id
+        body['contactId'] = contact_id
+        body['partyId'] = party_id
+        body['document'] = loads(document.model_dump_json())
         url = self.ep('document:analyzeEntities')
-        ...
-
+        data = super().post(url, json=body)
+        r = EntityRecognition.model_validate(data)
+        return r
 
     def get_agent_activity_record_list(self, org_id: str, q: str) -> ActivityList:
         """
         Get Agent Activity Record List
 
         Get a list of agent activity records for the specified query, `q`. The query must be an encoded JSON object.
-        
+
         Listing agent activity records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with a
         WxCC license, or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
 
-
         :type org_id: str
         :param q: An encoded json query. Example of json query:
-        
+
         ```
         {
         "anchorId":"1",
@@ -422,15 +428,16 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params['orgId'] = org_id
         params['q'] = q
         url = self.ep('aars')
-        ...
-
+        data = super().get(url, params=params)
+        r = ActivityList.model_validate(data)
+        return r
 
     def get_agent_activity_record(self, id: str, org_id: str) -> AgentActivity:
         """
         Get Agent Activity Record
 
         Get details of an agent activity for the `id` specified in the URI.
-        
+
         Retrieving agent activity records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
         with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
@@ -445,23 +452,23 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params = {}
         params['orgId'] = org_id
         url = self.ep(f'aars/{id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = AgentActivity.model_validate(data)
+        return r
 
     def get_agent_session_record_list(self, org_id: str, q: str) -> ActivityList:
         """
         Get Agent Session Record List
 
         Get a list of agent session records for the specified query, `q`. The query must be an encoded JSON object.
-        
+
         Listing agent session records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with a
         WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
 
-
         :type org_id: str
         :param q: An encoded JSON query. Example JSON query:
-        
+
         ```
         {
         "anchorId":"1",
@@ -498,15 +505,16 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params['orgId'] = org_id
         params['q'] = q
         url = self.ep('asrs')
-        ...
-
+        data = super().get(url, params=params)
+        r = ActivityList.model_validate(data)
+        return r
 
     def get_agent_session_record(self, id: str, org_id: str) -> AgentSession:
         """
         Get Agent Session Record
 
         Get details of an agent session record specified by `id` in the URI.
-        
+
         Retrieving agent session records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with
         a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
@@ -520,23 +528,23 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params = {}
         params['orgId'] = org_id
         url = self.ep(f'asrs/{id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = AgentSession.model_validate(data)
+        return r
 
     def get_customer_activity_record_list(self, org_id: str, q: str) -> ActivityList:
         """
         Get Customer Activity Record List
 
         Get a list of customer activity records for the specified query, `q`. The query must be an encoded JSON object.
-        
+
         Listing customer activity records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
         with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
 
-
         :type org_id: str
         :param q: An encoded JSON query. Example JSON query:
-        
+
         ```
         {
         "anchorId":"1",
@@ -573,15 +581,16 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params['orgId'] = org_id
         params['q'] = q
         url = self.ep('cars')
-        ...
-
+        data = super().get(url, params=params)
+        r = ActivityList.model_validate(data)
+        return r
 
     def get_customer_activity_record(self, id: str, org_id: str) -> CustomerActivity:
         """
         Get Customer Activity Record
 
         Get details of a customer activity record by `id` in the URI.
-        
+
         Retrieving customer activity records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
         with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
@@ -595,23 +604,23 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params = {}
         params['orgId'] = org_id
         url = self.ep(f'cars/{id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = CustomerActivity.model_validate(data)
+        return r
 
     def get_customer_session_record_list(self, org_id: str, q: str) -> ActivityList:
         """
         Get Customer Session Record List
 
         Get a list of customer session records for the specified query, `q`. The query must be an encoded JSON object.
-        
+
         Listing customer session records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations with
         a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
 
-
         :type org_id: str
         :param q: An encoded JSON query. Example JSON query:
-        
+
         ```
         {
         "anchorId":"1",
@@ -648,15 +657,16 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params['orgId'] = org_id
         params['q'] = q
         url = self.ep('csrs')
-        ...
-
+        data = super().get(url, params=params)
+        r = ActivityList.model_validate(data)
+        return r
 
     def get_customer_session_record(self, id: str, org_id: str) -> CustomerSession:
         """
         Get Customer Session Record
 
         Get details of a customer session record for the specified `id`.
-        
+
         Retrieving customer session records requires an auth token with the `cjp:config_read` `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ for organizations
         with a WxCC license or the `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
@@ -670,8 +680,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params = {}
         params['orgId'] = org_id
         url = self.ep(f'csrs/{id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = CustomerSession.model_validate(data)
+        return r
 
     def get_decrypted_recording(self, session_id: str, org_id: str):
         """
@@ -681,7 +692,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         requires an auth token with a `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ of `cjp:config_read` for a WxCC license and `cjp-analyzer:read` for
         organizations with only a Hybrid Analyzer license.
-        
+
         Get decrypted recording of a customer or agent session by ID. Specify `sessionId` in the URI.
 
         :param session_id: A unique identifier for session recording is required.
@@ -693,8 +704,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params = {}
         params['orgId'] = org_id
         url = self.ep(f'get-decrypted-recording/{session_id}')
-        ...
-
+        super().get(url, params=params)
 
     def get_encrypted_recording(self, session_id: str, key_id: int, org_id: str):
         """
@@ -704,7 +714,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         requires an auth token with a `scope
         <https://developer.webex.com/docs/integrations#scopes>`_ of `cjp:config_read` for a WxCC license and `cjp-analyzer:read` for
         organizations having only Hybrid Analyzer license.
-        
+
         Get encrypted recording of a customer or agent session by ID. Specify `sessionId` and `keyId` in the URI.
 
         :param session_id: A unique identifier for session recording is required.
@@ -718,6 +728,4 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         params = {}
         params['orgId'] = org_id
         url = self.ep(f'get-encrypted-recording/{session_id}/{key_id}')
-        ...
-
-    ...
+        super().get(url, params=params)

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -74,8 +75,9 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :rtype: list[Template]
         """
         url = self.ep(f'licenseTemplates?orgId={org_id}')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[Template]).validate_python(data['items'])
+        return r
 
     def create_an_organization_license_template(self, org_id: str, template_name: str = None,
                                                 licenses: list[str] = None, groups: list[str] = None,
@@ -98,9 +100,16 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :type template_type: TemplateTemplateType
         :rtype: :class:`Template`
         """
+        body = dict()
+        body['templateName'] = template_name
+        body['licenses'] = licenses
+        body['groups'] = groups
+        body['templateType'] = enum_str(template_type)
+        body['orgId'] = org_id
         url = self.ep('licenseTemplates')
-        ...
-
+        data = super().post(url, json=body)
+        r = Template.model_validate(data)
+        return r
 
     def update_an_organization_license_template(self, license_template_id: str, org_id: str, template_name: str = None,
                                                 licenses: list[str] = None, groups: list[str] = None) -> Template:
@@ -108,7 +117,7 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         Update an Organization License Template
 
         Update org/group license template
-        
+
         Specify the templateId in the `licenseTemplateId` parameter in the URI
 
         :param license_template_id: A unique identifier of a template
@@ -123,16 +132,22 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :type groups: list[str]
         :rtype: :class:`Template`
         """
+        body = dict()
+        body['templateName'] = template_name
+        body['licenses'] = licenses
+        body['groups'] = groups
+        body['orgId'] = org_id
         url = self.ep(f'licenseTemplates/{license_template_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Template.model_validate(data)
+        return r
 
     def delete_an_organization_license_template(self, license_template_id: str):
         """
         Delete an Organization License Template
 
         Delete an org/group level template
-        
+
         Specify the templateId in the `licenseTemplateId` parameter in the URI
 
         :param license_template_id: A unique identifier of a template
@@ -140,6 +155,4 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :rtype: None
         """
         url = self.ep(f'licenseTemplates/{license_template_id}')
-        ...
-
-    ...
+        super().delete(url)

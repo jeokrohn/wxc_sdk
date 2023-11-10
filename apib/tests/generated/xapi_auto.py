@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -100,7 +101,7 @@ class XAPIApi(ApiChild, base='xapi'):
 
         Query the current status of the Webex RoomOS Device. You specify the target device in the `deviceId` parameter
         in the URI. The target device is queried for statuses according to the expression in the `name` parameter.
-        
+
         See the `xAPI section of the Device Developers Guide
         <https://developer.webex.com/docs/api/guides/device-developers-guide#xapi>`_ for a description of status expressions.
 
@@ -116,8 +117,9 @@ class XAPIApi(ApiChild, base='xapi'):
         params['deviceId'] = device_id
         params['name'] = name
         url = self.ep('status')
-        ...
-
+        data = super().get(url, params=params)
+        r = QueryStatusResponse.model_validate(data)
+        return r
 
     def execute_command(self, command_name: str, device_id: str, arguments: ExecuteCommandArguments,
                         body: ExecuteCommandBody = None) -> ExecuteCommandResponse:
@@ -126,7 +128,7 @@ class XAPIApi(ApiChild, base='xapi'):
 
         Executes a command on the Webex RoomOS Device. Specify the command to execute in the `commandName` URI
         parameter.
-        
+
         See the `xAPI section of the Device Developers Guide
         <https://developer.webex.com/docs/devices#xapi>`_ for a description of command expressions.
 
@@ -141,7 +143,11 @@ class XAPIApi(ApiChild, base='xapi'):
         :type body: ExecuteCommandBody
         :rtype: :class:`ExecuteCommandResponse`
         """
+        body = dict()
+        body['deviceId'] = device_id
+        body['arguments'] = loads(arguments.model_dump_json())
+        body['body'] = loads(body.model_dump_json())
         url = self.ep(f'command/{command_name}')
-        ...
-
-    ...
+        data = super().post(url, json=body)
+        r = ExecuteCommandResponse.model_validate(data)
+        return r

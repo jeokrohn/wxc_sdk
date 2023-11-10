@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -71,22 +72,22 @@ class MembershipsApi(ApiChild, base='memberships'):
     """
 
     def list_memberships(self, room_id: str = None, person_id: str = None, person_email: str = None,
-                         max_: int = None) -> list[Membership]:
+                         **params) -> Generator[Membership, None, None]:
         """
         List Memberships
 
         Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
-        
+
         Use query parameters to filter the response.
-        
+
         Use `roomId` to list memberships for a room, by ID.
-        
+
         **NOTE**: For moderated team spaces, the list of memberships will include only the space moderators if the user
         is a team member but not a direct participant of the space.
-        
+
         Use either `personId` or `personEmail` to filter the results. The `roomId` parameter is required when using
         these parameters.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -98,22 +99,16 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param person_email: List memberships associated with a person, by email address. The `roomId` parameter is
             required when using this parameter.
         :type person_email: str
-        :param max_: Limit the maximum number of memberships in the response.
-        :type max_: int
-        :rtype: list[Membership]
+        :return: Generator yielding :class:`Membership` instances
         """
-        params = {}
         if room_id is not None:
             params['roomId'] = room_id
         if person_id is not None:
             params['personId'] = person_id
         if person_email is not None:
             params['personEmail'] = person_email
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Membership, item_key='items', params=params)
 
     def create_a_membership(self, room_id: str, person_id: str = None, person_email: str = None,
                             is_moderator: str = None) -> Membership:
@@ -133,16 +128,22 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type is_moderator: str
         :rtype: :class:`Membership`
         """
+        body = dict()
+        body['roomId'] = room_id
+        body['personId'] = person_id
+        body['personEmail'] = person_email
+        body['isModerator'] = is_moderator
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Membership.model_validate(data)
+        return r
 
     def get_membership_details(self, membership_id: str) -> Membership:
         """
         Get Membership Details
 
         Get details for a membership by ID.
-        
+
         Specify the membership ID in the `membershipId` URI parameter.
 
         :param membership_id: The unique identifier for the membership.
@@ -150,15 +151,16 @@ class MembershipsApi(ApiChild, base='memberships'):
         :rtype: :class:`Membership`
         """
         url = self.ep(f'{membership_id}')
-        ...
-
+        data = super().get(url)
+        r = Membership.model_validate(data)
+        return r
 
     def update_a_membership(self, membership_id: str, is_moderator: str, is_room_hidden: str) -> Membership:
         """
         Update a Membership
 
         Updates properties for a membership by ID.
-        
+
         Specify the membership ID in the `membershipId` URI parameter.
 
         :param membership_id: The unique identifier for the membership.
@@ -170,18 +172,22 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type is_room_hidden: str
         :rtype: :class:`Membership`
         """
+        body = dict()
+        body['isModerator'] = is_moderator
+        body['isRoomHidden'] = is_room_hidden
         url = self.ep(f'{membership_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Membership.model_validate(data)
+        return r
 
     def delete_a_membership(self, membership_id: str):
         """
         Delete a Membership
 
         Deletes a membership by ID.
-        
+
         Specify the membership ID in the `membershipId` URI parameter.
-        
+
         The membership for the last moderator of a `Team
         <https://developer.webex.com/docs/api/v1/teams>`_'s General space may not be deleted; `promote another user
         team moderator first.
@@ -191,6 +197,4 @@ class MembershipsApi(ApiChild, base='memberships'):
         :rtype: None
         """
         url = self.ep(f'{membership_id}')
-        ...
-
-    ...
+        super().delete(url)

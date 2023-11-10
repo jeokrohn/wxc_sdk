@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -102,15 +103,16 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         params['personId'] = person_id
         params['personEmail'] = person_email
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Authorization]).validate_python(data['items'])
+        return r
 
     def delete_authorization(self, authorization_id: str):
         """
         Delete authorization
 
         Deletes an authorization, by authorization ID.
-        
+
         Specify the authorization Id in the `authorizationId` parameter in the URI which was listed in the list
         resource.
 
@@ -119,8 +121,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :rtype: None
         """
         url = self.ep(f'{authorization_id}')
-        ...
-
+        super().delete(url)
 
     def delete_authorization_of_org_and_client_id(self, client_id: str, org_id: str = None):
         """
@@ -140,6 +141,4 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        ...
-
-    ...
+        super().delete(url, params=params)

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -146,7 +147,7 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
 
         List hybrid connectors for an organization. If no `orgId` is specified, the default is the organization of the
         authenticated user.
-        
+
         Only an admin auth token with the `spark-admin:hybrid_connectors_read` scope can list connectors.
 
         :param org_id: List hybrid connectors in this organization. If an organization is not specified, the
@@ -158,15 +159,16 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Connector]).validate_python(data['items'])
+        return r
 
     def get_hybrid_connector_details(self, connector_id: str) -> Connector:
         """
         Get Hybrid Connector Details
 
         Shows details for a hybrid connector, by ID.
-        
+
         Only an admin auth token with the `spark-admin:hybrid_connectors_read` scope can see connector details.
 
         :param connector_id: The ID of the connector.
@@ -174,6 +176,6 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
         :rtype: :class:`Connector`
         """
         url = self.ep(f'{connector_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = Connector.model_validate(data)
+        return r

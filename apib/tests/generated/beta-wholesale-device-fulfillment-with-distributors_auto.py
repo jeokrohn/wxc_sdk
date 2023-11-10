@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -234,8 +235,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         if sku is not None:
             params['sku'] = sku
         url = self.ep('deviceCatalog')
-        ...
-
+        return self.session.follow_pagination(url=url, model=CatalogResponse, item_key='items', params=params)
 
     def get_wholesale_device_catalog_details(self, catalog_id: str) -> CatalogResponse:
         """
@@ -248,8 +248,9 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :rtype: :class:`CatalogResponse`
         """
         url = self.ep(f'deviceCatalog/{catalog_id}')
-        ...
-
+        data = super().get(url)
+        r = CatalogResponse.model_validate(data)
+        return r
 
     def list_wholesale_device_distributors(self) -> list[DistributorResponse]:
         """
@@ -260,8 +261,9 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :rtype: list[DistributorResponse]
         """
         url = self.ep('distributors')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[DistributorResponse]).validate_python(data['items'])
+        return r
 
     def get_wholesale_device_distributor_details(self, distributor_id: str) -> DistributorDetailsResponse:
         """
@@ -274,8 +276,9 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :rtype: :class:`DistributorDetailsResponse`
         """
         url = self.ep(f'distributors/{distributor_id}')
-        ...
-
+        data = super().get(url)
+        r = DistributorDetailsResponse.model_validate(data)
+        return r
 
     def list_wholesale_device_orders(self, org_id: str = None, status: str = None,
                                      **params) -> Generator[OrderResponse, None, None]:
@@ -296,8 +299,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         if status is not None:
             params['status'] = status
         url = self.ep('orders')
-        ...
-
+        return self.session.follow_pagination(url=url, model=OrderResponse, item_key='items', params=params)
 
     def create_a_wholesale_device_order(self, description: str, org_id: str, shipping_details: OrderShippingDetails,
                                         line_items: list[OrderRequestLineItem]) -> OrderResponse:
@@ -316,9 +318,15 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :type line_items: list[OrderRequestLineItem]
         :rtype: :class:`OrderResponse`
         """
+        body = dict()
+        body['description'] = description
+        body['orgId'] = org_id
+        body['shippingDetails'] = loads(shipping_details.model_dump_json())
+        body['lineItems'] = loads(TypeAdapter(list[OrderRequestLineItem]).dump_json(line_items))
         url = self.ep('orders')
-        ...
-
+        data = super().post(url, json=body)
+        r = OrderResponse.model_validate(data)
+        return r
 
     def cancel_a_wholesale_device_order(self, order_number: str):
         """
@@ -331,8 +339,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :rtype: None
         """
         url = self.ep(f'orders/{order_number}')
-        ...
-
+        super().delete(url)
 
     def get_a_wholesale_device_order(self, order_number: str) -> OrderResponse:
         """
@@ -345,6 +352,6 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         :rtype: :class:`OrderResponse`
         """
         url = self.ep(f'orders/{order_number}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = OrderResponse.model_validate(data)
+        return r

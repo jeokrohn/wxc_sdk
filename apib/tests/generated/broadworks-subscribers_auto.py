@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -170,7 +171,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
                                      provisioning_id: str = None, sp_enterprise_id: str = None,
                                      last_status_change: str = None, status: SubscriberStatus = None,
                                      after: str = None, self_activated: bool = None,
-                                     max_: int = None) -> list[Subscriber]:
+                                     **params) -> Generator[Subscriber, None, None]:
         """
         List BroadWorks Subscribers
 
@@ -198,13 +199,8 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         :type after: str
         :param self_activated: Indicates if the subscriber was self activated, rather than provisioned via these APIs.
         :type self_activated: bool
-        :param max_: Limit the maximum number of subscribers returned in the search response, up to 100 per page. Refer
-            to the `Pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
-        :type max_: int
-        :rtype: list[Subscriber]
+        :return: Generator yielding :class:`Subscriber` instances
         """
-        params = {}
         if user_id is not None:
             params['userId'] = user_id
         if person_id is not None:
@@ -223,11 +219,8 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
             params['after'] = after
         if self_activated is not None:
             params['selfActivated'] = str(self_activated).lower()
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Subscriber, item_key='items', params=params)
 
     def provision_a_broad_works_subscriber(self, provisioning_id: str, user_id: str, sp_enterprise_id: str,
                                            first_name: str, last_name: str, package: SubscriberPackage,
@@ -238,13 +231,13 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         Provision a BroadWorks Subscriber
 
         Provision a new BroadWorks subscriber for Webex services.
-        
+
         This API lets a Service Provider map a BroadWorks subscriber to a new or existing Webex user and assign the
         required licenses and entitlements for Webex and Meetings.
 
         :param provisioning_id: This Provisioning ID defines how this subscriber is to be provisioned for Webex
             Services.
-        
+
         Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen
         Customer Template
         on Webex Partner Hub.
@@ -279,9 +272,23 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         :type timezone: str
         :rtype: :class:`Subscriber`
         """
+        body = dict()
+        body['provisioningId'] = provisioning_id
+        body['userId'] = user_id
+        body['spEnterpriseId'] = sp_enterprise_id
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['package'] = enum_str(package)
+        body['primaryPhoneNumber'] = primary_phone_number
+        body['mobilePhoneNumber'] = mobile_phone_number
+        body['extension'] = extension
+        body['email'] = email
+        body['language'] = language
+        body['timezone'] = timezone
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Subscriber.model_validate(data)
+        return r
 
     def get_a_broad_works_subscriber(self, subscriber_id: str) -> Subscriber:
         """
@@ -294,8 +301,9 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         :rtype: :class:`Subscriber`
         """
         url = self.ep(f'{subscriber_id}')
-        ...
-
+        data = super().get(url)
+        r = Subscriber.model_validate(data)
+        return r
 
     def update_a_broad_works_subscriber(self, subscriber_id: str, user_id: str = None, first_name: str = None,
                                         last_name: str = None, primary_phone_number: str = None,
@@ -306,14 +314,14 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
 
         This API lets a Service Provider update certain details of a provisioned BroadWorks subscriber
         on Webex.
-        
+
         <div>
         <Callout type='info'>The updated items will not be immediately reflected in the response body, but can be
         subsequently obtained via the `Get a BroadWorks Subscriber
         <https://developer.webex.com/docs/api/v1/broadworks-subscribers/get-a-broadworks-subscriber>`_ API once the status has transitioned from the
         updating state to the provisioned state.</Callout>
         </div>
-        
+
         o
 
         :param subscriber_id: A unique identifier for the subscriber in question.
@@ -340,9 +348,19 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         :type package: str
         :rtype: :class:`Subscriber`
         """
+        body = dict()
+        body['userId'] = user_id
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['primaryPhoneNumber'] = primary_phone_number
+        body['mobilePhoneNumber'] = mobile_phone_number
+        body['extension'] = extension
+        body['timezone'] = timezone
+        body['package'] = package
         url = self.ep(f'{subscriber_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Subscriber.model_validate(data)
+        return r
 
     def remove_a_broad_works_subscriber(self, subscriber_id: str):
         """
@@ -355,8 +373,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         :rtype: None
         """
         url = self.ep(f'{subscriber_id}')
-        ...
-
+        super().delete(url)
 
     def precheck_a_broadworks_subscriber_provisioning(self, email: str, provisioning_id: str = None,
                                                       user_id: str = None, sp_enterprise_id: str = None,
@@ -370,7 +387,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         Precheck a Broadworks Subscriber Provisioning
 
         Verify the likely success of provisioning a broadworks subscriber.
-        
+
         <div>
         <Callout type='info'>
         The Prerequisite for using this API is to have at least one Broadworks Cluster configured against partner using
@@ -411,11 +428,24 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
             section of the `Webex for BroadWorks
             <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide>`_ guide for more information.
         :type timezone: str
-
         :type customer_info: PrecheckABroadworksSubscriberProvisioningCustomerInfo
         :rtype: :class:`SubscriberProvisioningPrecheckResponse`
         """
+        body = dict()
+        body['provisioningId'] = provisioning_id
+        body['userId'] = user_id
+        body['spEnterpriseId'] = sp_enterprise_id
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['package'] = enum_str(package)
+        body['primaryPhoneNumber'] = primary_phone_number
+        body['mobilePhoneNumber'] = mobile_phone_number
+        body['extension'] = extension
+        body['email'] = email
+        body['language'] = language
+        body['timezone'] = timezone
+        body['customerInfo'] = loads(customer_info.model_dump_json())
         url = self.ep('validate')
-        ...
-
-    ...
+        data = super().post(url, json=body)
+        r = SubscriberProvisioningPrecheckResponse.model_validate(data)
+        return r

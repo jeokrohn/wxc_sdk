@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -403,36 +404,33 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
     <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
     """
 
-    def list_of_recording_audit_report_summaries(self, max_: int = None, from_: Union[str, datetime] = None,
-                                                 to_: Union[str, datetime] = None, host_email: str = None,
-                                                 site_url: str = None) -> list[RecordingReportSummaryObject]:
+    def list_of_recording_audit_report_summaries(self, from_: Union[str, datetime] = None, to_: Union[str,
+                                                 datetime] = None, host_email: str = None, site_url: str = None,
+                                                 **params) -> Generator[RecordingReportSummaryObject, None, None]:
         """
         List of Recording Audit Report Summaries
 
         Lists of recording audit report summaries. You can specify a date range and the maximum number of recording
         audit report summaries to return.
-        
+
         Only recording audit report summaries of meetings hosted by or shared with the authenticated user will be
         listed.
-        
+
         The list returned is sorted in descending order by the date and time that the recordings were created.
-        
+
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         * If `siteUrl` is specified, the recording audit report summaries of the specified site will be listed;
         otherwise, recording audit report summaries of the user's preferred site will be listed. All available Webex
         sites and the preferred site of the user can be retrieved by the `Get Site List` API.
-        
+
         #### Request Header
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.
 
-        :param max_: Maximum number of recording audit report summaries to return in a single page. `max` must be equal
-            to or greater than `1` and equal to or less than `100`.
-        :type max_: int
         :param from_: Starting date and time (inclusive) for recording audit report summaries to return, in any
             `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `from` cannot be after `to`. Please note that the interval between `to` and
@@ -451,11 +449,8 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
             specified, the API lists summary audit report for recordings from the user's preferred site. All available
             Webex sites and the preferred site of the user can be retrieved by `Get Site List` API.
         :type site_url: str
-        :rtype: list[RecordingReportSummaryObject]
+        :return: Generator yielding :class:`RecordingReportSummaryObject` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         if from_ is not None:
             if isinstance(from_, str):
                 from_ = isoparse(from_)
@@ -471,21 +466,20 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('accessSummary')
-        ...
-
+        return self.session.follow_pagination(url=url, model=RecordingReportSummaryObject, item_key='items', params=params)
 
     def get_recording_audit_report_details(self, recording_id: str, host_email: str = None,
-                                           max_: int = None) -> list[RecordingReportObject]:
+                                           **params) -> Generator[RecordingReportObject, None, None]:
         """
         Get Recording Audit Report Details
 
         Retrieves details for a recording audit report with a specified recording ID.
-        
+
         Only recording audit report details of meetings hosted by or shared with the authenticated user may be
         retrieved.
-        
+
         #### Request Header
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.
@@ -496,49 +490,40 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
             calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
             site they manage and the API will return recording details of that user.
         :type host_email: str
-        :param max_: Maximum number of recording audit report details to return in a single page. `max` must be equal
-            to or greater than `1` and equal to or less than `100`.
-        :type max_: int
-        :rtype: list[RecordingReportObject]
+        :return: Generator yielding :class:`RecordingReportObject` instances
         """
-        params = {}
         params['recordingId'] = recording_id
         if host_email is not None:
             params['hostEmail'] = host_email
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep('accessDetail')
-        ...
+        return self.session.follow_pagination(url=url, model=RecordingReportObject, item_key='items', params=params)
 
-
-    def list_meeting_archive_summaries(self, max_: int = None, from_: Union[str, datetime] = None, to_: Union[str,
-                                       datetime] = None, site_url: str = None) -> list[RecordingAchriveSummaryObject]:
+    def list_meeting_archive_summaries(self, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
+                                       site_url: str = None,
+                                       **params) -> Generator[RecordingAchriveSummaryObject, None, None]:
         """
         List Meeting Archive Summaries
 
         Lists of meeting archive summaries. You can specify a date range and the maximum number of meeting archive
         summaries to return.
-        
+
         Meeting archive summaries are only available to full administrators, not even the meeting host.
-        
+
         The list returned is sorted in descending order by the date and time that the archives were created.
-        
+
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         * If `siteUrl` is specified, the meeting archive summaries of the specified site will be listed; otherwise,
         meeting archive summaries of the user's preferred site will be listed. All available Webex sites and the
         preferred site of the user can be retrieved by the `Get Site List` API.
-        
+
         #### Request Header
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.
 
-        :param max_: Maximum number of meeting archive summaries to return in a single page. `max` must be equal to or
-            greater than `1` and equal to or less than `100`.
-        :type max_: int
         :param from_: Starting date and time (inclusive) for meeting archive summaries to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_
             compliant format. `from` cannot be after `to`. Please note that the interval between `to` and `from`
@@ -553,11 +538,8 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
             the API lists meeting archive summaries for recordings from the user's preferred site. All available Webex
             sites and the preferred site of the user can be retrieved by `Get Site List` API.
         :type site_url: str
-        :rtype: list[RecordingAchriveSummaryObject]
+        :return: Generator yielding :class:`RecordingAchriveSummaryObject` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         if from_ is not None:
             if isinstance(from_, str):
                 from_ = isoparse(from_)
@@ -571,19 +553,18 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('meetingArchiveSummaries')
-        ...
-
+        return self.session.follow_pagination(url=url, model=RecordingAchriveSummaryObject, item_key='items', params=params)
 
     def get_meeting_archive_details(self, archive_id: str) -> RecordingArchiveReportObject:
         """
         Get Meeting Archive Details
 
         Retrieves details for a meeting archive report with a specified archive ID, which contains recording metadata.
-        
+
         Meeting archive details are only available to full administrators, not even the meeting host.
-        
+
         #### Request Header
-        
+
         * `timezone`: `Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.
@@ -593,6 +574,6 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
         :rtype: :class:`RecordingArchiveReportObject`
         """
         url = self.ep(f'meetingArchives/{archive_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = RecordingArchiveReportObject.model_validate(data)
+        return r

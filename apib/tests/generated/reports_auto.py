@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -85,7 +86,7 @@ class ReportsApi(ApiChild, base='reports'):
 
         Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
         and `to` parameters should be provided together.
-        
+
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
 
@@ -119,8 +120,9 @@ class ReportsApi(ApiChild, base='reports'):
             to_ = dt_iso_str(to_)
             params['to'] = to_
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Report]).validate_python(data['Report Attributes'])
+        return r
 
     def create_a_report(self, template_id: str, start_date: Union[str, datetime] = None, end_date: Union[str,
                         datetime] = None, site_list: str = None) -> str:
@@ -131,10 +133,10 @@ class ReportsApi(ApiChild, base='reports'):
         example, for templates belonging to Webex, the user needs to provide `siteUrl`. These validation rules can be
         retrieved via the `Report Templates API
         <https://developer.webex.com/docs/api/v1/report-templates>`_.
-        
+
         The 'templateId' parameter is a number. However, it is a limitation of developer.webex.com platform that it is
         passed as a string when you try to test the API from here.
-        
+
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
 
@@ -148,18 +150,24 @@ class ReportsApi(ApiChild, base='reports'):
         :type site_list: str
         :rtype: str
         """
+        body = dict()
+        body['templateId'] = template_id
+        body['startDate'] = start_date
+        body['endDate'] = end_date
+        body['siteList'] = site_list
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = data['id']
+        return r
 
     def get_report_details(self, report_id: str) -> Report:
         """
         Get Report Details
 
         Shows details for a report, by report ID.
-        
+
         Specify the report ID in the `reportId` parameter in the URI.
-        
+
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
 
@@ -168,17 +176,18 @@ class ReportsApi(ApiChild, base='reports'):
         :rtype: :class:`Report`
         """
         url = self.ep(f'{report_id}')
-        ...
-
+        data = super().get(url)
+        r = Report.model_validate(data)
+        return r
 
     def delete_a_report(self, report_id: str):
         """
         Delete a Report
 
         Remove a report from the system.
-        
+
         Specify the report ID in the `reportId` parameter in the URI
-        
+
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
 
@@ -187,6 +196,4 @@ class ReportsApi(ApiChild, base='reports'):
         :rtype: None
         """
         url = self.ep(f'{report_id}')
-        ...
-
-    ...
+        super().delete(url)

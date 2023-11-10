@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -218,7 +219,7 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
         Historical Data related to Messaging
 
         Returns daily aggregates of various metrics related to Webex messaging.
-        
+
         <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with
         the **Try It** feature. </Callout></div>
 
@@ -240,8 +241,9 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
             to_ = dt_iso_str(to_)
             params['to'] = to_
         url = self.ep('messagingMetrics/dailyTotals')
-        ...
-
+        data = super().get(url, params=params)
+        r = HistoricalDataRelatedToMessagingResponse.model_validate(data)
+        return r
 
     def historical_data_related_to_room_devices(self, from_: Union[str, datetime] = None, to_: Union[str,
                                                 datetime] = None) -> HistoricalDataRelatedToRoomDevicesResponse:
@@ -249,7 +251,7 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
         Historical Data related to Room Devices
 
         Returns daily aggregates of various metrics related to Room Devices.
-        
+
         <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with
         the **Try It** feature. </Callout></div>
 
@@ -271,8 +273,9 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
             to_ = dt_iso_str(to_)
             params['to'] = to_
         url = self.ep('roomDeviceMetrics/dailyTotals')
-        ...
-
+        data = super().get(url, params=params)
+        r = HistoricalDataRelatedToRoomDevicesResponse.model_validate(data)
+        return r
 
     def historical_data_related_to_meetings(self, site_url: str, from_: Union[str, datetime] = None, to_: Union[str,
                                             datetime] = None) -> HistoricalDataRelatedToMeetingsResponse:
@@ -280,7 +283,7 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
         Historical Data related to Meetings
 
         Return aggregates of various metrics related to meetings for a given Webex site over a specified time range.
-        
+
         <div><Callout type="error">The base URL for these APIs is **analytics.webexapis.com**, which does not work with
         the **Try It** feature.</Callout></div>
 
@@ -305,6 +308,6 @@ class HistoricalAnalyticsAPIsApi(ApiChild, base='v1/analytics'):
             to_ = dt_iso_str(to_)
             params['to'] = to_
         url = self.ep('meetingsMetrics/aggregates')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = HistoricalDataRelatedToMeetingsResponse.model_validate(data)
+        return r

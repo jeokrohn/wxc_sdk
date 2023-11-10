@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -151,8 +152,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         if city_name is not None:
             params['cityName'] = city_name
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Location]).validate_python(data['items'])
+        return r
 
     def create_a_workspace_location(self, display_name: str, address: str, country_code: str, city_name: str,
                                     latitude: int, longitude: int, notes: str) -> Location:
@@ -179,9 +181,18 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type notes: str
         :rtype: :class:`Location`
         """
+        body = dict()
+        body['displayName'] = display_name
+        body['address'] = address
+        body['countryCode'] = country_code
+        body['cityName'] = city_name
+        body['latitude'] = latitude
+        body['longitude'] = longitude
+        body['notes'] = notes
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Location.model_validate(data)
+        return r
 
     def get_a_workspace_location_details(self, location_id: str) -> Location:
         """
@@ -195,8 +206,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :rtype: :class:`Location`
         """
         url = self.ep(f'{location_id}')
-        ...
-
+        data = super().get(url)
+        r = Location.model_validate(data)
+        return r
 
     def update_a_workspace_location(self, location_id: str, id: str, display_name: str, address: str,
                                     country_code: str, city_name: str, latitude: int, longitude: int,
@@ -231,9 +243,19 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type notes: str
         :rtype: :class:`Location`
         """
+        body = dict()
+        body['id'] = id
+        body['displayName'] = display_name
+        body['address'] = address
+        body['countryCode'] = country_code
+        body['cityName'] = city_name
+        body['latitude'] = latitude
+        body['longitude'] = longitude
+        body['notes'] = notes
         url = self.ep(f'{location_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Location.model_validate(data)
+        return r
 
     def delete_a_workspace_location(self, location_id: str):
         """
@@ -248,8 +270,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :rtype: None
         """
         url = self.ep(f'{location_id}')
-        ...
-
+        super().delete(url)
 
     def list_workspace_location_floors(self, location_id: str) -> list[Floor]:
         """
@@ -263,8 +284,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :rtype: list[Floor]
         """
         url = self.ep(f'{location_id}/floors')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[Floor]).validate_python(data['items'])
+        return r
 
     def create_a_workspace_location_floor(self, location_id: str, floor_number: int, display_name: str) -> Floor:
         """
@@ -282,9 +304,13 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
+        body = dict()
+        body['floorNumber'] = floor_number
+        body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors')
-        ...
-
+        data = super().post(url, json=body)
+        r = Floor.model_validate(data)
+        return r
 
     def get_a_workspace_location_floor_details(self, location_id: str, floor_id: str) -> Floor:
         """
@@ -300,8 +326,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :rtype: :class:`Floor`
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        ...
-
+        data = super().get(url)
+        r = Floor.model_validate(data)
+        return r
 
     def update_a_workspace_location_floor(self, location_id: str, floor_id: str, floor_number: int,
                                           display_name: str) -> Floor:
@@ -324,9 +351,13 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
+        body = dict()
+        body['floorNumber'] = floor_number
+        body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Floor.model_validate(data)
+        return r
 
     def delete_a_workspace_location_floor(self, location_id: str, floor_id: str):
         """
@@ -342,6 +373,4 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :rtype: None
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        ...
-
-    ...
+        super().delete(url)

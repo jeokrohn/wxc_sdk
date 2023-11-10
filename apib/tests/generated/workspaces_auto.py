@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -346,14 +347,14 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
     def list_workspaces(self, org_id: str = None, workspace_location_id: str = None, floor_id: str = None,
                         display_name: str = None, capacity: int = None, type: WorkspaceUpdateRequestType = None,
-                        start: int = None, max_: int = None, calling: WorkspaceCallingType = None,
+                        start: int = None, calling: WorkspaceCallingType = None,
                         supported_devices: WorkspaceSupportedDevices = None, calendar: WorkspaceCalendarType = None,
-                        device_hosted_meetings_enabled: bool = None) -> list[Workspace]:
+                        device_hosted_meetings_enabled: bool = None, **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
 
         List workspaces.
-        
+
         Use query parameters to filter the response. The `orgId` parameter can only be used by admin users of another
         organization (such as partners). The `workspaceLocationId`, `floorId`, `capacity` and `type` fields will only
         be present for workspaces that have a value set for them. The special values `notSet` (for filtering on
@@ -376,8 +377,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type type: WorkspaceUpdateRequestType
         :param start: Offset. Default is 0.
         :type start: int
-        :param max_: Limit the maximum number of workspaces in the response.
-        :type max_: int
         :param calling: List workspaces by calling type.
         :type calling: WorkspaceCallingType
         :param supported_devices: List workspaces by supported devices.
@@ -386,9 +385,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type calendar: WorkspaceCalendarType
         :param device_hosted_meetings_enabled: List workspaces enabled for device hosted meetings.
         :type device_hosted_meetings_enabled: bool
-        :rtype: list[Workspace]
+        :return: Generator yielding :class:`Workspace` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if workspace_location_id is not None:
@@ -403,8 +401,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['type'] = type
         if start is not None:
             params['start'] = start
-        if max_ is not None:
-            params['max'] = max_
         if calling is not None:
             params['calling'] = calling
         if supported_devices is not None:
@@ -414,8 +410,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         if device_hosted_meetings_enabled is not None:
             params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
     def create_a_workspace(self, display_name: str, org_id: str, workspace_location_id: str, floor_id: str,
                            capacity: int, type: WorkspaceType1, sip_address: str,
@@ -427,18 +422,18 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         Create a Workspace
 
         Create a workspace.
-        
+
         The `workspaceLocationId`, `floorId`, `capacity`, `type`, `notes` and `hotdeskingStatus`  parameters are
         optional, and omitting them will result in the creation of a workspace without these values set, or set to
         their default. A `workspaceLocationId` must be provided when the `floorId` is set. Calendar and calling can
         also be set for a new workspace. Omitting them will default to free calling and no calendaring. The `orgId`
         parameter can only be used by admin users of another organization (such as partners).
-        
+
         * Information for Webex Calling fields may be found here: `locations
         <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
-        
+
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
-        
+
         * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
         required.
 
@@ -475,16 +470,31 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type supported_devices: WorkspaceSupportedDevices
         :rtype: :class:`Workspace`
         """
+        body = dict()
+        body['displayName'] = display_name
+        body['orgId'] = org_id
+        body['workspaceLocationId'] = workspace_location_id
+        body['floorId'] = floor_id
+        body['capacity'] = capacity
+        body['type'] = enum_str(type)
+        body['sipAddress'] = sip_address
+        body['calling'] = loads(calling.model_dump_json())
+        body['calendar'] = loads(calendar.model_dump_json())
+        body['notes'] = notes
+        body['hotdeskingStatus'] = enum_str(hotdesking_status)
+        body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
+        body['supportedDevices'] = enum_str(supported_devices)
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Workspace.model_validate(data)
+        return r
 
     def get_workspace_details(self, workspace_id: str) -> Workspace:
         """
         Get Workspace Details
 
         Shows details for a workspace, by ID.
-        
+
         The `workspaceLocationId`, `floorId`, `capacity`, `type` and `notes` fields will only be present if they have
         been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.
 
@@ -493,8 +503,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :rtype: :class:`Workspace`
         """
         url = self.ep(f'{workspace_id}')
-        ...
-
+        data = super().get(url)
+        r = Workspace.model_validate(data)
+        return r
 
     def update_a_workspace(self, workspace_id: str, display_name: str, workspace_location_id: str, floor_id: str,
                            capacity: int, type: WorkspaceUpdateRequestType,
@@ -506,25 +517,25 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         Update a Workspace
 
         Updates details for a workspace by ID.
-        
+
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
         <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
         `notes` fields will result in the fields no longer being defined for the workspace. A `workspaceLocationId`
         must be provided when the `floorId` is set. The `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.
-        
+
         * Information for Webex Calling fields may be found here: `locations
         <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
-        
+
         * Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`,
         `thirdPartySipCalling` or `webexCalling`.
-        
+
         * Updating the `calling` parameter to `none`, `thirdPartySipCalling` or `webexCalling` is not supported if the
         workspace contains any devices.
-        
+
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
-        
+
         * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
         required.
 
@@ -559,16 +570,29 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_hosted_meetings: WorkspaceDeviceHostedMeetings
         :rtype: :class:`Workspace`
         """
+        body = dict()
+        body['displayName'] = display_name
+        body['workspaceLocationId'] = workspace_location_id
+        body['floorId'] = floor_id
+        body['capacity'] = capacity
+        body['type'] = enum_str(type)
+        body['calendar'] = loads(calendar.model_dump_json())
+        body['sipAddress'] = sip_address
+        body['calling'] = loads(calling.model_dump_json())
+        body['notes'] = notes
+        body['hotdeskingStatus'] = enum_str(hotdesking_status)
+        body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
         url = self.ep(f'{workspace_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Workspace.model_validate(data)
+        return r
 
     def delete_a_workspace(self, workspace_id: str):
         """
         Delete a Workspace
 
         Deletes a workspace by ID.
-        
+
         Also deletes all devices associated with the workspace. Any deleted devices will need to be reactivated.
         Specify the workspace ID in the `workspaceId` parameter in the URI.
 
@@ -577,15 +601,14 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :rtype: None
         """
         url = self.ep(f'{workspace_id}')
-        ...
-
+        super().delete(url)
 
     def get_workspace_capabilities(self, workspace_id: str) -> CapabilityMap:
         """
         Get Workspace Capabilities
 
         Shows the capabilities for a workspace by ID.
-        
+
         Returns a set of capabilities, including whether or not the capability is supported by any device in the
         workspace, and if the capability is configured (enabled). For example for a specific capability like
         `occupancyDetection`, the API will return if the capability is supported and/or configured such that occupancy
@@ -597,6 +620,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :rtype: CapabilityMap
         """
         url = self.ep(f'{workspace_id}/capabilities')
-        ...
-
-    ...
+        data = super().get(url)
+        r = CapabilityMap.model_validate(data['capabilities'])
+        return r

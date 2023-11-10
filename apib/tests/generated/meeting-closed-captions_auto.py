@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -122,12 +123,12 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
 
         Lists closed captions of a finished `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ specified by `meetingId`.
-        
+
         * Closed captions are ready 15 minutes after the meeting is finished.
-        
+
         * Only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled
         meetings** and `in-progress` **meeting instances** are not supported.
-        
+
         * Currently, a meeting may have only one closed caption associated with its `meetingId`. The response is a
         closed captions array, which may contain multiple values to allow for future expansion, but currently only one
         closed caption is included in the response.
@@ -143,8 +144,9 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         params = {}
         params['meetingId'] = meeting_id
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClosedCaptionObject]).validate_python(data['items'])
+        return r
 
     def list_meeting_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str) -> list[SnippetObject]:
         """
@@ -165,8 +167,9 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         params = {}
         params['meetingId'] = meeting_id
         url = self.ep(f'{closed_caption_id}/snippets')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[SnippetObject]).validate_python(data['items'])
+        return r
 
     def download_meeting_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str,
                                                  format: DownloadMeetingClosedCaptionSnippetsFormat = None):
@@ -175,9 +178,9 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
 
         Download meeting closed caption snippets from the meeting closed caption specified by `closedCaptionId`
         formatted either as a Video Text Track (.vtt) file or plain text (.txt) file.
-        
+
         #### Request Header
-        
+
         * `timezone`: *`Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ for time stamps in response body, defined in conformance with the
         `IANA time zone database
@@ -200,6 +203,4 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
             params['format'] = format
         params['meetingId'] = meeting_id
         url = self.ep(f'{closed_caption_id}/download')
-        ...
-
-    ...
+        super().get(url, params=params)

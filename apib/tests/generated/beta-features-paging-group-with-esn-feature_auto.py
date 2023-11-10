@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -156,25 +157,23 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
     query parameter.
     """
 
-    def read_the_list_of_paging_groups(self, org_id: str = None, max_: int = None, start: int = None,
-                                       location_id: str = None, name: str = None,
-                                       phone_number: str = None) -> list[ListPagingGroupObject]:
+    def read_the_list_of_paging_groups(self, org_id: str = None, start: int = None, location_id: str = None,
+                                       name: str = None, phone_number: str = None,
+                                       **params) -> Generator[ListPagingGroupObject, None, None]:
         """
         Read the List of Paging Groups
 
         List all Paging Groups for the organization.
-        
+
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
         dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
         simultaneous call to all the assigned targets.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param org_id: List paging groups for this organization.
         :type org_id: str
-        :param max_: Limit the number of objects returned to this maximum count. Default is 2000
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects. Default is 0
         :type start: int
         :param location_id: Return only paging groups with matching location ID. Default is all locations
@@ -183,13 +182,10 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
         :type name: str
         :param phone_number: Return only paging groups with matching primary phone number or extension.
         :type phone_number: str
-        :rtype: list[ListPagingGroupObject]
+        :return: Generator yielding :class:`ListPagingGroupObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if location_id is not None:
@@ -199,8 +195,7 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('paging')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListPagingGroupObject, item_key='locationPaging', params=params)
 
     def get_details_for_a_paging_group(self, location_id: str, paging_id: str,
                                        org_id: str = None) -> GetPagingGroupObject:
@@ -208,12 +203,12 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
         Get Details for a Paging Group
 
         Retrieve Paging Group details.
-        
+
         Group Paging allows a person, place or virtual line a one-way call or group page to up to 75 people and/or
         workspaces and/or virtual line by
         dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
         simultaneous call to all the assigned targets.
-        
+
         Retrieving paging group details requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -229,6 +224,6 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/paging/{paging_id}')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = GetPagingGroupObject.model_validate(data)
+        return r

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -333,8 +334,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         if page_size is not None:
             params['pageSize'] = page_size
         url = self.ep('tasks')
-        ...
-
+        data = super().get(url, params=params)
+        r = TasksResponse.model_validate(data)
+        return r
 
     def get_agents_statistics(self, from_: int, to_: int, interval: GetAgentsStatisticsInterval, agent_ids: str = None,
                               org_id: str = None) -> AgentStatsResponse:
@@ -369,8 +371,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
             params['orgId'] = org_id
         params['interval'] = interval
         url = self.ep('agents/statistics')
-        ...
-
+        data = super().get(url, params=params)
+        r = AgentStatsResponse.model_validate(data)
+        return r
 
     def get_queues_statistics(self, from_: int, to_: int, interval: GetAgentsStatisticsInterval, queue_ids: str = None,
                               org_id: str = None) -> QueueStatsResponse:
@@ -405,8 +408,9 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
             params['orgId'] = org_id
         params['interval'] = interval
         url = self.ep('queues/statistics')
-        ...
-
+        data = super().get(url, params=params)
+        r = QueueStatsResponse.model_validate(data)
+        return r
 
     def list_captures(self, query: ListCapturesQuery) -> ListCapturesResponse:
         """
@@ -414,11 +418,12 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
 
         Retrieve a list of captures given a set of taskIds. A capture is a specific snippet of media.
 
-
         :type query: ListCapturesQuery
         :rtype: :class:`ListCapturesResponse`
         """
+        body = dict()
+        body['query'] = loads(query.model_dump_json())
         url = self.ep('captures/query')
-        ...
-
-    ...
+        data = super().post(url, json=body)
+        r = ListCapturesResponse.model_validate(data)
+        return r

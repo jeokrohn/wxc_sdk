@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -43,15 +44,16 @@ class RolesApi(ApiChild, base='roles'):
         :rtype: list[Role]
         """
         url = self.ep()
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[Role]).validate_python(data['items'])
+        return r
 
     def get_role_details(self, role_id: str) -> Role:
         """
         Get Role Details
 
         Shows details for a role, by ID.
-        
+
         Specify the role ID in the `roleId` parameter in the URI.
 
         :param role_id: The unique identifier for the role.
@@ -59,6 +61,6 @@ class RolesApi(ApiChild, base='roles'):
         :rtype: :class:`Role`
         """
         url = self.ep(f'{role_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = Role.model_validate(data)
+        return r

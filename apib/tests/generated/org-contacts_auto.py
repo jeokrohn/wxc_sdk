@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -302,7 +303,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         Create a Contact
 
         Creating a new contact for a given organization requires an org admin role.
-        
+
         At least one of the following body parameters: `phoneNumbers`, `emails`, `sipAddresses` is required to create a
         new contact for source "CH",
         `displayName` is required to create a new contact for source "Webex4Broadworks".
@@ -341,9 +342,23 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type ims: list[ContactIms]
         :rtype: None
         """
+        body = dict()
+        body['schemas'] = schemas
+        body['displayName'] = display_name
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['companyName'] = company_name
+        body['title'] = title
+        body['address'] = address
+        body['avatarURL'] = avatar_url
+        body['primaryContactMethod'] = enum_str(primary_contact_method)
+        body['source'] = enum_str(source)
+        body['emails'] = loads(TypeAdapter(list[ContactEmails]).dump_json(emails))
+        body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers))
+        body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses))
+        body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims))
         url = self.ep(f'')
-        ...
-
+        super().post(url, json=body)
 
     def get_a_contact(self, org_id: str, contact_id: str) -> ContactResponse:
         """
@@ -361,8 +376,9 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :rtype: :class:`ContactResponse`
         """
         url = self.ep(f'{contact_id}')
-        ...
-
+        data = super().get(url)
+        r = ContactResponse.model_validate(data)
+        return r
 
     def update_a_contact(self, org_id: str, contact_id: str, schemas: str, display_name: str, first_name: str,
                          last_name: str, company_name: str, title: str, address: str, avatar_url: str,
@@ -412,16 +428,30 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type ims: list[ContactIms]
         :rtype: None
         """
+        body = dict()
+        body['schemas'] = schemas
+        body['displayName'] = display_name
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['companyName'] = company_name
+        body['title'] = title
+        body['address'] = address
+        body['avatarURL'] = avatar_url
+        body['primaryContactMethod'] = enum_str(primary_contact_method)
+        body['source'] = enum_str(source)
+        body['emails'] = loads(TypeAdapter(list[ContactEmails]).dump_json(emails))
+        body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers))
+        body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses))
+        body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims))
         url = self.ep(f'{contact_id}')
-        ...
-
+        super().patch(url, json=body)
 
     def delete_a_contact(self, org_id: str, contact_id: str):
         """
         Delete a Contact
 
         Remove a contact from the organization. Only an admin can remove a contact.
-        
+
         Specify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId`
         parameter in the URI.
 
@@ -433,18 +463,17 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :rtype: None
         """
         url = self.ep(f'{contact_id}')
-        ...
-
+        super().delete(url)
 
     def list_contacts(self, org_id: str, keyword: str = None, limit: int = None, source: str = None) -> SearchResponse:
         """
         List Contacts
 
         List contacts in the organization. The default limit is `1000`.
-        
+
         `keyword` can be the value of "displayName", "firstName", "lastName", "email". An empty string of `keyword`
         means get all contacts.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -467,8 +496,9 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         if source is not None:
             params['source'] = source
         url = self.ep(f'search')
-        ...
-
+        data = super().get(url, params=params)
+        r = SearchResponse.model_validate(data)
+        return r
 
     def bulk_create_or_update_contacts(self, org_id: str, schemas: str, contacts: list[BulkCreateContacts]):
         """
@@ -485,9 +515,11 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type contacts: list[BulkCreateContacts]
         :rtype: None
         """
+        body = dict()
+        body['schemas'] = schemas
+        body['contacts'] = loads(TypeAdapter(list[BulkCreateContacts]).dump_json(contacts))
         url = self.ep(f'bulk')
-        ...
-
+        super().post(url, json=body)
 
     def bulk_delete_contacts(self, org_id: str, schemas: str, object_ids: list[str]):
         """
@@ -504,7 +536,8 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type object_ids: list[str]
         :rtype: None
         """
+        body = dict()
+        body['schemas'] = schemas
+        body['objectIds'] = object_ids
         url = self.ep(f'bulk/delete')
-        ...
-
-    ...
+        super().post(url, json=body)

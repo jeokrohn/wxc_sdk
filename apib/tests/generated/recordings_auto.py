@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -359,41 +360,38 @@ class RecordingsApi(ApiChild, base=''):
     <https://developer.webex.com/docs/meetings#user-level-authentication-and-scopes>`_ for the specific scopes required for each API.
     """
 
-    def list_recordings(self, max_: int = None, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
+    def list_recordings(self, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
                         meeting_id: str = None, host_email: str = None, site_url: str = None,
                         integration_tag: str = None, topic: str = None, format: ListRecordingsFormat = None,
-                        service_type: RecordingObjectServiceType = None,
-                        status: ListRecordingsStatus = None) -> list[RecordingObject]:
+                        service_type: RecordingObjectServiceType = None, status: ListRecordingsStatus = None,
+                        **params) -> Generator[RecordingObject, None, None]:
         """
         List Recordings
 
         Lists recordings. You can specify a date range, a parent meeting ID, and the maximum number of recordings to
         return.
-        
+
         Only recordings of meetings hosted by or shared with the authenticated user will be listed.
-        
+
         The list returned is sorted in descending order by the date and time that the recordings were created.
-        
+
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**:
         when `meetingId` is specified, parameter of `siteUrl` will be ignored.
-        
+
         * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
         recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved
         by `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         #### Request Header
-        
+
         * `timezone`: *`Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.*
 
-        :param max_: Maximum number of recordings to return in a single page. `max` must be equal to or greater than
-            `1` and equal to or less than `100`.
-        :type max_: int
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
             `from` cannot be after `to`.
@@ -435,11 +433,8 @@ class RecordingsApi(ApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: ListRecordingsStatus
-        :rtype: list[RecordingObject]
+        :return: Generator yielding :class:`RecordingObject` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         if from_ is not None:
             if isinstance(from_, str):
                 from_ = isoparse(from_)
@@ -466,44 +461,41 @@ class RecordingsApi(ApiChild, base=''):
             params['serviceType'] = service_type
         if status is not None:
             params['status'] = status
-        url = self.ep('ecordings')
-        ...
+        url = self.ep('recordings')
+        return self.session.follow_pagination(url=url, model=RecordingObject, item_key='items', params=params)
 
-
-    def list_recordings_for_an_admin_or_compliance_officer(self, max_: int = None, from_: Union[str, datetime] = None,
-                                                           to_: Union[str, datetime] = None, meeting_id: str = None,
+    def list_recordings_for_an_admin_or_compliance_officer(self, from_: Union[str, datetime] = None, to_: Union[str,
+                                                           datetime] = None, meeting_id: str = None,
                                                            site_url: str = None, integration_tag: str = None,
                                                            topic: str = None, format: ListRecordingsFormat = None,
                                                            service_type: RecordingObjectServiceType = None,
-                                                           status: ListRecordingsStatus = None) -> list[RecordingObjectForAdminAndCO]:
+                                                           status: ListRecordingsStatus = None,
+                                                           **params) -> Generator[RecordingObjectForAdminAndCO, None, None]:
         """
         List Recordings For an Admin or Compliance Officer
 
         List recordings for an admin or compliance officer. You can specify a date range, a parent meeting ID, and the
         maximum number of recordings to return.
-        
+
         The list returned is sorted in descending order by the date and time that the recordings were created.
-        
+
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
         note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
-        
+
         * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings
         on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the
         admin user's or compliance officer's preferred site can be retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         #### Request Header
-        
+
         * `timezone`: *`Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.*
 
-        :param max_: Maximum number of recordings to return in a single page. `max` must be equal to or greater than
-            `1` and equal to or less than `100`.
-        :type max_: int
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
             `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
@@ -538,11 +530,8 @@ class RecordingsApi(ApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved to the recycle bin.
         :type status: ListRecordingsStatus
-        :rtype: list[RecordingObjectForAdminAndCO]
+        :return: Generator yielding :class:`RecordingObjectForAdminAndCO` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         if from_ is not None:
             if isinstance(from_, str):
                 from_ = isoparse(from_)
@@ -567,9 +556,8 @@ class RecordingsApi(ApiChild, base=''):
             params['serviceType'] = service_type
         if status is not None:
             params['status'] = status
-        url = self.ep('dmin/recordings')
-        ...
-
+        url = self.ep('admin/recordings')
+        return self.session.follow_pagination(url=url, model=RecordingObjectForAdminAndCO, item_key='items', params=params)
 
     def get_recording_details(self, recording_id: str,
                               host_email: str = None) -> RecordingObjectWithDirectDownloadLinks:
@@ -577,11 +565,11 @@ class RecordingsApi(ApiChild, base=''):
         Get Recording Details
 
         Retrieves details for a recording with a specified recording ID.
-        
+
         Only recordings of meetings hosted by or shared with the authenticated user may be retrieved.
-        
+
         #### Request Header
-        
+
         * `timezone`: *`Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.*
@@ -598,9 +586,10 @@ class RecordingsApi(ApiChild, base=''):
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        url = self.ep(f'ecordings/{recording_id}')
-        ...
-
+        url = self.ep(f'recordings/{recording_id}')
+        data = super().get(url, params=params)
+        r = RecordingObjectWithDirectDownloadLinks.model_validate(data)
+        return r
 
     def delete_a_recording(self, recording_id: str, reason: str, comment: str, host_email: str = None):
         """
@@ -609,7 +598,7 @@ class RecordingsApi(ApiChild, base=''):
         Removes a recording with a specified recording ID. The deleted recording cannot be recovered. If a Compliance
         Officer deletes another user's recording, the recording will be inaccessible to regular users (host, attendees
         and shared), but will be still available to the Compliance Officer.
-        
+
         Only recordings of meetings hosted by the authenticated user can be deleted.
 
         :param recording_id: A unique identifier for the recording.
@@ -630,9 +619,11 @@ class RecordingsApi(ApiChild, base=''):
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        url = self.ep(f'ecordings/{recording_id}')
-        ...
-
+        body = dict()
+        body['reason'] = reason
+        body['comment'] = comment
+        url = self.ep(f'recordings/{recording_id}')
+        super().delete(url, params=params, json=body)
 
     def move_recordings_into_the_recycle_bin(self, recording_ids: list[str], site_url: str, host_email: str = None):
         """
@@ -643,11 +634,11 @@ class RecordingsApi(ApiChild, base=''):
         <https://developer.webex.com/docs/api/v1/recordings/restore-recordings-from-recycle-bin>`_ API. If you'd like to empty recordings from the recycle bin, you can use
         `Purge Recordings from Recycle Bin
         <https://developer.webex.com/docs/api/v1/recordings/purge-recordings-from-recycle-bin>`_ API to purge all or some of them.
-        
+
         Only recordings of meetings hosted by the authenticated user can be moved into the recycle bin.
-        
+
         * `recordingIds` should not be empty and its maximum size is `100`.
-        
+
         * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
         `siteUrl` is not specified.
 
@@ -670,9 +661,11 @@ class RecordingsApi(ApiChild, base=''):
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        url = self.ep('ecordings/softDelete')
-        ...
-
+        body = dict()
+        body['recordingIds'] = recording_ids
+        body['siteUrl'] = site_url
+        url = self.ep('recordings/softDelete')
+        super().post(url, params=params, json=body)
 
     def restore_recordings_from_recycle_bin(self, restore_all: bool, recording_ids: list[str], site_url: str,
                                             host_email: str = None):
@@ -681,11 +674,11 @@ class RecordingsApi(ApiChild, base=''):
 
         Restore all or some recordings from the recycle bin. Only recordings of meetings hosted by the authenticated
         user can be restored from recycle bin.
-        
+
         * If `restoreAll` is `true`, `recordingIds` should be empty.
-        
+
         * If `restoreAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.
-        
+
         * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
         `siteUrl` is not specified.
 
@@ -711,9 +704,12 @@ class RecordingsApi(ApiChild, base=''):
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        url = self.ep('ecordings/restore')
-        ...
-
+        body = dict()
+        body['restoreAll'] = restore_all
+        body['recordingIds'] = recording_ids
+        body['siteUrl'] = site_url
+        url = self.ep('recordings/restore')
+        super().post(url, params=params, json=body)
 
     def purge_recordings_from_recycle_bin(self, purge_all: bool, recording_ids: list[str], site_url: str,
                                           host_email: str = None):
@@ -721,13 +717,13 @@ class RecordingsApi(ApiChild, base=''):
         Purge Recordings from Recycle Bin
 
         Purge recordings from recycle bin with recording IDs or purge all the recordings that are in the recycle bin.
-        
+
         Only recordings of meetings hosted by the authenticated user can be purged from recycle bin.
-        
+
         * If `purgeAll` is `true`, `recordingIds` should be empty.
-        
+
         * If `purgeAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.
-        
+
         * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
         `siteUrl` is not specified.
 
@@ -753,7 +749,9 @@ class RecordingsApi(ApiChild, base=''):
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        url = self.ep('ecordings/purge')
-        ...
-
-    ...
+        body = dict()
+        body['purgeAll'] = purge_all
+        body['recordingIds'] = recording_ids
+        body['siteUrl'] = site_url
+        url = self.ep('recordings/purge')
+        super().post(url, params=params, json=body)

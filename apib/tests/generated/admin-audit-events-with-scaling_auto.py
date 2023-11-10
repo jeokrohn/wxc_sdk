@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -115,10 +116,10 @@ class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
         List Admin Audit Events
 
         List admin audit events in your organization. Several query parameters are available to filter the response.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         **NOTE**: A maximum of one year of audit events can be returned per request.
 
         :param org_id: List events in this organization, by ID.
@@ -147,8 +148,7 @@ class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
         if event_categories is not None:
             params['eventCategories'] = ','.join(event_categories)
         url = self.ep('events')
-        ...
-
+        return self.session.follow_pagination(url=url, model=AuditEvent, item_key='items', params=params)
 
     def list_admin_audit_event_categories(self) -> list[str]:
         """
@@ -159,6 +159,6 @@ class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):
         :rtype: list[str]
         """
         url = self.ep('eventCategories')
-        ...
-
-    ...
+        data = super().get(url)
+        r = data['eventCategories']
+        return r

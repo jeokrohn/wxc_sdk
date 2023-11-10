@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -1077,14 +1078,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                     start: int = None, name: str = None,
-                                     phone_number: str = None) -> list[ListCallQueueObject]:
+    def read_the_list_of_call_queues(self, org_id: str = None, location_id: str = None, start: int = None,
+                                     name: str = None, phone_number: str = None,
+                                     **params) -> Generator[ListCallQueueObject, None, None]:
         """
         Read the List of Call Queues
 
         List all Call Queues for the organization.
-        
+
         Call queues temporarily hold calls in the cloud when all agents, which
         can be users or agents, assigned to receive calls from the queue are
         unavailable. Queued calls are routed to an available agent when not on an
@@ -1092,7 +1093,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        
+
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
@@ -1100,23 +1101,18 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param location_id: Only return call queues with matching location ID.
         :type location_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param name: Only return call queues with the matching name.
         :type name: str
         :param phone_number: Only return call queues with matching primary phone number or extension.
         :type phone_number: str
-        :rtype: list[ListCallQueueObject]
+        :return: Generator yielding :class:`ListCallQueueObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -1124,8 +1120,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('queues')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListCallQueueObject, item_key='queues', params=params)
 
     def create_a_call_queue(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
                             language_code: str, first_name: str, last_name: str, time_zone: str,
@@ -1137,7 +1132,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Create a Call Queue
 
         Create new Call Queues for the given location.
-        
+
         Call queues temporarily hold calls in the cloud when all agents, which
         can be users or agents, assigned to receive calls from the queue are
         unavailable. Queued calls are routed to an available agent when not on an
@@ -1145,7 +1140,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        
+
         Creating a call queue requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1185,16 +1180,30 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['languageCode'] = language_code
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['timeZone'] = time_zone
+        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['queueSettings'] = loads(queue_settings.model_dump_json())
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_json(agents))
+        body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+        body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None):
         """
         Delete a Call Queue
 
         Delete the designated Call Queue.
-        
+
         Call queues temporarily hold calls in the cloud when all agents, which
         can be users or agents, assigned to receive calls from the queue are
         unavailable. Queued calls are routed to an available agent when not on an
@@ -1202,7 +1211,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        
+
         Deleting a call queue requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1218,15 +1227,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_details_for_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> GetCallQueueObject:
         """
         Get Details for a Call Queue
 
         Retrieve Call Queue details.
-        
+
         Call queues temporarily hold calls in the cloud when all agents, which
         can be users or agents, assigned to receive calls from the queue are
         unavailable. Queued calls are routed to an available agent when not on an
@@ -1234,7 +1242,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        
+
         Retrieving call queue details requires a full or read-only administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_read`.
 
@@ -1250,8 +1258,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetCallQueueObject.model_validate(data)
+        return r
 
     def update_a_call_queue(self, location_id: str, queue_id: str, enabled: bool, name: str, language_code: str,
                             first_name: str, last_name: str, time_zone: str, phone_number: str, extension: Union[str,
@@ -1265,7 +1274,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update a Call Queue
 
         Update the designated Call Queue.
-        
+
         Call queues temporarily hold calls in the cloud when all agents, which
         can be users or agents, assigned to receive calls from the queue are
         unavailable. Queued calls are routed to an available agent when not on an
@@ -1273,7 +1282,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        
+
         Updating a call queue requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1323,9 +1332,24 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        body['name'] = name
+        body['languageCode'] = language_code
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['timeZone'] = time_zone
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['alternateNumberSettings'] = loads(alternate_number_settings.model_dump_json())
+        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['queueSettings'] = loads(queue_settings.model_dump_json())
+        body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
+        body['agents'] = loads(TypeAdapter(list[ModifyPersonPlaceVirtualLineCallQueueObject]).dump_json(agents))
+        body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+        body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def read_the_list_of_call_queue_announcement_files(self, location_id: str, queue_id: str,
                                                        org_id: str = None) -> list[GetAnnouncementFileInfo]:
@@ -1333,13 +1357,13 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Read the List of Call Queue Announcement Files
 
         List file info for all Call Queue announcement files associated with this Call Queue.
-        
+
         Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
         queue can be configured to play whatever subset of these announcement files is desired.
-        
+
         Retrieving this list of files requires a full or read-only administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_read`.
-        
+
         Note that uploading of announcement files via API is not currently supported, but is available via Webex
         Control Hub.
 
@@ -1355,8 +1379,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[GetAnnouncementFileInfo]).validate_python(data['announcements'])
+        return r
 
     def delete_a_call_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str,
                                               org_id: str = None):
@@ -1364,10 +1389,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Delete a Call Queue Announcement File
 
         Delete an announcement file for the designated Call Queue.
-        
+
         Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
         queue can be configured to play whatever subset of these announcement files is desired.
-        
+
         Deleting an announcement file for a call queue requires a full administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
@@ -1375,7 +1400,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param queue_id: Delete an announcement for the call queue with this identifier.
         :type queue_id: str
-
         :type file_name: str
         :param org_id: Delete call queue announcement from this organization.
         :type org_id: str
@@ -1385,8 +1409,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements/{file_name}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
                                                       org_id: str = None) -> CallForwardSettingsGetCallForwarding:
@@ -1394,7 +1417,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Get Call Forwarding Settings for a Call Queue
 
         Retrieve Call Forwarding settings for the designated Call Queue including the list of call forwarding rules.
-        
+
         Retrieving call forwarding settings for a call queue requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -1410,8 +1433,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
-        ...
-
+        data = super().get(url, params=params)
+        r = CallForwardSettingsGetCallForwarding.model_validate(data['callForwarding'])
+        return r
 
     def update_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
                                                          call_forwarding: ModifyCallForwardingObjectCallForwarding,
@@ -1420,7 +1444,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update Call Forwarding Settings for a Call Queue
 
         Update Call Forwarding settings for the designated Call Queue.
-        
+
         Updating call forwarding settings for a call queue requires a full administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
@@ -1437,9 +1461,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['callForwarding'] = loads(call_forwarding.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def create_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, name: str,
                                                                  enabled: bool, holiday_schedule: str,
@@ -1452,15 +1477,15 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Create a Selective Call Forwarding Rule for a Call Queue
 
         Create a Selective Call Forwarding Rule for the designated Call Queue.
-        
+
         A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        
+
         Creating a selective call forwarding rule for a call queue requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which the call queue exists.
@@ -1491,9 +1516,18 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['holidaySchedule'] = holiday_schedule
+        body['businessSchedule'] = business_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
                                                             org_id: str = None) -> GetForwardingRuleObject:
@@ -1501,15 +1535,15 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Get Selective Call Forwarding Rule for a Call Queue
 
         Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
-        
+
         A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        
+
         Retrieving a selective call forwarding rule's settings for a call queue requires a full or read-only
         administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which to call queue exists.
@@ -1526,8 +1560,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetForwardingRuleObject.model_validate(data)
+        return r
 
     def update_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
                                                                  name: str, enabled: bool, holiday_schedule: str,
@@ -1540,15 +1575,15 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update a Selective Call Forwarding Rule for a Call Queue
 
         Update a Selective Call Forwarding Rule's settings for the designated Call Queue.
-        
+
         A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        
+
         Updating a selective call forwarding rule's settings for a call queue requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this call queue exists.
@@ -1581,9 +1616,18 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['holidaySchedule'] = holiday_schedule
+        body['businessSchedule'] = business_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
                                                                  org_id: str = None):
@@ -1591,15 +1635,15 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Delete a Selective Call Forwarding Rule for a Call Queue
 
         Delete a Selective Call Forwarding Rule for the designated Call Queue.
-        
+
         A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        
+
         Deleting a selective call forwarding rule for a call queue requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this call queue exists.
@@ -1616,8 +1660,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_details_for_a_call_queue_holiday_service(self, location_id: str, queue_id: str,
                                                      org_id: str = None) -> GetCallQueueHolidayObject:
@@ -1625,9 +1668,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Get Details for a Call Queue Holiday Service
 
         Retrieve Call Queue Holiday Service details.
-        
+
         Configure the call queue to route calls differently during the holidays.
-        
+
         Retrieving call queue holiday service details requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -1643,8 +1686,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetCallQueueHolidayObject.model_validate(data)
+        return r
 
     def update_a_call_queue_holiday_service(self, location_id: str, queue_id: str, holiday_service_enabled: bool,
                                             action: GetCallQueueHolidayObjectAction,
@@ -1658,9 +1702,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update a Call Queue Holiday Service
 
         Update the designated Call Queue Holiday Service.
-        
+
         Configure the call queue to route calls differently during the holidays.
-        
+
         Updating a call queue holiday service requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
 
@@ -1695,9 +1739,17 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['holidayServiceEnabled'] = holiday_service_enabled
+        body['action'] = enum_str(action)
+        body['holidayScheduleLevel'] = enum_str(holiday_schedule_level)
+        body['holidayScheduleName'] = holiday_schedule_name
+        body['transferPhoneNumber'] = transfer_phone_number
+        body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
+        body['audioMessageSelection'] = enum_str(audio_message_selection)
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_details_for_a_call_queue_night_service(self, location_id: str, queue_id: str,
                                                    org_id: str = None) -> GetCallQueueNightServiceObject:
@@ -1705,10 +1757,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Get Details for a Call Queue Night Service
 
         Retrieve Call Queue Night service details.
-        
+
         Configure the call queue to route calls differently during the hours when the queue is not in service. This is
         determined by a schedule that defines the business hours of the queue.
-        
+
         Retrieving call queue details requires a full or read-only administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_read`.
 
@@ -1724,8 +1776,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetCallQueueNightServiceObject.model_validate(data)
+        return r
 
     def update_a_call_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool,
                                           action: GetCallQueueHolidayObjectAction, transfer_phone_number: Union[str,
@@ -1743,10 +1796,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update a Call Queue Night Service
 
         Update Call Queue Night Service details.
-        
+
         Configure the call queue to route calls differently during the hours when the queue is not in service. This is
         determined by a schedule that defines the business hours of the queue.
-        
+
         Updating call queue night service details requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
@@ -1791,9 +1844,21 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['nightServiceEnabled'] = night_service_enabled
+        body['action'] = enum_str(action)
+        body['transferPhoneNumber'] = transfer_phone_number
+        body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
+        body['announcementMode'] = enum_str(announcement_mode)
+        body['audioMessageSelection'] = enum_str(audio_message_selection)
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
+        body['businessHoursName'] = business_hours_name
+        body['businessHoursLevel'] = enum_str(business_hours_level)
+        body['forceNightServiceEnabled'] = force_night_service_enabled
+        body['manualAudioMessageSelection'] = enum_str(manual_audio_message_selection)
+        body['manualAudioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(manual_audio_files))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_details_for_a_call_queue_forced_forward(self, location_id: str, queue_id: str,
                                                     org_id: str = None) -> GetCallQueueForcedForwardObject:
@@ -1801,9 +1866,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Get Details for a Call Queue Forced Forward
 
         Retrieve Call Queue policy Forced Forward details.
-        
+
         This policy allows calls to be temporarily diverted to a configured destination.
-        
+
         Retrieving call queue Forced Forward details requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -1819,8 +1884,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetCallQueueForcedForwardObject.model_validate(data)
+        return r
 
     def update_a_call_queue_forced_forward_service(self, location_id: str, queue_id: str, forced_forward_enabled: bool,
                                                    transfer_phone_number: str, play_announcement_before_enabled: bool,
@@ -1831,11 +1897,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update a Call Queue Forced Forward service
 
         Update the designated Forced Forward Service.
-        
+
         If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls
         that are already in the queue remain queued.
         The policy can be configured to play an announcement prior to proceeding with the forward.
-        
+
         Updating a call queue Forced Forward service requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
@@ -1862,9 +1928,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['forcedForwardEnabled'] = forced_forward_enabled
+        body['transferPhoneNumber'] = transfer_phone_number
+        body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
+        body['audioMessageSelection'] = enum_str(audio_message_selection)
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_details_for_a_call_queue_stranded_calls(self, location_id: str, queue_id: str,
                                                     org_id: str = None) -> GetCallQueueStrandedCallsObject:
@@ -1872,12 +1943,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Get Details for a Call Queue Stranded Calls
 
         Allow admin to view default/configured Stranded Calls settings.
-        
+
         Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out, then
         all calls in the queue become stranded.
         Stranded-Unavailable Policy: This policy allows for the configuration of the processing of calls that are in a
         staffed queue when all agents are unavailable.
-        
+
         Retrieving call queue Stranded Calls details requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -1893,8 +1964,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetCallQueueStrandedCallsObject.model_validate(data)
+        return r
 
     def update_a_call_queue_stranded_calls_service(self, location_id: str, queue_id: str,
                                                    action: GetCallQueueStrandedCallsObjectAction,
@@ -1906,9 +1978,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update a Call Queue Stranded Calls service
 
         Update the designated Call Stranded Calls Service.
-        
+
         Allow admin to modify configured Stranded Calls settings.
-        
+
         Updating a call queue stranded calls requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
 
@@ -1932,7 +2004,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['action'] = enum_str(action)
+        body['transferPhoneNumber'] = transfer_phone_number
+        body['audioMessageSelection'] = enum_str(audio_message_selection)
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

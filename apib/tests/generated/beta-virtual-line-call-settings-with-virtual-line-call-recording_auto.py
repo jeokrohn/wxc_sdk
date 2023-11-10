@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -125,10 +126,10 @@ class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base=
         Read Call Recording Settings for a Virtual Line
 
         Retrieve Virtual Line's Call Recording settings.
-        
+
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
-        
+
         This API requires a full or user administrator auth token with the `spark-admin:telephony_config_read` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -143,8 +144,9 @@ class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base=
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'')
-        ...
-
+        data = super().get(url, params=params)
+        r = CallRecordingInfo.model_validate(data)
+        return r
 
     def configure_call_recording_settings_for_a_virtual_line(self, virtual_line_id: str, enabled: bool,
                                                              record: CallRecordingInfoRecord,
@@ -157,10 +159,10 @@ class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base=
         Configure Call Recording Settings for a Virtual Line
 
         Configure virtual line's Call Recording settings.
-        
+
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
-        
+
         This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -186,7 +188,12 @@ class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base=
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        body['record'] = enum_str(record)
+        body['recordVoicemailEnabled'] = record_voicemail_enabled
+        body['notification'] = loads(notification.model_dump_json())
+        body['repeat'] = loads(repeat.model_dump_json())
+        body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
         url = self.ep(f'')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -86,13 +87,13 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
     """
 
     def list_application_usage(self, org_id: str = None, app_name: str = None, app_id: str = None,
-                               order_by: ListApplicationUsageOrderBy = None, max_: int = None,
-                               cursor: str = None) -> list[ApplicationUsage]:
+                               order_by: ListApplicationUsageOrderBy = None, cursor: str = None,
+                               **params) -> Generator[ApplicationUsage, None, None]:
         """
         List Application Usage
 
         Lists all applications, optionally filtered by organization ID, application name, or application ID.
-        
+
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -104,15 +105,11 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
         :type app_id: str
         :param order_by: Sort results.
         :type order_by: ListApplicationUsageOrderBy
-        :param max_: Limit the number of records returned in the response. Use `pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ to move through the results.
-        :type max_: int
         :param cursor: The current cursor when `paging
             <https://developer.webex.com/docs/basics#pagination>`_ through long result sets.
         :type cursor: str
-        :rtype: list[ApplicationUsage]
+        :return: Generator yielding :class:`ApplicationUsage` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if app_name is not None:
@@ -121,11 +118,7 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
             params['appId'] = app_id
         if order_by is not None:
             params['orderBy'] = order_by
-        if max_ is not None:
-            params['max'] = max_
         if cursor is not None:
             params['cursor'] = cursor
         url = self.ep()
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=ApplicationUsage, item_key='items', params=params)

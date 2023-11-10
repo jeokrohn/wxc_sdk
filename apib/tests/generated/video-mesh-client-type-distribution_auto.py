@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -100,7 +101,7 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
         :type to_: Union[str, datetime]
         :param device_type: Device type(s).
-        
+
         - Possible values:
         `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
         :type device_type: str
@@ -118,8 +119,9 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
         params['to'] = to_
         params['deviceType'] = device_type
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClienttypedistributionCollectionforOrg]).validate_python(data['items'])
+        return r
 
     def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: Union[str, datetime],
                                                      to_: Union[str, datetime],
@@ -139,7 +141,7 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
         :type to_: Union[str, datetime]
         :param device_type: Device type(s).
-        
+
         - Possible values:
         `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
         :type device_type: str
@@ -157,6 +159,6 @@ class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientType
         params['to'] = to_
         params['deviceType'] = device_type
         url = self.ep('clusters')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClienttypedistributionCollectionforOrg]).validate_python(data['items'])
+        return r

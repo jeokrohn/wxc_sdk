@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -61,7 +62,7 @@ class OrganizationGroupsApi(ApiChild, base='organization/groups?orgId={orgId}&di
         List Organization Groups
 
         List the policy groups at an organization level based on a display name pattern.
-        
+
         Specify the organization's ID in the `orgId` URI parameter and the group's display name pattern in the
         `displayName` URI parameter.
 
@@ -70,6 +71,6 @@ class OrganizationGroupsApi(ApiChild, base='organization/groups?orgId={orgId}&di
         :rtype: list[GroupMembers]
         """
         url = self.ep(f'')
-        ...
-
-    ...
+        data = super().get(url)
+        r = TypeAdapter(list[GroupMembers]).validate_python(data['items'])
+        return r

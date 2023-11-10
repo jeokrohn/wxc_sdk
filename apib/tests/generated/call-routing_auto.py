@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -976,13 +977,13 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Test Call Routing
 
         Validates that an incoming call can be routed.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Test call routing requires a full or write-only administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1004,23 +1005,29 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['originatorId'] = originator_id
+        body['originatorType'] = enum_str(originator_type)
+        body['originatorNumber'] = originator_number
+        body['destination'] = destination
         url = self.ep('actions/testCallRouting/invoke')
-        ...
+        data = super().post(url, params=params, json=body)
+        r = TestCallRoutingPostResponse.model_validate(data)
+        return r
 
-
-    def get_local_gateway_dial_plan_usage_for_a_trunk(self, trunk_id: str, org_id: str = None, max_: int = None,
-                                                      start: int = None, order: str = None,
-                                                      name: list[str] = None) -> list[Customer]:
+    def get_local_gateway_dial_plan_usage_for_a_trunk(self, trunk_id: str, org_id: str = None, start: int = None,
+                                                      order: str = None, name: list[str] = None,
+                                                      **params) -> Generator[Customer, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk
 
         Get Local Gateway Dial Plan Usage for a Trunk.
-        
+
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
         calls over multiple trunks or to provide redundancy.
-        
+
         Retrieving this information requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1028,8 +1035,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type trunk_id: str
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
@@ -1037,13 +1042,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: list[str]
-        :rtype: list[Customer]
+        :return: Generator yielding :class:`Customer` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
@@ -1051,8 +1053,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if name is not None:
             params['name'] = ','.join(name)
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageDialPlan')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Customer, item_key='dialPlans', params=params)
 
     def get_locations_using_the_local_gateway_as_pstn_connection_routing(self, trunk_id: str,
                                                                          org_id: str = None) -> list[Customer]:
@@ -1060,12 +1061,12 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Get Locations Using the Local Gateway as PSTN Connection Routing
 
         Get Locations Using the Local Gateway as PSTN Connection Routing.
-        
+
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
         calls over multiple trunks or to provide redundancy.
-        
+
         Retrieving this information requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1079,20 +1080,21 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usagePstnConnection')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Customer]).validate_python(data['locations'])
+        return r
 
     def get_route_groups_using_the_local_gateway(self, trunk_id: str, org_id: str = None) -> list[RouteGroup]:
         """
         Get Route Groups Using the Local Gateway
 
         Get Route Groups Using the Local Gateway.
-        
+
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
         calls over multiple trunks or to provide redundancy.
-        
+
         Retrieving this information requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1106,20 +1108,21 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageRouteGroup')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[RouteGroup]).validate_python(data['routeGroup'])
+        return r
 
     def get_local_gateway_usage_count(self, trunk_id: str, org_id: str = None) -> LocalGatewayUsageCount:
         """
         Get Local Gateway Usage Count
 
         Get Local Gateway Usage Count
-        
+
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
         calls over multiple trunks or to provide redundancy.
-        
+
         Retrieving this information requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1133,8 +1136,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usage')
-        ...
-
+        data = super().get(url, params=params)
+        r = LocalGatewayUsageCount.model_validate(data)
+        return r
 
     def modify_dial_patterns(self, dial_plan_id: str, dial_patterns: list[DialPattern], delete_all_dial_patterns: bool,
                              org_id: str = None):
@@ -1142,13 +1146,13 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Modify Dial Patterns
 
         Modify dial patterns for the Dial Plan.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Modifying a dial pattern requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1166,22 +1170,24 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['dialPatterns'] = loads(TypeAdapter(list[DialPattern]).dump_json(dial_patterns))
+        body['deleteAllDialPatterns'] = delete_all_dial_patterns
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def validate_a_dial_pattern(self, dial_patterns: list[str], org_id: str = None) -> DialPatternValidateResult:
         """
         Validate a Dial Pattern
 
         Validate a Dial Pattern.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Validating a dial pattern requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1194,22 +1200,25 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['dialPatterns'] = dial_patterns
         url = self.ep('premisePstn/actions/validateDialPatterns/invoke')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = DialPatternValidateResult.model_validate(data)
+        return r
 
     def read_the_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None,
-                                    trunk_name: str = None, max_: int = None, start: int = None,
-                                    order: str = None) -> list[DialPlan]:
+                                    trunk_name: str = None, start: int = None, order: str = None,
+                                    **params) -> Generator[DialPlan, None, None]:
         """
         Read the List of Dial Plans
 
         List all Dial Plans for the organization.
-        
+
         Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial
         plan is associated. Multiple dial patterns can be defined as part of your dial plan.  Dial plans are
         configured globally for an enterprise and apply to all users, regardless of location.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1221,16 +1230,13 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type route_group_name: str
         :param trunk_name: Return the list of dial plans matching the Trunk name..
         :type trunk_name: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the dial plans according to the designated fields.  Available sort fields: `name`,
             `routeName`, `routeType`. Sort order is ascending by default
         :type order: str
-        :rtype: list[DialPlan]
+        :return: Generator yielding :class:`DialPlan` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if dial_plan_name is not None:
@@ -1239,15 +1245,12 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['routeGroupName'] = route_group_name
         if trunk_name is not None:
             params['trunkName'] = trunk_name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/dialPlans')
-        ...
-
+        return self.session.follow_pagination(url=url, model=DialPlan, item_key='dialPlans', params=params)
 
     def create_a_dial_plan(self, name: str, route_id: str, route_type: RouteType, dial_patterns: list[str],
                            org_id: str = None) -> str:
@@ -1255,13 +1258,13 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Create a Dial Plan
 
         Create a Dial Plan for the organization.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Creating a dial plan requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1280,22 +1283,28 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['routeId'] = route_id
+        body['routeType'] = enum_str(route_type)
+        body['dialPatterns'] = dial_patterns
         url = self.ep('premisePstn/dialPlans')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_a_dial_plan(self, dial_plan_id: str, org_id: str = None) -> DialPlanGet:
         """
         Get a Dial Plan
 
         Get a Dial Plan for the organization.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Retrieving a dial plan requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1309,8 +1318,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = DialPlanGet.model_validate(data)
+        return r
 
     def modify_a_dial_plan(self, dial_plan_id: str, name: str, route_id: str, route_type: RouteType,
                            org_id: str = None):
@@ -1318,13 +1328,13 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Modify a Dial Plan
 
         Modify a Dial Plan for the organization.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Modifying a dial plan requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1343,22 +1353,25 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['routeId'] = route_id
+        body['routeType'] = enum_str(route_type)
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def delete_a_dial_plan(self, dial_plan_id: str, org_id: str = None):
         """
         Delete a Dial Plan
 
         Delete a Dial Plan for the organization.
-        
+
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
         A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        
+
         Deleting a dial plan requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1372,8 +1385,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def validate_local_gateway_fqdn_and_domain_for_a_trunk(self, address: str, domain: str, port: int,
                                                            org_id: str = None):
@@ -1381,12 +1393,12 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Validate Local Gateway FQDN and Domain for a Trunk
 
         Validate Local Gateway FQDN and Domain for the organization trunks.
-        
+
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
         over multiple trunks or to provide redundancy.
-        
+
         Validating Local Gateway FQDN and Domain requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1403,23 +1415,26 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['address'] = address
+        body['domain'] = domain
+        body['port'] = port
         url = self.ep('premisePstn/trunks/actions/fqdnValidation/invoke')
-        ...
-
+        super().post(url, params=params, json=body)
 
     def read_the_list_of_trunks(self, org_id: str = None, name: list[str] = None, location_name: list[str] = None,
-                                trunk_type: str = None, max_: int = None, start: int = None,
-                                order: str = None) -> list[Trunk]:
+                                trunk_type: str = None, start: int = None, order: str = None,
+                                **params) -> Generator[Trunk, None, None]:
         """
         Read the List of Trunks
 
         List all Trunks for the organization.
-        
+
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
         over multiple trunks or to provide redundancy.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1431,16 +1446,13 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type location_name: list[str]
         :param trunk_type: Return the list of trunks matching the trunk type.
         :type trunk_type: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the trunks according to the designated fields.  Available sort fields: name, locationName.
             Sort order is ascending by default
         :type order: str
-        :rtype: list[Trunk]
+        :return: Generator yielding :class:`Trunk` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
@@ -1449,15 +1461,12 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['locationName'] = ','.join(location_name)
         if trunk_type is not None:
             params['trunkType'] = trunk_type
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/trunks')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Trunk, item_key='trunks', params=params)
 
     def create_a_trunk(self, name: str, location_id: str, password: str, dual_identity_support_enabled: bool,
                        trunk_type: TrunkType, device_type: str, address: str, domain: str, port: int,
@@ -1466,12 +1475,12 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Create a Trunk
 
         Create a Trunk for the organization.
-        
+
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
         calls over multiple trunks or to provide redundancy.
-        
+
         Creating a trunk requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param name: A unique name for the trunk.
@@ -1502,21 +1511,33 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['locationId'] = location_id
+        body['password'] = password
+        body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+        body['trunkType'] = enum_str(trunk_type)
+        body['deviceType'] = device_type
+        body['address'] = address
+        body['domain'] = domain
+        body['port'] = port
+        body['maxConcurrentCalls'] = max_concurrent_calls
         url = self.ep('premisePstn/trunks')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_a_trunk(self, trunk_id: str, org_id: str = None) -> TrunkGet:
         """
         Get a Trunk
 
         Get a Trunk for the organization.
-        
+
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
         over multiple trunks or to provide redundancy.
-        
+
         Retrieving a trunk requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1530,8 +1551,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = TrunkGet.model_validate(data)
+        return r
 
     def modify_a_trunk(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool,
                        max_concurrent_calls: int, org_id: str = None):
@@ -1539,12 +1561,12 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Modify a Trunk
 
         Modify a Trunk for the organization.
-        
+
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
         over multiple trunks or to provide redundancy.
-        
+
         Modifying a trunk requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1565,21 +1587,25 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['password'] = password
+        body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+        body['maxConcurrentCalls'] = max_concurrent_calls
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def delete_a_trunk(self, trunk_id: str, org_id: str = None):
         """
         Delete a Trunk
 
         Delete a Trunk for the organization.
-        
+
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
         over multiple trunks or to provide redundancy.
-        
+
         Deleting a trunk requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param trunk_id: ID of the trunk.
@@ -1592,21 +1618,20 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def read_the_list_of_trunk_types(self, org_id: str = None) -> list[TrunkTypeWithDeviceType]:
         """
         Read the List of Trunk Types
 
         List all Trunk Types with Device Types for the organization.
-        
+
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
         calls over multiple trunks or to provide redundancy. Trunk Types are Registering or Certificate Based and are
         configured in Call Manager.
-        
+
         Retrieving trunk types requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1618,17 +1643,18 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('premisePstn/trunks/trunkTypes')
-        ...
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[TrunkTypeWithDeviceType]).validate_python(data['trunkTypes'])
+        return r
 
-
-    def read_the_list_of_routing_groups(self, org_id: str = None, name: str = None, max_: int = None,
-                                        start: int = None, order: str = None) -> list[RouteGroup]:
+    def read_the_list_of_routing_groups(self, org_id: str = None, name: str = None, start: int = None,
+                                        order: str = None, **params) -> Generator[RouteGroup, None, None]:
         """
         Read the List of Routing Groups
 
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
         redundancy with the connection to the premises.
-        
+
         Retrieving this route group list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1636,29 +1662,23 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param name: Return the list of route groups matching the Route group name..
         :type name: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the route groups according to designated fields.  Available sort orders are `asc` and
             `desc`.
         :type order: str
-        :rtype: list[RouteGroup]
+        :return: Generator yielding :class:`RouteGroup` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/routeGroups')
-        ...
-
+        return self.session.follow_pagination(url=url, model=RouteGroup, item_key='routeGroups', params=params)
 
     def create_route_group_for_a_organization(self, name: str, local_gateways: list[LocalGateways],
                                               org_id: str = None) -> str:
@@ -1666,10 +1686,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Create Route Group for a Organization
 
         Creates a Route Group for the organization.
-        
+
         A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
         premises. Route groups can include up to 10 trunks from different locations.
-        
+
         Creating a Route Group requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1684,19 +1704,23 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways))
         url = self.ep('premisePstn/routeGroups')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def read_a_route_group_for_a_organization(self, route_group_id: str, org_id: str = None) -> RouteGroupGet:
         """
         Read a Route Group for a Organization
 
         Reads a Route Group for the organization based on id.
-        
+
         A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
         premises. Route groups can include up to 10 trunks from different locations.
-        
+
         Reading a Route Group requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1710,8 +1734,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = RouteGroupGet.model_validate(data)
+        return r
 
     def modify_a_route_group_for_a_organization(self, route_group_id: str, name: str,
                                                 local_gateways: list[LocalGateways], org_id: str = None):
@@ -1719,10 +1744,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Modify a Route Group for a Organization
 
         Modifies an existing Route Group for an organization based on id.
-        
+
         A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
         premises. Route groups can include up to 10 trunks from different locations.
-        
+
         Modifying a Route Group requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1739,19 +1764,21 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways))
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def remove_a_route_group_from_an_organization(self, route_group_id: str, org_id: str = None):
         """
         Remove a Route Group from an Organization
 
         Remove a Route Group from an Organization based on id.
-        
+
         A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
         premises. Route groups can include up to 10 trunks from different locations.
-        
+
         Removing a Route Group requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -1765,8 +1792,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def read_the_usage_of_a_routing_group(self, route_group_id: str,
                                           org_id: str = None) -> ReadTheUsageOfARoutingGroupResponse:
@@ -1781,7 +1807,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Dial Plans allow you to route calls to on-premises extensions via your trunk or route group.
         Route Lists are a list of numbers that can be reached via a route group and can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Retrieving usage information requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1795,20 +1821,21 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usage')
-        ...
-
+        data = super().get(url, params=params)
+        r = ReadTheUsageOfARoutingGroupResponse.model_validate(data)
+        return r
 
     def read_the_call_to_extension_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
-                                                                location_name: str = None, max_: int = None,
-                                                                start: int = None,
-                                                                order: str = None) -> list[Customer]:
+                                                                location_name: str = None, start: int = None,
+                                                                order: str = None,
+                                                                **params) -> Generator[Customer, None, None]:
         """
         Read the Call to Extension Locations of a Routing Group
 
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to the
         PBX using an existing trunk or route group.
-        
+
         Retrieving this location list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1818,42 +1845,37 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
-        :rtype: list[Customer]
+        :return: Generator yielding :class:`Customer` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageCallToExtension')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)
 
     def read_the_dial_plan_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
-                                                        location_name: str = None, max_: int = None,
-                                                        start: int = None, order: str = None) -> list[Customer]:
+                                                        location_name: str = None, start: int = None,
+                                                        order: str = None,
+                                                        **params) -> Generator[Customer, None, None]:
         """
         Read the Dial Plan Locations of a Routing Group
 
         List Dial Plan Locations for a specific route group.
-        
+
         Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are
         configured globally for an enterprise and apply to all users, regardless of location.
         A Dial Plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
         patterns. Specific dial patterns can be defined as part of your dial plan.
-        
+
         Retrieving this location list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1863,38 +1885,33 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
-        :rtype: list[Customer]
+        :return: Generator yielding :class:`Customer` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageDialPlan')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)
 
     def read_the_pstn_connection_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
-                                                              location_name: str = None, max_: int = None,
-                                                              start: int = None, order: str = None) -> list[Customer]:
+                                                              location_name: str = None, start: int = None,
+                                                              order: str = None,
+                                                              **params) -> Generator[Customer, None, None]:
         """
         Read the PSTN Connection Locations of a Routing Group
 
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
-        
+
         Retrieving this Location list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1904,38 +1921,32 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
-        :rtype: list[Customer]
+        :return: Generator yielding :class:`Customer` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usagePstnConnection')
-        ...
-
+        return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)
 
     def read_the_route_lists_of_a_routing_group(self, route_group_id: str, org_id: str = None, name: str = None,
-                                                max_: int = None, start: int = None,
-                                                order: str = None) -> list[RouteGroupUsageRouteListGet]:
+                                                start: int = None, order: str = None,
+                                                **params) -> Generator[RouteGroupUsageRouteListGet, None, None]:
         """
         Read the Route Lists of a Routing Group
 
         List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
         Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        
+
         Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1945,39 +1956,34 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param name: Return the list of locations matching the location name.
         :type name: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
-        :rtype: list[RouteGroupUsageRouteListGet]
+        :return: Generator yielding :class:`RouteGroupUsageRouteListGet` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageRouteList')
-        ...
-
+        return self.session.follow_pagination(url=url, model=RouteGroupUsageRouteListGet, item_key='routeGroupUsageRouteListGet', params=params)
 
     def read_the_list_of_route_lists(self, org_id: str = None, name: list[str] = None, location_id: list[str] = None,
-                                     max_: int = None, start: int = None, order: str = None) -> list[RouteList]:
+                                     start: int = None, order: str = None,
+                                     **params) -> Generator[RouteList, None, None]:
         """
         Read the List of Route Lists
 
         List all Route Lists for the organization.
-        
+
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Retrieving the Route List requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -1987,41 +1993,35 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type name: list[str]
         :param location_id: Return the list of Route Lists matching the location id.
         :type location_id: list[str]
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the Route List according to the designated fields. Available sort fields are `name`, and
             `locationId`. Sort order is ascending by default
         :type order: str
-        :rtype: list[RouteList]
+        :return: Generator yielding :class:`RouteList` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = ','.join(name)
         if location_id is not None:
             params['locationId'] = ','.join(location_id)
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/routeLists')
-        ...
-
+        return self.session.follow_pagination(url=url, model=RouteList, item_key='routeLists', params=params)
 
     def create_a_route_list(self, name: str, location_id: str, route_group_id: str, org_id: str = None) -> str:
         """
         Create a Route List
 
         Create a Route List for the organization.
-        
+
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Creating a Route List requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -2038,19 +2038,24 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['locationId'] = location_id
+        body['routeGroupId'] = route_group_id
         url = self.ep('premisePstn/routeLists')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_route_list(self, route_list_id: str, org_id: str = None):
         """
         Delete a Route List
 
         Delete a route list for a customer.
-        
+
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Deleting a Route List requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -2064,18 +2069,17 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_a_route_list(self, route_list_id: str, org_id: str = None) -> RouteListGet:
         """
         Get a Route List
 
         Get a rout list details.
-        
+
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Retrieving a Route List requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -2089,18 +2093,19 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = RouteListGet.model_validate(data)
+        return r
 
     def modify_a_route_list(self, route_list_id: str, name: str, route_group_id: str, org_id: str = None):
         """
         Modify a Route List
 
         Modify the details for a Route List.
-        
+
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Retrieving a Route List requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -2117,9 +2122,11 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['routeGroupId'] = route_group_id
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None,
                                       numbers: list[RouteListNumberPatch] = None,
@@ -2128,10 +2135,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Modify Numbers for Route List
 
         Modify numbers for a specific Route List of a Customer.
-        
+
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Retrieving a Route List requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -2149,20 +2156,25 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['numbers'] = loads(TypeAdapter(list[RouteListNumberPatch]).dump_json(numbers))
+        body['deleteAllNumbers'] = delete_all_numbers
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
-        ...
+        data = super().put(url, params=params, json=body)
+        r = TypeAdapter(list[RouteListNumberPatchResponse]).validate_python(data['numberStatus'])
+        return r
 
-
-    def get_numbers_assigned_to_a_route_list(self, route_list_id: str, org_id: str = None, max_: int = None,
-                                             start: int = None, order: str = None, number: str = None) -> list[str]:
+    def get_numbers_assigned_to_a_route_list(self, route_list_id: str, org_id: str = None, start: int = None,
+                                             order: str = None, number: str = None,
+                                             **params) -> Generator[str, None, None]:
         """
         Get Numbers assigned to a Route List
 
         Get numbers assigned to a Route List
-        
+
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
-        
+
         Retrieving a Route List requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -2170,21 +2182,16 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type route_list_id: str
         :param org_id: Organization to which the Route List belongs.
         :type org_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the Route Lists according to number, ascending or descending.
         :type order: str
         :param number: Number assigned to the route list.
         :type number: str
-        :rtype: list[str]
+        :return: Numbers assigned to the Route list.
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
@@ -2192,23 +2199,22 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if number is not None:
             params['number'] = number
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
-        ...
-
+        return self.session.follow_pagination(url=url, model=None, item_key='numbers', params=params)
 
     def get_local_gateway_call_to_on_premises_extension_usage_for_a_trunk(self, trunk_id: str, org_id: str = None,
-                                                                          max_: int = None, start: int = None,
-                                                                          order: str = None,
-                                                                          name: list[str] = None) -> list[Customer]:
+                                                                          start: int = None, order: str = None,
+                                                                          name: list[str] = None,
+                                                                          **params) -> Generator[Customer, None, None]:
         """
         Get Local Gateway Call to On-Premises Extension Usage for a Trunk
 
         Get local gateway call to on-premises extension usage for a trunk.
-        
+
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
         gateway or other supported device.
         The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
         calls over multiple trunks or to provide redundancy.
-        
+
         Retrieving this information requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -2216,8 +2222,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type trunk_id: str
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
@@ -2225,13 +2229,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: list[str]
-        :rtype: list[Customer]
+        :return: Generator yielding :class:`Customer` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if order is not None:
@@ -2239,6 +2240,4 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if name is not None:
             params['name'] = ','.join(name)
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageCallToExtension')
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)

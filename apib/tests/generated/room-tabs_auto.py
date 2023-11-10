@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -72,8 +73,9 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         params = {}
         params['roomId'] = room_id
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[RoomTab]).validate_python(data['items'])
+        return r
 
     def create_a_room_tab(self, room_id: str, content_url: str, display_name: str) -> RoomTab:
         """
@@ -89,9 +91,14 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :type display_name: str
         :rtype: :class:`RoomTab`
         """
+        body = dict()
+        body['roomId'] = room_id
+        body['contentUrl'] = content_url
+        body['displayName'] = display_name
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = RoomTab.model_validate(data)
+        return r
 
     def get_room_tab_details(self, id: str) -> RoomTab:
         """
@@ -104,8 +111,9 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :rtype: :class:`RoomTab`
         """
         url = self.ep(f'{id}')
-        ...
-
+        data = super().get(url)
+        r = RoomTab.model_validate(data)
+        return r
 
     def update_a_room_tab(self, id: str, room_id: str, content_url: str, display_name: str) -> RoomTab:
         """
@@ -123,9 +131,14 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :type display_name: str
         :rtype: :class:`RoomTab`
         """
+        body = dict()
+        body['roomId'] = room_id
+        body['contentUrl'] = content_url
+        body['displayName'] = display_name
         url = self.ep(f'{id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = RoomTab.model_validate(data)
+        return r
 
     def delete_a_room_tab(self, id: str):
         """
@@ -138,6 +151,4 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :rtype: None
         """
         url = self.ep(f'{id}')
-        ...
-
-    ...
+        super().delete(url)

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -543,17 +544,17 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                     start: int = None, name: str = None,
-                                     phone_number: str = None) -> list[ListHuntGroupObject]:
+    def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, start: int = None,
+                                     name: str = None, phone_number: str = None,
+                                     **params) -> Generator[ListHuntGroupObject, None, None]:
         """
         Read the List of Hunt Groups
 
         List all calling Hunt Groups for the organization.
-        
+
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
         route to a whole group.
-        
+
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
@@ -561,23 +562,18 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :param location_id: Only return hunt groups with matching location ID.
         :type location_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param name: Only return hunt groups with the matching name.
         :type name: str
         :param phone_number: Only return hunt groups with the matching primary phone number or extension.
         :type phone_number: str
-        :rtype: list[ListHuntGroupObject]
+        :return: Generator yielding :class:`ListHuntGroupObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -585,8 +581,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('huntGroups')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListHuntGroupObject, item_key='huntGroups', params=params)
 
     def create_a_hunt_group(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
                             language_code: str, first_name: str, last_name: str, time_zone: str,
@@ -597,10 +592,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Create a Hunt Group
 
         Create new Hunt Groups for the given location.
-        
+
         Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
         a pattern to route to a whole group.
-        
+
         Creating a hunt group requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -634,19 +629,31 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['languageCode'] = language_code
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['timeZone'] = time_zone
+        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
+        body['enabled'] = enabled
         url = self.ep(f'locations/{location_id}/huntGroups')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None):
         """
         Delete a Hunt Group
 
         Delete the designated Hunt Group.
-        
+
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
         route to a whole group.
-        
+
         Deleting a hunt group requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -662,8 +669,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_details_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                      org_id: str = None) -> GetHuntGroupObject:
@@ -671,10 +677,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Get Details for a Hunt Group
 
         Retrieve Hunt Group details.
-        
+
         Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
         a pattern to route to a whole group.
-        
+
         Retrieving hunt group details requires a full or read-only administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_read`.
 
@@ -690,8 +696,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetHuntGroupObject.model_validate(data)
+        return r
 
     def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
                             extension: Union[str, datetime], distinctive_ring: bool,
@@ -703,10 +710,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Update a Hunt Group
 
         Update the designated Hunt Group.
-        
+
         Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
         a pattern to route to a whole group.
-        
+
         Updating a hunt group requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -749,9 +756,21 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['distinctiveRing'] = distinctive_ring
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['timeZone'] = time_zone
+        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
+        body['enabled'] = enabled
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                                       org_id: str = None) -> CallForwardSettingsGetCallForwarding:
@@ -759,7 +778,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Get Call Forwarding Settings for a Hunt Group
 
         Retrieve Call Forwarding settings for the designated Hunt Group including the list of call forwarding rules.
-        
+
         Retrieving call forwarding settings for a hunt group requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -775,8 +794,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
-        ...
-
+        data = super().get(url, params=params)
+        r = CallForwardSettingsGetCallForwarding.model_validate(data['callForwarding'])
+        return r
 
     def update_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                                          call_forwarding: ModifyCallForwardingObjectCallForwarding,
@@ -785,7 +805,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Update Call Forwarding Settings for a Hunt Group
 
         Update Call Forwarding settings for the designated Hunt Group.
-        
+
         Updating call forwarding settings for a hunt group requires a full administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
@@ -802,9 +822,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['callForwarding'] = loads(call_forwarding.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def create_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str,
                                                                  enabled: bool, holiday_schedule: str,
@@ -817,15 +838,15 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Create a Selective Call Forwarding Rule for a Hunt Group
 
         Create a Selective Call Forwarding Rule for the designated Hunt Group.
-        
+
         A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        
+
         Creating a selective call forwarding rule for a hunt group requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -856,9 +877,18 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['holidaySchedule'] = holiday_schedule
+        body['businessSchedule'] = business_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str,
                                                             org_id: str = None) -> GetForwardingRuleObject:
@@ -866,15 +896,15 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Get Selective Call Forwarding Rule for a Hunt Group
 
         Retrieve a Selective Call Forwarding Rule's settings for the designated Hunt Group.
-        
+
         A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        
+
         Retrieving a selective call forwarding rule's settings for a hunt group requires a full or read-only
         administrator or location administrator auth token with a scope of `spark-admin:telephony_config_read`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -891,8 +921,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetForwardingRuleObject.model_validate(data)
+        return r
 
     def update_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                                                  rule_id: str, name: str, enabled: bool,
@@ -905,15 +936,15 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Update a Selective Call Forwarding Rule for a Hunt Group
 
         Update a Selective Call Forwarding Rule's settings for the designated Hunt Group.
-        
+
         A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        
+
         Updating a selective call forwarding rule's settings for a hunt group requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -946,9 +977,18 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        body['holidaySchedule'] = holiday_schedule
+        body['businessSchedule'] = business_schedule
+        body['forwardTo'] = loads(forward_to.model_dump_json())
+        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                                                  rule_id: str, org_id: str = None):
@@ -956,15 +996,15 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         Delete a Selective Call Forwarding Rule for a Hunt Group
 
         Delete a Selective Call Forwarding Rule for the designated Hunt Group.
-        
+
         A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
         designated number, based on the defined criteria.
-        
+
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        
+
         Deleting a selective call forwarding rule for a hunt group requires a full administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -981,6 +1021,4 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
-        ...
-
-    ...
+        super().delete(url, params=params)

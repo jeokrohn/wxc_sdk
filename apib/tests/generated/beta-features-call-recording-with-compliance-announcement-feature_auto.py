@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -46,11 +47,11 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         Get Details for the location compliance announcement setting
 
         Retrieve the location compliance announcement settings.
-        
+
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
         party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
-        
+
         Retrieving location compliance announcement setting requires a full or read-only administrator auth token with
         a scope of `spark-admin:telephony_config_read`.
 
@@ -64,8 +65,9 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'')
-        ...
-
+        data = super().get(url, params=params)
+        r = data['inboundPSTNCallsEnabled']
+        return r
 
     def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool,
                                                     org_id: str = None):
@@ -73,11 +75,11 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         Update the location compliance announcement
 
         Update the location compliance announcement.
-        
+
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
         party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
-        
+
         Updating the location compliance announcement requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -93,7 +95,7 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
         url = self.ep(f'')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

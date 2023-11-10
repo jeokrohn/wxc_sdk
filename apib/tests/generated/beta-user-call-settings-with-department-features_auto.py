@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -64,10 +65,10 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
         Read Department of a Person
 
         Retrieve a person's department membership.
-        
+
         An admin can organize people, workspaces, and features by placing them into departments. Departments can span
         locations.
-        
+
         This API requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -81,8 +82,9 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetPersonOrWorkspaceDetailsObjectDepartment.model_validate(data['department'])
+        return r
 
     def update_department_of_a_person(self, person_id: str, department: PutPersonOrWorkspaceDetailsObjectDepartment,
                                       org_id: str = None):
@@ -90,10 +92,10 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
         Update Department of a Person
 
         Modify a person's department membership.
-        
+
         An admin can organize people, workspaces, and features by placing them into departments. Departments can span
         locations.
-        
+
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param person_id: Modify department membership of this person.
@@ -107,7 +109,7 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['department'] = loads(department.model_dump_json())
         url = self.ep(f'')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

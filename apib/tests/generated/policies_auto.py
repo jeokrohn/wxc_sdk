@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -76,13 +77,13 @@ class PoliciesApi(ApiChild, base='policies'):
 
     def list_policies(self, type: ListPoliciesType, app_id: list[str] = None, person_id: list[str] = None,
                       org_id: str = None, name: str = None, action: PolicyAction = None, to_: Union[str,
-                      datetime] = None, max_: int = None, cursor: str = None) -> list[Policy]:
+                      datetime] = None, cursor: str = None, **params) -> Generator[Policy, None, None]:
         """
         List Policies
 
         List all policies for an organization. Only lists policies for the organization in which the authenticated user
         belongs.
-        
+
         Use query parameters to filter the response. Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -100,13 +101,10 @@ class PoliciesApi(ApiChild, base='policies'):
         :type action: PolicyAction
         :param to_: List policies created before this date and time.
         :type to_: Union[str, datetime]
-        :param max_: Limit the maximum number of policies in the response.
-        :type max_: int
         :param cursor: List the next policies after the current cursor.
         :type cursor: str
-        :rtype: list[Policy]
+        :return: Generator yielding :class:`Policy` instances
         """
-        params = {}
         if app_id is not None:
             params['appId'] = ','.join(app_id)
         if person_id is not None:
@@ -123,13 +121,10 @@ class PoliciesApi(ApiChild, base='policies'):
                 to_ = isoparse(to_)
             to_ = dt_iso_str(to_)
             params['to'] = to_
-        if max_ is not None:
-            params['max'] = max_
         if cursor is not None:
             params['cursor'] = cursor
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Policy, item_key='items', params=params)
 
     def create_a_policy(self, type: ListPoliciesType, action: PolicyAction, app_id: str = None, name: str = None,
                         person_ids: list[str] = None) -> Policy:
@@ -150,16 +145,23 @@ class PoliciesApi(ApiChild, base='policies'):
         :type person_ids: list[str]
         :rtype: :class:`Policy`
         """
+        body = dict()
+        body['appId'] = app_id
+        body['name'] = name
+        body['type'] = enum_str(type)
+        body['personIds'] = person_ids
+        body['action'] = enum_str(action)
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Policy.model_validate(data)
+        return r
 
     def get_policy_details(self, policy_id: str) -> Policy:
         """
         Get Policy Details
 
         Shows details for a policy, by ID.
-        
+
         Specify the policy ID in the `policyId` URI parameter.
 
         :param policy_id: A unique identifier for the policy.
@@ -167,8 +169,9 @@ class PoliciesApi(ApiChild, base='policies'):
         :rtype: :class:`Policy`
         """
         url = self.ep(f'{policy_id}')
-        ...
-
+        data = super().get(url)
+        r = Policy.model_validate(data)
+        return r
 
     def update_a_policy(self, policy_id: str, action: PolicyAction, app_id: str = None, name: str = None,
                         person_ids: list[str] = None) -> Policy:
@@ -176,7 +179,7 @@ class PoliciesApi(ApiChild, base='policies'):
         Update a Policy
 
         Update details for a policy, by ID.
-        
+
         Specify the policy ID in the `policyId` URI parameter.
 
         :param policy_id: A unique identifier for the policy.
@@ -191,16 +194,22 @@ class PoliciesApi(ApiChild, base='policies'):
         :type person_ids: list[str]
         :rtype: :class:`Policy`
         """
+        body = dict()
+        body['appId'] = app_id
+        body['name'] = name
+        body['personIds'] = person_ids
+        body['action'] = enum_str(action)
         url = self.ep(f'{policy_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Policy.model_validate(data)
+        return r
 
     def delete_a_policy(self, policy_id: str):
         """
         Delete a Policy
 
         Delete a policy, by ID.
-        
+
         Specify the policy ID in the `policyId` URI parameter.
 
         :param policy_id: A unique identifier for the policy.
@@ -208,6 +217,4 @@ class PoliciesApi(ApiChild, base='policies'):
         :rtype: None
         """
         url = self.ep(f'{policy_id}')
-        ...
-
-    ...
+        super().delete(url)

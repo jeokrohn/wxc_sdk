@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -67,7 +68,7 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         Provision a BroadWorks Workspace
 
         Provision a new BroadWorks workspace for Cisco Webex services.
-        
+
         This API allows a Service Provider to provision a workspace for an existing customer.
 
         :param provisioning_id: Provisioning ID that defines how this workspace is to be provisioned for Cisco Webex
@@ -86,9 +87,17 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :type extension: str
         :rtype: :class:`WorkspaceResponse`
         """
+        body = dict()
+        body['provisioningId'] = provisioning_id
+        body['userId'] = user_id
+        body['spEnterpriseId'] = sp_enterprise_id
+        body['displayName'] = display_name
+        body['primaryPhoneNumber'] = primary_phone_number
+        body['extension'] = extension
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = WorkspaceResponse.model_validate(data)
+        return r
 
     def update_a_broadworks_workspace(self, workspace_id: str, user_id: str = None, primary_phone_number: str = None,
                                       extension: str = None) -> WorkspaceResponse:
@@ -107,9 +116,14 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :type extension: str
         :rtype: :class:`WorkspaceResponse`
         """
+        body = dict()
+        body['userId'] = user_id
+        body['primaryPhoneNumber'] = primary_phone_number
+        body['extension'] = extension
         url = self.ep(f'{workspace_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = WorkspaceResponse.model_validate(data)
+        return r
 
     def remove_a_broad_works_workspace(self, workspace_id: str):
         """
@@ -122,6 +136,4 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :rtype: None
         """
         url = self.ep(f'{workspace_id}')
-        ...
-
-    ...
+        super().delete(url)

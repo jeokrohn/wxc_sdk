@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -170,23 +171,23 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
     <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
     """
 
-    def list_meeting_invitees(self, meeting_id: str, max_: int = None, host_email: str = None,
-                              panelist: str = None) -> list[GetInviteeObject]:
+    def list_meeting_invitees(self, meeting_id: str, host_email: str = None, panelist: str = None,
+                              **params) -> Generator[GetInviteeObject, None, None]:
         """
         List Meeting Invitees
 
         Lists meeting invitees for a meeting with a specified `meetingId`. You can set a maximum number of invitees to
         return.
-        
+
         This operation can be used for meeting series, scheduled meetings, and ended or ongoing meeting instance
         objects. If the specified `meetingId` is for a meeting series, the invitees for the series will be listed; if
         the `meetingId` is for a scheduled meeting, the invitees for the particular scheduled meeting will be listed;
         if the `meetingId` is for an ended or ongoing meeting instance, the invitees for the particular meeting
         instance will be listed. See the `Webex Meetings
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ guide for more information about the types of meetings.
-        
+
         The list returned is sorted in ascending order by email address.
-        
+
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -195,8 +196,6 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             of a scheduled `personal room
             <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is not supported for this API.
         :type meeting_id: str
-        :param max_: Limit the maximum number of meeting invitees in the response, up to 100.
-        :type max_: int
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
             site they manage and the API will return meeting invitees that are hosted by that user.
@@ -204,19 +203,15 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :param panelist: Filter invitees or attendees for webinars only. If `true`, returns invitees. If `false`,
             returns attendees. If `null`, returns both invitees and attendees.
         :type panelist: str
-        :rtype: list[GetInviteeObject]
+        :return: Generator yielding :class:`GetInviteeObject` instances
         """
-        params = {}
         params['meetingId'] = meeting_id
-        if max_ is not None:
-            params['max'] = max_
         if host_email is not None:
             params['hostEmail'] = host_email
         if panelist is not None:
             params['panelist'] = panelist
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=GetInviteeObject, item_key='items', params=params)
 
     def create_a_meeting_invitee(self, meeting_id: str, email: str, display_name: str, co_host: bool, host_email: str,
                                  send_email: bool, panelist: bool) -> GetInviteeObject:
@@ -224,7 +219,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         Create a Meeting Invitee
 
         Invite a person to attend a meeting.
-        
+
         Identify the invitee in the request body, by email address.
 
         :param meeting_id: Unique identifier for the meeting to which a person is being invited. This attribute only
@@ -242,7 +237,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             Webex site, if `displayName` is specified, it will show `displayName`. If `displayName` is not specified,
             and the `email` has been associated with an existing Webex account, the display name associated with the
             Webex account will be used; otherwise, the `email` will be used as `displayName`.
-        
+
         If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName`
         associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName`
         which is specified by the invitee who does not have a Webex account.
@@ -261,9 +256,18 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type panelist: bool
         :rtype: :class:`GetInviteeObject`
         """
+        body = dict()
+        body['meetingId'] = meeting_id
+        body['email'] = email
+        body['displayName'] = display_name
+        body['coHost'] = co_host
+        body['hostEmail'] = host_email
+        body['sendEmail'] = send_email
+        body['panelist'] = panelist
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = GetInviteeObject.model_validate(data)
+        return r
 
     def create_meeting_invitees(self, meeting_id: str, host_email: str,
                                 items: list[CreateInviteesItemObject]) -> list[GetInviteeObject]:
@@ -271,11 +275,11 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         Create Meeting Invitees
 
         Invite people to attend a meeting in bulk.
-        
+
         Identify each invitee by the email address of each item in the `items` of the request body.
-        
+
         Each invitee should have a unique `email`.
-        
+
         This API limits the maximum size of `items` in the request body to 100.
 
         :param meeting_id: Unique identifier for the meeting to which the people are being invited. This attribute only
@@ -293,9 +297,14 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type items: list[CreateInviteesItemObject]
         :rtype: list[GetInviteeObject]
         """
+        body = dict()
+        body['meetingId'] = meeting_id
+        body['hostEmail'] = host_email
+        body['items'] = loads(TypeAdapter(list[CreateInviteesItemObject]).dump_json(items))
         url = self.ep('bulkInsert')
-        ...
-
+        data = super().post(url, json=body)
+        r = TypeAdapter(list[GetInviteeObject]).validate_python(data['items'])
+        return r
 
     def get_a_meeting_invitee(self, meeting_invitee_id: str, host_email: str = None) -> GetInviteeObject:
         """
@@ -315,8 +324,9 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_invitee_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetInviteeObject.model_validate(data)
+        return r
 
     def update_a_meeting_invitee(self, meeting_invitee_id: str, email: str, display_name: str, co_host: bool,
                                  host_email: str, send_email: bool, panelist: bool) -> GetInviteeObject:
@@ -337,7 +347,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             Webex site, if `displayName` is specified, it will show `displayName`. If `displayName` is not specified,
             and the `email` has been associated with an existing Webex account, the display name associated with the
             Webex account will be used; otherwise, the `email` will be used as `displayName`.
-        
+
         If the invitee has an existing Webex account, the `displayName` shown in the meeting will be the `displayName`
         associated with the Webex account; otherwise, `displayName` shown in the meeting will be the `displayName`
         which is specified by the invitee who does not have a Webex account.
@@ -356,9 +366,17 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type panelist: bool
         :rtype: :class:`GetInviteeObject`
         """
+        body = dict()
+        body['email'] = email
+        body['displayName'] = display_name
+        body['coHost'] = co_host
+        body['hostEmail'] = host_email
+        body['sendEmail'] = send_email
+        body['panelist'] = panelist
         url = self.ep(f'{meeting_invitee_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = GetInviteeObject.model_validate(data)
+        return r
 
     def delete_a_meeting_invitee(self, meeting_invitee_id: str, host_email: str = None, send_email: bool = None):
         """
@@ -366,7 +384,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
 
         Removes a meeting invitee identified by a `meetingInviteeId` specified in the URI. The deleted meeting invitee
         cannot be recovered.
-        
+
         If the meeting invitee is associated with a meeting series, the invitee will be removed from the entire meeting
         series. If the invitee is associated with a scheduled meeting, the invitee will be removed from only that
         scheduled meeting.
@@ -389,6 +407,4 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         if send_email is not None:
             params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_invitee_id}')
-        ...
-
-    ...
+        super().delete(url, params=params)

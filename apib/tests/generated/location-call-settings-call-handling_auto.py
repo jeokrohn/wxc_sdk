@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -273,9 +274,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Generates an example password using the effective password settings for the location. If you don't specify
         anything in the `generate` field or don't provide a request body, then you will receive a SIP password by
         default.
-        
+
         Used while creating a trunk and shouldn't be used anywhere else.
-        
+
         Generating an example password requires a full or write-only administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
@@ -290,9 +291,12 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['generate'] = loads(TypeAdapter(list[PasswordGenerate]).dump_json(generate))
         url = self.ep(f'actions/generatePassword/invoke')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['exampleSipPassword']
+        return r
 
     def read_the_internal_dialing_configuration_for_a_location(self, location_id: str,
                                                                org_id: str = None) -> InternalDialingGet:
@@ -300,10 +304,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Read the Internal Dialing configuration for a location
 
         Get current configuration for routing unknown extensions to the Premises as internal calls
-        
+
         If some users in a location are registered to a PBX, retrieve the setting to route unknown extensions (digits
         that match the extension length) to the PBX.
-        
+
         Retrieving the internal dialing configuration requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -317,8 +321,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'internalDialing')
-        ...
-
+        data = super().get(url, params=params)
+        r = InternalDialingGet.model_validate(data)
+        return r
 
     def modify_the_internal_dialing_configuration_for_a_location(self, location_id: str,
                                                                  enable_unknown_extension_route_policy: bool,
@@ -328,10 +333,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Modify the Internal Dialing configuration for a location
 
         Modify current configuration for routing unknown extensions to the premise as internal calls
-        
+
         If some users in a location are registered to a PBX, enable the setting to route unknown extensions (digits
         that match the extension length) to the PBX.
-        
+
         Editing the internal dialing configuration requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
@@ -349,19 +354,21 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['enableUnknownExtensionRoutePolicy'] = enable_unknown_extension_route_policy
+        body['unknownExtensionRouteIdentity'] = loads(unknown_extension_route_identity.model_dump_json())
         url = self.ep(f'internalDialing')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_location_intercept(self, location_id: str, org_id: str = None) -> GetLocationInterceptObject:
         """
         Get Location Intercept
 
         Retrieve intercept location details for a customer location.
-        
+
         Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
         routed to a designated number the person chooses, or to the person's voicemail.
-        
+
         Retrieving intercept location details requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -375,8 +382,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'intercept')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetLocationInterceptObject.model_validate(data)
+        return r
 
     def put_location_intercept(self, location_id: str, enabled: bool, incoming: GetLocationInterceptObjectIncoming,
                                outgoing: GetLocationInterceptObjectOutgoing, org_id: str = None):
@@ -384,10 +392,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Put Location Intercept
 
         Modifies the intercept location details for a customer location.
-        
+
         Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
         routed to a designated number the user chooses, or to the user's voicemail.
-        
+
         Modifying the intercept location details requires a full, user administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
@@ -407,20 +415,23 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        body['incoming'] = loads(incoming.model_dump_json())
+        body['outgoing'] = loads(outgoing.model_dump_json())
         url = self.ep(f'intercept')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_location_outgoing_permission(self, location_id: str, org_id: str = None) -> list[CallingPermissionObject]:
         """
         Get Location Outgoing Permission
 
         Retrieve the location's outgoing call settings.
-        
+
         A location's outgoing call settings allow you to determine the types of calls the people/workspaces at the
         location are allowed to make, as well as configure the default calling permission for each call type at the
         location.
-        
+
         Retrieving a location's outgoing call settings requires a full, user or read-only administrator or location
         administrator auth token with a scope of spark-admin:telephony_config_read.
 
@@ -434,8 +445,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'outgoingPermission')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[CallingPermissionObject]).validate_python(data['callingPermissions'])
+        return r
 
     def update_location_outgoing_permission(self, location_id: str, org_id: str = None,
                                             calling_permissions: list[CallingPermissionObject] = None):
@@ -443,10 +455,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Update Location Outgoing Permission
 
         Update the location's outgoing call settings.
-        
+
         Location's outgoing call settings allows you to determine the types of calls the people/workspaces at this
         location are allowed to make and configure the default calling permission for each call type at a location.
-        
+
         Updating a location's outgoing call settings requires a full administrator or location administrator auth token
         with a scope of spark-admin:telephony_config_write.
 
@@ -461,9 +473,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['callingPermissions'] = loads(TypeAdapter(list[CallingPermissionObject]).dump_json(calling_permissions))
         url = self.ep(f'outgoingPermission')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_outgoing_permission_auto_transfer_number(self, location_id: str,
                                                      org_id: str = None) -> GetAutoTransferNumberObject:
@@ -471,10 +484,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Get Outgoing Permission Auto Transfer Number
 
         Get the transfer numbers for the outbound permission in a location.
-        
+
         Outbound permissions can specify which transfer number an outbound call should transfer to via the `action`
         field.
-        
+
         Retrieving an auto transfer number requires a full, user or read-only administrator or location administrator
         auth token with a scope of spark-admin:telephony_config_read.
 
@@ -488,8 +501,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'outgoingPermission/autoTransferNumbers')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetAutoTransferNumberObject.model_validate(data)
+        return r
 
     def put_outgoing_permission_auto_transfer_number(self, location_id: str, auto_transfer_number1: str,
                                                      auto_transfer_number2: str, auto_transfer_number3: str,
@@ -498,10 +512,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Put Outgoing Permission Auto Transfer Number
 
         Modifies the transfer numbers for the outbound permission in a location.
-        
+
         Outbound permissions can specify which transfer number an outbound call should transfer to via the `action`
         field.
-        
+
         Updating auto transfer number requires a full administrator or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
@@ -523,9 +537,12 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['autoTransferNumber1'] = auto_transfer_number1
+        body['autoTransferNumber2'] = auto_transfer_number2
+        body['autoTransferNumber3'] = auto_transfer_number3
         url = self.ep(f'outgoingPermission/autoTransferNumbers')
-        ...
-
+        super().put(url, params=params, json=body)
 
     def get_outgoing_permission_location_access_code(self, location_id: str,
                                                      org_id: str = None) -> GetLocationAccessCodeObjectAccessCodes:
@@ -533,9 +550,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Get Outgoing Permission Location Access Code
 
         Retrieve access codes details for a customer location.
-        
+
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
-        
+
         Retrieving access codes details requires a full, user or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
 
@@ -549,8 +566,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'outgoingPermission/accessCodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetLocationAccessCodeObjectAccessCodes.model_validate(data['accessCodes'])
+        return r
 
     def create_outgoing_permission_a_new_access_code_for_a_customer_location(self, location_id: str,
                                                                              access_codes: GetLocationAccessCodeObjectAccessCodes,
@@ -559,9 +577,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Create Outgoing Permission a new access code for a customer location
 
         Add a new access code for the given location for a customer.
-        
+
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
-        
+
         Creating an access code for the given location requires a full or user administrator or location administrator
         auth token with a scope of spark-admin:telephony_config_write.
 
@@ -576,9 +594,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['accessCodes'] = loads(access_codes.model_dump_json())
         url = self.ep(f'outgoingPermission/accessCodes')
-        ...
-
+        super().post(url, params=params, json=body)
 
     def delete_outgoing_permission_access_code_location(self, location_id: str, delete_codes: list[str],
                                                         org_id: str = None):
@@ -586,9 +605,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         Delete Outgoing Permission Access Code Location
 
         Deletes the access code details for a particular location for a customer.
-        
+
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
-        
+
         Modifying the access code location details requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
@@ -603,7 +622,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['deleteCodes'] = delete_codes
         url = self.ep(f'outgoingPermission/accessCodes')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

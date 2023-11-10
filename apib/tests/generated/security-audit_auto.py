@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -71,20 +72,20 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
     """
 
     def list_security_audit_events(self, org_id: str, start_time: Union[str, datetime], end_time: Union[str, datetime],
-                                   actor_id: str = None, max_: int = None,
-                                   event_categories: list[str] = None) -> list[SecurityAuditEvent]:
+                                   actor_id: str = None, event_categories: list[str] = None,
+                                   **params) -> Generator[SecurityAuditEvent, None, None]:
         """
         List Security Audit Events
 
         List Security Audit Events. This API currently returns user sign-in and sign-out data.
         To call this API the `audit:events_read` scope must be selected for the Integration or Service App and
         auhtorized by a Full Admin.
-        
+
         Several query parameters are available to filter the response.
-        
+
         Long result sets will be split into multiple `pages
         <https://developer.webex.com/docs/basics#pagination>`_
-        
+
         **NOTE**: A maximum of one year of audit events can be returned per request.
 
         :param org_id: List events in this organization, by ID.
@@ -95,13 +96,10 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
         :type end_time: Union[str, datetime]
         :param actor_id: List events performed by this person, by ID.
         :type actor_id: str
-        :param max_: Limit the maximum number of events in the response. The maximum value is `1000`.
-        :type max_: int
         :param event_categories: List events, by event categories.
         :type event_categories: list[str]
-        :rtype: list[SecurityAuditEvent]
+        :return: Generator yielding :class:`SecurityAuditEvent` instances
         """
-        params = {}
         params['orgId'] = org_id
         if isinstance(start_time, str):
             start_time = isoparse(start_time)
@@ -113,11 +111,7 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
         params['endTime'] = end_time
         if actor_id is not None:
             params['actorId'] = actor_id
-        if max_ is not None:
-            params['max'] = max_
         if event_categories is not None:
             params['eventCategories'] = ','.join(event_categories)
         url = self.ep()
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=SecurityAuditEvent, item_key='items', params=params)

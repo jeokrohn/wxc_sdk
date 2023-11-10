@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -928,8 +929,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('clusters/availability')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClusterAvailabilityCollection]).validate_python(data['items'])
+        return r
 
     def get_cluster_availability(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                  cluster_id: str) -> list[ClusterAvailabilityCollection]:
@@ -959,8 +961,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         to_ = dt_iso_str(to_)
         params['to'] = to_
         url = self.ep(f'clusters/availability/{cluster_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClusterAvailabilityCollection]).validate_python(data['items'])
+        return r
 
     def list_node_availability(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                cluster_id: str) -> list[NodeAvailabilityCollection]:
@@ -991,8 +994,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['clusterId'] = cluster_id
         url = self.ep('nodes/availability')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[NodeAvailabilityCollection]).validate_python(data['items'])
+        return r
 
     def get_node_availability(self, from_: Union[str, datetime], to_: Union[str, datetime],
                               node_id: str) -> list[SingleNodeAvailabilityCollection]:
@@ -1022,8 +1026,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         to_ = dt_iso_str(to_)
         params['to'] = to_
         url = self.ep(f'nodes/availability/{node_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[SingleNodeAvailabilityCollection]).validate_python(data['items'])
+        return r
 
     def list_media_health_monitoring_tool_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                   org_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
@@ -1033,7 +1038,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
         replacement `List Media Health Monitoring Tool Test results V2 API
         <https://developer.webex.com/docs/api/v1/video-mesh/list-media-health-monitoring-tool-test-results-v2>`_ for all future projects.</Callout></div>
-        
+
         Returns the test results of the Media Health Monitoring Tool tests for an organization.
 
         :param from_: The starting date and time of the requested data in any `ISO 8601
@@ -1058,8 +1063,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('mediaHealthMonitor')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[MediaHealthMonitoringResultsCollectionfororganization]).validate_python(data['items'])
+        return r
 
     def list_media_health_monitoring_tool_test_results_v2(self, org_id: str, from_: Union[str, datetime],
                                                           to_: Union[str, datetime],
@@ -1068,13 +1074,13 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         List Media Health Monitoring Tool Test results V2
 
         Returns the test results of the Media Health Monitoring Tool tests for an organization.
-        
+
         <br/>
-        
+
         Changes in V2:
-        
+
         <br/>
-        
+
         On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
 
         :param org_id: Unique ID of the organization.
@@ -1102,8 +1108,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/mediaHealthMonitorTest')
-        ...
-
+        data = super().get(url, params=params)
+        r = MediaHealthMonitoringResultsCollectionfororganization.model_validate(data)
+        return r
 
     def get_media_health_monitoring_tool_cluster_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                          cluster_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
@@ -1114,7 +1121,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         replacement `Get Media Health Monitoring Tool Test results for clusters V2 API
         <https://developer.webex.com/docs/api/v1/video-mesh/get-media-health-monitoring-tool-test-results-for-cluster-v2>`_ for all future
         projects.</Callout></div>
-        
+
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh cluster.
 
         :param from_: The starting date and time of the requested data in any `ISO 8601
@@ -1139,8 +1146,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['clusterId'] = cluster_id
         url = self.ep('mediaHealthMonitor/clusters')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[MediaHealthMonitoringResultsCollectionfororganization]).validate_python(data['items'])
+        return r
 
     def get_media_health_monitoring_tool_test_results_for_clusters_v2(self, cluster_id: str, from_: Union[str,
                                                                       datetime], to_: Union[str, datetime],
@@ -1149,13 +1157,13 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         Get Media Health Monitoring Tool Test results for clusters V2
 
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh cluster.
-        
+
         <br/>
-        
+
         Changes in V2:
-        
+
         <br/>
-        
+
         On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
 
         :param cluster_id: Unique ID of the Video Mesh cluster.
@@ -1183,8 +1191,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/mediaHealthMonitorTest/clusters')
-        ...
-
+        data = super().get(url, params=params)
+        r = MediaHealthMonitoringResultsCollectionfororganization.model_validate(data)
+        return r
 
     def get_media_health_monitoring_tool_node_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                       node_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
@@ -1195,7 +1204,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         replacement `Get Media Health Monitoring Tool Test results for node V2 API
         <https://developer.webex.com/docs/api/v1/video-mesh/get-media-health-monitoring-tool-test-results-for-node-v2>`_ for all future
         projects.</Callout></div>
-        
+
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh node.
 
         :param from_: The starting date and time of the requested data in any `ISO 8601
@@ -1220,8 +1229,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['nodeId'] = node_id
         url = self.ep('mediaHealthMonitor/nodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[MediaHealthMonitoringResultsCollectionfororganization]).validate_python(data['items'])
+        return r
 
     def get_media_health_monitoring_tool_test_results_for_node_v2(self, node_id: str, from_: Union[str, datetime],
                                                                   to_: Union[str, datetime],
@@ -1230,13 +1240,13 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         Get Media Health Monitoring Tool Test results for node V2
 
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh node.
-        
+
         <br/>
-        
+
         Changes in V2:
-        
+
         <br/>
-        
+
         On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
 
         :param node_id: Unique ID of the Video Mesh node.
@@ -1264,8 +1274,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/mediaHealthMonitorTest/nodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = MediaHealthMonitoringResultsCollectionfororganization.model_validate(data)
+        return r
 
     def list_overflow_to_cloud_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                        org_id: str) -> list[OverflowtoCloudCollection]:
@@ -1296,8 +1307,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('cloudOverflow')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[OverflowtoCloudCollection]).validate_python(data['items'])
+        return r
 
     def list_cluster_redirect_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                       org_id: str) -> list[RedirectCollectionForOrg]:
@@ -1328,8 +1340,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('callRedirects')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[RedirectCollectionForOrg]).validate_python(data['items'])
+        return r
 
     def get_cluster_redirect_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                      cluster_id: str) -> list[RedirectCollectionForOrg]:
@@ -1360,8 +1373,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['clusterId'] = cluster_id
         url = self.ep('clusters/callRedirects')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[RedirectCollectionForOrg]).validate_python(data['items'])
+        return r
 
     def list_clusters_utilization(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                   org_id: str) -> list[ClusterUtilizationCollection]:
@@ -1392,8 +1406,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('utilization')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClusterUtilizationCollection]).validate_python(data['items'])
+        return r
 
     def get_cluster_utilization_details(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                         cluster_id: str) -> list[ClusterUtilizationCollection]:
@@ -1424,8 +1439,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['clusterId'] = cluster_id
         url = self.ep('clusters/utilization')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClusterUtilizationCollection]).validate_python(data['items'])
+        return r
 
     def list_reachability_test_results(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                        org_id: str) -> list[ReachabilityTestresultsfororganization]:
@@ -1435,7 +1451,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
         replacement `List Reachability Test results V2 API
         <https://developer.webex.com/docs/api/v1/video-mesh/list-reachability-test-results-v2>`_ for all future projects.</Callout></div>
-        
+
         Returns the test results of the Reachability tests for an organization.
 
         :param from_: The starting date and time of the requested data in any `ISO 8601
@@ -1460,8 +1476,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('reachabilityTest')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ReachabilityTestresultsfororganization]).validate_python(data['items'])
+        return r
 
     def list_reachability_test_results_v2(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
                                           trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ReachabilityTestresultsfororganization:
@@ -1469,17 +1486,17 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         List Reachability Test results V2
 
         Returns the test results of the Reachability tests for an organization.
-        
+
         <br/>
-        
+
         Changes in V2:
-        
+
         <br/>
-        
+
         1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
-        
+
         <br/>
-        
+
         2. You can now view the destination IP address of the destination cluster in the JSON response.
 
         :param org_id: Unique ID of the organization.
@@ -1507,8 +1524,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/reachabilityTest')
-        ...
-
+        data = super().get(url, params=params)
+        r = ReachabilityTestresultsfororganization.model_validate(data)
+        return r
 
     def get_reachability_test_results_for_cluster(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                   cluster_id: str) -> list[ReachabilityTestresultsfororganization]:
@@ -1518,7 +1536,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
         replacement `Get Reachability Test results for cluster V2 API
         <https://developer.webex.com/docs/api/v1/video-mesh/get-reachability-test-results-for-cluster-v2>`_ for all future projects.</Callout></div>
-        
+
         Returns the test results of the Reachability tests for a single Video Mesh cluster.
 
         :param from_: The starting date and time of the requested data in any `ISO 8601
@@ -1543,8 +1561,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['clusterId'] = cluster_id
         url = self.ep('reachabilityTest/clusters')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ReachabilityTestresultsfororganization]).validate_python(data['items'])
+        return r
 
     def get_reachability_test_results_for_cluster_v2(self, cluster_id: str, from_: Union[str, datetime],
                                                      to_: Union[str, datetime],
@@ -1553,17 +1572,17 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         Get Reachability Test results for cluster V2
 
         Returns the test results of the Reachability tests for a single Video Mesh cluster.
-        
+
         <br/>
-        
+
         Changes in V2:
-        
+
         <br/>
-        
+
         1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
-        
+
         <br/>
-        
+
         2. You can now view the destination IP address of the destination cluster in the JSON response.
 
         :param cluster_id: Unique ID of the Video Mesh cluster.
@@ -1591,8 +1610,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/reachabilityTest/clusters')
-        ...
-
+        data = super().get(url, params=params)
+        r = ReachabilityTestresultsfororganization.model_validate(data)
+        return r
 
     def get_reachability_test_results_for_node(self, from_: Union[str, datetime], to_: Union[str, datetime],
                                                node_id: str) -> list[ReachabilityTestresultsfororganization]:
@@ -1602,7 +1622,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         <div><Callout type="warning"> This API is EOL and will be decommissioned soon. Please start using the
         replacement `Get Reachability Test results for node V2 API
         <https://developer.webex.com/docs/api/v1/video-mesh/get-reachability-test-results-for-node-v2>`_ for all future projects.</Callout></div>
-        
+
         Returns the test results of the Reachability tests for a single Video Mesh node.
 
         :param from_: The starting date and time of the requested data in any `ISO 8601
@@ -1627,8 +1647,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['nodeId'] = node_id
         url = self.ep('reachabilityTest/nodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ReachabilityTestresultsfororganization]).validate_python(data['items'])
+        return r
 
     def get_reachability_test_results_for_node_v2(self, node_id: str, from_: Union[str, datetime], to_: Union[str,
                                                   datetime],
@@ -1637,17 +1658,17 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         Get Reachability Test results for node V2
 
         Returns the test results of the Reachability tests for a single Video Mesh node.
-        
+
         <br/>
-        
+
         Changes in V2:
-        
+
         <br/>
-        
+
         1. On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
-        
+
         <br/>
-        
+
         2. You can now view the destination IP address of the destination cluster in the JSON response.
 
         :param node_id: Unique ID of the Video Mesh node.
@@ -1675,8 +1696,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/reachabilityTest/nodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = ReachabilityTestresultsfororganization.model_validate(data)
+        return r
 
     def list_cluster_details(self, org_id: str) -> list[ClusterDetailsCollection]:
         """
@@ -1691,8 +1713,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params = {}
         params['orgId'] = org_id
         url = self.ep('clusters')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClusterDetailsCollection]).validate_python(data['items'])
+        return r
 
     def get_cluster_details(self, cluster_id: str) -> list[ClusterDetailsCollection]:
         """
@@ -1705,8 +1728,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :rtype: list[ClusterDetailsCollection]
         """
         url = self.ep(f'clusters/{cluster_id}')
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[ClusterDetailsCollection]).validate_python(data['items'])
+        return r
 
     def trigger_on_demand_test_for_cluster(self, cluster_id: str, type: TriggerOnDemandBodyType,
                                            nodes: list[str]) -> TriggeredTestStatus1:
@@ -1725,9 +1749,13 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type nodes: list[str]
         :rtype: :class:`TriggeredTestStatus1`
         """
+        body = dict()
+        body['type'] = enum_str(type)
+        body['nodes'] = nodes
         url = self.ep(f'triggerTest/clusters/{cluster_id}')
-        ...
-
+        data = super().post(url, json=body)
+        r = TriggeredTestStatus1.model_validate(data)
+        return r
 
     def trigger_on_demand_test_for_node(self, node_id: str, type: TriggerOnDemandBodyType) -> TriggeredTestStatus1:
         """
@@ -1741,9 +1769,12 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :type type: TriggerOnDemandBodyType
         :rtype: :class:`TriggeredTestStatus1`
         """
+        body = dict()
+        body['type'] = enum_str(type)
         url = self.ep(f'triggerTest/nodes/{node_id}')
-        ...
-
+        data = super().post(url, json=body)
+        r = TriggeredTestStatus1.model_validate(data)
+        return r
 
     def get_triggered_test_status(self, command_id: str) -> TriggeredTestStatus1:
         """
@@ -1758,8 +1789,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params = {}
         params['commandId'] = command_id
         url = self.ep('testStatus')
-        ...
-
+        data = super().get(url, params=params)
+        r = TriggeredTestStatus1.model_validate(data)
+        return r
 
     def get_triggered_test_results(self, command_id: str) -> TriggeredTestResult:
         """
@@ -1777,8 +1809,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params = {}
         params['commandId'] = command_id
         url = self.ep('testResults')
-        ...
-
+        data = super().get(url, params=params)
+        r = TriggeredTestResult.model_validate(data)
+        return r
 
     def list_network_test_results(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
                                   trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
@@ -1787,7 +1820,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
 
         Returns the test results of the Network tests triggered for an organization. The tests listed below are run as
         a part of the Network Test execution on the node.
-        
+
         <b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run
         between the Video Mesh node and cloud services.<br/>
         <b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS
@@ -1822,8 +1855,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/networkTest')
-        ...
-
+        data = super().get(url, params=params)
+        r = ConnectivityTestResultsObject.model_validate(data)
+        return r
 
     def get_network_test_results_for_cluster(self, cluster_id: str, from_: Union[str, datetime], to_: Union[str,
                                              datetime],
@@ -1833,7 +1867,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
 
         Returns the test results of the Network tests triggered for a single Video Mesh cluster. The tests listed below
         are run as a part of the Network Test execution on the node.
-        
+
         <b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run
         between the Video Mesh node and cloud services.<br/>
         <b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS
@@ -1868,8 +1902,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/networkTest/clusters')
-        ...
-
+        data = super().get(url, params=params)
+        r = ConnectivityTestResultsObject.model_validate(data)
+        return r
 
     def get_network_test_results_for_node(self, node_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
                                           trigger_type: ListMediaHealthMonitoringToolTestResultsV2TriggerType) -> ConnectivityTestResultsObject:
@@ -1878,7 +1913,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
 
         Returns the test results of the Network tests triggered for a single Video Mesh node. The tests listed below
         are run as a part of the Network Test execution on the node.
-        
+
         <b>Bandwidth Test</b> - Tests the bandwidth parameters of the Video Mesh node's network. The test is run
         between the Video Mesh node and cloud services.<br/>
         <b>DNS Resolution Test</b> - Tests the resolution of IP addresses related to cloud services, against the DNS
@@ -1913,8 +1948,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/networkTest/nodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = ConnectivityTestResultsObject.model_validate(data)
+        return r
 
     def list_cluster_client_type_distribution_details(self, org_id: str, from_: Union[str, datetime], to_: Union[str,
                                                       datetime],
@@ -1934,7 +1970,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
         :type to_: Union[str, datetime]
         :param device_type: Device type(s).
-        
+
         - Possible values:
         `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
         :type device_type: str
@@ -1952,8 +1988,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['deviceType'] = device_type
         url = self.ep('clientTypeDistribution')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClienttypedistributionCollectionforOrg]).validate_python(data['items'])
+        return r
 
     def get_cluster_client_type_distribution_details(self, cluster_id: str, from_: Union[str, datetime],
                                                      to_: Union[str, datetime],
@@ -1973,7 +2010,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
         :type to_: Union[str, datetime]
         :param device_type: Device type(s).
-        
+
         - Possible values:
         `webexDevices` `webexAppVdi` `webexForMobile` `sipEndpoint` `webexForDesktop`
         :type device_type: str
@@ -1991,8 +2028,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         params['to'] = to_
         params['deviceType'] = device_type
         url = self.ep('clientTypeDistribution/clusters')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ClienttypedistributionCollectionforOrg]).validate_python(data['items'])
+        return r
 
     def list_event_threshold_configuration(self, org_id: str = None, cluster_id: str = None,
                                            event_name: ListEventThresholdConfigurationEventName = None,
@@ -2023,8 +2061,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         if event_scope is not None:
             params['eventScope'] = event_scope
         url = self.ep('eventThresholds')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetEventThresholdResponse.model_validate(data)
+        return r
 
     def get_event_threshold_configuration(self, event_threshold_id: str) -> GetEventThresholdResponse:
         """
@@ -2037,8 +2076,9 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :rtype: :class:`GetEventThresholdResponse`
         """
         url = self.ep(f'eventThresholds/{event_threshold_id}')
-        ...
-
+        data = super().get(url)
+        r = GetEventThresholdResponse.model_validate(data)
+        return r
 
     def update_event_threshold_configuration(self,
                                              event_thresholds: list[UpdateEventThresholdConfigurationEventThresholds]) -> BulkUpdateEventThresholdResponse:
@@ -2047,13 +2087,15 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
 
         Updates an existing event threshold configuration for given Event Threshold IDs.
 
-
         :type event_thresholds: list[UpdateEventThresholdConfigurationEventThresholds]
         :rtype: :class:`BulkUpdateEventThresholdResponse`
         """
+        body = dict()
+        body['eventThresholds'] = loads(TypeAdapter(list[UpdateEventThresholdConfigurationEventThresholds]).dump_json(event_thresholds))
         url = self.ep('eventThresholds')
-        ...
-
+        data = super().patch(url, json=body)
+        r = BulkUpdateEventThresholdResponse.model_validate(data)
+        return r
 
     def reset_event_threshold_configuration(self, event_threshold_ids: list[str]) -> BulkUpdateEventThresholdResponse:
         """
@@ -2063,11 +2105,12 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         receiving webhook events, use the `Webhooks API
         <docs/api/v1/webhooks>`_ to delete the webhook in question.
 
-
         :type event_threshold_ids: list[str]
         :rtype: :class:`BulkUpdateEventThresholdResponse`
         """
+        body = dict()
+        body['eventThresholdIds'] = event_threshold_ids
         url = self.ep('eventThresholds/reset')
-        ...
-
-    ...
+        data = super().post(url, json=body)
+        r = BulkUpdateEventThresholdResponse.model_validate(data)
+        return r

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -148,7 +149,7 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
                                      provisioning_id: str = None, sp_enterprise_id: str = None,
                                      last_status_change: str = None, status: SubscriberStatus = None,
                                      after: str = None, self_activated: bool = None,
-                                     max_: int = None) -> list[Subscriber]:
+                                     **params) -> Generator[Subscriber, None, None]:
         """
         List BroadWorks Subscribers
 
@@ -176,13 +177,8 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type after: str
         :param self_activated: Indicates if the subscriber was self activated, rather than provisioned via these APIs.
         :type self_activated: bool
-        :param max_: Limit the maximum number of subscribers returned in the search response, up to 100 per page. Refer
-            to the `Pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
-        :type max_: int
-        :rtype: list[Subscriber]
+        :return: Generator yielding :class:`Subscriber` instances
         """
-        params = {}
         if user_id is not None:
             params['userId'] = user_id
         if person_id is not None:
@@ -201,11 +197,8 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
             params['after'] = after
         if self_activated is not None:
             params['selfActivated'] = str(self_activated).lower()
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Subscriber, item_key='items', params=params)
 
     def provision_a_broad_works_subscriber(self, provisioning_id: str, user_id: str, sp_enterprise_id: str,
                                            first_name: str, last_name: str, package: SubscriberPackage,
@@ -216,13 +209,13 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         Provision a BroadWorks Subscriber
 
         Provision a new BroadWorks subscriber for Webex services.
-        
+
         This API lets a Service Provider map a BroadWorks subscriber to a new or existing Webex user and assign the
         required licenses and entitlements for Webex and Meetings.
 
         :param provisioning_id: This Provisioning ID defines how this subscriber is to be provisioned for Webex
             Services.
-        
+
         Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen
         Customer Template
         on Webex Control Hub.
@@ -257,9 +250,23 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type timezone: str
         :rtype: :class:`Subscriber`
         """
+        body = dict()
+        body['provisioningId'] = provisioning_id
+        body['userId'] = user_id
+        body['spEnterpriseId'] = sp_enterprise_id
+        body['spEnterpriseGroupId'] = sp_enterprise_group_id
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['package'] = enum_str(package)
+        body['primaryPhoneNumber'] = primary_phone_number
+        body['mobilePhoneNumber'] = mobile_phone_number
+        body['email'] = email
+        body['language'] = language
+        body['timezone'] = timezone
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Subscriber.model_validate(data)
+        return r
 
     def get_a_broad_works_subscriber(self, subscriber_id: str) -> Subscriber:
         """
@@ -272,8 +279,9 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :rtype: :class:`Subscriber`
         """
         url = self.ep(f'{subscriber_id}')
-        ...
-
+        data = super().get(url)
+        r = Subscriber.model_validate(data)
+        return r
 
     def update_a_broad_works_subscriber(self, subscriber_id: str, user_id: str = None, first_name: str = None,
                                         last_name: str = None, sp_enterprise_group_id: str = None,
@@ -285,7 +293,7 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
 
         This API lets a Service Provider update certain details of a provisioned BroadWorks subscriber
         on Webex.
-        
+
         <div>
         <Callout type='info'>The updated items will not be immediately reflected in the response body, but can be
         subsequently obtained via the `Get a BroadWorks Subscriber
@@ -321,9 +329,20 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :type package: str
         :rtype: :class:`Subscriber`
         """
+        body = dict()
+        body['userId'] = user_id
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['spEnterpriseGroupId'] = sp_enterprise_group_id
+        body['primaryPhoneNumber'] = primary_phone_number
+        body['mobilePhoneNumber'] = mobile_phone_number
+        body['language'] = language
+        body['timezone'] = timezone
+        body['package'] = package
         url = self.ep(f'{subscriber_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Subscriber.model_validate(data)
+        return r
 
     def remove_a_broad_works_subscriber(self, subscriber_id: str):
         """
@@ -336,6 +355,4 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :rtype: None
         """
         url = self.ep(f'{subscriber_id}')
-        ...
-
-    ...
+        super().delete(url)

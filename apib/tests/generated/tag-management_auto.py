@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -84,8 +85,9 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         params = {}
         params['type'] = type
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[TagsObj]).validate_python(data)
+        return r
 
     def create_or_replace_existing_customer_tags_with_the_provided_ones(self, org_id: str,
                                                                         tags: list[TagsObj]) -> list[TagsObj]:
@@ -105,9 +107,12 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type tags: list[TagsObj]
         :rtype: list[TagsObj]
         """
+        body = dict()
+        body['tags'] = loads(TypeAdapter(list[TagsObj]).dump_json(tags))
         url = self.ep(f'organizations/{org_id}/assignTags')
-        ...
-
+        data = super().post(url, json=body)
+        r = TypeAdapter(list[TagsObj]).validate_python(data)
+        return r
 
     def get_customer_organization_s_tags(self, org_id: str) -> CustomerTagsResponse:
         """
@@ -122,8 +127,9 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :rtype: :class:`CustomerTagsResponse`
         """
         url = self.ep(f'organizations/{org_id}')
-        ...
-
+        data = super().get(url)
+        r = CustomerTagsResponse.model_validate(data)
+        return r
 
     def fetch_all_customers_for_a_given_set_of_tags(self, tags: str, max_: int = None) -> list[CustomerTagsResponse]:
         """
@@ -143,8 +149,9 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         if max_ is not None:
             params['max'] = max_
         url = self.ep('organizations')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[CustomerTagsResponse]).validate_python(data)
+        return r
 
     def create_or_replace_existing_subscription_tags_with_the_provided_ones(self, org_id: str, subscription_id: str,
                                                                             tags: list[TagsObj]) -> list[TagsObj]:
@@ -167,9 +174,12 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :type tags: list[TagsObj]
         :rtype: list[TagsObj]
         """
+        body = dict()
+        body['tags'] = loads(TypeAdapter(list[TagsObj]).dump_json(tags))
         url = self.ep(f'organizations/{org_id}/subscriptions/{subscription_id}/assignTags')
-        ...
-
+        data = super().post(url, json=body)
+        r = TypeAdapter(list[TagsObj]).validate_python(data)
+        return r
 
     def subscription_list_on_a_given_tag_name_or_a_set_of_tags(self, tags: str,
                                                                max_: int = None) -> list[SubscriptionTagsResponse]:
@@ -190,8 +200,9 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         if max_ is not None:
             params['max'] = max_
         url = self.ep('subscriptions')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[SubscriptionTagsResponse]).validate_python(data)
+        return r
 
     def fetch_a_subscription(self, org_id: str, subscription_id: str) -> SubscriptionTagsResponse:
         """
@@ -208,6 +219,6 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :rtype: :class:`SubscriptionTagsResponse`
         """
         url = self.ep(f'organizations/{org_id}/subscriptions/{subscription_id}')
-        ...
-
-    ...
+        data = super().get(url)
+        r = SubscriptionTagsResponse.model_validate(data)
+        return r

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -195,12 +196,12 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         List Tracking Codes
 
         Lists tracking codes on a site by an admin user.
-        
+
         * If `siteUrl` is specified, tracking codes of the specified site will be listed; otherwise, tracking codes of
         the user's preferred site will be listed. All available Webex sites and the preferred sites of a user can be
         retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         * Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in
         Control Hub. This is a one-time irreversible operation. Once the tracking codes are mapped to custom or user
         profile attributes, the response returns the mapped tracking codes.
@@ -216,8 +217,9 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('config/trackingCodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[GetTrackingCodeObject]).validate_python(data['items'])
+        return r
 
     def get_a_tracking_code(self, tracking_code_id: Union[str, datetime],
                             site_url: str = None) -> GetTrackingCodeObject:
@@ -225,12 +227,12 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         Get a Tracking Code
 
         Retrieves details for a tracking code by an admin user.
-        
+
         * If `siteUrl` is specified, the tracking code is retrieved from the specified site; otherwise, the tracking
         code is retrieved from the user's preferred site. All available Webex sites and the preferred sites of a user
         can be retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         * Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in
         Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user
         profile attributes, the response returns details for a mapped tracking code.
@@ -248,8 +250,9 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep(f'config/trackingCodes/{tracking_code_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetTrackingCodeObject.model_validate(data)
+        return r
 
     def create_a_tracking_code(self, name: str, site_url: str, options: list[OptionsForTrackingCodeObject],
                                input_mode: GetTrackingCodeObjectInputMode,
@@ -259,31 +262,31 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         Create a Tracking Code
 
         Create a new tracking code by an admin user.
-        
+
         * The `siteUrl` is required. The operation creates a tracking code for the specified site. All or a user's
         available Webex sites can be retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         * The `inputMode` of `hostProfileSelect` is only available for a host profile and sign-up pages and does not
         apply to the meeting scheduler page or the meeting start page. The value for `scheduleStartCodes` must be
         `null` or the value for all services must be `notUsed` when the `inputMode` is `hostProfileSelect`.
-        
+
         * The `hostProfileCode` of `required` is only allowed for a Site Admin managed site, and not for a Control Hub
         managed site.
-        
+
         * When the `hostProfileCode` is `adminSet`, only `adminSet`, `notUsed`, and `notApplicable` are available for
         the types of `scheduleStartCodes`. When the `hostProfileCode` is not `adminSet`, only `optional`, `required`,
         `notUsed`, and `notApplicable` are available for `scheduleStartCodes`.
-        
+
         * If the type of the `All` service has a value other than `notApplicable`, and another service, e.g.
         `EventCenter`, is missing from the `scheduleStartCodes`, then the type of this missing `EventCenter` service
         shares the same type as the `All` service. If the type of `All` service has a value other than
         `notApplicable`, and another service, e.g. `EventCenter`, has a type, then the type specified should be the
         same as the `All` service.
-        
+
         * If the `All` service is missing from the `scheduleStartCodes`, any of the other four services, e.g.
         `EventCenter`, have a default type of `notUsed` if it is also missing from the `scheduleStartCodes`.
-        
+
         * Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in
         Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user
         profile attributes, they cannot create tracking codes when the mapping process is in progress or the mapping
@@ -306,9 +309,17 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type schedule_start_codes: list[ScheduleStartCodeObject]
         :rtype: :class:`GetTrackingCodeObject`
         """
+        body = dict()
+        body['name'] = name
+        body['siteUrl'] = site_url
+        body['options'] = loads(TypeAdapter(list[OptionsForTrackingCodeObject]).dump_json(options))
+        body['inputMode'] = enum_str(input_mode)
+        body['hostProfileCode'] = enum_str(host_profile_code)
+        body['scheduleStartCodes'] = loads(TypeAdapter(list[ScheduleStartCodeObject]).dump_json(schedule_start_codes))
         url = self.ep('config/trackingCodes')
-        ...
-
+        data = super().post(url, json=body)
+        r = GetTrackingCodeObject.model_validate(data)
+        return r
 
     def update_a_tracking_code(self, name: str, site_url: str, options: list[OptionsForTrackingCodeObject],
                                input_mode: GetTrackingCodeObjectInputMode,
@@ -318,31 +329,31 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         Update a Tracking Code
 
         Updates details for a tracking code by an admin user.
-        
+
         * The `siteUrl` is required. The operation updates a tracking code for the specified site. All of a user's
         available Webex sites can be retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         * The `inputMode` of `hostProfileSelect` is only available for the host profile and sign-up pages and it
         doesn't apply to the meeting scheduler page or meeting start page. Therefore, `scheduleStartCodes` must be
         `null` or type of all services must be `notUsed` when the `inputMode` is `hostProfileSelect`.
-        
+
         * Currently, the `hostProfileCode` of `required` is only allowed for a Site Admin managed site, and not allowed
         for a Control Hub managed site.
-        
+
         * When the `hostProfileCode` is `adminSet`, only `adminSet`, `notUsed` and `notApplicable` are available for
         the types of `scheduleStartCodes`. When the `hostProfileCode` is not `adminSet`, only `optional`, `required`,
         `notUsed` and `notApplicable` are available for types of `scheduleStartCodes`.
-        
+
         * If the type of the `All` service has a value other than `notApplicable`, and another service, e.g.
         `EventCenter`, is missing from the `scheduleStartCodes`, then the type of this missing `EventCenter` service
         shares the same type as the `All` service silently. If the type of `All` service has a value other than
         `notApplicable`, and another service, e.g. `EventCenter`, has a type, then the type specified should be the
         same as the `All` service.
-        
+
         * If the `All` service is missing from the `scheduleStartCodes`, any of the other four services, e.g.
         `EventCenter`, has a default type of `notUsed` if that service is also missing from the `scheduleStartCodes`.
-        
+
         * Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in
         Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user
         profile attributes, they cannot update tracking codes when the mapping process is in progress or the mapping
@@ -365,20 +376,28 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type schedule_start_codes: list[ScheduleStartCodeObject]
         :rtype: :class:`GetTrackingCodeObject`
         """
+        body = dict()
+        body['name'] = name
+        body['siteUrl'] = site_url
+        body['options'] = loads(TypeAdapter(list[OptionsForTrackingCodeObject]).dump_json(options))
+        body['inputMode'] = enum_str(input_mode)
+        body['hostProfileCode'] = enum_str(host_profile_code)
+        body['scheduleStartCodes'] = loads(TypeAdapter(list[ScheduleStartCodeObject]).dump_json(schedule_start_codes))
         url = self.ep('config/trackingCodes/{trackingCodeId}')
-        ...
-
+        data = super().put(url, json=body)
+        r = GetTrackingCodeObject.model_validate(data)
+        return r
 
     def delete_a_tracking_code(self, tracking_code_id: Union[str, datetime], site_url: str):
         """
         Delete a Tracking Code
 
         Deletes a tracking code by an admin user.
-        
+
         * The `siteUrl` is required. The operation deletes a tracking code for the specified site. All of a user's
         available Webex sites can be retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        
+
         * Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in
         Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user
         profile attributes, they cannot delete tracking codes when the mapping process is in progress or the mapping
@@ -395,30 +414,29 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         params = {}
         params['siteUrl'] = site_url
         url = self.ep(f'config/trackingCodes/{tracking_code_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_user_tracking_codes(self, site_url: str = None, person_id: str = None) -> GetTrackingCodeForUserObject:
         """
         Get User Tracking Codes
 
         Lists user's tracking codes by an admin user.
-        
+
         * At least one parameter, either `personId`, or `email` is required. `personId` must come before `email` if
         both are specified. Please note that `email` is specified in the request header.
-        
+
         * If `siteUrl` is specified, the tracking codes of the specified site will be listed; otherwise, the tracking
         codes of a user's preferred site are listed. All available Webex sites and preferred sites of a user can be
         retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API. Please note that the user here is the admin user who invokes the API, not
         the user specified by `personId` or email.
-        
+
         * Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in
         Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user
         profile attributes, the response returns the user's mapped tracking codes.
-        
+
         #### Request Header
-        
+
         * `email`: Email address for the user whose tracking codes are being retrieved. The admin users can specify the
         email of a user on a site they manage and the API returns details for the user's tracking codes. At least one
         parameter of `personId` or `email` is required.
@@ -440,8 +458,9 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         if person_id is not None:
             params['personId'] = person_id
         url = self.ep('userconfig/trackingCodes')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetTrackingCodeForUserObject.model_validate(data)
+        return r
 
     def update_user_tracking_codes(self, site_url: str, person_id: str, email: str,
                                    tracking_codes: list[UpdateTrackingCodeItemForUserObject]) -> GetTrackingCodeForUserObject:
@@ -449,21 +468,21 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         Update User Tracking Codes
 
         Updates tracking codes for a specified user by an admin user.
-        
+
         * The `siteUrl` is required. The operation updates a user's tracking code on the specified site. All a user's
         available Webex sites can be retrieved by the `Get Site List
         <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API. Please note that the user here is the admin
         user who invokes the API, not the user specified by `personId` or `email`.
-        
+
         * A name that is not found in the site-level tracking codes cannot be set for a user's tracking codes. All
         available site-level tracking codes for a site can be retrieved by the `List Tracking Codes
         <https://developer.webex.com/docs/api/v1/tracking-codes/list-tracking-codes>`_ API.
-        
+
         * If the `inputMode` of a user's tracking code is `select` or `hostProfileSelect`, its value must be one of the
         site-level options of that tracking code. All available site-level tracking codes for a site can be retrieved
         by the `List Tracking Codes
         <https://developer.webex.com/docs/api/v1/tracking-codes/list-tracking-codes>`_ API.
-        
+
         * Admins can switch any Control Hub managed site from using classic tracking codes to mapped tracking codes in
         Control Hub, this is a one-time irreversible operation. Once the tracking codes are mapped to custom or user
         profile attributes, they cannot update user's tracking codes when the mapping process is in progress or the
@@ -481,7 +500,12 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         :type tracking_codes: list[UpdateTrackingCodeItemForUserObject]
         :rtype: :class:`GetTrackingCodeForUserObject`
         """
+        body = dict()
+        body['siteUrl'] = site_url
+        body['personId'] = person_id
+        body['email'] = email
+        body['trackingCodes'] = loads(TypeAdapter(list[UpdateTrackingCodeItemForUserObject]).dump_json(tracking_codes))
         url = self.ep('userconfig/trackingCodes')
-        ...
-
-    ...
+        data = super().put(url, json=body)
+        r = GetTrackingCodeForUserObject.model_validate(data)
+        return r

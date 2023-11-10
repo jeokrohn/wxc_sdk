@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -129,26 +130,20 @@ class WebhooksApi(ApiChild, base='webhooks'):
     <https://developer.webex.com/docs/basics#pagination>`_.
     """
 
-    def list_webhooks(self, max_: int = None, owned_by: str = None) -> list[Webhook]:
+    def list_webhooks(self, owned_by: str = None, **params) -> Generator[Webhook, None, None]:
         """
         List Webhooks
 
         List all of your webhooks.
 
-        :param max_: Limit the maximum number of webhooks in the response.
-        :type max_: int
         :param owned_by: Limit the result list to org wide webhooks. Only allowed value is `org`.
         :type owned_by: str
-        :rtype: list[Webhook]
+        :return: Generator yielding :class:`Webhook` instances
         """
-        params = {}
-        if max_ is not None:
-            params['max'] = max_
         if owned_by is not None:
             params['ownedBy'] = owned_by
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)
 
     def create_a_webhook(self, name: str, target_url: str, resource: WebhookResource, event: WebhookEvent,
                          filter: str = None, secret: str = None, owned_by: str = None) -> Webhook:
@@ -156,7 +151,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         Create a Webhook
 
         Creates a webhook.
-        
+
         To learn more about how to create and use webhooks, see The `Webhooks Guide
         <https://developer.webex.com/docs/api/guides/webhooks>`_.
 
@@ -182,16 +177,25 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type owned_by: str
         :rtype: :class:`Webhook`
         """
+        body = dict()
+        body['name'] = name
+        body['targetUrl'] = target_url
+        body['resource'] = enum_str(resource)
+        body['event'] = enum_str(event)
+        body['filter'] = filter
+        body['secret'] = secret
+        body['ownedBy'] = owned_by
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = Webhook.model_validate(data)
+        return r
 
     def get_webhook_details(self, webhook_id: str) -> Webhook:
         """
         Get Webhook Details
 
         Shows details for a webhook, by ID.
-        
+
         Specify the webhook ID in the `webhookId` parameter in the URI.
 
         :param webhook_id: The unique identifier for the webhook.
@@ -199,8 +203,9 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :rtype: :class:`Webhook`
         """
         url = self.ep(f'{webhook_id}')
-        ...
-
+        data = super().get(url)
+        r = Webhook.model_validate(data)
+        return r
 
     def update_a_webhook(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None,
                          status: WebhookStatus = None) -> Webhook:
@@ -211,7 +216,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         auto deactivated.
         The fields that can be updated are `name`, `targetURL`, `secret` and `status`. All other fields, if supplied,
         are ignored.
-        
+
         Specify the webhook ID in the `webhookId` parameter in the URI.
 
         :param webhook_id: The unique identifier for the webhook.
@@ -232,16 +237,23 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type status: WebhookStatus
         :rtype: :class:`Webhook`
         """
+        body = dict()
+        body['name'] = name
+        body['targetUrl'] = target_url
+        body['secret'] = secret
+        body['ownedBy'] = owned_by
+        body['status'] = enum_str(status)
         url = self.ep(f'{webhook_id}')
-        ...
-
+        data = super().put(url, json=body)
+        r = Webhook.model_validate(data)
+        return r
 
     def delete_a_webhook(self, webhook_id: str):
         """
         Delete a Webhook
 
         Deletes a webhook, by ID.
-        
+
         Specify the webhook ID in the `webhookId` parameter in the URI.
 
         :param webhook_id: The unique identifier for the webhook.
@@ -249,6 +261,4 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :rtype: None
         """
         url = self.ep(f'{webhook_id}')
-        ...
-
-    ...
+        super().delete(url)

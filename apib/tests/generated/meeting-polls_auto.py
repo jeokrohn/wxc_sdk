@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -229,12 +230,12 @@ class MeetingPollsApi(ApiChild, base='meetings'):
         List Meeting Polls
 
         Lists all the polls and the poll questions in a meeting when ready.
-        
+
         * Only `meeting instances
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
-        
+
         * No pagination for this API because we don't expect a large number of questions for each meeting.
-        
+
         <div><Callout type="info">Polls are available within 15 minutes following the meeting.</Callout></div>
 
         :param meeting_id: A unique identifier for the `meeting instance
@@ -245,54 +246,49 @@ class MeetingPollsApi(ApiChild, base='meetings'):
         params = {}
         params['meetingId'] = meeting_id
         url = self.ep('polls')
-        ...
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Poll]).validate_python(data['items'])
+        return r
 
-
-    def get_meeting_poll_results(self, meeting_id: str, max_: int = None) -> list[PollResult]:
+    def get_meeting_poll_results(self, meeting_id: str, **params) -> Generator[PollResult, None, None]:
         """
         Get Meeting PollResults
 
         List the meeting polls, the poll's questions, and answers from the meeting when ready.
-        
+
         * Only `meeting instances
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
-        
+
         * Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         * This API is paginated by the sum of respondents from all questions in a meeting, these pagination links are
         returned in the response header.
-        
+
         <div><Callout type="info">Polls results are available within 15 minutes following the meeting.</Callout></div>
 
         :param meeting_id: A unique identifier for the `meeting instance
             <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the polls belong.
         :type meeting_id: str
-        :param max_: Limit the maximum number of respondents in a meeting in the response, up to 100.
-        :type max_: int
-        :rtype: list[PollResult]
+        :return: Generator yielding :class:`PollResult` instances
         """
-        params = {}
         params['meetingId'] = meeting_id
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep('pollResults')
-        ...
-
+        return self.session.follow_pagination(url=url, model=PollResult, item_key='items', params=params)
 
     def list_respondents_of_a_question(self, poll_id: str, question_id: str, meeting_id: str,
-                                       max_: int = None) -> list[Respondent]:
+                                       **params) -> Generator[Respondent, None, None]:
         """
         List Respondents of a Question
 
         Lists the respondents to a specific questions in a poll.
-        
+
         * Only `meeting instances
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ in state `ended` or `inProgress` are supported for `meetingId`.
-        
+
         * Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-        
+
         <div><Callout type="info">The list of poll respondents are available within 15 minutes following the
         meeting.</Callout></div>
 
@@ -303,15 +299,8 @@ class MeetingPollsApi(ApiChild, base='meetings'):
         :param meeting_id: A unique identifier for the `meeting instance
             <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ to which the respondents belong.
         :type meeting_id: str
-        :param max_: Limit the maximum number of respondents in a specified question in the response, up to 100.
-        :type max_: int
-        :rtype: list[Respondent]
+        :return: Generator yielding :class:`Respondent` instances
         """
-        params = {}
         params['meetingId'] = meeting_id
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep(f'polls/{poll_id}/questions/{question_id}/respondents')
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=Respondent, item_key='items', params=params)

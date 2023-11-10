@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -143,8 +144,8 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
     def list_wholesale_billing_reports(self, billing_start_date: Union[str, datetime] = None,
                                        billing_end_date: Union[str, datetime] = None,
                                        sort_by: ListWholesaleBillingReportsSortBy = None, type: ListReportType = None,
-                                       status: ListReportStatus = None, max_: int = None,
-                                       sub_partner_org_id: str = None) -> list[ListReport]:
+                                       status: ListReportStatus = None, sub_partner_org_id: str = None,
+                                       **params) -> Generator[ListReport, None, None]:
         """
         List Wholesale Billing Reports
 
@@ -160,15 +161,10 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :type type: ListReportType
         :param status: The status of the billing report
         :type status: ListReportStatus
-        :param max_: Limit the maximum number of reports returned in the response, up to 100 per page. Refer to the
-            `Pagination
-            <https://developer.webex.com/docs/basics#pagination>`_ section of `Webex REST API Basics
-        :type max_: int
         :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
         :type sub_partner_org_id: str
-        :rtype: list[ListReport]
+        :return: Generator yielding :class:`ListReport` instances
         """
-        params = {}
         if billing_start_date is not None:
             if isinstance(billing_start_date, str):
                 billing_start_date = isoparse(billing_start_date)
@@ -185,13 +181,10 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
             params['type'] = type
         if status is not None:
             params['status'] = status
-        if max_ is not None:
-            params['max'] = max_
         if sub_partner_org_id is not None:
             params['subPartnerOrgId'] = sub_partner_org_id
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListReport, item_key='items', params=params)
 
     def get_a_wholesale_billing_report(self, id: str) -> Report:
         """
@@ -204,8 +197,9 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :rtype: :class:`Report`
         """
         url = self.ep(f'{id}')
-        ...
-
+        data = super().get(url)
+        r = Report.model_validate(data)
+        return r
 
     def create_a_wholesale_billing_report(self, billing_start_date: Union[str, datetime], billing_end_date: Union[str,
                                           datetime], type: str = None, sub_partner_org_id: str = None) -> ReportId:
@@ -224,9 +218,15 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :type sub_partner_org_id: str
         :rtype: :class:`ReportId`
         """
+        body = dict()
+        body['billingStartDate'] = billing_start_date
+        body['billingEndDate'] = billing_end_date
+        body['type'] = type
+        body['subPartnerOrgId'] = sub_partner_org_id
         url = self.ep()
-        ...
-
+        data = super().post(url, json=body)
+        r = ReportId.model_validate(data)
+        return r
 
     def delete_a_wholesale_billing_report(self, id: str):
         """
@@ -239,6 +239,4 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         :rtype: None
         """
         url = self.ep(f'{id}')
-        ...
-
-    ...
+        super().delete(url)

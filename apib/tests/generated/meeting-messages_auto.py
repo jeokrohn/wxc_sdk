@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -39,14 +40,14 @@ class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
         Delete a Meeting Message
 
         Deletes a Meeting Message from the In Meeting Chat, using its ID.
-        
+
         This ID can be retrieved by a Compliance Officer using the `events API
         <https://developer.webex.com/docs/api/v1/events/list-events>`_ filtering on the `meetingMessages`
         resource type.
-        
+
         NOTE: When viewing the response from the events API, there are 2 `id` fields. The ID to be used here can be
         found under the `data` field in the response.
-        
+
         Specify the `meetingMessage` ID in the `meetingMessageId` parameter in the URI.
 
         :param meeting_message_id: The unique identifier for the message.
@@ -54,6 +55,4 @@ class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
         :rtype: None
         """
         url = self.ep(f'')
-        ...
-
-    ...
+        super().delete(url)

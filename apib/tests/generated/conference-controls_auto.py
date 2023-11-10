@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -85,9 +86,10 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_ids: list[str]
         :rtype: None
         """
+        body = dict()
+        body['callIds'] = call_ids
         url = self.ep()
-        ...
-
+        super().post(url, json=body)
 
     def release_conference(self):
         """
@@ -100,8 +102,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :rtype: None
         """
         url = self.ep()
-        ...
-
+        super().delete(url)
 
     def get_conference_details(self) -> ConferenceDetails:
         """
@@ -112,8 +113,9 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :rtype: :class:`ConferenceDetails`
         """
         url = self.ep()
-        ...
-
+        data = super().get(url)
+        r = ConferenceDetails.model_validate(data)
+        return r
 
     def add_participant(self, call_id: str):
         """
@@ -125,9 +127,10 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('addParticipant')
-        ...
-
+        super().post(url, json=body)
 
     def mute(self, call_id: str = None):
         """
@@ -142,9 +145,10 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('mute')
-        ...
-
+        super().post(url, json=body)
 
     def unmute(self, call_id: str = None):
         """
@@ -159,9 +163,10 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('unmute')
-        ...
-
+        super().post(url, json=body)
 
     def deafen_participant(self, call_id: str):
         """
@@ -174,9 +179,10 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('deafen')
-        ...
-
+        super().post(url, json=body)
 
     def undeafen_participant(self, call_id: str):
         """
@@ -189,9 +195,10 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('undeafen')
-        ...
-
+        super().post(url, json=body)
 
     def hold(self):
         """
@@ -202,8 +209,7 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :rtype: None
         """
         url = self.ep('hold')
-        ...
-
+        super().post(url)
 
     def resume(self):
         """
@@ -214,6 +220,4 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :rtype: None
         """
         url = self.ep('resume')
-        ...
-
-    ...
+        super().post(url)

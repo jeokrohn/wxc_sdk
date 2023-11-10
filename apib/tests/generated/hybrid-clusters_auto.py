@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -54,7 +55,7 @@ class HybridClustersApi(ApiChild, base='hybrid/clusters'):
 
         List hybrid clusters for an organization. If no `orgId` is specified, the default is the organization of the
         authenticated user.
-        
+
         Only an admin auth token with the `spark-admin:hybrid_clusters_read` scope can list clusters.
 
         :param org_id: List hybrid clusters in this organization. If an organization is not specified, the organization
@@ -66,15 +67,16 @@ class HybridClustersApi(ApiChild, base='hybrid/clusters'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Cluster]).validate_python(data['items'])
+        return r
 
     def get_hybrid_cluster_details(self, hybrid_cluster_id: str, org_id: str = None) -> Cluster:
         """
         Get Hybrid Cluster Details
 
         Shows details for a hybrid cluster, by ID.
-        
+
         Only an admin auth token with the `spark-admin:hybrid_clusters_read` scope can see cluster details.
 
         :param hybrid_cluster_id: The ID of the cluster.
@@ -90,6 +92,6 @@ class HybridClustersApi(ApiChild, base='hybrid/clusters'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{hybrid_cluster_id}')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = Cluster.model_validate(data)
+        return r

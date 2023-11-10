@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -43,7 +44,7 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         Read Call Bridge Settings for a Person
 
         Retrieve a person's Call Bridge settings.
-        
+
         This API requires a full, user or read-only administrator or location administrator auth token with a scope of
         `spark-admin:people_read`.
 
@@ -59,8 +60,9 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'')
-        ...
-
+        data = super().get(url, params=params)
+        r = data['warningToneEnabled']
+        return r
 
     def configure_call_bridge_settings_for_a_person(self, person_id: str, warning_tone_enabled: bool,
                                                     org_id: str = None):
@@ -68,7 +70,7 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         Configure Call Bridge Settings for a Person
 
         Configure a person's Call Bridge settings.
-        
+
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:people_write` scope.
 
@@ -86,7 +88,7 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['warningToneEnabled'] = warning_tone_enabled
         url = self.ep(f'')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

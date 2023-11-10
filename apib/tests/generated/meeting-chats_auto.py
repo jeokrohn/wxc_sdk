@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -95,7 +96,7 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
         Lists the meeting chats of a finished `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ specified by `meetingId`. You can set a maximum number
         of chats to return.
-        
+
         Use this operation to list the chats of a finished `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ when they are ready. Please note that only
         **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled
@@ -110,8 +111,7 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
         """
         params['meetingId'] = meeting_id
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=ChatObject, item_key='items', params=params)
 
     def delete_meeting_chats(self, meeting_id: str):
         """
@@ -119,7 +119,7 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
 
         Deletes the meeting chats of a finished `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ specified by `meetingId`.
-        
+
         Use this operation to delete the chats of a finished `meeting instance
         <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ when they are ready. Please note that
         only **meeting instances** in state `ended` are supported for `meetingId`. **Meeting series**, **scheduled
@@ -135,6 +135,4 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
         params = {}
         params['meetingId'] = meeting_id
         url = self.ep()
-        ...
-
-    ...
+        super().delete(url, params=params)

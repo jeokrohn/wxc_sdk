@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -61,6 +62,6 @@ class FilesApi(ApiChild, base='files/{fileId}'):
         :rtype: :class:`File`
         """
         url = self.ep(f'')
-        ...
-
-    ...
+        data = super().get(url)
+        r = File.model_validate(data)
+        return r

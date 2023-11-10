@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -537,16 +538,16 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
     """
 
     def get_detailed_call_history(self, start_time: Union[str, datetime], end_time: Union[str, datetime],
-                                  locations: str = None, max_: int = None) -> list[CDR]:
+                                  locations: str = None, **params) -> Generator[CDR, None, None]:
         """
         Get Detailed Call History
 
         Provides Webex Calling Detailed Call History data for your organization.
-        
+
         Results can be filtered with the `startTime`, `endTime` and `locations` request parameters. The `startTime` and
         `endTime` parameters specify the start and end of the time period for the Detailed Call History reports you
         wish to collect. The API will return all reports that were created between `startTime` and `endTime`.
-        
+
         <br/><br/>
         Response entries may be added as more information is made available for the reports.
         Values in response items may be extended as more capabilities are added to Webex Calling.
@@ -562,15 +563,8 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
         :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: str
-        :param max_: Limit the maximum number of reports per page of the response. The range is 1 to 500. When the API
-            has more reports to return than the max value, the API response will be paginated. Follow the next link
-            contained in the “Link” header within a response to request the next page of results. If there is no next
-            link, all reports for the selected time range have been collected. API requests for the next pages can be
-            requested immediately and do not count towards API rate limiting.
-        :type max_: int
-        :rtype: list[CDR]
+        :return: Generator yielding :class:`CDR` instances
         """
-        params = {}
         if isinstance(start_time, str):
             start_time = isoparse(start_time)
         start_time = dt_iso_str(start_time)
@@ -581,9 +575,5 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
         params['endTime'] = end_time
         if locations is not None:
             params['locations'] = locations
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
-    ...
+        return self.session.follow_pagination(url=url, model=CDR, item_key='items', params=params)

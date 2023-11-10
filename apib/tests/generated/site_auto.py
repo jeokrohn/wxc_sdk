@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -171,7 +172,7 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
 
         Site administrators can use this API to get a list of functions, options, and privileges that are configured
         for their Webex service sites.
-        
+
         * If `siteUrl` is specified, common settings of the meeting's configuration of the specified site will be
         queried; otherwise, the API will query from the site administrator's preferred site. All available Webex sites
         and preferred site of the user can be retrieved by `Get Site List
@@ -188,8 +189,9 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep()
-        ...
-
+        data = super().get(url, params=params)
+        r = GetMeetingConfigurationCommonSettingObject.model_validate(data)
+        return r
 
     def update_meeting_common_settings_configuration(self,
                                                      site_options: GetMeetingConfigurationCommonSettingObjectSiteOptions,
@@ -213,7 +215,12 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
         :type security_options: GetMeetingConfigurationCommonSettingObjectSecurityOptions
         :rtype: :class:`GetMeetingConfigurationCommonSettingObject`
         """
+        body = dict()
+        body['siteOptions'] = loads(site_options.model_dump_json())
+        body['defaultSchedulerOptions'] = loads(default_scheduler_options.model_dump_json())
+        body['scheduleMeetingOptions'] = loads(schedule_meeting_options.model_dump_json())
+        body['securityOptions'] = loads(security_options.model_dump_json())
         url = self.ep()
-        ...
-
-    ...
+        data = super().patch(url, json=body)
+        r = GetMeetingConfigurationCommonSettingObject.model_validate(data)
+        return r

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -328,18 +329,18 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
     query parameter.
     """
 
-    def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max_: int = None,
-                                     start: int = None, name: str = None, phone_number: str = None,
-                                     department_id: str = None,
-                                     department_name: str = None) -> list[ListHuntGroupObject]:
+    def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, start: int = None,
+                                     name: str = None, phone_number: str = None, department_id: str = None,
+                                     department_name: str = None,
+                                     **params) -> Generator[ListHuntGroupObject, None, None]:
         """
         Read the List of Hunt Groups
 
         List all calling Hunt Groups for the organization.
-        
+
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
         route to a whole group.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -347,8 +348,6 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type org_id: str
         :param location_id: Only return hunt groups with matching location ID.
         :type location_id: str
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param name: Only return hunt groups with the matching name.
@@ -359,15 +358,12 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type department_id: str
         :param department_name: Return only hunt groups with the matching departmentName.
         :type department_name: str
-        :rtype: list[ListHuntGroupObject]
+        :return: Generator yielding :class:`ListHuntGroupObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -379,8 +375,7 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if department_name is not None:
             params['departmentName'] = department_name
         url = self.ep('huntGroups')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListHuntGroupObject, item_key='huntGroups', params=params)
 
     def get_details_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                      org_id: str = None) -> GetHuntGroupObject:
@@ -388,10 +383,10 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         Get Details for a Hunt Group
 
         Retrieve Hunt Group details.
-        
+
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
         route to a whole group.
-        
+
         Retrieving hunt group details requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -407,8 +402,9 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetHuntGroupObject.model_validate(data)
+        return r
 
     def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
                             extension: Union[str, datetime], distinctive_ring: bool,
@@ -420,10 +416,10 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         Update a Hunt Group
 
         Update the designated Hunt Group.
-        
+
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
         route to a whole group.
-        
+
         Updating a hunt group requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -468,7 +464,19 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['distinctiveRing'] = distinctive_ring
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['timeZone'] = time_zone
+        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents))
+        body['enabled'] = enabled
+        body['department'] = loads(department.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

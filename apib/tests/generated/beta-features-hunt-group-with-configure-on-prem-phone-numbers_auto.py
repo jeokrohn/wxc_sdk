@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -346,10 +347,10 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         Create a Hunt Group
 
         Create new Hunt Groups for the given location.
-        
+
         Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
         a pattern to route to a whole group.
-        
+
         Creating a hunt group requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -390,9 +391,24 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['languageCode'] = language_code
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['timeZone'] = time_zone
+        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['useHostedAgentEnabled'] = use_hosted_agent_enabled
+        body['usePolicyServerEnabled'] = use_policy_server_enabled
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
+        body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents))
+        body['enabled'] = enabled
         url = self.ep(f'')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def get_details_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                      org_id: str = None) -> GetHuntGroupObject:
@@ -400,10 +416,10 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         Get Details for a Hunt Group
 
         Retrieve Hunt Group details.
-        
+
         Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
         a pattern to route to a whole group.
-        
+
         Retrieving hunt group details requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -419,8 +435,9 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{hunt_group_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetHuntGroupObject.model_validate(data)
+        return r
 
     def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
                             extension: Union[str, datetime], distinctive_ring: bool,
@@ -432,10 +449,10 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         Update a Hunt Group
 
         Update the designated Hunt Group.
-        
+
         Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
         a pattern to route to a whole group.
-        
+
         Updating a hunt group requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -482,7 +499,20 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['phoneNumber'] = phone_number
+        body['extension'] = extension
+        body['distinctiveRing'] = distinctive_ring
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers))
+        body['languageCode'] = language_code
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['timeZone'] = time_zone
+        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['usePolicyServerEnabled'] = use_policy_server_enabled
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
+        body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents))
+        body['enabled'] = enabled
         url = self.ep(f'{hunt_group_id}')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

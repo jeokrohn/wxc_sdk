@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -68,12 +69,12 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
 
     def list_resource_group_memberships(self, license_id: str = None, person_id: str = None, person_org_id: str = None,
                                         status: ResourceGroupMembershipStatus = None,
-                                        max_: int = None) -> list[ResourceGroupMembership]:
+                                        **params) -> Generator[ResourceGroupMembership, None, None]:
         """
         List Resource Group Memberships
 
         Lists all resource group memberships for an organization.
-        
+
         Use query parameters to filter the response.
 
         :param license_id: List resource group memberships for a license, by ID.
@@ -84,11 +85,8 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         :type person_org_id: str
         :param status: Limit resource group memberships to a specific status.
         :type status: ResourceGroupMembershipStatus
-        :param max_: Limit the maximum number of resource group memberships in the response.
-        :type max_: int
-        :rtype: list[ResourceGroupMembership]
+        :return: Generator yielding :class:`ResourceGroupMembership` instances
         """
-        params = {}
         if license_id is not None:
             params['licenseId'] = license_id
         if person_id is not None:
@@ -97,18 +95,15 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
             params['personOrgId'] = person_org_id
         if status is not None:
             params['status'] = status
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=ResourceGroupMembership, item_key='items', params=params)
 
     def get_resource_group_membership_details(self, resource_group_membership_id: str) -> ResourceGroupMembership:
         """
         Get Resource Group Membership Details
 
         Shows details for a resource group membership, by ID.
-        
+
         Specify the resource group membership ID in the `resourceGroupMembershipId` URI parameter.
 
         :param resource_group_membership_id: The unique identifier for the resource group membership.
@@ -116,8 +111,9 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         :rtype: :class:`ResourceGroupMembership`
         """
         url = self.ep(f'{resource_group_membership_id}')
-        ...
-
+        data = super().get(url)
+        r = ResourceGroupMembership.model_validate(data)
+        return r
 
     def update_a_resource_group_membership(self, resource_group_membership_id: str, resource_group_id: str,
                                            license_id: str, person_id: str, person_org_id: str,
@@ -126,9 +122,9 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         Update a Resource Group Membership
 
         Updates a resource group membership, by ID.
-        
+
         Specify the resource group membership ID in the `resourceGroupMembershipId` URI parameter.
-        
+
         Only the `resourceGroupId` can be changed with this action. Resource group memberships with a `status` of
         "pending" cannot be updated. For more information about resource group memberships, see the
         `Managing Hybrid Services
@@ -148,7 +144,13 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         :type status: ResourceGroupMembershipStatus
         :rtype: :class:`ResourceGroupMembership`
         """
+        body = dict()
+        body['resourceGroupId'] = resource_group_id
+        body['licenseId'] = license_id
+        body['personId'] = person_id
+        body['personOrgId'] = person_org_id
+        body['status'] = enum_str(status)
         url = self.ep(f'{resource_group_membership_id}')
-        ...
-
-    ...
+        data = super().put(url, json=body)
+        r = ResourceGroupMembership.model_validate(data)
+        return r

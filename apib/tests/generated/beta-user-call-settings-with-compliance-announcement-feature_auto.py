@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -135,10 +136,10 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         Read Call Recording Settings for a Person
 
         Retrieve a person's Call Recording settings.
-        
+
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
-        
+
         This API requires a full or user administrator auth token with the `spark-admin:people_write` scope.
 
         :param person_id: Unique identifier for the person.
@@ -153,8 +154,9 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'')
-        ...
-
+        data = super().get(url, params=params)
+        r = CallRecordingInfo.model_validate(data)
+        return r
 
     def configure_call_recording_settings_for_a_person(self, person_id: str, enabled: bool,
                                                        record: CallRecordingInfoRecord,
@@ -168,10 +170,10 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         Configure Call Recording Settings for a Person
 
         Configure a person's Call Recording settings.
-        
+
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
-        
+
         This API requires a full or user administrator auth token with the `spark-admin:people_write` scope.
 
         :param person_id: Unique identifier for the person.
@@ -200,7 +202,13 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        body['record'] = enum_str(record)
+        body['recordVoicemailEnabled'] = record_voicemail_enabled
+        body['startStopAnnouncementEnabled'] = start_stop_announcement_enabled
+        body['notification'] = loads(notification.model_dump_json())
+        body['repeat'] = loads(repeat.model_dump_json())
+        body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
         url = self.ep(f'')
-        ...
-
-    ...
+        super().put(url, params=params, json=body)

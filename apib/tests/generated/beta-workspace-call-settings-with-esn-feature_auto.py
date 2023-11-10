@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -181,11 +182,11 @@ class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{wor
         Retrieve Monitoring Settings for a Workspace
 
         Retrieves Monitoring settings for a Workspace.
-        
+
         Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
         status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
         monitored call park extension.
-        
+
         This API requires a full or read-only administrator auth token with a scope of `spark-admin:workspaces_read` or
         a user auth token with `spark:workspaces_read` scope can be used to read workspace settings.
 
@@ -201,8 +202,9 @@ class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{wor
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'monitoring')
-        ...
-
+        data = super().get(url, params=params)
+        r = UserMonitoringGet.model_validate(data)
+        return r
 
     def list_numbers_associated_with_a_specific_workspace(self, workspace_id: str,
                                                           org_id: str = None) -> ListNumbersAssociatedWithASpecificWorkspaceResponse:
@@ -211,7 +213,7 @@ class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{wor
 
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and organization associated with the workspace.
-        
+
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:workspaces_read`.
 
@@ -226,6 +228,6 @@ class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{wor
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'numbers')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = ListNumbersAssociatedWithASpecificWorkspaceResponse.model_validate(data)
+        return r

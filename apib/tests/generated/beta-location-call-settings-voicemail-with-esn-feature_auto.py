@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -182,16 +183,16 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
     query parameter.
     """
 
-    def list_voicemail_group(self, location_id: str = None, org_id: str = None, max_: int = None, start: int = None,
-                             name: str = None, phone_number: str = None) -> list[GetVoicemailGroupObject]:
+    def list_voicemail_group(self, location_id: str = None, org_id: str = None, start: int = None, name: str = None,
+                             phone_number: str = None, **params) -> Generator[GetVoicemailGroupObject, None, None]:
         """
         List VoicemailGroup
 
         List the voicemail group information for the organization.
-        
+
         You can create a shared voicemail box and inbound FAX box to
         assign to users or call routing features like an auto attendant, call queue, or hunt group.
-        
+
         Retrieving a voicemail group for the organization requires a full read-only administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
@@ -199,23 +200,18 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
         :type location_id: str
         :param org_id: Organization to which the voicemail group belongs.
         :type org_id: str
-        :param max_: Limit the maximum number of events in the response. The maximum value is `200`.
-        :type max_: int
         :param start: Offset from the first result that you want to fetch.
         :type start: int
         :param name: Search (Contains) based on voicemail group name
         :type name: str
         :param phone_number: Search (Contains) based on number or extension
         :type phone_number: str
-        :rtype: list[GetVoicemailGroupObject]
+        :return: Generator yielding :class:`GetVoicemailGroupObject` instances
         """
-        params = {}
         if location_id is not None:
             params['locationId'] = location_id
         if org_id is not None:
             params['orgId'] = org_id
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
@@ -223,8 +219,7 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('voicemailGroups')
-        ...
-
+        return self.session.follow_pagination(url=url, model=GetVoicemailGroupObject, item_key='voicemailGroups', params=params)
 
     def get_location_voicemail_group(self, location_id: str, voicemail_group_id: str,
                                      org_id: str = None) -> GetLocationVoicemailGroupObject:
@@ -232,10 +227,10 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
         Get Location Voicemail Group
 
         Retrieve voicemail group details for a location.
-        
+
         Manage your voicemail group settings for a specific location, like when you want your voicemail to be active,
         message storage settings, and how you would like to be notified of new voicemail messages.
-        
+
         Retrieving voicemail group details requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -251,6 +246,6 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = GetLocationVoicemailGroupObject.model_validate(data)
+        return r

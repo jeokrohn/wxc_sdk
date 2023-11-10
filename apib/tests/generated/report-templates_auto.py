@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -69,13 +70,13 @@ class ReportTemplatesApi(ApiChild, base='report/templates'):
         List Report Templates
 
         List all the available report templates that can be generated.
-        
+
         CSV (comma separated value) reports for Webex services are only supported for organizations based in the North
         American region. Organizations based in other regions will return blank CSV files for any Webex reports.
 
         :rtype: list[Template]
         """
         url = self.ep()
-        ...
-
-    ...
+        data = super().get(url)
+        r = TypeAdapter(list[Template]).validate_python(data)
+        return r

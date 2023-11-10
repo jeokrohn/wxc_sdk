@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -270,9 +271,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        body = dict()
+        body['destination'] = destination
+        body['endpointId'] = endpoint_id
         url = self.ep('dial')
-        ...
-
+        data = super().post(url, json=body)
+        r = DialResponse.model_validate(data)
+        return r
 
     def answer(self, call_id: str, endpoint_id: str = None):
         """
@@ -291,9 +296,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
+        body['endpointId'] = endpoint_id
         url = self.ep('answer')
-        ...
-
+        super().post(url, json=body)
 
     def reject(self, call_id: str, action: RejectActionEnum = None):
         """
@@ -308,9 +315,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type action: RejectActionEnum
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
+        body['action'] = enum_str(action)
         url = self.ep('reject')
-        ...
-
+        super().post(url, json=body)
 
     def hangup(self, call_id: str):
         """
@@ -322,9 +331,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('hangup')
-        ...
-
+        super().post(url, json=body)
 
     def hold(self, call_id: str):
         """
@@ -336,9 +346,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('hold')
-        ...
-
+        super().post(url, json=body)
 
     def resume(self, call_id: str):
         """
@@ -350,9 +361,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('resume')
-        ...
-
+        super().post(url, json=body)
 
     def divert(self, call_id: str, destination: str = None, to_voicemail: str = None):
         """
@@ -372,28 +384,31 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type to_voicemail: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
+        body['destination'] = destination
+        body['toVoicemail'] = to_voicemail
         url = self.ep('divert')
-        ...
-
+        super().post(url, json=body)
 
     def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None):
         """
         Transfer
 
         Transfer two calls together.
-        
+
         Unanswered incoming calls cannot be transferred but can be diverted using the divert API.
-        
+
         If the user has only two calls and wants to transfer them together, the `callId1` and `callId2` parameters are
         optional and when not provided the calls are automatically selected and transferred.
-        
+
         If the user has more than two calls and wants to transfer two of them together, the `callId1` and `callId2`
         parameters are mandatory to specify which calls are being transferred. Those are also commonly referred to as
         Attended Transfer, Consultative Transfer, or Supervised Transfer and will return a `204` response.
-        
+
         If the user wants to transfer one call to a new destination but only when the destination responds, the
         `callId1` and destination parameters are mandatory to specify the call being transferred and the destination.
-        
+
         This is referred to as a Mute Transfer and is similar to the divert API with the difference of waiting for the
         destination to respond prior to transferring the call. If the destination does not respond, the call is not
         transferred. This will return a `201` response.
@@ -411,9 +426,12 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type destination: str
         :rtype: None
         """
+        body = dict()
+        body['callId1'] = call_id1
+        body['callId2'] = call_id2
+        body['destination'] = destination
         url = self.ep('transfer')
-        ...
-
+        super().post(url, json=body)
 
     def park(self, call_id: str, destination: Union[str, datetime] = None,
              is_group_park: str = None) -> PartyInformation:
@@ -434,9 +452,14 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type is_group_park: str
         :rtype: PartyInformation
         """
+        body = dict()
+        body['callId'] = call_id
+        body['destination'] = destination
+        body['isGroupPark'] = is_group_park
         url = self.ep('park')
-        ...
-
+        data = super().post(url, json=body)
+        r = PartyInformation.model_validate(data['parkedAgainst'])
+        return r
 
     def retrieve(self, destination: Union[str, datetime] = None, endpoint_id: str = None) -> DialResponse:
         """
@@ -457,9 +480,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        body = dict()
+        body['destination'] = destination
+        body['endpointId'] = endpoint_id
         url = self.ep('retrieve')
-        ...
-
+        data = super().post(url, json=body)
+        r = DialResponse.model_validate(data)
+        return r
 
     def start_recording(self, call_id: str = None):
         """
@@ -472,9 +499,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('startRecording')
-        ...
-
+        super().post(url, json=body)
 
     def stop_recording(self, call_id: str = None):
         """
@@ -487,9 +515,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('stopRecording')
-        ...
-
+        super().post(url, json=body)
 
     def pause_recording(self, call_id: str = None):
         """
@@ -502,9 +531,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('pauseRecording')
-        ...
-
+        super().post(url, json=body)
 
     def resume_recording(self, call_id: str = None):
         """
@@ -517,9 +547,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('resumeRecording')
-        ...
-
+        super().post(url, json=body)
 
     def transmit_dtmf(self, call_id: str = None, dtmf: Union[str, datetime] = None):
         """
@@ -536,9 +567,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type dtmf: Union[str, datetime]
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
+        body['dtmf'] = dtmf
         url = self.ep('transmitDtmf')
-        ...
-
+        super().post(url, json=body)
 
     def push(self, call_id: str = None):
         """
@@ -551,9 +584,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: None
         """
+        body = dict()
+        body['callId'] = call_id
         url = self.ep('push')
-        ...
-
+        super().post(url, json=body)
 
     def pickup(self, target: Union[str, datetime] = None, endpoint_id: str = None) -> DialResponse:
         """
@@ -574,9 +608,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        body = dict()
+        body['target'] = target
+        body['endpointId'] = endpoint_id
         url = self.ep('pickup')
-        ...
-
+        data = super().post(url, json=body)
+        r = DialResponse.model_validate(data)
+        return r
 
     def barge_in(self, target: Union[str, datetime], endpoint_id: str = None) -> DialResponse:
         """
@@ -595,9 +633,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type endpoint_id: str
         :rtype: :class:`DialResponse`
         """
+        body = dict()
+        body['target'] = target
+        body['endpointId'] = endpoint_id
         url = self.ep('bargeIn')
-        ...
-
+        data = super().post(url, json=body)
+        r = DialResponse.model_validate(data)
+        return r
 
     def list_calls(self) -> list[Call]:
         """
@@ -608,8 +650,9 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: list[Call]
         """
         url = self.ep()
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[Call]).validate_python(data['items'])
+        return r
 
     def get_call_details(self, call_id: str) -> Call:
         """
@@ -622,8 +665,9 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: :class:`Call`
         """
         url = self.ep(f'{call_id}')
-        ...
-
+        data = super().get(url)
+        r = Call.model_validate(data)
+        return r
 
     def list_call_history(self, type: CallHistoryRecordTypeEnum = None) -> list[CallHistoryRecord]:
         """
@@ -641,6 +685,6 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         if type is not None:
             params['type'] = type
         url = self.ep('history')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])
+        return r

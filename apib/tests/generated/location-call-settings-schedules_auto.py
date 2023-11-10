@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -269,15 +270,16 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
     """
 
     def read_the_list_of_schedules(self, location_id: str, org_id: str = None, type: GetScheduleObjectType = None,
-                                   max_: int = None, start: int = None, name: str = None) -> list[ListScheduleObject]:
+                                   start: int = None, name: str = None,
+                                   **params) -> Generator[ListScheduleObject, None, None]:
         """
         Read the List of Schedules
 
         List all schedules for the given location of the organization.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
@@ -287,28 +289,22 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :param type: Type of the schedule.
         :type type: GetScheduleObjectType
-        :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param name: Only return schedules with the matching name.
         :type name: str
-        :rtype: list[ListScheduleObject]
+        :return: Generator yielding :class:`ListScheduleObject` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if type is not None:
             params['type'] = type
-        if max_ is not None:
-            params['max'] = max_
         if start is not None:
             params['start'] = start
         if name is not None:
             params['name'] = name
         url = self.ep(f'')
-        ...
-
+        return self.session.follow_pagination(url=url, model=ListScheduleObject, item_key='schedules', params=params)
 
     def get_details_for_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str,
                                    org_id: str = None) -> GetScheduleObject:
@@ -316,10 +312,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         Get Details for a Schedule
 
         Retrieve Schedule details.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Retrieving schedule details requires a full or read-only administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_read`.
 
@@ -337,8 +333,9 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{type}/{schedule_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetScheduleObject.model_validate(data)
+        return r
 
     def create_a_schedule(self, location_id: str, type: GetScheduleObjectType, name: str,
                           events: list[ModifyScheduleEventObject], org_id: str = None) -> str:
@@ -346,10 +343,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         Create a Schedule
 
         Create new Schedule for the given location.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Creating a schedule requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -368,9 +365,14 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['type'] = enum_str(type)
+        body['name'] = name
+        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventObject]).dump_json(events))
         url = self.ep(f'')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def update_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, name: str,
                           events: list[ModifyScheduleEventListObject], org_id: str = None) -> str:
@@ -378,13 +380,13 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         Update a Schedule
 
         Update the designated schedule.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Updating a schedule requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The Schedule ID will change upon modification of the Schedule name.
 
         :param location_id: Location in which this schedule exists.
@@ -404,19 +406,23 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventListObject]).dump_json(events))
         url = self.ep(f'{type}/{schedule_id}')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, org_id: str = None):
         """
         Delete a Schedule
 
         Delete the designated Schedule.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Deleting a schedule requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -434,8 +440,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{type}/{schedule_id}')
-        ...
-
+        super().delete(url, params=params)
 
     def get_details_for_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str,
                                          event_id: str, org_id: str = None) -> GetScheduleEventObject:
@@ -443,10 +448,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         Get Details for a Schedule Event
 
         Retrieve Schedule Event details.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Retrieving a schedule event's details requires a full or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
 
@@ -466,8 +471,9 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{type}/{schedule_id}/events/{event_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = GetScheduleEventObject.model_validate(data)
+        return r
 
     def create_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, name: str,
                                 start_date: Union[str, datetime], end_date: Union[str, datetime],
@@ -477,10 +483,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         Create a Schedule Event
 
         Create new Event for the given location Schedule.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Creating a schedule event requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -512,9 +518,18 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['startDate'] = start_date
+        body['endDate'] = end_date
+        body['startTime'] = start_time
+        body['endTime'] = end_time
+        body['allDayEnabled'] = all_day_enabled
+        body['recurrence'] = loads(recurrence.model_dump_json())
         url = self.ep(f'{type}/{schedule_id}/events')
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def update_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, event_id: str,
                                 name: str, start_date: Union[str, datetime], end_date: Union[str, datetime],
@@ -524,13 +539,13 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         Update a Schedule Event
 
         Update the designated Schedule Event.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Updating a schedule event requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
-        
+
         **NOTE**: The schedule event ID will change upon modification of the schedule event name.
 
         :param location_id: Location in which this schedule event exists.
@@ -563,9 +578,18 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['startDate'] = start_date
+        body['endDate'] = end_date
+        body['startTime'] = start_time
+        body['endTime'] = end_time
+        body['allDayEnabled'] = all_day_enabled
+        body['recurrence'] = loads(recurrence.model_dump_json())
         url = self.ep(f'{type}/{schedule_id}/events/{event_id}')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = data['id']
+        return r
 
     def delete_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, event_id: str,
                                 org_id: str = None):
@@ -573,10 +597,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         Delete a Schedule Event
 
         Delete the designated Schedule Event.
-        
+
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
+
         Deleting a schedule event requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -596,6 +620,4 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{type}/{schedule_id}/events/{event_id}')
-        ...
-
-    ...
+        super().delete(url, params=params)

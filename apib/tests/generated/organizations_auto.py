@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -52,15 +53,16 @@ class OrganizationsApi(ApiChild, base='organizations'):
         :rtype: list[Organization]
         """
         url = self.ep()
-        ...
-
+        data = super().get(url)
+        r = TypeAdapter(list[Organization]).validate_python(data['items'])
+        return r
 
     def get_organization_details(self, org_id: str) -> Organization:
         """
         Get Organization Details
 
         Shows details for an organization, by ID.
-        
+
         Specify the org ID in the `orgId` parameter in the URI.
 
         :param org_id: The unique identifier for the organization.
@@ -68,8 +70,9 @@ class OrganizationsApi(ApiChild, base='organizations'):
         :rtype: :class:`Organization`
         """
         url = self.ep(f'{org_id}')
-        ...
-
+        data = super().get(url)
+        r = Organization.model_validate(data)
+        return r
 
     def delete_organization(self, org_id: str):
         """
@@ -79,27 +82,27 @@ class OrganizationsApi(ApiChild, base='organizations'):
         response is returned.
         <br/><br/>
         Specify the org ID in the `orgId` parameter in the URI.
-        
+
         <div><Callout type="warning">Deleting your organization permanently deletes all of the information associated
         with your organization and is irreversible.</Callout></div>
-        
+
         Deleting an Organization may fail with a HTTP 409 Conflict response and encounter one or more of the errors
         described below. Resolve these conditions to allow the delete to succeed.
         <br/><br/>
-        
+
         + Org cannot be deleted as it has Linked sites.
-        
+
         + Org cannot be deleted as it has active subscriptions or licenses.
-        
+
         + Org cannot be deleted as `Directory Synchronization
         <https://developer.webex.com/docs/api/v1/broadworks-enterprises/get-directory-sync-status-for-an-enterprise>`_ is enabled.
-        
+
         + Org cannot be deleted as it has more than 1 user.
-        
+
         + Org cannot be deleted as it has more than 1 managed by relationship.
-        
+
         + Org cannot be deleted as it has managed orgs.
-        
+
         <div>
         <Callout type='info'>When deleting a Webex for BroadWorks Organization with BroadWorks Directory
         Synchronization enabled, a prerequisite is to disable BroadWorks Directory Synchronization for the given
@@ -113,6 +116,4 @@ class OrganizationsApi(ApiChild, base='organizations'):
         :rtype: None
         """
         url = self.ep(f'{org_id}')
-        ...
-
-    ...
+        super().delete(url)

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from datetime import datetime
+from json import loads
 from typing import Optional, Union
 
 from dateutil.parser import isoparse
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
@@ -233,28 +234,28 @@ class PeopleApi(ApiChild, base='people'):
 
     def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None,
                     roles: str = None, calling_data: bool = None, location_id: str = None,
-                    max_: int = None) -> PersonCollectionResponse:
+                    **params) -> Generator[Person, None, None]:
         """
         List People
 
         List people in your organization. For most users, either the `email` or `displayName` parameter is required.
         Admin users can omit these fields and list all users in their organization.
-        
+
         Response properties associated with a user's presence status, such as `status` or `lastActivity`, will only be
         returned for people within your organization or an organization you manage. Presence information will not be
         returned if the authenticated user has `disabled status sharing
         <https://help.webex.com/nkzs6wl/>`_.
-        
+
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as `true`. Admin users can list all users in a location or with a specific phone number. Admin users
         will receive an enriched payload with additional administrative fields like `licenses`,`roles` etc. These
         fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
-        
+
         Lookup by `email` is only supported for people within the same org or where a partner admin relationship is in
         place.
-        
+
         Lookup by `roles` is only supported for Admin users for the people within the same org.
-        
+
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
@@ -278,12 +279,8 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
-        :param max_: Limit the maximum number of people in the response. If `callingData`=true, then `max` will not be
-            more than 50.
-        :type max_: int
-        :rtype: :class:`PersonCollectionResponse`
+        :return: Generator yielding :class:`Person` instances
         """
-        params = {}
         if email is not None:
             params['email'] = email
         if display_name is not None:
@@ -298,11 +295,8 @@ class PeopleApi(ApiChild, base='people'):
             params['callingData'] = str(calling_data).lower()
         if location_id is not None:
             params['locationId'] = location_id
-        if max_ is not None:
-            params['max'] = max_
         url = self.ep()
-        ...
-
+        return self.session.follow_pagination(url=url, model=Person, item_key='items', params=params)
 
     def create_a_person(self, emails: list[str], calling_data: bool = None,
                         phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: Union[str, datetime] = None,
@@ -315,25 +309,25 @@ class PeopleApi(ApiChild, base='people'):
         Create a Person
 
         Create a new user account for a given organization. Only an admin can create a new user account.
-        
+
         At least one of the following body parameters is required to create a new user: `displayName`, `firstName`,
         `lastName`.
-        
+
         Currently, users may have only one email address associated with their account. The `emails` parameter is an
         array, which accepts multiple values to allow for future expansion, but currently only one email address will
         be used for the new user.
-        
+
         Admin users can include `Webex calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as true. It may happen that the POST request with calling data returns a 400 status, but the person
         was created still. One way to get into this state is if an invalid phone number is assigned to a user. The
         people API aggregates calls to several other microservices, and one may have failed. A best practice is to
         check if the user exists before retrying. This can be done with the user's email address and a GET /people.
-        
+
         When doing attendee management, append `#attendee` to the `siteUrl` parameter (e.g.
         `mysite.webex.com#attendee`) to make the new user an attendee for a site.
-        
+
         **NOTE**:
-        
+
         * For creating a `Webex Calling` user, you must provide `phoneNumbers` or `extension`, `locationId`, and
         `licenses` string in the same request.
 
@@ -381,24 +375,43 @@ class PeopleApi(ApiChild, base='people'):
         params = {}
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
+        body = dict()
+        body['emails'] = emails
+        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers))
+        body['extension'] = extension
+        body['locationId'] = location_id
+        body['displayName'] = display_name
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['avatar'] = avatar
+        body['orgId'] = org_id
+        body['roles'] = roles
+        body['licenses'] = licenses
+        body['department'] = department
+        body['manager'] = manager
+        body['managerId'] = manager_id
+        body['title'] = title
+        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses))
+        body['siteUrls'] = site_urls
         url = self.ep()
-        ...
-
+        data = super().post(url, params=params, json=body)
+        r = Person.model_validate(data)
+        return r
 
     def get_person_details(self, person_id: str, calling_data: bool = None) -> Person:
         """
         Get Person Details
 
         Shows details for a person, by ID.
-        
+
         Response properties associated with a user's presence status, such as `status` or `lastActivity`, will only be
         displayed for people within your organization or an organization you manage. Presence information will not be
         shown if the authenticated user has `disabled status sharing
         <https://help.webex.com/nkzs6wl/>`_.
-        
+
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as `true`.
-        
+
         Specify the person ID in the `personId` parameter in the URI.
 
         :param person_id: A unique identifier for the person.
@@ -411,8 +424,9 @@ class PeopleApi(ApiChild, base='people'):
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         url = self.ep(f'{person_id}')
-        ...
-
+        data = super().get(url, params=params)
+        r = Person.model_validate(data)
+        return r
 
     def update_a_person(self, person_id: str, display_name: str, calling_data: bool = None,
                         show_all_types: bool = None, emails: list[str] = None,
@@ -426,29 +440,29 @@ class PeopleApi(ApiChild, base='people'):
         Update a Person
 
         Update details for a person, by ID.
-        
+
         Specify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.
-        
+
         Include all details for the person. This action expects all user details to be present in the request. A common
         approach is to first `GET the person's details
         <https://developer.webex.com/docs/api/v1/people/get-person-details>`_, make changes, then PUT both the changed and unchanged values.
-        
+
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as true.
-        
+
         When doing attendee management, to update a user from host role to an attendee for a site append `#attendee` to
         the respective `siteUrl` and remove the meeting host license for this site from the license array.
         To update a person from an attendee role to a host for a site, add the meeting license for this site in the
         meeting array, and remove that site from the `siteurl` parameter.
-        
+
         To remove the attendee privilege for a user on a meeting site, remove the `sitename#attendee` from the
         `siteUrl`s array. The `showAllTypes` parameter must be set to `true`.
-        
+
         **NOTE**:
-        
+
         * The `locationId` can only be set when assigning a calling license to a user. It cannot be changed if a user
         is already an existing calling user.
-        
+
         * The `extension` field should be used to update the Webex Calling extension for a person. The extension value
         should not include the location routing prefix. The `work_extension` type in the `phoneNumbers` object as seen
         in the response payload of `List People
@@ -511,16 +525,37 @@ class PeopleApi(ApiChild, base='people'):
             params['callingData'] = str(calling_data).lower()
         if show_all_types is not None:
             params['showAllTypes'] = str(show_all_types).lower()
+        body = dict()
+        body['emails'] = emails
+        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers))
+        body['extension'] = extension
+        body['locationId'] = location_id
+        body['displayName'] = display_name
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        body['nickName'] = nick_name
+        body['avatar'] = avatar
+        body['orgId'] = org_id
+        body['roles'] = roles
+        body['licenses'] = licenses
+        body['department'] = department
+        body['manager'] = manager
+        body['managerId'] = manager_id
+        body['title'] = title
+        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses))
+        body['siteUrls'] = site_urls
+        body['loginEnabled'] = login_enabled
         url = self.ep(f'{person_id}')
-        ...
-
+        data = super().put(url, params=params, json=body)
+        r = Person.model_validate(data)
+        return r
 
     def delete_a_person(self, person_id: str):
         """
         Delete a Person
 
         Remove a person from the system. Only an admin can remove a person.
-        
+
         Specify the person ID in the `personId` parameter in the URI.
 
         :param person_id: A unique identifier for the person.
@@ -528,8 +563,7 @@ class PeopleApi(ApiChild, base='people'):
         :rtype: None
         """
         url = self.ep(f'{person_id}')
-        ...
-
+        super().delete(url)
 
     def get_my_own_details(self, calling_data: bool = None) -> Person:
         """
@@ -537,7 +571,7 @@ class PeopleApi(ApiChild, base='people'):
 
         Get profile details for the authenticated user. This is the same as GET `/people/{personId}` using the Person
         ID associated with your Auth token.
-        
+
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as true.
 
@@ -549,6 +583,6 @@ class PeopleApi(ApiChild, base='people'):
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         url = self.ep('me')
-        ...
-
-    ...
+        data = super().get(url, params=params)
+        r = Person.model_validate(data)
+        return r
