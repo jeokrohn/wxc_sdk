@@ -2,7 +2,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from .intercept import LocationInterceptApi
 from .internal_dialing import InternalDialingApi
@@ -41,6 +41,13 @@ class PSTNConnection(ApiModel):
 
 
 class TelephonyLocation(ApiModel):
+
+    @model_validator(mode='before')
+    @classmethod
+    def pop_enforce_outside_dial_digit(cls, data):
+        data.pop('enforceOutsideDialDigit', None)
+        return data
+
     #: A unique identifier for the location.
     location_id: Optional[str] = Field(alias='id', default=None)
     #: The name of the location.
