@@ -161,12 +161,13 @@ class ApplicationsApi(ApiChild, base='applications'):
     
     """
 
-    def list_applications(self, type: ListApplicationsType = None, org_id: str = None, created_by: str = None,
+    def list_applications(self, type: ListApplicationsType = None, created_by: str = None,
                           submission_status: ApplicationSubmissionStatus = None,
                           org_submission_status: ApplicationSubmissionStatus = None,
                           order_by: ListApplicationsOrderBy = None, category: str = None, tag: str = None,
                           bot_email: str = None, is_featured: bool = None, is_native: bool = None, cursor: str = None,
-                          wait_for_ci: bool = None, **params) -> Generator[Application, None, None]:
+                          wait_for_ci: bool = None, org_id: str = None,
+                          **params) -> Generator[Application, None, None]:
         """
         List Applications
 
@@ -177,8 +178,6 @@ class ApplicationsApi(ApiChild, base='applications'):
 
         :param type: List applications of this type.
         :type type: ListApplicationsType
-        :param org_id: List applications owned by this organization, by ID.
-        :type org_id: str
         :param created_by: List applications created by this person, by ID. Use `me` as a shorthand for the current API
             user when used with an authentication token.
         :type created_by: str
@@ -201,6 +200,8 @@ class ApplicationsApi(ApiChild, base='applications'):
         :type cursor: str
         :param wait_for_ci: Internal use only.
         :type wait_for_ci: bool
+        :param org_id: List applications owned by this organization, by ID.
+        :type org_id: str
         :return: Generator yielding :class:`Application` instances
         """
         if type is not None:

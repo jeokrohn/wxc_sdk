@@ -232,8 +232,8 @@ class PeopleApi(ApiChild, base='people'):
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
 
-    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None,
-                    roles: str = None, calling_data: bool = None, location_id: str = None,
+    def list_people(self, email: str = None, display_name: str = None, id: str = None, roles: str = None,
+                    calling_data: bool = None, location_id: str = None, org_id: str = None,
                     **params) -> Generator[Person, None, None]:
         """
         List People
@@ -270,15 +270,15 @@ class PeopleApi(ApiChild, base='people'):
             then presence information (such as the `lastActivity` or `status` properties) will not be included in the
             response.
         :type id: str
-        :param org_id: List people in this organization. Only admin users of another organization (such as partners)
-            may use this parameter.
-        :type org_id: str
         :param roles: List of roleIds separated by commas.
         :type roles: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+        :param org_id: List people in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
+        :type org_id: str
         :return: Generator yielding :class:`Person` instances
         """
         if email is not None:
@@ -301,10 +301,10 @@ class PeopleApi(ApiChild, base='people'):
     def create_a_person(self, emails: list[str], calling_data: bool = None,
                         phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: Union[str, datetime] = None,
                         location_id: str = None, display_name: str = None, first_name: str = None,
-                        last_name: str = None, avatar: str = None, org_id: str = None, roles: list[str] = None,
+                        last_name: str = None, avatar: str = None, roles: list[str] = None,
                         licenses: list[str] = None, department: str = None, manager: str = None,
                         manager_id: str = None, title: str = None, addresses: list[PersonAddresses] = None,
-                        site_urls: list[str] = None) -> Person:
+                        site_urls: list[str] = None, org_id: str = None) -> Person:
         """
         Create a Person
 
@@ -351,8 +351,6 @@ class PeopleApi(ApiChild, base='people'):
         :type last_name: str
         :param avatar: The URL to the person's avatar in PNG format.
         :type avatar: str
-        :param org_id: The ID of the organization to which this person belongs.
-        :type org_id: str
         :param roles: An array of role strings representing the roles to which this admin user belongs.
         :type roles: list[str]
         :param licenses: An array of license strings allocated to this person.
@@ -370,6 +368,8 @@ class PeopleApi(ApiChild, base='people'):
         :param site_urls: One or several site names where this user has an attendee role. Append `#attendee` to the
             sitename (eg: mysite.webex.com#attendee)
         :type site_urls: list[str]
+        :param org_id: The ID of the organization to which this person belongs.
+        :type org_id: str
         :rtype: :class:`Person`
         """
         params = {}
@@ -432,10 +432,10 @@ class PeopleApi(ApiChild, base='people'):
                         show_all_types: bool = None, emails: list[str] = None,
                         phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: Union[str, datetime] = None,
                         location_id: str = None, first_name: str = None, last_name: str = None, nick_name: str = None,
-                        avatar: str = None, org_id: str = None, roles: list[str] = None, licenses: list[str] = None,
+                        avatar: str = None, roles: list[str] = None, licenses: list[str] = None,
                         department: str = None, manager: str = None, manager_id: str = None, title: str = None,
                         addresses: list[PersonAddresses] = None, site_urls: list[str] = None,
-                        login_enabled: str = None) -> Person:
+                        login_enabled: str = None, org_id: str = None) -> Person:
         """
         Update a Person
 
@@ -496,8 +496,6 @@ class PeopleApi(ApiChild, base='people'):
         :type nick_name: str
         :param avatar: The URL to the person's avatar in PNG format.
         :type avatar: str
-        :param org_id: The ID of the organization to which this person belongs.
-        :type org_id: str
         :param roles: An array of role strings representing the roles to which this admin user belongs.
         :type roles: list[str]
         :param licenses: An array of license strings allocated to this person.
@@ -518,6 +516,8 @@ class PeopleApi(ApiChild, base='people'):
         :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
             authenticated user is an admin user for the person's organization.
         :type login_enabled: str
+        :param org_id: The ID of the organization to which this person belongs.
+        :type org_id: str
         :rtype: :class:`Person`
         """
         params = {}

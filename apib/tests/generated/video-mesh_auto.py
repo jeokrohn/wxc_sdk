@@ -2032,23 +2032,24 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         r = TypeAdapter(list[ClienttypedistributionCollectionforOrg]).validate_python(data['items'])
         return r
 
-    def list_event_threshold_configuration(self, org_id: str = None, cluster_id: str = None,
+    def list_event_threshold_configuration(self, cluster_id: str = None,
                                            event_name: ListEventThresholdConfigurationEventName = None,
-                                           event_scope: ListEventThresholdConfigurationEventScope = None) -> GetEventThresholdResponse:
+                                           event_scope: ListEventThresholdConfigurationEventScope = None,
+                                           org_id: str = None) -> GetEventThresholdResponse:
         """
         List Event Threshold Configuration
 
         Returns the event threshold configurations for `orgId` or `clusterId`, with optional filters `eventName` and
         `eventScope`.
 
-        :param org_id: Unique ID of the Organization.
-        :type org_id: str
         :param cluster_id: Unique ID of the Video Mesh Cluster.
         :type cluster_id: str
         :param event_name: Event name to fetch threshold details.
         :type event_name: ListEventThresholdConfigurationEventName
         :param event_scope: Scope name to filter events.
         :type event_scope: ListEventThresholdConfigurationEventScope
+        :param org_id: Unique ID of the Organization.
+        :type org_id: str
         :rtype: :class:`GetEventThresholdResponse`
         """
         params = {}

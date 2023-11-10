@@ -972,7 +972,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     """
 
     def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: Union[str, datetime],
-                          org_id: str = None, originator_number: str = None) -> TestCallRoutingPostResponse:
+                          originator_number: str = None, org_id: str = None) -> TestCallRoutingPostResponse:
         """
         Test Call Routing
 
@@ -995,11 +995,11 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :param destination: This element specifies called party.  It can be any dialable string, for example, an ESN
             number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
         :type destination: Union[str, datetime]
-        :param org_id: Organization in which we are validating a call routing.
-        :type org_id: str
         :param originator_number: Only used when originatorType is `TRUNK`. This element could be a phone number or
             URI.
         :type originator_number: str
+        :param org_id: Organization in which we are validating a call routing.
+        :type org_id: str
         :rtype: :class:`TestCallRoutingPostResponse`
         """
         params = {}
@@ -1015,8 +1015,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TestCallRoutingPostResponse.model_validate(data)
         return r
 
-    def get_local_gateway_dial_plan_usage_for_a_trunk(self, trunk_id: str, org_id: str = None, start: int = None,
-                                                      order: str = None, name: list[str] = None,
+    def get_local_gateway_dial_plan_usage_for_a_trunk(self, trunk_id: str, start: int = None, order: str = None,
+                                                      name: list[str] = None, org_id: str = None,
                                                       **params) -> Generator[Customer, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk
@@ -1033,8 +1033,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
-        :param org_id: Organization to which the trunk belongs.
-        :type org_id: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
@@ -1042,6 +1040,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: list[str]
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
         :return: Generator yielding :class:`Customer` instances
         """
         if org_id is not None:
@@ -1207,8 +1207,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = DialPatternValidateResult.model_validate(data)
         return r
 
-    def read_the_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None,
-                                    trunk_name: str = None, start: int = None, order: str = None,
+    def read_the_list_of_dial_plans(self, dial_plan_name: str = None, route_group_name: str = None,
+                                    trunk_name: str = None, start: int = None, order: str = None, org_id: str = None,
                                     **params) -> Generator[DialPlan, None, None]:
         """
         Read the List of Dial Plans
@@ -1222,8 +1222,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List dial plans for this organization.
-        :type org_id: str
         :param dial_plan_name: Return the list of dial plans matching the dial plan name.
         :type dial_plan_name: str
         :param route_group_name: Return the list of dial plans matching the Route group name..
@@ -1235,6 +1233,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :param order: Order the dial plans according to the designated fields.  Available sort fields: `name`,
             `routeName`, `routeType`. Sort order is ascending by default
         :type order: str
+        :param org_id: List dial plans for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`DialPlan` instances
         """
         if org_id is not None:
@@ -1422,8 +1422,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep('premisePstn/trunks/actions/fqdnValidation/invoke')
         super().post(url, params=params, json=body)
 
-    def read_the_list_of_trunks(self, org_id: str = None, name: list[str] = None, location_name: list[str] = None,
-                                trunk_type: str = None, start: int = None, order: str = None,
+    def read_the_list_of_trunks(self, name: list[str] = None, location_name: list[str] = None, trunk_type: str = None,
+                                start: int = None, order: str = None, org_id: str = None,
                                 **params) -> Generator[Trunk, None, None]:
         """
         Read the List of Trunks
@@ -1438,8 +1438,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List trunks for this organization.
-        :type org_id: str
         :param name: Return the list of trunks matching the local gateway names.
         :type name: list[str]
         :param location_name: Return the list of trunks matching the location names.
@@ -1451,6 +1449,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :param order: Order the trunks according to the designated fields.  Available sort fields: name, locationName.
             Sort order is ascending by default
         :type order: str
+        :param org_id: List trunks for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`Trunk` instances
         """
         if org_id is not None:
@@ -1647,8 +1647,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[TrunkTypeWithDeviceType]).validate_python(data['trunkTypes'])
         return r
 
-    def read_the_list_of_routing_groups(self, org_id: str = None, name: str = None, start: int = None,
-                                        order: str = None, **params) -> Generator[RouteGroup, None, None]:
+    def read_the_list_of_routing_groups(self, name: str = None, start: int = None, order: str = None,
+                                        org_id: str = None, **params) -> Generator[RouteGroup, None, None]:
         """
         Read the List of Routing Groups
 
@@ -1658,8 +1658,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Retrieving this route group list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List route groups for this organization.
-        :type org_id: str
         :param name: Return the list of route groups matching the Route group name..
         :type name: str
         :param start: Start at the zero-based offset in the list of matching objects.
@@ -1667,6 +1665,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :param order: Order the route groups according to designated fields.  Available sort orders are `asc` and
             `desc`.
         :type order: str
+        :param org_id: List route groups for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`RouteGroup` instances
         """
         if org_id is not None:
@@ -1825,9 +1825,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = ReadTheUsageOfARoutingGroupResponse.model_validate(data)
         return r
 
-    def read_the_call_to_extension_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
-                                                                location_name: str = None, start: int = None,
-                                                                order: str = None,
+    def read_the_call_to_extension_locations_of_a_routing_group(self, route_group_id: str, location_name: str = None,
+                                                                start: int = None, order: str = None,
+                                                                org_id: str = None,
                                                                 **params) -> Generator[Customer, None, None]:
         """
         Read the Call to Extension Locations of a Routing Group
@@ -1841,14 +1841,14 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
-        :param org_id: Organization associated with specific route group.
-        :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
         :return: Generator yielding :class:`Customer` instances
         """
         if org_id is not None:
@@ -1862,9 +1862,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageCallToExtension')
         return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)
 
-    def read_the_dial_plan_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
-                                                        location_name: str = None, start: int = None,
-                                                        order: str = None,
+    def read_the_dial_plan_locations_of_a_routing_group(self, route_group_id: str, location_name: str = None,
+                                                        start: int = None, order: str = None, org_id: str = None,
                                                         **params) -> Generator[Customer, None, None]:
         """
         Read the Dial Plan Locations of a Routing Group
@@ -1881,14 +1880,14 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
-        :param org_id: Organization associated with specific route group.
-        :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
         :return: Generator yielding :class:`Customer` instances
         """
         if org_id is not None:
@@ -1902,9 +1901,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageDialPlan')
         return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)
 
-    def read_the_pstn_connection_locations_of_a_routing_group(self, route_group_id: str, org_id: str = None,
-                                                              location_name: str = None, start: int = None,
-                                                              order: str = None,
+    def read_the_pstn_connection_locations_of_a_routing_group(self, route_group_id: str, location_name: str = None,
+                                                              start: int = None, order: str = None,
+                                                              org_id: str = None,
                                                               **params) -> Generator[Customer, None, None]:
         """
         Read the PSTN Connection Locations of a Routing Group
@@ -1917,14 +1916,14 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
-        :param org_id: Organization associated with specific route group.
-        :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
         :return: Generator yielding :class:`Customer` instances
         """
         if org_id is not None:
@@ -1938,8 +1937,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usagePstnConnection')
         return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)
 
-    def read_the_route_lists_of_a_routing_group(self, route_group_id: str, org_id: str = None, name: str = None,
-                                                start: int = None, order: str = None,
+    def read_the_route_lists_of_a_routing_group(self, route_group_id: str, name: str = None, start: int = None,
+                                                order: str = None, org_id: str = None,
                                                 **params) -> Generator[RouteGroupUsageRouteListGet, None, None]:
         """
         Read the Route Lists of a Routing Group
@@ -1952,14 +1951,14 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
-        :param org_id: Organization associated with specific route group.
-        :type org_id: str
         :param name: Return the list of locations matching the location name.
         :type name: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
         :type order: str
+        :param org_id: Organization associated with specific route group.
+        :type org_id: str
         :return: Generator yielding :class:`RouteGroupUsageRouteListGet` instances
         """
         if org_id is not None:
@@ -1973,8 +1972,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageRouteList')
         return self.session.follow_pagination(url=url, model=RouteGroupUsageRouteListGet, item_key='routeGroupUsageRouteListGet', params=params)
 
-    def read_the_list_of_route_lists(self, org_id: str = None, name: list[str] = None, location_id: list[str] = None,
-                                     start: int = None, order: str = None,
+    def read_the_list_of_route_lists(self, name: list[str] = None, location_id: list[str] = None, start: int = None,
+                                     order: str = None, org_id: str = None,
                                      **params) -> Generator[RouteList, None, None]:
         """
         Read the List of Route Lists
@@ -1987,8 +1986,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Retrieving the Route List requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List all Route List for this organization.
-        :type org_id: str
         :param name: Return the list of Route List matching the route list name.
         :type name: list[str]
         :param location_id: Return the list of Route Lists matching the location id.
@@ -1998,6 +1995,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :param order: Order the Route List according to the designated fields. Available sort fields are `name`, and
             `locationId`. Sort order is ascending by default
         :type order: str
+        :param org_id: List all Route List for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`RouteList` instances
         """
         if org_id is not None:
@@ -2128,9 +2127,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
         super().put(url, params=params, json=body)
 
-    def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None,
-                                      numbers: list[RouteListNumberPatch] = None,
-                                      delete_all_numbers: str = None) -> list[RouteListNumberPatchResponse]:
+    def modify_numbers_for_route_list(self, route_list_id: str, numbers: list[RouteListNumberPatch] = None,
+                                      delete_all_numbers: str = None,
+                                      org_id: str = None) -> list[RouteListNumberPatchResponse]:
         """
         Modify Numbers for Route List
 
@@ -2144,13 +2143,13 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
-        :param org_id: Organization to which the Route List belongs.
-        :type org_id: str
         :param numbers: Array of the numbers to be deleted/added.
         :type numbers: list[RouteListNumberPatch]
         :param delete_all_numbers: If present, the numbers array is ignored and all numbers in the route list are
             deleted.
         :type delete_all_numbers: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
         :rtype: list[RouteListNumberPatchResponse]
         """
         params = {}
@@ -2164,8 +2163,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[RouteListNumberPatchResponse]).validate_python(data['numberStatus'])
         return r
 
-    def get_numbers_assigned_to_a_route_list(self, route_list_id: str, org_id: str = None, start: int = None,
-                                             order: str = None, number: str = None,
+    def get_numbers_assigned_to_a_route_list(self, route_list_id: str, start: int = None, order: str = None,
+                                             number: str = None, org_id: str = None,
                                              **params) -> Generator[str, None, None]:
         """
         Get Numbers assigned to a Route List
@@ -2180,14 +2179,14 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
-        :param org_id: Organization to which the Route List belongs.
-        :type org_id: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the Route Lists according to number, ascending or descending.
         :type order: str
         :param number: Number assigned to the route list.
         :type number: str
+        :param org_id: Organization to which the Route List belongs.
+        :type org_id: str
         :return: Numbers assigned to the Route list.
         """
         if org_id is not None:
@@ -2201,9 +2200,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
         return self.session.follow_pagination(url=url, model=None, item_key='numbers', params=params)
 
-    def get_local_gateway_call_to_on_premises_extension_usage_for_a_trunk(self, trunk_id: str, org_id: str = None,
-                                                                          start: int = None, order: str = None,
-                                                                          name: list[str] = None,
+    def get_local_gateway_call_to_on_premises_extension_usage_for_a_trunk(self, trunk_id: str, start: int = None,
+                                                                          order: str = None, name: list[str] = None,
+                                                                          org_id: str = None,
                                                                           **params) -> Generator[Customer, None, None]:
         """
         Get Local Gateway Call to On-Premises Extension Usage for a Trunk
@@ -2220,8 +2219,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
-        :param org_id: Organization to which the trunk belongs.
-        :type org_id: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
@@ -2229,6 +2226,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: list[str]
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
         :return: Generator yielding :class:`Customer` instances
         """
         if org_id is not None:

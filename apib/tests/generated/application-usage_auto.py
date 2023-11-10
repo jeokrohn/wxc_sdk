@@ -86,8 +86,8 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
     
     """
 
-    def list_application_usage(self, org_id: str = None, app_name: str = None, app_id: str = None,
-                               order_by: ListApplicationUsageOrderBy = None, cursor: str = None,
+    def list_application_usage(self, app_name: str = None, app_id: str = None,
+                               order_by: ListApplicationUsageOrderBy = None, cursor: str = None, org_id: str = None,
                                **params) -> Generator[ApplicationUsage, None, None]:
         """
         List Application Usage
@@ -97,8 +97,6 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
-        :param org_id: List application usage for applications owned by this organization, by ID.
-        :type org_id: str
         :param app_name: List application usage information for applications with this name.
         :type app_name: str
         :param app_id: List application usage for an application, by ID.
@@ -108,6 +106,8 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
         :param cursor: The current cursor when `paging
             <https://developer.webex.com/docs/basics#pagination>`_ through long result sets.
         :type cursor: str
+        :param org_id: List application usage for applications owned by this organization, by ID.
+        :type org_id: str
         :return: Generator yielding :class:`ApplicationUsage` instances
         """
         if org_id is not None:

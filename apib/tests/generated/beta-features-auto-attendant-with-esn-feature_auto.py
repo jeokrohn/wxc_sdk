@@ -233,8 +233,8 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
     query parameter.
     """
 
-    def read_the_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, start: int = None,
-                                         name: str = None, phone_number: str = None,
+    def read_the_list_of_auto_attendants(self, location_id: str = None, start: int = None, name: str = None,
+                                         phone_number: str = None, org_id: str = None,
                                          **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         Read the List of Auto Attendants
@@ -247,8 +247,6 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List auto attendants for this organization.
-        :type org_id: str
         :param location_id: Return the list of auto attendants for this location.
         :type location_id: str
         :param start: Start at the zero-based offset in the list of matching objects.
@@ -257,6 +255,8 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
         :type name: str
         :param phone_number: Only return auto attendants with the matching phone number.
         :type phone_number: str
+        :param org_id: List auto attendants for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`ListAutoAttendantObject` instances
         """
         if org_id is not None:

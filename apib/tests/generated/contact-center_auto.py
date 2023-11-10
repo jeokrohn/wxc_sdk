@@ -299,8 +299,8 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
     `cjp-analyzer:read` scope for organizations with a Hybrid Analyzer license.
     """
 
-    def get_tasks(self, from_: int, to_: int = None, channel_types: list[str] = None, org_id: str = None,
-                  page_size: int = None) -> TasksResponse:
+    def get_tasks(self, from_: int, to_: int = None, channel_types: list[str] = None, page_size: int = None,
+                  org_id: str = None) -> TasksResponse:
         """
         Get Tasks
 
@@ -316,11 +316,11 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :param channel_types: Task channel type(s) permitted in response. Must be lowercase. By default, there is no
             channelType filtering.
         :type channel_types: list[str]
+        :param page_size: Maximum page size in response. Max allowable value is 1000.
+        :type page_size: int
         :param org_id: Organization ID to use for this operation. If unspecified, inferred from token. Token must have
             permission to interact with this organization.
         :type org_id: str
-        :param page_size: Maximum page size in response. Max allowable value is 1000.
-        :type page_size: int
         :rtype: :class:`TasksResponse`
         """
         params = {}

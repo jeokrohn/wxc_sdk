@@ -76,8 +76,8 @@ class PoliciesApi(ApiChild, base='policies'):
     """
 
     def list_policies(self, type: ListPoliciesType, app_id: list[str] = None, person_id: list[str] = None,
-                      org_id: str = None, name: str = None, action: PolicyAction = None, to_: Union[str,
-                      datetime] = None, cursor: str = None, **params) -> Generator[Policy, None, None]:
+                      name: str = None, action: PolicyAction = None, to_: Union[str, datetime] = None,
+                      cursor: str = None, org_id: str = None, **params) -> Generator[Policy, None, None]:
         """
         List Policies
 
@@ -93,8 +93,6 @@ class PoliciesApi(ApiChild, base='policies'):
         :type app_id: list[str]
         :param person_id: List policies which apply to this person, by ID.
         :type person_id: list[str]
-        :param org_id: List policies which apply to this `orgId`.
-        :type org_id: str
         :param name: List policies which apply to this name.
         :type name: str
         :param action: List policies with this action.
@@ -103,6 +101,8 @@ class PoliciesApi(ApiChild, base='policies'):
         :type to_: Union[str, datetime]
         :param cursor: List the next policies after the current cursor.
         :type cursor: str
+        :param org_id: List policies which apply to this `orgId`.
+        :type org_id: str
         :return: Generator yielding :class:`Policy` instances
         """
         if app_id is not None:

@@ -69,7 +69,7 @@ class Parameter:
         python_class = self.registry.get(self.python_type)
         return python_class.is_enum
 
-    def for_arg_list(self) -> str:
+    def source_for_arg_list(self) -> str:
         """
         representation of parameter in argument list in def
         """
@@ -81,7 +81,7 @@ class Parameter:
             arg = f'{arg}&=&None'
         return arg
 
-    def for_docstring(self) -> Generator[str, None, None]:
+    def source_for_docstring(self) -> Generator[str, None, None]:
         """
         Lines for docstring something like:
             :param person_id: List authorizations for this user id.
@@ -102,7 +102,7 @@ class Parameter:
             python_type = 'Union[str, datetime]'
         yield f':type {self.python_name}: {python_type}'
 
-    def for_param_init(self) -> Iterable[str]:
+    def source_for_param_init(self) -> Iterable[str]:
         """
         Python code for initialization of 'param' variable
         """
@@ -129,7 +129,7 @@ class Parameter:
                           (f'    {l}' for l in lines))
         return lines
 
-    def for_body_init(self) -> str:
+    def source_for_body_init(self) -> str:
         """
         Python code for body init
         """
@@ -223,6 +223,32 @@ class Endpoint:
             p_filter = set()
         return (p for p in self.href_parameter if p.name not in p_filter)
 
+    def parameters_for_args(self)->Generator[Parameter, None, None]:
+        """
+        Generator for parameters in order required for method arguments
+        """
+        # order
+        #   * mandatory parameters; href before body
+        #   * optional parameters; href before body w/o orgId
+        #   * orgId if present
+        yield from (p for p in chain(self.href_parameters_filtered(),
+                                     self.body_parameter)
+                    if not p.optional)
+        org_id = None
+        for p in chain(self.href_parameters_filtered(),
+                       self.body_parameter):
+            if not p.optional:
+                # skip mandatory parameters; already covered
+                continue
+            if p.name == 'orgId':
+                # skip orgId parameter ... for now
+                org_id = p
+                continue
+            yield p
+        # out orgId parameter to the end
+        if org_id:
+            yield org_id
+
     @property
     def params_required(self) -> bool:
         # do we need to pass 'params'?
@@ -252,16 +278,8 @@ class Endpoint:
 
         # comma separated list of all parameters
         param_line = ', '.join(chain(['self'],
-                                     # optional parameters, href 1st
-                                     (parameter.for_arg_list()
-                                      for parameter in chain(self.href_parameters_filtered(),
-                                                             self.body_parameter)
-                                      if not parameter.optional),
-                                     # mandatory parameters, href 1st
-                                     (parameter.for_arg_list()
-                                      for parameter in chain(self.href_parameters_filtered(),
-                                                             self.body_parameter)
-                                      if parameter.optional)))
+                                     (parameter.source_for_arg_list()
+                                      for parameter in self.parameters_for_args())))
 
         # for methods with pagination we want to add a **params parameter
         if paginated := self.paginated:
@@ -304,14 +322,9 @@ class Endpoint:
                 source.print(line)
             source.print()
         # parameter docstrings
-        for parameter in chain((p for p in chain(self.href_parameters_filtered(),
-                                                 self.body_parameter)
-                                if not p.optional),
-                               (p for p in chain(self.href_parameters_filtered(),
-                                                 self.body_parameter)
-                                if p.optional)):
+        for parameter in self.parameters_for_args():
             # print all docstring lines for parameter
-            list(map(source.print, parameter.for_docstring()))
+            list(map(source.print, parameter.source_for_docstring()))
         # also add a return: line
         if paginated := self.paginated:
             if not paginated.referenced_class:
@@ -402,13 +415,13 @@ class Endpoint:
                 if p.url_parameter:
                     continue
                 # add all lines for param initialization to source
-                list(map(source.print, p.for_param_init()))
+                list(map(source.print, p.source_for_param_init()))
 
         # prepare body
         if self.body_parameter:
             source.print('body = dict()')
             for p in self.body_parameter:
-                source.print(p.for_body_init())
+                source.print(p.source_for_body_init())
 
         # code to determine URL (make sure to set URL parameters)
         url = self.url[len(base):].strip('/')
@@ -603,7 +616,6 @@ class PythonAPI:
 
 @dataclass(init=False)
 class PythonClassRegistry:
-
     # context used to disambiguate class names in the registry
     _context: str = field(repr=False)
 

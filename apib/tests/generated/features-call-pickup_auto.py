@@ -131,8 +131,8 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
     query parameter.
     """
 
-    def read_the_list_of_call_pickups(self, location_id: str, org_id: str = None, start: int = None, order: str = None,
-                                      name: str = None, **params) -> Generator[ListCallPickupObject, None, None]:
+    def read_the_list_of_call_pickups(self, location_id: str, start: int = None, order: str = None, name: str = None,
+                                      org_id: str = None, **params) -> Generator[ListCallPickupObject, None, None]:
         """
         Read the List of Call Pickups
 
@@ -147,14 +147,14 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
 
         :param location_id: Return the list of call pickups for this location.
         :type location_id: str
-        :param org_id: List call pickups for this organization.
-        :type org_id: str
         :param start: Start at the zero-based offset in the list of matching call pickups. Default is 0.
         :type start: int
         :param order: Sort the list of call pickups by name, either ASC or DSC. Default is ASC.
         :type order: str
         :param name: Return the list of call pickups that contains the given name. The maximum length is 80.
         :type name: str
+        :param org_id: List call pickups for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`ListCallPickupObject` instances
         """
         if org_id is not None:
@@ -296,9 +296,9 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         r = data['id']
         return r
 
-    def get_available_agents_from_call_pickups(self, location_id: str, org_id: str = None,
-                                               call_pickup_name: str = None, start: int = None, name: str = None,
-                                               phone_number: str = None, order: str = None,
+    def get_available_agents_from_call_pickups(self, location_id: str, call_pickup_name: str = None, start: int = None,
+                                               name: str = None, phone_number: str = None, order: str = None,
+                                               org_id: str = None,
                                                **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
         """
         Get available agents from Call Pickups
@@ -312,8 +312,6 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
 
         :param location_id: Return the available agents for this location.
         :type location_id: str
-        :param org_id: Return the available agents for this organization.
-        :type org_id: str
         :param call_pickup_name: Only return available agents from call pickups with the matching name.
         :type call_pickup_name: str
         :param start: Start at the zero-based offset in the list of matching available agents.
@@ -326,6 +324,8 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
             separated sort order fields may be specified. Available sort fields: `fname`, `lname`, `extension`,
             `number`.
         :type order: str
+        :param org_id: Return the available agents for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`GetPersonPlaceVirtualLineCallPickupObject` instances
         """
         if org_id is not None:

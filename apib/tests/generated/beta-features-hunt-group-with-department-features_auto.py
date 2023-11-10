@@ -329,10 +329,9 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
     query parameter.
     """
 
-    def read_the_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, start: int = None,
-                                     name: str = None, phone_number: str = None, department_id: str = None,
-                                     department_name: str = None,
-                                     **params) -> Generator[ListHuntGroupObject, None, None]:
+    def read_the_list_of_hunt_groups(self, location_id: str = None, start: int = None, name: str = None,
+                                     phone_number: str = None, department_id: str = None, department_name: str = None,
+                                     org_id: str = None, **params) -> Generator[ListHuntGroupObject, None, None]:
         """
         Read the List of Hunt Groups
 
@@ -344,8 +343,6 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List hunt groups for this organization.
-        :type org_id: str
         :param location_id: Only return hunt groups with matching location ID.
         :type location_id: str
         :param start: Start at the zero-based offset in the list of matching objects.
@@ -358,6 +355,8 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type department_id: str
         :param department_name: Return only hunt groups with the matching departmentName.
         :type department_name: str
+        :param org_id: List hunt groups for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`ListHuntGroupObject` instances
         """
         if org_id is not None:

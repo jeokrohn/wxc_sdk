@@ -196,9 +196,9 @@ class GroupsApi(ApiChild, base='groups'):
         r = GroupResponse.model_validate(data)
         return r
 
-    def list_and_search_groups(self, org_id: str = None, filter: str = None, attributes: str = None,
-                               sort_by: str = None, sort_order: str = None, include_members: bool = None,
-                               start_index: int = None, count: int = None) -> GroupsCollectionResponse:
+    def list_and_search_groups(self, filter: str = None, attributes: str = None, sort_by: str = None,
+                               sort_order: str = None, include_members: bool = None, start_index: int = None,
+                               count: int = None, org_id: str = None) -> GroupsCollectionResponse:
         """
         List and Search Groups
 
@@ -213,9 +213,6 @@ class GroupsApi(ApiChild, base='groups'):
 
         * Use `sortBy` parameter to sort the responses by `id` or `displayName`.
 
-        :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
-            may use this parameter.
-        :type org_id: str
         :param filter: Searches the group by `displayName` with an operator and a value.  The available operators are
             `eq` (equal) and `sw` (starts with).  Only `displayName` can be used to filter results.
         :type filter: str
@@ -232,6 +229,9 @@ class GroupsApi(ApiChild, base='groups'):
         :type start_index: int
         :param count: Specifies the desired number of search results per page.
         :type count: int
+        :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
+        :type org_id: str
         :rtype: :class:`GroupsCollectionResponse`
         """
         params = {}

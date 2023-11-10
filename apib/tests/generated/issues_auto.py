@@ -118,8 +118,8 @@ class IssuesAPIApi(ApiChild, base='issues'):
     An Issue cannot be deleted, but the `status` can be updated to `CLOSED`.
     """
 
-    def list_issues(self, created_for: str = None, org_id: str = None, from_: Union[str, datetime] = None,
-                    to_: Union[str, datetime] = None, after_issue: str = None,
+    def list_issues(self, created_for: str = None, from_: Union[str, datetime] = None, to_: Union[str,
+                    datetime] = None, after_issue: str = None, org_id: str = None,
                     **params) -> Generator[Issue, None, None]:
         """
         List Issues
@@ -136,9 +136,6 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :param created_for:
         List issues created for this person ID.
         :type created_for: str
-        :param org_id:
-        List issues in this organization. Admins of another organization such as partners might use this parameter.
-        :type org_id: str
         :param from_:
         List events which occurred after a specific date and time.
         :type from_: Union[str, datetime]
@@ -148,6 +145,9 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :param after_issue:
         List issues created or modified after a specific issue, by ID.
         :type after_issue: str
+        :param org_id:
+        List issues in this organization. Admins of another organization such as partners might use this parameter.
+        :type org_id: str
         :return: Generator yielding :class:`Issue` instances
         """
         if created_for is not None:

@@ -211,8 +211,8 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_paging_groups(self, org_id: str = None, start: int = None, location_id: str = None,
-                                       name: str = None, phone_number: str = None,
+    def read_the_list_of_paging_groups(self, start: int = None, location_id: str = None, name: str = None,
+                                       phone_number: str = None, org_id: str = None,
                                        **params) -> Generator[ListPagingGroupObject, None, None]:
         """
         Read the List of Paging Groups
@@ -226,8 +226,6 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
-        :param org_id: List paging groups for this organization.
-        :type org_id: str
         :param start: Start at the zero-based offset in the list of matching objects. Default is 0
         :type start: int
         :param location_id: Return only paging groups with matching location ID. Default is all locations
@@ -236,6 +234,8 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type name: str
         :param phone_number: Return only paging groups with matching primary phone number or extension.
         :type phone_number: str
+        :param org_id: List paging groups for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`ListPagingGroupObject` instances
         """
         if org_id is not None:

@@ -345,11 +345,11 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     the relevant endpoints.
     """
 
-    def list_workspaces(self, org_id: str = None, workspace_location_id: str = None, floor_id: str = None,
-                        display_name: str = None, capacity: int = None, type: WorkspaceUpdateRequestType = None,
-                        start: int = None, calling: WorkspaceCallingType = None,
-                        supported_devices: WorkspaceSupportedDevices = None, calendar: WorkspaceCalendarType = None,
-                        device_hosted_meetings_enabled: bool = None, **params) -> Generator[Workspace, None, None]:
+    def list_workspaces(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
+                        capacity: int = None, type: WorkspaceUpdateRequestType = None, start: int = None,
+                        calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
+                        calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
+                        org_id: str = None, **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
 
@@ -361,9 +361,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         category) and `-1` (for filtering on capacity) can be used to filter for workspaces without a type and/or
         capacity.
 
-        :param org_id: List workspaces in this organization. Only admin users of another organization (such as
-            partners) may use this parameter.
-        :type org_id: str
         :param workspace_location_id: Location associated with the workspace.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
@@ -385,6 +382,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type calendar: WorkspaceCalendarType
         :param device_hosted_meetings_enabled: List workspaces enabled for device hosted meetings.
         :type device_hosted_meetings_enabled: bool
+        :param org_id: List workspaces in this organization. Only admin users of another organization (such as
+            partners) may use this parameter.
+        :type org_id: str
         :return: Generator yielding :class:`Workspace` instances
         """
         if org_id is not None:

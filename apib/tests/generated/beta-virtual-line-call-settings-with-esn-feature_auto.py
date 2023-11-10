@@ -107,11 +107,11 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
     `spark-admin:telephony_config_read.
     """
 
-    def read_the_list_of_virtual_lines(self, org_id: str = None, location_id: list[str] = None, start: int = None,
-                                       id: list[str] = None, owner_name: list[str] = None,
-                                       phone_number: list[str] = None, location_name: list[str] = None,
-                                       order: list[str] = None, has_device_assigned: bool = None,
-                                       has_extension_assigned: bool = None, has_dn_assigned: bool = None,
+    def read_the_list_of_virtual_lines(self, location_id: list[str] = None, start: int = None, id: list[str] = None,
+                                       owner_name: list[str] = None, phone_number: list[str] = None,
+                                       location_name: list[str] = None, order: list[str] = None,
+                                       has_device_assigned: bool = None, has_extension_assigned: bool = None,
+                                       has_dn_assigned: bool = None, org_id: str = None,
                                        **params) -> Generator[ListVirtualLineObject, None, None]:
         """
         Read the List of Virtual Lines
@@ -124,8 +124,6 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List virtual lines for this organization.
-        :type org_id: str
         :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
             `?locationId=locId1&locationId=locId2`.
         :type location_id: list[str]
@@ -156,6 +154,8 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
             a Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
             assigned.
         :type has_dn_assigned: bool
+        :param org_id: List virtual lines for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`ListVirtualLineObject` instances
         """
         if org_id is not None:

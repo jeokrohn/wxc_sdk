@@ -266,8 +266,8 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
     query parameter.
     """
 
-    def generate_example_password_for_location(self, location_id: str, org_id: str = None,
-                                               generate: list[PasswordGenerate] = None) -> str:
+    def generate_example_password_for_location(self, location_id: str, generate: list[PasswordGenerate] = None,
+                                               org_id: str = None) -> str:
         """
         Generate example password for Location
 
@@ -282,10 +282,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
 
         :param location_id: Location for which example password has to be generated.
         :type location_id: str
-        :param org_id: Organization to which the location belongs.
-        :type org_id: str
         :param generate: password settings array.
         :type generate: list[PasswordGenerate]
+        :param org_id: Organization to which the location belongs.
+        :type org_id: str
         :rtype: str
         """
         params = {}
@@ -449,8 +449,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         r = TypeAdapter(list[CallingPermissionObject]).validate_python(data['callingPermissions'])
         return r
 
-    def update_location_outgoing_permission(self, location_id: str, org_id: str = None,
-                                            calling_permissions: list[CallingPermissionObject] = None):
+    def update_location_outgoing_permission(self, location_id: str,
+                                            calling_permissions: list[CallingPermissionObject] = None,
+                                            org_id: str = None):
         """
         Update Location Outgoing Permission
 
@@ -464,10 +465,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
 
         :param location_id: Update outgoing call settings for this location.
         :type location_id: str
-        :param org_id: Update outgoing call settings for this organization.
-        :type org_id: str
         :param calling_permissions: Array specifying the subset of calling permissions to be updated.
         :type calling_permissions: list[CallingPermissionObject]
+        :param org_id: Update outgoing call settings for this organization.
+        :type org_id: str
         :rtype: None
         """
         params = {}

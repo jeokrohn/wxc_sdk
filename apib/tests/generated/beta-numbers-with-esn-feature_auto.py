@@ -104,16 +104,17 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
     query parameter.
     """
 
-    def get_phone_numbers_for_an_organization_with_given_criterias(self, org_id: str = None, location_id: str = None,
-                                                                   start: int = None, phone_number: str = None,
-                                                                   available: bool = None, order: str = None,
-                                                                   owner_name: str = None, owner_id: str = None,
+    def get_phone_numbers_for_an_organization_with_given_criterias(self, location_id: str = None, start: int = None,
+                                                                   phone_number: str = None, available: bool = None,
+                                                                   order: str = None, owner_name: str = None,
+                                                                   owner_id: str = None,
                                                                    owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType = None,
                                                                    extension: str = None, number_type: str = None,
                                                                    phone_number_type: str = None, state: str = None,
                                                                    details: bool = None,
                                                                    toll_free_numbers: bool = None,
                                                                    restricted_non_geo_numbers: bool = None,
+                                                                   org_id: str = None,
                                                                    **params) -> Generator[NumberObject, None, None]:
         """
         Get Phone Numbers for an Organization with Given Criterias
@@ -126,8 +127,6 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List numbers for this organization.
-        :type org_id: str
         :param location_id: Return the list of phone numbers for this location within the given organization. The
             maximum length is 36.
         :type location_id: str
@@ -164,6 +163,8 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
+        :param org_id: List numbers for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`NumberObject` instances
         """
         if org_id is not None:

@@ -154,13 +154,13 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def fetch_list_of_announcement_greetings_on_location_and_organization_level(self, org_id: str = None,
+    def fetch_list_of_announcement_greetings_on_location_and_organization_level(self,
                                                                                 location_id: FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId = None,
                                                                                 start: int = None, order: str = None,
                                                                                 file_name: str = None,
                                                                                 file_type: str = None,
                                                                                 media_file_type: str = None,
-                                                                                name: str = None,
+                                                                                name: str = None, org_id: str = None,
                                                                                 **params) -> Generator[AnnouncementsListResponse, None, None]:
         """
         Fetch list of announcement greetings on location and organization level
@@ -172,8 +172,6 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         This API requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: Get announcements in this organization.
-        :type org_id: str
         :param location_id: Return the list of enterprise or Location announcement files. Without this parameter, the
             Enterprise level announcements are returned.
         :type location_id: FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId
@@ -189,6 +187,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type media_file_type: str
         :param name: Return the list of announcement files for this announcement label.
         :type name: str
+        :param org_id: Get announcements in this organization.
+        :type org_id: str
         :return: Generator yielding :class:`AnnouncementsListResponse` instances
         """
         if org_id is not None:

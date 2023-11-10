@@ -280,7 +280,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         r = DistributorDetailsResponse.model_validate(data)
         return r
 
-    def list_wholesale_device_orders(self, org_id: str = None, status: str = None,
+    def list_wholesale_device_orders(self, status: str = None, org_id: str = None,
                                      **params) -> Generator[OrderResponse, None, None]:
         """
         List Wholesale Device Orders
@@ -288,10 +288,10 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         List the device fulfillment orders associated with a Service Provider. There are a number of filter options,
         which can be combined in a single request.
 
-        :param org_id: Wholesale customer ID.
-        :type org_id: str
         :param status: The aggregated order status.
         :type status: str
+        :param org_id: Wholesale customer ID.
+        :type org_id: str
         :return: Generator yielding :class:`OrderResponse` instances
         """
         if org_id is not None:

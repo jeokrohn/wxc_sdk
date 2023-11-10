@@ -116,8 +116,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     documentation for the relevant endpoints.
     """
 
-    def list_workspace_locations(self, org_id: str = None, display_name: str = None, address: str = None,
-                                 country_code: str = None, city_name: str = None) -> list[Location]:
+    def list_workspace_locations(self, display_name: str = None, address: str = None, country_code: str = None,
+                                 city_name: str = None, org_id: str = None) -> list[Location]:
         """
         List Workspace Locations
 
@@ -127,9 +127,6 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         optional.
         Requires an administrator auth token with the `spark-admin:workspace_locations_read` scope.
 
-        :param org_id: List workspace locations in this organization. Only admin users of another organization (such as
-            partners) may use this parameter.
-        :type org_id: str
         :param display_name: Location display name.
         :type display_name: str
         :param address: Location address.
@@ -138,6 +135,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type country_code: str
         :param city_name: Location city name.
         :type city_name: str
+        :param org_id: List workspace locations in this organization. Only admin users of another organization (such as
+            partners) may use this parameter.
+        :type org_id: str
         :rtype: list[Location]
         """
         params = {}

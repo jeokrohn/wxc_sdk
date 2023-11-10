@@ -490,16 +490,17 @@ class NumbersApi(ApiChild, base='telephony/config'):
         r = ValidateNumbersResponse.model_validate(data)
         return r
 
-    def get_phone_numbers_for_an_organization_with_given_criterias(self, org_id: str = None, location_id: str = None,
-                                                                   start: int = None, phone_number: str = None,
-                                                                   available: bool = None, order: str = None,
-                                                                   owner_name: str = None, owner_id: str = None,
+    def get_phone_numbers_for_an_organization_with_given_criterias(self, location_id: str = None, start: int = None,
+                                                                   phone_number: str = None, available: bool = None,
+                                                                   order: str = None, owner_name: str = None,
+                                                                   owner_id: str = None,
                                                                    owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType = None,
                                                                    extension: str = None, number_type: str = None,
                                                                    phone_number_type: str = None, state: str = None,
                                                                    details: bool = None,
                                                                    toll_free_numbers: bool = None,
                                                                    restricted_non_geo_numbers: bool = None,
+                                                                   org_id: str = None,
                                                                    **params) -> Generator[NumberObject, None, None]:
         """
         Get Phone Numbers for an Organization with Given Criterias
@@ -512,8 +513,6 @@ class NumbersApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
-        :param org_id: List numbers for this organization.
-        :type org_id: str
         :param location_id: Return the list of phone numbers for this location within the given organization. The
             maximum length is 36.
         :type location_id: str
@@ -550,6 +549,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
+        :param org_id: List numbers for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`NumberObject` instances
         """
         if org_id is not None:
@@ -587,7 +588,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep('numbers')
         return self.session.follow_pagination(url=url, model=NumberObject, item_key='phoneNumbers', params=params)
 
-    def list_manage_numbers_jobs(self, org_id: str = None, start: int = None,
+    def list_manage_numbers_jobs(self, start: int = None, org_id: str = None,
                                  **params) -> Generator[StartJobResponse, None, None]:
         """
         List Manage Numbers Jobs
@@ -602,10 +603,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
         This API requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: Retrieve list of Manage Number jobs for this organization.
-        :type org_id: str
         :param start: Start at the zero-based offset in the list of jobs. Default is 0.
         :type start: int
+        :param org_id: Retrieve list of Manage Number jobs for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`StartJobResponse` instances
         """
         if org_id is not None:
@@ -742,7 +743,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke')
         super().post(url, params=params)
 
-    def list_manage_numbers_job_errors(self, job_id: str = None, org_id: str = None, start: int = None,
+    def list_manage_numbers_job_errors(self, job_id: str = None, start: int = None, org_id: str = None,
                                        **params) -> Generator[ItemObject, None, None]:
         """
         List Manage Numbers Job errors
@@ -769,10 +770,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         :param job_id: Retrieve the error details for this `jobId`.
         :type job_id: str
-        :param org_id: Retrieve list of jobs for this organization.
-        :type org_id: str
         :param start: Specifies the error offset from the first result that you want to fetch.
         :type start: int
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`ItemObject` instances
         """
         if org_id is not None:

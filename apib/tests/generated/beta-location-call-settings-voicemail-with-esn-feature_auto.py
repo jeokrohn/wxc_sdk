@@ -183,8 +183,9 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
     query parameter.
     """
 
-    def list_voicemail_group(self, location_id: str = None, org_id: str = None, start: int = None, name: str = None,
-                             phone_number: str = None, **params) -> Generator[GetVoicemailGroupObject, None, None]:
+    def list_voicemail_group(self, location_id: str = None, start: int = None, name: str = None,
+                             phone_number: str = None, org_id: str = None,
+                             **params) -> Generator[GetVoicemailGroupObject, None, None]:
         """
         List VoicemailGroup
 
@@ -198,14 +199,14 @@ class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telepho
 
         :param location_id: Location to which the voicemail group belongs.
         :type location_id: str
-        :param org_id: Organization to which the voicemail group belongs.
-        :type org_id: str
         :param start: Offset from the first result that you want to fetch.
         :type start: int
         :param name: Search (Contains) based on voicemail group name
         :type name: str
         :param phone_number: Search (Contains) based on number or extension
         :type phone_number: str
+        :param org_id: Organization to which the voicemail group belongs.
+        :type org_id: str
         :return: Generator yielding :class:`GetVoicemailGroupObject` instances
         """
         if location_id is not None:

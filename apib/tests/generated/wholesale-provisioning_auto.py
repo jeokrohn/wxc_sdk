@@ -410,7 +410,7 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
     
     """
 
-    def list_wholesale_customers(self, external_id: str = None, org_id: str = None, status: list[str] = None,
+    def list_wholesale_customers(self, external_id: str = None, status: list[str] = None, org_id: str = None,
                                  **params) -> Generator[Customer, None, None]:
         """
         List Wholesale Customers
@@ -420,10 +420,10 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
 
         :param external_id: Customer external ID.
         :type external_id: str
-        :param org_id: The encoded Organization ID for the customer.
-        :type org_id: str
         :param status: Customer API status.
         :type status: list[str]
+        :param org_id: The encoded Organization ID for the customer.
+        :type org_id: str
         :return: Generator yielding :class:`Customer` instances
         """
         if external_id is not None:
@@ -436,9 +436,10 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         return self.session.follow_pagination(url=url, model=Customer, item_key='items', params=params)
 
     def provision_a_wholesale_customer(self, provisioning_id: str, packages: list[str], external_id: str,
-                                       address: Address, org_id: str = None,
+                                       address: Address,
                                        customer_info: ProvisionAWholesaleCustomerCustomerInfo = None,
-                                       provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters = None) -> str:
+                                       provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters = None,
+                                       org_id: str = None) -> str:
         """
         Provision a Wholesale Customer
 
@@ -469,11 +470,11 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type external_id: str
         :param address: Billing Address of the customer.
         :type address: Address
-        :param org_id: The Organization ID of the enterprise on Webex. Mandatory for existing customer.
-        :type org_id: str
         :param customer_info: Mandatory for new customer. Optional if Organization ID is provided.
         :type customer_info: ProvisionAWholesaleCustomerCustomerInfo
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
+        :param org_id: The Organization ID of the enterprise on Webex. Mandatory for existing customer.
+        :type org_id: str
         :rtype: str
         """
         body = dict()
@@ -559,10 +560,10 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         super().delete(url)
 
     def precheck_a_wholesale_customer_provisioning(self, address: Address, provisioning_id: str = None,
-                                                   packages: list[str] = None, org_id: str = None,
-                                                   external_id: str = None,
+                                                   packages: list[str] = None, external_id: str = None,
                                                    customer_info: PrecheckAWholesaleCustomerProvisioningCustomerInfo = None,
-                                                   provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters = None) -> CustomerProvisioningPrecheckResponse:
+                                                   provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters = None,
+                                                   org_id: str = None) -> CustomerProvisioningPrecheckResponse:
         """
         Precheck a Wholesale Customer Provisioning
 
@@ -590,12 +591,12 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :type provisioning_id: str
         :param packages: The complete list of Webex Wholesale packages to be assigned to the Wholesale customer.
         :type packages: list[str]
-        :param org_id: The Organization ID of the enterprise on Cisco Webex.
-        :type org_id: str
         :param external_id: External ID of the Wholesale customer.
         :type external_id: str
         :type customer_info: PrecheckAWholesaleCustomerProvisioningCustomerInfo
         :type provisioning_parameters: ProvisionAWholesaleCustomerProvisioningParameters
+        :param org_id: The Organization ID of the enterprise on Cisco Webex.
+        :type org_id: str
         :rtype: :class:`CustomerProvisioningPrecheckResponse`
         """
         body = dict()

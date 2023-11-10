@@ -222,9 +222,9 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         r = GetCallParkObject.model_validate(data)
         return r
 
-    def get_available_agents_from_call_parks(self, location_id: str, org_id: str = None, call_park_name: str = None,
-                                             start: int = None, name: str = None, phone_number: str = None,
-                                             order: str = None,
+    def get_available_agents_from_call_parks(self, location_id: str, call_park_name: str = None, start: int = None,
+                                             name: str = None, phone_number: str = None, order: str = None,
+                                             org_id: str = None,
                                              **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
         """
         Get available agents from Call Parks
@@ -238,8 +238,6 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
 
         :param location_id: Return the available agents for this location.
         :type location_id: str
-        :param org_id: Return the available agents for this organization.
-        :type org_id: str
         :param call_park_name: Only return available agents from call parks with the matching name.
         :type call_park_name: str
         :param start: Start at the zero-based offset in the list of matching available agents.
@@ -252,6 +250,8 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
             separated sort order fields may be specified. Available sort fields: fname, lname, number and extension.
             The maximum supported sort order value is 3.
         :type order: str
+        :param org_id: Return the available agents for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`GetPersonPlaceVirtualLineCallParksObject` instances
         """
         if org_id is not None:
@@ -269,9 +269,9 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/availableUsers')
         return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallParksObject, item_key='agents', params=params)
 
-    def read_the_list_of_call_park_extensions(self, org_id: str = None, start: int = None, extension: Union[str,
-                                              datetime] = None, name: str = None, location_id: str = None,
-                                              location_name: str = None, order: str = None,
+    def read_the_list_of_call_park_extensions(self, start: int = None, extension: Union[str, datetime] = None,
+                                              name: str = None, location_id: str = None, location_name: str = None,
+                                              order: str = None, org_id: str = None,
                                               **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         Read the List of Call Park Extensions
@@ -285,8 +285,6 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List call park extensions for this organization.
-        :type org_id: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
         :param extension: Only return call park extensions with the matching extension.
@@ -300,6 +298,8 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         :param order: Order the available agents according to the designated fields.  Available sort fields:
             `groupName`, `callParkExtension`, `callParkExtensionName`, `callParkExtensionExternalId`.
         :type order: str
+        :param org_id: List call park extensions for this organization.
+        :type org_id: str
         :return: Generator yielding :class:`ListCallParkExtensionObject` instances
         """
         if org_id is not None:
