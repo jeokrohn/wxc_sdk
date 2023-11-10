@@ -10,19 +10,17 @@ from operator import attrgetter
 from os.path import commonprefix
 from re import subn, sub
 from typing import Any, Optional, Union
-
-__all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Parameter', 'simple_python_type']
-
 from urllib.parse import urljoin
 
 import dateutil.parser
-from pydantic import parse_obj_as, TypeAdapter
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember
 from apib.apib.classes import ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray, ApibApi
 from apib.tools import break_line, sanitize_class_name, snake_case, words_to_camel, \
     remove_html_comments, remove_div, lines_for_docstring
 from wxc_sdk.base import to_camel
+
+__all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Parameter', 'simple_python_type']
 
 log = logging.getLogger(__name__)
 
