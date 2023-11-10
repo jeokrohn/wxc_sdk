@@ -85,7 +85,7 @@ class GroupResponse(ApiModel):
     #: The timestamp indicating lastModification time of group
     #: example: 2022-02-17T02:13:29.706Z
     last_modified: Optional[datetime] = None
-    #: example: 1.0
+    #: example: 1
     member_size: Optional[int] = None
     #: An array of members
     members: Optional[list[Member]] = None
@@ -93,11 +93,11 @@ class GroupResponse(ApiModel):
 
 class GroupsCollectionResponse(ApiModel):
     #: Total number of groups returned in the response.
-    #: example: 3.0
+    #: example: 3
     total_results: Optional[int] = None
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
-    #: example: 10.0
+    #: example: 10
     items_per_page: Optional[int] = None
     #: An array of group objects.
     groups: Optional[list[GroupResponse]] = None

@@ -155,7 +155,7 @@ class Call(ApiModel):
     remote_party: Optional[PartyInformation] = None
     #: The appearance value for the call. The appearance value can be used to display the user's calls in an order
     #: consistent with the user's devices. Only present when the call has an appearance value assigned.
-    #: example: 1.0
+    #: example: 1
     appearance: Optional[int] = None
     #: The date and time the call was created.
     #: example: 2016-04-21T17:00:00.000Z

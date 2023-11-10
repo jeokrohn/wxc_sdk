@@ -603,31 +603,6 @@ class PythonAPI:
 
 @dataclass(init=False)
 class PythonClassRegistry:
-    # TODO: to disambiguate names:
-    #   + a global context can be set (name of the APIB currently processed)
-    #       * set_context(context: str)
-    #   + the context is used to create qualified identifiers for class names
-    #       * qualified_class_name(class_name: str)->str
-    #   + qualident: <prefix>%<class name>
-    #   + class names are not converted to camel case during creation of PythonClass instances from APIB
-    #   + python_types and referenced_classes in Attribute instances use qualified class names
-    #       * use get_qualident() to validate reference and get qualified name
-    #   + "proper" Python class names are created after all PythonClasses have been created --> normalization before
-    #       code creation
-    #   + the normalization makes sure that unique Python class names are used
-    #       + mapper from qualified class name to "normalized" Python class name
-    #       + remove qualifier
-    #       + convert class names to camel case
-    #       + make class names unique
-    #       + after creating unique unqualified class names the resulting mapping is used to update references to
-    #           class names
-    #       + normalization updates
-    #           + python_type in Attribute
-    #           + referenced_class in Attribute
-    #           + python_type in PythonClass
-    #           * ... in Endpoint
-    #   + after normalization updated PythonClass and Attribute instances can be used for code creation
-    #
 
     # context used to disambiguate class names in the registry
     _context: str = field(repr=False)
@@ -826,16 +801,16 @@ class PythonClassRegistry:
             self._add_class(new_class)
             python_type = new_class.name
         elif value.element == 'number':
+            sample = value.content
             # can be int or float
             if value.content is None:
                 python_type = 'int'
             else:
                 try:
-                    int(value.content)
+                    sample = int(value.content)
                     python_type = 'int'
                 except ValueError:
                     python_type = 'float'
-            sample = value.content
         elif value.element == 'enum':
             value: ApibEnum
             # we need an implicit enum class
@@ -908,18 +883,6 @@ class PythonClassRegistry:
         for ds in parse_result.api.data_structures():
             self._add_classes_from_data_structure(ds)
 
-        # also go through transitions and look at response datastructures
-        # TODO: isn't this redundant w/ _register_endpoints?
-        # for transition in parse_result.api.transitions():
-        #     response = transition.http_transaction.response
-        #     ds = response and response.datastructure
-        #     if not ds:
-        #         continue
-        #
-        #     # skip datastructures w/o attributes
-        #     if not ds.attributes:
-        #         continue
-        #     self.add_classes_from_data_structure(ds)
         self._register_endpoints(parsed_blueprint=parse_result)
 
     def _dereferenced_class(self, class_name) -> tuple[str, Optional[PythonClass]]:
@@ -1163,6 +1126,7 @@ class PythonClassRegistry:
         #       * determine the set of common attributes
         #       * record class, # of common attributes, common attributes
         #       * group candidates together by common attribute names
+        # pick the class with the largest overlap of attributes
         # pick the class with the largest overlap of attributes
         # generate new base class if common attributes are not covering everything
         # TODO: implement

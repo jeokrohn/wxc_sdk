@@ -127,10 +127,10 @@ class DeviceType(ApiModel):
     #: example: Cisco Unified Border Element
     device_type: Optional[str] = None
     #: Minimum number of concurrent calls. Required for static certificate based trunk.
-    #: example: 250.0
+    #: example: 250
     min_concurrent_calls: Optional[int] = None
     #: Maximum number of concurrent calls. Required for static certificate based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 
@@ -361,16 +361,16 @@ class HostedFeature(ApiModel):
 
 class LocalGatewayUsageCount(ApiModel):
     #: The count where the local gateway is used as a PSTN Connection setting.
-    #: example: 1.0
+    #: example: 1
     pstn_connection_count: Optional[int] = None
     #: The count where the given local gateway is used as call to extension setting.
-    #: example: 1.0
+    #: example: 1
     call_to_extension_count: Optional[int] = None
     #: The count where the given local gateway is used by the dial plan.
-    #: example: 1.0
+    #: example: 1
     dial_plan_count: Optional[int] = None
     #: The count where the given local gateway is used by the route group.
-    #: example: 1.0
+    #: example: 1
     route_group_count: Optional[int] = None
 
 
@@ -385,7 +385,7 @@ class LocalGateways(ApiModel):
     #: example: 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL1dTV1laMjEyODA2TDIxMjgwNw'
     location_id: Optional[str] = None
     #: Prioritizes local gateways based on these numbers; the lowest number gets the highest priority.
-    #: example: 1.0
+    #: example: 1
     priority: Optional[int] = None
 
 
@@ -469,7 +469,7 @@ class ResponseStatusType(str, Enum):
 
 class ResponseStatus(ApiModel):
     #: Error Code. 25013 for error retrieving the outbound proxy. 25014 for error retrieving the status
-    #: example: 25013.0
+    #: example: 25013
     code: Optional[int] = None
     #: Status type.
     type: Optional[ResponseStatusType] = None
@@ -768,7 +768,7 @@ class TrunkFQDNValidatePost(ApiModel):
     #: example: acme.corp
     domain: Optional[str] = None
     #: FQDN port of the trunk.
-    #: example: 5000.0
+    #: example: 5000
     port: Optional[int] = None
 
 
@@ -823,10 +823,10 @@ class TrunkGet(ApiModel):
     #: example: acme.corp
     domain: Optional[str] = None
     #: FQDN port. Required to create a static certificate-based trunk.
-    #: example: 5000.0
+    #: example: 5000
     port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 
@@ -856,10 +856,10 @@ class TrunkPost(ApiModel):
     #: example: acme.corp
     domain: Optional[str] = None
     #: FQDN port. Required to create a static certificate-based trunk.
-    #: example: 5000.0
+    #: example: 5000
     port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 
@@ -874,7 +874,7 @@ class TrunkPut(ApiModel):
     #: example: True
     dual_identity_support_enabled: Optional[bool] = None
     #: Max Concurrent call. Required to create a static certificate-based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 

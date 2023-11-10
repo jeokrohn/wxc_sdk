@@ -29,7 +29,7 @@ class DepartmentResponseDepartment(ApiModel):
     #: example: HR
     name: Optional[str] = None
     #: Number of members in this department.
-    #: example: 2.0
+    #: example: 2
     member_count: Optional[int] = None
 
 

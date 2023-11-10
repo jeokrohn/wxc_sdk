@@ -305,7 +305,7 @@ class CustomizedQuestionForCreateMeetingType(str, Enum):
 
 class QuestionOptionObject(ApiModel):
     #: Unique identifier for the question option.
-    #: example: 1.0
+    #: example: 1
     id: Optional[int] = None
     #: Value for the question option.
     #: example: Yes
@@ -349,13 +349,13 @@ class CustomizedQuestionForGetMeetingRules(ApiModel):
     match_case: Optional[bool] = None
     #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be
     #: ordered together.
-    #: example: 1.0
+    #: example: 1
     order: Optional[int] = None
 
 
 class CustomizedQuestionForGetMeeting(ApiModel):
     #: Unique identifier for the question.
-    #: example: 330521.0
+    #: example: 330521
     id: Optional[int] = None
     #: Title of the customized question.
     #: example: How are you
@@ -420,7 +420,7 @@ class StandardRegistrationApproveRule(ApiModel):
     match_case: Optional[bool] = None
     #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be
     #: ordered together.
-    #: example: 1.0
+    #: example: 1
     order: Optional[int] = None
 
 
@@ -460,7 +460,7 @@ class MeetingSeriesObjectRegistration(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
     customized_questions: Optional[list[CustomizedQuestionForGetMeeting]] = None
@@ -655,14 +655,14 @@ class MeetingSeriesObject(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -671,7 +671,7 @@ class MeetingSeriesObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -692,7 +692,7 @@ class MeetingSeriesObject(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -789,7 +789,7 @@ class MeetingSeriesObjectWithAdhocRegistration(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
 
 
@@ -922,14 +922,14 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -938,7 +938,7 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -959,7 +959,7 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -1138,14 +1138,14 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -1154,7 +1154,7 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -1175,7 +1175,7 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -1358,14 +1358,14 @@ class ScheduledMeetingObject(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -1374,7 +1374,7 @@ class ScheduledMeetingObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -1395,7 +1395,7 @@ class ScheduledMeetingObject(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -1519,14 +1519,14 @@ class UpdateMeetingObject(ApiModel):
     #: applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`,
     #: `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not
     #: specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 30.0
+    #: example: 30
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -1535,7 +1535,7 @@ class UpdateMeetingObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved by
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
@@ -1548,7 +1548,7 @@ class UpdateMeetingObject(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
@@ -1683,7 +1683,7 @@ class CreateMeetingObjectRegistration(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
     customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None
@@ -1790,7 +1790,7 @@ class CreateMeetingObject(ApiModel):
     #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default value for an ad-hoc meeting is 0 and the user's input value will be ignored.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation. This parameter is ignored for an
     #: ad-hoc meeting.
@@ -1800,7 +1800,7 @@ class CreateMeetingObject(ApiModel):
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host. This parameter is
     #: ignored for an ad-hoc meeting.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting. The default value for an ad-hoc
     #: meeting is `allowJoinWithLobby` and the user's input value will be ignored.
@@ -1810,7 +1810,7 @@ class CreateMeetingObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a
     #: meeting scheduled in the user's `personal room
@@ -1831,7 +1831,7 @@ class CreateMeetingObject(ApiModel):
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it. The default value for an ad-hoc
     #: meeting is null and the user's input value will be ignored.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
@@ -2017,7 +2017,7 @@ class Registration(ApiModel):
 
 class AnswerForCustomizedQuestion(ApiModel):
     #: Unique identifier for the option.
-    #: example: 1.0
+    #: example: 1
     option_id: Optional[int] = None
     #: The content of the answer or the option for this question.
     #: example: green
@@ -2026,7 +2026,7 @@ class AnswerForCustomizedQuestion(ApiModel):
 
 class CustomizedRegistrant(ApiModel):
     #: Unique identifier for the customized questions retrieved from the registration form.
-    #: example: 330087.0
+    #: example: 330087
     question_id: Optional[int] = None
     #: The answers for customized questions. If the question type is checkbox, more than one answer can be set.
     answers: Optional[list[AnswerForCustomizedQuestion]] = None
@@ -2064,7 +2064,7 @@ class RegistrantFormObject(ApiModel):
     #: example: New York
     state: Optional[str] = None
     #: The registrant's postal code. Registration options define whether or not this is required.
-    #: example: 123456.0
+    #: example: 123456
     zip_code: Optional[int] = None
     #: The America is not a country or a specific region. Registration options define whether or not this is required.
     #: example: United States
@@ -2123,7 +2123,7 @@ class Registrant(ApiModel):
     #: example: New York
     state: Optional[str] = None
     #: Registrant's postal code.
-    #: example: 123456.0
+    #: example: 123456
     zip_code: Optional[int] = None
     #: Registrant's country or region.
     #: example: United States
@@ -2184,7 +2184,7 @@ class RegistrantCreateResponse(ApiModel):
     #: example: New York
     state: Optional[str] = None
     #: Registrant's postal code.
-    #: example: 123456.0
+    #: example: 123456
     zip_code: Optional[int] = None
     #: Registrant's country or region.
     #: example: United States
@@ -2260,7 +2260,7 @@ class MeetingSessionTypeObject(ApiModel):
     #: example: meeting
     type: Optional[MeetingSessionTypeObjectType] = None
     #: The maximum number of attendees for the meeting session type.
-    #: example: 1000.0
+    #: example: 1000
     attendees_capacity: Optional[int] = None
 
 
@@ -2362,7 +2362,7 @@ class JoinMeetingObject(ApiModel):
     #: example: BgJep@43
     password: Optional[str] = None
     #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
-    #: example: 5.0
+    #: example: 5
     expiration_minutes: Optional[int] = None
     #: Required when the meeting is webinar-enabled and enabled registration ID.
     #: example: 1111
@@ -2397,7 +2397,7 @@ class QuestionObjectType(str, Enum):
 
 class QuestionObject(ApiModel):
     #: Unique identifier for the question.
-    #: example: 3388057.0
+    #: example: 3388057
     id: Optional[int] = None
     #: Details for the question.
     #: example: Do you like cisco?
@@ -2407,7 +2407,7 @@ class QuestionObject(ApiModel):
     type: Optional[QuestionObjectType] = None
     #: The lowest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is
     #: not `rating`.
-    #: example: 1.0
+    #: example: 1
     from_score: Optional[int] = None
     #: The lowest score label of the rating question. This attribute will be ingnored, if the value of `type` attribute
     #: is not `rating`.
@@ -2415,7 +2415,7 @@ class QuestionObject(ApiModel):
     from_label: Optional[str] = None
     #: The highest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is
     #: not `rating`.
-    #: example: 5.0
+    #: example: 5
     to_score: Optional[int] = None
     #: The highest score label of the rating question. This attribute will be ingnored, if the value of `type`
     #: attribute is not `rating`.
@@ -2448,7 +2448,7 @@ class SurveyObject(ApiModel):
 
 class QuestionWithAnswersObject(ApiModel):
     #: Unique identifier for the question.
-    #: example: 3388057.0
+    #: example: 3388057
     id: Optional[int] = None
     #: Details for the question.
     #: example: Do you like cisco?
@@ -2523,7 +2523,7 @@ class RegistrationForUpdate(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
     customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None

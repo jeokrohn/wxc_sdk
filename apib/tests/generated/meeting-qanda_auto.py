@@ -61,10 +61,10 @@ class QAObject(ApiModel):
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
-    #: example: 10.0
+    #: example: 10
     total_attendees: Optional[int] = None
     #: The total number of respondents in the meeting.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: The name of the user who asked the question.
     #: example: John Andersen

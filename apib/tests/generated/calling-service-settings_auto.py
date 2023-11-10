@@ -25,7 +25,7 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiMode
     #: example: True
     enabled: Optional[bool] = None
     #: Maximum number of repeaed digits. The minimum value is 1. The maximum value is 6.
-    #: example: 3.0
+    #: example: 3
     max_: Optional[int] = None
 
 
@@ -34,19 +34,19 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences(Ap
     #: example: True
     enabled: Optional[bool] = None
     #: Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
-    #: example: 3.0
+    #: example: 3
     number_of_ascending_digits: Optional[int] = None
     #: Number of descending digits in sequence. The minimum value is 2. The maximum value is 5.
-    #: example: 3.0
+    #: example: 3
     number_of_descending_digits: Optional[int] = None
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesLength(ApiModel):
     #: The minimum value is 2. The maximum value is 15.
-    #: example: 3.0
+    #: example: 3
     min: Optional[int] = None
     #: The minimum value is 3. The maximum value is 30.
-    #: example: 3.0
+    #: example: 3
     max_: Optional[int] = None
 
 
@@ -71,7 +71,7 @@ class GetVoicemailRulesObjectExpirePasscode(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of days for password expiry. The minimum value is 15. The maximum value is 180.
-    #: example: 180.0
+    #: example: 180
     number_of_days: Optional[int] = None
 
 
@@ -80,7 +80,7 @@ class GetVoicemailRulesObjectBlockPreviousPasscodes(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of previous passcodes. The minimum value is 1. The maximum value is 10.
-    #: example: 3.0
+    #: example: 3
     number_of_passcodes: Optional[int] = None
 
 
@@ -99,7 +99,7 @@ class GetVoicemailSettingsObject(ApiModel):
     #: When enabled, you can set the deletion conditions for expired messages.
     message_expiry_enabled: Optional[bool] = None
     #: Number of days after which messages expire.
-    #: example: 10.0
+    #: example: 10
     number_of_days_for_message_expiry: Optional[int] = None
     #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When
     #: disabled, all unread voicemail messages will be kept.

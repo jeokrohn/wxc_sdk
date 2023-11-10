@@ -116,7 +116,7 @@ class Floor(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4NjczZDIwLWM0M2EtNDQ5Ni1iYWIxLTNiMjhhZGJjMjViYQ
     location_id: Optional[str] = None
     #: The floor number.
-    #: example: -1.0
+    #: example: -1
     floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
@@ -125,7 +125,7 @@ class Floor(ApiModel):
 
 class FloorCreationRequest(ApiModel):
     #: The floor number.
-    #: example: -1.0
+    #: example: -1
     floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement

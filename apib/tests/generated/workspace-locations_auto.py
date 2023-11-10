@@ -32,10 +32,10 @@ class Location(ApiModel):
     #: example: Barcelona
     city_name: Optional[str] = None
     #: The location latitude.
-    #: example: 41.4066147
+    #: example: 41
     latitude: Optional[int] = None
     #: The location longitude.
-    #: example: 2.2007173
+    #: example: 2
     longitude: Optional[int] = None
     #: Notes associated with the location.
     #: example: A note about the location
@@ -56,10 +56,10 @@ class WorkspaceLocationsCreationRequest(ApiModel):
     #: example: Barcelona
     city_name: Optional[str] = None
     #: The location latitude.
-    #: example: 41.4066147
+    #: example: 41
     latitude: Optional[int] = None
     #: The location longitude.
-    #: example: 2.2007173
+    #: example: 2
     longitude: Optional[int] = None
     #: Notes associated with the location.
     #: example: A note about the location
@@ -79,7 +79,7 @@ class Floor(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9XT1JLU1BBQ0VfTE9DQVRJT04vM2E2ZmYzNzMtNjhhNy00NGU0LTkxZDYtYTI3NDYwZTBhYzVjIzUxOWY2N2E1LTlkOTktNGM2My04YTA5LWI5MTcxY2M2NmJkMQ==
     location_id: Optional[str] = None
     #: The floor number.
-    #: example: -1.0
+    #: example: -1
     floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
@@ -88,7 +88,7 @@ class Floor(ApiModel):
 
 class WorkspaceLocationFloorsCreationRequest(ApiModel):
     #: The floor number.
-    #: example: -1.0
+    #: example: -1
     floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement

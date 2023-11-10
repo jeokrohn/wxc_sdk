@@ -41,10 +41,10 @@ class RecordingReportSummaryObject(ApiModel):
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: The number of times the recording was viewed.
-    #: example: 7.0
+    #: example: 7
     view_count: Optional[int] = None
     #: The number of times the recording was downloaded.
-    #: example: 20.0
+    #: example: 20
     download_count: Optional[int] = None
 
 
@@ -98,7 +98,7 @@ class RecordingAchriveSummaryObject(ApiModel):
 
 class MeetingRecordingArchiveParticipant(ApiModel):
     #: An internal ID that is associated with each join.
-    #: example: 28208023.0
+    #: example: 28208023
     correlation_id: Optional[int] = None
     #: Display name for the meeting participant.
     #: example: John Andersen
@@ -137,7 +137,7 @@ class MeetingRecordingArchiveChat(ApiModel):
 
 class MeetingRecordingArchiveUser(ApiModel):
     #: An internal ID that is associated with each join.
-    #: example: 28208023.0
+    #: example: 28208023
     correlation_id: Optional[int] = None
     #: Display name for the meeting participant.
     #: example: John Andersen
@@ -149,7 +149,7 @@ class MeetingRecordingArchiveUser(ApiModel):
 
 class MeetingRecordingArchivePollQuestionQuestion(ApiModel):
     #: The number of choices in the questions.
-    #: example: 3.0
+    #: example: 3
     choice_count: Optional[int] = None
     #: The type of the question.
     #: example: single
@@ -161,7 +161,7 @@ class MeetingRecordingArchivePollQuestionQuestion(ApiModel):
 
 class MeetingRecordingArchivePollAnswerSummary(ApiModel):
     #: The total number of people who selected this answer.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: Whether the answer is correct.
     #: example: True
@@ -175,7 +175,7 @@ class MeetingRecordingArchivePollAnswerSummary(ApiModel):
 
 class MeetingRecordingArchivePollRespondent(ApiModel):
     #: An internal ID that is associated with the respondent's each join.
-    #: example: 28208023.0
+    #: example: 28208023
     correlation_id: Optional[int] = None
     #: Display name for the poll respondent.
     #: example: Alex Green
@@ -200,13 +200,13 @@ class MeetingRecordingArchivePollQuestion(ApiModel):
 
 class MeetingRecordingArchivePollContent(ApiModel):
     #: The total number of questions.
-    #: example: 10.0
+    #: example: 10
     question_count: Optional[int] = None
     #: The total number of users.
-    #: example: 10.0
+    #: example: 10
     user_count: Optional[int] = None
     #: The number of voters among users.
-    #: example: 3.0
+    #: example: 3
     voted_user_count: Optional[int] = None
     #: Poll's questions.
     questions: Optional[list[MeetingRecordingArchivePollQuestion]] = None
@@ -236,7 +236,7 @@ class MeetingRecordingArchiveQAAnswer(ApiModel):
     #: example: John Andersen
     display_name: Optional[str] = None
     #: An internal ID that is associated with the answer's each join.
-    #: example: 10947662.0
+    #: example: 10947662
     correlation_id: Optional[int] = None
     #: The email of the person who answered the question.
     #: example: alex.green@example.com

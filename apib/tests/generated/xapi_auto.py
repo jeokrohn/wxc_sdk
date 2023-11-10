@@ -17,7 +17,7 @@ __auto__ = ['ExecuteCommandArguments', 'ExecuteCommandBody', 'ExecuteCommandBody
 
 
 class QueryStatusResponseResultAudio(ApiModel):
-    #: example: 75.0
+    #: example: 75
     volume: Optional[int] = Field(alias='Volume', default=None)
 
 
@@ -34,14 +34,14 @@ class QueryStatusResponse(ApiModel):
 
 
 class ExecuteCommandArguments(ApiModel):
-    #: example: 50.0
+    #: example: 50
     level: Optional[int] = Field(alias='Level', default=None)
 
 
 class ExecuteCommandBodyBookingTime(ApiModel):
     #: example: 2020-07-01T13:00:00Z
     start_time: Optional[datetime] = Field(alias='StartTime', default=None)
-    #: example: 60.0
+    #: example: 60
     duration: Optional[int] = Field(alias='Duration', default=None)
 
 

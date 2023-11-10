@@ -18,7 +18,7 @@ __auto__ = ['Error', 'PrecheckABroadworksSubscriberProvisioningCustomerInfo', 'S
 
 class Error(ApiModel):
     #: An error code that identifies the reason for the error.
-    #: example: 10022.0
+    #: example: 10022
     error_code: Optional[int] = None
     #: A description of the error.
     #: example: The BroadWorks UserID is already associated with an existing user.
@@ -123,7 +123,7 @@ class SubscriberListResponse(ApiModel):
 
 class SubscriberProvisioningPrecheckResponseInfo(ApiModel):
     #: Provisioning Precheck `infoCode`.
-    #: example: 100.0
+    #: example: 100
     info_code: Optional[int] = None
     #: A textual description of the `infoCode`.
     #: example: Provisioning Precheck validation successful.

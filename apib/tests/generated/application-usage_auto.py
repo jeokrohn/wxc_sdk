@@ -55,7 +55,7 @@ class ApplicationUsage(ApiModel):
     #: example: info@example.com
     app_contact_email: Optional[str] = None
     #: How many users use the application.
-    #: example: 5.0
+    #: example: 5
     app_user_adoption: Optional[int] = None
     #: Whether or not the application is allowed by policy.
     #: example: allow

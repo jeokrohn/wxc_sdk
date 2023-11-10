@@ -16,7 +16,7 @@ __auto__ = ['AudioIn', 'AudioInType', 'CallsQualitiesResponse', 'MediaSessionQua
 
 class VideoIn(ApiModel):
     #: The sampling interval of the downstream video quality data
-    #: example: 60.0
+    #: example: 60
     sampling_interval: Optional[int] = None
     #: The date and time when this video session started.
     #: example: 2016-04-18T17:00:00.000Z
@@ -41,7 +41,7 @@ class AudioIn(ApiModel):
     #: example: IP
     type: Optional[AudioInType] = None
     #: The sampling interval of the downstream audio quality data
-    #: example: 60.0
+    #: example: 60
     sampling_interval: Optional[int] = None
     #: The date and time when this audio session started.
     #: example: 2016-04-18T17:00:00.000Z
@@ -76,10 +76,10 @@ class MediaSessionQuality(ApiModel):
     #: example: 2016-04-18T17:00:00.000Z
     joined: Optional[datetime] = None
     #: The total amount of time, in milliseconds, it takes for this media session to join the call.
-    #: example: 500.0
+    #: example: 500
     joining_time: Optional[int] = None
     #: The total amount of time, in seconds, that this media session has joined the call.
-    #: example: 180.0
+    #: example: 180
     joined_duration: Optional[int] = None
     #: The type of the client (and OS) used by this media session.
     #: example: Teams_Mobile_Client (iOS)

@@ -139,7 +139,7 @@ class GetSharedLineMemberItem(ApiModel):
     #: example: 12341111
     esn: Optional[datetime] = None
     #: Device port number assigned to a person or workspace.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
     #: example: True
@@ -151,7 +151,7 @@ class GetSharedLineMemberItem(ApiModel):
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Registration home IP for the line port.
     #: example: 198.168.0.1
@@ -187,7 +187,7 @@ class GetSharedLineMemberList(ApiModel):
     #: List of members.
     members: Optional[list[GetSharedLineMemberItem]] = None
     #: Maximum number of device ports.
-    #: example: 10.0
+    #: example: 10
     max_line_count: Optional[int] = None
 
 

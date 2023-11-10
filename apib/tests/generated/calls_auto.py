@@ -38,7 +38,7 @@ class Call(ApiModel):
     #: example: connected
     status: Optional[CallStatus] = None
     #: The current duration of the call in seconds.
-    #: example: 180.0
+    #: example: 180
     duration: Optional[int] = None
     #: The date and time when the call was created.
     #: example: 2016-04-21T17:00:00.000Z

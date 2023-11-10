@@ -664,7 +664,7 @@ class ApplicationUsage(ApiModel):
     #: example: info@example.com
     app_contact_email: Optional[str] = None
     #: How many users use the application.
-    #: example: 5.0
+    #: example: 5
     app_user_adoption: Optional[int] = None
     #: Whether or not the application is allowed by policy.
     #: example: allow
@@ -922,7 +922,7 @@ class AuthorizationsCollectionResponse(ApiModel):
 
 class EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors(ApiModel):
     #: An error code that identifies the reason for the error
-    #: example: 6003.0
+    #: example: 6003
     error_code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: Broadworks External Directory User Sync failed while trying to connect to Broadworks cluster.
@@ -940,28 +940,28 @@ class EnterpriseBroadworksDirectorySyncDirectorySyncStatus(ApiModel):
     #: example: COMPLETE
     sync_status: Optional[str] = None
     #: The number of users added to CI (Common Identity) in this sync.
-    #: example: 44.0
+    #: example: 44
     users_added: Optional[int] = None
     #: The number of users updated in CI (Common Identity)  in this sync.
-    #: example: 21.0
+    #: example: 21
     users_updated: Optional[int] = None
     #: The number of users deleted from CI (Common Identity)  in this sync.
-    #: example: 34.0
+    #: example: 34
     users_deleted: Optional[int] = None
     #: The number of machines added to CI (Common Identity)  in this sync.
-    #: example: 24.0
+    #: example: 24
     machines_added: Optional[int] = None
     #: The number of machines updated in CI (Common Identity)  in this sync.
-    #: example: 4.0
+    #: example: 4
     machines_updated: Optional[int] = None
     #: The number of machines deleted from CI (Common Identity)  in this sync.
-    #: example: 9.0
+    #: example: 9
     machines_deleted: Optional[int] = None
     #: The number of total external users that have been added to CI across all syncs.
-    #: example: 1077.0
+    #: example: 1077
     total_external_users_in_ci: Optional[int] = Field(alias='totalExternalUsersInCI', default=None)
     #: The number of total external machines that have been added to CI (Common Identity)  across all syncs.
-    #: example: 326.0
+    #: example: 326
     total_external_machines_in_ci: Optional[int] = Field(alias='totalExternalMachinesInCI', default=None)
     #: The date and time of the last successful sync.
     #: example: 2021-04-01T14:48:30.502539Z
@@ -975,28 +975,28 @@ class EnterpriseBroadworksDirectorySyncDirectorySyncStatus(ApiModel):
     #: directly in error response with appropriate HTTP status code.
     errors: Optional[list[EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
-    #: example: 5.0
+    #: example: 5
     user_contacts_added: Optional[int] = None
     #: The number of user contacts updated in Contact service in this sync.
-    #: example: 2.0
+    #: example: 2
     user_contacts_updated: Optional[int] = None
     #: The number of user contacts deleted from Contact service in this sync.
-    #: example: 1.0
+    #: example: 1
     user_contacts_deleted: Optional[int] = None
     #: The number of org contacts added to Contact service in this sync.
-    #: example: 5.0
+    #: example: 5
     org_contacts_added: Optional[int] = None
     #: The number of org contacts updated in Contact service in this sync.
-    #: example: 2.0
+    #: example: 2
     org_contacts_updated: Optional[int] = None
     #: The number of org contacts deleted from Contact service in this sync.
-    #: example: 1.0
+    #: example: 1
     org_contacts_deleted: Optional[int] = None
     #: The total number of user contacts in Contact service.
-    #: example: 10.0
+    #: example: 10
     total_user_contacts_in_contact_service: Optional[int] = None
     #: The total number of org contacts in Contact service.
-    #: example: 2.0
+    #: example: 2
     total_org_contacts_in_contact_service: Optional[int] = None
 
 
@@ -1094,28 +1094,28 @@ class EnterpriseBroadworksDirectorySyncDirectorySyncStatus1(ApiModel):
     #: example: COMPLETE
     sync_status: Optional[str] = None
     #: The number of users added to CI (Common Identity) in this sync.
-    #: example: 44.0
+    #: example: 44
     users_added: Optional[int] = None
     #: The number of users updated in CI (Common Identity) in this sync.
-    #: example: 21.0
+    #: example: 21
     users_updated: Optional[int] = None
     #: The number of users deleted from CI (Common Identity) in this sync.
-    #: example: 34.0
+    #: example: 34
     users_deleted: Optional[int] = None
     #: The number of machines added to CI (Common Identity) in this sync.
-    #: example: 24.0
+    #: example: 24
     machines_added: Optional[int] = None
     #: The number of machines updated in CI (Common Identity) in this sync.
-    #: example: 4.0
+    #: example: 4
     machines_updated: Optional[int] = None
     #: The number of machines deleted from CI (Common Identity) in this sync.
-    #: example: 9.0
+    #: example: 9
     machines_deleted: Optional[int] = None
     #: The number of total external users that have been added to CI across all syncs.
-    #: example: 1077.0
+    #: example: 1077
     total_external_users_in_ci: Optional[int] = Field(alias='totalExternalUsersInCI', default=None)
     #: The number of total external machines that have been added to CI (Common Identity) across all syncs.
-    #: example: 326.0
+    #: example: 326
     total_external_machines_in_ci: Optional[int] = Field(alias='totalExternalMachinesInCI', default=None)
     #: The date and time of the last successful sync.
     #: example: 2021-04-01T14:48:30.502539Z
@@ -1129,40 +1129,40 @@ class EnterpriseBroadworksDirectorySyncDirectorySyncStatus1(ApiModel):
     #: directly in error response with appropriate HTTP status code.
     errors: Optional[list[EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
-    #: example: 5.0
+    #: example: 5
     user_contacts_added: Optional[int] = None
     #: The number of user contacts updated in Contact service in this sync.
-    #: example: 2.0
+    #: example: 2
     user_contacts_updated: Optional[int] = None
     #: The number of user contacts deleted from Contact service in this sync.
-    #: example: 1.0
+    #: example: 1
     user_contacts_deleted: Optional[int] = None
     #: The number of group contacts added to Contact service in this sync.
-    #: example: 5.0
+    #: example: 5
     group_contacts_added: Optional[int] = None
     #: The number of group contacts updated in Contact service in this sync.
-    #: example: 2.0
+    #: example: 2
     group_contacts_updated: Optional[int] = None
     #: The number of group contacts deleted from Contact service in this sync.
-    #: example: 1.0
+    #: example: 1
     group_contacts_deleted: Optional[int] = None
     #: The number of org contacts added to Contact service in this sync.
-    #: example: 5.0
+    #: example: 5
     org_contacts_added: Optional[int] = None
     #: The number of org contacts updated in Contact service in this sync.
-    #: example: 2.0
+    #: example: 2
     org_contacts_updated: Optional[int] = None
     #: The number of org contacts deleted from Contact service in this sync.
-    #: example: 1.0
+    #: example: 1
     org_contacts_deleted: Optional[int] = None
     #: The total number of user contacts in Contact service.
-    #: example: 10.0
+    #: example: 10
     total_user_contacts_in_contact_service: Optional[int] = None
     #: The total number of group contacts in Contact service.
-    #: example: 10.0
+    #: example: 10
     total_group_contacts_in_contact_service: Optional[int] = None
     #: The total number of org contacts in Contact service.
-    #: example: 2.0
+    #: example: 2
     total_org_contacts_in_contact_service: Optional[int] = None
 
 
@@ -1457,7 +1457,7 @@ class Call(ApiModel):
     remote_party: Optional[PartyInformation] = None
     #: The appearance value for the call. The appearance value can be used to display the user's calls in an order
     #: consistent with the user's devices. Only present when the call has an appearance value assigned.
-    #: example: 1.0
+    #: example: 1
     appearance: Optional[int] = None
     #: The date and time the call was created.
     #: example: 2016-04-21T17:00:00.000Z
@@ -1665,7 +1665,7 @@ class CreateDECTNetwork(ApiModel):
 class BaseStationPostResult(ApiModel):
     #: HTTP status code indicating the creation of base station. 201 status code indicates the successful creation of
     #: base stations
-    #: example: 201.0
+    #: example: 201
     status: Optional[int] = None
     #: Unique identifier of the base station.
     #: example: Y2lzY29zcGFyazovL3VzL0RFQ1RfREVWX1NUQVRJT04vYzRhMTQxN2ItZGNiYi00MGMzLWE3YWQtNTY1MGZkZGRkNTNj
@@ -1771,7 +1771,7 @@ class DepartmentResponseDepartment(ApiModel):
     #: example: HR
     name: Optional[str] = None
     #: Number of members in this department.
-    #: example: 2.0
+    #: example: 2
     member_count: Optional[int] = None
 
 
@@ -1826,7 +1826,7 @@ class MemberObject(ApiModel):
     #: example: True
     primary_owner: Optional[bool] = None
     #: Port number assigned to person or workspace.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
     #: requires this option. This will override user level compression options.
@@ -1834,7 +1834,7 @@ class MemberObject(ApiModel):
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Registration Host IP address for the line port.
     #: example: 10.0.0.45
@@ -1870,7 +1870,7 @@ class GetMemberResponse(ApiModel):
     #: List of members that appear on the device.
     members: Optional[list[MemberObject]] = None
     #: Maximum number of lines available for the device.
-    #: example: 10.0
+    #: example: 10
     max_line_count: Optional[int] = None
 
 
@@ -1947,7 +1947,7 @@ class AnnouncementResponse(ApiModel):
     #: example: 2023-06-13T18:39:53.651Z
     last_updated: Optional[datetime] = None
     #: Reference count of the call features this announcement is assigned to.
-    #: example: 1.0
+    #: example: 1
     feature_reference_count: Optional[int] = None
     #: Call features referenced by this announcement.
     feature_references: Optional[list[FeatureReferenceObject]] = None
@@ -1955,16 +1955,16 @@ class AnnouncementResponse(ApiModel):
 
 class AnnouncementUsageResponse(ApiModel):
     #: Total file size used by announcements in this repository in kilobytes.
-    #: example: 1068.0
+    #: example: 1068
     total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB', default=None)
     #: Maximum audio file size allowed to upload in kilobytes.
-    #: example: 9600.0
+    #: example: 9600
     max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB', default=None)
     #: Maximum video file size allowed to upload in kilobytes.
-    #: example: 120000.0
+    #: example: 120000
     max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB', default=None)
     #: Total file size limit for the repository in megabytes.
-    #: example: 1000.0
+    #: example: 1000
     total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB', default=None)
 
 
@@ -2574,7 +2574,7 @@ class CallQueueQueueSettingsObjectOverflow(ApiModel):
     #: example: True
     overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available.
-    #: example: 20.0
+    #: example: 20
     overflow_after_wait_time: Optional[int] = None
     #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered by a
     #: user.
@@ -2591,7 +2591,7 @@ class CallQueueQueueSettingsObjectOverflow(ApiModel):
 class CallQueueQueueSettingsObject(ApiModel):
     #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are
     #: triggered.
-    #: example: 50.0
+    #: example: 50
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
     #: example: True
@@ -2607,7 +2607,7 @@ class GetCallQueueCallPolicyObjectCallBounce(ApiModel):
     #: example: True
     call_bounce_enabled: Optional[bool] = None
     #: Number of rings after which to bounce call, if call bounce is enabled.
-    #: example: 5.0
+    #: example: 5
     call_bounce_max_rings: Optional[int] = None
     #: Bounce if agent becomes unavailable.
     #: example: True
@@ -2616,13 +2616,13 @@ class GetCallQueueCallPolicyObjectCallBounce(ApiModel):
     #: example: True
     alert_agent_enabled: Optional[bool] = None
     #: Number of second after which to alert agent if alertAgentEnabled.
-    #: example: 20.0
+    #: example: 20
     alert_agent_max_seconds: Optional[int] = None
     #: Bounce if call on hold more than callBounceMaxSeconds.
     #: example: True
     call_bounce_on_hold_enabled: Optional[bool] = None
     #: Number of second after which to bounce if callBounceEnabled.
-    #: example: 20.0
+    #: example: 20
     call_bounce_on_hold_max_seconds: Optional[int] = None
 
 
@@ -2853,25 +2853,25 @@ class CallQueueQueueSettingsObjectWaitMessage(ApiModel):
     wait_mode: Optional[CallQueueQueueSettingsObjectWaitMessageWaitMode] = None
     #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
     #: is 100 minutes.
-    #: example: 100.0
+    #: example: 100
     handling_time: Optional[int] = None
     #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
-    #: example: 100.0
+    #: example: 100
     default_handling_time: Optional[int] = None
     #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
     #: positions are 100.
-    #: example: 100.0
+    #: example: 100
     queue_position: Optional[int] = None
     #: Play time / Play position High Volume.
     high_volume_message_enabled: Optional[bool] = None
     #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
     #: seconds.
-    #: example: 600.0
+    #: example: 600
     estimated_waiting_time: Optional[int] = None
     #: Callback options enabled/disabled. Default value is false.
     callback_option_enabled: Optional[bool] = None
     #: The minimum estimated callback times in minutes. The default value is 30.
-    #: example: 10.0
+    #: example: 10
     minimum_estimated_callback_time: Optional[int] = None
     #: The international numbers for callback is enabled/disabled. The default value is `false`.
     international_callback_enabled: Optional[bool] = None
@@ -2886,7 +2886,7 @@ class CallQueueQueueSettingsObjectComfortMessage(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
     #: is 10 seconds.The maximum time is 600 seconds.
-    #: example: 10.0
+    #: example: 10
     time_between_messages: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
@@ -2905,7 +2905,7 @@ class CallQueueQueueSettingsObjectComfortMessageBypass(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The
     #: minimum time is 1 seconds. The maximum time is 120 seconds.
-    #: example: 10.0
+    #: example: 10
     call_waiting_age_threshold: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
@@ -2939,7 +2939,7 @@ class CallQueueQueueSettingsObjectMohMessage(ApiModel):
 class CallQueueQueueSettingsObject1(ApiModel):
     #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
     #: triggered.
-    #: example: 50.0
+    #: example: 50
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
     #: example: True
@@ -3020,7 +3020,7 @@ class GetPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: example: 50
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call `routingType` is `SKILL_BASED`.
-    #: example: 1.0
+    #: example: 1
     skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. The default value while creating call queue is `true`.
     #: example: True
@@ -3131,7 +3131,7 @@ class GetComplianceAnnouncementObject(ApiModel):
     #: Flag to indicate whether compliance announcement is played after a specified delay in seconds.
     outbound_pstncalls_delay_enabled: Optional[bool] = Field(alias='outboundPSTNCallsDelayEnabled', default=None)
     #: Number of seconds to wait before playing the compliance announcement.
-    #: example: 10.0
+    #: example: 10
     delay_in_seconds: Optional[int] = None
 
 
@@ -3144,7 +3144,7 @@ class GetOrgComplianceAnnouncementObject(ApiModel):
     #: Flag to indicate whether compliance announcement is played after a specified delay in seconds.
     outbound_pstncalls_delay_enabled: Optional[bool] = Field(alias='outboundPSTNCallsDelayEnabled', default=None)
     #: Number of seconds to wait before playing the compliance announcement.
-    #: example: 10.0
+    #: example: 10
     delay_in_seconds: Optional[int] = None
 
 
@@ -3165,12 +3165,12 @@ class PostHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: example: True
     next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and `nextAgentEnabled` is true.
-    #: example: 3.0
+    #: example: 3
     next_agent_rings: Optional[int] = None
     #: If true, forwards unanswered calls to the destination after the number of rings occurs.
     forward_enabled: Optional[bool] = None
     #: Number of rings before forwarding calls if `forwardEnabled` is true.
-    #: example: 15.0
+    #: example: 15
     number_of_rings: Optional[int] = None
     #: Destination if `forwardEnabled` is True.
     #: example: 2225551212
@@ -3255,7 +3255,7 @@ class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: example: True
     next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and `nextAgentEnabled` is true.
-    #: example: 3.0
+    #: example: 3
     next_agent_rings: Optional[int] = None
     #: If true, forwards unanswered calls to the destination after the number of rings occurs.
     forward_enabled: Optional[bool] = None
@@ -3263,10 +3263,10 @@ class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: Number of rings before forwarding calls if `forwardEnabled` is true.
-    #: example: 15.0
+    #: example: 15
     number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
-    #: example: 15.0
+    #: example: 15
     system_max_number_of_rings: Optional[int] = None
     #: If destinationVoicemailEnabled is true, enables and disables sending incoming to destination number's voicemail
     #: if the destination is an internal phone number and that number has the voicemail service enabled.
@@ -4054,7 +4054,7 @@ class GetCallPickupObject1(ApiModel):
     #: After the number of seconds given by the notificationDelayTimerSeconds has elapsed, notify every member of the
     #: call pickup group when an incoming call goes unanswered. The notificationType field specifies the notification
     #: method.Default: 6.
-    #: example: 6.0
+    #: example: 6
     notification_delay_timer_seconds: Optional[int] = None
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject1]] = None
@@ -4071,7 +4071,7 @@ class ModifyCallPickupObject(ApiModel):
     #: After the number of seconds given by the notificationDelayTimerSeconds has elapsed, notify every member of the
     #: call pickup group when an incoming call goes unanswered. The notificationType field specifies the notification
     #: method.Default: 6.
-    #: example: 6.0
+    #: example: 6
     notification_delay_timer_seconds: Optional[int] = None
     #: An array of people, workspace, and virtual lines IDs, that are added to call pickup.
     agents: Optional[list[str]] = None
@@ -4110,7 +4110,7 @@ class GetLocationVoicemailGroupObjectFaxMessage(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Extension to receive fax messages.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
 
 
@@ -4134,7 +4134,7 @@ class GetLocationVoicemailGroupObject(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Voicemail group extension number.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Routing prefix of location.
     #: example: 1234
@@ -4263,7 +4263,7 @@ class ExtensionStatusObject(ApiModel):
     #: example: VALID
     state: Optional[ExtensionStatusObjectState] = None
     #: Error code of the state in case extension is not valid.
-    #: example: 9495.0
+    #: example: 9495
     error_code: Optional[int] = None
     #: Message assigned to the error code.
     #: example: [Error 9495] The extension is not available. It is already assigned as a Call Park Extension: 407721.
@@ -4427,7 +4427,7 @@ class GetTelephonyLocationObject(ApiModel):
     #: example: 'Big Corp Denver'
     external_caller_id_name: Optional[str] = None
     #: Limit on the number of people at the location(read-only).
-    #: example: 500000.0
+    #: example: 500000
     user_limit: Optional[int] = None
     #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to
     #: the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish
@@ -4535,7 +4535,7 @@ class ExtentionStatusObject(ApiModel):
     #: example: VALID
     state: Optional[ExtensionStatusObjectState] = None
     #: Error Code.
-    #: example: 59475.0
+    #: example: 59475
     error_code: Optional[int] = None
     #: example: The extension is not available. It is already assigned to a virtual extension
     message: Optional[str] = None
@@ -4574,7 +4574,7 @@ class PutTelephonyLocationObject(ApiModel):
     #: example: '12'
     outside_dial_digit: Optional[datetime] = None
     #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
-    #: example: 2.0
+    #: example: 2
     routing_prefix: Optional[int] = None
     #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
     #: include a P-Charge-Info header with the selected number in the SIP INVITE.
@@ -4722,25 +4722,25 @@ class NumberObject1(ApiModel):
 
 class NumberCount(ApiModel):
     #: Count of phone numbers that are in the assigned state.
-    #: example: 33.0
+    #: example: 33
     assigned: Optional[int] = None
     #: Count of phone numbers which are in the un-assigned state.
-    #: example: 114.0
+    #: example: 114
     un_assigned: Optional[int] = None
     #: Count of phone numbers which are inactive.
-    #: example: 12.0
+    #: example: 12
     in_active: Optional[int] = None
     #: Count of extensions only without phone number.
-    #: example: 692.0
+    #: example: 692
     extension_only: Optional[int] = None
     #: Count of the toll free numbers.
-    #: example: 1.0
+    #: example: 1
     toll_free_numbers: Optional[int] = None
     #: Total phone numbers and extensions available.
-    #: example: 839.0
+    #: example: 839
     total: Optional[int] = None
     #: Count of phone numbers of type `MOBILE_NUMBER` only without `PSTN_NUMBER` and extension.
-    #: example: 6.0
+    #: example: 6
     mobile_number: Optional[int] = None
 
 
@@ -4818,7 +4818,7 @@ class CallRecordingInfoNotification(ApiModel):
 
 class CallRecordingInfoRepeat(ApiModel):
     #: Interval at which warning tone "beep" will be played. This interval is an integer from 10 to 1800 seconds
-    #: example: 15.0
+    #: example: 15
     interval: Optional[int] = None
     #: `true` when ongoing call recording tone will be played at the designated interval. `false` indicates no warning
     #: tone will be played.
@@ -4988,7 +4988,7 @@ class GetSharedLineMemberItem(ApiModel):
     #: example: 12341111
     esn: Optional[datetime] = None
     #: Device port number assigned to a person or workspace.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
     #: example: True
@@ -5000,7 +5000,7 @@ class GetSharedLineMemberItem(ApiModel):
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Registration home IP for the line port.
     #: example: 198.168.0.1
@@ -5036,7 +5036,7 @@ class GetSharedLineMemberList(ApiModel):
     #: List of members.
     members: Optional[list[GetSharedLineMemberItem]] = None
     #: Maximum number of device ports.
-    #: example: 10.0
+    #: example: 10
     max_line_count: Optional[int] = None
 
 
@@ -5376,7 +5376,7 @@ class ListVirtualLineObject(ApiModel):
     #: Location details of virtual line.
     location: Optional[Location] = None
     #: Number of devices assigned to a virtual line.
-    #: example: 1.0
+    #: example: 1
     number_of_devices_assigned: Optional[int] = None
     #: Type of billing plan.
     #: example: BCOCP1
@@ -5707,7 +5707,7 @@ class AuthorizationCode(ApiModel):
 
 class ReportError(ApiModel):
     #: The error code itself.
-    #: example: 2024.0
+    #: example: 2024
     code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: Billing Report not found.
@@ -5836,7 +5836,7 @@ class SubscriberListResponse1(ApiModel):
 
 class SubscriberProvisioningPrecheckResponseInfo(ApiModel):
     #: Provisioning Precheck `infoCode`.
-    #: example: 100.0
+    #: example: 100
     info_code: Optional[int] = None
     #: A textual description of the `infoCode`.
     #: example: Provisioning Precheck validation successful.
@@ -5931,7 +5931,7 @@ class CallMembership(ApiModel):
     #: example: ``
     org_id: Optional[str] = None
     #: The total amount of time, in seconds, that the membership was in a "joined" state.
-    #: example: 180.0
+    #: example: 180
     joined_duration: Optional[int] = None
     #: The current status of the audio stream.
     #: example: on
@@ -5965,7 +5965,7 @@ class ListCallMembershipsIsHost(str, Enum):
 
 class VideoIn(ApiModel):
     #: The sampling interval of the downstream video quality data
-    #: example: 60.0
+    #: example: 60
     sampling_interval: Optional[int] = None
     #: The date and time when this video session started.
     #: example: 2016-04-18T17:00:00.000Z
@@ -5990,7 +5990,7 @@ class AudioIn(ApiModel):
     #: example: IP
     type: Optional[AudioInType] = None
     #: The sampling interval of the downstream audio quality data
-    #: example: 60.0
+    #: example: 60
     sampling_interval: Optional[int] = None
     #: The date and time when this audio session started.
     #: example: 2016-04-18T17:00:00.000Z
@@ -6025,10 +6025,10 @@ class MediaSessionQuality(ApiModel):
     #: example: 2016-04-18T17:00:00.000Z
     joined: Optional[datetime] = None
     #: The total amount of time, in milliseconds, it takes for this media session to join the call.
-    #: example: 500.0
+    #: example: 500
     joining_time: Optional[int] = None
     #: The total amount of time, in seconds, that this media session has joined the call.
-    #: example: 180.0
+    #: example: 180
     joined_duration: Optional[int] = None
     #: The type of the client (and OS) used by this media session.
     #: example: Teams_Mobile_Client (iOS)
@@ -6125,10 +6125,10 @@ class DeviceType(ApiModel):
     #: example: Cisco Unified Border Element
     device_type: Optional[str] = None
     #: Minimum number of concurrent calls. Required for static certificate based trunk.
-    #: example: 250.0
+    #: example: 250
     min_concurrent_calls: Optional[int] = None
     #: Maximum number of concurrent calls. Required for static certificate based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 
@@ -6338,16 +6338,16 @@ class HostedFeature(ApiModel):
 
 class LocalGatewayUsageCount(ApiModel):
     #: The count where the local gateway is used as a PSTN Connection setting.
-    #: example: 1.0
+    #: example: 1
     pstn_connection_count: Optional[int] = None
     #: The count where the given local gateway is used as call to extension setting.
-    #: example: 1.0
+    #: example: 1
     call_to_extension_count: Optional[int] = None
     #: The count where the given local gateway is used by the dial plan.
-    #: example: 1.0
+    #: example: 1
     dial_plan_count: Optional[int] = None
     #: The count where the given local gateway is used by the route group.
-    #: example: 1.0
+    #: example: 1
     route_group_count: Optional[int] = None
 
 
@@ -6362,7 +6362,7 @@ class LocalGateways(ApiModel):
     #: example: 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL1dTV1laMjEyODA2TDIxMjgwNw'
     location_id: Optional[str] = None
     #: Prioritizes local gateways based on these numbers; the lowest number gets the highest priority.
-    #: example: 1.0
+    #: example: 1
     priority: Optional[int] = None
 
 
@@ -6440,7 +6440,7 @@ class ResponseStatusType(str, Enum):
 
 class ResponseStatus(ApiModel):
     #: Error Code. 25013 for error retrieving the outbound proxy. 25014 for error retrieving the status
-    #: example: 25013.0
+    #: example: 25013
     code: Optional[int] = None
     #: Status type.
     type: Optional[ResponseStatusType] = None
@@ -6739,7 +6739,7 @@ class TrunkFQDNValidatePost(ApiModel):
     #: example: acme.corp
     domain: Optional[str] = None
     #: FQDN port of the trunk.
-    #: example: 5000.0
+    #: example: 5000
     port: Optional[int] = None
 
 
@@ -6790,10 +6790,10 @@ class TrunkGet(ApiModel):
     #: example: acme.corp
     domain: Optional[str] = None
     #: FQDN port. Required to create a static certificate-based trunk.
-    #: example: 5000.0
+    #: example: 5000
     port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 
@@ -6823,10 +6823,10 @@ class TrunkPost(ApiModel):
     #: example: acme.corp
     domain: Optional[str] = None
     #: FQDN port. Required to create a static certificate-based trunk.
-    #: example: 5000.0
+    #: example: 5000
     port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 
@@ -6841,7 +6841,7 @@ class TrunkPut(ApiModel):
     #: example: True
     dual_identity_support_enabled: Optional[bool] = None
     #: Max Concurrent call. Required to create a static certificate-based trunk.
-    #: example: 1000.0
+    #: example: 1000
     max_concurrent_calls: Optional[int] = None
 
 
@@ -6922,7 +6922,7 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiMode
     #: example: True
     enabled: Optional[bool] = None
     #: Maximum number of repeaed digits. The minimum value is 1. The maximum value is 6.
-    #: example: 3.0
+    #: example: 3
     max_: Optional[int] = None
 
 
@@ -6931,19 +6931,19 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences(Ap
     #: example: True
     enabled: Optional[bool] = None
     #: Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
-    #: example: 3.0
+    #: example: 3
     number_of_ascending_digits: Optional[int] = None
     #: Number of descending digits in sequence. The minimum value is 2. The maximum value is 5.
-    #: example: 3.0
+    #: example: 3
     number_of_descending_digits: Optional[int] = None
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesLength(ApiModel):
     #: The minimum value is 2. The maximum value is 15.
-    #: example: 3.0
+    #: example: 3
     min: Optional[int] = None
     #: The minimum value is 3. The maximum value is 30.
-    #: example: 3.0
+    #: example: 3
     max_: Optional[int] = None
 
 
@@ -6968,7 +6968,7 @@ class GetVoicemailRulesObjectExpirePasscode(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of days for password expiry. The minimum value is 15. The maximum value is 180.
-    #: example: 180.0
+    #: example: 180
     number_of_days: Optional[int] = None
 
 
@@ -6977,7 +6977,7 @@ class GetVoicemailRulesObjectBlockPreviousPasscodes(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of previous passcodes. The minimum value is 1. The maximum value is 10.
-    #: example: 3.0
+    #: example: 3
     number_of_passcodes: Optional[int] = None
 
 
@@ -6996,7 +6996,7 @@ class GetVoicemailSettingsObject(ApiModel):
     #: When enabled, you can set the deletion conditions for expired messages.
     message_expiry_enabled: Optional[bool] = None
     #: Number of days after which messages expire.
-    #: example: 10.0
+    #: example: 10
     number_of_days_for_message_expiry: Optional[int] = None
     #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When
     #: disabled, all unread voicemail messages will be kept.
@@ -7036,7 +7036,7 @@ class Call2(ApiModel):
     #: example: connected
     status: Optional[ListCallMembershipsCallStatus] = None
     #: The current duration of the call in seconds.
-    #: example: 180.0
+    #: example: 180
     duration: Optional[int] = None
     #: The date and time when the call was created.
     #: example: 2016-04-21T17:00:00.000Z
@@ -7106,7 +7106,7 @@ class ConferenceDetails(ApiModel):
     #: The state of the conference.
     state: Optional[ConferenceStateEnum] = None
     #: The appearance index for the conference leg. Only present when the conference has an appearance value assigned.
-    #: example: 2.0
+    #: example: 2
     appearance: Optional[int] = None
     #: The conference start time in ISO 8601 format.
     #: example: 2023-03-02T15:00:00.000Z
@@ -7158,7 +7158,7 @@ class Agent(ApiModel):
     #: example: 653
     agent_dn: Optional[AgentAgentDn] = None
     #: The ID identifies an agent.
-    #: example: 295.0
+    #: example: 295
     agent_id: Optional[int] = None
     #: Name of an agent, that is, a person who answers customer calls, chats or emails.
     #: example: loadAgent00001 BSFT
@@ -7173,10 +7173,10 @@ class Agent(ApiModel):
     #: example: LoggedIn
     current_state: Optional[AgentCurrentState] = None
     #: Timestamp when the interaction started.
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     cstts: Optional[int] = None
     #: Timestamp when the interaction ended.
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     cetts: Optional[int] = None
     #: The ID assigned to an entry point.
     #: example: 0ba49aae-74ed-41e5-bd28-6f8524b62e04
@@ -7184,10 +7184,10 @@ class Agent(ApiModel):
     #: The media type of the contact.
     #: example: telephony
     channel_type: Optional[AgentChannelType] = None
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     realtime_update_timestamp: Optional[int] = None
     #: The ID assigned to a team.
-    #: example: 125.0
+    #: example: 125
     team_id: Optional[int] = None
     #: The name of a team, which is a group of agents at a specific site who handle a particular type of contact.
     #: example: Load_Team1
@@ -7195,7 +7195,7 @@ class Agent(ApiModel):
     #: example: AV-SuTCNizTcJ2G98gNn
     team_system_id: Optional[str] = None
     #: The ID assigned to a site, which is a call center location.
-    #: example: 66.0
+    #: example: 66
     site_id: Optional[int] = None
     #: The call center location to which a call was distributed.
     #: example: Load_Site_BLV
@@ -7208,10 +7208,10 @@ class AgentActivity(Agent):
     #: example: c4567c9858a74fd39497cddde50b1ac
     call_session_id: Optional[str] = None
     #: The amount of time between when the activity started and when the activity ended.
-    #: example: 21.0
+    #: example: 21
     duration: Optional[int] = None
     #: The ID assigned to an idle state/code.
-    #: example: 95.0
+    #: example: 95
     idle_code_id: Optional[int] = None
     #: The name of the idle code. Admin can configure possible values like Meeting, RONA, Dinner, Lunch, Busy
     #: example: Meeting
@@ -7227,16 +7227,16 @@ class AgentSession(Agent):
     #: example: AV9-9J4KizTcJ2G98fzL
     agent_system_id: Optional[str] = None
     #: The number of times an agent went into Available state.
-    #: example: 1.0
+    #: example: 1
     available_count: Optional[int] = None
     #: The number of times an agent transferred without consulting first.
-    #: example: 2.0
+    #: example: 2
     blind_xfer_count: Optional[int] = None
     #: The number of times an agent went into an Idle state.
-    #: example: 1.0
+    #: example: 1
     idle_count: Optional[int] = None
     #: The amount of time an agent spent in an Available state.
-    #: example: 2065.0
+    #: example: 2065
     total_available_time: Optional[int] = None
 
 
@@ -7267,13 +7267,13 @@ class Customer1(ApiModel):
     #: example: e3db29fa-6a84-4dc3-b814-95c617b67a95
     agent_session_id: Optional[str] = None
     #: Number of times a customer contacted.
-    #: example: 1.0
+    #: example: 1
     call_count: Optional[int] = None
     #: The current direction of the call.
     #: example: inbound
     call_direction: Optional[CustomerCallDirection] = None
     #: Timestamp when the interaction started.
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     cstts: Optional[int] = None
     #: The media type of the contact.
     #: example: telephony
@@ -7302,7 +7302,7 @@ class Customer1(ApiModel):
     #: example: e3cf6187-cc3f-4c6f-8ba5-6014821529e3-1584547145537-new
     sid: Optional[str] = None
     #: The ID assigned to a site, which is a call center location.
-    #: example: 66.0
+    #: example: 66
     site_id: Optional[int] = None
     #: The call center location to which a call was distributed.
     #: example: Load_Site_BLV
@@ -7310,20 +7310,20 @@ class Customer1(ApiModel):
     #: example: AV-SuI65izTcJ2G98gNm
     site_system_id: Optional[str] = None
     #: The ID assigned to a team.
-    #: example: 125.0
+    #: example: 125
     team_id: Optional[int] = None
     #: The name of a team, which is a group of agents at a specific site who handle a particular type of contact.
     #: example: Load_Team1
     team_name: Optional[str] = None
     #: example: AV-SuTCNizTcJ2G98gNn
     team_system_id: Optional[str] = None
-    #: example: 1.0
+    #: example: 1
     tid: Optional[int] = None
 
 
 class CustomerActivity(Customer1):
     #: The amount of time between when the activity started and when it was terminated.
-    #: example: 154.0
+    #: example: 154
     duration: Optional[int] = None
     #: If this isn't a current activity, this field shows the state of the following activity.
     #: example: ivr-connected
@@ -7343,23 +7343,23 @@ class CustomerSessionTerminationType(str, Enum):
 
 class CustomerSession(Customer1):
     #: Number of times the contact was in IVR state.
-    #: example: 1.0
+    #: example: 1
     ivr_count: Optional[int] = None
     #: The amount of time, in milliseconds, during which a call was in IVR state.
-    #: example: 1.0
+    #: example: 1
     ivr_duration: Optional[int] = None
     #: A string that identifies a queue.
     #: example: 20
     queue_id: Optional[datetime] = None
     #: The number of queues contact entered.
-    #: example: 1.0
+    #: example: 1
     queue_count: Optional[int] = None
     #: The name of the current or final queue, which is holding place for contacts while they await handling by an
     #: agent. Calls are moved from an entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesQueue
     queue_name: Optional[str] = None
     #: The amount of time, in milliseconds, a contact spent in queue waiting.
-    #: example: 245198.0
+    #: example: 245198
     queue_duration: Optional[int] = None
     #: Indicates which party terminated the interaction.
     #: example: caller
@@ -7371,9 +7371,9 @@ class CustomerSession(Customer1):
 
 class ActivityListDatasetMetadata(ApiModel):
     last_access_timestamp: Optional[int] = None
-    #: example: 3.0
+    #: example: 3
     number_of_records_found: Optional[int] = None
-    #: example: 3.0
+    #: example: 3
     number_of_records_in_dataset: Optional[int] = None
     #: example: true
     is_complete: Optional[str] = None
@@ -7444,12 +7444,12 @@ class TaskAttributes(ApiModel):
     #: example: email
     channel_type: Optional[str] = None
     #: Created time of the task (epoch milliseconds).
-    #: example: 1591702170000.0
+    #: example: 1591702170000
     created_time: Optional[int] = None
     #: Last updated time of the task (epoch milliseconds). Updates whenever the underlying data is modified, even if
     #: the Task view of the data is the same. May also update after task "closure", so not suitable for finding a
     #: task's "closed time".
-    #: example: 1591712170099.0
+    #: example: 1591712170099
     last_updated_time: Optional[int] = None
     owner: Optional[Location] = None
     queue: Optional[Location] = None
@@ -7505,7 +7505,7 @@ class TasksValidationError(ApiModel):
     tracking_id: Optional[str] = None
     #: example: The request was not processed
     message: Optional[str] = None
-    #: example: 400.0
+    #: example: 400
     code: Optional[int] = None
 
 
@@ -7523,29 +7523,29 @@ class AgentStatsChannel(ApiModel):
     #: example: telephony
     channel_type: Optional[AgentStatsChannelChannelType] = None
     #: Number of assigned tasks within this channel during the agent's session.
-    #: example: 3.0
+    #: example: 3
     total_assigned_tasks: Optional[int] = None
     #: Number of accepted tasks that were assigned to the agent.
-    #: example: 3.0
+    #: example: 3
     total_accepted_tasks: Optional[int] = None
     #: Number of rejected tasks that were assigned to the agent.
     total_rejected_tasks: Optional[int] = None
     #: Number of tasks the agent transferred to another agent.
     total_transferred_tasks: Optional[int] = None
     #: Amount of time the agent was engaged with a customer (in milliseconds).
-    #: example: 40302.0
+    #: example: 40302
     total_engaged_duration: Optional[int] = None
     #: Amount of time the customer(s) was put on hold (in milliseconds).
-    #: example: 10198.0
+    #: example: 10198
     total_hold_duration: Optional[int] = None
     #: Amount of time the agent spent wrapping-up customer interactions (in milliseconds).
-    #: example: 3552.0
+    #: example: 3552
     total_wrap_up_duration: Optional[int] = None
 
 
 class AgentStats(ApiModel):
     #: Time in GMT
-    #: example: 1591702200000.0
+    #: example: 1591702200000
     interval_start_time: Optional[int] = None
     #: Agent GUID
     #: example: 06ce7234-dd3e-49e2-8763-d93766739d3
@@ -7559,7 +7559,7 @@ class AgentStats(ApiModel):
     #: example: Ghost Riders
     team_name: Optional[str] = None
     #: Time that the agent's status was set to 'Available'.
-    #: example: 54052.0
+    #: example: 54052
     total_available_time: Optional[int] = None
     #: Time that the agent's status was set to 'Unavailable'.
     total_unavailable_time: Optional[int] = None
@@ -7575,7 +7575,7 @@ class AgentStatsResponse(ApiModel):
 
 class QueueStats(ApiModel):
     #: Time in GMT (milliseconds).
-    #: example: 1591702200000.0
+    #: example: 1591702200000
     interval_start_time: Optional[int] = None
     #: Queue ID
     #: example: 06ce7234-dd3e-49e2-8763-d93766739d3
@@ -7584,19 +7584,19 @@ class QueueStats(ApiModel):
     queue_name: Optional[str] = None
     #: example: telephony
     channel_type: Optional[AgentStatsChannelChannelType] = None
-    #: example: 7.0
+    #: example: 7
     total_offered_tasks: Optional[int] = None
-    #: example: 7.0
+    #: example: 7
     total_enqueued_tasks: Optional[int] = None
-    #: example: 7.0
+    #: example: 7
     total_assigned_tasks: Optional[int] = None
-    #: example: 7.0
+    #: example: 7
     total_accepted_tasks: Optional[int] = None
     total_rejected_tasks: Optional[int] = None
     total_abandoned_tasks: Optional[int] = None
-    #: example: 20349.0
+    #: example: 20349
     average_enqueued_time: Optional[int] = None
-    #: example: 93729.0
+    #: example: 93729
     average_handle_time: Optional[int] = None
 
 
@@ -7620,10 +7620,10 @@ class ArtifactAttributes(ApiModel):
     #: example: https://cjp-ccone-devus1-media-storage-recording.s3.amazonaws.com/9e4895c9-787b-4615-b15f-f1b3b12c3091/
     file_path: Optional[str] = None
     #: Begin time of capture
-    #: example: 1591804052000.0
+    #: example: 1591804052000
     start_time: Optional[int] = None
     #: End time of capture
-    #: example: 1591804562000.0
+    #: example: 1591804562000
     stop_time: Optional[int] = None
     #: Comma separated list of agent Ids and masked customer contact email/phone details.
     #: example: ['140e7575-6a21-4599-a929-c407dcf36649,+*******9000']
@@ -7669,7 +7669,7 @@ class ListCapturesQuery(ApiModel):
     #: example: ['6a64d539-4653-4c48-98d7-78fb66c1bc1d, 9dd4a070-4047-46ac-abec-942f48f5535e']
     task_ids: Optional[list[str]] = None
     #: Expiration time of returned s3 url (in minutes). Max value is 60.
-    #: example: 30.0
+    #: example: 30
     url_expiration: Optional[int] = None
 
 
@@ -7936,10 +7936,10 @@ class MppVlanObject(ApiModel):
     #: Indicates whether the VLAN object of an MPP is enabled.
     enabled: Optional[bool] = None
     #: Indicates the value of a VLAN object for an MPP object.
-    #: example: 1.0
+    #: example: 1
     value: Optional[int] = None
     #: Indicates the PC port value of a VLAN object for an MPP object.
-    #: example: 1.0
+    #: example: 1
     pc_port: Optional[int] = None
 
 
@@ -7990,16 +7990,16 @@ class DirectoryMethod(str, Enum):
 
 class VolumeSettingsObject(ApiModel):
     #: Specify a ringer volume level through a numeric value between 0 and 15.
-    #: example: 9.0
+    #: example: 9
     ringer_volume: Optional[int] = None
     #: Specify a speaker volume level through a numeric value between 0 and 15.
-    #: example: 11.0
+    #: example: 11
     speaker_volume: Optional[int] = None
     #: Specify a handset volume level through a numeric value between 0 and 15.
-    #: example: 10.0
+    #: example: 10
     handset_volume: Optional[int] = None
     #: Specify a headset volume level through a numeric value between 0 and 15.
-    #: example: 10.0
+    #: example: 10
     headset_volume: Optional[int] = None
     #: Enable/disable the wireless headset hookswitch control.
     #: example: True
@@ -8233,10 +8233,10 @@ class MppObject(ApiModel):
     #: Holds the Acd object value.
     acd: Optional[AcdObject] = None
     #: Indicates the short inter digit timer value.
-    #: example: 14.0
+    #: example: 14
     short_interdigit_timer: Optional[int] = None
     #: Indicates the long inter digit timer value..
-    #: example: 16.0
+    #: example: 16
     long_interdigit_timer: Optional[int] = None
     #: Line key labels define the format of what's shown next to line keys.
     #: example: PERSON_EXTENSION
@@ -8254,7 +8254,7 @@ class MppObject(ApiModel):
     #: example: ['["192.86.108.226:22"]']
     multicast: Optional[list[str]] = None
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
-    #: example: 30.0
+    #: example: 30
     off_hook_timer: Optional[int] = None
     #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
     #: provisioned location.
@@ -8311,7 +8311,7 @@ class MppObject(ApiModel):
     #: example: True
     dial_assist_enabled: Optional[bool] = None
     #: Specify the number of calls per unique line appearance on the phone.
-    #: example: 9.0
+    #: example: 9
     calls_per_line: Optional[int] = None
     #: Enable/disable automatic nightly configuration resync of the MPP device.
     #: example: True
@@ -8343,7 +8343,7 @@ class LdapObject(ApiModel):
     #: example: localhost
     server_address: Optional[str] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
-    #: example: 8080.0
+    #: example: 8080
     server_port: Optional[int] = None
     #: Indicates the selection of the protocol for LDAP service on the phone.
     #: example: SSL
@@ -8464,10 +8464,10 @@ class MppObjectDevice(ApiModel):
     #: Holds the Acd object value.
     acd: Optional[AcdObject] = None
     #: Indicates the short inter digit timer value.
-    #: example: 14.0
+    #: example: 14
     short_interdigit_timer: Optional[int] = None
     #: Indicates the long inter digit timer value..
-    #: example: 16.0
+    #: example: 16
     long_interdigit_timer: Optional[int] = None
     #: Line key labels define the format of what's shown next to line keys.
     #: example: PERSON_EXTENSION
@@ -8485,7 +8485,7 @@ class MppObjectDevice(ApiModel):
     #: example: ['["192.86.108.226:22"]']
     multicast: Optional[list[str]] = None
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
-    #: example: 30.0
+    #: example: 30
     off_hook_timer: Optional[int] = None
     #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
     #: provisioned location.
@@ -8545,7 +8545,7 @@ class MppObjectDevice(ApiModel):
     #: example: True
     dial_assist_enabled: Optional[bool] = None
     #: Specify the number of calls per unique line appearance on the phone.
-    #: example: 9.0
+    #: example: 9
     calls_per_line: Optional[int] = None
     #: Enable/disable automatic nightly configuration resync of the MPP device.
     #: example: True
@@ -8590,13 +8590,13 @@ class DectDeviceList(ApiModel):
     #: example: Cisco DECT 210 Base
     display_name: Optional[str] = None
     #: Indicates number of base stations.
-    #: example: 250.0
+    #: example: 250
     number_of_base_stations: Optional[int] = None
     #: Indicates number of port lines,
-    #: example: 1000.0
+    #: example: 1000
     number_of_line_ports: Optional[int] = None
     #: Indicates number of supported registrations.
-    #: example: 30.0
+    #: example: 30
     number_of_registrations_supported: Optional[int] = None
 
 
@@ -8697,10 +8697,10 @@ class DeviceSettingsObject(ApiModel):
     #: example: True
     update_in_progress: Optional[bool] = None
     #: Number of devices that will be updated.
-    #: example: 9.0
+    #: example: 9
     device_count: Optional[int] = None
     #: Indicates the last updated time.
-    #: example: 1659624763665.0
+    #: example: 1659624763665
     last_update_time: Optional[int] = None
 
 
@@ -8716,10 +8716,10 @@ class DeviceSettingsObjectForDeviceLevel(ApiModel):
     #: example: True
     update_in_progress: Optional[bool] = None
     #: Number of devices that will be updated.
-    #: example: 9.0
+    #: example: 9
     device_count: Optional[int] = None
     #: Indicates the last updated time.
-    #: example: 1659624763665.0
+    #: example: 1659624763665
     last_update_time: Optional[int] = None
 
 
@@ -8759,7 +8759,7 @@ class MemberObject1(ApiModel):
     #: example: True
     primary_owner: Optional[bool] = None
     #: Port number assigned to person or workspace.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
     #: requires this option. This will override user level compression options.
@@ -8767,7 +8767,7 @@ class MemberObject1(ApiModel):
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Registration Host IP address for the line port.
     #: example: 10.0.0.45
@@ -8806,7 +8806,7 @@ class GetMemberResponse1(ApiModel):
     #: List of members that appear on the device.
     members: Optional[list[MemberObject1]] = None
     #: Maximum number of lines available for the device.
-    #: example: 10.0
+    #: example: 10
     max_line_count: Optional[int] = None
 
 
@@ -8903,10 +8903,10 @@ class ListDeviceSettingsObject(ApiModel):
     #: Progress of the device update.
     update_in_progress: Optional[bool] = None
     #: Device count.
-    #: example: 22.0
+    #: example: 22
     device_count: Optional[int] = None
     #: Last updated time.
-    #: example: 1659624763665.0
+    #: example: 1659624763665
     last_update_time: Optional[int] = None
 
 
@@ -8929,7 +8929,7 @@ class MacStatusObject(ApiModel):
     #: example: UNAVAILABLE
     state: Optional[MacStatusObjectState] = None
     #: MAC address validation error code.
-    #: example: 5675.0
+    #: example: 5675
     error_code: Optional[int] = None
     #: Provides a status message about the MAC address.
     #: example: [Error 5675] MAC Address is in use.
@@ -8955,7 +8955,7 @@ class PutDeviceSettingsRequest(ApiModel):
 
 class PutMemberObject(ApiModel):
     #: Person's assigned port number.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: Unique identifier for the member.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
@@ -8969,7 +8969,7 @@ class PutMemberObject(ApiModel):
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
     #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
@@ -9192,7 +9192,7 @@ class PostApplyLineKeyTemplateRequest(ApiModel):
 
 class ProgrammableLineKeys(ApiModel):
     #: An index representing a Line Key. Index starts from 1 representing the first key on the left side of the phone.
-    #: example: 2.0
+    #: example: 2
     line_key_index: Optional[int] = None
     #: The action that would be performed when the Line Key is pressed.
     #: example: SPEED_DIAL
@@ -10017,11 +10017,11 @@ class CallParkSettingsObject(ApiModel):
     ring_pattern: Optional[RingPatternObject] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the
     #: set time, then the call will be recalled based on the Call Park Recall setting.
-    #: example: 60.0
+    #: example: 60
     recall_time: Optional[int] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call
     #: will revert back to the hunt group (after the person who parked the call is alerted).
-    #: example: 60.0
+    #: example: 60
     hunt_wait_time: Optional[int] = None
 
 
@@ -10318,7 +10318,7 @@ class CallQueueQueueSettingsGetObjectOverflow(ApiModel):
     overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum
     #: value 0, The maximum value is 7200 seconds.
-    #: example: 20.0
+    #: example: 20
     overflow_after_wait_time: Optional[int] = None
     #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by
     #: a user.
@@ -10354,7 +10354,7 @@ class CallQueueQueueSettingsGetObjectComfortMessage(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
     #: is 10 seconds.The maximum time is 600 seconds.
-    #: example: 10.0
+    #: example: 10
     time_between_messages: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
@@ -10371,7 +10371,7 @@ class CallQueueQueueSettingsGetObjectComfortMessageBypass(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The
     #: minimum time is 1 seconds. The maximum time is 120 seconds.
-    #: example: 10.0
+    #: example: 10
     call_waiting_age_threshold: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
@@ -10403,7 +10403,7 @@ class CallQueueQueueSettingsGetObjectMohMessage(ApiModel):
 class CallQueueQueueSettingsGetObject(ApiModel):
     #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
     #: triggered.
-    #: example: 50.0
+    #: example: 50
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
     #: example: True
@@ -10442,7 +10442,7 @@ class PostPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: example: 50
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when call routing type is `SKILL_BASED`.
-    #: example: 1.0
+    #: example: 1
     skill_level: Optional[int] = None
 
 
@@ -10634,7 +10634,7 @@ class GetPersonPlaceVirtualLineCallQueueObject1(ApiModel):
     #: example: 50
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call `routingType` is `SKILL_BASED`.
-    #: example: 1.0
+    #: example: 1
     skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. The default value while creating call queue is `true`.
     #: example: True
@@ -10799,7 +10799,7 @@ class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: example: 50
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when call routing type is `SKILL_BASED`.
-    #: example: 1.0
+    #: example: 1
     skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. The default value for newly added agents is `true`.
     #: example: True
@@ -11297,7 +11297,7 @@ class GroupResponse(ApiModel):
     #: The timestamp indicating lastModification time of group
     #: example: 2022-02-17T02:13:29.706Z
     last_modified: Optional[datetime] = None
-    #: example: 1.0
+    #: example: 1
     member_size: Optional[int] = None
     #: An array of members
     members: Optional[list[Member]] = None
@@ -11305,11 +11305,11 @@ class GroupResponse(ApiModel):
 
 class GroupsCollectionResponse(ApiModel):
     #: Total number of groups returned in the response.
-    #: example: 3.0
+    #: example: 3
     total_results: Optional[int] = None
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
-    #: example: 10.0
+    #: example: 10
     items_per_page: Optional[int] = None
     #: An array of group objects.
     groups: Optional[list[GroupResponse]] = None
@@ -11400,57 +11400,57 @@ class HistoricalDataRelatedToRoomDevicesResponse(ApiModel):
 
 
 class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods(ApiModel):
-    #: example: 123.0
+    #: example: 123
     web_app: Optional[int] = None
-    #: example: 123.0
+    #: example: 123
     cloud_video_device: Optional[int] = None
-    #: example: 123.0
+    #: example: 123
     mobile_meetings_app: Optional[int] = None
 
 
 class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByRoles(ApiModel):
-    #: example: 123.0
+    #: example: 123
     host: Optional[int] = None
-    #: example: 123.0
+    #: example: 123
     attendee: Optional[int] = None
 
 
 class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation(ApiModel):
     #: example: United States
     country: Optional[str] = None
-    #: example: 123.0
+    #: example: 123
     total_participants: Optional[int] = None
 
 
 class HistoricalDataRelatedToMeetingsResponseMetrics(ApiModel):
     #: Total number of meetings held over the selected date range. includes Webex Meetings, Webex Events, Webex
     #: Support, and Webex Training sessions
-    #: example: 123.0
+    #: example: 123
     total_meetings: Optional[int] = None
     #: Total number of joins by participant and devices from all Webex meetings over the selected date range
-    #: example: 123.0
+    #: example: 123
     total_participants: Optional[int] = None
     #: Total number of unique hosts who started at least one webex meeting over the selected date range
-    #: example: 123.0
+    #: example: 123
     total_unique_hosts: Optional[int] = None
     #: Total number of minutes for all meetings over selected date range
-    #: example: 1234.0
+    #: example: 1234
     total_meeting_minutes: Optional[int] = None
     #: Total number of VoIP and telephony minutes used during meetings over the selected date range
-    #: example: 1234.0
+    #: example: 1234
     total_audio_minutes: Optional[int] = None
-    #: example: 1234.0
+    #: example: 1234
     total_telephone_minutes: Optional[int] = None
-    #: example: 1234.0
+    #: example: 1234
     total_vo_ipminutes: Optional[int] = Field(alias='totalVoIPMinutes', default=None)
     #: Total number of meetings held where at least one participant enabled video for any amount of time
-    #: example: 123.0
+    #: example: 123
     video_meetings: Optional[int] = None
     #: Total number of meetings held where at least one participant enabled sharing for any amount of time
-    #: example: 123.0
+    #: example: 123
     sharing_meetings: Optional[int] = None
     #: Total number of meetings held where at least one participant enable recording for any amount of time
-    #: example: 123.0
+    #: example: 123
     recording_meetings: Optional[int] = None
     #: Participant Count for each join/client type. This list is dynamic and can change
     participants_by_join_methods: Optional[HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods] = None
@@ -11630,7 +11630,7 @@ class Issue(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0lTU1VFLzIyNWE0YWY0LTIxYTctNDY2OC05NjhhLWI5NWU2MjlhMjBlNg
     id: Optional[str] = None
     #: A shorter identifier for the issue, unique only to the organization it belongs to.
-    #: example: 123.0
+    #: example: 123
     short_key: Optional[int] = None
     #: The subject summary for the issue.
     #: example: No audio during meeting from Webex client.
@@ -11701,10 +11701,10 @@ class License(ApiModel):
     #: example: Meeting - Webex Meeting Center
     name: Optional[str] = None
     #: Total number of license units allocated.
-    #: example: 50.0
+    #: example: 50
     total_units: Optional[int] = None
     #: Total number of license units consumed.
-    #: example: 5.0
+    #: example: 5
     consumed_units: Optional[int] = None
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
     #: example: Sub-hydraOct26a
@@ -11741,10 +11741,10 @@ class LicensewithUsers(ApiModel):
     #: example: Meeting - Webex Meeting Center
     name: Optional[str] = None
     #: Total number of license units allocated.
-    #: example: 50.0
+    #: example: 50
     total_units: Optional[int] = None
     #: Total number of license units consumed.
-    #: example: 5.0
+    #: example: 5
     consumed_units: Optional[int] = None
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
     #: example: Sub-hydraOct26a
@@ -12085,7 +12085,7 @@ class RecurYearlyByDateObjectMonth(str, Enum):
 
 class RecurYearlyByDateObject(ApiModel):
     #: Schedule the event on a specific day of the month.
-    #: example: 1.0
+    #: example: 1
     day_of_month: Optional[int] = None
     #: Schedule the event on a specific month of the year.
     #: example: JANUARY
@@ -12284,7 +12284,7 @@ class GetLocationVoicemailGroupObject1(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Voicemail group extension number.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Voicemail group toll free number.
     toll_free_number: Optional[bool] = None
@@ -12362,7 +12362,7 @@ class GetVoicePortalPasscodeRuleObjectFailedAttempts(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of failed attempts allowed.
-    #: example: 3.0
+    #: example: 3
     attempts: Optional[int] = None
 
 
@@ -12440,7 +12440,7 @@ class PostLocationVoicemailGroupObject(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Set unique voicemail group extension number for this particular location.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Set voicemail group caller ID first name.
     #: example: Customer
@@ -12449,7 +12449,7 @@ class PostLocationVoicemailGroupObject(ApiModel):
     #: example: Support
     last_name: Optional[str] = None
     #: Set passcode to access voicemail group when calling.
-    #: example: 1234.0
+    #: example: 1234
     passcode: Optional[int] = None
     #: Language code for voicemail group audio announcement.
     #: example: en_us
@@ -12474,7 +12474,7 @@ class PutLocationVoicemailGroupObject(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Set unique voicemail group extension number.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Set the voicemail group caller ID first name.
     #: example: Customer
@@ -12486,7 +12486,7 @@ class PutLocationVoicemailGroupObject(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Set passcode to access voicemail group when calling.
-    #: example: 1234.0
+    #: example: 1234
     passcode: Optional[int] = None
     #: Language code for the voicemail group audio announcement.
     #: example: en_us
@@ -12652,7 +12652,7 @@ class Floor(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4NjczZDIwLWM0M2EtNDQ5Ni1iYWIxLTNiMjhhZGJjMjViYQ
     location_id: Optional[str] = None
     #: The floor number.
-    #: example: -1.0
+    #: example: -1
     floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
@@ -12661,7 +12661,7 @@ class Floor(ApiModel):
 
 class FloorCreationRequest(ApiModel):
     #: The floor number.
-    #: example: -1.0
+    #: example: -1
     floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
@@ -12992,7 +12992,7 @@ class Device1(ApiModel):
     #: example: 2019-04-23T17:32:00.000Z
     left_time: Optional[datetime] = None
     #: The duration in seconds the device stayed in the meeting.
-    #: example: 60.0
+    #: example: 60
     duration_second: Optional[int] = None
     #: The PSTN call type in which the device joined the meeting.
     #: example: callIn
@@ -13290,7 +13290,7 @@ class Poll(ApiModel):
     #: example: 2021-07-06T09:25:51Z
     end_time: Optional[datetime] = None
     #: The length of time in the alarm box, in seconds.
-    #: example: 300.0
+    #: example: 300
     timer_duration: Optional[int] = None
     #: The name of the poll coordinator.
     #: example: John Andersen
@@ -13317,7 +13317,7 @@ class AnswerSummaryItem(ApiModel):
     #: example: China
     value: Optional[str] = None
     #: The total number of people who selected this answer.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: Whether the answer is correct.
     #: example: True
@@ -13383,10 +13383,10 @@ class PollResult(ApiModel):
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
-    #: example: 10.0
+    #: example: 10
     total_attendees: Optional[int] = None
     #: The total number of respondents in the poll.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: The date and time the poll started in `ISO 8601
     #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -13397,7 +13397,7 @@ class PollResult(ApiModel):
     #: example: 2021-07-06T09:28:34Z
     end_time: Optional[datetime] = None
     #: The duration of the poll, in seconds.
-    #: example: 300.0
+    #: example: 300
     timer_duration: Optional[int] = None
     #: The name of the poll coordinator.
     #: example: John Andersen
@@ -13793,10 +13793,10 @@ class QAObject(ApiModel):
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
-    #: example: 10.0
+    #: example: 10
     total_attendees: Optional[int] = None
     #: The total number of respondents in the meeting.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: The name of the user who asked the question.
     #: example: John Andersen
@@ -13835,7 +13835,7 @@ class VideoInTransportType(str, Enum):
 
 class VideoIn1(ApiModel):
     #: The sampling interval, in seconds, of the downstream video quality data.
-    #: example: 60.0
+    #: example: 60
     sampling_interval: Optional[int] = None
     #: The date and time when this video session started.
     #: example: 2020-04-10T17:00:00.000Z
@@ -14124,10 +14124,10 @@ class SnippetObject1(ApiModel):
     #: example: john.andersen@example.com
     person_email: Optional[str] = None
     #: Offset from the beginning of the parent transcript in milliseconds indicating the start time of the snippet.
-    #: example: 1000.0
+    #: example: 1000
     offset_millisecond: Optional[int] = None
     #: Duration of the snippet in milliseconds.
-    #: example: 2000.0
+    #: example: 2000
     duration_millisecond: Optional[int] = None
 
 
@@ -14206,7 +14206,7 @@ class MeetingUsageReportObject(ApiModel):
     #: example: 2023-01-18T10:46:30+08:00
     end: Optional[datetime] = None
     #: Duration of the meeting in minutes.
-    #: example: 20.0
+    #: example: 20
     duration: Optional[int] = None
     #: Scheduled type for the meeting.
     #: example: meeting
@@ -14218,43 +14218,43 @@ class MeetingUsageReportObject(ApiModel):
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: Aggregated attendee minutes.
-    #: example: 60.0
+    #: example: 60
     total_people_minutes: Optional[int] = None
     #: Aggregated attendee PSTN call-in minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_in_minutes: Optional[int] = None
     #: Aggregated attendee domestic PSTN call-out minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_out_domestic: Optional[int] = None
     #: Aggregated attendee toll-free PSTN call-in minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_in_toll_free_minutes: Optional[int] = None
     #: Aggregated attendee international PSTN call-out minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_out_international: Optional[int] = None
     #: Aggregated attendee VoIP minutes.
-    #: example: 60.0
+    #: example: 60
     total_voip_minutes: Optional[int] = None
     #: Total number of participants of the meeting.
-    #: example: 30.0
+    #: example: 30
     total_participants: Optional[int] = None
     #: Total number of VoIP participants of the meeting.
-    #: example: 10.0
+    #: example: 10
     total_participants_voip: Optional[int] = None
     #: Total number of PSTN call-in participants of the meeting.
-    #: example: 10.0
+    #: example: 10
     total_participants_call_in: Optional[int] = None
     #: Total number of PSTN call-out participants of the meeting.
-    #: example: 10.0
+    #: example: 10
     total_participants_call_out: Optional[int] = None
     #: Peak number of attendees throughout the meeting.
-    #: example: 30.0
+    #: example: 30
     peak_attendee: Optional[int] = None
     #: Total number of registrants of the meeting.
-    #: example: 30.0
+    #: example: 30
     total_registered: Optional[int] = None
     #: Total number of invitees of the meeting.
-    #: example: 30.0
+    #: example: 30
     total_invitee: Optional[int] = None
     #: The service type for the meeting usage report.
     #: example: MeetingCenter
@@ -14268,7 +14268,7 @@ class MeetingAttendeeReportObject(ApiModel):
     #: example: 089b137c3cf34b578896941e2d49dfe8_I_146987372776523573
     meeting_id: Optional[str] = None
     #: Meeting number.
-    #: example: 123456789.0
+    #: example: 123456789
     meeting_number: Optional[int] = None
     #: Meeting title.
     #: example: John's Meeting
@@ -14288,7 +14288,7 @@ class MeetingAttendeeReportObject(ApiModel):
     #: example: 2023-01-18T10:46:30+08:00
     left_time: Optional[datetime] = None
     #: Duration of the attendee in the meeting in minutes.
-    #: example: 20.0
+    #: example: 20
     duration: Optional[int] = None
     #: The attendee's role in the meeting.
     #: example: host
@@ -14716,7 +14716,7 @@ class CustomizedQuestionForCreateMeetingType(str, Enum):
 
 class QuestionOptionObject(ApiModel):
     #: Unique identifier for the question option.
-    #: example: 1.0
+    #: example: 1
     id: Optional[int] = None
     #: Value for the question option.
     #: example: Yes
@@ -14760,13 +14760,13 @@ class CustomizedQuestionForGetMeetingRules(ApiModel):
     match_case: Optional[bool] = None
     #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be
     #: ordered together.
-    #: example: 1.0
+    #: example: 1
     order: Optional[int] = None
 
 
 class CustomizedQuestionForGetMeeting(ApiModel):
     #: Unique identifier for the question.
-    #: example: 330521.0
+    #: example: 330521
     id: Optional[int] = None
     #: Title of the customized question.
     #: example: How are you
@@ -14831,7 +14831,7 @@ class StandardRegistrationApproveRule(ApiModel):
     match_case: Optional[bool] = None
     #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be
     #: ordered together.
-    #: example: 1.0
+    #: example: 1
     order: Optional[int] = None
 
 
@@ -14871,7 +14871,7 @@ class MeetingSeriesObjectRegistration(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
     customized_questions: Optional[list[CustomizedQuestionForGetMeeting]] = None
@@ -15058,14 +15058,14 @@ class MeetingSeriesObject(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -15074,7 +15074,7 @@ class MeetingSeriesObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -15095,7 +15095,7 @@ class MeetingSeriesObject(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -15178,7 +15178,7 @@ class MeetingSeriesObjectWithAdhocRegistration(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
 
 
@@ -15311,14 +15311,14 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -15327,7 +15327,7 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -15348,7 +15348,7 @@ class MeetingSeriesObjectWithAdhoc(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -15525,14 +15525,14 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -15541,7 +15541,7 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -15562,7 +15562,7 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -15743,14 +15743,14 @@ class ScheduledMeetingObject(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -15759,7 +15759,7 @@ class ScheduledMeetingObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -15780,7 +15780,7 @@ class ScheduledMeetingObject(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -15902,14 +15902,14 @@ class UpdateMeetingObject(ApiModel):
     #: applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`,
     #: `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not
     #: specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 30.0
+    #: example: 30
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -15918,7 +15918,7 @@ class UpdateMeetingObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved by
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
@@ -15931,7 +15931,7 @@ class UpdateMeetingObject(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
@@ -16064,7 +16064,7 @@ class CreateMeetingObjectRegistration(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
     customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None
@@ -16171,7 +16171,7 @@ class CreateMeetingObject(ApiModel):
     #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default value for an ad-hoc meeting is 0 and the user's input value will be ignored.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation. This parameter is ignored for an
     #: ad-hoc meeting.
@@ -16181,7 +16181,7 @@ class CreateMeetingObject(ApiModel):
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host. This parameter is
     #: ignored for an ad-hoc meeting.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting. The default value for an ad-hoc
     #: meeting is `allowJoinWithLobby` and the user's input value will be ignored.
@@ -16191,7 +16191,7 @@ class CreateMeetingObject(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a
     #: meeting scheduled in the user's `personal room
@@ -16212,7 +16212,7 @@ class CreateMeetingObject(ApiModel):
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it. The default value for an ad-hoc
     #: meeting is null and the user's input value will be ignored.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
@@ -16389,7 +16389,7 @@ class Registration(ApiModel):
 
 class AnswerForCustomizedQuestion(ApiModel):
     #: Unique identifier for the option.
-    #: example: 1.0
+    #: example: 1
     option_id: Optional[int] = None
     #: The content of the answer or the option for this question.
     #: example: green
@@ -16398,7 +16398,7 @@ class AnswerForCustomizedQuestion(ApiModel):
 
 class CustomizedRegistrant(ApiModel):
     #: Unique identifier for the customized questions retrieved from the registration form.
-    #: example: 330087.0
+    #: example: 330087
     question_id: Optional[int] = None
     #: The answers for customized questions. If the question type is checkbox, more than one answer can be set.
     answers: Optional[list[AnswerForCustomizedQuestion]] = None
@@ -16436,7 +16436,7 @@ class RegistrantFormObject(ApiModel):
     #: example: New York
     state: Optional[str] = None
     #: The registrant's postal code. Registration options define whether or not this is required.
-    #: example: 123456.0
+    #: example: 123456
     zip_code: Optional[int] = None
     #: The America is not a country or a specific region. Registration options define whether or not this is required.
     #: example: United States
@@ -16495,7 +16495,7 @@ class Registrant(ApiModel):
     #: example: New York
     state: Optional[str] = None
     #: Registrant's postal code.
-    #: example: 123456.0
+    #: example: 123456
     zip_code: Optional[int] = None
     #: Registrant's country or region.
     #: example: United States
@@ -16552,7 +16552,7 @@ class RegistrantCreateResponse(ApiModel):
     #: example: New York
     state: Optional[str] = None
     #: Registrant's postal code.
-    #: example: 123456.0
+    #: example: 123456
     zip_code: Optional[int] = None
     #: Registrant's country or region.
     #: example: United States
@@ -16622,7 +16622,7 @@ class MeetingSessionTypeObject(ApiModel):
     #: example: meeting
     type: Optional[MeetingSessionTypeObjectType] = None
     #: The maximum number of attendees for the meeting session type.
-    #: example: 1000.0
+    #: example: 1000
     attendees_capacity: Optional[int] = None
 
 
@@ -16724,7 +16724,7 @@ class JoinMeetingObject(ApiModel):
     #: example: BgJep@43
     password: Optional[str] = None
     #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
-    #: example: 5.0
+    #: example: 5
     expiration_minutes: Optional[int] = None
 
 
@@ -16756,7 +16756,7 @@ class QuestionObjectType(str, Enum):
 
 class QuestionObject(ApiModel):
     #: Unique identifier for the question.
-    #: example: 3388057.0
+    #: example: 3388057
     id: Optional[int] = None
     #: Details for the question.
     #: example: Do you like cisco?
@@ -16766,7 +16766,7 @@ class QuestionObject(ApiModel):
     type: Optional[QuestionObjectType] = None
     #: The lowest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is
     #: not `rating`.
-    #: example: 1.0
+    #: example: 1
     from_score: Optional[int] = None
     #: The lowest score label of the rating question. This attribute will be ingnored, if the value of `type` attribute
     #: is not `rating`.
@@ -16774,7 +16774,7 @@ class QuestionObject(ApiModel):
     from_label: Optional[str] = None
     #: The highest score of the rating question. This attribute will be ingnored, if the value of `type` attribute is
     #: not `rating`.
-    #: example: 5.0
+    #: example: 5
     to_score: Optional[int] = None
     #: The highest score label of the rating question. This attribute will be ingnored, if the value of `type`
     #: attribute is not `rating`.
@@ -16807,7 +16807,7 @@ class SurveyObject(ApiModel):
 
 class QuestionWithAnswersObject(ApiModel):
     #: Unique identifier for the question.
-    #: example: 3388057.0
+    #: example: 3388057
     id: Optional[int] = None
     #: Details for the question.
     #: example: Do you like cisco?
@@ -16882,7 +16882,7 @@ class RegistrationForUpdate(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
     customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None
@@ -17171,14 +17171,14 @@ class MeetingSeriesObject1(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -17187,7 +17187,7 @@ class MeetingSeriesObject1(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -17208,7 +17208,7 @@ class MeetingSeriesObject1(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -17386,14 +17386,14 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -17402,7 +17402,7 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -17423,7 +17423,7 @@ class MeetingSeriesObjectWithAdhoc1(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -17602,14 +17602,14 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -17618,7 +17618,7 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -17639,7 +17639,7 @@ class MeetingSeriesObjectForListMeeting1(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -17822,14 +17822,14 @@ class ScheduledMeetingObject1(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings/update-a-meeting>`_ API. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default is `0` if not specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -17838,7 +17838,7 @@ class ScheduledMeetingObject1(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's
     #: `personal room
@@ -17859,7 +17859,7 @@ class ScheduledMeetingObject1(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the `siteUrl` parameter when creating the meeting. If not specified,
@@ -17983,14 +17983,14 @@ class UpdateMeetingObject1(ApiModel):
     #: applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`,
     #: `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not
     #: specified.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
     exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 30.0
+    #: example: 30
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
     #: example: allowJoin
@@ -17999,7 +17999,7 @@ class UpdateMeetingObject1(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved by
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: Whether or not webcast view is enabled.
     enabled_webcast_view: Optional[bool] = None
@@ -18012,7 +18012,7 @@ class UpdateMeetingObject1(ApiModel):
     #: Whether or not to automatically lock the meeting after it starts.
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
@@ -18154,7 +18154,7 @@ class CreateMeetingObject1(ApiModel):
     #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a
     #: meeting are `0`, `5`, `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The
     #: default value for an ad-hoc meeting is 0 and the user's input value will be ignored.
-    #: example: 15.0
+    #: example: 15
     join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation. This parameter is ignored for an
     #: ad-hoc meeting.
@@ -18164,7 +18164,7 @@ class CreateMeetingObject1(ApiModel):
     public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host. This parameter is
     #: ignored for an ad-hoc meeting.
-    #: example: 10.0
+    #: example: 10
     reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting. The default value for an ad-hoc
     #: meeting is `allowJoinWithLobby` and the user's input value will be ignored.
@@ -18174,7 +18174,7 @@ class CreateMeetingObject1(ApiModel):
     #: meeting. All available meeting session types enabled for the user can be retrieved using the
     #: `List Meeting Session Types
     #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3.0
+    #: example: 3
     session_type_id: Optional[int] = None
     #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a
     #: meeting scheduled in the user's `personal room
@@ -18195,7 +18195,7 @@ class CreateMeetingObject1(ApiModel):
     enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it. The default value for an ad-hoc
     #: meeting is null and the user's input value will be ignored.
-    #: example: 10.0
+    #: example: 10
     automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
@@ -18337,7 +18337,7 @@ class Registrant1(ApiModel):
     #: example: New York
     state: Optional[str] = None
     #: Registrant's postal code.
-    #: example: 123456.0
+    #: example: 123456
     zip_code: Optional[int] = None
     #: Registrant's country or region.
     #: example: United States
@@ -18397,7 +18397,7 @@ class JoinMeetingObject1(ApiModel):
     #: example: BgJep@43
     password: Optional[str] = None
     #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
-    #: example: 5.0
+    #: example: 5
     expiration_minutes: Optional[int] = None
     #: Required when the meeting is webinar-enabled and enabled registration ID.
     #: example: 1111
@@ -18536,7 +18536,7 @@ class JoinMeetingObject2(ApiModel):
     #: example: BgJep@43
     password: Optional[str] = None
     #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
-    #: example: 5.0
+    #: example: 5
     expiration_minutes: Optional[int] = None
     #: Required when the meeting is webinar-enabled and enabled registration ID.
     #: example: 1111
@@ -18591,7 +18591,7 @@ class RegistrationForUpdate2(ApiModel):
     #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
     #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
     #: is limited by the user capacity.
-    #: example: 1000.0
+    #: example: 1000
     max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
     customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None
@@ -19319,10 +19319,10 @@ class SearchResponse(ApiModel):
     #: Start at the zero-based offset in the list of matching contacts.
     start: Optional[int] = None
     #: Limit the number of contacts returned to this maximum count.
-    #: example: 1000.0
+    #: example: 1000
     limit: Optional[int] = None
     #: Total number of contacts returned in search results.
-    #: example: 1.0
+    #: example: 1
     total: Optional[int] = None
 
 
@@ -19729,10 +19729,10 @@ class RecordingReportSummaryObject(ApiModel):
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: The number of times the recording was viewed.
-    #: example: 7.0
+    #: example: 7
     view_count: Optional[int] = None
     #: The number of times the recording was downloaded.
-    #: example: 20.0
+    #: example: 20
     download_count: Optional[int] = None
 
 
@@ -19779,7 +19779,7 @@ class RecordingAchriveSummaryObject(ApiModel):
 
 class MeetingRecordingArchiveParticipant(ApiModel):
     #: An internal ID that is associated with each join.
-    #: example: 28208023.0
+    #: example: 28208023
     correlation_id: Optional[int] = None
     #: Display name for the meeting participant.
     #: example: John Andersen
@@ -19818,7 +19818,7 @@ class MeetingRecordingArchiveChat(ApiModel):
 
 class MeetingRecordingArchiveUser(ApiModel):
     #: An internal ID that is associated with each join.
-    #: example: 28208023.0
+    #: example: 28208023
     correlation_id: Optional[int] = None
     #: Display name for the meeting participant.
     #: example: John Andersen
@@ -19830,7 +19830,7 @@ class MeetingRecordingArchiveUser(ApiModel):
 
 class MeetingRecordingArchivePollQuestionQuestion(ApiModel):
     #: The number of choices in the questions.
-    #: example: 3.0
+    #: example: 3
     choice_count: Optional[int] = None
     #: The type of the question.
     #: example: single
@@ -19842,7 +19842,7 @@ class MeetingRecordingArchivePollQuestionQuestion(ApiModel):
 
 class MeetingRecordingArchivePollAnswerSummary(ApiModel):
     #: The total number of people who selected this answer.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: Whether the answer is correct.
     #: example: True
@@ -19856,7 +19856,7 @@ class MeetingRecordingArchivePollAnswerSummary(ApiModel):
 
 class MeetingRecordingArchivePollRespondent(ApiModel):
     #: An internal ID that is associated with the respondent's each join.
-    #: example: 28208023.0
+    #: example: 28208023
     correlation_id: Optional[int] = None
     #: Display name for the poll respondent.
     #: example: Alex Green
@@ -19881,13 +19881,13 @@ class MeetingRecordingArchivePollQuestion(ApiModel):
 
 class MeetingRecordingArchivePollContent(ApiModel):
     #: The total number of questions.
-    #: example: 10.0
+    #: example: 10
     question_count: Optional[int] = None
     #: The total number of users.
-    #: example: 10.0
+    #: example: 10
     user_count: Optional[int] = None
     #: The number of voters among users.
-    #: example: 3.0
+    #: example: 3
     voted_user_count: Optional[int] = None
     #: Poll's questions.
     questions: Optional[list[MeetingRecordingArchivePollQuestion]] = None
@@ -19917,7 +19917,7 @@ class MeetingRecordingArchiveQAAnswer(ApiModel):
     #: example: John Andersen
     display_name: Optional[str] = None
     #: An internal ID that is associated with the answer's each join.
-    #: example: 10947662.0
+    #: example: 10947662
     correlation_id: Optional[int] = None
     #: The email of the person who answered the question.
     #: example: alex.green@example.com
@@ -20131,10 +20131,10 @@ class RecordingObject(ApiModel):
     #: example: MeetingCenter
     service_type: Optional[MeetingUsageReportObjectServiceType] = None
     #: The duration of the recording, in seconds.
-    #: example: 4472.0
+    #: example: 4472
     duration_seconds: Optional[int] = None
     #: The size of the recording file, in bytes.
-    #: example: 248023188.0
+    #: example: 248023188
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
@@ -20198,10 +20198,10 @@ class RecordingObjectForAdminAndCO(ApiModel):
     #: example: MeetingCenter
     service_type: Optional[MeetingUsageReportObjectServiceType] = None
     #: The duration of the recording, in seconds.
-    #: example: 4472.0
+    #: example: 4472
     duration_seconds: Optional[int] = None
     #: The size of the recording file, in bytes.
-    #: example: 248023188.0
+    #: example: 248023188
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
@@ -20286,10 +20286,10 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: example: MeetingCenter
     service_type: Optional[MeetingUsageReportObjectServiceType] = None
     #: The duration of the recording in seconds.
-    #: example: 4472.0
+    #: example: 4472
     duration_seconds: Optional[int] = None
     #: The size of the recording file in bytes.
-    #: example: 248023188.0
+    #: example: 248023188
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
@@ -20395,7 +20395,7 @@ class Template2(ApiModel):
     #: example: Teams
     service: Optional[str] = None
     #: Maximum date range for reports belonging to this template.
-    #: example: 31.0
+    #: example: 31
     max_days: Optional[int] = None
     #: Generated reports belong to which field.
     #: example: orgWithoutDate
@@ -20534,7 +20534,7 @@ class CDR(ApiModel):
     #: example: ORIGINATING
     direction: Optional[str] = Field(alias='Direction', default=None)
     #: The length of the call in seconds.
-    #: example: 36.0
+    #: example: 36
     duration: Optional[int] = Field(alias='Duration', default=None)
     #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
     #: Remote Session ID.
@@ -20656,7 +20656,7 @@ class CDR(ApiModel):
     #: example: 2023-10-12 21:22:32.621
     release_time: Optional[datetime] = Field(alias='Release time', default=None)
     #: The length of ringing before the call was answered or timed out, in seconds.
-    #: example: 23.0
+    #: example: 23
     ring_duration: Optional[int] = Field(alias='Ring duration', default=None)
     #: Call Redirection Reason for the redirecting number. For example:
     #: 
@@ -21128,7 +21128,7 @@ class BulkUser(ApiModel):
     schemas: Optional[list[str]] = None
     #: An integer specifying the maximum number of errors that the service provider will accept before the operation is
     #: terminated and an error response is returned.
-    #: example: 99.0
+    #: example: 99
     fail_on_errors: Optional[int] = None
     #: Contains a list of bulk operations for POST/PATCH/DELETE operations.
     operations: Optional[list[BulkUserOperations]] = None
@@ -21288,13 +21288,13 @@ class SearchGroupResponse(ApiModel):
     #: example: ['urn:scim:schemas:extension:cisco:webexidentity:2.0:GroupMembers']
     schemas: Optional[list[str]] = None
     #: Total number of groups in search results.
-    #: example: 2.0
+    #: example: 2
     member_size: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2.0
+    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching contacts.
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
     #: An array of group objects.
     resources: Optional[list[GetGroupResponse]] = Field(alias='Resources', default=None)
@@ -21320,13 +21320,13 @@ class GroupMemberResponse(ApiModel):
     #: example: group1@example.com
     display_name: Optional[str] = None
     #: Total number of groups in search results.
-    #: example: 2.0
+    #: example: 2
     total_results: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2.0
+    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching groups.
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
     #: A list of members of this group.
     members: Optional[list[GroupMemberResponseMembers]] = None
@@ -21744,13 +21744,13 @@ class SearchUserResponse(ApiModel):
     #: example: ['urn:ietf:params:scim:api:messages:2.0:ListResponse']
     schemas: Optional[list[str]] = None
     #: Total number of users in search results.
-    #: example: 2.0
+    #: example: 2
     total_results: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2.0
+    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching users.
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
     #: A list of users with details.
     resources: Optional[list[GetUserResponse]] = Field(alias='Resources', default=None)
@@ -21871,16 +21871,16 @@ class GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria(
     #: Determines if a password requires mixed case.
     mixed_case: Optional[bool] = None
     #: Sets the minimum password length.
-    #: example: 8.0
+    #: example: 8
     min_length: Optional[int] = None
     #: Sets the minimum number of numeric characters in the password.
-    #: example: 2.0
+    #: example: 2
     min_numeric: Optional[int] = None
     #: Sets the minimum number of alphabetical characters in the password.
-    #: example: 4.0
+    #: example: 4
     min_alpha: Optional[int] = None
     #: Sets the minimum number of special characters in the password.
-    #: example: 1.0
+    #: example: 1
     min_special: Optional[int] = None
     #: Do not allow dynamic web page text for meeting passwords (like site name, host's name, username, meeting topic).
     disallow_dynamic_web_text: Optional[bool] = None
@@ -22096,7 +22096,7 @@ class ApplicationsSetting(ApiModel):
     #: example: True
     mobile_client_enabled: Optional[bool] = None
     #: Number of available device licenses for assigning devices/apps.
-    #: example: 35.0
+    #: example: 35
     available_line_count: Optional[int] = None
 
 
@@ -22167,10 +22167,10 @@ class CallForwardingInfoCallForwardingNoAnswer(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: Number of rings before the call will be forwarded if unanswered.
-    #: example: 3.0
+    #: example: 3
     number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
-    #: example: 15.0
+    #: example: 15
     system_max_number_of_rings: Optional[int] = None
     #: Indicates the enabled or disabled state of sending incoming calls to destination number's voicemail if the
     #: destination is an internal phone number and that number has the voicemail service enabled.
@@ -22203,7 +22203,7 @@ class CallForwardingPutCallForwardingNoAnswer(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: Number of rings before the call will be forwarded if unanswered.
-    #: example: 3.0
+    #: example: 3
     number_of_rings: Optional[int] = None
     #: Enables and disables sending incoming to destination number's voicemail if the destination is an internal phone
     #: number and that number has the voicemail service enabled.
@@ -22395,13 +22395,13 @@ class EndpointIdType(ApiModel):
 class EventLongDetailsRecurrenceRecurDaily(ApiModel):
     #: Recurring interval in days. The number of days after the start when an event will repeat.  Repetitions cannot
     #: overlap.
-    #: example: 1.0
+    #: example: 1
     recur_interval: Optional[int] = None
 
 
 class EventLongDetailsRecurrenceRecurWeekly(ApiModel):
     #: Specifies the number of weeks between the start of each recurrence.
-    #: example: 1.0
+    #: example: 1
     recur_interval: Optional[int] = None
     #: Indicates event occurs weekly on Sunday.
     sunday: Optional[bool] = None
@@ -22430,7 +22430,7 @@ class EventLongDetailsRecurrence(ApiModel):
     recur_end_date: Optional[datetime] = None
     #: End recurrence after the event has repeated the specified number of times. Requires either `recurDaily` or
     #: `recurWeekly` to be specified.
-    #: example: 1.0
+    #: example: 1
     recur_end_occurrence: Optional[int] = None
     #: Specifies the number of days between the start of each recurrence. Not allowed with `recurWeekly`.
     recur_daily: Optional[EventLongDetailsRecurrenceRecurDaily] = None
@@ -22482,7 +22482,7 @@ class GetSharedLineMemberItem1(ApiModel):
     #: example: 1111
     extension: Optional[datetime] = None
     #: Device port number assigned to a person or workspace.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
     #: example: True
@@ -22494,7 +22494,7 @@ class GetSharedLineMemberItem1(ApiModel):
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Registration home IP for the line port.
     #: example: 198.168.0.1
@@ -22530,7 +22530,7 @@ class GetSharedLineMemberList1(ApiModel):
     #: List of members.
     members: Optional[list[GetSharedLineMemberItem1]] = None
     #: Maximum number of device ports.
-    #: example: 10.0
+    #: example: 10
     max_line_count: Optional[int] = None
 
 
@@ -22799,7 +22799,7 @@ class PutSharedLineMemberItem(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85ODhiYTQyOC0zMjMyLTRmNjItYjUyNS1iZDUzZmI4Nzc0MWE
     id: Optional[str] = None
     #: Device port number assigned to person or workspace.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
     #: example: True
@@ -22811,7 +22811,7 @@ class PutSharedLineMemberItem(ApiModel):
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
     #: can only make calls to the predefined number set in `hotlineDestination`.
@@ -22974,7 +22974,7 @@ class VoiceMessageDetails(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL01FU1NBR0UvNmQ0MTgyMTItZjUwNi00Yzk4LTk5MTItNmI1MmE1ZmU2ODgx
     id: Optional[str] = None
     #: The duration (in seconds) of the voicemail message.  Duration is not present for a FAX message.
-    #: example: 38.0
+    #: example: 38
     duration: Optional[int] = None
     #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the
     #: calling party.
@@ -22987,7 +22987,7 @@ class VoiceMessageDetails(ApiModel):
     #: example: True
     read: Optional[bool] = None
     #: Number of pages for the FAX.  Only set for a FAX.
-    #: example: 2.0
+    #: example: 2
     fax_page_count: Optional[int] = None
     #: The date and time the voicemail message was created.
     #: example: 2021-11-14T17:00:00.000Z
@@ -23017,10 +23017,10 @@ class VoicemailInfoSendUnansweredCalls(ApiModel):
     #: example: True
     greeting_uploaded: Optional[bool] = None
     #: Number of rings before unanswered call will be sent to voicemail.
-    #: example: 3.0
+    #: example: 3
     number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
-    #: example: 15.0
+    #: example: 15
     system_max_number_of_rings: Optional[int] = None
 
 
@@ -23095,7 +23095,7 @@ class VoicemailPutSendUnansweredCalls(ApiModel):
     #: example: DEFAULT
     greeting: Optional[HoursMenuObjectGreeting] = None
     #: Number of rings before an unanswered call will be sent to voicemail.
-    #: example: 3.0
+    #: example: 3
     number_of_rings: Optional[int] = None
 
 
@@ -23357,15 +23357,15 @@ class RetrieveExecutiveAssistantSettingsForAPersonResponse(ApiModel):
 
 class GetMessageSummaryResponse(ApiModel):
     #: The number of new (unread) voicemail messages.
-    #: example: 2.0
+    #: example: 2
     new_messages: Optional[int] = None
     #: The number of old (read) voicemail messages.
-    #: example: 5.0
+    #: example: 5
     old_messages: Optional[int] = None
     #: The number of new (unread) urgent voicemail messages.
     new_urgent_messages: Optional[int] = None
     #: The number of old (read) urgent voicemail messages.
-    #: example: 1.0
+    #: example: 1
     old_urgent_messages: Optional[int] = None
 
 
@@ -23381,7 +23381,7 @@ class ClusterClientTypeDistributionDetailsBlr1a(ApiModel):
     #: example: SIP Devices
     description: Optional[str] = None
     #: The count of the device type.
-    #: example: 10.0
+    #: example: 10
     count: Optional[int] = None
 
 
@@ -23435,13 +23435,13 @@ class ClusterAvailableTimeline(ApiModel):
     #: example: Available
     availability: Optional[str] = None
     #: Number of nodes that are online.
-    #: example: 1.0
+    #: example: 1
     no_of_online_nodes: Optional[int] = None
     #: Number of nodes that are offline.
-    #: example: 1.0
+    #: example: 1
     no_of_offline_nodes: Optional[int] = None
     #: Total number of nodes in the Video Mesh cluster.
-    #: example: 2.0
+    #: example: 2
     total_nodes: Optional[int] = None
 
 
@@ -23475,7 +23475,7 @@ class ClustersAvailability(ApiModel):
 
 class NodeAvailableTimeline(ApiModel):
     #: Number of nodes that are online.
-    #: example: 1.0
+    #: example: 1
     no_of_online_nodes: Optional[int] = None
     #: Number of nodes that are offline.
     no_of_offline_nodes: Optional[int] = None
@@ -23492,7 +23492,7 @@ class NodeAvailableTimeline(ApiModel):
     #: example: NA
     un_availability_reason: Optional[str] = None
     #: Total number of nodes in the Video Mesh cluster.
-    #: example: 1.0
+    #: example: 1
     total_nodes: Optional[int] = None
 
 
@@ -23672,7 +23672,7 @@ class OverflowDetails1(ApiModel):
     #: example: Capacity exceeded
     overflow_reason: Optional[str] = None
     #: Number of overflows.
-    #: example: 25.0
+    #: example: 25
     overflow_count: Optional[int] = None
     #: Any possible remediations for this overflow.
     #: example: Video Mesh exceeded its capacity. If this happens frequently, consider adding more nodes to your clusters.
@@ -23713,7 +23713,7 @@ class ClusterRedirectDetailsBlr1a(ApiModel):
     #: example: Capacity exceeded
     redirect_reason: Optional[str] = None
     #: Number of Call Redirects.
-    #: example: 10.0
+    #: example: 10
     redirect_count: Optional[int] = None
     #: Any possible remediations for this overflow.
     #: example: Video Mesh exceeded its capacity. If this happens frequently, consider adding more nodes to your clusters.
@@ -23761,16 +23761,16 @@ class RedirectforOrg(ApiModel):
 
 class UtilizationMetricsT1SJ(ApiModel):
     #: Peak CPU usage during the time interval.
-    #: example: 54.54
+    #: example: 54
     peak_cpu: Optional[int] = None
     #: Average CPU usage during the time interval.
-    #: example: 4.27
+    #: example: 4
     avg_cpu: Optional[int] = None
     #: Maximum active calls at a point in the time interval.
-    #: example: 5.0
+    #: example: 5
     active_calls: Optional[int] = None
     #: Maximum active private calls at a point in the time interval.
-    #: example: 1.0
+    #: example: 1
     active_private_calls: Optional[int] = None
 
 
@@ -23818,7 +23818,7 @@ class ReachabilityTestresultsSuccess(ApiModel):
     #: example: 1.1.1.1
     ip_address: Optional[str] = None
     #: Port number.
-    #: example: 5004.0
+    #: example: 5004
     port: Optional[int] = None
     #: Port reachability information.
     #: example: True
@@ -24131,10 +24131,10 @@ class WebSocketConnectivityTest(ApiModel):
 
 class UpdateEventThresholdConfig1(ApiModel):
     #: Threshold value (in percentage) to trigger an event.
-    #: example: 40.0
+    #: example: 40
     min_threshold: Optional[int] = None
     #: Deafault Threshold value (in percentage) to trigger an event.
-    #: example: 10.0
+    #: example: 10
     default_min_threshold: Optional[int] = None
 
 
@@ -24241,7 +24241,7 @@ class ListVirtualLineObject1(ApiModel):
     #: Location details of virtual line.
     location: Optional[Location] = None
     #: Number of devices assigned to a virtual line.
-    #: example: 1.0
+    #: example: 1
     number_of_devices_assigned: Optional[int] = None
     #: Type of billing plan.
     #: example: BCOCP1
@@ -24974,10 +24974,10 @@ class Location10(ApiModel):
     #: example: Barcelona
     city_name: Optional[str] = None
     #: The location latitude.
-    #: example: 41.4066147
+    #: example: 41
     latitude: Optional[int] = None
     #: The location longitude.
-    #: example: 2.2007173
+    #: example: 2
     longitude: Optional[int] = None
     #: Notes associated with the location.
     #: example: A note about the location
@@ -24998,10 +24998,10 @@ class WorkspaceLocationsCreationRequest(ApiModel):
     #: example: Barcelona
     city_name: Optional[str] = None
     #: The location latitude.
-    #: example: 41.4066147
+    #: example: 41
     latitude: Optional[int] = None
     #: The location longitude.
-    #: example: 2.2007173
+    #: example: 2
     longitude: Optional[int] = None
     #: Notes associated with the location.
     #: example: A note about the location
@@ -25021,13 +25021,13 @@ class AggregatedMetric(ApiModel):
     #: example: 2021-10-21T13:00:00
     end: Optional[datetime] = None
     #: The mean measurement value in the bucket.
-    #: example: 12.3
+    #: example: 12
     mean: Optional[int] = None
     #: The lowest measurement value in the bucket.
-    #: example: 5.1
+    #: example: 5
     min: Optional[int] = None
     #: The highest measurement value in the bucket.
-    #: example: 8.8
+    #: example: 8
     max_: Optional[int] = None
 
 
@@ -25039,7 +25039,7 @@ class RawMetric(ApiModel):
     #: example: 2021-10-21T13:00:00
     timestamp: Optional[datetime] = None
     #: The measurement value.
-    #: example: 5.1
+    #: example: 5
     value: Optional[int] = None
 
 
@@ -25095,7 +25095,7 @@ class DurationMetric(ApiModel):
     #: example: 2021-10-21T13:00:00Z
     end: Optional[datetime] = None
     #: The time duration (in a given state) in the bucket.
-    #: example: 13.0
+    #: example: 13
     duration: Optional[int] = None
 
 
@@ -25260,7 +25260,7 @@ class Workspace4(ApiModel):
     #: example: SFO-12 Capanina
     display_name: Optional[str] = None
     #: How many people the workspace is suitable for.
-    #: example: 5.0
+    #: example: 5
     capacity: Optional[int] = None
     #: The workspace type.
     type: Optional[WorkspaceType1] = None
@@ -25329,7 +25329,7 @@ class WorkspaceCreationRequest(ApiModel):
     #: example: Y2lzY29z...
     floor_id: Optional[str] = None
     #: How many people the workspace is suitable for. If set, must be 0 or higher.
-    #: example: 5.0
+    #: example: 5
     capacity: Optional[int] = None
     #: The type that best describes the workspace.
     type: Optional[WorkspaceType1] = None
@@ -25382,7 +25382,7 @@ class WorkspaceUpdateRequest(ApiModel):
     #: example: Y2lzY29z...
     floor_id: Optional[str] = None
     #: How many people the workspace is suitable for. If set, must be 0 or higher.
-    #: example: 5.0
+    #: example: 5
     capacity: Optional[int] = None
     #: The type that best describes the workspace.
     #: example: focus
@@ -25442,7 +25442,7 @@ class CapabilityResponse(ApiModel):
 
 
 class QueryStatusResponseResultAudio(ApiModel):
-    #: example: 75.0
+    #: example: 75
     volume: Optional[int] = Field(alias='Volume', default=None)
 
 
@@ -25459,14 +25459,14 @@ class QueryStatusResponse(ApiModel):
 
 
 class ExecuteCommandArguments(ApiModel):
-    #: example: 50.0
+    #: example: 50
     level: Optional[int] = Field(alias='Level', default=None)
 
 
 class ExecuteCommandBodyBookingTime(ApiModel):
     #: example: 2020-07-01T13:00:00Z
     start_time: Optional[datetime] = Field(alias='StartTime', default=None)
-    #: example: 60.0
+    #: example: 60
     duration: Optional[int] = Field(alias='Duration', default=None)
 
 

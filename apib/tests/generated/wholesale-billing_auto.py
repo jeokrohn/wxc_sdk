@@ -50,7 +50,7 @@ class ListReport(ApiModel):
 
 class ReportError(ApiModel):
     #: An error code that identifies the reason for the error.
-    #: example: 2024.0
+    #: example: 2024
     code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: Billing Report not found.

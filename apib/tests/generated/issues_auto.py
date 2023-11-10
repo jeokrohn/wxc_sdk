@@ -45,7 +45,7 @@ class Issue(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0lTU1VFLzIyNWE0YWY0LTIxYTctNDY2OC05NjhhLWI5NWU2MjlhMjBlNg
     id: Optional[str] = None
     #: A shorter identifier for the issue, unique only to the organization it belongs to.
-    #: example: 123.0
+    #: example: 123
     short_key: Optional[int] = None
     #: The subject summary for the issue.
     #: example: No audio during meeting from Webex client.

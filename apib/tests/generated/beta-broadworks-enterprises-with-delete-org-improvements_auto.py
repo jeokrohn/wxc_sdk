@@ -20,7 +20,7 @@ __auto__ = ['Enterprise', 'EnterpriseBroadworksDirectorySync', 'EnterpriseBroadw
 
 class EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors(ApiModel):
     #: An error code that identifies the reason for the error
-    #: example: 6003.0
+    #: example: 6003
     error_code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: Broadworks External Directory User Sync failed while trying to connect to Broadworks cluster.
@@ -38,28 +38,28 @@ class EnterpriseBroadworksDirectorySyncDirectorySyncStatus(ApiModel):
     #: example: COMPLETE
     sync_status: Optional[str] = None
     #: The number of users added to CI (Common Identity) in this sync.
-    #: example: 44.0
+    #: example: 44
     users_added: Optional[int] = None
     #: The number of users updated in CI (Common Identity)  in this sync.
-    #: example: 21.0
+    #: example: 21
     users_updated: Optional[int] = None
     #: The number of users deleted from CI (Common Identity)  in this sync.
-    #: example: 34.0
+    #: example: 34
     users_deleted: Optional[int] = None
     #: The number of machines added to CI (Common Identity)  in this sync.
-    #: example: 24.0
+    #: example: 24
     machines_added: Optional[int] = None
     #: The number of machines updated in CI (Common Identity)  in this sync.
-    #: example: 4.0
+    #: example: 4
     machines_updated: Optional[int] = None
     #: The number of machines deleted from CI (Common Identity)  in this sync.
-    #: example: 9.0
+    #: example: 9
     machines_deleted: Optional[int] = None
     #: The number of total external users that have been added to CI across all syncs.
-    #: example: 1077.0
+    #: example: 1077
     total_external_users_in_ci: Optional[int] = Field(alias='totalExternalUsersInCI', default=None)
     #: The number of total external machines that have been added to CI (Common Identity)  across all syncs.
-    #: example: 326.0
+    #: example: 326
     total_external_machines_in_ci: Optional[int] = Field(alias='totalExternalMachinesInCI', default=None)
     #: The date and time of the last successful sync.
     #: example: 2021-04-01T14:48:30.502539Z
@@ -73,28 +73,28 @@ class EnterpriseBroadworksDirectorySyncDirectorySyncStatus(ApiModel):
     #: directly in error response with appropriate HTTP status code.
     errors: Optional[list[EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
-    #: example: 5.0
+    #: example: 5
     user_contacts_added: Optional[int] = None
     #: The number of user contacts updated in Contact service in this sync.
-    #: example: 2.0
+    #: example: 2
     user_contacts_updated: Optional[int] = None
     #: The number of user contacts deleted from Contact service in this sync.
-    #: example: 1.0
+    #: example: 1
     user_contacts_deleted: Optional[int] = None
     #: The number of org contacts added to Contact service in this sync.
-    #: example: 5.0
+    #: example: 5
     org_contacts_added: Optional[int] = None
     #: The number of org contacts updated in Contact service in this sync.
-    #: example: 2.0
+    #: example: 2
     org_contacts_updated: Optional[int] = None
     #: The number of org contacts deleted from Contact service in this sync.
-    #: example: 1.0
+    #: example: 1
     org_contacts_deleted: Optional[int] = None
     #: The total number of user contacts in Contact service.
-    #: example: 10.0
+    #: example: 10
     total_user_contacts_in_contact_service: Optional[int] = None
     #: The total number of org contacts in Contact service.
-    #: example: 2.0
+    #: example: 2
     total_org_contacts_in_contact_service: Optional[int] = None
 
 

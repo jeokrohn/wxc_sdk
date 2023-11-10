@@ -81,7 +81,7 @@ class ListVirtualLineObject(ApiModel):
     #: Location details of virtual line.
     location: Optional[ListVirtualLineObjectLocation] = None
     #: Number of devices assigned to a virtual line.
-    #: example: 1.0
+    #: example: 1
     number_of_devices_assigned: Optional[int] = None
     #: Type of billing plan.
     #: example: BCOCP1

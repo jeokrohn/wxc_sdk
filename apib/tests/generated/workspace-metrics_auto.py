@@ -25,13 +25,13 @@ class AggregatedMetric(ApiModel):
     #: example: 2021-10-21T13:00:00
     end: Optional[datetime] = None
     #: The mean measurement value in the bucket.
-    #: example: 12.3
+    #: example: 12
     mean: Optional[int] = None
     #: The lowest measurement value in the bucket.
-    #: example: 5.1
+    #: example: 5
     min: Optional[int] = None
     #: The highest measurement value in the bucket.
-    #: example: 8.8
+    #: example: 8
     max_: Optional[int] = None
 
 
@@ -43,7 +43,7 @@ class RawMetric(ApiModel):
     #: example: 2021-10-21T13:00:00
     timestamp: Optional[datetime] = None
     #: The measurement value.
-    #: example: 5.1
+    #: example: 5
     value: Optional[int] = None
 
 
@@ -99,7 +99,7 @@ class DurationMetric(ApiModel):
     #: example: 2021-10-21T13:00:00Z
     end: Optional[datetime] = None
     #: The time duration (in a given state) in the bucket.
-    #: example: 13.0
+    #: example: 13
     duration: Optional[int] = None
 
 

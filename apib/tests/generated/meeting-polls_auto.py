@@ -71,7 +71,7 @@ class Poll(ApiModel):
     #: example: 2021-07-06T09:25:51Z
     end_time: Optional[datetime] = None
     #: The length of time in the alarm box, in seconds.
-    #: example: 300.0
+    #: example: 300
     timer_duration: Optional[int] = None
     #: The name of the poll coordinator.
     #: example: John Andersen
@@ -98,7 +98,7 @@ class AnswerSummaryItem(ApiModel):
     #: example: China
     value: Optional[str] = None
     #: The total number of people who selected this answer.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: Whether the answer is correct.
     #: example: True
@@ -164,10 +164,10 @@ class PollResult(ApiModel):
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
-    #: example: 10.0
+    #: example: 10
     total_attendees: Optional[int] = None
     #: The total number of respondents in the poll.
-    #: example: 10.0
+    #: example: 10
     total_respondents: Optional[int] = None
     #: The date and time the poll started in `ISO 8601
     #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -178,7 +178,7 @@ class PollResult(ApiModel):
     #: example: 2021-07-06T09:28:34Z
     end_time: Optional[datetime] = None
     #: The duration of the poll, in seconds.
-    #: example: 300.0
+    #: example: 300
     timer_duration: Optional[int] = None
     #: The name of the poll coordinator.
     #: example: John Andersen

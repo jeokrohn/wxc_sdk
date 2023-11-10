@@ -29,7 +29,7 @@ class VideoInTransportType(str, Enum):
 
 class VideoIn(ApiModel):
     #: The sampling interval, in seconds, of the downstream video quality data.
-    #: example: 60.0
+    #: example: 60
     sampling_interval: Optional[int] = None
     #: The date and time when this video session started.
     #: example: 2020-04-10T17:00:00.000Z

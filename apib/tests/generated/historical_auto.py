@@ -106,57 +106,57 @@ class HistoricalDataRelatedToRoomDevicesResponse(ApiModel):
 
 
 class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods(ApiModel):
-    #: example: 123.0
+    #: example: 123
     web_app: Optional[int] = None
-    #: example: 123.0
+    #: example: 123
     cloud_video_device: Optional[int] = None
-    #: example: 123.0
+    #: example: 123
     mobile_meetings_app: Optional[int] = None
 
 
 class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByRoles(ApiModel):
-    #: example: 123.0
+    #: example: 123
     host: Optional[int] = None
-    #: example: 123.0
+    #: example: 123
     attendee: Optional[int] = None
 
 
 class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation(ApiModel):
     #: example: United States
     country: Optional[str] = None
-    #: example: 123.0
+    #: example: 123
     total_participants: Optional[int] = None
 
 
 class HistoricalDataRelatedToMeetingsResponseMetrics(ApiModel):
     #: Total number of meetings held over the selected date range. includes Webex Meetings, Webex Events, Webex
     #: Support, and Webex Training sessions
-    #: example: 123.0
+    #: example: 123
     total_meetings: Optional[int] = None
     #: Total number of joins by participant and devices from all Webex meetings over the selected date range
-    #: example: 123.0
+    #: example: 123
     total_participants: Optional[int] = None
     #: Total number of unique hosts who started at least one webex meeting over the selected date range
-    #: example: 123.0
+    #: example: 123
     total_unique_hosts: Optional[int] = None
     #: Total number of minutes for all meetings over selected date range
-    #: example: 1234.0
+    #: example: 1234
     total_meeting_minutes: Optional[int] = None
     #: Total number of VoIP and telephony minutes used during meetings over the selected date range
-    #: example: 1234.0
+    #: example: 1234
     total_audio_minutes: Optional[int] = None
-    #: example: 1234.0
+    #: example: 1234
     total_telephone_minutes: Optional[int] = None
-    #: example: 1234.0
+    #: example: 1234
     total_vo_ipminutes: Optional[int] = Field(alias='totalVoIPMinutes', default=None)
     #: Total number of meetings held where at least one participant enabled video for any amount of time
-    #: example: 123.0
+    #: example: 123
     video_meetings: Optional[int] = None
     #: Total number of meetings held where at least one participant enabled sharing for any amount of time
-    #: example: 123.0
+    #: example: 123
     sharing_meetings: Optional[int] = None
     #: Total number of meetings held where at least one participant enable recording for any amount of time
-    #: example: 123.0
+    #: example: 123
     recording_meetings: Optional[int] = None
     #: Participant Count for each join/client type. This list is dynamic and can change
     participants_by_join_methods: Optional[HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods] = None

@@ -47,7 +47,7 @@ class CallRecordingInfoNotification(ApiModel):
 
 class CallRecordingInfoRepeat(ApiModel):
     #: Interval at which warning tone "beep" will be played. This interval is an integer from 10 to 1800 seconds
-    #: example: 15.0
+    #: example: 15
     interval: Optional[int] = None
     #: `true` when ongoing call recording tone will be played at the designated interval. `false` indicates no warning
     #: tone will be played.

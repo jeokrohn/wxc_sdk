@@ -58,7 +58,7 @@ class GetLocationVoicemailGroupObjectFaxMessage(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Extension to receive fax messages.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
 
 
@@ -82,7 +82,7 @@ class GetLocationVoicemailGroupObject(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Voicemail group extension number.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Routing prefix of location.
     #: example: 1234

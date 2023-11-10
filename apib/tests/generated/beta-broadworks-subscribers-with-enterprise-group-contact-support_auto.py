@@ -16,7 +16,7 @@ __auto__ = ['Error', 'Subscriber', 'SubscriberListResponse', 'SubscriberPackage'
 
 class Error(ApiModel):
     #: An error code that identifies the reason for the error.
-    #: example: 10022.0
+    #: example: 10022
     error_code: Optional[int] = None
     #: A description of the error.
     #: example: The BroadWorks UserID is already associated with an existing user.

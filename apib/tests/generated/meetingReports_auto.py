@@ -63,7 +63,7 @@ class MeetingUsageReportObject(ApiModel):
     #: example: 2023-01-18T10:46:30+08:00
     end: Optional[datetime] = None
     #: Duration of the meeting in minutes.
-    #: example: 20.0
+    #: example: 20
     duration: Optional[int] = None
     #: Scheduled type for the meeting.
     #: example: meeting
@@ -75,43 +75,43 @@ class MeetingUsageReportObject(ApiModel):
     #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: Aggregated attendee minutes.
-    #: example: 60.0
+    #: example: 60
     total_people_minutes: Optional[int] = None
     #: Aggregated attendee PSTN call-in minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_in_minutes: Optional[int] = None
     #: Aggregated attendee domestic PSTN call-out minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_out_domestic: Optional[int] = None
     #: Aggregated attendee toll-free PSTN call-in minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_in_toll_free_minutes: Optional[int] = None
     #: Aggregated attendee international PSTN call-out minutes.
-    #: example: 60.0
+    #: example: 60
     total_call_out_international: Optional[int] = None
     #: Aggregated attendee VoIP minutes.
-    #: example: 60.0
+    #: example: 60
     total_voip_minutes: Optional[int] = None
     #: Total number of participants of the meeting.
-    #: example: 30.0
+    #: example: 30
     total_participants: Optional[int] = None
     #: Total number of VoIP participants of the meeting.
-    #: example: 10.0
+    #: example: 10
     total_participants_voip: Optional[int] = None
     #: Total number of PSTN call-in participants of the meeting.
-    #: example: 10.0
+    #: example: 10
     total_participants_call_in: Optional[int] = None
     #: Total number of PSTN call-out participants of the meeting.
-    #: example: 10.0
+    #: example: 10
     total_participants_call_out: Optional[int] = None
     #: Peak number of attendees throughout the meeting.
-    #: example: 30.0
+    #: example: 30
     peak_attendee: Optional[int] = None
     #: Total number of registrants of the meeting.
-    #: example: 30.0
+    #: example: 30
     total_registered: Optional[int] = None
     #: Total number of invitees of the meeting.
-    #: example: 30.0
+    #: example: 30
     total_invitee: Optional[int] = None
     #: The service type for the meeting usage report.
     #: example: MeetingCenter
@@ -132,7 +132,7 @@ class MeetingAttendeeReportObject(ApiModel):
     #: example: 089b137c3cf34b578896941e2d49dfe8_I_146987372776523573
     meeting_id: Optional[str] = None
     #: Meeting number.
-    #: example: 123456789.0
+    #: example: 123456789
     meeting_number: Optional[int] = None
     #: Meeting title.
     #: example: John's Meeting
@@ -152,7 +152,7 @@ class MeetingAttendeeReportObject(ApiModel):
     #: example: 2023-01-18T10:46:30+08:00
     left_time: Optional[datetime] = None
     #: Duration of the attendee in the meeting in minutes.
-    #: example: 20.0
+    #: example: 20
     duration: Optional[int] = None
     #: The attendee's role in the meeting.
     #: example: host

@@ -72,7 +72,7 @@ class CallQueueQueueSettingsObjectOverflow(ApiModel):
     #: example: True
     overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available.
-    #: example: 20.0
+    #: example: 20
     overflow_after_wait_time: Optional[int] = None
     #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered by a
     #: user.
@@ -89,7 +89,7 @@ class CallQueueQueueSettingsObjectOverflow(ApiModel):
 class CallQueueQueueSettingsObject(ApiModel):
     #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are
     #: triggered.
-    #: example: 50.0
+    #: example: 50
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
     #: example: True
@@ -105,7 +105,7 @@ class GetCallQueueCallPolicyObjectCallBounce(ApiModel):
     #: example: True
     call_bounce_enabled: Optional[bool] = None
     #: Number of rings after which to bounce call, if call bounce is enabled.
-    #: example: 5.0
+    #: example: 5
     call_bounce_max_rings: Optional[int] = None
     #: Bounce if agent becomes unavailable.
     #: example: True
@@ -114,13 +114,13 @@ class GetCallQueueCallPolicyObjectCallBounce(ApiModel):
     #: example: True
     alert_agent_enabled: Optional[bool] = None
     #: Number of second after which to alert agent if alertAgentEnabled.
-    #: example: 20.0
+    #: example: 20
     alert_agent_max_seconds: Optional[int] = None
     #: Bounce if call on hold more than callBounceMaxSeconds.
     #: example: True
     call_bounce_on_hold_enabled: Optional[bool] = None
     #: Number of second after which to bounce if callBounceEnabled.
-    #: example: 20.0
+    #: example: 20
     call_bounce_on_hold_max_seconds: Optional[int] = None
 
 

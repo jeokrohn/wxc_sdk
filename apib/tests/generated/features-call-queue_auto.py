@@ -246,7 +246,7 @@ class CallQueueQueueSettingsGetObjectOverflow(ApiModel):
     overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum
     #: value 0, The maximum value is 7200 seconds.
-    #: example: 20.0
+    #: example: 20
     overflow_after_wait_time: Optional[int] = None
     #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by
     #: a user.
@@ -292,25 +292,25 @@ class CallQueueQueueSettingsGetObjectWaitMessage(ApiModel):
     wait_mode: Optional[CallQueueQueueSettingsGetObjectWaitMessageWaitMode] = None
     #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
     #: is 100 minutes.
-    #: example: 100.0
+    #: example: 100
     handling_time: Optional[int] = None
     #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
-    #: example: 100.0
+    #: example: 100
     default_handling_time: Optional[int] = None
     #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
     #: positions are 100.
-    #: example: 100.0
+    #: example: 100
     queue_position: Optional[int] = None
     #: Play time / Play position High Volume.
     high_volume_message_enabled: Optional[bool] = None
     #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
     #: seconds.
-    #: example: 600.0
+    #: example: 600
     estimated_waiting_time: Optional[int] = None
     #: Callback options enabled/disabled. Default value is false.
     callback_option_enabled: Optional[bool] = None
     #: The minimum estimated callback times in minutes. The default value is 30.
-    #: example: 10.0
+    #: example: 10
     minimum_estimated_callback_time: Optional[int] = None
     #: The international numbers for callback is enabled/disabled. The default value is `false`.
     international_callback_enabled: Optional[bool] = None
@@ -325,7 +325,7 @@ class CallQueueQueueSettingsGetObjectComfortMessage(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
     #: is 10 seconds.The maximum time is 600 seconds.
-    #: example: 10.0
+    #: example: 10
     time_between_messages: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
@@ -342,7 +342,7 @@ class CallQueueQueueSettingsGetObjectComfortMessageBypass(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The
     #: minimum time is 1 seconds. The maximum time is 120 seconds.
-    #: example: 10.0
+    #: example: 10
     call_waiting_age_threshold: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
@@ -374,7 +374,7 @@ class CallQueueQueueSettingsGetObjectMohMessage(ApiModel):
 class CallQueueQueueSettingsGetObject(ApiModel):
     #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
     #: triggered.
-    #: example: 50.0
+    #: example: 50
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
     #: example: True
@@ -434,7 +434,7 @@ class GetCallQueueCallPolicyObjectCallBounce(ApiModel):
     #: example: True
     call_bounce_enabled: Optional[bool] = None
     #: Number of rings after which to bounce call, if call bounce is enabled.
-    #: example: 5.0
+    #: example: 5
     call_bounce_max_rings: Optional[int] = None
     #: Bounce if agent becomes unavailable.
     #: example: True
@@ -443,13 +443,13 @@ class GetCallQueueCallPolicyObjectCallBounce(ApiModel):
     #: example: True
     alert_agent_enabled: Optional[bool] = None
     #: Number of second after which to alert agent if `alertAgentEnabled`.
-    #: example: 20.0
+    #: example: 20
     alert_agent_max_seconds: Optional[int] = None
     #: Bounce if call on hold more than `callBounceMaxSeconds`.
     #: example: True
     call_bounce_on_hold_enabled: Optional[bool] = None
     #: Number of second after which to bounce if `callBounceEnabled`.
-    #: example: 20.0
+    #: example: 20
     call_bounce_on_hold_max_seconds: Optional[int] = None
 
 
@@ -484,7 +484,7 @@ class PostPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: example: 50
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when call routing type is `SKILL_BASED`.
-    #: example: 1.0
+    #: example: 1
     skill_level: Optional[int] = None
 
 
@@ -763,7 +763,7 @@ class GetPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: example: 50
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call `routingType` is `SKILL_BASED`.
-    #: example: 1.0
+    #: example: 1
     skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. The default value while creating call queue is `true`.
     #: example: True
@@ -952,7 +952,7 @@ class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: example: 50
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when call routing type is `SKILL_BASED`.
-    #: example: 1.0
+    #: example: 1
     skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. The default value for newly added agents is `true`.
     #: example: True

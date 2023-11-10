@@ -52,13 +52,13 @@ class ClusterAvailableTimeline(ApiModel):
     #: example: Available
     availability: Optional[str] = None
     #: Number of nodes that are online.
-    #: example: 1.0
+    #: example: 1
     no_of_online_nodes: Optional[int] = None
     #: Number of nodes that are offline.
-    #: example: 1.0
+    #: example: 1
     no_of_offline_nodes: Optional[int] = None
     #: Total number of nodes in the Video Mesh cluster.
-    #: example: 2.0
+    #: example: 2
     total_nodes: Optional[int] = None
 
 
@@ -92,7 +92,7 @@ class ClustersAvailability(ApiModel):
 
 class NodeAvailableTimeline(ApiModel):
     #: Number of nodes that are online.
-    #: example: 1.0
+    #: example: 1
     no_of_online_nodes: Optional[int] = None
     #: Number of nodes that are offline.
     no_of_offline_nodes: Optional[int] = None
@@ -109,7 +109,7 @@ class NodeAvailableTimeline(ApiModel):
     #: example: NA
     un_availability_reason: Optional[str] = None
     #: Total number of nodes in the Video Mesh cluster.
-    #: example: 1.0
+    #: example: 1
     total_nodes: Optional[int] = None
 
 
@@ -289,7 +289,7 @@ class OverflowDetails1(ApiModel):
     #: example: Capacity exceeded
     overflow_reason: Optional[str] = None
     #: Number of overflows.
-    #: example: 25.0
+    #: example: 25
     overflow_count: Optional[int] = None
     #: Any possible remediations for this overflow.
     #: example: Video Mesh exceeded its capacity. If this happens frequently, consider adding more nodes to your clusters.
@@ -330,7 +330,7 @@ class ClusterRedirectDetailsBlr1a(ApiModel):
     #: example: Capacity exceeded
     redirect_reason: Optional[str] = None
     #: Number of Call Redirects.
-    #: example: 10.0
+    #: example: 10
     redirect_count: Optional[int] = None
     #: Any possible remediations for this overflow.
     #: example: Video Mesh exceeded its capacity. If this happens frequently, consider adding more nodes to your clusters.
@@ -378,16 +378,16 @@ class RedirectforOrg(ApiModel):
 
 class UtilizationMetricsT1SJ(ApiModel):
     #: Peak CPU usage during the time interval.
-    #: example: 54.54
+    #: example: 54
     peak_cpu: Optional[int] = None
     #: Average CPU usage during the time interval.
-    #: example: 4.27
+    #: example: 4
     avg_cpu: Optional[int] = None
     #: Maximum active calls at a point in the time interval.
-    #: example: 5.0
+    #: example: 5
     active_calls: Optional[int] = None
     #: Maximum active private calls at a point in the time interval.
-    #: example: 1.0
+    #: example: 1
     active_private_calls: Optional[int] = None
 
 
@@ -435,7 +435,7 @@ class ReachabilityTestresultsSuccess(ApiModel):
     #: example: 1.1.1.1
     ip_address: Optional[str] = None
     #: Port number.
-    #: example: 5004.0
+    #: example: 5004
     port: Optional[int] = None
     #: Port reachability information.
     #: example: True
@@ -754,7 +754,7 @@ class ClusterClientTypeDistributionDetailsBlr1a(ApiModel):
     #: example: SIP Devices
     description: Optional[str] = None
     #: The count of the device type.
-    #: example: 10.0
+    #: example: 10
     count: Optional[int] = None
 
 
@@ -799,10 +799,10 @@ class ClienttypedistributionforOrg(ApiModel):
 
 class UpdateEventThresholdConfig1(ApiModel):
     #: Threshold value (in percentage) to trigger an event.
-    #: example: 40.0
+    #: example: 40
     min_threshold: Optional[int] = None
     #: Deafault Threshold value (in percentage) to trigger an event.
-    #: example: 10.0
+    #: example: 10
     default_min_threshold: Optional[int] = None
 
 

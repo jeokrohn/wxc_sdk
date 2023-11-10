@@ -94,10 +94,10 @@ class RecordingObject(ApiModel):
     #: example: MeetingCenter
     service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording, in seconds.
-    #: example: 4472.0
+    #: example: 4472
     duration_seconds: Optional[int] = None
     #: The size of the recording file, in bytes.
-    #: example: 248023188.0
+    #: example: 248023188
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
@@ -161,10 +161,10 @@ class RecordingObjectForAdminAndCO(ApiModel):
     #: example: MeetingCenter
     service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording, in seconds.
-    #: example: 4472.0
+    #: example: 4472
     duration_seconds: Optional[int] = None
     #: The size of the recording file, in bytes.
-    #: example: 248023188.0
+    #: example: 248023188
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None
@@ -249,10 +249,10 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: example: MeetingCenter
     service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording in seconds.
-    #: example: 4472.0
+    #: example: 4472
     duration_seconds: Optional[int] = None
     #: The size of the recording file in bytes.
-    #: example: 248023188.0
+    #: example: 248023188
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None

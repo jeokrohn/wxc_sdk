@@ -23,7 +23,7 @@ class ClusterClientTypeDistributionDetailsBlr1a(ApiModel):
     #: example: SIP Devices
     description: Optional[str] = None
     #: The count of the device type.
-    #: example: 10.0
+    #: example: 10
     count: Optional[int] = None
 
 

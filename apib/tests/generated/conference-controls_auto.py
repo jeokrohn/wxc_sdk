@@ -45,7 +45,7 @@ class ConferenceDetails(ApiModel):
     #: The state of the conference.
     state: Optional[ConferenceStateEnum] = None
     #: The appearance index for the conference leg. Only present when the conference has an appearance value assigned.
-    #: example: 2.0
+    #: example: 2
     appearance: Optional[int] = None
     #: The conference start time in ISO 8601 format.
     #: example: 2023-03-02T15:00:00.000Z

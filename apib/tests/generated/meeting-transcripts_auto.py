@@ -76,10 +76,10 @@ class SnippetObject(ApiModel):
     #: example: john.andersen@example.com
     person_email: Optional[str] = None
     #: Offset from the beginning of the parent transcript in milliseconds indicating the start time of the snippet.
-    #: example: 1000.0
+    #: example: 1000
     offset_millisecond: Optional[int] = None
     #: Duration of the snippet in milliseconds.
-    #: example: 2000.0
+    #: example: 2000
     duration_millisecond: Optional[int] = None
 
 

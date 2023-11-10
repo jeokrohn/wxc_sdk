@@ -51,12 +51,12 @@ class TaskAttributes(ApiModel):
     #: example: email
     channel_type: Optional[str] = None
     #: Created time of the task (epoch milliseconds).
-    #: example: 1591702170000.0
+    #: example: 1591702170000
     created_time: Optional[int] = None
     #: Last updated time of the task (epoch milliseconds). Updates whenever the underlying data is modified, even if
     #: the Task view of the data is the same. May also update after task "closure", so not suitable for finding a
     #: task's "closed time".
-    #: example: 1591712170099.0
+    #: example: 1591712170099
     last_updated_time: Optional[int] = None
     owner: Optional[TaskOwner] = None
     queue: Optional[TaskOwner] = None
@@ -112,7 +112,7 @@ class TasksValidationError(ApiModel):
     tracking_id: Optional[str] = None
     #: example: The request was not processed
     message: Optional[str] = None
-    #: example: 400.0
+    #: example: 400
     code: Optional[int] = None
 
 
@@ -130,29 +130,29 @@ class AgentStatsChannel(ApiModel):
     #: example: telephony
     channel_type: Optional[AgentStatsChannelChannelType] = None
     #: Number of assigned tasks within this channel during the agent's session.
-    #: example: 3.0
+    #: example: 3
     total_assigned_tasks: Optional[int] = None
     #: Number of accepted tasks that were assigned to the agent.
-    #: example: 3.0
+    #: example: 3
     total_accepted_tasks: Optional[int] = None
     #: Number of rejected tasks that were assigned to the agent.
     total_rejected_tasks: Optional[int] = None
     #: Number of tasks the agent transferred to another agent.
     total_transferred_tasks: Optional[int] = None
     #: Amount of time the agent was engaged with a customer (in milliseconds).
-    #: example: 40302.0
+    #: example: 40302
     total_engaged_duration: Optional[int] = None
     #: Amount of time the customer(s) was put on hold (in milliseconds).
-    #: example: 10198.0
+    #: example: 10198
     total_hold_duration: Optional[int] = None
     #: Amount of time the agent spent wrapping-up customer interactions (in milliseconds).
-    #: example: 3552.0
+    #: example: 3552
     total_wrap_up_duration: Optional[int] = None
 
 
 class AgentStats(ApiModel):
     #: Time in GMT
-    #: example: 1591702200000.0
+    #: example: 1591702200000
     interval_start_time: Optional[int] = None
     #: Agent GUID
     #: example: 06ce7234-dd3e-49e2-8763-d93766739d3
@@ -166,7 +166,7 @@ class AgentStats(ApiModel):
     #: example: Ghost Riders
     team_name: Optional[str] = None
     #: Time that the agent's status was set to 'Available'.
-    #: example: 54052.0
+    #: example: 54052
     total_available_time: Optional[int] = None
     #: Time that the agent's status was set to 'Unavailable'.
     total_unavailable_time: Optional[int] = None
@@ -182,7 +182,7 @@ class AgentStatsResponse(ApiModel):
 
 class QueueStats(ApiModel):
     #: Time in GMT (milliseconds).
-    #: example: 1591702200000.0
+    #: example: 1591702200000
     interval_start_time: Optional[int] = None
     #: Queue ID
     #: example: 06ce7234-dd3e-49e2-8763-d93766739d3
@@ -191,19 +191,19 @@ class QueueStats(ApiModel):
     queue_name: Optional[str] = None
     #: example: telephony
     channel_type: Optional[AgentStatsChannelChannelType] = None
-    #: example: 7.0
+    #: example: 7
     total_offered_tasks: Optional[int] = None
-    #: example: 7.0
+    #: example: 7
     total_enqueued_tasks: Optional[int] = None
-    #: example: 7.0
+    #: example: 7
     total_assigned_tasks: Optional[int] = None
-    #: example: 7.0
+    #: example: 7
     total_accepted_tasks: Optional[int] = None
     total_rejected_tasks: Optional[int] = None
     total_abandoned_tasks: Optional[int] = None
-    #: example: 20349.0
+    #: example: 20349
     average_enqueued_time: Optional[int] = None
-    #: example: 93729.0
+    #: example: 93729
     average_handle_time: Optional[int] = None
 
 
@@ -227,10 +227,10 @@ class ArtifactAttributes(ApiModel):
     #: example: https://cjp-ccone-devus1-media-storage-recording.s3.amazonaws.com/9e4895c9-787b-4615-b15f-f1b3b12c3091/
     file_path: Optional[str] = None
     #: Begin time of capture
-    #: example: 1591804052000.0
+    #: example: 1591804052000
     start_time: Optional[int] = None
     #: End time of capture
-    #: example: 1591804562000.0
+    #: example: 1591804562000
     stop_time: Optional[int] = None
     #: Comma separated list of agent Ids and masked customer contact email/phone details.
     #: example: ['140e7575-6a21-4599-a929-c407dcf36649,+*******9000']
@@ -276,7 +276,7 @@ class ListCapturesQuery(ApiModel):
     #: example: ['6a64d539-4653-4c48-98d7-78fb66c1bc1d, 9dd4a070-4047-46ac-abec-942f48f5535e']
     task_ids: Optional[list[str]] = None
     #: Expiration time of returned s3 url (in minutes). Max value is 60.
-    #: example: 30.0
+    #: example: 30
     url_expiration: Optional[int] = None
 
 

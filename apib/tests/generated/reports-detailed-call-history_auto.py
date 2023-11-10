@@ -145,7 +145,7 @@ class CDR(ApiModel):
     #: example: ORIGINATING
     direction: Optional[str] = Field(alias='Direction', default=None)
     #: The length of the call in seconds.
-    #: example: 36.0
+    #: example: 36
     duration: Optional[int] = Field(alias='Duration', default=None)
     #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
     #: Remote Session ID.
@@ -267,7 +267,7 @@ class CDR(ApiModel):
     #: example: 2023-10-12 21:22:32.621
     release_time: Optional[datetime] = Field(alias='Release time', default=None)
     #: The length of ringing before the call was answered or timed out, in seconds.
-    #: example: 23.0
+    #: example: 23
     ring_duration: Optional[int] = Field(alias='Ring duration', default=None)
     #: Call Redirection Reason for the redirecting number. For example:
     #: 

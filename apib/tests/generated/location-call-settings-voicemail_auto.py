@@ -63,7 +63,7 @@ class GetLocationVoicemailGroupObjectFaxMessage(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Extension to receive fax messages.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
 
 
@@ -87,7 +87,7 @@ class GetLocationVoicemailGroupObject(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Voicemail group extension number.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Voicemail group toll free number.
     toll_free_number: Optional[bool] = None
@@ -165,7 +165,7 @@ class GetVoicePortalPasscodeRuleObjectExpirePasscode(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of days for passcode expiry. The minimum value is 15. The maximum value is 100.
-    #: example: 180.0
+    #: example: 180
     number_of_days: Optional[int] = None
 
 
@@ -174,7 +174,7 @@ class GetVoicePortalPasscodeRuleObjectFailedAttempts(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of failed attempts allowed.
-    #: example: 3.0
+    #: example: 3
     attempts: Optional[int] = None
 
 
@@ -183,7 +183,7 @@ class GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Number of required passcodes changes. The minimum value is 1. The maximum value is 10.
-    #: example: 3.0
+    #: example: 3
     number_of_passcodes: Optional[int] = None
 
 
@@ -193,10 +193,10 @@ class GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits(ApiModel):
 
 class GetVoicePortalPasscodeRuleObjectLength(ApiModel):
     #: The minimum value is 2. The maximum value is 15.
-    #: example: 3.0
+    #: example: 3
     min: Optional[int] = None
     #: The minimum value is 3. The maximum value is 30.
-    #: example: 3.0
+    #: example: 3
     max_: Optional[int] = None
 
 
@@ -274,7 +274,7 @@ class PostLocationVoicemailGroupObject(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Set unique voicemail group extension number for this particular location.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Set voicemail group caller ID first name.
     #: example: Customer
@@ -283,7 +283,7 @@ class PostLocationVoicemailGroupObject(ApiModel):
     #: example: Support
     last_name: Optional[str] = None
     #: Set passcode to access voicemail group when calling.
-    #: example: 1234.0
+    #: example: 1234
     passcode: Optional[int] = None
     #: Language code for voicemail group audio announcement.
     #: example: en_us
@@ -308,7 +308,7 @@ class PutLocationVoicemailGroupObject(ApiModel):
     #: example: +1234234324
     phone_number: Optional[str] = None
     #: Set unique voicemail group extension number.
-    #: example: 23455.0
+    #: example: 23455
     extension: Optional[int] = None
     #: Set the voicemail group caller ID first name.
     #: example: Customer
@@ -320,7 +320,7 @@ class PutLocationVoicemailGroupObject(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Set passcode to access voicemail group when calling.
-    #: example: 1234.0
+    #: example: 1234
     passcode: Optional[int] = None
     #: Language code for the voicemail group audio announcement.
     #: example: en_us

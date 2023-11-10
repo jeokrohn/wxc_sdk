@@ -56,7 +56,7 @@ class AnnouncementResponse(ApiModel):
     #: example: 2023-06-13T18:39:53.651Z
     last_updated: Optional[datetime] = None
     #: Reference count of the call features this announcement is assigned to.
-    #: example: 1.0
+    #: example: 1
     feature_reference_count: Optional[int] = None
     #: Call features referenced by this announcement.
     feature_references: Optional[list[FeatureReferenceObject]] = None
@@ -70,16 +70,16 @@ class AnnouncementResponseWithId(ApiModel):
 
 class AnnouncementUsageResponse(ApiModel):
     #: Total file size used by announcements in this repository in kilobytes.
-    #: example: 1068.0
+    #: example: 1068
     total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB', default=None)
     #: Maximum audio file size allowed to upload in kilobytes.
-    #: example: 9600.0
+    #: example: 9600
     max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB', default=None)
     #: Maximum video file size allowed to upload in kilobytes.
-    #: example: 120000.0
+    #: example: 120000
     max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB', default=None)
     #: Total file size limit for the repository in megabytes.
-    #: example: 1000.0
+    #: example: 1000
     total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB', default=None)
 
 

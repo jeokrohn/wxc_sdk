@@ -140,7 +140,7 @@ class Workspace(ApiModel):
     #: example: SFO-12 Capanina
     display_name: Optional[str] = None
     #: How many people the workspace is suitable for.
-    #: example: 5.0
+    #: example: 5
     capacity: Optional[int] = None
     #: The workspace type.
     type: Optional[WorkspaceType1] = None
@@ -216,7 +216,7 @@ class WorkspaceCreationRequest(ApiModel):
     #: example: Y2lzY29z...
     floor_id: Optional[str] = None
     #: How many people the workspace is suitable for. If set, must be 0 or higher.
-    #: example: 5.0
+    #: example: 5
     capacity: Optional[int] = None
     #: The type that best describes the workspace.
     type: Optional[WorkspaceType1] = None
@@ -269,7 +269,7 @@ class WorkspaceUpdateRequest(ApiModel):
     #: example: Y2lzY29z...
     floor_id: Optional[str] = None
     #: How many people the workspace is suitable for. If set, must be 0 or higher.
-    #: example: 5.0
+    #: example: 5
     capacity: Optional[int] = None
     #: The type that best describes the workspace.
     #: example: focus

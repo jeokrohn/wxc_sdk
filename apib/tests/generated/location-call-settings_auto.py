@@ -77,7 +77,7 @@ class ExtensionStatusObject(ApiModel):
     #: example: VALID
     state: Optional[ExtensionStatusObjectState] = None
     #: Error code of the state in case extension is not valid.
-    #: example: 9495.0
+    #: example: 9495
     error_code: Optional[int] = None
     #: Message assigned to the error code.
     #: example: [Error 9495] The extension is not available. It is already assigned as a Call Park Extension: 407721.
@@ -249,7 +249,7 @@ class GetTelephonyLocationObject(ApiModel):
     #: example: 'Big Corp Denver'
     external_caller_id_name: Optional[str] = None
     #: Limit on the number of people at the location, Read-Only.
-    #: example: 500000.0
+    #: example: 500000
     user_limit: Optional[int] = None
     #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to
     #: the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish
@@ -364,7 +364,7 @@ class ExtentionStatusObject(ApiModel):
     #: example: VALID
     state: Optional[ExtensionStatusObjectState] = None
     #: Error Code.
-    #: example: 59475.0
+    #: example: 59475
     error_code: Optional[int] = None
     #: example: The extension is not available. It is already assigned to a virtual extension
     message: Optional[str] = None

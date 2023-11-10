@@ -88,7 +88,7 @@ class PackageStatus(str, Enum):
 
 class Error(ApiModel):
     #: An error code that identifies the reason for the error.
-    #: example: 10022.0
+    #: example: 10022
     error_code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: The email is already associated with an existing user.
@@ -167,7 +167,7 @@ class CustomerListResponse(ApiModel):
 
 class CustomerProvisioningPrecheckResponseInfo(ApiModel):
     #: Provisioning Precheck `infoCode`.
-    #: example: 100.0
+    #: example: 100
     info_code: Optional[int] = None
     #: A textual description of the `infoCode`.
     #: example: Provisioning Precheck validation successful.

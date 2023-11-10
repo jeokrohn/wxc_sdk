@@ -59,7 +59,7 @@ class RecurYearlyByDateObjectMonth(str, Enum):
 
 class RecurYearlyByDateObject(ApiModel):
     #: Schedule the event on a specific day of the month.
-    #: example: 1.0
+    #: example: 1
     day_of_month: Optional[int] = None
     #: Schedule the event on a specific month of the year.
     #: example: JANUARY

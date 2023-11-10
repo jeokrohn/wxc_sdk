@@ -272,10 +272,10 @@ class SearchResponse(ApiModel):
     #: Start at the zero-based offset in the list of matching contacts.
     start: Optional[int] = None
     #: Limit the number of contacts returned to this maximum count.
-    #: example: 1000.0
+    #: example: 1000
     limit: Optional[int] = None
     #: Total number of contacts returned in search results.
-    #: example: 1.0
+    #: example: 1
     total: Optional[int] = None
 
 

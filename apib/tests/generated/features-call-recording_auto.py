@@ -69,7 +69,7 @@ class GetComplianceAnnouncementObject(ApiModel):
     #: Flag to indicate whether compliance announcement is played after a specified delay in seconds.
     outbound_pstncalls_delay_enabled: Optional[bool] = Field(alias='outboundPSTNCallsDelayEnabled', default=None)
     #: Number of seconds to wait before playing the compliance announcement.
-    #: example: 10.0
+    #: example: 10
     delay_in_seconds: Optional[int] = None
 
 
@@ -82,7 +82,7 @@ class GetOrgComplianceAnnouncementObject(ApiModel):
     #: Flag to indicate whether compliance announcement is played after a specified delay in seconds.
     outbound_pstncalls_delay_enabled: Optional[bool] = Field(alias='outboundPSTNCallsDelayEnabled', default=None)
     #: Number of seconds to wait before playing the compliance announcement.
-    #: example: 10.0
+    #: example: 10
     delay_in_seconds: Optional[int] = None
 
 

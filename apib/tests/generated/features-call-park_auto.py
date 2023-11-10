@@ -39,11 +39,11 @@ class CallParkSettingsObject(ApiModel):
     ring_pattern: Optional[CallParkSettingsObjectRingPattern] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the
     #: set time, then the call will be recalled based on the Call Park Recall setting.
-    #: example: 60.0
+    #: example: 60
     recall_time: Optional[int] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call
     #: will revert back to the hunt group (after the person who parked the call is alerted).
-    #: example: 60.0
+    #: example: 60
     hunt_wait_time: Optional[int] = None
 
 

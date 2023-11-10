@@ -67,7 +67,7 @@ class MemberObject(ApiModel):
     #: example: True
     primary_owner: Optional[bool] = None
     #: Port number assigned to person or workspace.
-    #: example: 1.0
+    #: example: 1
     port: Optional[int] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
     #: requires this option. This will override user level compression options.
@@ -75,7 +75,7 @@ class MemberObject(ApiModel):
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
-    #: example: 1.0
+    #: example: 1
     line_weight: Optional[int] = None
     #: Registration Host IP address for the line port.
     #: example: 10.0.0.45
@@ -111,7 +111,7 @@ class GetMemberResponse(ApiModel):
     #: List of members that appear on the device.
     members: Optional[list[MemberObject]] = None
     #: Maximum number of lines available for the device.
-    #: example: 10.0
+    #: example: 10
     max_line_count: Optional[int] = None
 
 

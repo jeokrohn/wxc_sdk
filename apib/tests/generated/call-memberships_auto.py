@@ -59,7 +59,7 @@ class CallMembership(ApiModel):
     #: example: ``
     org_id: Optional[str] = None
     #: The total amount of time, in seconds, that the membership was in a "joined" state.
-    #: example: 180.0
+    #: example: 180
     joined_duration: Optional[int] = None
     #: The current status of the audio stream.
     #: example: on

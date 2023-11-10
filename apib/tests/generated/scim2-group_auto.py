@@ -186,13 +186,13 @@ class SearchGroupResponse(ApiModel):
     #: example: ['urn:scim:schemas:extension:cisco:webexidentity:2.0:GroupMembers']
     schemas: Optional[list[str]] = None
     #: Total number of groups in search results.
-    #: example: 2.0
+    #: example: 2
     member_size: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2.0
+    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching contacts.
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
     #: An array of group objects.
     resources: Optional[list[GetGroupResponse]] = Field(alias='Resources', default=None)
@@ -218,13 +218,13 @@ class GroupMemberResponse(ApiModel):
     #: example: group1@example.com
     display_name: Optional[str] = None
     #: Total number of groups in search results.
-    #: example: 2.0
+    #: example: 2
     total_results: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2.0
+    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching groups.
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
     #: A list of members of this group.
     members: Optional[list[GroupMemberResponseMembers]] = None

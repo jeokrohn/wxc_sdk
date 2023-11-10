@@ -16,7 +16,7 @@ __auto__ = ['BillingReportsListResponse', 'ListReport', 'Report', 'ReportError',
 
 class ReportError(ApiModel):
     #: The error code itself.
-    #: example: 2024.0
+    #: example: 2024
     code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: Billing Report not found.

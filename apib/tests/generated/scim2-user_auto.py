@@ -514,13 +514,13 @@ class SearchUserResponse(ApiModel):
     #: example: ['urn:ietf:params:scim:api:messages:2.0:ListResponse']
     schemas: Optional[list[str]] = None
     #: Total number of users in search results.
-    #: example: 2.0
+    #: example: 2
     total_results: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2.0
+    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching users.
-    #: example: 1.0
+    #: example: 1
     start_index: Optional[int] = None
     #: A list of users with details.
     resources: Optional[list[GetUserResponse]] = Field(alias='Resources', default=None)

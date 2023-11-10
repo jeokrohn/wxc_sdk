@@ -87,16 +87,16 @@ class GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria(
     #: Determines if a password requires mixed case.
     mixed_case: Optional[bool] = None
     #: Sets the minimum password length.
-    #: example: 8.0
+    #: example: 8
     min_length: Optional[int] = None
     #: Sets the minimum number of numeric characters in the password.
-    #: example: 2.0
+    #: example: 2
     min_numeric: Optional[int] = None
     #: Sets the minimum number of alphabetical characters in the password.
-    #: example: 4.0
+    #: example: 4
     min_alpha: Optional[int] = None
     #: Sets the minimum number of special characters in the password.
-    #: example: 1.0
+    #: example: 1
     min_special: Optional[int] = None
     #: Do not allow dynamic web page text for meeting passwords (like site name, host's name, username, meeting topic).
     disallow_dynamic_web_text: Optional[bool] = None

@@ -43,7 +43,7 @@ class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: example: True
     next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and `nextAgentEnabled` is true.
-    #: example: 3.0
+    #: example: 3
     next_agent_rings: Optional[int] = None
     #: If true, forwards unanswered calls to the destination after the number of rings occurs.
     forward_enabled: Optional[bool] = None
@@ -51,10 +51,10 @@ class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: Number of rings before forwarding calls if `forwardEnabled` is true.
-    #: example: 15.0
+    #: example: 15
     number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
-    #: example: 15.0
+    #: example: 15
     system_max_number_of_rings: Optional[int] = None
     #: If destinationVoicemailEnabled is true, enables and disables sending incoming to destination number's voicemail
     #: if the destination is an internal phone number and that number has the voicemail service enabled.

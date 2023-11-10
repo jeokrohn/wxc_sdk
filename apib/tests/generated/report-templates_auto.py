@@ -39,7 +39,7 @@ class Template(ApiModel):
     #: example: Teams
     service: Optional[str] = None
     #: Maximum date range for reports belonging to this template.
-    #: example: 31.0
+    #: example: 31
     max_days: Optional[int] = None
     #: Generated reports belong to which field.
     #: example: orgWithoutDate

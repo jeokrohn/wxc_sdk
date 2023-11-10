@@ -72,7 +72,7 @@ class Device(ApiModel):
     #: example: 2019-04-23T17:32:00.000Z
     left_time: Optional[datetime] = None
     #: The duration in seconds the device stayed in the meeting.
-    #: example: 60.0
+    #: example: 60
     duration_second: Optional[int] = None
     #: The PSTN call type in which the device joined the meeting.
     #: example: callIn

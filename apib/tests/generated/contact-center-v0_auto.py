@@ -60,7 +60,7 @@ class Agent(ApiModel):
     #: example: 653
     agent_dn: Optional[AgentAgentDn] = None
     #: The ID identifies an agent.
-    #: example: 295.0
+    #: example: 295
     agent_id: Optional[int] = None
     #: Name of an agent, that is, a person who answers customer calls, chats or emails.
     #: example: loadAgent00001 BSFT
@@ -75,10 +75,10 @@ class Agent(ApiModel):
     #: example: LoggedIn
     current_state: Optional[AgentCurrentState] = None
     #: Timestamp when the interaction started.
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     cstts: Optional[int] = None
     #: Timestamp when the interaction ended.
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     cetts: Optional[int] = None
     #: The ID assigned to an entry point.
     #: example: 0ba49aae-74ed-41e5-bd28-6f8524b62e04
@@ -86,10 +86,10 @@ class Agent(ApiModel):
     #: The media type of the contact.
     #: example: telephony
     channel_type: Optional[AgentChannelType] = None
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     realtime_update_timestamp: Optional[int] = None
     #: The ID assigned to a team.
-    #: example: 125.0
+    #: example: 125
     team_id: Optional[int] = None
     #: The name of a team, which is a group of agents at a specific site who handle a particular type of contact.
     #: example: Load_Team1
@@ -97,7 +97,7 @@ class Agent(ApiModel):
     #: example: AV-SuTCNizTcJ2G98gNn
     team_system_id: Optional[str] = None
     #: The ID assigned to a site, which is a call center location.
-    #: example: 66.0
+    #: example: 66
     site_id: Optional[int] = None
     #: The call center location to which a call was distributed.
     #: example: Load_Site_BLV
@@ -110,10 +110,10 @@ class AgentActivity(Agent):
     #: example: c4567c9858a74fd39497cddde50b1ac
     call_session_id: Optional[str] = None
     #: The amount of time between when the activity started and when the activity ended.
-    #: example: 21.0
+    #: example: 21
     duration: Optional[int] = None
     #: The ID assigned to an idle state/code.
-    #: example: 95.0
+    #: example: 95
     idle_code_id: Optional[int] = None
     #: The name of the idle code. Admin can configure possible values like Meeting, RONA, Dinner, Lunch, Busy
     #: example: Meeting
@@ -129,16 +129,16 @@ class AgentSession(Agent):
     #: example: AV9-9J4KizTcJ2G98fzL
     agent_system_id: Optional[str] = None
     #: The number of times an agent went into Available state.
-    #: example: 1.0
+    #: example: 1
     available_count: Optional[int] = None
     #: The number of times an agent transferred without consulting first.
-    #: example: 2.0
+    #: example: 2
     blind_xfer_count: Optional[int] = None
     #: The number of times an agent went into an Idle state.
-    #: example: 1.0
+    #: example: 1
     idle_count: Optional[int] = None
     #: The amount of time an agent spent in an Available state.
-    #: example: 2065.0
+    #: example: 2065
     total_available_time: Optional[int] = None
 
 
@@ -169,13 +169,13 @@ class Customer(ApiModel):
     #: example: e3db29fa-6a84-4dc3-b814-95c617b67a95
     agent_session_id: Optional[str] = None
     #: Number of times a customer contacted.
-    #: example: 1.0
+    #: example: 1
     call_count: Optional[int] = None
     #: The current direction of the call.
     #: example: inbound
     call_direction: Optional[CustomerCallDirection] = None
     #: Timestamp when the interaction started.
-    #: example: 1530629440059.0
+    #: example: 1530629440059
     cstts: Optional[int] = None
     #: The media type of the contact.
     #: example: telephony
@@ -204,7 +204,7 @@ class Customer(ApiModel):
     #: example: e3cf6187-cc3f-4c6f-8ba5-6014821529e3-1584547145537-new
     sid: Optional[str] = None
     #: The ID assigned to a site, which is a call center location.
-    #: example: 66.0
+    #: example: 66
     site_id: Optional[int] = None
     #: The call center location to which a call was distributed.
     #: example: Load_Site_BLV
@@ -212,20 +212,20 @@ class Customer(ApiModel):
     #: example: AV-SuI65izTcJ2G98gNm
     site_system_id: Optional[str] = None
     #: The ID assigned to a team.
-    #: example: 125.0
+    #: example: 125
     team_id: Optional[int] = None
     #: The name of a team, which is a group of agents at a specific site who handle a particular type of contact.
     #: example: Load_Team1
     team_name: Optional[str] = None
     #: example: AV-SuTCNizTcJ2G98gNn
     team_system_id: Optional[str] = None
-    #: example: 1.0
+    #: example: 1
     tid: Optional[int] = None
 
 
 class CustomerActivity(Customer):
     #: The amount of time between when the activity started and when it was terminated.
-    #: example: 154.0
+    #: example: 154
     duration: Optional[int] = None
     #: If this isn't a current activity, this field shows the state of the following activity.
     #: example: ivr-connected
@@ -245,23 +245,23 @@ class CustomerSessionTerminationType(str, Enum):
 
 class CustomerSession(Customer):
     #: Number of times the contact was in IVR state.
-    #: example: 1.0
+    #: example: 1
     ivr_count: Optional[int] = None
     #: The amount of time, in milliseconds, during which a call was in IVR state.
-    #: example: 1.0
+    #: example: 1
     ivr_duration: Optional[int] = None
     #: A string that identifies a queue.
     #: example: 20
     queue_id: Optional[datetime] = None
     #: The number of queues contact entered.
-    #: example: 1.0
+    #: example: 1
     queue_count: Optional[int] = None
     #: The name of the current or final queue, which is holding place for contacts while they await handling by an
     #: agent. Calls are moved from an entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesQueue
     queue_name: Optional[str] = None
     #: The amount of time, in milliseconds, a contact spent in queue waiting.
-    #: example: 245198.0
+    #: example: 245198
     queue_duration: Optional[int] = None
     #: Indicates which party terminated the interaction.
     #: example: caller
@@ -273,9 +273,9 @@ class CustomerSession(Customer):
 
 class ActivityListDatasetMetadata(ApiModel):
     last_access_timestamp: Optional[int] = None
-    #: example: 3.0
+    #: example: 3
     number_of_records_found: Optional[int] = None
-    #: example: 3.0
+    #: example: 3
     number_of_records_in_dataset: Optional[int] = None
     #: example: true
     is_complete: Optional[str] = None
