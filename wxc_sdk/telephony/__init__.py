@@ -92,6 +92,10 @@ class NumberListPhoneNumber(ApiModel):
     phone_number: Optional[str] = None
     #: Extension for a PSTN phone number.
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
     #: Phone number's state.
     state: Optional[NumberState] = None
     #: Type of phone number.

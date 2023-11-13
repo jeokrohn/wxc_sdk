@@ -131,6 +131,10 @@ class AutoAttendant(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
     #: First name defined for an auto attendant. (only returned by details())
@@ -171,6 +175,8 @@ class AutoAttendant(ApiModel):
                                              'enabled': True,
                                              'toll_free_number': True,
                                              'language': True,
+                                             'esn': True,
+                                             'routing_prefix': True
                                              })
 
     @staticmethod

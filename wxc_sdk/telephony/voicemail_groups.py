@@ -29,6 +29,10 @@ class VoicemailGroup(ApiModel):
     #: Phone number of the voicemail group.
     phone_number: Optional[str] = None
     #: If enabled, incoming calls are sent to voicemail.
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
     enabled: bool
     #: Flag to indicate if the number is toll free.
     toll_free_number: bool = Field(default=False)
@@ -43,6 +47,10 @@ class VoicemailGroupDetail(ApiModel):
     phone_number: Optional[str] = None
     #: Voicemail group extension number.
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
     #: Voicemail group toll free number.
     toll_free_number: Optional[bool] = None
     #: Voicemail group caller id first name.

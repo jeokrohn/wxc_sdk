@@ -69,6 +69,10 @@ class HGandCQ(ApiModel):
     phone_number: Optional[str] = None
     #: Extension
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
     calling_line_id_policy: Optional[CallingLineIdPolicy] = None
     calling_line_id_phone_number: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
@@ -115,6 +119,8 @@ class HGandCQ(ApiModel):
                 'location_id': True,
                 'toll_free_number': True,
                 'language': True,
+                'routing_prefix': True,
+                'esn': True,
                 'agents':
                     {'__all__':
                          {'first_name': True,

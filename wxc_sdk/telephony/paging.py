@@ -28,6 +28,10 @@ class PagingAgent(ApiModel):
     phone_number: Optional[str] = None
     #: Agents extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
 
     @classmethod
     def create_update_exclude(cls) -> dict:
@@ -40,7 +44,9 @@ class PagingAgent(ApiModel):
                 'last_name': True,
                 'agent_type': True,
                 'phone_number': True,
-                'extension': True}
+                'extension': True,
+                'esn': True,
+                'routing_prefix': True}
 
 
 class Paging(ApiModel):
@@ -56,6 +62,10 @@ class Paging(ApiModel):
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
     #: is the phone numer a toll free number?
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
     toll_free_number: Optional[bool] = None
     #: Paging language. Minimum length is 1. Maximum length is 40.
     language: Optional[str] = None
@@ -92,7 +102,9 @@ class Paging(ApiModel):
                                                         'originators': {'__all__': PagingAgent.create_update_exclude()},
                                                         'targets': {'__all__': PagingAgent.create_update_exclude()},
                                                         'location_name': True,
-                                                        'location_id': True}))
+                                                        'location_id': True,
+                                                        'esn': True,
+                                                        'routing_prefix': True}))
 
         # originators and targets are only ID lists
         def to_id(key: str):

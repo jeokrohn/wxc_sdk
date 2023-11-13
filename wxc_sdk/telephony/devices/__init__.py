@@ -43,6 +43,10 @@ class MemberCommon(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of a person or workspace.
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routingPrefix: Optional[str]
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str]
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
     #: requires this option. This will override user level compression options.
     t38_fax_compression_enabled: Optional[bool] = None

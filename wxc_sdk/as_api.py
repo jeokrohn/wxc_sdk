@@ -9240,8 +9240,8 @@ class AsCallQueueApi:
                          {'overflow':
                               {'is_transfer_number_set': True}}})
 
-    def list_gen(self, location_id: str = None, name: str = None,
-             org_id: str = None, **params) -> AsyncGenerator[CallQueue, None, None]:
+    def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None, department_id: str = None,
+             department_name: str = None, org_id: str = None, **params) -> AsyncGenerator[CallQueue, None, None]:
         """
         Read the List of Call Queues
         List all Call Queues for the organization.
@@ -9259,6 +9259,12 @@ class AsCallQueueApi:
         :type location_id: str
         :param name: Only return call queues with the matching name.
         :type name: str
+        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :type phone_number: str
+        :param department_id: Return only call queues with the matching departmentId.
+        :type department_id: str
+        :param department_name: Return only call queues with the matching departmentName.
+        :type department_name: str
         :param org_id: List call queues for this organization
         :type org_id: str
         :param params: dict of additional parameters passed directly to endpoint
@@ -9272,8 +9278,8 @@ class AsCallQueueApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=CallQueue, params=params)
 
-    async def list(self, location_id: str = None, name: str = None,
-             org_id: str = None, **params) -> List[CallQueue]:
+    async def list(self, location_id: str = None, name: str = None, phone_number: str = None, department_id: str = None,
+             department_name: str = None, org_id: str = None, **params) -> List[CallQueue]:
         """
         Read the List of Call Queues
         List all Call Queues for the organization.
@@ -9291,6 +9297,12 @@ class AsCallQueueApi:
         :type location_id: str
         :param name: Only return call queues with the matching name.
         :type name: str
+        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :type phone_number: str
+        :param department_id: Return only call queues with the matching departmentId.
+        :type department_id: str
+        :param department_name: Return only call queues with the matching departmentName.
+        :type department_name: str
         :param org_id: List call queues for this organization
         :type org_id: str
         :param params: dict of additional parameters passed directly to endpoint

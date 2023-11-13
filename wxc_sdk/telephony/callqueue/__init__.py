@@ -10,7 +10,7 @@ from ..forwarding import ForwardingApi, FeatureSelector
 from ..hg_and_cq import HGandCQ, Policy, Agent
 from ...base import SafeEnum as Enum
 from ...base import to_camel, ApiModel
-from ...common import RingPattern, Greeting, AnnAudioFile
+from ...common import RingPattern, Greeting, AnnAudioFile, IdAndName
 from ...rest import RestSession
 
 __all__ = ['CallBounce', 'DistinctiveRing', 'CallQueueCallPolicies', 'OverflowAction', 'OverflowSetting', 'WaitMode',
@@ -301,6 +301,8 @@ class CallQueue(HGandCQ):
     allow_agent_join_enabled: Optional[bool] = None
     #: Allow queue phone number for outgoing calls
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
+    #: Specifies the department information.
+    department: Optional[IdAndName]
 
     @staticmethod
     def exclude_update_or_create() -> dict:
@@ -313,7 +315,8 @@ class CallQueue(HGandCQ):
         base_exclude = HGandCQ.exclude_update_or_create()
         base_exclude.update({'queue_settings':
                                  {'overflow':
-                                      {'is_transfer_number_set': True}}})
+                                      {'is_transfer_number_set': True}},
+                             'department': {'name': True}})
         return base_exclude
 
     @staticmethod
@@ -327,6 +330,7 @@ class CallQueue(HGandCQ):
                time_zone: str = None,
                phone_number: str = None,
                extension: str = None,
+               department_id: str = None,
                call_policies: CallQueueCallPolicies = None,
                queue_settings: QueueSettings = None,
                allow_call_waiting_for_agents_enabled: bool = None,
@@ -346,6 +350,7 @@ class CallQueue(HGandCQ):
         :param time_zone:
         :param phone_number:
         :param extension:
+        :param department_id:
         :param call_policies:
         :param queue_settings:
         :param allow_call_waiting_for_agents_enabled:
@@ -363,6 +368,9 @@ class CallQueue(HGandCQ):
             queue_settings = QueueSettings(queue_size=queue_size)
         params = {k: v for k, v in locals().items()
                   if v is not None and k != 'queue_size'}
+        if department_id:
+            params.pop('departmentId')
+            params['department'] = {'id': department_id}
         return CallQueue(**params)
 
 
@@ -428,8 +436,8 @@ class CallQueueApi:
                          {'overflow':
                               {'is_transfer_number_set': True}}})
 
-    def list(self, location_id: str = None, name: str = None,
-             org_id: str = None, **params) -> Generator[CallQueue, None, None]:
+    def list(self, location_id: str = None, name: str = None, phone_number: str = None, department_id: str = None,
+             department_name: str = None, org_id: str = None, **params) -> Generator[CallQueue, None, None]:
         """
         Read the List of Call Queues
         List all Call Queues for the organization.
@@ -447,6 +455,12 @@ class CallQueueApi:
         :type location_id: str
         :param name: Only return call queues with the matching name.
         :type name: str
+        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :type phone_number: str
+        :param department_id: Return only call queues with the matching departmentId.
+        :type department_id: str
+        :param department_name: Return only call queues with the matching departmentName.
+        :type department_name: str
         :param org_id: List call queues for this organization
         :type org_id: str
         :param params: dict of additional parameters passed directly to endpoint
