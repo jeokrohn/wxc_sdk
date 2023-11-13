@@ -12,6 +12,7 @@ from .participants import MeetingParticipantsApi
 from .preferences import MeetingPreferencesApi
 from .qanda import MeetingQandAApi
 from .qualities import MeetingQualitiesApi
+from .recordings import RecordingsApi
 from .transcripts import MeetingTranscriptsApi
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -1090,6 +1091,8 @@ class MeetingsApi(ApiChild, base='meetings'):
     qanda: MeetingQandAApi
     #: qualities API
     qualities: MeetingQualitiesApi
+    # recordings
+    recordings: RecordingsApi
     #: transcripts
     transcripts: MeetingTranscriptsApi
 
@@ -1102,6 +1105,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         self.preferences = MeetingPreferencesApi(session=session)
         self.qanda = MeetingQandAApi(session=session)
         self.qualities = MeetingQualitiesApi(session=session)
+        self.recordings = RecordingsApi(session=session)
         self.transcripts = MeetingTranscriptsApi(session=session)
 
     def create(self, title: str = None, agenda: str = None, password: str = None, start: str = None, end: str = None,

@@ -15,6 +15,7 @@ Release history
 - fix: corrected handling of Union[datetime, str] in :meth:`wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`
 - feat: support for ESNs
 - feat: call queue with departments
+- feat: call recordings API
 
 1.16.1
 ------
