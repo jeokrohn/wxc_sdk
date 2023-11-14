@@ -108,7 +108,7 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :rtype: list[TagsObj]
         """
         body = dict()
-        body['tags'] = loads(TypeAdapter(list[TagsObj]).dump_json(tags))
+        body['tags'] = loads(TypeAdapter(list[TagsObj]).dump_json(tags, by_alias=True, exclude_none=True))
         url = self.ep(f'organizations/{org_id}/assignTags')
         data = super().post(url, json=body)
         r = TypeAdapter(list[TagsObj]).validate_python(data)
@@ -175,7 +175,7 @@ class PartnerTagsApi(ApiChild, base='partner/tags'):
         :rtype: list[TagsObj]
         """
         body = dict()
-        body['tags'] = loads(TypeAdapter(list[TagsObj]).dump_json(tags))
+        body['tags'] = loads(TypeAdapter(list[TagsObj]).dump_json(tags, by_alias=True, exclude_none=True))
         url = self.ep(f'organizations/{org_id}/subscriptions/{subscription_id}/assignTags')
         data = super().post(url, json=body)
         r = TypeAdapter(list[TagsObj]).validate_python(data)

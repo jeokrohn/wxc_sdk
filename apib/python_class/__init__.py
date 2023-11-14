@@ -143,7 +143,8 @@ class Parameter:
             return f"body['{self.name}'] = enum_str({self.python_name})"
         if self.python_type == self.referenced_class:
             return f"body['{self.name}'] = loads({self.python_name}.model_dump_json())"
-        return f"body['{self.name}'] = loads(TypeAdapter({self.python_type}).dump_json({self.python_name}))"
+        return f"body['{self.name}'] = loads(TypeAdapter({self.python_type}).dump_json({self.python_name}, " \
+               f"by_alias=True, exclude_none=True))"
 
 
 class SourceIO(StringIO):

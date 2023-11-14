@@ -353,10 +353,10 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         body['avatarURL'] = avatar_url
         body['primaryContactMethod'] = enum_str(primary_contact_method)
         body['source'] = enum_str(source)
-        body['emails'] = loads(TypeAdapter(list[ContactEmails]).dump_json(emails))
-        body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers))
-        body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses))
-        body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims))
+        body['emails'] = loads(TypeAdapter(list[ContactEmails]).dump_json(emails, by_alias=True, exclude_none=True))
+        body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+        body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses, by_alias=True, exclude_none=True))
+        body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims, by_alias=True, exclude_none=True))
         url = self.ep(f'')
         super().post(url, json=body)
 
@@ -439,10 +439,10 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         body['avatarURL'] = avatar_url
         body['primaryContactMethod'] = enum_str(primary_contact_method)
         body['source'] = enum_str(source)
-        body['emails'] = loads(TypeAdapter(list[ContactEmails]).dump_json(emails))
-        body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers))
-        body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses))
-        body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims))
+        body['emails'] = loads(TypeAdapter(list[ContactEmails]).dump_json(emails, by_alias=True, exclude_none=True))
+        body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+        body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses, by_alias=True, exclude_none=True))
+        body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims, by_alias=True, exclude_none=True))
         url = self.ep(f'{contact_id}')
         super().patch(url, json=body)
 
@@ -517,7 +517,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         """
         body = dict()
         body['schemas'] = schemas
-        body['contacts'] = loads(TypeAdapter(list[BulkCreateContacts]).dump_json(contacts))
+        body['contacts'] = loads(TypeAdapter(list[BulkCreateContacts]).dump_json(contacts, by_alias=True, exclude_none=True))
         url = self.ep(f'bulk')
         super().post(url, json=body)
 

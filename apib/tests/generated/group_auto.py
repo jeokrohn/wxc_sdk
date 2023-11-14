@@ -140,7 +140,7 @@ class GroupsApi(ApiChild, base='groups'):
         body['displayName'] = display_name
         body['orgId'] = org_id
         body['description'] = description
-        body['members'] = loads(TypeAdapter(list[PostMember]).dump_json(members))
+        body['members'] = loads(TypeAdapter(list[PostMember]).dump_json(members, by_alias=True, exclude_none=True))
         url = self.ep()
         data = super().post(url, json=body)
         r = GroupResponse.model_validate(data)
@@ -168,7 +168,7 @@ class GroupsApi(ApiChild, base='groups'):
         body = dict()
         body['displayName'] = display_name
         body['description'] = description
-        body['members'] = loads(TypeAdapter(list[PatchMemberWithOperation]).dump_json(members))
+        body['members'] = loads(TypeAdapter(list[PatchMemberWithOperation]).dump_json(members, by_alias=True, exclude_none=True))
         url = self.ep(f'{group_id}')
         data = super().patch(url, json=body)
         r = GroupResponse.model_validate(data)

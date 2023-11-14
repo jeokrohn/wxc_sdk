@@ -1190,7 +1190,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_json(agents))
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues')
@@ -1345,7 +1345,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
         body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
-        body['agents'] = loads(TypeAdapter(list[ModifyPersonPlaceVirtualLineCallQueueObject]).dump_json(agents))
+        body['agents'] = loads(TypeAdapter(list[ModifyPersonPlaceVirtualLineCallQueueObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
@@ -1747,7 +1747,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['transferPhoneNumber'] = transfer_phone_number
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
         super().put(url, params=params, json=body)
 
@@ -1851,12 +1851,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['announcementMode'] = enum_str(announcement_mode)
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
         body['businessHoursName'] = business_hours_name
         body['businessHoursLevel'] = enum_str(business_hours_level)
         body['forceNightServiceEnabled'] = force_night_service_enabled
         body['manualAudioMessageSelection'] = enum_str(manual_audio_message_selection)
-        body['manualAudioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(manual_audio_files))
+        body['manualAudioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(manual_audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
         super().put(url, params=params, json=body)
 
@@ -1933,7 +1933,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['transferPhoneNumber'] = transfer_phone_number
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
         super().put(url, params=params, json=body)
 
@@ -2008,6 +2008,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['action'] = enum_str(action)
         body['transferPhoneNumber'] = transfer_phone_number
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files))
+        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         super().put(url, params=params, json=body)

@@ -368,7 +368,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         body = dict()
         body['type'] = enum_str(type)
         body['name'] = name
-        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventObject]).dump_json(events))
+        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventObject]).dump_json(events, by_alias=True, exclude_none=True))
         url = self.ep(f'')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -408,7 +408,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventListObject]).dump_json(events))
+        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventListObject]).dump_json(events, by_alias=True, exclude_none=True))
         url = self.ep(f'{type}/{schedule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']

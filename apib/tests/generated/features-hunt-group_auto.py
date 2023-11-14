@@ -638,7 +638,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         body['lastName'] = last_name
         body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
         url = self.ep(f'locations/{location_id}/huntGroups')
         data = super().post(url, params=params, json=body)
@@ -761,13 +761,13 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         body['phoneNumber'] = phone_number
         body['extension'] = extension
         body['distinctiveRing'] = distinctive_ring
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers))
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
         body['languageCode'] = language_code
         body['firstName'] = first_name
         body['lastName'] = last_name
         body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)

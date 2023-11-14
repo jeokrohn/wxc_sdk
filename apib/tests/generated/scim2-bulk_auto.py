@@ -129,7 +129,7 @@ class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim/{orgId}/v2/
         body = dict()
         body['schemas'] = schemas
         body['failOnErrors'] = fail_on_errors
-        body['operations'] = loads(TypeAdapter(list[BulkUserOperations]).dump_json(operations))
+        body['operations'] = loads(TypeAdapter(list[BulkUserOperations]).dump_json(operations, by_alias=True, exclude_none=True))
         url = self.ep(f'')
         data = super().post(url, json=body)
         r = BulkUser.model_validate(data)

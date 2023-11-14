@@ -254,7 +254,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         url = self.ep('admin/meetingTranscripts')
         return self.session.follow_pagination(url=url, model=TranscriptObject, item_key='items', params=params)
 
-    def download_a_meeting_transcript(self, transcript_id: str, format: DownloadAMeetingTranscriptFormat = None,
+    def download_a_meeting_transcript(self, transcript_id: str, format_: DownloadAMeetingTranscriptFormat = None,
                                       host_email: str = None):
         """
         Download a Meeting Transcript
@@ -263,8 +263,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
 
         :param transcript_id: Unique identifier for the meeting transcript.
         :type transcript_id: str
-        :param format: Format for the downloaded meeting transcript.
-        :type format: DownloadAMeetingTranscriptFormat
+        :param format_: Format for the downloaded meeting transcript.
+        :type format_: DownloadAMeetingTranscriptFormat
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the `admin-level` scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for a meeting that is hosted by that user.
@@ -272,8 +272,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :rtype: None
         """
         params = {}
-        if format is not None:
-            params['format'] = format
+        if format_ is not None:
+            params['format'] = format_
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'meetingTranscripts/{transcript_id}/download')

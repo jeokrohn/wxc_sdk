@@ -517,7 +517,7 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
         body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents))
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['department'] = loads(department.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().put(url, params=params, json=body)

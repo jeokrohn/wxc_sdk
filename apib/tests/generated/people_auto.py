@@ -377,7 +377,7 @@ class PeopleApi(ApiChild, base='people'):
             params['callingData'] = str(calling_data).lower()
         body = dict()
         body['emails'] = emails
-        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers))
+        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
         body['extension'] = extension
         body['locationId'] = location_id
         body['displayName'] = display_name
@@ -391,7 +391,7 @@ class PeopleApi(ApiChild, base='people'):
         body['manager'] = manager
         body['managerId'] = manager_id
         body['title'] = title
-        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses))
+        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
         body['siteUrls'] = site_urls
         url = self.ep()
         data = super().post(url, params=params, json=body)
@@ -527,7 +527,7 @@ class PeopleApi(ApiChild, base='people'):
             params['showAllTypes'] = str(show_all_types).lower()
         body = dict()
         body['emails'] = emails
-        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers))
+        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
         body['extension'] = extension
         body['locationId'] = location_id
         body['displayName'] = display_name
@@ -542,7 +542,7 @@ class PeopleApi(ApiChild, base='people'):
         body['manager'] = manager
         body['managerId'] = manager_id
         body['title'] = title
-        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses))
+        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
         body['siteUrls'] = site_urls
         body['loginEnabled'] = login_enabled
         url = self.ep(f'{person_id}')

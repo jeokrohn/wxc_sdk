@@ -322,7 +322,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         body['description'] = description
         body['orgId'] = org_id
         body['shippingDetails'] = loads(shipping_details.model_dump_json())
-        body['lineItems'] = loads(TypeAdapter(list[OrderRequestLineItem]).dump_json(line_items))
+        body['lineItems'] = loads(TypeAdapter(list[OrderRequestLineItem]).dump_json(line_items, by_alias=True, exclude_none=True))
         url = self.ep('orders')
         data = super().post(url, json=body)
         r = OrderResponse.model_validate(data)

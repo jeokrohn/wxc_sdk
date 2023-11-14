@@ -1171,7 +1171,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['dialPatterns'] = loads(TypeAdapter(list[DialPattern]).dump_json(dial_patterns))
+        body['dialPatterns'] = loads(TypeAdapter(list[DialPattern]).dump_json(dial_patterns, by_alias=True, exclude_none=True))
         body['deleteAllDialPatterns'] = delete_all_dial_patterns
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
         super().put(url, params=params, json=body)
@@ -1706,7 +1706,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways))
+        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways, by_alias=True, exclude_none=True))
         url = self.ep('premisePstn/routeGroups')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1766,7 +1766,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways))
+        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways, by_alias=True, exclude_none=True))
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
         super().put(url, params=params, json=body)
 
@@ -2156,7 +2156,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['numbers'] = loads(TypeAdapter(list[RouteListNumberPatch]).dump_json(numbers))
+        body['numbers'] = loads(TypeAdapter(list[RouteListNumberPatch]).dump_json(numbers, by_alias=True, exclude_none=True))
         body['deleteAllNumbers'] = delete_all_numbers
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
         data = super().put(url, params=params, json=body)

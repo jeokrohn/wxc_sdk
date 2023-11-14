@@ -292,7 +292,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['generate'] = loads(TypeAdapter(list[PasswordGenerate]).dump_json(generate))
+        body['generate'] = loads(TypeAdapter(list[PasswordGenerate]).dump_json(generate, by_alias=True, exclude_none=True))
         url = self.ep(f'actions/generatePassword/invoke')
         data = super().post(url, params=params, json=body)
         r = data['exampleSipPassword']
@@ -475,7 +475,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['callingPermissions'] = loads(TypeAdapter(list[CallingPermissionObject]).dump_json(calling_permissions))
+        body['callingPermissions'] = loads(TypeAdapter(list[CallingPermissionObject]).dump_json(calling_permissions, by_alias=True, exclude_none=True))
         url = self.ep(f'outgoingPermission')
         super().put(url, params=params, json=body)
 

@@ -402,8 +402,8 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['useHostedAgentEnabled'] = use_hosted_agent_enabled
         body['usePolicyServerEnabled'] = use_policy_server_enabled
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
-        body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents))
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
         url = self.ep(f'')
         data = super().post(url, params=params, json=body)
@@ -504,15 +504,15 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         body['phoneNumber'] = phone_number
         body['extension'] = extension
         body['distinctiveRing'] = distinctive_ring
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers))
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
         body['languageCode'] = language_code
         body['firstName'] = first_name
         body['lastName'] = last_name
         body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['usePolicyServerEnabled'] = use_policy_server_enabled
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents))
-        body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents))
+        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
         url = self.ep(f'{hunt_group_id}')
         super().put(url, params=params, json=body)

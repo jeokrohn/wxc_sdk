@@ -3113,7 +3113,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         body['automaticLockMinutes'] = automatic_lock_minutes
         body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
         body['allowAuthenticatedDevices'] = allow_authenticated_devices
-        body['invitees'] = loads(TypeAdapter(list[InviteeObjectForCreateMeeting]).dump_json(invitees))
+        body['invitees'] = loads(TypeAdapter(list[InviteeObjectForCreateMeeting]).dump_json(invitees, by_alias=True, exclude_none=True))
         body['sendEmail'] = send_email
         body['hostEmail'] = host_email
         body['siteUrl'] = site_url
@@ -3123,8 +3123,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         body['integrationTags'] = integration_tags
         body['simultaneousInterpretation'] = loads(simultaneous_interpretation.model_dump_json())
         body['enabledBreakoutSessions'] = enabled_breakout_sessions
-        body['breakoutSessions'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(breakout_sessions))
-        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes))
+        body['breakoutSessions'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(breakout_sessions, by_alias=True, exclude_none=True))
+        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
         body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
         body['requireAttendeeLogin'] = require_attendee_login
         body['restrictToInvitees'] = restrict_to_invitees
@@ -3754,7 +3754,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
         body['integrationTags'] = integration_tags
         body['enabledBreakoutSessions'] = enabled_breakout_sessions
-        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes))
+        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
         body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
         body['requireAttendeeLogin'] = require_attendee_login
         body['restrictToInvitees'] = restrict_to_invitees
@@ -3978,7 +3978,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
         body['integrationTags'] = integration_tags
         body['enabledBreakoutSessions'] = enabled_breakout_sessions
-        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes))
+        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
         body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
         body['requireAttendeeLogin'] = require_attendee_login
         body['restrictToInvitees'] = restrict_to_invitees
@@ -4431,8 +4431,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         body['requireWorkPhone'] = require_work_phone
         body['requireFax'] = require_fax
         body['maxRegisterNum'] = max_register_num
-        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedQuestionForCreateMeeting]).dump_json(customized_questions))
-        body['rules'] = loads(TypeAdapter(list[StandardRegistrationApproveRule]).dump_json(rules))
+        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedQuestionForCreateMeeting]).dump_json(customized_questions, by_alias=True, exclude_none=True))
+        body['rules'] = loads(TypeAdapter(list[StandardRegistrationApproveRule]).dump_json(rules, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registration')
         data = super().put(url, json=body)
         r = Registration.model_validate(data)
@@ -4539,7 +4539,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         body['countryRegion'] = country_region
         body['workPhone'] = work_phone
         body['fax'] = fax
-        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedRegistrant]).dump_json(customized_questions))
+        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedRegistrant]).dump_json(customized_questions, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registrants')
         data = super().post(url, params=params, json=body)
         r = RegistrantCreateResponse.model_validate(data)
@@ -4580,7 +4580,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['items'] = loads(TypeAdapter(list[RegistrantFormObject]).dump_json(items))
+        body['items'] = loads(TypeAdapter(list[RegistrantFormObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registrants/bulkInsert')
         data = super().post(url, params=params, json=body)
         r = TypeAdapter(list[RegistrantCreateResponse]).validate_python(data['items'])
@@ -4768,7 +4768,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             params['hostEmail'] = host_email
         body = dict()
         body['sendEmail'] = send_email
-        body['registrants'] = loads(TypeAdapter(list[Registrants]).dump_json(registrants))
+        body['registrants'] = loads(TypeAdapter(list[Registrants]).dump_json(registrants, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registrants/{status_op_type}')
         super().post(url, params=params, json=body)
 
@@ -4826,7 +4826,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         """
         body = dict()
         body['enabled'] = enabled
-        body['interpreters'] = loads(TypeAdapter(list[InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting]).dump_json(interpreters))
+        body['interpreters'] = loads(TypeAdapter(list[InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting]).dump_json(interpreters, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/simultaneousInterpretation')
         data = super().put(url, json=body)
         r = MeetingSeriesObjectSimultaneousInterpretation.model_validate(data)
@@ -5049,7 +5049,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         body = dict()
         body['hostEmail'] = host_email
         body['sendEmail'] = send_email
-        body['items'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(items))
+        body['items'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/breakoutSessions')
         data = super().put(url, json=body)
         r = TypeAdapter(list[GetBreakoutSessionObject]).validate_python(data['items'])
@@ -5252,7 +5252,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         body = dict()
         body['hostEmail'] = host_email
         body['personId'] = person_id
-        body['items'] = loads(TypeAdapter(list[InvitationSourceCreateObject]).dump_json(items))
+        body['items'] = loads(TypeAdapter(list[InvitationSourceCreateObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/invitationSources')
         data = super().post(url, json=body)
         r = TypeAdapter(list[InvitationSourceObject]).validate_python(data['items'])

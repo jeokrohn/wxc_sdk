@@ -172,7 +172,7 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         return r
 
     def download_meeting_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str,
-                                                 format: DownloadMeetingClosedCaptionSnippetsFormat = None):
+                                                 format_: DownloadMeetingClosedCaptionSnippetsFormat = None):
         """
         Download Meeting Closed Caption Snippets
 
@@ -194,13 +194,13 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
             scheduled meetings or scheduled `personal room
             <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meetings.
         :type meeting_id: str
-        :param format: Format for the downloaded meeting closed caption snippets.
-        :type format: DownloadMeetingClosedCaptionSnippetsFormat
+        :param format_: Format for the downloaded meeting closed caption snippets.
+        :type format_: DownloadMeetingClosedCaptionSnippetsFormat
         :rtype: None
         """
         params = {}
-        if format is not None:
-            params['format'] = format
+        if format_ is not None:
+            params['format'] = format_
         params['meetingId'] = meeting_id
         url = self.ep(f'{closed_caption_id}/download')
         super().get(url, params=params)

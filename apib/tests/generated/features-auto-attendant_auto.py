@@ -638,7 +638,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         body['extension'] = extension
         body['firstName'] = first_name
         body['lastName'] = last_name
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers))
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
         body['languageCode'] = language_code
         body['businessSchedule'] = business_schedule
         body['holidaySchedule'] = holiday_schedule
@@ -717,7 +717,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         body['extension'] = extension
         body['firstName'] = first_name
         body['lastName'] = last_name
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers))
+        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
         body['languageCode'] = language_code
         body['businessSchedule'] = business_schedule
         body['holidaySchedule'] = holiday_schedule

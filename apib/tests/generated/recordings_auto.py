@@ -89,7 +89,7 @@ class RecordingObject(ApiModel):
     #: example: BgJep@43
     password: Optional[str] = None
     #: example: MP4
-    format: Optional[RecordingObjectFormat] = None
+    format_: Optional[RecordingObjectFormat] = None
     #: The service type for the recording.
     #: example: MeetingCenter
     service_type: Optional[RecordingObjectServiceType] = None
@@ -156,7 +156,7 @@ class RecordingObjectForAdminAndCO(ApiModel):
     #: example: BgJep@43
     password: Optional[str] = None
     #: example: MP4
-    format: Optional[RecordingObjectFormat] = None
+    format_: Optional[RecordingObjectFormat] = None
     #: The service type for the recording.
     #: example: MeetingCenter
     service_type: Optional[RecordingObjectServiceType] = None
@@ -245,7 +245,7 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: example: BgJep@43
     password: Optional[str] = None
     #: example: MP4
-    format: Optional[RecordingObjectFormat] = None
+    format_: Optional[RecordingObjectFormat] = None
     #: example: MeetingCenter
     service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording in seconds.
@@ -362,7 +362,7 @@ class RecordingsApi(ApiChild, base=''):
 
     def list_recordings(self, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
                         meeting_id: str = None, host_email: str = None, site_url: str = None,
-                        integration_tag: str = None, topic: str = None, format: ListRecordingsFormat = None,
+                        integration_tag: str = None, topic: str = None, format_: ListRecordingsFormat = None,
                         service_type: RecordingObjectServiceType = None, status: ListRecordingsStatus = None,
                         **params) -> Generator[RecordingObject, None, None]:
         """
@@ -425,8 +425,8 @@ class RecordingsApi(ApiChild, base=''):
         :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
             manner.
         :type topic: str
-        :param format: Recording's file format. If specified, the API filters recordings by format.
-        :type format: ListRecordingsFormat
+        :param format_: Recording's file format. If specified, the API filters recordings by format.
+        :type format_: ListRecordingsFormat
         :param service_type: The service type for recordings. If this item is specified, the API filters recordings by
             service-type.
         :type service_type: RecordingObjectServiceType
@@ -455,8 +455,8 @@ class RecordingsApi(ApiChild, base=''):
             params['integrationTag'] = integration_tag
         if topic is not None:
             params['topic'] = topic
-        if format is not None:
-            params['format'] = format
+        if format_ is not None:
+            params['format'] = format_
         if service_type is not None:
             params['serviceType'] = service_type
         if status is not None:
@@ -467,7 +467,7 @@ class RecordingsApi(ApiChild, base=''):
     def list_recordings_for_an_admin_or_compliance_officer(self, from_: Union[str, datetime] = None, to_: Union[str,
                                                            datetime] = None, meeting_id: str = None,
                                                            site_url: str = None, integration_tag: str = None,
-                                                           topic: str = None, format: ListRecordingsFormat = None,
+                                                           topic: str = None, format_: ListRecordingsFormat = None,
                                                            service_type: RecordingObjectServiceType = None,
                                                            status: ListRecordingsStatus = None,
                                                            **params) -> Generator[RecordingObjectForAdminAndCO, None, None]:
@@ -523,8 +523,8 @@ class RecordingsApi(ApiChild, base=''):
         :type integration_tag: str
         :param topic: Recording topic. If specified, the API filters recordings by topic in a case-insensitive manner.
         :type topic: str
-        :param format: Recording's file format. If specified, the API filters recordings by format.
-        :type format: ListRecordingsFormat
+        :param format_: Recording's file format. If specified, the API filters recordings by format.
+        :type format_: ListRecordingsFormat
         :param service_type: The service type for recordings. If specified, the API filters recordings by service type.
         :type service_type: RecordingObjectServiceType
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
@@ -550,8 +550,8 @@ class RecordingsApi(ApiChild, base=''):
             params['integrationTag'] = integration_tag
         if topic is not None:
             params['topic'] = topic
-        if format is not None:
-            params['format'] = format
+        if format_ is not None:
+            params['format'] = format_
         if service_type is not None:
             params['serviceType'] = service_type
         if status is not None:
@@ -573,6 +573,9 @@ class RecordingsApi(ApiChild, base=''):
         * `timezone`: *`Time zone
         <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
         not defined.*
+
+        * `siteUrl`: Optional request header parameter. If specified, retrieve the recording details from that site;
+        otherwise, retrieve it from the site which is implied based on the recording ID.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str

@@ -300,7 +300,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         body = dict()
         body['meetingId'] = meeting_id
         body['hostEmail'] = host_email
-        body['items'] = loads(TypeAdapter(list[CreateInviteesItemObject]).dump_json(items))
+        body['items'] = loads(TypeAdapter(list[CreateInviteesItemObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep('bulkInsert')
         data = super().post(url, json=body)
         r = TypeAdapter(list[GetInviteeObject]).validate_python(data['items'])

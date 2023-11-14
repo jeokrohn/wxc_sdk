@@ -302,7 +302,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         body['schemas'] = schemas
         body['displayName'] = display_name
         body['externalId'] = external_id
-        body['members'] = loads(TypeAdapter(list[GroupMemberObject]).dump_json(members))
+        body['members'] = loads(TypeAdapter(list[GroupMemberObject]).dump_json(members, by_alias=True, exclude_none=True))
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
         url = self.ep(f'')
         data = super().post(url, json=body)
@@ -589,7 +589,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         body['schemas'] = schemas
         body['displayName'] = display_name
         body['externalId'] = external_id
-        body['members'] = loads(TypeAdapter(list[GroupMemberObject]).dump_json(members))
+        body['members'] = loads(TypeAdapter(list[GroupMemberObject]).dump_json(members, by_alias=True, exclude_none=True))
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
         url = self.ep(f'{group_id}')
         data = super().put(url, json=body)
@@ -755,7 +755,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         """
         body = dict()
         body['schemas'] = schemas
-        body['Operations'] = loads(TypeAdapter(list[PatchGroupOperations]).dump_json(operations))
+        body['Operations'] = loads(TypeAdapter(list[PatchGroupOperations]).dump_json(operations, by_alias=True, exclude_none=True))
         url = self.ep(f'{group_id}')
         data = super().patch(url, json=body)
         r = GetGroupResponse.model_validate(data)

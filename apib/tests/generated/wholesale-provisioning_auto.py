@@ -312,12 +312,6 @@ class ProvisionAWholesaleCustomerProvisioningParametersCallingLocation(ApiModel)
     #: SIP Header for any emergency calls from this location.
     #: example: 95547321
     emergency_location_identifier: Optional[str] = None
-    #: List of numbers to be assigned to the location.
-    #: example: ['+17205557878', '+17205557879', '+17205557880', '+17205557881']
-    numbers: Optional[list[str]] = None
-    #: Main number of the Wholesale customer.
-    #: example: +17205557878
-    main_number: Optional[str] = None
 
 
 class ProvisionAWholesaleCustomerProvisioningParametersCalling(ApiModel):
