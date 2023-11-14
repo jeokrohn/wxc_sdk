@@ -13677,7 +13677,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :return:
         """
         data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain',
-                                                 'subscription_status', 'e911_setup_required'})
+                                                 'e911_setup_required', 'subscription_id'})
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
         await self.put(url=url, data=data, params=params)
