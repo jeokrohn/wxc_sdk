@@ -2842,23 +2842,13 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**:
+                when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**:
-        when `meetingId` is specified, parameter of `siteUrl` will be ignored.
-
-        * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
-        recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved
-        by `Get Site List
-        <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-
-        #### Request Header
-
-        * `timezone`: *`Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone
-        database
-        not defined.*
+            * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
+                recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved
+                by `Get Site List
+                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -2948,23 +2938,13 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**:
+                when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**:
-        when `meetingId` is specified, parameter of `siteUrl` will be ignored.
-
-        * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
-        recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved
-        by `Get Site List
-        <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-
-        #### Request Header
-
-        * `timezone`: *`Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone
-        database
-        not defined.*
+            * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
+                recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved
+                by `Get Site List
+                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -3057,20 +3037,15 @@ class AsRecordingsApi(AsApiChild, base=''):
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
-        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
-        note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
+                note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-        * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings
-        on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the
-        admin user's or compliance officer's preferred site can be retrieved by the `Get Site List
-        <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings
+                on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the
+                admin user's or compliance officer's preferred site can be retrieved by the `Get Site List
+                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         #### Request Header
-
-        * `timezone`: *`Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone
-        database
-        not defined.*
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -3154,20 +3129,15 @@ class AsRecordingsApi(AsApiChild, base=''):
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
-        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
-        note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
+                note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-        * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings
-        on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the
-        admin user's or compliance officer's preferred site can be retrieved by the `Get Site List
-        <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings
+                on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the
+                admin user's or compliance officer's preferred site can be retrieved by the `Get Site List
+                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         #### Request Header
-
-        * `timezone`: *`Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone
-        database
-        not defined.*
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -3241,13 +3211,6 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         Only recordings of meetings hosted by or shared with the authenticated user may be retrieved.
 
-        #### Request Header
-
-        * `timezone`: *`Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone
-        database
-        not defined.*
-
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
         :param host_email: Email address for the meeting host. Only used if the user or application calling the API has
@@ -3315,10 +3278,10 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         Only recordings of meetings hosted by the authenticated user can be moved into the recycle bin.
 
-        * `recordingIds` should not be empty and its maximum size is `100`.
+            * `recordingIds` should not be empty and its maximum size is `100`.
 
-        * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
-        `siteUrl` is not specified.
+            * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
+                `siteUrl` is not specified.
 
         :param recording_ids: Recording IDs for removing recordings into the recycle bin in batch. Please note that all
             the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not
@@ -3354,12 +3317,12 @@ class AsRecordingsApi(AsApiChild, base=''):
         Restore all or some recordings from the recycle bin. Only recordings of meetings hosted by the authenticated
         user can be restored from recycle bin.
 
-        * If `restoreAll` is `true`, `recordingIds` should be empty.
+            * If `restoreAll` is `true`, `recordingIds` should be empty.
 
-        * If `restoreAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.
+            * If `restoreAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.
 
-        * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
-        `siteUrl` is not specified.
+            * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
+                `siteUrl` is not specified.
 
         :param restore_all: If not specified or `false`, restores the recordings specified by `recordingIds`. If
             `true`, restores all recordings from the recycle bin.
@@ -3400,12 +3363,12 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         Only recordings of meetings hosted by the authenticated user can be purged from recycle bin.
 
-        * If `purgeAll` is `true`, `recordingIds` should be empty.
+            * If `purgeAll` is `true`, `recordingIds` should be empty.
 
-        * If `purgeAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.
+            * If `purgeAll` is `false`, `recordingIds` should not be empty and its maximum size is `100`.
 
-        * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
-        `siteUrl` is not specified.
+            * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
+                `siteUrl` is not specified.
 
         :param purge_all: If not specified or `false`, purges the recordings specified by `recordingIds`. If `true`,
             purges all recordings from the recycle bin.

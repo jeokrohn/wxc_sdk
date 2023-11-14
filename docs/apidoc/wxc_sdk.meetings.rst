@@ -19,4 +19,5 @@ Subpackages
    wxc_sdk.meetings.preferences
    wxc_sdk.meetings.qanda
    wxc_sdk.meetings.qualities
+   wxc_sdk.meetings.recordings
    wxc_sdk.meetings.transcripts
