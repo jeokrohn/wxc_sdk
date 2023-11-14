@@ -16,6 +16,7 @@ Release history
 - feat: support for ESNs
 - feat: call queue with departments
 - feat: call recordings API
+- feat: new :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.create_line_key_template`, :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.list_line_key_templates`, :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.line_key_template_details`, :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.modify_line_key_template`, :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_line_key_template`, :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.preview_apply_line_key_template`
 
 1.16.1
 ------
