@@ -18,7 +18,7 @@ from typing import Optional, Any, List
 from pydantic import Field, model_validator, field_validator
 
 from ..api_child import ApiChild
-from ..base import SafeEnum as Enum
+from ..base import SafeEnum as Enum, enum_str
 from ..base import to_camel, ApiModel
 from ..rest import RestSession
 from ..telephony import DeviceManagedBy
@@ -163,9 +163,9 @@ class DevicesApi(ApiChild, base='devices'):
         self.settings_jobs = DeviceSettingsJobsApi(session=session)
 
     def list(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
-             display_name: str = None, product: str = None,
-             product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
-             software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
+             display_name: str = None, product: str = None, product_type: ProductType = None, tag: str = None,
+             connection_status: ConnectionStatus = None, serial: str = None, software: str = None,
+             upgrade_channel: str = None, error_code: str = None, capability: str = None,
              permission: str = None, mac: str = None, org_id: str = None, **params) -> Generator[Device, None, None]:
         """
         List Devices
@@ -209,7 +209,8 @@ class DevicesApi(ApiChild, base='devices'):
         :type org_id: str
         :return: Generator yielding :class:`Device` instances
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
+        params.update((to_camel(p), enum_str(v))
+                      for p, v in locals().items()
                       if p not in {'self', 'params'} and v is not None)
         pt = params.pop('productType', None)
         if pt is not None:

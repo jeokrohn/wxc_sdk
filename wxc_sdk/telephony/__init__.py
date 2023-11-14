@@ -33,12 +33,12 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, plus1
 from ..base import SafeEnum as Enum
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
-    DeviceCustomization, IdAndName
+    DeviceCustomization, IdAndName, OwnerType, NumberOwner
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
 
-__all__ = ['OwnerType', 'NumberOwner', 'NumberListPhoneNumberType',
+__all__ = ['NumberListPhoneNumberType',
            'NumberListPhoneNumber',
            'NumberType', 'NumberDetails', 'UCMProfile',
            'TestCallRoutingResult', 'OriginatorType', 'CallSourceType', 'CallSourceInfo', 'DestinationType',
@@ -47,36 +47,6 @@ __all__ = ['OwnerType', 'NumberOwner', 'NumberListPhoneNumberType',
            'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination',
            'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'SupportedDevice',
            'AnnouncementLanguage', 'TelephonyApi']
-
-
-class OwnerType(str, Enum):
-    people = 'PEOPLE'
-    place = 'PLACE'
-    auto_attendant = 'AUTO_ATTENDANT'
-    call_center = 'CALL_CENTER'
-    call_queue = 'CALL_QUEUE'
-    group_paging = 'GROUP_PAGING'
-    hunt_group = 'HUNT_GROUP'
-    virtual_line = 'VIRTUAL_LINE'
-    voice_messaging = 'VOICE_MESSAGING'
-    broadworks_anywhere = 'BROADWORKS_ANYWHERE'
-    contact_center_link = 'CONTACT_CENTER_LINK'
-    route_list = 'ROUTE_LIST'
-    voicemail_group = 'VOICEMAIL_GROUP'
-
-
-class NumberOwner(ApiModel):
-    """
-    Owner of a phone number
-    """
-    #: ID of the owner to which PSTN Phone number is assigned.
-    owner_id: Optional[str] = Field(alias='id', default=None)
-    #: Type of the PSTN phone number's owner
-    owner_type: Optional[OwnerType] = Field(alias='type', default=None)
-    #: Last name of the PSTN phone number's owner
-    last_name: Optional[str] = None
-    #: First name of the PSTN phone number's owner
-    first_name: Optional[str] = None
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -241,6 +211,7 @@ class ServiceType(str, Enum):
     call_center = 'CALL_CENTER'
     contact_center_link = 'CONTACT_CENTER_LINK'
     group_paging = 'GROUP_PAGING'
+    paging_group = 'PAGING_GROUP'
     hunt_group = 'HUNT_GROUP'
     voice_messaging = 'VOICE_MESSAGING'
     voicemail_group = 'VOICEMAIL_GROUP'

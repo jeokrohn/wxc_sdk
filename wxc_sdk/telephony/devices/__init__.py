@@ -3,18 +3,20 @@ Telephony devices
 """
 import json
 from collections.abc import Generator
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from pydantic import TypeAdapter, Field, field_validator
 
 from ...api_child import ApiChild
-from ...base import ApiModel, plus1, to_camel
+from ...base import ApiModel, plus1, to_camel, enum_str
 from ...base import SafeEnum as Enum
 
 __all__ = ['DectDevice', 'MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
-           'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi']
+           'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi', 'LineKeyType', 'ProgrammableLineKey',
+           'LineKeyTemplate']
 
-from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName
+from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName, \
+    ApplyLineKeyTemplateAction
 
 
 class DectDevice(ApiModel):
@@ -144,6 +146,79 @@ class MACValidationResponse(ApiModel):
     status: ValidationStatus
     #: Contains an array of all the MAC address provided and their statuses.
     mac_status: Optional[list[MACStatus]] = None
+
+
+class LineKeyType(str, Enum):
+    #: PRIMARY_LINE is the user's primary extension. This is the default assignment for Line Key Index 1 and cannot be
+    #: modified.
+    primary_line = 'PRIMARY_LINE'
+    #: Shows the appearance of other users on the owner's phone.
+    shared_line = 'SHARED_LINE'
+    #: Enables User and Call Park monitoring.
+    monitor = 'MONITOR'
+    #: Allows users to reach a telephone number, extension or a SIP URI.
+    speed_dial = 'SPEED_DIAL'
+    #: An open key will automatically take the configuration of a monitor button starting with the first open key.
+    #: These buttons are also usable by the user to configure speed dial numbers on these keys.
+    open = 'OPEN'
+    #: Button not usable but reserved for future features.
+    closed = 'CLOSED'
+
+
+class ProgrammableLineKey(ApiModel):
+    #: An index representing a Line Key. Index starts from 1 representing the first key on the left side of the phone.
+    #: example: 2
+    line_key_index: Optional[int] = None
+    #: The action that would be performed when the Line Key is pressed.
+    #: example: SPEED_DIAL
+    line_key_type: Optional[LineKeyType] = None
+    #: This is applicable only when the lineKeyType is `SPEED_DIAL`.
+    #: example: Help Line
+    line_key_label: Optional[str] = None
+    #: This is applicable only when the lineKeyType is `SPEED_DIAL` and the value must be a valid Telephone Number,
+    #: Ext, or SIP URI (format: user@host using A-Z,a-z,0-9,-_ .+ for user and host).
+    #: example: 5646
+    line_key_value: Optional[str] = None
+
+    @classmethod
+    def standard_plk_list(cls, lines: int)->list['ProgrammableLineKey']:
+        """
+        get a standard list of programmable line keys of given length.
+        1st line key is primary line and all other are "open"
+
+        :param lines: number of programmable line keys
+        :return: list of programmable line keys
+        """
+        r = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open) for i in range(1, 11)]
+        r[0].line_key_type = LineKeyType.primary_line
+        return r
+
+
+class LineKeyTemplate(ApiModel):
+    #: Unique identifier for the Line Key Template
+    #: example: Y2lzY29zcGFyazovL1VTL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS9kNDUzM2MwYi1hZGRmLTRjODUtODk0YS1hZTVkOTAyYzAyMDM=
+    id: Optional[str] = None
+    #: Name of the Line Key Template
+    #: example: template for 8845
+    template_name: Optional[str] = None
+    #: The Device Model for which the Line Key Template is applicable
+    #: example: DMS Cisco 8845
+    device_model: Optional[str] = None
+    #: The friendly display name used to represent the device model in Control Hub
+    #: example: Cisco 8845
+    model_display_name: Optional[str] = None
+    #: Indicates whether user can reorder the line keys.
+    user_reorder_enabled: Optional[bool] = None
+    #: Contains a mapping of Line Keys and their corresponding actions.
+    line_keys: Optional[list[ProgrammableLineKey]] = None
+
+    def create_or_update(self) -> dict[str, Any]:
+        """
+        dict for create or update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True, exclude={'id', 'model_display_name'})
 
 
 class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
@@ -383,3 +458,214 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
         url = self.ep('actions/validateMacs/invoke')
         data = self.post(url=url, params=params, json={'macs': macs})
         return MACValidationResponse.model_validate(data)
+
+    def create_line_key_template(self, template: LineKeyTemplate,
+                                 org_id: str = None) -> str:
+        """
+        Create a Line Key Template
+
+        Create a Line Key Template in this organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows customers to create a Line Key Template for a device model.
+
+        Creating a Line Key Template requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param template: Line key template to create
+        :type template: LineKeyTemplate
+        :return: id of new line key template
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = template.create_or_update()
+        url = self.ep('lineKeyTemplates')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def list_line_key_templates(self, org_id: str = None) -> list[LineKeyTemplate]:
+        """
+        Read the list of Line Key Templates
+
+        List all Line Key Templates available for this organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve the list of Line Key Templates that are available for the organization.
+
+        Retrieving this list requires a full, user or read-only administrator or location administrator auth token with
+        a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List line key templates for this organization.
+        :type org_id: str
+        :rtype: list[LineKeyTemplate]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('lineKeyTemplates')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[LineKeyTemplate]).validate_python(data['lineKeyTemplates'])
+        return r
+
+    def line_key_template_details(self, template_id: str, org_id: str = None) -> LineKeyTemplate:
+        """
+        Get details of a Line Key Template
+
+        Get detailed information about a Line Key Template by template ID in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve a line key template by its ID in an organization.
+
+        Retrieving a line key template requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param template_id: Get line key template for this template ID.
+        :type template_id: str
+        :param org_id: Retrieve a line key template for this organization.
+        :type org_id: str
+        :rtype: :class:`GetLineKeyTemplateResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'lineKeyTemplates/{template_id}')
+        data = super().get(url, params=params)
+        r = LineKeyTemplate.model_validate(data)
+        return r
+
+    def modify_line_key_template(self, template: LineKeyTemplate, org_id: str = None):
+        """
+        Modify a Line Key Template
+
+        Modify a line key template by its template ID in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to modify an existing Line Key Template by its ID in an organization.
+
+        Modifying an existing line key template requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param template: new line key template settings
+        :type template: LineKeyTemplate
+        :param org_id: Modify a line key template for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'lineKeyTemplates/{template.id}')
+        super().put(url, params=params, json=template.create_or_update())
+
+    def delete_line_key_template(self, template_id: str, org_id: str = None):
+        """
+        Delete a Line Key Template
+
+        Delete a Line Key Template by its template ID in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to delete an existing Line Key Templates by its ID in an organization.
+
+        Deleting an existing line key template requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param template_id: Delete line key template with this template ID.
+        :type template_id: str
+        :param org_id: Delete a line key template for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'lineKeyTemplates/{template_id}')
+        super().delete(url, params=params)
+
+    def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
+                                        location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
+                                        include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
+                                        more_shared_appearances_enabled: bool = None,
+                                        few_shared_appearances_enabled: bool = None,
+                                        more_monitor_appearances_enabled: bool = None, org_id: str = None) -> int:
+        """
+        Preview Apply Line Key Template
+
+        Preview the number of devices that will be affected by the application of a Line Key Template or when resetting
+        devices to their factory Line Key settings.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to preview the number of devices that will be affected if a customer were to apply a Line
+        Key Template or apply factory default Line Key settings to devices.
+
+        Retrieving the number of devices affected requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param action: Line key Template action to perform.
+        :type action: ApplyLineKeyTemplateAction
+        :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
+        :type template_id: str
+        :param location_ids: Used to search for devices only in the given locations.
+        :type location_ids: list[str]
+        :param exclude_devices_with_custom_layout: Indicates whether to exclude devices with custom layout.
+        :type exclude_devices_with_custom_layout: bool
+        :param include_device_tags: Include devices only with these tags.
+        :type include_device_tags: list[str]
+        :param exclude_device_tags: Exclude devices with these tags.
+        :type exclude_device_tags: list[str]
+        :param more_shared_appearances_enabled: Refine search by warnings for More shared appearances than shared
+            users.
+        :type more_shared_appearances_enabled: bool
+        :param few_shared_appearances_enabled: Refine search by warnings for Fewer shared appearances than shared
+            users.
+        :type few_shared_appearances_enabled: bool
+        :param more_monitor_appearances_enabled: Refine search by warnings for more monitor appearances than monitors.
+        :type more_monitor_appearances_enabled: bool
+        :param org_id: Preview Line Key Template for this organization.
+        :type org_id: str
+        :rtype: int
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['action'] = enum_str(action)
+        if template_id is not None:
+            body['templateId'] = template_id
+        if location_ids is not None:
+            body['locationIds'] = location_ids
+        if exclude_devices_with_custom_layout is not None:
+            body['excludeDevicesWithCustomLayout'] = exclude_devices_with_custom_layout
+        if include_device_tags is not None:
+            body['includeDeviceTags'] = include_device_tags
+        if exclude_device_tags is not None:
+            body['excludeDeviceTags'] = exclude_device_tags
+        if more_shared_appearances_enabled is not None:
+            body['moreSharedAppearancesEnabled'] = more_shared_appearances_enabled
+        if few_shared_appearances_enabled is not None:
+            body['fewSharedAppearancesEnabled'] = few_shared_appearances_enabled
+        if more_monitor_appearances_enabled is not None:
+            body['moreMonitorAppearancesEnabled'] = more_monitor_appearances_enabled
+        url = self.ep('actions/previewApplyLineKeyTemplate/invoke')
+        data = super().post(url, params=params, json=body)
+        r = data['deviceCount']
+        return r

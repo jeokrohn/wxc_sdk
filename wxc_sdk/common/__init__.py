@@ -25,7 +25,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'UsbPortsObject', 'WifiAuthenticationMethod', 'DirectoryMethod', 'CallHistoryMethod', 'MppVlanDevice',
            'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
-           'BacklightTimer68XX78XX', 'DectCustomization']
+           'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction']
 
 
 class IdOnly(ApiModel):
@@ -1035,3 +1035,59 @@ class AnnAudioFile(ApiModel):
     media_file_type: Optional[MediaFileType] = None
     #: Audio announcement file type location.
     level: Optional[AnnouncementLevel] = None
+
+
+class OwnerType(str, Enum):
+    #: PSTN phone number's owner is a workspace.
+    place = 'PLACE'
+    #: PSTN phone number's owner is a person.
+    people = 'PEOPLE'
+    #: PSTN phone number's owner is a Virtual Profile.
+    virtual_line = 'VIRTUAL_LINE'
+    #: PSTN phone number's owner is an auto-attendant.
+    auto_attendant = 'AUTO_ATTENDANT'
+    #: PSTN phone number's owner is a call queue.
+    call_queue = 'CALL_QUEUE'
+    #: PSTN phone number's owner is a group paging.
+    group_paging = 'GROUP_PAGING'
+    #: PSTN phone number's owner is a hunt group.
+    hunt_group = 'HUNT_GROUP'
+    #: PSTN phone number's owner is a voice messaging.
+    voice_messaging = 'VOICE_MESSAGING'
+    #: PSTN phone number's owner is a Single Number Reach.
+    broadworks_anywhere = 'BROADWORKS_ANYWHERE'
+    #: PSTN phone number's owner is a Contact Center link.
+    contact_center_link = 'CONTACT_CENTER_LINK'
+    #: PSTN phone number's owner is a Contact Center adapter.
+    contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
+    #: PSTN phone number's owner is a route list.
+    route_list = 'ROUTE_LIST'
+    #: PSTN phone number's owner is a voice mail group.
+    voicemail_group = 'VOICEMAIL_GROUP'
+    #: PSTN phone number's owner is a collaborate bridge.
+    collaborate_bridge = 'COLLABORATE_BRIDGE'
+
+
+class NumberOwner(ApiModel):
+    """
+    Owner of a phone number
+    """
+    #: ID of the owner to which PSTN Phone number is assigned.
+    owner_id: Optional[str] = Field(alias='id', default=None)
+    #: Type of the PSTN phone number's owner
+    owner_type: Optional[OwnerType] = Field(alias='type', default=None)
+    #: Last name of the PSTN phone number's owner
+    last_name: Optional[str] = None
+    #: First name of the PSTN phone number's owner
+    first_name: Optional[str] = None
+    #: Display name of the PSTN phone number's owner and will only be returned when the owner type is a Feature.
+    #: example: Mark Zand
+    display_name: Optional[str] = None
+
+
+class ApplyLineKeyTemplateAction(str, Enum):
+    #: Used to apply LinekeyTemplate to devices.
+    apply_template = 'APPLY_TEMPLATE'
+    #: Used to reset devices to its default Linekey Template configurations.
+    apply_default_templates = 'APPLY_DEFAULT_TEMPLATES'
+
