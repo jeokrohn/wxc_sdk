@@ -24,6 +24,8 @@ from ..rest import RestSession
 class WorkspaceLocation(ApiModel):
     #: Unique identifier for the location.
     id: str
+    #: location id
+    location_id: Optional[str] = None
     #: A friendly name for the location.
     display_name: str
     #: The location address.
