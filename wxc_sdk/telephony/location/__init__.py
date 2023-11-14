@@ -42,12 +42,6 @@ class PSTNConnection(ApiModel):
 
 class TelephonyLocation(ApiModel):
 
-    @model_validator(mode='before')
-    @classmethod
-    def pop_enforce_outside_dial_digit(cls, data):
-        data.pop('enforceOutsideDialDigit', None)
-        return data
-
     #: A unique identifier for the location.
     location_id: Optional[str] = Field(alias='id', default=None)
     #: The name of the location.
@@ -75,10 +69,8 @@ class TelephonyLocation(ApiModel):
     default_domain: Optional[str] = None
     #: True if E911 setup is required.
     e911_setup_required: Optional[bool] = None
-    # TODO: undocumented
-    enforce_outbound_dial_digit: Optional[bool] = None
-    # TODO: undocumented
-    subscription_id: Optional[str] = None
+    #: True when enforcing outside dial digit at location level to make PSTN calls.
+    enforce_outside_dial_digit: Optional[bool] = None
 
 
 @dataclass(init=False)

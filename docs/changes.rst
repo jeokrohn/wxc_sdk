@@ -16,6 +16,7 @@ Release history
 - feat: support for ESNs
 - feat: call queue with departments
 - feat: call recordings API
+- fix: attribute :attr:`wxc_sdk.telephony.location.TelephonyLocation.enforce_outside_dial_digit`
 
 1.16.1
 ------
