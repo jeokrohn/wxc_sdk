@@ -29,9 +29,9 @@ class PagingAgent(ApiModel):
     #: Agents extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str]
+    routingPrefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
-    esn: Optional[str]
+    esn: Optional[str] = None
 
     @classmethod
     def create_update_exclude(cls) -> dict:
@@ -63,9 +63,9 @@ class Paging(ApiModel):
     extension: Optional[str] = None
     #: is the phone numer a toll free number?
     #: Routing prefix of location.
-    routingPrefix: Optional[str]
+    routingPrefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
-    esn: Optional[str]
+    esn: Optional[str] = None
     toll_free_number: Optional[bool] = None
     #: Paging language. Minimum length is 1. Maximum length is 40.
     language: Optional[str] = None

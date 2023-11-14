@@ -70,9 +70,9 @@ class HGandCQ(ApiModel):
     #: Extension
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str]
+    routingPrefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
-    esn: Optional[str]
+    esn: Optional[str] = None
     calling_line_id_policy: Optional[CallingLineIdPolicy] = None
     calling_line_id_phone_number: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each

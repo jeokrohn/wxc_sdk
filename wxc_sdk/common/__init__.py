@@ -110,9 +110,9 @@ class UserNumber(ApiModel):
     #: Extension of person or workspace. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str]
+    routingPrefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
-    esn: Optional[str]
+    esn: Optional[str] = None
     #: Flag to indicate primary phone.
     primary: Optional[bool] = None
 
@@ -173,9 +173,9 @@ class CallParkExtension(ApiModel):
     #: The extension number for this call park extension.
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str]
+    routingPrefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
-    esn: Optional[str]
+    esn: Optional[str] = None
     #: The location name where the call park extension is.
     location_name: Optional[str] = None
     #: The location ID for the location.
