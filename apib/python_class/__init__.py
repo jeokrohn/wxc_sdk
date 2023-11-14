@@ -25,7 +25,7 @@ __all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Param
 log = logging.getLogger(__name__)
 
 # some Python names are not allowed as parameter names
-RESERVED_PARAM_NAMES = {'from', 'to', 'max'}
+RESERVED_PARAM_NAMES = {'from', 'to', 'max', 'format'}
 
 CLASS_TEMPLATE = """
 class {class_name}{baseclass}:
