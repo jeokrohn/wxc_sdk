@@ -21,6 +21,7 @@ from ..api_child import ApiChild
 from ..base import SafeEnum as Enum
 from ..base import to_camel, ApiModel
 from ..rest import RestSession
+from ..telephony import DeviceManagedBy
 from ..telephony.jobs import DeviceSettingsJobsApi
 
 
@@ -87,19 +88,19 @@ class Device(ApiModel):
     first_seen: Optional[datetime] = None
     #: The date and time that the device was last seen, in ISO8601 format.
     last_seen: Optional[datetime] = None
-    #: Device manager(s)
-    managed_by: Optional[str] = None
+    #: Entity managing the device configuration.
+    managed_by: Optional[DeviceManagedBy] = None
     #: Manufacturer of the device
     #: only for 3rd party devices
     manufacturer: Optional[str] = None
     #: The Line/Port identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode
     #: only for 3rd party devices
     line_port: Optional[str] = None
-    #: Contains the body of the HTTP response received following the request to the Console API.
-    #: Not set if the response has no body.
+    #: Contains the body of the HTTP response received following the request to the Console API
+    #: Not set if the response has no body
     #: only for 3rd party devices
     outbound_proxy: Optional[str] = None
-    #: SIP authentication user name for the owner of the device.
+    #: SIP authentication user ame for the owner of the device
     #: only for 3rd party devices
     sip_user_name: Optional[str] = None
 
