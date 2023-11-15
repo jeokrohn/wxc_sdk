@@ -226,7 +226,7 @@ async def main():
                    if number.owner is None and not number.main_number]
         print(f'Deleting {len(numbers)} phone numbers')
         numbers_by_location: dict[str, list[NumberListPhoneNumber]] = reduce(
-            lambda red, number: red[(number.location.location_id, number.location.name)].append(number) or red,
+            lambda red, number: red[(number.location.id, number.location.name)].append(number) or red,
             numbers,
             defaultdict(list))
         if numbers_by_location:

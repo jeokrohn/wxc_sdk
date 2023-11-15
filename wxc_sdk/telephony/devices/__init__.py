@@ -206,7 +206,7 @@ class LineKeyTemplate(ApiModel):
     device_model: Optional[str] = None
     #: The friendly display name used to represent the device model in Control Hub
     #: example: Cisco 8845
-    model_display_name: Optional[str] = None
+    display_name: Optional[str] = Field(alias='modelDisplayName', default=None)
     #: Indicates whether user can reorder the line keys.
     user_reorder_enabled: Optional[bool] = None
     #: Contains a mapping of Line Keys and their corresponding actions.
@@ -218,7 +218,7 @@ class LineKeyTemplate(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_none=True, by_alias=True, exclude={'id', 'model_display_name'})
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True, exclude={'id', 'display_name'})
 
 
 class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
