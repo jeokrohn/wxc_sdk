@@ -51,12 +51,12 @@ CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
 __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsAnnouncementsRepositoryApi',
-           'AsApiChild', 'AsAppServicesApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
-           'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
-           'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
-           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi',
-           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi',
-           'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
+           'AsApiChild', 'AsAppServicesApi', 'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi',
+           'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi',
+           'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi',
+           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi',
+           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi',
+           'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
            'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
            'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
            'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
@@ -10873,6 +10873,178 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         await self.put(url, data=data, params=params)
 
 
+class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/devices/applyLineKeyTemplate'):
+    async def apply(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
+              location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
+              include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
+              advisory_types: LineKeyTemplateAdvisoryTypes = None,
+              org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+        """
+        Apply a Line key Template
+
+        Apply a Line Key Template or reset devices to their factory Line Key settings.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to apply a line key template or apply factory default Line Key settings to devices in a
+        set of locations or across all locations in the organization.
+
+        Applying a Line Key Template or resetting devices to their default Line Key configuration requires a full
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param action: Line key Template action to perform.
+        :type action: PostApplyLineKeyTemplateRequestAction
+        :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
+        :type template_id: str
+        :param location_ids: Used to search for devices only in the given locations.
+        :type location_ids: list[str]
+        :param exclude_devices_with_custom_layout: Indicates whether to exclude devices with custom layout.
+        :type exclude_devices_with_custom_layout: bool
+        :param include_device_tags: Include devices only with these tags.
+        :type include_device_tags: list[str]
+        :param exclude_device_tags: Exclude devices with these tags.
+        :type exclude_device_tags: list[str]
+        :param advisory_types: Refine search with advisories.
+        :type advisory_types: LineKeyTemplateAdvisoryTypes
+        :param org_id: Apply Line Key Template for this organization.
+        :type org_id: str
+        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['action'] = enum_str(action)
+        if template_id is not None:
+            body['templateId'] = template_id
+        if location_ids is not None:
+            body['locationIds'] = location_ids
+        if exclude_devices_with_custom_layout  is not None:
+            body['excludeDevicesWithCustomLayout'] = exclude_devices_with_custom_layout
+        if include_device_tags is not None:
+            body['includeDeviceTags'] = include_device_tags
+        if exclude_device_tags is not None:
+            body['excludeDeviceTags'] = exclude_device_tags
+        if advisory_types is not None:
+            body['advisoryTypes'] = json.loads(advisory_types.model_dump_json())
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
+        return r
+
+    async def list_jobs(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
+        """
+        Get List of Apply Line Key Template jobs
+
+        Get the list of all apply line key templates jobs in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the apply line key templates jobs in an organization.
+
+        Retrieving the list of apply line key templates jobs in an organization requires a full, user or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of line key templates jobs in this organization.
+        :type org_id: str
+        :rtype: list[ApplyLineKeyTemplateJobDetails]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[ApplyLineKeyTemplateJobDetails]).validate_python(data['items'])
+        return r
+
+    async def job_status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+        """
+        Get the job status of an Apply Line Key Template job
+
+        Get the status of an apply line key template job by its job ID.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to check the status of an apply line key templates job by job ID in an organization.
+
+        Checking the the status of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check a line key template job status in this organization.
+        :type org_id: str
+        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
+        return r
+
+    def job_errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get job errors for an Apply Line Key Template job
+
+        GET job errors for an apply Line Key Template job in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the errors of an apply line key templates job by job ID in an
+        organization.
+
+        Retrieving all the errors of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for an apply line key template job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def job_errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        Get job errors for an Apply Line Key Template job
+
+        GET job errors for an apply Line Key Template job in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the errors of an apply line key templates job by job ID in an
+        organization.
+
+        Retrieving all the errors of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for an apply line key template job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
 class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
     """
     API for jobs to manage numbers
@@ -11048,11 +11220,14 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     device_settings: AsDeviceSettingsJobsApi
     #: API for manage numbers jobs
     manage_numbers: AsManageNumbersJobsApi
+    #: API for apply line key template jobs
+    apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
         self.device_settings = AsDeviceSettingsJobsApi(session=session)
         self.manage_numbers = AsManageNumbersJobsApi(session=session)
+        self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
 
 
 class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):

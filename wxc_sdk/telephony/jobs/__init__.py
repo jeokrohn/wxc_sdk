@@ -7,20 +7,22 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
-from ...base import ApiModel
-from ...common import DeviceCustomization
+from ...base import ApiModel, enum_str
+from ...common import DeviceCustomization, ApplyLineKeyTemplateAction
 from ...rest import RestSession
 from ...api_child import ApiChild
 
 __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'JobErrorMessage', 'JobError',
            'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'NumberJob',
            'ErrorMessageObject', 'ErrorObject', 'ManageNumberErrorItem', 'ManageNumbersJobsApi',
-           'InitiateMoveNumberJobsBody']
+           'InitiateMoveNumberJobsBody', 'ApplyLineKeyTemplatesJobsApi', 'LineKeyTemplateAdvisoryTypes',
+           'ApplyLineKeyTemplateJobDetails']
 
 
 class StepExecutionStatus(ApiModel):
+    #: Unique identifier that identifies each step in a job.
     #: Unique identifier that identifies each step in a job.
     id: int
     #: Step execution start time.
@@ -49,13 +51,13 @@ class JobExecutionStatus(ApiModel):
     #: Last updated time post one of the step execution completion.
     last_updated: datetime
     #: Displays status for overall steps that are part of the job.
-    status_message: str
+    status_message: Optional[str] = None
     #: Exit code for a job.
-    exit_code: str
+    exit_code: Optional[str] = None
     #: Job creation time.
     created_time: datetime
     #: Time lapsed since the job execution started.
-    time_elapsed: str
+    time_elapsed: Optional[str] = None
     #: Status of each step within a job.
     step_execution_statuses: list[StepExecutionStatus] = Field(default_factory=list)
 
@@ -446,6 +448,192 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         return self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)
 
 
+class LineKeyTemplateAdvisoryTypes(ApiModel):
+    #: Refine search by warnings for More shared appearances than shared users.
+    #: example: True
+    more_shared_appearances_enabled: Optional[bool] = None
+    #: Refine search by warnings for Fewer shared appearances than shared users.
+    #: example: True
+    few_shared_appearances_enabled: Optional[bool] = None
+    #: Refine search by warnings for More monitor appearances than monitors.
+    #: example: True
+    more_monitor_appearances_enabled: Optional[bool] = None
+
+
+class ApplyLineKeyTemplateJobDetails(ApiModel):
+    #: Job name.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatus]] = None
+    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of
+    #: invocation.
+    latest_execution_status: Optional[str] = None
+    #: Indicates the progress of the job.
+    percentage_complete: Optional[int] = None
+    #: Number of job steps completed.
+    updated_count: Optional[int] = None
+    #: Number of job steps completed with advisories.
+    advisory_count: Optional[int] = None
+
+
+class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices/applyLineKeyTemplate'):
+    def apply(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
+              location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
+              include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
+              advisory_types: LineKeyTemplateAdvisoryTypes = None,
+              org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+        """
+        Apply a Line key Template
+
+        Apply a Line Key Template or reset devices to their factory Line Key settings.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to apply a line key template or apply factory default Line Key settings to devices in a
+        set of locations or across all locations in the organization.
+
+        Applying a Line Key Template or resetting devices to their default Line Key configuration requires a full
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param action: Line key Template action to perform.
+        :type action: PostApplyLineKeyTemplateRequestAction
+        :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
+        :type template_id: str
+        :param location_ids: Used to search for devices only in the given locations.
+        :type location_ids: list[str]
+        :param exclude_devices_with_custom_layout: Indicates whether to exclude devices with custom layout.
+        :type exclude_devices_with_custom_layout: bool
+        :param include_device_tags: Include devices only with these tags.
+        :type include_device_tags: list[str]
+        :param exclude_device_tags: Exclude devices with these tags.
+        :type exclude_device_tags: list[str]
+        :param advisory_types: Refine search with advisories.
+        :type advisory_types: LineKeyTemplateAdvisoryTypes
+        :param org_id: Apply Line Key Template for this organization.
+        :type org_id: str
+        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['action'] = enum_str(action)
+        if template_id is not None:
+            body['templateId'] = template_id
+        if location_ids is not None:
+            body['locationIds'] = location_ids
+        if exclude_devices_with_custom_layout  is not None:
+            body['excludeDevicesWithCustomLayout'] = exclude_devices_with_custom_layout
+        if include_device_tags is not None:
+            body['includeDeviceTags'] = include_device_tags
+        if exclude_device_tags is not None:
+            body['excludeDeviceTags'] = exclude_device_tags
+        if advisory_types is not None:
+            body['advisoryTypes'] = json.loads(advisory_types.model_dump_json())
+        url = self.ep()
+        data = super().post(url, params=params, json=body)
+        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
+        return r
+
+    def list_jobs(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
+        """
+        Get List of Apply Line Key Template jobs
+
+        Get the list of all apply line key templates jobs in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the apply line key templates jobs in an organization.
+
+        Retrieving the list of apply line key templates jobs in an organization requires a full, user or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of line key templates jobs in this organization.
+        :type org_id: str
+        :rtype: list[ApplyLineKeyTemplateJobDetails]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ApplyLineKeyTemplateJobDetails]).validate_python(data['items'])
+        return r
+
+    def job_status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+        """
+        Get the job status of an Apply Line Key Template job
+
+        Get the status of an apply line key template job by its job ID.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to check the status of an apply line key templates job by job ID in an organization.
+
+        Checking the the status of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check a line key template job status in this organization.
+        :type org_id: str
+        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = super().get(url, params=params)
+        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
+        return r
+
+    def job_errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
+        """
+        Get job errors for an Apply Line Key Template job
+
+        GET job errors for an apply Line Key Template job in an organization.
+
+        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the errors of an apply line key templates job by job ID in an
+        organization.
+
+        Retrieving all the errors of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for an apply line key template job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+
 @dataclass(init=False)
 class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
@@ -455,8 +643,11 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     device_settings: DeviceSettingsJobsApi
     #: API for manage numbers jobs
     manage_numbers: ManageNumbersJobsApi
+    #: API for apply line key template jobs
+    apply_line_key_templates: ApplyLineKeyTemplatesJobsApi
 
     def __init__(self, *, session: RestSession):
         super().__init__(session=session)
         self.device_settings = DeviceSettingsJobsApi(session=session)
         self.manage_numbers = ManageNumbersJobsApi(session=session)
+        self.apply_line_key_templates = ApplyLineKeyTemplatesJobsApi(session=session)
