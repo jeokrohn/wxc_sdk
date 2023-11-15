@@ -258,11 +258,11 @@ def main() -> int:
             wsl_name_len = max(len(wsl.display_name) for wsl in ws_location_list)
             ws_name_len = max(len(ws.display_name) for ws in workspaces)
 
-            # ... chain([0], ...) to avoid max() on empty sequence
-            pn_len = max(chain([0], (len(n.phone_number) for n in numbers if n.phone_number)))
-            ext_len = max(chain([0], (len(n.extension) for n in numbers if n.extension)))
+            # ... chain([1], ...) to avoid max() on empty sequence
+            pn_len = max(chain([1], (len(n.phone_number) for n in numbers if n.phone_number)))
+            ext_len = max(chain([1], (len(n.extension) for n in numbers if n.extension)))
 
-            # print workspacss with workspace locations, numbers, and devices
+            # print workspaces with workspace locations, numbers, and devices
             for workspace in workspaces:
                 if not workspace.workspace_location_id:
                     wsl_name = ''
