@@ -1,4 +1,5 @@
 import asyncio
+import re
 from concurrent.futures import ThreadPoolExecutor
 from random import choice
 
@@ -62,8 +63,9 @@ class TestTrunksPerRouteGroup(TestWithLocations):
         route_groups: list[RouteGroup]
 
         # names for new trunks
+        loc_prefix, _ = re.subn(r'[^\w\d\s]', ' ', target_location.name[:20])
         new_trunk_names = (name for i in range(1000)
-                           if (name := f'{target_location.name} {i:03}') not in set(t.name for t in trunks))
+                           if (name := f'{loc_prefix} {i:03}') not in set(t.name for t in trunks))
 
         # list of ids of created trunks
         created_trunk_ids = []

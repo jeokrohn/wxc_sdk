@@ -71,6 +71,8 @@ class TelephonyLocation(ApiModel):
     e911_setup_required: Optional[bool] = None
     #: True when enforcing outside dial digit at location level to make PSTN calls.
     enforce_outside_dial_digit: Optional[bool] = None
+    # TODO: undocumented
+    subscription_id: Optional[str] = None
 
 
 @dataclass(init=False)

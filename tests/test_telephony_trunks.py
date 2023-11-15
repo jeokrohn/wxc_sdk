@@ -43,7 +43,8 @@ class TestCreate(TestWithLocations):
         """
         location = choice(self.locations)
         trunk_names = set(t.name for t in self.trunks)
-        trunk_name = next(name for i in range(1000) if (name := f'{location.name} {i}') not in trunk_names)
+        loc_prefix, _ = re.subn(r'[^\w\d\s]', ' ', location.name[:20])
+        trunk_name = next(name for i in range(1000) if (name := f'{loc_prefix} {i:03}') not in trunk_names)
         print(f'Creating "{trunk_name}" in "{location.name}"')
         password = self.api.telephony.location.generate_password(location_id=location.location_id)
         new_trunk_id = self.api.telephony.prem_pstn.trunk.create(name=trunk_name,

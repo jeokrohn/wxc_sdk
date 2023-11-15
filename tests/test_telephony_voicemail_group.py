@@ -301,6 +301,23 @@ class TestVmGroup(TestWithLocations):
                                         groups))
             print(f'Got details for {len(groups)} voicemail groups')
 
+    @async_test
+    async def test_details_undocumented_time_zone(self):
+        """
+        Get details and check for undocumented time_zone attribute
+        """
+        with self.assert_vmg():
+            api = self.async_api.telephony.voicemail_groups
+            groups = await api.list()
+            details = await asyncio.gather(*[api.details(location_id=g.location_id,
+                                                         voicemail_group_id=g.group_id)
+                                             for g in groups])
+            details: list[VoicemailGroupDetail]
+        with_time_zone = [d for d in details if d.time_zone]
+        print(f'got time_zone (undocumented) for {len(with_time_zone)} voicemail groups')
+        # we want to raise an exception if the undocumented attribute is gone
+        self.assertTrue(with_time_zone, 'Undocumented attribute time_zone is gone?')
+
     def test_003_create(self):
         """
         Create a simple voicemail group

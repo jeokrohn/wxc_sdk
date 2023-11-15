@@ -302,7 +302,7 @@ class CallQueue(HGandCQ):
     #: Allow queue phone number for outgoing calls
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
     #: Specifies the department information.
-    department: Optional[IdAndName]
+    department: Optional[IdAndName] = None
 
     @staticmethod
     def exclude_update_or_create() -> dict:

@@ -1050,6 +1050,8 @@ class OwnerType(str, Enum):
     call_queue = 'CALL_QUEUE'
     #: PSTN phone number's owner is a group paging.
     group_paging = 'GROUP_PAGING'
+    # TODO: which one?
+    paging_group = 'PAGING_GROUP'
     #: PSTN phone number's owner is a hunt group.
     hunt_group = 'HUNT_GROUP'
     #: PSTN phone number's owner is a voice messaging.

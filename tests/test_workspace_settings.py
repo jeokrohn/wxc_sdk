@@ -6,7 +6,7 @@ import asyncio
 from tests.base import TestCaseWithLog, async_test
 from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
-from wxc_sdk.workspaces import Workspace
+from wxc_sdk.workspaces import Workspace, CallingType
 
 
 class TestWorkspaceSettings(TestCaseWithLog):
@@ -17,14 +17,15 @@ class TestWorkspaceSettings(TestCaseWithLog):
         Get list of devices in all workspaces
         """
         workspaces = list(self.api.workspaces.list())
+        workspaces = [ws for ws in workspaces if ws.calling and ws.calling.type == CallingType.webex]
         if not workspaces:
-            self.skipTest('No workspaces')
+            self.skipTest('No workspaces with calling type webex')
         device_lists = await asyncio.gather(*[self.async_api.workspace_settings.devices.list(ws.workspace_id)
                                               for ws in workspaces],
                                             return_exceptions=True)
         for ws, devices in zip(workspaces, device_lists):
             ws: Workspace
-            print(f'workspace "{ws.display_name}"')
+            print(f'workspace "{ws.display_name}", calling type: {ws.calling.type}')
             if isinstance(devices, Exception):
                 print(f'  failed to get device list: {devices}')
                 continue
@@ -43,8 +44,9 @@ class TestWorkspaceSettings(TestCaseWithLog):
         Get numbers for all workspaces
         """
         workspaces = list(self.api.workspaces.list())
+        workspaces = [ws for ws in workspaces if ws.calling and ws.calling.type == CallingType.webex]
         if not workspaces:
-            self.skipTest('No workspaces')
+            self.skipTest('No workspaces with calling type webex')
         number_lists = await asyncio.gather(*[self.async_api.workspace_settings.numbers.read(ws.workspace_id)
                                               for ws in workspaces],
                                             return_exceptions=True)

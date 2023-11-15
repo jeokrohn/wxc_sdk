@@ -529,6 +529,7 @@ class TestUpdate(TestWithQueues):
                                                                forwarding_rule=rule)
                 # enable selective forwarding with this rule
                 forwarding.selective.enabled = True
+                forwarding.selective.destination = '9999'
                 # don't update the rules...
                 forwarding.rules = None
                 fapi.update(location_id=target.location_id, feature_id=target.id, forwarding=forwarding)

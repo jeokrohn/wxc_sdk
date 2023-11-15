@@ -81,6 +81,8 @@ class VoicemailGroupDetail(ApiModel):
     email_copy_of_message: Optional[VoicemailCopyOfMessage] = None
     #: Enable/disable to forward voice message.
     voice_message_forwarding_enabled: Optional[bool] = None
+    # TODO: undocumented
+    time_zone: Optional[str] = None
 
     @staticmethod
     def create(name: str, extension: str, first_name: str, last_name: str, passcode: int, language_code: str = 'en_us',
