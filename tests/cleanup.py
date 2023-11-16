@@ -276,13 +276,14 @@ async def main():
     async with AsWebexSimpleApi(tokens=tokens) as as_api:
         # workspace locations
         # we can only delete workspace locations which are not enabled for calling
-        locations = [loc for loc in api.workspace_locations.list()
-                     if re.search(r'\b(\w{2})\b (\d+) USA', loc.address)]
-        print(f'Deleting {len(locations)} locations')
-        if not DRY_RUN:
-            await asyncio.gather(*[as_api.workspace_locations.delete(location_id=loc.id)
-                                   for loc in locations],
-                                 return_exceptions=True)
+        if False:
+            locations = [loc for loc in api.workspace_locations.list()
+                         if re.search(r'\b(\w{2})\b (\d+) USA', loc.address)]
+            print(f'Deleting {len(locations)} locations')
+            if not DRY_RUN:
+                await asyncio.gather(*[as_api.workspace_locations.delete(location_id=loc.id)
+                                       for loc in locations],
+                                     return_exceptions=True)
 
         # spaces
         spaces = list(filtered(api.rooms.list(),
