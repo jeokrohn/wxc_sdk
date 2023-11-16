@@ -2,6 +2,7 @@ import base64
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from unittest import skip
 
 from tests.base import TestCaseWithLog
 from tests.testutil import create_random_wsl
@@ -46,6 +47,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         rest_error: RestError = raised.exception
         self.assertEqual(403, rest_error.response.status_code)
 
+    @skip('Deprecated, moved to Locations')
     def test_004_create(self):
         """
         test creation
@@ -63,6 +65,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
                                     wsl_list))
         print(f'Got details for {len(wsl_list)} workspace locations')
 
+    @skip('Deprecated, moved to Locations')
     def test_006_update(self):
         """
         Try to update a workspace location
@@ -82,6 +85,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
             # delete the workspace location again
             self.api.workspace_locations.delete(location_id=wsl.id)
 
+    @skip('Deprecated, moved to Locations')
     def test_007_clear_notes(self):
         """
         Try to update a workspace location and clear the notes
@@ -111,6 +115,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
             with self.no_log():
                 self.api.workspace_locations.delete(location_id=wsl.id)
 
+    @skip('Deprecated, moved to Locations')
     def test_008_list_floors_new_location(self):
         """
         List floors of new location
@@ -120,6 +125,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
             floors = list(self.api.workspace_locations.floors.list(location_id=wsl.id))
             self.assertEqual(list(), floors)
 
+    @skip('Deprecated, moved to Locations')
     def test_008_create_some_floors(self):
         """
         create some floors in a location
@@ -134,6 +140,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
             listed_floors = list(self.api.workspace_locations.floors.list(location_id=wsl.id))
             self.assertEqual(10, len(listed_floors))
 
+    @skip('Deprecated, moved to Locations')
     def test_009_update_floor(self):
         """
         update a floor

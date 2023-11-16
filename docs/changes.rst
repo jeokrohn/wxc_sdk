@@ -23,6 +23,8 @@ Release history
 - fix: :class:`wxc_sdk.common.OwnerType` needs to support PAGING_GROUP and GROUP_PAGING (inconsistent)
 - fix: undocumented attribute :attr:`wxc_sdk.telephone.voicemail_groups.VoicemailGroupDetail.time_zone`
 - feat: new API :attr:`wxc_sdk.telephony.jobs.JobsApi.apply_line_key_templates`
+- feat: improved handling of floor actions in TelephonyApi
+- feat: deprecation warnings for create/update on workspace locations
 
 1.16.1
 ------

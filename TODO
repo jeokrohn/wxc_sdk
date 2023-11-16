@@ -2,7 +2,6 @@
     * available members for call queues, call parks, ...
     * add virtual lines to devices, w/ line labels
     + add virtual lines to apps, w/ line labels
-# TODO: how do you create a workspace w/ WxC using the API?
 # TODO: what about location level settings?
     #   what about outgoing and incoming permissions for locations
     #   what about call park for locations
@@ -17,7 +16,6 @@
     # ...
 # TODO: file defect: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-pickup
 #   attribute phoneNumber actually is 'numbers'
-# TODO: implement: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-virtual-lines
 # TODO: implement shared line appearance members for WxC apps: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/search-shared-line-appearance-members
 
 

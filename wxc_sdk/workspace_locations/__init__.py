@@ -12,6 +12,7 @@ documentation for the relevant endpoints.
 
 __all__ = ['WorkspaceLocationApi', 'WorkspaceLocationFloorApi', 'WorkspaceLocation', 'WorkspaceLocationFloor']
 
+import logging
 from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
@@ -100,6 +101,7 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         :return: new workspace location floor
         :rtype: WorkspaceLocationFloor
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         body = {to_camel(p): v for p, v in locals().items()
                 if p not in {'self', 'location_id', 'org_id'} and v is not None}
         url = self.ep(location_id=location_id)
@@ -144,6 +146,7 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         :type org_id: str
         :return: updated workspace location floor
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         data = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id', 'location_id'})
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
@@ -162,6 +165,7 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         :param org_id:
         :type org_id: str
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
         super().delete(url=url, params=params)
@@ -177,6 +181,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         self.floors = WorkspaceLocationFloorApi(session=session)
 
     def ep(self, location_id: str = None):
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         return super().ep(path=location_id)
 
     def list(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None,
@@ -219,6 +224,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         :return: created workspace location
         :rtype: WorkspaceLocation
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         body = {to_camel(p): v for p, v in locals().items()
                 if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
@@ -260,6 +266,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         :return: updated workspace location
         :rtype: WorkspaceLocation
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
         body = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id'})
@@ -272,6 +279,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         Deletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new
         location can be reassigned to them.
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
         super().delete(url=url, params=params)

@@ -40,6 +40,8 @@ from wxc_sdk.telephony.voicemail_groups import VoicemailGroup
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace
 
+# TODO: add test cases for floors etc. (see WorksspaceLocations test cases)
+
 
 class TestLocationSimple(TestCaseWithLog):
 

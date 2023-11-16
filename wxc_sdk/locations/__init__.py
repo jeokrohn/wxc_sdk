@@ -17,7 +17,7 @@ from pydantic import Field, TypeAdapter
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, webex_id_to_uuid
 
-__all__ = ['LocationAddress', 'Location', 'Floor', 'CreateLocationFloorBody', 'LocationsApi']
+__all__ = ['LocationAddress', 'Location', 'Floor', 'LocationsApi']
 
 
 class LocationAddress(ApiModel):
@@ -79,18 +79,27 @@ class Location(ApiModel):
         return webex_id_to_uuid(self.org_id)
 
 
-class CreateLocationFloorBody(ApiModel):
-    #: The floor number.
-    floor_number: Optional[int] = None
-    #: The floor display name.
-    display_name: Optional[str] = None
-
-
-class Floor(CreateLocationFloorBody):
+class Floor(ApiModel):
     #: Unique identifier for the floor.
+    #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL1dPUktTUEFDRV9MT0NBVElPTl9GTE9PUi83NDhkZDNmMS1iYmE5LTQxMDItODk5NC00M2IyOTM2MzNlNjY
     id: Optional[str] = None
     #: Unique identifier for the location.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4NjczZDIwLWM0M2EtNDQ5Ni1iYWIxLTNiMjhhZGJjMjViYQ
     location_id: Optional[str] = None
+    #: The floor number.
+    #: example: -1
+    floor_number: Optional[int] = None
+    #: The floor display name.
+    #: example: The basement
+    display_name: Optional[str] = None
+
+    def update(self)->dict:
+        """
+        date for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True, exclude={'id', 'location_id'})
 
 
 class LocationsApi(ApiChild, base='locations'):
@@ -243,23 +252,27 @@ class LocationsApi(ApiChild, base='locations'):
 
     def list_floors(self, location_id: str) -> List[Floor]:
         """
+        List Location Floors
+
         List location floors.
-        Requires an administrator auth token with the spark-admin:locations_read scope.
+        Requires an administrator auth token with the `spark-admin:locations_read` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/list-location-floors
+        :rtype: list[Floor]
         """
         url = self.ep(f'{location_id}/floors')
-        data = super().get(url=url)
-        return TypeAdapter(list[Floor]).validate_python(data["items"])
+        data = super().get(url)
+        r = TypeAdapter(list[Floor]).validate_python(data['items'])
+        return r
 
     def create_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
-        Create a new floor in the given location. The displayName parameter is optional, and omitting it will result in
-        the creation of a floor without that value set.
-        Requires an administrator auth token with the spark-admin:locations_write scope.
+        Create a Location Floor
+
+        Create a new floor in the given location. The `displayName` parameter is optional, and omitting it will result
+        in the creation of a floor without that value set.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
@@ -267,73 +280,66 @@ class LocationsApi(ApiChild, base='locations'):
         :type floor_number: int
         :param display_name: The floor display name.
         :type display_name: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/create-a-location-floor
+        :rtype: :class:`Floor`
         """
-        body = CreateLocationFloorBody()
-        if floor_number is not None:
-            body.floor_number = floor_number
+        body = dict()
+        body['floorNumber'] = floor_number
         if display_name is not None:
-            body.display_name = display_name
+            body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors')
-        data = super().post(url=url, data=body.model_dump_json())
-        return Floor.model_validate(data)
+        data = super().post(url, json=body)
+        r = Floor.model_validate(data)
+        return r
 
     def floor_details(self, location_id: str, floor_id: str) -> Floor:
         """
-        Shows details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI.
-        Requires an administrator auth token with the spark-admin:locations_read scope.
+        Get Location Floor Details
+
+        Shows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.
+        Requires an administrator auth token with the `spark-admin:locations_read` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
         :param floor_id: A unique identifier for the floor.
         :type floor_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/get-location-floor-details
+        :rtype: :class:`Floor`
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        data = super().get(url=url)
-        return Floor.model_validate(data)
+        data = super().get(url)
+        r = Floor.model_validate(data)
+        return r
 
-    def update_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str = None) -> Floor:
+    def update_floor(self, floor: Floor) -> Floor:
         """
-        Updates details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI. Include all
-        details for the floor returned by a previous call to Get Location Floor Details. Omitting the optional
-        displayName field will result in that field no longer being defined for the floor.
-        Requires an administrator auth token with the spark-admin:locations_write scope.
+        Update a Location Floor
 
-        :param location_id: A unique identifier for the location.
-        :type location_id: str
-        :param floor_id: A unique identifier for the floor.
-        :type floor_id: str
-        :param floor_number: The floor number.
-        :type floor_number: int
-        :param display_name: The floor display name.
-        :type display_name: str
+        Updates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all
+        details for the floor returned by a previous call to `Get Location Floor Details
+        <https://developer.webex.com/docs/api/v1/locations/get-location-floor-details>`_. Omitting the optional
+        `displayName` field will result in that field no longer being defined for the floor.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
 
-        documentation: https://developer.webex.com/docs/api/v1/locations/update-a-location-floor
+        :param floor: new floor settings
+        :type floor: Floor
+        :rtype: :class:`Floor`
         """
-        body = CreateLocationFloorBody()
-        if floor_number is not None:
-            body.floor_number = floor_number
-        if display_name is not None:
-            body.display_name = display_name
-        url = self.ep(f'{location_id}/floors/{floor_id}')
-        data = super().put(url=url, data=body.model_dump_json())
-        return Floor.model_validate(data)
+        url = self.ep(f'{floor.location_id}/floors/{floor.id}')
+        data = super().put(url, json=floor.update())
+        r = Floor.model_validate(data)
+        return r
 
     def delete_floor(self, location_id: str, floor_id: str):
         """
+        Delete a Location Floor
+
         Deletes a floor, by ID.
-        Requires an administrator auth token with the spark-admin:locations_write scope.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
         :param floor_id: A unique identifier for the floor.
         :type floor_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/delete-a-location-floor
+        :rtype: None
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        super().delete(url=url)
-        return
+        super().delete(url)

@@ -28,7 +28,7 @@ from wxc_sdk.devices import ActivationCodeResponse, ConnectionStatus, Device, Pr
 from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.licenses import License, SiteType
-from wxc_sdk.locations import CreateLocationFloorBody, Floor, Location, LocationAddress
+from wxc_sdk.locations import Floor, Location, LocationAddress
 from wxc_sdk.meetings import AnswerCondition, ApprovalQuestion, ApprovalRule, AttendeePrivileges,\
     AudioConnectionOptions, AudioConnectionType, AutoRegistrationResult, BreakoutSession, CallInNumbers,\
     CreateMeetingBody, CustomizedQuestionForCreateMeeting, EntryAndExitTone, GetMeetingSurveyResponse, InputMode,\
@@ -176,16 +176,16 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingPermissions',
            'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost',
            'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization',
-           'ComplianceEvent', 'ConnectionStatus', 'CreateInviteesItem', 'CreateLocationFloorBody',
-           'CreateMeetingBody', 'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse',
-           'CustomNumbers', 'Customer', 'CustomizedQuestionForCreateMeeting', 'DND', 'DectCustomization',
-           'DectDevice', 'DefaultAudioType', 'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType',
-           'Device', 'DeviceActivationState', 'DeviceConfiguration', 'DeviceConfigurationOperation',
-           'DeviceConfigurationResponse', 'DeviceConfigurationSource', 'DeviceConfigurationSourceEditability',
-           'DeviceConfigurationSources', 'DeviceCustomization', 'DeviceCustomizations', 'DeviceManagedBy',
-           'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner', 'DeviceStatus', 'DeviceType',
-           'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse',
-           'Dialing', 'DirectoryMethod', 'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing',
+           'ComplianceEvent', 'ConnectionStatus', 'CreateInviteesItem', 'CreateMeetingBody',
+           'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
+           'CustomizedQuestionForCreateMeeting', 'DND', 'DectCustomization', 'DectDevice', 'DefaultAudioType',
+           'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType', 'Device', 'DeviceActivationState',
+           'DeviceConfiguration', 'DeviceConfigurationOperation', 'DeviceConfigurationResponse',
+           'DeviceConfigurationSource', 'DeviceConfigurationSourceEditability', 'DeviceConfigurationSources',
+           'DeviceCustomization', 'DeviceCustomizations', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember',
+           'DeviceMembersResponse', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'DialPatternStatus',
+           'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse', 'Dialing',
+           'DirectoryMethod', 'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing',
            'EmergencyDestination', 'EnabledAndNumberOfDays', 'EnabledAndValue', 'EntryAndExitTone',
            'ErrorMessageObject', 'ErrorObject', 'Event', 'EventData', 'EventResource', 'EventType',
            'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts',

@@ -1308,23 +1308,27 @@ class AsLocationsApi(AsApiChild, base='locations'):
 
     async def list_floors(self, location_id: str) -> List[Floor]:
         """
+        List Location Floors
+
         List location floors.
-        Requires an administrator auth token with the spark-admin:locations_read scope.
+        Requires an administrator auth token with the `spark-admin:locations_read` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/list-location-floors
+        :rtype: list[Floor]
         """
         url = self.ep(f'{location_id}/floors')
-        data = await super().get(url=url)
-        return TypeAdapter(list[Floor]).validate_python(data["items"])
+        data = await super().get(url)
+        r = TypeAdapter(list[Floor]).validate_python(data['items'])
+        return r
 
     async def create_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
-        Create a new floor in the given location. The displayName parameter is optional, and omitting it will result in
-        the creation of a floor without that value set.
-        Requires an administrator auth token with the spark-admin:locations_write scope.
+        Create a Location Floor
+
+        Create a new floor in the given location. The `displayName` parameter is optional, and omitting it will result
+        in the creation of a floor without that value set.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
@@ -1332,76 +1336,69 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :type floor_number: int
         :param display_name: The floor display name.
         :type display_name: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/create-a-location-floor
+        :rtype: :class:`Floor`
         """
-        body = CreateLocationFloorBody()
-        if floor_number is not None:
-            body.floor_number = floor_number
+        body = dict()
+        body['floorNumber'] = floor_number
         if display_name is not None:
-            body.display_name = display_name
+            body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors')
-        data = await super().post(url=url, data=body.model_dump_json())
-        return Floor.model_validate(data)
+        data = await super().post(url, json=body)
+        r = Floor.model_validate(data)
+        return r
 
     async def floor_details(self, location_id: str, floor_id: str) -> Floor:
         """
-        Shows details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI.
-        Requires an administrator auth token with the spark-admin:locations_read scope.
+        Get Location Floor Details
+
+        Shows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.
+        Requires an administrator auth token with the `spark-admin:locations_read` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
         :param floor_id: A unique identifier for the floor.
         :type floor_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/get-location-floor-details
+        :rtype: :class:`Floor`
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        data = await super().get(url=url)
-        return Floor.model_validate(data)
+        data = await super().get(url)
+        r = Floor.model_validate(data)
+        return r
 
-    async def update_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str = None) -> Floor:
+    async def update_floor(self, floor: Floor) -> Floor:
         """
-        Updates details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI. Include all
-        details for the floor returned by a previous call to Get Location Floor Details. Omitting the optional
-        displayName field will result in that field no longer being defined for the floor.
-        Requires an administrator auth token with the spark-admin:locations_write scope.
+        Update a Location Floor
 
-        :param location_id: A unique identifier for the location.
-        :type location_id: str
-        :param floor_id: A unique identifier for the floor.
-        :type floor_id: str
-        :param floor_number: The floor number.
-        :type floor_number: int
-        :param display_name: The floor display name.
-        :type display_name: str
+        Updates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all
+        details for the floor returned by a previous call to `Get Location Floor Details
+        <https://developer.webex.com/docs/api/v1/locations/get-location-floor-details>`_. Omitting the optional
+        `displayName` field will result in that field no longer being defined for the floor.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
 
-        documentation: https://developer.webex.com/docs/api/v1/locations/update-a-location-floor
+        :param floor: new floor settings
+        :type floor: Floor
+        :rtype: :class:`Floor`
         """
-        body = CreateLocationFloorBody()
-        if floor_number is not None:
-            body.floor_number = floor_number
-        if display_name is not None:
-            body.display_name = display_name
-        url = self.ep(f'{location_id}/floors/{floor_id}')
-        data = await super().put(url=url, data=body.model_dump_json())
-        return Floor.model_validate(data)
+        url = self.ep(f'{floor.location_id}/floors/{floor.id}')
+        data = await super().put(url, json=floor.update())
+        r = Floor.model_validate(data)
+        return r
 
     async def delete_floor(self, location_id: str, floor_id: str):
         """
+        Delete a Location Floor
+
         Deletes a floor, by ID.
-        Requires an administrator auth token with the spark-admin:locations_write scope.
+        Requires an administrator auth token with the `spark-admin:locations_write` scope.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
         :param floor_id: A unique identifier for the floor.
         :type floor_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/locations/delete-a-location-floor
+        :rtype: None
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        await super().delete(url=url)
-        return
+        await super().delete(url)
 
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
@@ -15142,6 +15139,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         :return: new workspace location floor
         :rtype: WorkspaceLocationFloor
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         body = {to_camel(p): v for p, v in locals().items()
                 if p not in {'self', 'location_id', 'org_id'} and v is not None}
         url = self.ep(location_id=location_id)
@@ -15186,6 +15184,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         :type org_id: str
         :return: updated workspace location floor
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         data = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id', 'location_id'})
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
@@ -15204,6 +15203,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         :param org_id:
         :type org_id: str
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
         await super().delete(url=url, params=params)
@@ -15218,6 +15218,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         self.floors = AsWorkspaceLocationFloorApi(session=session)
 
     def ep(self, location_id: str = None):
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         return super().ep(path=location_id)
 
     def list_gen(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None,
@@ -15283,6 +15284,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         :return: created workspace location
         :rtype: WorkspaceLocation
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         body = {to_camel(p): v for p, v in locals().items()
                 if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
@@ -15324,6 +15326,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         :return: updated workspace location
         :rtype: WorkspaceLocation
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
         body = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id'})
@@ -15336,6 +15339,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         Deletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new
         location can be reassigned to them.
         """
+        logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
         await super().delete(url=url, params=params)
