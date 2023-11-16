@@ -74,6 +74,16 @@ class TelephonyLocation(ApiModel):
     # TODO: undocumented
     subscription_id: Optional[str] = None
 
+    def update(self) -> dict:
+        """
+        restricted data used for updates
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+                               exclude={'location_id', 'name', 'user_limit', 'default_domain',
+                                        'e911_setup_required', 'subscription_id'})
+
 
 @dataclass(init=False)
 class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
@@ -235,11 +245,10 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return:
         """
-        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain',
-                                                 'e911_setup_required', 'subscription_id'})
+        data = settings.update()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        self.put(url=url, data=data, params=params)
+        self.put(url=url, json=data, params=params)
 
     def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
                                      service_enabled: bool = None, org_id: str = None):

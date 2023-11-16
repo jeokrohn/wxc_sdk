@@ -14027,11 +14027,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return:
         """
-        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain',
-                                                 'e911_setup_required', 'subscription_id'})
+        data = settings.update()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        await self.put(url=url, data=data, params=params)
+        await self.put(url=url, json=data, params=params)
 
     async def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
                                      service_enabled: bool = None, org_id: str = None):
