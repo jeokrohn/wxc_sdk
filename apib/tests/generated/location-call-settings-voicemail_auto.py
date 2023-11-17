@@ -480,9 +480,9 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         r = GetVoicePortalObject.model_validate(data)
         return r
 
-    def update_voice_portal(self, location_id: str, name: str, language_code: str, extension: Union[str, datetime],
-                            phone_number: str, first_name: str, last_name: str,
-                            passcode: PutVoicePortalObjectPasscode, org_id: str = None):
+    def update_voice_portal(self, location_id: str, name: str, language_code: str, first_name: str, last_name: str,
+                            passcode: PutVoicePortalObjectPasscode, extension: Union[str, datetime] = None,
+                            phone_number: str = None, org_id: str = None):
         """
         Update VoicePortal
 
@@ -500,16 +500,16 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type name: str
         :param language_code: Language code for voicemail group audio announcement.
         :type language_code: str
-        :param extension: Extension of incoming call.
-        :type extension: Union[str, datetime]
-        :param phone_number: Phone Number of incoming call.
-        :type phone_number: str
         :param first_name: Caller ID First Name.
         :type first_name: str
         :param last_name: Caller ID Last Name.
         :type last_name: str
         :param passcode: Voice Portal Admin Passcode.
         :type passcode: PutVoicePortalObjectPasscode
+        :param extension: Extension of incoming call.
+        :type extension: Union[str, datetime]
+        :param phone_number: Phone Number of incoming call.
+        :type phone_number: str
         :param org_id: Update voicemail rules for this organization.
         :type org_id: str
         :rtype: None
@@ -520,8 +520,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         body = dict()
         body['name'] = name
         body['languageCode'] = language_code
-        body['extension'] = extension
-        body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
         body['firstName'] = first_name
         body['lastName'] = last_name
         body['passcode'] = loads(passcode.model_dump_json())
@@ -622,16 +624,17 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         r = GetLocationVoicemailGroupObject.model_validate(data)
         return r
 
-    def modify_location_voicemail_group(self, location_id: str, voicemail_group_id: str, name: str, phone_number: str,
-                                        extension: int, first_name: str, last_name: str, enabled: bool, passcode: int,
-                                        language_code: str, greeting: GetLocationVoicemailGroupObjectGreeting,
-                                        greeting_description: str,
+    def modify_location_voicemail_group(self, location_id: str, voicemail_group_id: str,
                                         message_storage: GetLocationVoicemailGroupObjectMessageStorage,
                                         notifications: GetLocationVoicemailGroupObjectNotifications,
                                         fax_message: GetLocationVoicemailGroupObjectFaxMessage,
                                         transfer_to_number: GetLocationVoicemailGroupObjectNotifications,
                                         email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage,
-                                        org_id: str = None):
+                                        name: str = None, phone_number: str = None, extension: int = None,
+                                        first_name: str = None, last_name: str = None, enabled: bool = None,
+                                        passcode: int = None, language_code: str = None,
+                                        greeting: GetLocationVoicemailGroupObjectGreeting = None,
+                                        greeting_description: str = None, org_id: str = None):
         """
         Modify Location Voicemail Group
 
@@ -647,6 +650,16 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param voicemail_group_id: Modifies the voicemail group details for this voicemail group ID.
         :type voicemail_group_id: str
+        :param message_storage: Message storage information
+        :type message_storage: GetLocationVoicemailGroupObjectMessageStorage
+        :param notifications: Message notifications
+        :type notifications: GetLocationVoicemailGroupObjectNotifications
+        :param fax_message: Fax message receive settings
+        :type fax_message: GetLocationVoicemailGroupObjectFaxMessage
+        :param transfer_to_number: Transfer message information
+        :type transfer_to_number: GetLocationVoicemailGroupObjectNotifications
+        :param email_copy_of_message: Message copy information
+        :type email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage
         :param name: Set the name of the voicemail group.
         :type name: str
         :param phone_number: Set voicemail group phone number.
@@ -667,16 +680,6 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type greeting: GetLocationVoicemailGroupObjectGreeting
         :param greeting_description: CUSTOM greeting for previously uploaded.
         :type greeting_description: str
-        :param message_storage: Message storage information
-        :type message_storage: GetLocationVoicemailGroupObjectMessageStorage
-        :param notifications: Message notifications
-        :type notifications: GetLocationVoicemailGroupObjectNotifications
-        :param fax_message: Fax message receive settings
-        :type fax_message: GetLocationVoicemailGroupObjectFaxMessage
-        :param transfer_to_number: Transfer message information
-        :type transfer_to_number: GetLocationVoicemailGroupObjectNotifications
-        :param email_copy_of_message: Message copy information
-        :type email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage
         :param org_id: Modifies the voicemail group details for a customer location.
         :type org_id: str
         :rtype: None
@@ -685,16 +688,26 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['enabled'] = enabled
-        body['passcode'] = passcode
-        body['languageCode'] = language_code
-        body['greeting'] = enum_str(greeting)
-        body['greetingDescription'] = greeting_description
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if enabled is not None:
+            body['enabled'] = enabled
+        if passcode is not None:
+            body['passcode'] = passcode
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if greeting is not None:
+            body['greeting'] = enum_str(greeting)
+        if greeting_description is not None:
+            body['greetingDescription'] = greeting_description
         body['messageStorage'] = loads(message_storage.model_dump_json())
         body['notifications'] = loads(notifications.model_dump_json())
         body['faxMessage'] = loads(fax_message.model_dump_json())
@@ -703,15 +716,15 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
         super().put(url, params=params, json=body)
 
-    def create_a_new_voicemail_group_for_a_location(self, location_id: str, name: str, phone_number: str,
-                                                    extension: int, first_name: str, last_name: str, passcode: int,
+    def create_a_new_voicemail_group_for_a_location(self, location_id: str, name: str, extension: int, passcode: int,
                                                     language_code: str,
                                                     message_storage: GetLocationVoicemailGroupObjectMessageStorage,
                                                     notifications: GetLocationVoicemailGroupObjectNotifications,
                                                     fax_message: GetLocationVoicemailGroupObjectFaxMessage,
                                                     transfer_to_number: GetLocationVoicemailGroupObjectNotifications,
                                                     email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage,
-                                                    org_id: str = None) -> str:
+                                                    phone_number: str = None, first_name: str = None,
+                                                    last_name: str = None, org_id: str = None) -> str:
         """
         Create a new Voicemail Group for a Location
 
@@ -726,14 +739,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param name: Set name to create new voicemail group for a particular location for a customer.
         :type name: str
-        :param phone_number: Set voicemail group phone number for this particular location.
-        :type phone_number: str
         :param extension: Set unique voicemail group extension number for this particular location.
         :type extension: int
-        :param first_name: Set voicemail group caller ID first name.
-        :type first_name: str
-        :param last_name: Set voicemail group called ID last name.
-        :type last_name: str
         :param passcode: Set passcode to access voicemail group when calling.
         :type passcode: int
         :param language_code: Language code for voicemail group audio announcement.
@@ -748,6 +755,12 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type transfer_to_number: GetLocationVoicemailGroupObjectNotifications
         :param email_copy_of_message: Message copy information
         :type email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage
+        :param phone_number: Set voicemail group phone number for this particular location.
+        :type phone_number: str
+        :param first_name: Set voicemail group caller ID first name.
+        :type first_name: str
+        :param last_name: Set voicemail group called ID last name.
+        :type last_name: str
         :param org_id: Create a new voice mail group for this organization.
         :type org_id: str
         :rtype: str
@@ -757,10 +770,13 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['phoneNumber'] = phone_number
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
         body['extension'] = extension
-        body['firstName'] = first_name
-        body['lastName'] = last_name
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
         body['passcode'] = passcode
         body['languageCode'] = language_code
         body['messageStorage'] = loads(message_storage.model_dump_json())

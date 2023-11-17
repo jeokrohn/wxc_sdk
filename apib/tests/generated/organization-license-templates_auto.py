@@ -101,10 +101,14 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :rtype: :class:`Template`
         """
         body = dict()
-        body['templateName'] = template_name
-        body['licenses'] = licenses
-        body['groups'] = groups
-        body['templateType'] = enum_str(template_type)
+        if template_name is not None:
+            body['templateName'] = template_name
+        if licenses is not None:
+            body['licenses'] = licenses
+        if groups is not None:
+            body['groups'] = groups
+        if template_type is not None:
+            body['templateType'] = enum_str(template_type)
         body['orgId'] = org_id
         url = self.ep('licenseTemplates')
         data = super().post(url, json=body)
@@ -133,9 +137,12 @@ class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):
         :rtype: :class:`Template`
         """
         body = dict()
-        body['templateName'] = template_name
-        body['licenses'] = licenses
-        body['groups'] = groups
+        if template_name is not None:
+            body['templateName'] = template_name
+        if licenses is not None:
+            body['licenses'] = licenses
+        if groups is not None:
+            body['groups'] = groups
         body['orgId'] = org_id
         url = self.ep(f'licenseTemplates/{license_template_id}')
         data = super().put(url, json=body)

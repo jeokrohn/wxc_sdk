@@ -86,7 +86,8 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
         r = GetPersonOrWorkspaceDetailsObjectDepartment.model_validate(data['department'])
         return r
 
-    def update_department_of_a_person(self, person_id: str, department: PutPersonOrWorkspaceDetailsObjectDepartment,
+    def update_department_of_a_person(self, person_id: str,
+                                      department: PutPersonOrWorkspaceDetailsObjectDepartment = None,
                                       org_id: str = None):
         """
         Update Department of a Person
@@ -110,6 +111,7 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['department'] = loads(department.model_dump_json())
+        if department is not None:
+            body['department'] = loads(department.model_dump_json())
         url = self.ep(f'')
         super().put(url, params=params, json=body)

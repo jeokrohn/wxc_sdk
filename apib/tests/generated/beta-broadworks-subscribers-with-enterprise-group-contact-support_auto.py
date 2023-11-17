@@ -254,15 +254,21 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         body['provisioningId'] = provisioning_id
         body['userId'] = user_id
         body['spEnterpriseId'] = sp_enterprise_id
-        body['spEnterpriseGroupId'] = sp_enterprise_group_id
+        if sp_enterprise_group_id is not None:
+            body['spEnterpriseGroupId'] = sp_enterprise_group_id
         body['firstName'] = first_name
         body['lastName'] = last_name
         body['package'] = enum_str(package)
-        body['primaryPhoneNumber'] = primary_phone_number
-        body['mobilePhoneNumber'] = mobile_phone_number
-        body['email'] = email
-        body['language'] = language
-        body['timezone'] = timezone
+        if primary_phone_number is not None:
+            body['primaryPhoneNumber'] = primary_phone_number
+        if mobile_phone_number is not None:
+            body['mobilePhoneNumber'] = mobile_phone_number
+        if email is not None:
+            body['email'] = email
+        if language is not None:
+            body['language'] = language
+        if timezone is not None:
+            body['timezone'] = timezone
         url = self.ep()
         data = super().post(url, json=body)
         r = Subscriber.model_validate(data)
@@ -330,15 +336,24 @@ class BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :rtype: :class:`Subscriber`
         """
         body = dict()
-        body['userId'] = user_id
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['spEnterpriseGroupId'] = sp_enterprise_group_id
-        body['primaryPhoneNumber'] = primary_phone_number
-        body['mobilePhoneNumber'] = mobile_phone_number
-        body['language'] = language
-        body['timezone'] = timezone
-        body['package'] = package
+        if user_id is not None:
+            body['userId'] = user_id
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if sp_enterprise_group_id is not None:
+            body['spEnterpriseGroupId'] = sp_enterprise_group_id
+        if primary_phone_number is not None:
+            body['primaryPhoneNumber'] = primary_phone_number
+        if mobile_phone_number is not None:
+            body['mobilePhoneNumber'] = mobile_phone_number
+        if language is not None:
+            body['language'] = language
+        if timezone is not None:
+            body['timezone'] = timezone
+        if package is not None:
+            body['package'] = package
         url = self.ep(f'{subscriber_id}')
         data = super().put(url, json=body)
         r = Subscriber.model_validate(data)

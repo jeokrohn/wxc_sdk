@@ -253,13 +253,20 @@ class MessagesWithECMApi(ApiChild, base='messages'):
         :rtype: :class:`Message`
         """
         body = dict()
-        body['roomId'] = room_id
-        body['toPersonId'] = to_person_id
-        body['toPersonEmail'] = to_person_email
-        body['text'] = text
-        body['markdown'] = markdown
-        body['files'] = files
-        body['attachments'] = loads(TypeAdapter(list[Attachment]).dump_json(attachments, by_alias=True, exclude_none=True))
+        if room_id is not None:
+            body['roomId'] = room_id
+        if to_person_id is not None:
+            body['toPersonId'] = to_person_id
+        if to_person_email is not None:
+            body['toPersonEmail'] = to_person_email
+        if text is not None:
+            body['text'] = text
+        if markdown is not None:
+            body['markdown'] = markdown
+        if files is not None:
+            body['files'] = files
+        if attachments is not None:
+            body['attachments'] = loads(TypeAdapter(list[Attachment]).dump_json(attachments, by_alias=True, exclude_none=True))
         url = self.ep()
         data = super().post(url, json=body)
         r = Message.model_validate(data)

@@ -129,22 +129,30 @@ class Parameter:
                           (f'    {l}' for l in lines))
         return lines
 
-    def source_for_body_init(self) -> str:
+    def source_for_body_init(self) -> Generator[str, None, None]:
         """
         Python code for body init
         """
+        if self.optional:
+            yield f'if {self.python_name} is not None:'
+            indent = ' ' * 4
+        else:
+            indent = ''
         # most simple form:
         if not self.referenced_class:
             # most simple form
             # body['{name}'] = {python_name}
-            return f"body['{self.name}'] = {self.python_name}"
+            yield f"{indent}body['{self.name}'] = {self.python_name}"
+            return
         if self.is_enum:
             # body['{name}'] = enum_str({python_name})
-            return f"body['{self.name}'] = enum_str({self.python_name})"
+            yield f"{indent}body['{self.name}'] = enum_str({self.python_name})"
+            return
         if self.python_type == self.referenced_class:
-            return f"body['{self.name}'] = loads({self.python_name}.model_dump_json())"
-        return f"body['{self.name}'] = loads(TypeAdapter({self.python_type}).dump_json({self.python_name}, " \
-               f"by_alias=True, exclude_none=True))"
+            yield f"{indent}body['{self.name}'] = loads({self.python_name}.model_dump_json())"
+            return
+        yield f"{indent}body['{self.name}'] = loads(TypeAdapter({self.python_type}).dump_json({self.python_name}, " \
+              f"by_alias=True, exclude_none=True))"
 
 
 class SourceIO(StringIO):
@@ -422,7 +430,7 @@ class Endpoint:
         if self.body_parameter:
             source.print('body = dict()')
             for p in self.body_parameter:
-                source.print(p.source_for_body_init())
+                list(map(source.print, p.source_for_body_init()))
 
         # code to determine URL (make sure to set URL parameters)
         url = self.url[len(base):].strip('/')
@@ -457,6 +465,7 @@ class Attribute:
     docstring: str
     sample: Any
     referenced_class: str
+    optional: bool = field(default=False)
 
     @classmethod
     def from_enum(cls, enum_element: ApibEnum) -> Generator['Attribute', None, None]:
@@ -741,6 +750,7 @@ class PythonClassRegistry:
         value = member.value
         docstring = member.meta and member.meta.description
         referenced_class = None
+        optional = 'optional' in member.type_attributes
         if value.element == 'string':
             sample = value.content
             # could be a datetime
@@ -852,7 +862,7 @@ class PythonClassRegistry:
         if referenced_class:
             referenced_class = self.qualified_class_name(referenced_class)
         return Attribute(name=name, python_type=python_type, docstring=docstring, sample=sample,
-                         referenced_class=referenced_class)
+                         referenced_class=referenced_class, optional=optional)
 
     def _add_classes_from_data_structure(self, ds: ApibDatastructure, class_name: str = None) -> PythonClass:
         """
@@ -1127,6 +1137,12 @@ class PythonClassRegistry:
                 endpoint.result = endpoint.result.replace(endpoint.result_referenced_class,
                                                           python_name)
                 endpoint.result_referenced_class = python_name
+
+            if endpoint.body_class_name:
+                python_name = qualident_to_python_name[endpoint.body_class_name]
+                python_name, _ = self._dereferenced_class(python_name)
+                endpoint.body_class_name = python_name
+
         self._context = '-'
 
     def baseclasses_for_common_attribute_sets(self):
@@ -1224,7 +1240,7 @@ class PythonClassRegistry:
                         if python_class.attributes:
                             body_parameters = [Parameter(name=attr.name, python_type=attr.python_type,
                                                          docstring=attr.docstring, sample=attr.sample,
-                                                         optional=optional, referenced_class=attr.referenced_class,
+                                                         optional=attr.optional, referenced_class=attr.referenced_class,
                                                          registry=self)
                                                for attr in python_class.attributes]
                         else:

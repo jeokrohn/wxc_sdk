@@ -64,7 +64,7 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         r = data['warningToneEnabled']
         return r
 
-    def configure_call_bridge_settings_for_a_person(self, person_id: str, warning_tone_enabled: bool,
+    def configure_call_bridge_settings_for_a_person(self, person_id: str, warning_tone_enabled: bool = None,
                                                     org_id: str = None):
         """
         Configure Call Bridge Settings for a Person
@@ -89,6 +89,7 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['warningToneEnabled'] = warning_tone_enabled
+        if warning_tone_enabled is not None:
+            body['warningToneEnabled'] = warning_tone_enabled
         url = self.ep(f'')
         super().put(url, params=params, json=body)

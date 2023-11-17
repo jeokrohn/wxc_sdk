@@ -116,8 +116,8 @@ class GroupsApi(ApiChild, base='groups'):
     <https://developer.webex.com/docs/api/v1/people>`_.
     """
 
-    def create_a_group(self, display_name: str, org_id: str, description: str,
-                       members: list[PostMember]) -> GroupResponse:
+    def create_a_group(self, display_name: str, description: str = None, members: list[PostMember] = None,
+                       org_id: str = None) -> GroupResponse:
         """
         Create a Group
 
@@ -125,22 +125,25 @@ class GroupsApi(ApiChild, base='groups'):
 
         :param display_name: The name of the group.
         :type display_name: str
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
         :param description: Description of the group.
         :type description: str
         :param members: An array of members. Maximum of 500 members can be provided. To add more members, use the
             `Update a Group
             <https://developer.webex.com/docs/api/v1/groups/update-a-group>`_ API to add additional members.
         :type members: list[PostMember]
+        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
+            from the OAuth token is used.
+        :type org_id: str
         :rtype: :class:`GroupResponse`
         """
         body = dict()
         body['displayName'] = display_name
-        body['orgId'] = org_id
-        body['description'] = description
-        body['members'] = loads(TypeAdapter(list[PostMember]).dump_json(members, by_alias=True, exclude_none=True))
+        if org_id is not None:
+            body['orgId'] = org_id
+        if description is not None:
+            body['description'] = description
+        if members is not None:
+            body['members'] = loads(TypeAdapter(list[PostMember]).dump_json(members, by_alias=True, exclude_none=True))
         url = self.ep()
         data = super().post(url, json=body)
         r = GroupResponse.model_validate(data)

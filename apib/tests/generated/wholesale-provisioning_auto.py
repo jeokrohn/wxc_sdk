@@ -474,11 +474,14 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         body = dict()
         body['provisioningId'] = provisioning_id
         body['packages'] = packages
-        body['orgId'] = org_id
+        if org_id is not None:
+            body['orgId'] = org_id
         body['externalId'] = external_id
         body['address'] = loads(address.model_dump_json())
-        body['customerInfo'] = loads(customer_info.model_dump_json())
-        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
+        if customer_info is not None:
+            body['customerInfo'] = loads(customer_info.model_dump_json())
+        if provisioning_parameters is not None:
+            body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep('customers')
         data = super().post(url, json=body)
         r = data['url']
@@ -531,10 +534,13 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :rtype: str
         """
         body = dict()
-        body['externalId'] = external_id
+        if external_id is not None:
+            body['externalId'] = external_id
         body['packages'] = packages
-        body['address'] = loads(address.model_dump_json())
-        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
+        if address is not None:
+            body['address'] = loads(address.model_dump_json())
+        if provisioning_parameters is not None:
+            body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep(f'customers/{customer_id}')
         data = super().put(url, json=body)
         r = data['url']
@@ -594,13 +600,19 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :rtype: :class:`CustomerProvisioningPrecheckResponse`
         """
         body = dict()
-        body['provisioningId'] = provisioning_id
-        body['packages'] = packages
-        body['orgId'] = org_id
-        body['externalId'] = external_id
+        if provisioning_id is not None:
+            body['provisioningId'] = provisioning_id
+        if packages is not None:
+            body['packages'] = packages
+        if org_id is not None:
+            body['orgId'] = org_id
+        if external_id is not None:
+            body['externalId'] = external_id
         body['address'] = loads(address.model_dump_json())
-        body['customerInfo'] = loads(customer_info.model_dump_json())
-        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
+        if customer_info is not None:
+            body['customerInfo'] = loads(customer_info.model_dump_json())
+        if provisioning_parameters is not None:
+            body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep('customers/validate')
         data = super().post(url, json=body)
         r = CustomerProvisioningPrecheckResponse.model_validate(data)
@@ -749,7 +761,8 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         """
         body = dict()
         body['package'] = enum_str(package)
-        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
+        if provisioning_parameters is not None:
+            body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
         url = self.ep(f'subscribers/{subscriber_id}')
         data = super().put(url, json=body)
         r = Subscriber.model_validate(data)
@@ -805,12 +818,17 @@ class WholesaleProvisioningApi(ApiChild, base='wholesale'):
         :rtype: :class:`CustomerProvisioningPrecheckResponse`
         """
         body = dict()
-        body['provisioningId'] = provisioning_id
-        body['customerId'] = customer_id
+        if provisioning_id is not None:
+            body['provisioningId'] = provisioning_id
+        if customer_id is not None:
+            body['customerId'] = customer_id
         body['email'] = email
-        body['package'] = enum_str(package)
-        body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
-        body['customerInfo'] = loads(customer_info.model_dump_json())
+        if package is not None:
+            body['package'] = enum_str(package)
+        if provisioning_parameters is not None:
+            body['provisioningParameters'] = loads(provisioning_parameters.model_dump_json())
+        if customer_info is not None:
+            body['customerInfo'] = loads(customer_info.model_dump_json())
         url = self.ep('subscribers/validate')
         data = super().post(url, json=body)
         r = CustomerProvisioningPrecheckResponse.model_validate(data)

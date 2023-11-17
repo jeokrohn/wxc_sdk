@@ -723,7 +723,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = data['enabled']
         return r
 
-    def modify_call_waiting_settings_for_a_workspace(self, workspace_id: str, enabled: bool, org_id: str = None):
+    def modify_call_waiting_settings_for_a_workspace(self, workspace_id: str, enabled: bool = None,
+                                                     org_id: str = None):
         """
         Modify Call Waiting Settings for a Workspace
 
@@ -750,7 +751,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['enabled'] = enabled
+        if enabled is not None:
+            body['enabled'] = enabled
         url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         super().put(url, params=params, json=body)
 
@@ -783,11 +785,12 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         return r
 
     def modify_caller_id_settings_for_a_workspace(self, workspace_id: str, selected: CLIDPolicySelection,
-                                                  custom_number: str, display_name: str, display_detail: str,
-                                                  block_in_forward_calls_enabled: bool,
-                                                  external_caller_id_name_policy: ExternalCallerIdNamePolicy,
-                                                  custom_external_caller_id_name: str,
-                                                  location_external_caller_id_name: str, org_id: str = None):
+                                                  custom_number: str = None, display_name: str = None,
+                                                  display_detail: str = None,
+                                                  block_in_forward_calls_enabled: bool = None,
+                                                  external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
+                                                  custom_external_caller_id_name: str = None,
+                                                  location_external_caller_id_name: str = None, org_id: str = None):
         """
         Modify Caller ID Settings for a Workspace
 
@@ -831,13 +834,20 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         body = dict()
         body['selected'] = enum_str(selected)
-        body['customNumber'] = custom_number
-        body['displayName'] = display_name
-        body['displayDetail'] = display_detail
-        body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
-        body['externalCallerIdNamePolicy'] = enum_str(external_caller_id_name_policy)
-        body['customExternalCallerIdName'] = custom_external_caller_id_name
-        body['locationExternalCallerIdName'] = location_external_caller_id_name
+        if custom_number is not None:
+            body['customNumber'] = custom_number
+        if display_name is not None:
+            body['displayName'] = display_name
+        if display_detail is not None:
+            body['displayDetail'] = display_detail
+        if block_in_forward_calls_enabled is not None:
+            body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
+        if external_caller_id_name_policy is not None:
+            body['externalCallerIdNamePolicy'] = enum_str(external_caller_id_name_policy)
+        if custom_external_caller_id_name is not None:
+            body['customExternalCallerIdName'] = custom_external_caller_id_name
+        if location_external_caller_id_name is not None:
+            body['locationExternalCallerIdName'] = location_external_caller_id_name
         url = self.ep(f'workspaces/{workspace_id}/features/callerId')
         super().put(url, params=params, json=body)
 
@@ -871,8 +881,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = UserMonitoringGet.model_validate(data)
         return r
 
-    def modify_monitoring_settings_for_a_workspace(self, workspace_id: str, enable_call_park_notification: bool,
-                                                   monitored_elements: list[str], org_id: str = None):
+    def modify_monitoring_settings_for_a_workspace(self, workspace_id: str, enable_call_park_notification: bool = None,
+                                                   monitored_elements: list[str] = None, org_id: str = None):
         """
         Modify Monitoring Settings for a Workspace
 
@@ -902,8 +912,10 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['enableCallParkNotification'] = enable_call_park_notification
-        body['monitoredElements'] = monitored_elements
+        if enable_call_park_notification is not None:
+            body['enableCallParkNotification'] = enable_call_park_notification
+        if monitored_elements is not None:
+            body['monitoredElements'] = monitored_elements
         url = self.ep(f'workspaces/{workspace_id}/features/monitoring')
         super().put(url, params=params, json=body)
 
@@ -935,9 +947,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = GetMusicOnHoldObject.model_validate(data)
         return r
 
-    def modify_music_on_hold_settings_for_a_workspace(self, workspace_id: str, moh_enabled: bool,
-                                                      greeting: InterceptAnnouncementsGetGreeting,
-                                                      audio_announcement_file: AudioAnnouncementFileGetObject,
+    def modify_music_on_hold_settings_for_a_workspace(self, workspace_id: str, moh_enabled: bool = None,
+                                                      greeting: InterceptAnnouncementsGetGreeting = None,
+                                                      audio_announcement_file: AudioAnnouncementFileGetObject = None,
                                                       org_id: str = None):
         """
         Modify Music On Hold Settings for a Workspace
@@ -969,9 +981,12 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['mohEnabled'] = moh_enabled
-        body['greeting'] = enum_str(greeting)
-        body['audioAnnouncementFile'] = loads(audio_announcement_file.model_dump_json())
+        if moh_enabled is not None:
+            body['mohEnabled'] = moh_enabled
+        if greeting is not None:
+            body['greeting'] = enum_str(greeting)
+        if audio_announcement_file is not None:
+            body['audioAnnouncementFile'] = loads(audio_announcement_file.model_dump_json())
         url = self.ep(f'telephony/config/workspaces/{workspace_id}/musicOnHold')
         super().put(url, params=params, json=body)
 
@@ -1031,10 +1046,10 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = UserInboundPermissionGet.model_validate(data)
         return r
 
-    def modify_incoming_permission_settings_for_a_workspace(self, workspace_id: str, use_custom_enabled: bool,
-                                                            external_transfer: UserInboundPermissionGetExternalTransfer,
-                                                            internal_calls_enabled: bool, collect_calls_enabled: bool,
-                                                            org_id: str = None):
+    def modify_incoming_permission_settings_for_a_workspace(self, workspace_id: str, use_custom_enabled: bool = None,
+                                                            external_transfer: UserInboundPermissionGetExternalTransfer = None,
+                                                            internal_calls_enabled: bool = None,
+                                                            collect_calls_enabled: bool = None, org_id: str = None):
         """
         Modify Incoming Permission Settings for a Workspace
 
@@ -1067,10 +1082,14 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['useCustomEnabled'] = use_custom_enabled
-        body['externalTransfer'] = enum_str(external_transfer)
-        body['internalCallsEnabled'] = internal_calls_enabled
-        body['collectCallsEnabled'] = collect_calls_enabled
+        if use_custom_enabled is not None:
+            body['useCustomEnabled'] = use_custom_enabled
+        if external_transfer is not None:
+            body['externalTransfer'] = enum_str(external_transfer)
+        if internal_calls_enabled is not None:
+            body['internalCallsEnabled'] = internal_calls_enabled
+        if collect_calls_enabled is not None:
+            body['collectCallsEnabled'] = collect_calls_enabled
         url = self.ep(f'workspaces/{workspace_id}/features/incomingPermission')
         super().put(url, params=params, json=body)
 
@@ -1104,8 +1123,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = UserOutgoingPermissionGet.model_validate(data)
         return r
 
-    def modify_outgoing_permission_settings_for_a_workspace(self, workspace_id: str, use_custom_enabled: bool,
-                                                            calling_permissions: list[CallingPermission],
+    def modify_outgoing_permission_settings_for_a_workspace(self, workspace_id: str, use_custom_enabled: bool = None,
+                                                            calling_permissions: list[CallingPermission] = None,
                                                             org_id: str = None):
         """
         Modify Outgoing Permission Settings for a Workspace
@@ -1135,8 +1154,10 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['useCustomEnabled'] = use_custom_enabled
-        body['callingPermissions'] = loads(TypeAdapter(list[CallingPermission]).dump_json(calling_permissions, by_alias=True, exclude_none=True))
+        if use_custom_enabled is not None:
+            body['useCustomEnabled'] = use_custom_enabled
+        if calling_permissions is not None:
+            body['callingPermissions'] = loads(TypeAdapter(list[CallingPermission]).dump_json(calling_permissions, by_alias=True, exclude_none=True))
         url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         super().put(url, params=params, json=body)
 
@@ -1168,7 +1189,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = TypeAdapter(list[AuthorizationCode]).validate_python(data['accessCodes'])
         return r
 
-    def modify_access_codes_for_a_workspace(self, workspace_id: str, delete_codes: list[str], org_id: str = None):
+    def modify_access_codes_for_a_workspace(self, workspace_id: str, delete_codes: list[str] = None,
+                                            org_id: str = None):
         """
         Modify Access Codes for a Workspace
 
@@ -1194,7 +1216,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['deleteCodes'] = delete_codes
+        if delete_codes is not None:
+            body['deleteCodes'] = delete_codes
         url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url, params=params, json=body)
 
@@ -1263,9 +1286,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = InterceptGet.model_validate(data)
         return r
 
-    def configure_call_intercept_settings_for_a_workspace(self, workspace_id: str, enabled: bool,
-                                                          incoming: InterceptIncomingPatch,
-                                                          outgoing: InterceptOutGoingGet, org_id: str = None):
+    def configure_call_intercept_settings_for_a_workspace(self, workspace_id: str, enabled: bool = None,
+                                                          incoming: InterceptIncomingPatch = None,
+                                                          outgoing: InterceptOutGoingGet = None, org_id: str = None):
         """
         Configure Call Intercept Settings for a Workspace
 
@@ -1298,9 +1321,12 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['enabled'] = enabled
-        body['incoming'] = loads(incoming.model_dump_json())
-        body['outgoing'] = loads(outgoing.model_dump_json())
+        if enabled is not None:
+            body['enabled'] = enabled
+        if incoming is not None:
+            body['incoming'] = loads(incoming.model_dump_json())
+        if outgoing is not None:
+            body['outgoing'] = loads(outgoing.model_dump_json())
         url = self.ep(f'workspaces/{workspace_id}/features/intercept')
         super().put(url, params=params, json=body)
 
@@ -1335,9 +1361,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = TransferNumberGet.model_validate(data)
         return r
 
-    def modify_transfer_numbers_settings_for_a_workspace(self, workspace_id: str, auto_transfer_number1: str,
-                                                         auto_transfer_number2: str, auto_transfer_number3: str,
-                                                         org_id: str = None):
+    def modify_transfer_numbers_settings_for_a_workspace(self, workspace_id: str, auto_transfer_number1: str = None,
+                                                         auto_transfer_number2: str = None,
+                                                         auto_transfer_number3: str = None, org_id: str = None):
         """
         Modify Transfer Numbers Settings for a Workspace
 
@@ -1372,8 +1398,11 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['autoTransferNumber1'] = auto_transfer_number1
-        body['autoTransferNumber2'] = auto_transfer_number2
-        body['autoTransferNumber3'] = auto_transfer_number3
+        if auto_transfer_number1 is not None:
+            body['autoTransferNumber1'] = auto_transfer_number1
+        if auto_transfer_number2 is not None:
+            body['autoTransferNumber2'] = auto_transfer_number2
+        if auto_transfer_number3 is not None:
+            body['autoTransferNumber3'] = auto_transfer_number3
         url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)

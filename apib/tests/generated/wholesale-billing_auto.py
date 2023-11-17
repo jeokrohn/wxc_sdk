@@ -221,8 +221,10 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         body = dict()
         body['billingStartDate'] = billing_start_date
         body['billingEndDate'] = billing_end_date
-        body['type'] = type
-        body['subPartnerOrgId'] = sub_partner_org_id
+        if type is not None:
+            body['type'] = type
+        if sub_partner_org_id is not None:
+            body['subPartnerOrgId'] = sub_partner_org_id
         url = self.ep()
         data = super().post(url, json=body)
         r = ReportId.model_validate(data)

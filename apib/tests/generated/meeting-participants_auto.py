@@ -431,9 +431,12 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['emails'] = emails
-        body['joinTimeFrom'] = join_time_from
-        body['joinTimeTo'] = join_time_to
+        if emails is not None:
+            body['emails'] = emails
+        if join_time_from is not None:
+            body['joinTimeFrom'] = join_time_from
+        if join_time_to is not None:
+            body['joinTimeTo'] = join_time_to
         url = self.ep('query')
         data = super().post(url, params=params, json=body)
         r = TypeAdapter(list[Participant]).validate_python(data['items'])
@@ -502,9 +505,12 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         :rtype: :class:`InProgressParticipant`
         """
         body = dict()
-        body['muted'] = muted
-        body['admit'] = admit
-        body['expel'] = expel
+        if muted is not None:
+            body['muted'] = muted
+        if admit is not None:
+            body['admit'] = admit
+        if expel is not None:
+            body['expel'] = expel
         url = self.ep(f'{participant_id}')
         data = super().put(url, json=body)
         r = InProgressParticipant.model_validate(data)

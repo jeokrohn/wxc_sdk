@@ -1008,7 +1008,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         body = dict()
         body['originatorId'] = originator_id
         body['originatorType'] = enum_str(originator_type)
-        body['originatorNumber'] = originator_number
+        if originator_number is not None:
+            body['originatorNumber'] = originator_number
         body['destination'] = destination
         url = self.ep('actions/testCallRouting/invoke')
         data = super().post(url, params=params, json=body)
@@ -1387,8 +1388,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
         super().delete(url, params=params)
 
-    def validate_local_gateway_fqdn_and_domain_for_a_trunk(self, address: str, domain: str, port: int,
-                                                           org_id: str = None):
+    def validate_local_gateway_fqdn_and_domain_for_a_trunk(self, address: str = None, domain: str = None,
+                                                           port: int = None, org_id: str = None):
         """
         Validate Local Gateway FQDN and Domain for a Trunk
 
@@ -1416,9 +1417,12 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['address'] = address
-        body['domain'] = domain
-        body['port'] = port
+        if address is not None:
+            body['address'] = address
+        if domain is not None:
+            body['domain'] = domain
+        if port is not None:
+            body['port'] = port
         url = self.ep('premisePstn/trunks/actions/fqdnValidation/invoke')
         super().post(url, params=params, json=body)
 
@@ -1468,9 +1472,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep('premisePstn/trunks')
         return self.session.follow_pagination(url=url, model=Trunk, item_key='trunks', params=params)
 
-    def create_a_trunk(self, name: str, location_id: str, password: str, dual_identity_support_enabled: bool,
-                       trunk_type: TrunkType, device_type: str, address: str, domain: str, port: int,
-                       max_concurrent_calls: int, org_id: str = None) -> str:
+    def create_a_trunk(self, name: str, location_id: str, password: str, trunk_type: TrunkType,
+                       dual_identity_support_enabled: bool = None, device_type: str = None, address: str = None,
+                       domain: str = None, port: int = None, max_concurrent_calls: int = None,
+                       org_id: str = None) -> str:
         """
         Create a Trunk
 
@@ -1489,11 +1494,11 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param password: A password to use on the trunk.
         :type password: str
+        :param trunk_type: Trunk Type associated with the trunk.
+        :type trunk_type: TrunkType
         :param dual_identity_support_enabled: Dual Identity Support setting impacts the handling of the From header and
             P-Asserted-Identity header when sending an initial SIP `INVITE` to the trunk for an outbound call.
         :type dual_identity_support_enabled: bool
-        :param trunk_type: Trunk Type associated with the trunk.
-        :type trunk_type: TrunkType
         :param device_type: Device type assosiated with trunk.
         :type device_type: str
         :param address: FQDN or SRV address. Required to create a static certificate-based trunk.
@@ -1515,13 +1520,19 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         body['name'] = name
         body['locationId'] = location_id
         body['password'] = password
-        body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+        if dual_identity_support_enabled is not None:
+            body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
         body['trunkType'] = enum_str(trunk_type)
-        body['deviceType'] = device_type
-        body['address'] = address
-        body['domain'] = domain
-        body['port'] = port
-        body['maxConcurrentCalls'] = max_concurrent_calls
+        if device_type is not None:
+            body['deviceType'] = device_type
+        if address is not None:
+            body['address'] = address
+        if domain is not None:
+            body['domain'] = domain
+        if port is not None:
+            body['port'] = port
+        if max_concurrent_calls is not None:
+            body['maxConcurrentCalls'] = max_concurrent_calls
         url = self.ep('premisePstn/trunks')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1555,8 +1566,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TrunkGet.model_validate(data)
         return r
 
-    def modify_a_trunk(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool,
-                       max_concurrent_calls: int, org_id: str = None):
+    def modify_a_trunk(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool = None,
+                       max_concurrent_calls: int = None, org_id: str = None):
         """
         Modify a Trunk
 
@@ -1590,8 +1601,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         body = dict()
         body['name'] = name
         body['password'] = password
-        body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
-        body['maxConcurrentCalls'] = max_concurrent_calls
+        if dual_identity_support_enabled is not None:
+            body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+        if max_concurrent_calls is not None:
+            body['maxConcurrentCalls'] = max_concurrent_calls
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
         super().put(url, params=params, json=body)
 
@@ -2096,7 +2109,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = RouteListGet.model_validate(data)
         return r
 
-    def modify_a_route_list(self, route_list_id: str, name: str, route_group_id: str, org_id: str = None):
+    def modify_a_route_list(self, route_list_id: str, name: str = None, route_group_id: str = None,
+                            org_id: str = None):
         """
         Modify a Route List
 
@@ -2122,8 +2136,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['routeGroupId'] = route_group_id
+        if name is not None:
+            body['name'] = name
+        if route_group_id is not None:
+            body['routeGroupId'] = route_group_id
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
         super().put(url, params=params, json=body)
 
@@ -2156,8 +2172,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['numbers'] = loads(TypeAdapter(list[RouteListNumberPatch]).dump_json(numbers, by_alias=True, exclude_none=True))
-        body['deleteAllNumbers'] = delete_all_numbers
+        if numbers is not None:
+            body['numbers'] = loads(TypeAdapter(list[RouteListNumberPatch]).dump_json(numbers, by_alias=True, exclude_none=True))
+        if delete_all_numbers is not None:
+            body['deleteAllNumbers'] = delete_all_numbers
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
         data = super().put(url, params=params, json=body)
         r = TypeAdapter(list[RouteListNumberPatchResponse]).validate_python(data['numberStatus'])

@@ -337,12 +337,13 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
     query parameter.
     """
 
-    def create_a_hunt_group(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
-                            language_code: str, first_name: str, last_name: str, time_zone: str,
-                            call_policies: PostHuntGroupCallPolicyObject, use_hosted_agent_enabled: bool,
-                            use_policy_server_enabled: bool, agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
+    def create_a_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject,
+                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
                             address_agents: list[AddressAgentHuntGroupObject], enabled: bool,
-                            org_id: str = None) -> str:
+                            phone_number: str = None, extension: Union[str, datetime] = None,
+                            language_code: str = None, first_name: str = None, last_name: str = None,
+                            time_zone: str = None, use_hosted_agent_enabled: bool = None,
+                            use_policy_server_enabled: bool = None, org_id: str = None) -> str:
         """
         Create a Hunt Group
 
@@ -358,6 +359,14 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         :type location_id: str
         :param name: Unique name for the hunt group.
         :type name: str
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: PostHuntGroupCallPolicyObject
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
+        :param address_agents: People, workspaces and virtual lines that are eligible to  receive calls, on-prem.
+        :type address_agents: list[AddressAgentHuntGroupObject]
+        :param enabled: Whether or not the hunt group is enabled.
+        :type enabled: bool
         :param phone_number: Primary phone number of the hunt group. Either phone number or extension are required.
         :type phone_number: str
         :param extension: Primary phone extension of the hunt group. Either phone number or extension are required.
@@ -371,19 +380,11 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
-        :param call_policies: Policy controlling how calls are routed to agents.
-        :type call_policies: PostHuntGroupCallPolicyObject
         :param use_hosted_agent_enabled: Determines whether hosted or numeric Hunt Group agents are used for this Hunt
             Group
         :type use_hosted_agent_enabled: bool
         :param use_policy_server_enabled: Determines wether to use the Policy Server for this Hunt Group
         :type use_policy_server_enabled: bool
-        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
-        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
-        :param address_agents: People, workspaces and virtual lines that are eligible to  receive calls, on-prem.
-        :type address_agents: list[AddressAgentHuntGroupObject]
-        :param enabled: Whether or not the hunt group is enabled.
-        :type enabled: bool
         :param org_id: Create the hunt group for this organization.
         :type org_id: str
         :rtype: str
@@ -393,15 +394,23 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['useHostedAgentEnabled'] = use_hosted_agent_enabled
-        body['usePolicyServerEnabled'] = use_policy_server_enabled
+        if use_hosted_agent_enabled is not None:
+            body['useHostedAgentEnabled'] = use_hosted_agent_enabled
+        if use_policy_server_enabled is not None:
+            body['usePolicyServerEnabled'] = use_policy_server_enabled
         body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
@@ -439,12 +448,15 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         r = GetHuntGroupObject.model_validate(data)
         return r
 
-    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
-                            extension: Union[str, datetime], distinctive_ring: bool,
-                            alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
-                            last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
-                            use_policy_server_enabled: bool, agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
-                            address_agents: list[AddressAgentHuntGroupObject], enabled: bool, org_id: str = None):
+    def update_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject],
+                            address_agents: list[AddressAgentHuntGroupObject], name: str = None,
+                            phone_number: str = None, extension: Union[str, datetime] = None,
+                            distinctive_ring: bool = None,
+                            alternate_numbers: list[AlternateNumbersWithPattern] = None, language_code: str = None,
+                            first_name: str = None, last_name: str = None, time_zone: str = None,
+                            call_policies: PostHuntGroupCallPolicyObject = None,
+                            use_policy_server_enabled: bool = None, enabled: bool = None, org_id: str = None):
         """
         Update a Hunt Group
 
@@ -460,6 +472,10 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         :type location_id: str
         :param hunt_group_id: Update settings for the hunt group with the matching ID.
         :type hunt_group_id: str
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
+        :param address_agents: People, workspaces and virtual lines that are eligible to  receive calls, on-prem.
+        :type address_agents: list[AddressAgentHuntGroupObject]
         :param name: Unique name for the hunt group.
         :type name: str
         :param phone_number: Primary phone number of the hunt group.
@@ -486,10 +502,6 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         :type call_policies: PostHuntGroupCallPolicyObject
         :param use_policy_server_enabled: Determines wether to use the Policy Server for this Hunt Group
         :type use_policy_server_enabled: bool
-        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
-        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
-        :param address_agents: People, workspaces and virtual lines that are eligible to  receive calls, on-prem.
-        :type address_agents: list[AddressAgentHuntGroupObject]
         :param enabled: Whether or not the hunt group is enabled.
         :type enabled: bool
         :param org_id: Update hunt group settings from this organization.
@@ -500,19 +512,31 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['distinctiveRing'] = distinctive_ring
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
-        body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['usePolicyServerEnabled'] = use_policy_server_enabled
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if distinctive_ring is not None:
+            body['distinctiveRing'] = distinctive_ring
+        if alternate_numbers is not None:
+            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if call_policies is not None:
+            body['callPolicies'] = loads(call_policies.model_dump_json())
+        if use_policy_server_enabled is not None:
+            body['usePolicyServerEnabled'] = use_policy_server_enabled
         body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents, by_alias=True, exclude_none=True))
-        body['enabled'] = enabled
+        if enabled is not None:
+            body['enabled'] = enabled
         url = self.ep(f'{hunt_group_id}')
         super().put(url, params=params, json=body)

@@ -338,7 +338,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         return r
 
     def create_a_schedule(self, location_id: str, type: GetScheduleObjectType, name: str,
-                          events: list[ModifyScheduleEventObject], org_id: str = None) -> str:
+                          events: list[ModifyScheduleEventObject] = None, org_id: str = None) -> str:
         """
         Create a Schedule
 
@@ -368,14 +368,15 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         body = dict()
         body['type'] = enum_str(type)
         body['name'] = name
-        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventObject]).dump_json(events, by_alias=True, exclude_none=True))
+        if events is not None:
+            body['events'] = loads(TypeAdapter(list[ModifyScheduleEventObject]).dump_json(events, by_alias=True, exclude_none=True))
         url = self.ep(f'')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
     def update_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, name: str,
-                          events: list[ModifyScheduleEventListObject], org_id: str = None) -> str:
+                          events: list[ModifyScheduleEventListObject] = None, org_id: str = None) -> str:
         """
         Update a Schedule
 
@@ -408,7 +409,8 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['events'] = loads(TypeAdapter(list[ModifyScheduleEventListObject]).dump_json(events, by_alias=True, exclude_none=True))
+        if events is not None:
+            body['events'] = loads(TypeAdapter(list[ModifyScheduleEventListObject]).dump_json(events, by_alias=True, exclude_none=True))
         url = self.ep(f'{type}/{schedule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
@@ -477,8 +479,9 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
 
     def create_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, name: str,
                                 start_date: Union[str, datetime], end_date: Union[str, datetime],
-                                start_time: Union[str, datetime], end_time: Union[str, datetime],
-                                all_day_enabled: bool, recurrence: RecurrenceObject, org_id: str = None) -> str:
+                                start_time: Union[str, datetime] = None, end_time: Union[str, datetime] = None,
+                                all_day_enabled: bool = None, recurrence: RecurrenceObject = None,
+                                org_id: str = None) -> str:
         """
         Create a Schedule Event
 
@@ -522,10 +525,14 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         body['name'] = name
         body['startDate'] = start_date
         body['endDate'] = end_date
-        body['startTime'] = start_time
-        body['endTime'] = end_time
-        body['allDayEnabled'] = all_day_enabled
-        body['recurrence'] = loads(recurrence.model_dump_json())
+        if start_time is not None:
+            body['startTime'] = start_time
+        if end_time is not None:
+            body['endTime'] = end_time
+        if all_day_enabled is not None:
+            body['allDayEnabled'] = all_day_enabled
+        if recurrence is not None:
+            body['recurrence'] = loads(recurrence.model_dump_json())
         url = self.ep(f'{type}/{schedule_id}/events')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -533,8 +540,9 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
 
     def update_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, event_id: str,
                                 name: str, start_date: Union[str, datetime], end_date: Union[str, datetime],
-                                start_time: Union[str, datetime], end_time: Union[str, datetime],
-                                all_day_enabled: bool, recurrence: RecurrenceObject, org_id: str = None) -> str:
+                                start_time: Union[str, datetime] = None, end_time: Union[str, datetime] = None,
+                                all_day_enabled: bool = None, recurrence: RecurrenceObject = None,
+                                org_id: str = None) -> str:
         """
         Update a Schedule Event
 
@@ -582,10 +590,14 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         body['name'] = name
         body['startDate'] = start_date
         body['endDate'] = end_date
-        body['startTime'] = start_time
-        body['endTime'] = end_time
-        body['allDayEnabled'] = all_day_enabled
-        body['recurrence'] = loads(recurrence.model_dump_json())
+        if start_time is not None:
+            body['startTime'] = start_time
+        if end_time is not None:
+            body['endTime'] = end_time
+        if all_day_enabled is not None:
+            body['allDayEnabled'] = all_day_enabled
+        if recurrence is not None:
+            body['recurrence'] = loads(recurrence.model_dump_json())
         url = self.ep(f'{type}/{schedule_id}/events/{event_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']

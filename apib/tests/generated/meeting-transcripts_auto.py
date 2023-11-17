@@ -313,8 +313,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         r = SnippetObject.model_validate(data)
         return r
 
-    def update_a_transcript_snippet(self, transcript_id: str, snippet_id: str, reason: str,
-                                    text: str) -> SnippetObject:
+    def update_a_transcript_snippet(self, transcript_id: str, snippet_id: str, text: str,
+                                    reason: str = None) -> SnippetObject:
         """
         Update a Transcript Snippet
 
@@ -325,21 +325,22 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type transcript_id: str
         :param snippet_id: Unique identifier for the snippet being updated.
         :type snippet_id: str
-        :param reason: Reason for snippet update; only required for Compliance Officers.
-        :type reason: str
         :param text: Text for the snippet.
         :type text: str
+        :param reason: Reason for snippet update; only required for Compliance Officers.
+        :type reason: str
         :rtype: :class:`SnippetObject`
         """
         body = dict()
-        body['reason'] = reason
+        if reason is not None:
+            body['reason'] = reason
         body['text'] = text
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
         data = super().put(url, json=body)
         r = SnippetObject.model_validate(data)
         return r
 
-    def delete_a_transcript(self, transcript_id: str, reason: str, comment: str):
+    def delete_a_transcript(self, transcript_id: str, reason: str = None, comment: str = None):
         """
         Delete a Transcript
 
@@ -357,7 +358,9 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :rtype: None
         """
         body = dict()
-        body['reason'] = reason
-        body['comment'] = comment
+        if reason is not None:
+            body['reason'] = reason
+        if comment is not None:
+            body['comment'] = comment
         url = self.ep(f'meetingTranscripts/{transcript_id}')
         super().delete(url, json=body)

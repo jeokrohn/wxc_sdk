@@ -1122,12 +1122,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues')
         return self.session.follow_pagination(url=url, model=ListCallQueueObject, item_key='queues', params=params)
 
-    def create_a_call_queue(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
-                            language_code: str, first_name: str, last_name: str, time_zone: str,
-                            call_policies: GetCallQueueCallPolicyObject,
+    def create_a_call_queue(self, location_id: str, name: str, call_policies: GetCallQueueCallPolicyObject,
                             queue_settings: CallQueueQueueSettingsGetObject,
-                            agents: list[PostPersonPlaceVirtualLineCallQueueObject], allow_agent_join_enabled: bool,
-                            phone_number_for_outgoing_calls_enabled: bool, org_id: str = None) -> str:
+                            agents: list[PostPersonPlaceVirtualLineCallQueueObject], phone_number: str = None,
+                            extension: Union[str, datetime] = None, language_code: str = None, first_name: str = None,
+                            last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None,
+                            phone_number_for_outgoing_calls_enabled: bool = None, org_id: str = None) -> str:
         """
         Create a Call Queue
 
@@ -1148,6 +1148,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param name: Unique name for the call queue.
         :type name: str
+        :param call_policies: Policy controlling how calls are routed to `agents`.
+        :type call_policies: GetCallQueueCallPolicyObject
+        :param queue_settings: Overall call queue settings.
+        :type queue_settings: CallQueueQueueSettingsGetObject
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineCallQueueObject]
         :param phone_number: Primary phone number of the call queue. Either a `phoneNumber` or `extension` is
             mandatory.
         :type phone_number: str
@@ -1162,12 +1168,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type last_name: str
         :param time_zone: Time zone for the call queue.
         :type time_zone: str
-        :param call_policies: Policy controlling how calls are routed to `agents`.
-        :type call_policies: GetCallQueueCallPolicyObject
-        :param queue_settings: Overall call queue settings.
-        :type queue_settings: CallQueueQueueSettingsGetObject
-        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
-        :type agents: list[PostPersonPlaceVirtualLineCallQueueObject]
         :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
         :type allow_agent_join_enabled: bool
         :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
@@ -1182,17 +1182,25 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
         body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_json(agents, by_alias=True, exclude_none=True))
-        body['allowAgentJoinEnabled'] = allow_agent_join_enabled
-        body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
+        if allow_agent_join_enabled is not None:
+            body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+        if phone_number_for_outgoing_calls_enabled is not None:
+            body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1262,14 +1270,16 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueObject.model_validate(data)
         return r
 
-    def update_a_call_queue(self, location_id: str, queue_id: str, enabled: bool, name: str, language_code: str,
-                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: Union[str,
-                            datetime], alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
-                            call_policies: GetCallQueueCallPolicyObject,
-                            queue_settings: CallQueueQueueSettingsGetObject,
-                            allow_call_waiting_for_agents_enabled: bool,
-                            agents: list[ModifyPersonPlaceVirtualLineCallQueueObject], allow_agent_join_enabled: bool,
-                            phone_number_for_outgoing_calls_enabled: bool, org_id: str = None):
+    def update_a_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsGetObject,
+                            enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None,
+                            last_name: str = None, time_zone: str = None, phone_number: str = None,
+                            extension: Union[str, datetime] = None,
+                            alternate_number_settings: GetCallQueueObjectAlternateNumberSettings = None,
+                            call_policies: GetCallQueueCallPolicyObject = None,
+                            allow_call_waiting_for_agents_enabled: bool = None,
+                            agents: list[ModifyPersonPlaceVirtualLineCallQueueObject] = None,
+                            allow_agent_join_enabled: bool = None,
+                            phone_number_for_outgoing_calls_enabled: bool = None, org_id: str = None):
         """
         Update a Call Queue
 
@@ -1290,6 +1300,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
+        :param queue_settings: Overall call queue settings.
+        :type queue_settings: CallQueueQueueSettingsGetObject
         :param enabled: Whether or not the call queue is enabled.
         :type enabled: bool
         :param name: Unique name for the call queue.
@@ -1314,8 +1326,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type alternate_number_settings: GetCallQueueObjectAlternateNumberSettings
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: GetCallQueueCallPolicyObject
-        :param queue_settings: Overall call queue settings.
-        :type queue_settings: CallQueueQueueSettingsGetObject
         :param allow_call_waiting_for_agents_enabled: Flag to indicate whether call waiting is enabled for agents.
         :type allow_call_waiting_for_agents_enabled: bool
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
@@ -1333,21 +1343,35 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['enabled'] = enabled
-        body['name'] = name
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['alternateNumberSettings'] = loads(alternate_number_settings.model_dump_json())
-        body['callPolicies'] = loads(call_policies.model_dump_json())
+        if enabled is not None:
+            body['enabled'] = enabled
+        if name is not None:
+            body['name'] = name
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if alternate_number_settings is not None:
+            body['alternateNumberSettings'] = loads(alternate_number_settings.model_dump_json())
+        if call_policies is not None:
+            body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
-        body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
-        body['agents'] = loads(TypeAdapter(list[ModifyPersonPlaceVirtualLineCallQueueObject]).dump_json(agents, by_alias=True, exclude_none=True))
-        body['allowAgentJoinEnabled'] = allow_agent_join_enabled
-        body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
+        if allow_call_waiting_for_agents_enabled is not None:
+            body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
+        if agents is not None:
+            body['agents'] = loads(TypeAdapter(list[ModifyPersonPlaceVirtualLineCallQueueObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        if allow_agent_join_enabled is not None:
+            body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+        if phone_number_for_outgoing_calls_enabled is not None:
+            body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().put(url, params=params, json=body)
 
@@ -1438,7 +1462,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         return r
 
     def update_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
-                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding,
+                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
                                                          org_id: str = None):
         """
         Update Call Forwarding Settings for a Call Queue
@@ -1462,16 +1486,17 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['callForwarding'] = loads(call_forwarding.model_dump_json())
+        if call_forwarding is not None:
+            body['callForwarding'] = loads(call_forwarding.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         super().put(url, params=params, json=body)
 
     def create_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, name: str,
-                                                                 enabled: bool, holiday_schedule: str,
-                                                                 business_schedule: str,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
                                                                  calls_from: CreateForwardingRuleObjectCallsFrom,
                                                                  calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 enabled: bool = None, holiday_schedule: str = None,
+                                                                 business_schedule: str = None,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
                                                                  org_id: str = None) -> str:
         """
         Create a Selective Call Forwarding Rule for a Call Queue
@@ -1494,6 +1519,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type queue_id: str
         :param name: Unique name for the selective rule in the hunt group.
         :type name: str
+        :param calls_from: Settings related to the rule matching based on incoming caller ID.
+        :type calls_from: CreateForwardingRuleObjectCallsFrom
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CreateForwardingRuleObjectCallsTo
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
         :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
@@ -1505,10 +1534,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param forward_to: Controls what happens when the rule matches including the destination number for the call
             forwarding.
         :type forward_to: CreateForwardingRuleObjectForwardTo
-        :param calls_from: Settings related to the rule matching based on incoming caller ID.
-        :type calls_from: CreateForwardingRuleObjectCallsFrom
-        :param calls_to: Settings related to the rule matching based on the destination number.
-        :type calls_to: CreateForwardingRuleObjectCallsTo
         :param org_id: Create the call queue rule for this organization.
         :type org_id: str
         :rtype: str
@@ -1518,10 +1543,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['enabled'] = enabled
-        body['holidaySchedule'] = holiday_schedule
-        body['businessSchedule'] = business_schedule
-        body['forwardTo'] = loads(forward_to.model_dump_json())
+        if enabled is not None:
+            body['enabled'] = enabled
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if business_schedule is not None:
+            body['businessSchedule'] = business_schedule
+        if forward_to is not None:
+            body['forwardTo'] = loads(forward_to.model_dump_json())
         body['callsFrom'] = loads(calls_from.model_dump_json())
         body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules')
@@ -1565,11 +1594,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
-                                                                 name: str, enabled: bool, holiday_schedule: str,
-                                                                 business_schedule: str,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
-                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
-                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 name: str = None, enabled: bool = None,
+                                                                 holiday_schedule: str = None,
+                                                                 business_schedule: str = None,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
+                                                                 calls_from: CreateForwardingRuleObjectCallsFrom = None,
+                                                                 calls_to: CreateForwardingRuleObjectCallsTo = None,
                                                                  org_id: str = None) -> str:
         """
         Update a Selective Call Forwarding Rule for a Call Queue
@@ -1617,13 +1647,20 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['enabled'] = enabled
-        body['holidaySchedule'] = holiday_schedule
-        body['businessSchedule'] = business_schedule
-        body['forwardTo'] = loads(forward_to.model_dump_json())
-        body['callsFrom'] = loads(calls_from.model_dump_json())
-        body['callsTo'] = loads(calls_to.model_dump_json())
+        if name is not None:
+            body['name'] = name
+        if enabled is not None:
+            body['enabled'] = enabled
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if business_schedule is not None:
+            body['businessSchedule'] = business_schedule
+        if forward_to is not None:
+            body['forwardTo'] = loads(forward_to.model_dump_json())
+        if calls_from is not None:
+            body['callsFrom'] = loads(calls_from.model_dump_json())
+        if calls_to is not None:
+            body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
@@ -1693,10 +1730,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def update_a_call_queue_holiday_service(self, location_id: str, queue_id: str, holiday_service_enabled: bool,
                                             action: GetCallQueueHolidayObjectAction,
                                             holiday_schedule_level: CallQueueHolidaySchedulesObjectScheduleLevel,
-                                            holiday_schedule_name: str, transfer_phone_number: str,
                                             play_announcement_before_enabled: bool,
                                             audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                            audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                            holiday_schedule_name: str = None, transfer_phone_number: str = None,
+                                            audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
                                             org_id: str = None):
         """
         Update a Call Queue Holiday Service
@@ -1719,17 +1756,17 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param holiday_schedule_level: Specifies whether the schedule mentioned in `holidayScheduleName` is org or
             location specific. (Must be from `holidaySchedules` list)
         :type holiday_schedule_level: CallQueueHolidaySchedulesObjectScheduleLevel
+        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
+            action.
+        :type play_announcement_before_enabled: bool
+        :param audio_message_selection: Specifies what type of announcement to be played.
+        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param holiday_schedule_name: Name of the schedule configured for a holiday service as one of from
             `holidaySchedules` list.
         :type holiday_schedule_name: str
         :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
             also be an extension.
         :type transfer_phone_number: str
-        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
-            action.
-        :type play_announcement_before_enabled: bool
-        :param audio_message_selection: Specifies what type of announcement to be played.
-        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
         :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
         :param org_id: Update call queue settings from this organization.
@@ -1743,11 +1780,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['holidayServiceEnabled'] = holiday_service_enabled
         body['action'] = enum_str(action)
         body['holidayScheduleLevel'] = enum_str(holiday_schedule_level)
-        body['holidayScheduleName'] = holiday_schedule_name
-        body['transferPhoneNumber'] = transfer_phone_number
+        if holiday_schedule_name is not None:
+            body['holidayScheduleName'] = holiday_schedule_name
+        if transfer_phone_number is not None:
+            body['transferPhoneNumber'] = transfer_phone_number
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+        if audio_files is not None:
+            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
         super().put(url, params=params, json=body)
 
@@ -1781,16 +1821,17 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_call_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool,
-                                          action: GetCallQueueHolidayObjectAction, transfer_phone_number: Union[str,
-                                          datetime], play_announcement_before_enabled: bool,
+                                          play_announcement_before_enabled: bool,
                                           announcement_mode: GetCallQueueNightServiceObjectAnnouncementMode,
                                           audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                          audio_files: list[AudioAnnouncementFileFeatureGetObject],
-                                          business_hours_name: str,
-                                          business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel,
                                           force_night_service_enabled: bool,
                                           manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                          manual_audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                          action: GetCallQueueHolidayObjectAction = None,
+                                          transfer_phone_number: Union[str, datetime] = None,
+                                          audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
+                                          business_hours_name: str = None,
+                                          business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel = None,
+                                          manual_audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
                                           org_id: str = None):
         """
         Update a Call Queue Night Service
@@ -1809,11 +1850,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type queue_id: str
         :param night_service_enabled: Enable or disable call queue night service routing policy.
         :type night_service_enabled: bool
-        :param action: Specifies call processing action type.
-        :type action: GetCallQueueHolidayObjectAction
-        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
-            also be an extension.
-        :type transfer_phone_number: Union[str, datetime]
         :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
             action.
         :type play_announcement_before_enabled: bool
@@ -1822,6 +1858,16 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param audio_message_selection: Specifies what type of announcements to be played when `announcementMode` is
             `NORMAL`.
         :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param force_night_service_enabled: Force night service regardless of business hour schedule.
+        :type force_night_service_enabled: bool
+        :param manual_audio_message_selection: Specifies what type of announcement to be played when `announcementMode`
+            is `MANUAL`.
+        :type manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param action: Specifies call processing action type.
+        :type action: GetCallQueueHolidayObjectAction
+        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
+            also be an extension.
+        :type transfer_phone_number: Union[str, datetime]
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
         :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
         :param business_hours_name: Name of the schedule configured for a night service as one of from
@@ -1830,11 +1876,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param business_hours_level: Specifies whether the above mentioned schedule is org or location specific. (Must
             be from `businessHourSchedules` list)
         :type business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel
-        :param force_night_service_enabled: Force night service regardless of business hour schedule.
-        :type force_night_service_enabled: bool
-        :param manual_audio_message_selection: Specifies what type of announcement to be played when `announcementMode`
-            is `MANUAL`.
-        :type manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param manual_audio_files: List Of pre-configured Audio Files.
         :type manual_audio_files: list[AudioAnnouncementFileFeatureGetObject]
         :param org_id: Retrieve call queue night service settings from this organization.
@@ -1846,17 +1887,23 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['nightServiceEnabled'] = night_service_enabled
-        body['action'] = enum_str(action)
-        body['transferPhoneNumber'] = transfer_phone_number
+        if action is not None:
+            body['action'] = enum_str(action)
+        if transfer_phone_number is not None:
+            body['transferPhoneNumber'] = transfer_phone_number
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['announcementMode'] = enum_str(announcement_mode)
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
-        body['businessHoursName'] = business_hours_name
-        body['businessHoursLevel'] = enum_str(business_hours_level)
+        if audio_files is not None:
+            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+        if business_hours_name is not None:
+            body['businessHoursName'] = business_hours_name
+        if business_hours_level is not None:
+            body['businessHoursLevel'] = enum_str(business_hours_level)
         body['forceNightServiceEnabled'] = force_night_service_enabled
         body['manualAudioMessageSelection'] = enum_str(manual_audio_message_selection)
-        body['manualAudioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(manual_audio_files, by_alias=True, exclude_none=True))
+        if manual_audio_files is not None:
+            body['manualAudioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(manual_audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
         super().put(url, params=params, json=body)
 
@@ -1889,9 +1936,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_call_queue_forced_forward_service(self, location_id: str, queue_id: str, forced_forward_enabled: bool,
-                                                   transfer_phone_number: str, play_announcement_before_enabled: bool,
+                                                   play_announcement_before_enabled: bool,
                                                    audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                                   transfer_phone_number: str = None,
+                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
                                                    org_id: str = None):
         """
         Update a Call Queue Forced Forward service
@@ -1911,14 +1959,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type queue_id: str
         :param forced_forward_enabled: Enable or disable call forced forward service routing policy.
         :type forced_forward_enabled: bool
-        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
-            also be an extension.
-        :type transfer_phone_number: str
         :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
             action.
         :type play_announcement_before_enabled: bool
         :param audio_message_selection: Specifies what type of announcement to be played.
         :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
+        :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
+            also be an extension.
+        :type transfer_phone_number: str
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
         :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
         :param org_id: Update call queue settings from this organization.
@@ -1930,10 +1978,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['forcedForwardEnabled'] = forced_forward_enabled
-        body['transferPhoneNumber'] = transfer_phone_number
+        if transfer_phone_number is not None:
+            body['transferPhoneNumber'] = transfer_phone_number
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+        if audio_files is not None:
+            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
         super().put(url, params=params, json=body)
 
@@ -1970,9 +2020,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
     def update_a_call_queue_stranded_calls_service(self, location_id: str, queue_id: str,
                                                    action: GetCallQueueStrandedCallsObjectAction,
-                                                   transfer_phone_number: str,
                                                    audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject],
+                                                   transfer_phone_number: str = None,
+                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
                                                    org_id: str = None):
         """
         Update a Call Queue Stranded Calls service
@@ -1990,11 +2040,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type queue_id: str
         :param action: Specifies call processing action type.
         :type action: GetCallQueueStrandedCallsObjectAction
+        :param audio_message_selection: Specifies what type of announcement to be played.
+        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
             also be an extension.
         :type transfer_phone_number: str
-        :param audio_message_selection: Specifies what type of announcement to be played.
-        :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
         :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
         :param org_id: Update call queue settings from this organization.
@@ -2006,8 +2056,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['action'] = enum_str(action)
-        body['transferPhoneNumber'] = transfer_phone_number
+        if transfer_phone_number is not None:
+            body['transferPhoneNumber'] = transfer_phone_number
         body['audioMessageSelection'] = enum_str(audio_message_selection)
-        body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+        if audio_files is not None:
+            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         super().put(url, params=params, json=body)

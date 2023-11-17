@@ -439,12 +439,15 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         r = GetCallQueueObject.model_validate(data)
         return r
 
-    def update_a_call_queue(self, location_id: str, queue_id: str, enabled: bool, name: str, language_code: str,
-                            first_name: str, last_name: str, time_zone: str, phone_number: str, extension: Union[str,
-                            datetime], alternate_number_settings: GetCallQueueObjectAlternateNumberSettings,
-                            call_policies: GetCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject,
-                            allow_call_waiting_for_agents_enabled: bool, agents: list[PostPersonPlaceObject],
-                            department: ModifyCallQueueObjectDepartment, org_id: str = None):
+    def update_a_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject,
+                            enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None,
+                            last_name: str = None, time_zone: str = None, phone_number: str = None,
+                            extension: Union[str, datetime] = None,
+                            alternate_number_settings: GetCallQueueObjectAlternateNumberSettings = None,
+                            call_policies: GetCallQueueCallPolicyObject = None,
+                            allow_call_waiting_for_agents_enabled: bool = None,
+                            agents: list[PostPersonPlaceObject] = None,
+                            department: ModifyCallQueueObjectDepartment = None, org_id: str = None):
         """
         Update a Call Queue
 
@@ -465,6 +468,8 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
+        :param queue_settings: Overall call queue settings.
+        :type queue_settings: CallQueueQueueSettingsObject
         :param enabled: Whether or not the call queue is enabled.
         :type enabled: bool
         :param name: Unique name for the call queue.
@@ -489,8 +494,6 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :type alternate_number_settings: GetCallQueueObjectAlternateNumberSettings
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: GetCallQueueCallPolicyObject
-        :param queue_settings: Overall call queue settings.
-        :type queue_settings: CallQueueQueueSettingsObject
         :param allow_call_waiting_for_agents_enabled: Flag to indicate whether call waiting is enabled for agents.
         :type allow_call_waiting_for_agents_enabled: bool
         :param agents: People, including workspaces, that are eligible to receive calls.
@@ -505,19 +508,32 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['enabled'] = enabled
-        body['name'] = name
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['alternateNumberSettings'] = loads(alternate_number_settings.model_dump_json())
-        body['callPolicies'] = loads(call_policies.model_dump_json())
+        if enabled is not None:
+            body['enabled'] = enabled
+        if name is not None:
+            body['name'] = name
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if alternate_number_settings is not None:
+            body['alternateNumberSettings'] = loads(alternate_number_settings.model_dump_json())
+        if call_policies is not None:
+            body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
-        body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents, by_alias=True, exclude_none=True))
-        body['department'] = loads(department.model_dump_json())
+        if allow_call_waiting_for_agents_enabled is not None:
+            body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
+        if agents is not None:
+            body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        if department is not None:
+            body['department'] = loads(department.model_dump_json())
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().put(url, params=params, json=body)

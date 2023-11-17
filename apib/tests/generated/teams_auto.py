@@ -77,7 +77,8 @@ class TeamsApi(ApiChild, base='teams'):
         """
         body = dict()
         body['name'] = name
-        body['description'] = description
+        if description is not None:
+            body['description'] = description
         url = self.ep()
         data = super().post(url, json=body)
         r = Team.model_validate(data)
@@ -123,7 +124,8 @@ class TeamsApi(ApiChild, base='teams'):
         """
         body = dict()
         body['name'] = name
-        body['description'] = description
+        if description is not None:
+            body['description'] = description
         url = self.ep(f'{team_id}')
         data = super().put(url, json=body)
         r = Team.model_validate(data)

@@ -249,10 +249,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = GetOrgComplianceAnnouncementObject.model_validate(data)
         return r
 
-    def update_the_organization_compliance_announcement(self, inbound_pstncalls_enabled: bool,
-                                                        outbound_pstncalls_enabled: bool,
-                                                        outbound_pstncalls_delay_enabled: bool, delay_in_seconds: int,
-                                                        org_id: str = None):
+    def update_the_organization_compliance_announcement(self, inbound_pstncalls_enabled: bool = None,
+                                                        outbound_pstncalls_enabled: bool = None,
+                                                        outbound_pstncalls_delay_enabled: bool = None,
+                                                        delay_in_seconds: int = None, org_id: str = None):
         """
         Update the organization compliance announcement
 
@@ -284,10 +284,14 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
-        body['outboundPSTNCallsEnabled'] = outbound_pstncalls_enabled
-        body['outboundPSTNCallsDelayEnabled'] = outbound_pstncalls_delay_enabled
-        body['delayInSeconds'] = delay_in_seconds
+        if inbound_pstncalls_enabled is not None:
+            body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
+        if outbound_pstncalls_enabled is not None:
+            body['outboundPSTNCallsEnabled'] = outbound_pstncalls_enabled
+        if outbound_pstncalls_delay_enabled is not None:
+            body['outboundPSTNCallsDelayEnabled'] = outbound_pstncalls_delay_enabled
+        if delay_in_seconds is not None:
+            body['delayInSeconds'] = delay_in_seconds
         url = self.ep('callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)
 
@@ -319,10 +323,11 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = GetComplianceAnnouncementObject.model_validate(data)
         return r
 
-    def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool,
-                                                    use_org_settings_enabled: bool, outbound_pstncalls_enabled: bool,
-                                                    outbound_pstncalls_delay_enabled: bool, delay_in_seconds: int,
-                                                    org_id: str = None):
+    def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool = None,
+                                                    use_org_settings_enabled: bool = None,
+                                                    outbound_pstncalls_enabled: bool = None,
+                                                    outbound_pstncalls_delay_enabled: bool = None,
+                                                    delay_in_seconds: int = None, org_id: str = None):
         """
         Update the location compliance announcement
 
@@ -359,10 +364,15 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
-        body['useOrgSettingsEnabled'] = use_org_settings_enabled
-        body['outboundPSTNCallsEnabled'] = outbound_pstncalls_enabled
-        body['outboundPSTNCallsDelayEnabled'] = outbound_pstncalls_delay_enabled
-        body['delayInSeconds'] = delay_in_seconds
+        if inbound_pstncalls_enabled is not None:
+            body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
+        if use_org_settings_enabled is not None:
+            body['useOrgSettingsEnabled'] = use_org_settings_enabled
+        if outbound_pstncalls_enabled is not None:
+            body['outboundPSTNCallsEnabled'] = outbound_pstncalls_enabled
+        if outbound_pstncalls_delay_enabled is not None:
+            body['outboundPSTNCallsDelayEnabled'] = outbound_pstncalls_delay_enabled
+        if delay_in_seconds is not None:
+            body['delayInSeconds'] = delay_in_seconds
         url = self.ep(f'locations/{location_id}/callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)

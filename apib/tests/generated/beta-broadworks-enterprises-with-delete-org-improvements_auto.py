@@ -304,7 +304,8 @@ class BetaBroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broa
         :rtype: :class:`TriggerUserDirectorySyncResponse`
         """
         body = dict()
-        body['userId'] = user_id
+        if user_id is not None:
+            body['userId'] = user_id
         url = self.ep(f'{id}/broadworksDirectorySync/externalUser')
         data = super().post(url, json=body)
         r = TriggerUserDirectorySyncResponse.model_validate(data)

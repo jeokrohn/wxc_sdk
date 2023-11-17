@@ -152,9 +152,12 @@ class ReportsApi(ApiChild, base='reports'):
         """
         body = dict()
         body['templateId'] = template_id
-        body['startDate'] = start_date
-        body['endDate'] = end_date
-        body['siteList'] = site_list
+        if start_date is not None:
+            body['startDate'] = start_date
+        if end_date is not None:
+            body['endDate'] = end_date
+        if site_list is not None:
+            body['siteList'] = site_list
         url = self.ep()
         data = super().post(url, json=body)
         r = data['id']

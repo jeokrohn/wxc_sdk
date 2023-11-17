@@ -130,9 +130,12 @@ class MembershipsApi(ApiChild, base='memberships'):
         """
         body = dict()
         body['roomId'] = room_id
-        body['personId'] = person_id
-        body['personEmail'] = person_email
-        body['isModerator'] = is_moderator
+        if person_id is not None:
+            body['personId'] = person_id
+        if person_email is not None:
+            body['personEmail'] = person_email
+        if is_moderator is not None:
+            body['isModerator'] = is_moderator
         url = self.ep()
         data = super().post(url, json=body)
         r = Membership.model_validate(data)

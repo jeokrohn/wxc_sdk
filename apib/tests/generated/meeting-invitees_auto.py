@@ -213,8 +213,9 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=GetInviteeObject, item_key='items', params=params)
 
-    def create_a_meeting_invitee(self, meeting_id: str, email: str, display_name: str, co_host: bool, host_email: str,
-                                 send_email: bool, panelist: bool) -> GetInviteeObject:
+    def create_a_meeting_invitee(self, meeting_id: str, email: str, display_name: str = None, co_host: bool = None,
+                                 host_email: str = None, send_email: bool = None,
+                                 panelist: bool = None) -> GetInviteeObject:
         """
         Create a Meeting Invitee
 
@@ -259,18 +260,23 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         body = dict()
         body['meetingId'] = meeting_id
         body['email'] = email
-        body['displayName'] = display_name
-        body['coHost'] = co_host
-        body['hostEmail'] = host_email
-        body['sendEmail'] = send_email
-        body['panelist'] = panelist
+        if display_name is not None:
+            body['displayName'] = display_name
+        if co_host is not None:
+            body['coHost'] = co_host
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if send_email is not None:
+            body['sendEmail'] = send_email
+        if panelist is not None:
+            body['panelist'] = panelist
         url = self.ep()
         data = super().post(url, json=body)
         r = GetInviteeObject.model_validate(data)
         return r
 
-    def create_meeting_invitees(self, meeting_id: str, host_email: str,
-                                items: list[CreateInviteesItemObject]) -> list[GetInviteeObject]:
+    def create_meeting_invitees(self, meeting_id: str, items: list[CreateInviteesItemObject],
+                                host_email: str = None) -> list[GetInviteeObject]:
         """
         Create Meeting Invitees
 
@@ -289,17 +295,18 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             ID of a scheduled `personal room
             <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is not supported for this API.
         :type meeting_id: str
+        :param items: Meeting invitees to be inserted.
+        :type items: list[CreateInviteesItemObject]
         :param host_email: Email address for the meeting host. This attribute should only be set if the user or
             application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email
             of a user in a site they manage to be the meeting host.
         :type host_email: str
-        :param items: Meeting invitees to be inserted.
-        :type items: list[CreateInviteesItemObject]
         :rtype: list[GetInviteeObject]
         """
         body = dict()
         body['meetingId'] = meeting_id
-        body['hostEmail'] = host_email
+        if host_email is not None:
+            body['hostEmail'] = host_email
         body['items'] = loads(TypeAdapter(list[CreateInviteesItemObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep('bulkInsert')
         data = super().post(url, json=body)
@@ -328,8 +335,9 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         r = GetInviteeObject.model_validate(data)
         return r
 
-    def update_a_meeting_invitee(self, meeting_invitee_id: str, email: str, display_name: str, co_host: bool,
-                                 host_email: str, send_email: bool, panelist: bool) -> GetInviteeObject:
+    def update_a_meeting_invitee(self, meeting_invitee_id: str, email: str, display_name: str = None,
+                                 co_host: bool = None, host_email: str = None, send_email: bool = None,
+                                 panelist: bool = None) -> GetInviteeObject:
         """
         Update a Meeting Invitee
 
@@ -368,11 +376,16 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         """
         body = dict()
         body['email'] = email
-        body['displayName'] = display_name
-        body['coHost'] = co_host
-        body['hostEmail'] = host_email
-        body['sendEmail'] = send_email
-        body['panelist'] = panelist
+        if display_name is not None:
+            body['displayName'] = display_name
+        if co_host is not None:
+            body['coHost'] = co_host
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if send_email is not None:
+            body['sendEmail'] = send_email
+        if panelist is not None:
+            body['panelist'] = panelist
         url = self.ep(f'{meeting_invitee_id}')
         data = super().put(url, json=body)
         r = GetInviteeObject.model_validate(data)

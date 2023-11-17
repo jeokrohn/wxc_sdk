@@ -251,9 +251,10 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         url = self.ep('paging')
         return self.session.follow_pagination(url=url, model=ListPagingGroupObject, item_key='locationPaging', params=params)
 
-    def create_a_new_paging_group(self, location_id: str, name: str, phone_number: str, extension: Union[str,
-                                  datetime], language_code: str, first_name: str, last_name: str,
-                                  originator_caller_id_enabled: bool, originators: list[str], targets: list[str],
+    def create_a_new_paging_group(self, location_id: str, name: str, phone_number: str = None, extension: Union[str,
+                                  datetime] = None, language_code: str = None, first_name: str = None,
+                                  last_name: str = None, originator_caller_id_enabled: bool = None,
+                                  originators: list[str] = None, targets: list[str] = None,
                                   org_id: str = None) -> str:
         """
         Create a new Paging Group
@@ -303,14 +304,22 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['originatorCallerIdEnabled'] = originator_caller_id_enabled
-        body['originators'] = originators
-        body['targets'] = targets
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if originator_caller_id_enabled is not None:
+            body['originatorCallerIdEnabled'] = originator_caller_id_enabled
+        if originators is not None:
+            body['originators'] = originators
+        if targets is not None:
+            body['targets'] = targets
         url = self.ep(f'locations/{location_id}/paging')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -374,10 +383,11 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         r = GetPagingGroupObject.model_validate(data)
         return r
 
-    def update_a_paging_group(self, location_id: str, paging_id: str, enabled: bool, name: str, phone_number: str,
-                              extension: Union[str, datetime], language_code: str, first_name: str, last_name: str,
-                              originator_caller_id_enabled: bool, originators: list[str], targets: list[str],
-                              org_id: str = None):
+    def update_a_paging_group(self, location_id: str, paging_id: str, enabled: bool = None, name: str = None,
+                              phone_number: str = None, extension: Union[str, datetime] = None,
+                              language_code: str = None, first_name: str = None, last_name: str = None,
+                              originator_caller_id_enabled: bool = None, originators: list[str] = None,
+                              targets: list[str] = None, org_id: str = None):
         """
         Update a Paging Group
 
@@ -427,15 +437,25 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['enabled'] = enabled
-        body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['originatorCallerIdEnabled'] = originator_caller_id_enabled
-        body['originators'] = originators
-        body['targets'] = targets
+        if enabled is not None:
+            body['enabled'] = enabled
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if originator_caller_id_enabled is not None:
+            body['originatorCallerIdEnabled'] = originator_caller_id_enabled
+        if originators is not None:
+            body['originators'] = originators
+        if targets is not None:
+            body['targets'] = targets
         url = self.ep(f'locations/{location_id}/paging/{paging_id}')
         super().put(url, params=params, json=body)

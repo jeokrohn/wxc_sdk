@@ -146,10 +146,13 @@ class PoliciesApi(ApiChild, base='policies'):
         :rtype: :class:`Policy`
         """
         body = dict()
-        body['appId'] = app_id
-        body['name'] = name
+        if app_id is not None:
+            body['appId'] = app_id
+        if name is not None:
+            body['name'] = name
         body['type'] = enum_str(type)
-        body['personIds'] = person_ids
+        if person_ids is not None:
+            body['personIds'] = person_ids
         body['action'] = enum_str(action)
         url = self.ep()
         data = super().post(url, json=body)
@@ -195,9 +198,12 @@ class PoliciesApi(ApiChild, base='policies'):
         :rtype: :class:`Policy`
         """
         body = dict()
-        body['appId'] = app_id
-        body['name'] = name
-        body['personIds'] = person_ids
+        if app_id is not None:
+            body['appId'] = app_id
+        if name is not None:
+            body['name'] = name
+        if person_ids is not None:
+            body['personIds'] = person_ids
         body['action'] = enum_str(action)
         url = self.ep(f'{policy_id}')
         data = super().put(url, json=body)

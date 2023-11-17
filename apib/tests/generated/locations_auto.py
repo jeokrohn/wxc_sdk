@@ -221,8 +221,8 @@ class LocationsApi(ApiChild, base='locations'):
         return r
 
     def create_a_location(self, name: str, time_zone: str, preferred_language: str, announcement_language: str,
-                          address: LocationAddress, latitude: Union[str, datetime], longitude: Union[str, datetime],
-                          notes: str, org_id: str = None) -> str:
+                          address: LocationAddress, latitude: Union[str, datetime] = None, longitude: Union[str,
+                          datetime] = None, notes: str = None, org_id: str = None) -> str:
         """
         Create a Location
 
@@ -272,16 +272,19 @@ class LocationsApi(ApiChild, base='locations'):
         body['preferredLanguage'] = preferred_language
         body['announcementLanguage'] = announcement_language
         body['address'] = loads(address.model_dump_json())
-        body['latitude'] = latitude
-        body['longitude'] = longitude
-        body['notes'] = notes
+        if latitude is not None:
+            body['latitude'] = latitude
+        if longitude is not None:
+            body['longitude'] = longitude
+        if notes is not None:
+            body['notes'] = notes
         url = self.ep()
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
-    def update_a_location(self, location_id: str, name: str, time_zone: str, preferred_language: str,
-                          address: LocationAddress, org_id: str = None):
+    def update_a_location(self, location_id: str, name: str = None, time_zone: str = None,
+                          preferred_language: str = None, address: LocationAddress = None, org_id: str = None):
         """
         Update a Location
 
@@ -313,10 +316,14 @@ class LocationsApi(ApiChild, base='locations'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['timeZone'] = time_zone
-        body['preferredLanguage'] = preferred_language
-        body['address'] = loads(address.model_dump_json())
+        if name is not None:
+            body['name'] = name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if preferred_language is not None:
+            body['preferredLanguage'] = preferred_language
+        if address is not None:
+            body['address'] = loads(address.model_dump_json())
         url = self.ep(f'{location_id}')
         super().put(url, params=params, json=body)
 
@@ -336,7 +343,7 @@ class LocationsApi(ApiChild, base='locations'):
         r = TypeAdapter(list[Floor]).validate_python(data['items'])
         return r
 
-    def create_a_location_floor(self, location_id: str, floor_number: int, display_name: str) -> Floor:
+    def create_a_location_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
         Create a Location Floor
 
@@ -354,7 +361,8 @@ class LocationsApi(ApiChild, base='locations'):
         """
         body = dict()
         body['floorNumber'] = floor_number
-        body['displayName'] = display_name
+        if display_name is not None:
+            body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors')
         data = super().post(url, json=body)
         r = Floor.model_validate(data)
@@ -378,7 +386,8 @@ class LocationsApi(ApiChild, base='locations'):
         r = Floor.model_validate(data)
         return r
 
-    def update_a_location_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str) -> Floor:
+    def update_a_location_floor(self, location_id: str, floor_id: str, floor_number: int,
+                                display_name: str = None) -> Floor:
         """
         Update a Location Floor
 
@@ -400,7 +409,8 @@ class LocationsApi(ApiChild, base='locations'):
         """
         body = dict()
         body['floorNumber'] = floor_number
-        body['displayName'] = display_name
+        if display_name is not None:
+            body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors/{floor_id}')
         data = super().put(url, json=body)
         r = Floor.model_validate(data)

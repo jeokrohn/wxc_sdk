@@ -369,9 +369,12 @@ class DevicesApi(ApiChild, base='devices'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['op'] = enum_str(op)
-        body['path'] = path
-        body['value'] = value
+        if op is not None:
+            body['op'] = enum_str(op)
+        if path is not None:
+            body['path'] = path
+        if value is not None:
+            body['value'] = value
         url = self.ep(f'{device_id}')
         data = super().patch(url, params=params, json=body)
         r = Device.model_validate(data)
@@ -411,9 +414,12 @@ class DevicesApi(ApiChild, base='devices'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['workspaceId'] = workspace_id
-        body['personId'] = person_id
-        body['model'] = model
+        if workspace_id is not None:
+            body['workspaceId'] = workspace_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if model is not None:
+            body['model'] = model
         url = self.ep('activationCode')
         data = super().post(url, params=params, json=body)
         r = ActivationCode.model_validate(data)
@@ -458,9 +464,12 @@ class DevicesApi(ApiChild, base='devices'):
         body = dict()
         body['mac'] = mac
         body['model'] = model
-        body['workspaceId'] = workspace_id
-        body['personId'] = person_id
-        body['password'] = password
+        if workspace_id is not None:
+            body['workspaceId'] = workspace_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if password is not None:
+            body['password'] = password
         url = self.ep()
         data = super().post(url, params=params, json=body)
         r = Device.model_validate(data)

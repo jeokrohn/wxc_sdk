@@ -462,8 +462,8 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         r = GetTrackingCodeForUserObject.model_validate(data)
         return r
 
-    def update_user_tracking_codes(self, site_url: str, person_id: str, email: str,
-                                   tracking_codes: list[UpdateTrackingCodeItemForUserObject]) -> GetTrackingCodeForUserObject:
+    def update_user_tracking_codes(self, site_url: str, tracking_codes: list[UpdateTrackingCodeItemForUserObject],
+                                   person_id: str = None, email: str = None) -> GetTrackingCodeForUserObject:
         """
         Update User Tracking Codes
 
@@ -490,20 +490,22 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
 
         :param site_url: Site URL for the tracking code.
         :type site_url: str
+        :param tracking_codes: Tracking code information for updates.
+        :type tracking_codes: list[UpdateTrackingCodeItemForUserObject]
         :param person_id: Unique identifier for the user. At least one parameter of `personId` or `email` is required.
             `personId` must precede `email` if both are specified.
         :type person_id: str
         :param email: Email address for the user. At least one parameter of `personId` or `email` is required.
             `personId` must precede `email` if both are specified.
         :type email: str
-        :param tracking_codes: Tracking code information for updates.
-        :type tracking_codes: list[UpdateTrackingCodeItemForUserObject]
         :rtype: :class:`GetTrackingCodeForUserObject`
         """
         body = dict()
         body['siteUrl'] = site_url
-        body['personId'] = person_id
-        body['email'] = email
+        if person_id is not None:
+            body['personId'] = person_id
+        if email is not None:
+            body['email'] = email
         body['trackingCodes'] = loads(TypeAdapter(list[UpdateTrackingCodeItemForUserObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
         url = self.ep('userconfig/trackingCodes')
         data = super().put(url, json=body)

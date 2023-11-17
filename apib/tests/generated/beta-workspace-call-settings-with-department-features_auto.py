@@ -89,7 +89,8 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         return r
 
     def update_department_of_a_workspace(self, workspace_id: str,
-                                         department: PutPersonOrWorkspaceDetailsObjectDepartment, org_id: str = None):
+                                         department: PutPersonOrWorkspaceDetailsObjectDepartment = None,
+                                         org_id: str = None):
         """
         Update Department of a Workspace
 
@@ -113,6 +114,7 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['department'] = loads(department.model_dump_json())
+        if department is not None:
+            body['department'] = loads(department.model_dump_json())
         url = self.ep(f'')
         super().put(url, params=params, json=body)

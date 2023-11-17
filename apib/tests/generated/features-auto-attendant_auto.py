@@ -576,12 +576,14 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         r = GetAutoAttendantObject.model_validate(data)
         return r
 
-    def create_an_auto_attendant(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
-                                 first_name: str, last_name: str, alternate_numbers: list[AlternateNumbersObject],
-                                 language_code: str, business_schedule: str, holiday_schedule: str,
-                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
-                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
+    def create_an_auto_attendant(self, location_id: str, name: str, business_schedule: str,
                                  business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
+                                 phone_number: str = None, extension: Union[str, datetime] = None,
+                                 first_name: str = None, last_name: str = None,
+                                 alternate_numbers: list[AlternateNumbersObject] = None, language_code: str = None,
+                                 holiday_schedule: str = None,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
                                  org_id: str = None) -> str:
         """
         Create an Auto Attendant
@@ -598,6 +600,12 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param name: Unique name for the auto attendant.
         :type name: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuGetObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuGetObject
         :param phone_number: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
         :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
@@ -610,8 +618,6 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type alternate_numbers: list[AlternateNumbersObject]
         :param language_code: Language code for the auto attendant.
         :type language_code: str
-        :param business_schedule: Business hours defined for the auto attendant.
-        :type business_schedule: str
         :param holiday_schedule: Holiday defined for the auto attendant.
         :type holiday_schedule: str
         :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
@@ -621,10 +627,6 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type name_dialing: GetAutoAttendantObjectExtensionDialing
         :param time_zone: Time zone defined for the auto attendant.
         :type time_zone: str
-        :param business_hours_menu: Business hours menu defined for the auto attendant.
-        :type business_hours_menu: HoursMenuGetObject
-        :param after_hours_menu: After hours menu defined for the auto attendant.
-        :type after_hours_menu: HoursMenuGetObject
         :param org_id: Create the auto attendant for this organization.
         :type org_id: str
         :rtype: str
@@ -634,17 +636,27 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
-        body['languageCode'] = language_code
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if alternate_numbers is not None:
+            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+        if language_code is not None:
+            body['languageCode'] = language_code
         body['businessSchedule'] = business_schedule
-        body['holidaySchedule'] = holiday_schedule
-        body['extensionDialing'] = enum_str(extension_dialing)
-        body['nameDialing'] = enum_str(name_dialing)
-        body['timeZone'] = time_zone
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if extension_dialing is not None:
+            body['extensionDialing'] = enum_str(extension_dialing)
+        if name_dialing is not None:
+            body['nameDialing'] = enum_str(name_dialing)
+        if time_zone is not None:
+            body['timeZone'] = time_zone
         body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
         body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants')
@@ -652,14 +664,15 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
-                                 extension: Union[str, datetime], first_name: str, last_name: str,
-                                 alternate_numbers: list[AlternateNumbersObject], language_code: str,
-                                 business_schedule: str, holiday_schedule: str,
-                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
-                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
-                                 business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
-                                 org_id: str = None):
+    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str = None,
+                                 phone_number: str = None, extension: Union[str, datetime] = None,
+                                 first_name: str = None, last_name: str = None,
+                                 alternate_numbers: list[AlternateNumbersObject] = None, language_code: str = None,
+                                 business_schedule: str = None, holiday_schedule: str = None,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
+                                 business_hours_menu: HoursMenuGetObject = None,
+                                 after_hours_menu: HoursMenuGetObject = None, org_id: str = None):
         """
         Update an Auto Attendant
 
@@ -712,20 +725,34 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
-        body['languageCode'] = language_code
-        body['businessSchedule'] = business_schedule
-        body['holidaySchedule'] = holiday_schedule
-        body['extensionDialing'] = enum_str(extension_dialing)
-        body['nameDialing'] = enum_str(name_dialing)
-        body['timeZone'] = time_zone
-        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
-        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if alternate_numbers is not None:
+            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if business_schedule is not None:
+            body['businessSchedule'] = business_schedule
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if extension_dialing is not None:
+            body['extensionDialing'] = enum_str(extension_dialing)
+        if name_dialing is not None:
+            body['nameDialing'] = enum_str(name_dialing)
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if business_hours_menu is not None:
+            body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+        if after_hours_menu is not None:
+            body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url, params=params, json=body)
 
@@ -812,11 +839,13 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def create_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                      name: str, enabled: bool,
-                                                                      business_schedule: str, holiday_schedule: str,
+                                                                      name: str,
                                                                       forward_to: CallForwardSelectiveForwardToObject,
                                                                       calls_from: CallForwardSelectiveCallsFromObject,
-                                                                      calls_to: CallForwardSelectiveCallsToObject,
+                                                                      enabled: bool = None,
+                                                                      business_schedule: str = None,
+                                                                      holiday_schedule: str = None,
+                                                                      calls_to: CallForwardSelectiveCallsToObject = None,
                                                                       org_id: str = None) -> str:
         """
         Create a Selective Call Forwarding Rule for an Auto Attendant
@@ -840,6 +869,11 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type auto_attendant_id: str
         :param name: Unique name for the selective rule in the auto attendant.
         :type name: str
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
+        :type forward_to: CallForwardSelectiveForwardToObject
+        :param calls_from: Settings related to the rule matching based on incoming caller ID.
+        :type calls_from: CallForwardSelectiveCallsFromObject
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
         :param business_schedule: Name of the location's business schedule which determines when this selective call
@@ -848,11 +882,6 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
             forwarding rule is in effect.
         :type holiday_schedule: str
-        :param forward_to: Controls what happens when the rule matches including the destination number for the call
-            forwarding.
-        :type forward_to: CallForwardSelectiveForwardToObject
-        :param calls_from: Settings related to the rule matching based on incoming caller ID.
-        :type calls_from: CallForwardSelectiveCallsFromObject
         :param calls_to: Settings related to the rule matching based on the destination number.
         :type calls_to: CallForwardSelectiveCallsToObject
         :param org_id: Create the auto attendant rule for this organization.
@@ -864,12 +893,16 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['enabled'] = enabled
-        body['businessSchedule'] = business_schedule
-        body['holidaySchedule'] = holiday_schedule
+        if enabled is not None:
+            body['enabled'] = enabled
+        if business_schedule is not None:
+            body['businessSchedule'] = business_schedule
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
         body['forwardTo'] = loads(forward_to.model_dump_json())
         body['callsFrom'] = loads(calls_from.model_dump_json())
-        body['callsTo'] = loads(calls_to.model_dump_json())
+        if calls_to is not None:
+            body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -913,11 +946,12 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         return r
 
     def update_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                    rule_id: str, name: str, enabled: bool,
-                                                                    business_schedule: str, holiday_schedule: str,
-                                                                    forward_to: CallForwardSelectiveForwardToObject,
-                                                                    calls_from: CallForwardSelectiveCallsFromObject,
-                                                                    calls_to: CallForwardSelectiveCallsToObject,
+                                                                    rule_id: str, name: str, enabled: bool = None,
+                                                                    business_schedule: str = None,
+                                                                    holiday_schedule: str = None,
+                                                                    forward_to: CallForwardSelectiveForwardToObject = None,
+                                                                    calls_from: CallForwardSelectiveCallsFromObject = None,
+                                                                    calls_to: CallForwardSelectiveCallsToObject = None,
                                                                     org_id: str = None) -> str:
         """
         Update Selective Call Forwarding Rule for an Auto Attendant
@@ -967,12 +1001,18 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['enabled'] = enabled
-        body['businessSchedule'] = business_schedule
-        body['holidaySchedule'] = holiday_schedule
-        body['forwardTo'] = loads(forward_to.model_dump_json())
-        body['callsFrom'] = loads(calls_from.model_dump_json())
-        body['callsTo'] = loads(calls_to.model_dump_json())
+        if enabled is not None:
+            body['enabled'] = enabled
+        if business_schedule is not None:
+            body['businessSchedule'] = business_schedule
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if forward_to is not None:
+            body['forwardTo'] = loads(forward_to.model_dump_json())
+        if calls_from is not None:
+            body['callsFrom'] = loads(calls_from.model_dump_json())
+        if calls_to is not None:
+            body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']

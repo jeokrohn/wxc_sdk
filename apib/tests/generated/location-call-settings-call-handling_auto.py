@@ -292,7 +292,8 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['generate'] = loads(TypeAdapter(list[PasswordGenerate]).dump_json(generate, by_alias=True, exclude_none=True))
+        if generate is not None:
+            body['generate'] = loads(TypeAdapter(list[PasswordGenerate]).dump_json(generate, by_alias=True, exclude_none=True))
         url = self.ep(f'actions/generatePassword/invoke')
         data = super().post(url, params=params, json=body)
         r = data['exampleSipPassword']
@@ -327,7 +328,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
 
     def modify_the_internal_dialing_configuration_for_a_location(self, location_id: str,
                                                                  enable_unknown_extension_route_policy: bool,
-                                                                 unknown_extension_route_identity: UnknownExtensionRouteIdentity,
+                                                                 unknown_extension_route_identity: UnknownExtensionRouteIdentity = None,
                                                                  org_id: str = None):
         """
         Modify the Internal Dialing configuration for a location
@@ -356,7 +357,8 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
             params['orgId'] = org_id
         body = dict()
         body['enableUnknownExtensionRoutePolicy'] = enable_unknown_extension_route_policy
-        body['unknownExtensionRouteIdentity'] = loads(unknown_extension_route_identity.model_dump_json())
+        if unknown_extension_route_identity is not None:
+            body['unknownExtensionRouteIdentity'] = loads(unknown_extension_route_identity.model_dump_json())
         url = self.ep(f'internalDialing')
         super().put(url, params=params, json=body)
 
@@ -475,7 +477,8 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['callingPermissions'] = loads(TypeAdapter(list[CallingPermissionObject]).dump_json(calling_permissions, by_alias=True, exclude_none=True))
+        if calling_permissions is not None:
+            body['callingPermissions'] = loads(TypeAdapter(list[CallingPermissionObject]).dump_json(calling_permissions, by_alias=True, exclude_none=True))
         url = self.ep(f'outgoingPermission')
         super().put(url, params=params, json=body)
 
@@ -506,9 +509,9 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         r = GetAutoTransferNumberObject.model_validate(data)
         return r
 
-    def put_outgoing_permission_auto_transfer_number(self, location_id: str, auto_transfer_number1: str,
-                                                     auto_transfer_number2: str, auto_transfer_number3: str,
-                                                     org_id: str = None):
+    def put_outgoing_permission_auto_transfer_number(self, location_id: str, auto_transfer_number1: str = None,
+                                                     auto_transfer_number2: str = None,
+                                                     auto_transfer_number3: str = None, org_id: str = None):
         """
         Put Outgoing Permission Auto Transfer Number
 
@@ -539,9 +542,12 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['autoTransferNumber1'] = auto_transfer_number1
-        body['autoTransferNumber2'] = auto_transfer_number2
-        body['autoTransferNumber3'] = auto_transfer_number3
+        if auto_transfer_number1 is not None:
+            body['autoTransferNumber1'] = auto_transfer_number1
+        if auto_transfer_number2 is not None:
+            body['autoTransferNumber2'] = auto_transfer_number2
+        if auto_transfer_number3 is not None:
+            body['autoTransferNumber3'] = auto_transfer_number3
         url = self.ep(f'outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)
 

@@ -196,10 +196,14 @@ class IssuesAPIApi(ApiChild, base='issues'):
         body = dict()
         body['subject'] = subject
         body['description'] = description
-        body['type'] = enum_str(type)
-        body['logId'] = log_id
-        body['meetingId'] = meeting_id
-        body['externalKey'] = external_key
+        if type is not None:
+            body['type'] = enum_str(type)
+        if log_id is not None:
+            body['logId'] = log_id
+        if meeting_id is not None:
+            body['meetingId'] = meeting_id
+        if external_key is not None:
+            body['externalKey'] = external_key
         url = self.ep()
         data = super().post(url, json=body)
         r = Issue.model_validate(data)
@@ -262,15 +266,24 @@ class IssuesAPIApi(ApiChild, base='issues'):
         :rtype: :class:`Issue`
         """
         body = dict()
-        body['subject'] = subject
-        body['description'] = description
-        body['type'] = enum_str(type)
-        body['status'] = enum_str(status)
-        body['assignee'] = assignee
-        body['resolution'] = resolution
-        body['logId'] = log_id
-        body['meetingId'] = meeting_id
-        body['externalKey'] = external_key
+        if subject is not None:
+            body['subject'] = subject
+        if description is not None:
+            body['description'] = description
+        if type is not None:
+            body['type'] = enum_str(type)
+        if status is not None:
+            body['status'] = enum_str(status)
+        if assignee is not None:
+            body['assignee'] = assignee
+        if resolution is not None:
+            body['resolution'] = resolution
+        if log_id is not None:
+            body['logId'] = log_id
+        if meeting_id is not None:
+            body['meetingId'] = meeting_id
+        if external_key is not None:
+            body['externalKey'] = external_key
         url = self.ep(f'{id}')
         data = super().put(url, json=body)
         r = Issue.model_validate(data)

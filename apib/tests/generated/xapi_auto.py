@@ -146,7 +146,8 @@ class XAPIApi(ApiChild, base='xapi'):
         body = dict()
         body['deviceId'] = device_id
         body['arguments'] = loads(arguments.model_dump_json())
-        body['body'] = loads(body.model_dump_json())
+        if body is not None:
+            body['body'] = loads(body.model_dump_json())
         url = self.ep(f'command/{command_name}')
         data = super().post(url, json=body)
         r = ExecuteCommandResponse.model_validate(data)

@@ -377,22 +377,38 @@ class PeopleApi(ApiChild, base='people'):
             params['callingData'] = str(calling_data).lower()
         body = dict()
         body['emails'] = emails
-        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
-        body['extension'] = extension
-        body['locationId'] = location_id
-        body['displayName'] = display_name
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['avatar'] = avatar
-        body['orgId'] = org_id
-        body['roles'] = roles
-        body['licenses'] = licenses
-        body['department'] = department
-        body['manager'] = manager
-        body['managerId'] = manager_id
-        body['title'] = title
-        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
-        body['siteUrls'] = site_urls
+        if phone_numbers is not None:
+            body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+        if extension is not None:
+            body['extension'] = extension
+        if location_id is not None:
+            body['locationId'] = location_id
+        if display_name is not None:
+            body['displayName'] = display_name
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if avatar is not None:
+            body['avatar'] = avatar
+        if org_id is not None:
+            body['orgId'] = org_id
+        if roles is not None:
+            body['roles'] = roles
+        if licenses is not None:
+            body['licenses'] = licenses
+        if department is not None:
+            body['department'] = department
+        if manager is not None:
+            body['manager'] = manager
+        if manager_id is not None:
+            body['managerId'] = manager_id
+        if title is not None:
+            body['title'] = title
+        if addresses is not None:
+            body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
+        if site_urls is not None:
+            body['siteUrls'] = site_urls
         url = self.ep()
         data = super().post(url, params=params, json=body)
         r = Person.model_validate(data)
@@ -526,25 +542,43 @@ class PeopleApi(ApiChild, base='people'):
         if show_all_types is not None:
             params['showAllTypes'] = str(show_all_types).lower()
         body = dict()
-        body['emails'] = emails
-        body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
-        body['extension'] = extension
-        body['locationId'] = location_id
+        if emails is not None:
+            body['emails'] = emails
+        if phone_numbers is not None:
+            body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+        if extension is not None:
+            body['extension'] = extension
+        if location_id is not None:
+            body['locationId'] = location_id
         body['displayName'] = display_name
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['nickName'] = nick_name
-        body['avatar'] = avatar
-        body['orgId'] = org_id
-        body['roles'] = roles
-        body['licenses'] = licenses
-        body['department'] = department
-        body['manager'] = manager
-        body['managerId'] = manager_id
-        body['title'] = title
-        body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
-        body['siteUrls'] = site_urls
-        body['loginEnabled'] = login_enabled
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if nick_name is not None:
+            body['nickName'] = nick_name
+        if avatar is not None:
+            body['avatar'] = avatar
+        if org_id is not None:
+            body['orgId'] = org_id
+        if roles is not None:
+            body['roles'] = roles
+        if licenses is not None:
+            body['licenses'] = licenses
+        if department is not None:
+            body['department'] = department
+        if manager is not None:
+            body['manager'] = manager
+        if manager_id is not None:
+            body['managerId'] = manager_id
+        if title is not None:
+            body['title'] = title
+        if addresses is not None:
+            body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
+        if site_urls is not None:
+            body['siteUrls'] = site_urls
+        if login_enabled is not None:
+            body['loginEnabled'] = login_enabled
         url = self.ep(f'{person_id}')
         data = super().put(url, params=params, json=body)
         r = Person.model_validate(data)

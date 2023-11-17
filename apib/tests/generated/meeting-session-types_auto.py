@@ -156,8 +156,8 @@ class SessionTypesApi(ApiChild, base='admin/meeting'):
         r = TypeAdapter(list[UserSessionTypes]).validate_python(data['items'])
         return r
 
-    def update_user_session_types(self, site_url: str, person_id: str, email: str,
-                                  session_type_ids: list[str]) -> UserSessionTypes:
+    def update_user_session_types(self, site_url: str, session_type_ids: list[str], person_id: str = None,
+                                  email: str = None) -> UserSessionTypes:
         """
         Update User Session Types
 
@@ -168,18 +168,20 @@ class SessionTypesApi(ApiChild, base='admin/meeting'):
 
         :param site_url: Site URL for the session type.
         :type site_url: str
+        :param session_type_ids: An array of the session type ID.
+        :type session_type_ids: list[str]
         :param person_id: A unique identifier for the user.
         :type person_id: str
         :param email: The email of the user.
         :type email: str
-        :param session_type_ids: An array of the session type ID.
-        :type session_type_ids: list[str]
         :rtype: :class:`UserSessionTypes`
         """
         body = dict()
         body['siteUrl'] = site_url
-        body['personId'] = person_id
-        body['email'] = email
+        if person_id is not None:
+            body['personId'] = person_id
+        if email is not None:
+            body['email'] = email
         body['sessionTypeIds'] = session_type_ids
         url = self.ep('userconfig/sessionTypes')
         data = super().put(url, json=body)

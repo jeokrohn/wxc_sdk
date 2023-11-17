@@ -628,13 +628,20 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :rtype: list[AvailableSharedLineMemberItem]
         """
         body = dict()
-        body['max'] = max_
-        body['start'] = start
-        body['location'] = location
-        body['name'] = name
-        body['number'] = number
-        body['order'] = order
-        body['extension'] = extension
+        if max_ is not None:
+            body['max'] = max_
+        if start is not None:
+            body['start'] = start
+        if location is not None:
+            body['location'] = location
+        if name is not None:
+            body['name'] = name
+        if number is not None:
+            body['number'] = number
+        if order is not None:
+            body['order'] = order
+        if extension is not None:
+            body['extension'] = extension
         url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/availableMembers')
         data = super().get(url, json=body)
         r = TypeAdapter(list[AvailableSharedLineMemberItem]).validate_python(data['members'])

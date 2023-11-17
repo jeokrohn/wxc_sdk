@@ -146,7 +146,8 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
+        if call_id is not None:
+            body['callId'] = call_id
         url = self.ep('mute')
         super().post(url, json=body)
 
@@ -164,7 +165,8 @@ class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
+        if call_id is not None:
+            body['callId'] = call_id
         url = self.ep('unmute')
         super().post(url, json=body)
 

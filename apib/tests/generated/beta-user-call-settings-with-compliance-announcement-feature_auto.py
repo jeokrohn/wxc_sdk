@@ -158,13 +158,13 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         r = CallRecordingInfo.model_validate(data)
         return r
 
-    def configure_call_recording_settings_for_a_person(self, person_id: str, enabled: bool,
-                                                       record: CallRecordingInfoRecord,
-                                                       record_voicemail_enabled: bool,
-                                                       start_stop_announcement_enabled: bool,
-                                                       notification: CallRecordingInfoNotification,
-                                                       repeat: CallRecordingInfoRepeat,
-                                                       start_stop_announcement: CallRecordingInfoStartStopAnnouncement,
+    def configure_call_recording_settings_for_a_person(self, person_id: str, enabled: bool = None,
+                                                       record: CallRecordingInfoRecord = None,
+                                                       record_voicemail_enabled: bool = None,
+                                                       start_stop_announcement_enabled: bool = None,
+                                                       notification: CallRecordingInfoNotification = None,
+                                                       repeat: CallRecordingInfoRepeat = None,
+                                                       start_stop_announcement: CallRecordingInfoStartStopAnnouncement = None,
                                                        org_id: str = None):
         """
         Configure Call Recording Settings for a Person
@@ -203,12 +203,19 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['enabled'] = enabled
-        body['record'] = enum_str(record)
-        body['recordVoicemailEnabled'] = record_voicemail_enabled
-        body['startStopAnnouncementEnabled'] = start_stop_announcement_enabled
-        body['notification'] = loads(notification.model_dump_json())
-        body['repeat'] = loads(repeat.model_dump_json())
-        body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
+        if enabled is not None:
+            body['enabled'] = enabled
+        if record is not None:
+            body['record'] = enum_str(record)
+        if record_voicemail_enabled is not None:
+            body['recordVoicemailEnabled'] = record_voicemail_enabled
+        if start_stop_announcement_enabled is not None:
+            body['startStopAnnouncementEnabled'] = start_stop_announcement_enabled
+        if notification is not None:
+            body['notification'] = loads(notification.model_dump_json())
+        if repeat is not None:
+            body['repeat'] = loads(repeat.model_dump_json())
+        if start_stop_announcement is not None:
+            body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
         url = self.ep(f'')
         super().put(url, params=params, json=body)

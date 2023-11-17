@@ -594,7 +594,7 @@ class RecordingsApi(ApiChild, base=''):
         r = RecordingObjectWithDirectDownloadLinks.model_validate(data)
         return r
 
-    def delete_a_recording(self, recording_id: str, reason: str, comment: str, host_email: str = None):
+    def delete_a_recording(self, recording_id: str, host_email: str = None, reason: str = None, comment: str = None):
         """
         Delete a Recording
 
@@ -606,29 +606,32 @@ class RecordingsApi(ApiChild, base=''):
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
+        :param host_email: Email address for the meeting host. Only used if the user or application calling the API has
+            the required `admin-level meeting scopes
+            <https://developer.webex.com/docs/meetings#adminorganization-level-authentication-and-scopes>`_. If set, the admin may specify the email of a user in a site they
+            manage and the API will delete a recording of that user.
+        :type host_email: str
         :param reason: Reason for deleting a recording. Only required when a Compliance Officer is operating on another
             user's recording.
         :type reason: str
         :param comment: Compliance Officer's explanation for deleting a recording. The comment can be a maximum of 255
             characters long.
         :type comment: str
-        :param host_email: Email address for the meeting host. Only used if the user or application calling the API has
-            the required `admin-level meeting scopes
-            <https://developer.webex.com/docs/meetings#adminorganization-level-authentication-and-scopes>`_. If set, the admin may specify the email of a user in a site they
-            manage and the API will delete a recording of that user.
-        :type host_email: str
         :rtype: None
         """
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['reason'] = reason
-        body['comment'] = comment
+        if reason is not None:
+            body['reason'] = reason
+        if comment is not None:
+            body['comment'] = comment
         url = self.ep(f'recordings/{recording_id}')
         super().delete(url, params=params, json=body)
 
-    def move_recordings_into_the_recycle_bin(self, recording_ids: list[str], site_url: str, host_email: str = None):
+    def move_recordings_into_the_recycle_bin(self, recording_ids: list[str], host_email: str = None,
+                                             site_url: str = None):
         """
         Move Recordings into the Recycle Bin
 
@@ -649,16 +652,16 @@ class RecordingsApi(ApiChild, base=''):
             the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not
             specified.
         :type recording_ids: list[str]
-        :param site_url: URL of the Webex site from which the API deletes recordings. If not specified, the API deletes
-            recordings from the user's preferred site. All available Webex sites and preferred sites of a user can be
-            retrieved by the `Get Site List
-            <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-        :type site_url: str
         :param host_email: Email address for the meeting host. Only used if the user or application calling the API has
             the required `admin-level meeting scopes
             <https://developer.webex.com/docs/meetings#adminorganization-level-authentication-and-scopes>`_. If set, the admin may specify the email of a user in a site they
             manage and the API will move recordings into recycle bin of that user
         :type host_email: str
+        :param site_url: URL of the Webex site from which the API deletes recordings. If not specified, the API deletes
+            recordings from the user's preferred site. All available Webex sites and preferred sites of a user can be
+            retrieved by the `Get Site List
+            <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        :type site_url: str
         :rtype: None
         """
         params = {}
@@ -666,12 +669,13 @@ class RecordingsApi(ApiChild, base=''):
             params['hostEmail'] = host_email
         body = dict()
         body['recordingIds'] = recording_ids
-        body['siteUrl'] = site_url
+        if site_url is not None:
+            body['siteUrl'] = site_url
         url = self.ep('recordings/softDelete')
         super().post(url, params=params, json=body)
 
-    def restore_recordings_from_recycle_bin(self, restore_all: bool, recording_ids: list[str], site_url: str,
-                                            host_email: str = None):
+    def restore_recordings_from_recycle_bin(self, host_email: str = None, restore_all: bool = None,
+                                            recording_ids: list[str] = None, site_url: str = None):
         """
         Restore Recordings from Recycle Bin
 
@@ -685,6 +689,11 @@ class RecordingsApi(ApiChild, base=''):
         * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
         `siteUrl` is not specified.
 
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the required `admin-level meeting scopes
+            <https://developer.webex.com/docs/meetings#adminorganization-level-authentication-and-scopes>`_. If set, the admin may specify the email of a
+            user in a site they manage and the API will restore recordings of that user.
+        :type host_email: str
         :param restore_all: If not specified or `false`, restores the recordings specified by `recordingIds`. If
             `true`, restores all recordings from the recycle bin.
         :type restore_all: bool
@@ -697,25 +706,23 @@ class RecordingsApi(ApiChild, base=''):
             can be retrieved by `Get Site List
             <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
         :type site_url: str
-        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
-            calling the API has the required `admin-level meeting scopes
-            <https://developer.webex.com/docs/meetings#adminorganization-level-authentication-and-scopes>`_. If set, the admin may specify the email of a
-            user in a site they manage and the API will restore recordings of that user.
-        :type host_email: str
         :rtype: None
         """
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['restoreAll'] = restore_all
-        body['recordingIds'] = recording_ids
-        body['siteUrl'] = site_url
+        if restore_all is not None:
+            body['restoreAll'] = restore_all
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        if site_url is not None:
+            body['siteUrl'] = site_url
         url = self.ep('recordings/restore')
         super().post(url, params=params, json=body)
 
-    def purge_recordings_from_recycle_bin(self, purge_all: bool, recording_ids: list[str], site_url: str,
-                                          host_email: str = None):
+    def purge_recordings_from_recycle_bin(self, host_email: str = None, purge_all: bool = None,
+                                          recording_ids: list[str] = None, site_url: str = None):
         """
         Purge Recordings from Recycle Bin
 
@@ -730,6 +737,11 @@ class RecordingsApi(ApiChild, base=''):
         * All the IDs of `recordingIds` should belong to the site of `siteUrl` or the user's preferred site if
         `siteUrl` is not specified.
 
+        :param host_email: Email address for the meeting host. Only used if the user or application calling the API has
+            the required `admin-level meeting scopes
+            <https://developer.webex.com/docs/meetings#adminorganization-level-authentication-and-scopes>`_. If set, the admin may specify the email of a user in a site they
+            manage and the API will purge recordings from recycle bin of that user.
+        :type host_email: str
         :param purge_all: If not specified or `false`, purges the recordings specified by `recordingIds`. If `true`,
             purges all recordings from the recycle bin.
         :type purge_all: bool
@@ -742,19 +754,17 @@ class RecordingsApi(ApiChild, base=''):
             retrieved by `Get Site List
             <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
         :type site_url: str
-        :param host_email: Email address for the meeting host. Only used if the user or application calling the API has
-            the required `admin-level meeting scopes
-            <https://developer.webex.com/docs/meetings#adminorganization-level-authentication-and-scopes>`_. If set, the admin may specify the email of a user in a site they
-            manage and the API will purge recordings from recycle bin of that user.
-        :type host_email: str
         :rtype: None
         """
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['purgeAll'] = purge_all
-        body['recordingIds'] = recording_ids
-        body['siteUrl'] = site_url
+        if purge_all is not None:
+            body['purgeAll'] = purge_all
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        if site_url is not None:
+            body['siteUrl'] = site_url
         url = self.ep('recordings/purge')
         super().post(url, params=params, json=body)

@@ -412,12 +412,13 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
-    def create_a_workspace(self, display_name: str, org_id: str, workspace_location_id: str, floor_id: str,
-                           capacity: int, type: WorkspaceType1, sip_address: str,
-                           calling: WorkspaceCreationRequestCalling, calendar: WorkspaceCreationRequestCalendar,
-                           notes: str, hotdesking_status: WorkspaceCreationRequestHotdeskingStatus,
-                           device_hosted_meetings: WorkspaceDeviceHostedMeetings,
-                           supported_devices: WorkspaceSupportedDevices) -> Workspace:
+    def create_a_workspace(self, display_name: str, workspace_location_id: str = None, floor_id: str = None,
+                           capacity: int = None, type: WorkspaceType1 = None, sip_address: str = None,
+                           calling: WorkspaceCreationRequestCalling = None,
+                           calendar: WorkspaceCreationRequestCalendar = None, notes: str = None,
+                           hotdesking_status: WorkspaceCreationRequestHotdeskingStatus = None,
+                           device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
+                           supported_devices: WorkspaceSupportedDevices = None, org_id: str = None) -> Workspace:
         """
         Create a Workspace
 
@@ -439,9 +440,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         :param display_name: A friendly name for the workspace.
         :type display_name: str
-        :param org_id: `OrgId` associated with the workspace. Only admin users of another organization (such as
-            partners) may use this parameter.
-        :type org_id: str
         :param workspace_location_id: Location associated with the workspace. Must be provided when the `floorId` is
             set.
         :type workspace_location_id: str
@@ -468,22 +466,37 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_hosted_meetings: WorkspaceDeviceHostedMeetings
         :param supported_devices: The supported devices for the workspace. Default is `collaborationDevices`.
         :type supported_devices: WorkspaceSupportedDevices
+        :param org_id: `OrgId` associated with the workspace. Only admin users of another organization (such as
+            partners) may use this parameter.
+        :type org_id: str
         :rtype: :class:`Workspace`
         """
         body = dict()
         body['displayName'] = display_name
-        body['orgId'] = org_id
-        body['workspaceLocationId'] = workspace_location_id
-        body['floorId'] = floor_id
-        body['capacity'] = capacity
-        body['type'] = enum_str(type)
-        body['sipAddress'] = sip_address
-        body['calling'] = loads(calling.model_dump_json())
-        body['calendar'] = loads(calendar.model_dump_json())
-        body['notes'] = notes
-        body['hotdeskingStatus'] = enum_str(hotdesking_status)
-        body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
-        body['supportedDevices'] = enum_str(supported_devices)
+        if org_id is not None:
+            body['orgId'] = org_id
+        if workspace_location_id is not None:
+            body['workspaceLocationId'] = workspace_location_id
+        if floor_id is not None:
+            body['floorId'] = floor_id
+        if capacity is not None:
+            body['capacity'] = capacity
+        if type is not None:
+            body['type'] = enum_str(type)
+        if sip_address is not None:
+            body['sipAddress'] = sip_address
+        if calling is not None:
+            body['calling'] = loads(calling.model_dump_json())
+        if calendar is not None:
+            body['calendar'] = loads(calendar.model_dump_json())
+        if notes is not None:
+            body['notes'] = notes
+        if hotdesking_status is not None:
+            body['hotdeskingStatus'] = enum_str(hotdesking_status)
+        if device_hosted_meetings is not None:
+            body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
+        if supported_devices is not None:
+            body['supportedDevices'] = enum_str(supported_devices)
         url = self.ep()
         data = super().post(url, json=body)
         r = Workspace.model_validate(data)
@@ -507,12 +520,12 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         r = Workspace.model_validate(data)
         return r
 
-    def update_a_workspace(self, workspace_id: str, display_name: str, workspace_location_id: str, floor_id: str,
-                           capacity: int, type: WorkspaceUpdateRequestType,
-                           calendar: WorkspaceCreationRequestCalendar, sip_address: str,
-                           calling: WorkspaceCreationRequestCalling, notes: str,
-                           hotdesking_status: WorkspaceCreationRequestHotdeskingStatus,
-                           device_hosted_meetings: WorkspaceDeviceHostedMeetings) -> Workspace:
+    def update_a_workspace(self, workspace_id: str, display_name: str = None, workspace_location_id: str = None,
+                           floor_id: str = None, capacity: int = None, type: WorkspaceUpdateRequestType = None,
+                           calendar: WorkspaceCreationRequestCalendar = None, sip_address: str = None,
+                           calling: WorkspaceCreationRequestCalling = None, notes: str = None,
+                           hotdesking_status: WorkspaceCreationRequestHotdeskingStatus = None,
+                           device_hosted_meetings: WorkspaceDeviceHostedMeetings = None) -> Workspace:
         """
         Update a Workspace
 
@@ -571,17 +584,28 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :rtype: :class:`Workspace`
         """
         body = dict()
-        body['displayName'] = display_name
-        body['workspaceLocationId'] = workspace_location_id
-        body['floorId'] = floor_id
-        body['capacity'] = capacity
-        body['type'] = enum_str(type)
-        body['calendar'] = loads(calendar.model_dump_json())
-        body['sipAddress'] = sip_address
-        body['calling'] = loads(calling.model_dump_json())
-        body['notes'] = notes
-        body['hotdeskingStatus'] = enum_str(hotdesking_status)
-        body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
+        if display_name is not None:
+            body['displayName'] = display_name
+        if workspace_location_id is not None:
+            body['workspaceLocationId'] = workspace_location_id
+        if floor_id is not None:
+            body['floorId'] = floor_id
+        if capacity is not None:
+            body['capacity'] = capacity
+        if type is not None:
+            body['type'] = enum_str(type)
+        if calendar is not None:
+            body['calendar'] = loads(calendar.model_dump_json())
+        if sip_address is not None:
+            body['sipAddress'] = sip_address
+        if calling is not None:
+            body['calling'] = loads(calling.model_dump_json())
+        if notes is not None:
+            body['notes'] = notes
+        if hotdesking_status is not None:
+            body['hotdeskingStatus'] = enum_str(hotdesking_status)
+        if device_hosted_meetings is not None:
+            body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
         url = self.ep(f'{workspace_id}')
         data = super().put(url, json=body)
         r = Workspace.model_validate(data)

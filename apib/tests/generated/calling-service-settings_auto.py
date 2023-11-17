@@ -195,7 +195,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_voicemail_settings(self, message_expiry_enabled: bool, number_of_days_for_message_expiry: int,
-                                  strict_deletion_enabled: bool, voice_message_forwarding_enabled: bool,
+                                  strict_deletion_enabled: bool = None, voice_message_forwarding_enabled: bool = None,
                                   org_id: str = None):
         """
         Update Voicemail Settings
@@ -229,8 +229,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         body = dict()
         body['messageExpiryEnabled'] = message_expiry_enabled
         body['numberOfDaysForMessageExpiry'] = number_of_days_for_message_expiry
-        body['strictDeletionEnabled'] = strict_deletion_enabled
-        body['voiceMessageForwardingEnabled'] = voice_message_forwarding_enabled
+        if strict_deletion_enabled is not None:
+            body['strictDeletionEnabled'] = strict_deletion_enabled
+        if voice_message_forwarding_enabled is not None:
+            body['voiceMessageForwardingEnabled'] = voice_message_forwarding_enabled
         url = self.ep('voicemail/settings')
         super().put(url, params=params, json=body)
 
@@ -258,10 +260,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         r = GetVoicemailRulesObject.model_validate(data)
         return r
 
-    def update_voicemail_rules(self, default_voicemail_pin_enabled: bool, default_voicemail_pin: str,
-                               expire_passcode: GetVoicemailRulesObjectExpirePasscode,
+    def update_voicemail_rules(self, expire_passcode: GetVoicemailRulesObjectExpirePasscode,
                                change_passcode: GetVoicemailRulesObjectExpirePasscode,
                                block_previous_passcodes: GetVoicemailRulesObjectBlockPreviousPasscodes,
+                               default_voicemail_pin_enabled: bool = None, default_voicemail_pin: str = None,
                                org_id: str = None):
         """
         Update Voicemail Rules
@@ -277,16 +279,16 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         Updating an organization's voicemail passcode and/or rules requires a full administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
 
-        :param default_voicemail_pin_enabled: Set to `true` to enable the default voicemail passcode.
-        :type default_voicemail_pin_enabled: bool
-        :param default_voicemail_pin: Default voicemail passcode.
-        :type default_voicemail_pin: str
         :param expire_passcode: Settings for passcode expiry.
         :type expire_passcode: GetVoicemailRulesObjectExpirePasscode
         :param change_passcode: Settings for passcode changes.
         :type change_passcode: GetVoicemailRulesObjectExpirePasscode
         :param block_previous_passcodes: Settings for previous passcode usage.
         :type block_previous_passcodes: GetVoicemailRulesObjectBlockPreviousPasscodes
+        :param default_voicemail_pin_enabled: Set to `true` to enable the default voicemail passcode.
+        :type default_voicemail_pin_enabled: bool
+        :param default_voicemail_pin: Default voicemail passcode.
+        :type default_voicemail_pin: str
         :param org_id: Update voicemail rules for this organization.
         :type org_id: str
         :rtype: None
@@ -295,8 +297,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['defaultVoicemailPinEnabled'] = default_voicemail_pin_enabled
-        body['defaultVoicemailPin'] = default_voicemail_pin
+        if default_voicemail_pin_enabled is not None:
+            body['defaultVoicemailPinEnabled'] = default_voicemail_pin_enabled
+        if default_voicemail_pin is not None:
+            body['defaultVoicemailPin'] = default_voicemail_pin
         body['expirePasscode'] = loads(expire_passcode.model_dump_json())
         body['changePasscode'] = loads(change_passcode.model_dump_json())
         body['blockPreviousPasscodes'] = loads(block_previous_passcodes.model_dump_json())

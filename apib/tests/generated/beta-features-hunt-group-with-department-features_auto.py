@@ -405,12 +405,13 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         r = GetHuntGroupObject.model_validate(data)
         return r
 
-    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
-                            extension: Union[str, datetime], distinctive_ring: bool,
-                            alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
-                            last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
-                            agents: list[PostPersonPlaceObject], enabled: bool,
-                            department: ModifyHuntGroupObjectDepartment, org_id: str = None):
+    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str = None, phone_number: str = None,
+                            extension: Union[str, datetime] = None, distinctive_ring: bool = None,
+                            alternate_numbers: list[AlternateNumbersWithPattern] = None, language_code: str = None,
+                            first_name: str = None, last_name: str = None, time_zone: str = None,
+                            call_policies: PostHuntGroupCallPolicyObject = None,
+                            agents: list[PostPersonPlaceObject] = None, enabled: bool = None,
+                            department: ModifyHuntGroupObjectDepartment = None, org_id: str = None):
         """
         Update a Hunt Group
 
@@ -464,18 +465,31 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['distinctiveRing'] = distinctive_ring
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
-        body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents, by_alias=True, exclude_none=True))
-        body['enabled'] = enabled
-        body['department'] = loads(department.model_dump_json())
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if distinctive_ring is not None:
+            body['distinctiveRing'] = distinctive_ring
+        if alternate_numbers is not None:
+            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if call_policies is not None:
+            body['callPolicies'] = loads(call_policies.model_dump_json())
+        if agents is not None:
+            body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        if enabled is not None:
+            body['enabled'] = enabled
+        if department is not None:
+            body['department'] = loads(department.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)

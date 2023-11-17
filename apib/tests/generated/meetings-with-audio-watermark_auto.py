@@ -2798,26 +2798,29 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
     <https://developer.webex.com/docs/meetings>`_ for scopes required for each API.
     """
 
-    def create_a_meeting(self, adhoc: bool, room_id: str, template_id: str, title: str, agenda: str, password: str,
-                         start: Union[str, datetime], end: Union[str, datetime], timezone: str, recurrence: str,
-                         enabled_auto_record_meeting: bool, allow_any_user_to_be_co_host: bool,
-                         enabled_join_before_host: bool, enable_connect_audio_before_host: bool,
-                         join_before_host_minutes: int, exclude_password: bool, public_meeting: bool,
-                         reminder_time: int,
-                         unlocked_meeting_join_security: MeetingSeriesObjectUnlockedMeetingJoinSecurity,
-                         session_type_id: int, scheduled_type: MeetingSeriesObjectScheduledType,
-                         enabled_webcast_view: bool, panelist_password: str, enable_automatic_lock: bool,
-                         automatic_lock_minutes: int, allow_first_user_to_be_co_host: bool,
-                         allow_authenticated_devices: bool, invitees: list[InviteeObjectForCreateMeeting],
-                         send_email: bool, host_email: str, site_url: str,
-                         meeting_options: MeetingSeriesObjectMeetingOptions,
-                         attendee_privileges: MeetingSeriesObjectAttendeePrivileges,
-                         registration: CreateMeetingObjectRegistration, integration_tags: list[str],
-                         simultaneous_interpretation: CreateMeetingObjectSimultaneousInterpretation,
-                         enabled_breakout_sessions: bool, breakout_sessions: list[BreakoutSessionObject],
-                         enabled_audio_watermark: bool, tracking_codes: list[TrackingCodeItemForCreateMeetingObject],
-                         audio_connection_options: MeetingSeriesObjectAudioConnectionOptions,
-                         require_attendee_login: bool, restrict_to_invitees: bool) -> MeetingSeriesObjectWithAdhoc:
+    def create_a_meeting(self, title: str, start: Union[str, datetime], end: Union[str, datetime],
+                         invitees: list[InviteeObjectForCreateMeeting],
+                         breakout_sessions: list[BreakoutSessionObject], adhoc: bool = None, room_id: str = None,
+                         template_id: str = None, agenda: str = None, password: str = None, timezone: str = None,
+                         recurrence: str = None, enabled_auto_record_meeting: bool = None,
+                         allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None,
+                         enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None,
+                         exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None,
+                         unlocked_meeting_join_security: MeetingSeriesObjectUnlockedMeetingJoinSecurity = None,
+                         session_type_id: int = None, scheduled_type: MeetingSeriesObjectScheduledType = None,
+                         enabled_webcast_view: bool = None, panelist_password: str = None,
+                         enable_automatic_lock: bool = None, automatic_lock_minutes: int = None,
+                         allow_first_user_to_be_co_host: bool = None, allow_authenticated_devices: bool = None,
+                         send_email: bool = None, host_email: str = None, site_url: str = None,
+                         meeting_options: MeetingSeriesObjectMeetingOptions = None,
+                         attendee_privileges: MeetingSeriesObjectAttendeePrivileges = None,
+                         registration: CreateMeetingObjectRegistration = None, integration_tags: list[str] = None,
+                         simultaneous_interpretation: CreateMeetingObjectSimultaneousInterpretation = None,
+                         enabled_breakout_sessions: bool = None, enabled_audio_watermark: bool = None,
+                         tracking_codes: list[TrackingCodeItemForCreateMeetingObject] = None,
+                         audio_connection_options: MeetingSeriesObjectAudioConnectionOptions = None,
+                         require_attendee_login: bool = None,
+                         restrict_to_invitees: bool = None) -> MeetingSeriesObjectWithAdhoc:
         """
         Create a Meeting
 
@@ -2891,29 +2894,9 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         administrator can use this watermark when analyzing an unauthorized recording to identify which Webex app or
         device was the source of the recording.
 
-        :param adhoc: Whether or not to create an ad-hoc meeting for the room specified by `roomId`. When `true`,
-            `roomId` is required.
-        :type adhoc: bool
-        :param room_id: Unique identifier for the Webex space which the meeting is to be associated with. It can be
-            retrieved by `List Rooms
-            <https://developer.webex.com/docs/api/v1/rooms/list-rooms>`_. `roomId` is required when `adhoc` is `true`. When `roomId` is specified, the
-            parameter `hostEmail` will be ignored.
-        :type room_id: str
-        :param template_id: Unique identifier for meeting template. Please note that `start` and `end` are optional
-            when `templateId` is specified. The list of meeting templates that is available for the authenticated user
-            can be retrieved from `List Meeting Templates
-            <https://developer.webex.com/docs/api/v1/meetings/list-meeting-templates>`_. This parameter is ignored for an ad-hoc meeting.
-        :type template_id: str
         :param title: Meeting title. The title can be a maximum of 128 characters long. The default value for an ad-hoc
             meeting is the user's name if not specified.
         :type title: str
-        :param agenda: Meeting agenda. The agenda can be a maximum of 1300 characters long.
-        :type agenda: str
-        :param password: Meeting password. Must conform to the site's password complexity settings. Read
-            `password management
-            <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password
-            rules will be generated automatically.
-        :type password: str
         :param start: Date and time for the start of meeting in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before
             current date and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes
@@ -2936,6 +2919,42 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
             `2022-03-01T11:52:41+08:00` will be adjusted to `2022-03-01T11:52:00+08:00`. The default value for an
             ad-hoc meeting is 20 minutes after the current time and the user's input value will be ignored.
         :type end: Union[str, datetime]
+        :param invitees: Invitees for meeting. The maximum size of invitees is 1000. If `roomId` is specified and
+            `invitees` is missing, all the members in the space are invited implicitly. If both `roomId` and
+            `invitees` are specified, only those in the `invitees` list are invited. `coHost` for each invitee is
+            `true` by default if `roomId` is specified when creating a meeting, and anyone in the invitee list that is
+            not qualified to be a cohost will be invited as a non-cohost invitee. The user's input value will be
+            ignored for an ad-hoc meeting and the the members of the room specified by `roomId` except "me" will be
+            used by default.
+        :type invitees: list[InviteeObjectForCreateMeeting]
+        :param breakout_sessions: Breakout sessions are smaller groups that are split off from the main meeting or
+            webinar. They allow a subset of participants to collaborate and share ideas over audio and video. Use
+            breakout sessions for workshops, classrooms, or for when you need a moment to talk privately with a few
+            participants outside of the main session. Please note that maximum number of breakout sessions in a
+            meeting or webinar is 100. In webinars, if hosts preassign attendees to breakout sessions, the role of
+            `attendee` will be changed to `panelist`. Breakout session is not supported for a meeting with
+            simultaneous interpretation.
+        :type breakout_sessions: list[BreakoutSessionObject]
+        :param adhoc: Whether or not to create an ad-hoc meeting for the room specified by `roomId`. When `true`,
+            `roomId` is required.
+        :type adhoc: bool
+        :param room_id: Unique identifier for the Webex space which the meeting is to be associated with. It can be
+            retrieved by `List Rooms
+            <https://developer.webex.com/docs/api/v1/rooms/list-rooms>`_. `roomId` is required when `adhoc` is `true`. When `roomId` is specified, the
+            parameter `hostEmail` will be ignored.
+        :type room_id: str
+        :param template_id: Unique identifier for meeting template. Please note that `start` and `end` are optional
+            when `templateId` is specified. The list of meeting templates that is available for the authenticated user
+            can be retrieved from `List Meeting Templates
+            <https://developer.webex.com/docs/api/v1/meetings/list-meeting-templates>`_. This parameter is ignored for an ad-hoc meeting.
+        :type template_id: str
+        :param agenda: Meeting agenda. The agenda can be a maximum of 1300 characters long.
+        :type agenda: str
+        :param password: Meeting password. Must conform to the site's password complexity settings. Read
+            `password management
+            <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password
+            rules will be generated automatically.
+        :type password: str
         :param timezone: `Time zone
             <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the
             `IANA time zone database
@@ -3019,14 +3038,6 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
             organization to start or join the meeting without a prompt. The default value for an ad-hoc meeting is
             `true` and the user's input value will be ignored.
         :type allow_authenticated_devices: bool
-        :param invitees: Invitees for meeting. The maximum size of invitees is 1000. If `roomId` is specified and
-            `invitees` is missing, all the members in the space are invited implicitly. If both `roomId` and
-            `invitees` are specified, only those in the `invitees` list are invited. `coHost` for each invitee is
-            `true` by default if `roomId` is specified when creating a meeting, and anyone in the invitee list that is
-            not qualified to be a cohost will be invited as a non-cohost invitee. The user's input value will be
-            ignored for an ad-hoc meeting and the the members of the room specified by `roomId` except "me" will be
-            used by default.
-        :type invitees: list[InviteeObjectForCreateMeeting]
         :param send_email: Whether or not to send emails to host and invitees. It is an optional field and default
             value is true. The default value for an ad-hoc meeting is `false` and the user's input value will be
             ignored.
@@ -3062,14 +3073,6 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :type simultaneous_interpretation: CreateMeetingObjectSimultaneousInterpretation
         :param enabled_breakout_sessions: Whether or not breakout sessions are enabled.
         :type enabled_breakout_sessions: bool
-        :param breakout_sessions: Breakout sessions are smaller groups that are split off from the main meeting or
-            webinar. They allow a subset of participants to collaborate and share ideas over audio and video. Use
-            breakout sessions for workshops, classrooms, or for when you need a moment to talk privately with a few
-            participants outside of the main session. Please note that maximum number of breakout sessions in a
-            meeting or webinar is 100. In webinars, if hosts preassign attendees to breakout sessions, the role of
-            `attendee` will be changed to `panelist`. Breakout session is not supported for a meeting with
-            simultaneous interpretation.
-        :type breakout_sessions: list[BreakoutSessionObject]
         :param enabled_audio_watermark: Whether or not audio watermark is enabled.
         :type enabled_audio_watermark: bool
         :param tracking_codes: Tracking codes information. All available tracking codes and their options for the
@@ -3093,49 +3096,87 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :rtype: :class:`MeetingSeriesObjectWithAdhoc`
         """
         body = dict()
-        body['adhoc'] = adhoc
-        body['roomId'] = room_id
-        body['templateId'] = template_id
+        if adhoc is not None:
+            body['adhoc'] = adhoc
+        if room_id is not None:
+            body['roomId'] = room_id
+        if template_id is not None:
+            body['templateId'] = template_id
         body['title'] = title
-        body['agenda'] = agenda
-        body['password'] = password
+        if agenda is not None:
+            body['agenda'] = agenda
+        if password is not None:
+            body['password'] = password
         body['start'] = start
         body['end'] = end
-        body['timezone'] = timezone
-        body['recurrence'] = recurrence
-        body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
-        body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
-        body['enabledJoinBeforeHost'] = enabled_join_before_host
-        body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
-        body['joinBeforeHostMinutes'] = join_before_host_minutes
-        body['excludePassword'] = exclude_password
-        body['publicMeeting'] = public_meeting
-        body['reminderTime'] = reminder_time
-        body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
-        body['sessionTypeId'] = session_type_id
-        body['scheduledType'] = enum_str(scheduled_type)
-        body['enabledWebcastView'] = enabled_webcast_view
-        body['panelistPassword'] = panelist_password
-        body['enableAutomaticLock'] = enable_automatic_lock
-        body['automaticLockMinutes'] = automatic_lock_minutes
-        body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
-        body['allowAuthenticatedDevices'] = allow_authenticated_devices
+        if timezone is not None:
+            body['timezone'] = timezone
+        if recurrence is not None:
+            body['recurrence'] = recurrence
+        if enabled_auto_record_meeting is not None:
+            body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+        if allow_any_user_to_be_co_host is not None:
+            body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+        if enabled_join_before_host is not None:
+            body['enabledJoinBeforeHost'] = enabled_join_before_host
+        if enable_connect_audio_before_host is not None:
+            body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+        if join_before_host_minutes is not None:
+            body['joinBeforeHostMinutes'] = join_before_host_minutes
+        if exclude_password is not None:
+            body['excludePassword'] = exclude_password
+        if public_meeting is not None:
+            body['publicMeeting'] = public_meeting
+        if reminder_time is not None:
+            body['reminderTime'] = reminder_time
+        if unlocked_meeting_join_security is not None:
+            body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
+        if session_type_id is not None:
+            body['sessionTypeId'] = session_type_id
+        if scheduled_type is not None:
+            body['scheduledType'] = enum_str(scheduled_type)
+        if enabled_webcast_view is not None:
+            body['enabledWebcastView'] = enabled_webcast_view
+        if panelist_password is not None:
+            body['panelistPassword'] = panelist_password
+        if enable_automatic_lock is not None:
+            body['enableAutomaticLock'] = enable_automatic_lock
+        if automatic_lock_minutes is not None:
+            body['automaticLockMinutes'] = automatic_lock_minutes
+        if allow_first_user_to_be_co_host is not None:
+            body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+        if allow_authenticated_devices is not None:
+            body['allowAuthenticatedDevices'] = allow_authenticated_devices
         body['invitees'] = loads(TypeAdapter(list[InviteeObjectForCreateMeeting]).dump_json(invitees, by_alias=True, exclude_none=True))
-        body['sendEmail'] = send_email
-        body['hostEmail'] = host_email
-        body['siteUrl'] = site_url
-        body['meetingOptions'] = loads(meeting_options.model_dump_json())
-        body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
-        body['registration'] = loads(registration.model_dump_json())
-        body['integrationTags'] = integration_tags
-        body['simultaneousInterpretation'] = loads(simultaneous_interpretation.model_dump_json())
-        body['enabledBreakoutSessions'] = enabled_breakout_sessions
+        if send_email is not None:
+            body['sendEmail'] = send_email
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if site_url is not None:
+            body['siteUrl'] = site_url
+        if meeting_options is not None:
+            body['meetingOptions'] = loads(meeting_options.model_dump_json())
+        if attendee_privileges is not None:
+            body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
+        if registration is not None:
+            body['registration'] = loads(registration.model_dump_json())
+        if integration_tags is not None:
+            body['integrationTags'] = integration_tags
+        if simultaneous_interpretation is not None:
+            body['simultaneousInterpretation'] = loads(simultaneous_interpretation.model_dump_json())
+        if enabled_breakout_sessions is not None:
+            body['enabledBreakoutSessions'] = enabled_breakout_sessions
         body['breakoutSessions'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(breakout_sessions, by_alias=True, exclude_none=True))
-        body['enabledAudioWatermark'] = enabled_audio_watermark
-        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
-        body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
-        body['requireAttendeeLogin'] = require_attendee_login
-        body['restrictToInvitees'] = restrict_to_invitees
+        if enabled_audio_watermark is not None:
+            body['enabledAudioWatermark'] = enabled_audio_watermark
+        if tracking_codes is not None:
+            body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
+        if audio_connection_options is not None:
+            body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
+        if require_attendee_login is not None:
+            body['requireAttendeeLogin'] = require_attendee_login
+        if restrict_to_invitees is not None:
+            body['restrictToInvitees'] = restrict_to_invitees
         url = self.ep()
         data = super().post(url, json=body)
         r = MeetingSeriesObjectWithAdhoc.model_validate(data)
@@ -3545,21 +3586,25 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ScheduledMeetingObject, item_key='items', params=params)
 
-    def patch_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: Union[str, datetime],
-                        end: Union[str, datetime], timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
-                        allow_any_user_to_be_co_host: bool, enabled_join_before_host: bool,
-                        enable_connect_audio_before_host: bool, join_before_host_minutes: int, exclude_password: bool,
-                        public_meeting: bool, reminder_time: int,
-                        unlocked_meeting_join_security: MeetingSeriesObjectUnlockedMeetingJoinSecurity,
-                        session_type_id: int, enabled_webcast_view: bool, panelist_password: str,
-                        enable_automatic_lock: bool, automatic_lock_minutes: int,
-                        allow_first_user_to_be_co_host: bool, allow_authenticated_devices: bool, send_email: bool,
-                        host_email: str, site_url: str, meeting_options: MeetingSeriesObjectMeetingOptions,
-                        attendee_privileges: MeetingSeriesObjectAttendeePrivileges, integration_tags: list[str],
-                        enabled_breakout_sessions: bool, tracking_codes: list[TrackingCodeItemForCreateMeetingObject],
-                        enabled_audio_watermark: bool,
-                        audio_connection_options: MeetingSeriesObjectAudioConnectionOptions,
-                        require_attendee_login: bool, restrict_to_invitees: bool) -> MeetingSeriesObject:
+    def patch_a_meeting(self, meeting_id: str, title: str = None, agenda: str = None, password: str = None,
+                        start: Union[str, datetime] = None, end: Union[str, datetime] = None, timezone: str = None,
+                        recurrence: str = None, enabled_auto_record_meeting: bool = None,
+                        allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None,
+                        enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None,
+                        exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None,
+                        unlocked_meeting_join_security: MeetingSeriesObjectUnlockedMeetingJoinSecurity = None,
+                        session_type_id: int = None, enabled_webcast_view: bool = None, panelist_password: str = None,
+                        enable_automatic_lock: bool = None, automatic_lock_minutes: int = None,
+                        allow_first_user_to_be_co_host: bool = None, allow_authenticated_devices: bool = None,
+                        send_email: bool = None, host_email: str = None, site_url: str = None,
+                        meeting_options: MeetingSeriesObjectMeetingOptions = None,
+                        attendee_privileges: MeetingSeriesObjectAttendeePrivileges = None,
+                        integration_tags: list[str] = None, enabled_breakout_sessions: bool = None,
+                        tracking_codes: list[TrackingCodeItemForCreateMeetingObject] = None,
+                        enabled_audio_watermark: bool = None,
+                        audio_connection_options: MeetingSeriesObjectAudioConnectionOptions = None,
+                        require_attendee_login: bool = None,
+                        restrict_to_invitees: bool = None) -> MeetingSeriesObject:
         """
         Patch a Meeting
 
@@ -3726,61 +3771,100 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :rtype: :class:`MeetingSeriesObject`
         """
         body = dict()
-        body['title'] = title
-        body['agenda'] = agenda
-        body['password'] = password
-        body['start'] = start
-        body['end'] = end
-        body['timezone'] = timezone
-        body['recurrence'] = recurrence
-        body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
-        body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
-        body['enabledJoinBeforeHost'] = enabled_join_before_host
-        body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
-        body['joinBeforeHostMinutes'] = join_before_host_minutes
-        body['excludePassword'] = exclude_password
-        body['publicMeeting'] = public_meeting
-        body['reminderTime'] = reminder_time
-        body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
-        body['sessionTypeId'] = session_type_id
-        body['enabledWebcastView'] = enabled_webcast_view
-        body['panelistPassword'] = panelist_password
-        body['enableAutomaticLock'] = enable_automatic_lock
-        body['automaticLockMinutes'] = automatic_lock_minutes
-        body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
-        body['allowAuthenticatedDevices'] = allow_authenticated_devices
-        body['sendEmail'] = send_email
-        body['hostEmail'] = host_email
-        body['siteUrl'] = site_url
-        body['meetingOptions'] = loads(meeting_options.model_dump_json())
-        body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
-        body['integrationTags'] = integration_tags
-        body['enabledBreakoutSessions'] = enabled_breakout_sessions
-        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
-        body['enabledAudioWatermark'] = enabled_audio_watermark
-        body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
-        body['requireAttendeeLogin'] = require_attendee_login
-        body['restrictToInvitees'] = restrict_to_invitees
+        if title is not None:
+            body['title'] = title
+        if agenda is not None:
+            body['agenda'] = agenda
+        if password is not None:
+            body['password'] = password
+        if start is not None:
+            body['start'] = start
+        if end is not None:
+            body['end'] = end
+        if timezone is not None:
+            body['timezone'] = timezone
+        if recurrence is not None:
+            body['recurrence'] = recurrence
+        if enabled_auto_record_meeting is not None:
+            body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+        if allow_any_user_to_be_co_host is not None:
+            body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+        if enabled_join_before_host is not None:
+            body['enabledJoinBeforeHost'] = enabled_join_before_host
+        if enable_connect_audio_before_host is not None:
+            body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+        if join_before_host_minutes is not None:
+            body['joinBeforeHostMinutes'] = join_before_host_minutes
+        if exclude_password is not None:
+            body['excludePassword'] = exclude_password
+        if public_meeting is not None:
+            body['publicMeeting'] = public_meeting
+        if reminder_time is not None:
+            body['reminderTime'] = reminder_time
+        if unlocked_meeting_join_security is not None:
+            body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
+        if session_type_id is not None:
+            body['sessionTypeId'] = session_type_id
+        if enabled_webcast_view is not None:
+            body['enabledWebcastView'] = enabled_webcast_view
+        if panelist_password is not None:
+            body['panelistPassword'] = panelist_password
+        if enable_automatic_lock is not None:
+            body['enableAutomaticLock'] = enable_automatic_lock
+        if automatic_lock_minutes is not None:
+            body['automaticLockMinutes'] = automatic_lock_minutes
+        if allow_first_user_to_be_co_host is not None:
+            body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+        if allow_authenticated_devices is not None:
+            body['allowAuthenticatedDevices'] = allow_authenticated_devices
+        if send_email is not None:
+            body['sendEmail'] = send_email
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if site_url is not None:
+            body['siteUrl'] = site_url
+        if meeting_options is not None:
+            body['meetingOptions'] = loads(meeting_options.model_dump_json())
+        if attendee_privileges is not None:
+            body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
+        if integration_tags is not None:
+            body['integrationTags'] = integration_tags
+        if enabled_breakout_sessions is not None:
+            body['enabledBreakoutSessions'] = enabled_breakout_sessions
+        if tracking_codes is not None:
+            body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
+        if enabled_audio_watermark is not None:
+            body['enabledAudioWatermark'] = enabled_audio_watermark
+        if audio_connection_options is not None:
+            body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
+        if require_attendee_login is not None:
+            body['requireAttendeeLogin'] = require_attendee_login
+        if restrict_to_invitees is not None:
+            body['restrictToInvitees'] = restrict_to_invitees
         url = self.ep(f'{meeting_id}')
         data = super().patch(url, json=body)
         r = MeetingSeriesObject.model_validate(data)
         return r
 
-    def update_a_meeting(self, meeting_id: str, title: str, agenda: str, password: str, start: Union[str, datetime],
-                         end: Union[str, datetime], timezone: str, recurrence: str, enabled_auto_record_meeting: bool,
-                         allow_any_user_to_be_co_host: bool, enabled_join_before_host: bool,
-                         enable_connect_audio_before_host: bool, join_before_host_minutes: int,
-                         exclude_password: bool, public_meeting: bool, reminder_time: int,
-                         unlocked_meeting_join_security: MeetingSeriesObjectUnlockedMeetingJoinSecurity,
-                         session_type_id: int, enabled_webcast_view: bool, panelist_password: str,
-                         enable_automatic_lock: bool, automatic_lock_minutes: int,
-                         allow_first_user_to_be_co_host: bool, allow_authenticated_devices: bool, send_email: bool,
-                         host_email: str, site_url: str, meeting_options: MeetingSeriesObjectMeetingOptions,
-                         attendee_privileges: MeetingSeriesObjectAttendeePrivileges, integration_tags: list[str],
-                         enabled_breakout_sessions: bool,
-                         tracking_codes: list[TrackingCodeItemForCreateMeetingObject], enabled_audio_watermark: bool,
-                         audio_connection_options: MeetingSeriesObjectAudioConnectionOptions,
-                         require_attendee_login: bool, restrict_to_invitees: bool) -> MeetingSeriesObject:
+    def update_a_meeting(self, meeting_id: str, title: str = None, agenda: str = None, password: str = None,
+                         start: Union[str, datetime] = None, end: Union[str, datetime] = None, timezone: str = None,
+                         recurrence: str = None, enabled_auto_record_meeting: bool = None,
+                         allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None,
+                         enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None,
+                         exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None,
+                         unlocked_meeting_join_security: MeetingSeriesObjectUnlockedMeetingJoinSecurity = None,
+                         session_type_id: int = None, enabled_webcast_view: bool = None,
+                         panelist_password: str = None, enable_automatic_lock: bool = None,
+                         automatic_lock_minutes: int = None, allow_first_user_to_be_co_host: bool = None,
+                         allow_authenticated_devices: bool = None, send_email: bool = None, host_email: str = None,
+                         site_url: str = None, meeting_options: MeetingSeriesObjectMeetingOptions = None,
+                         attendee_privileges: MeetingSeriesObjectAttendeePrivileges = None,
+                         integration_tags: list[str] = None, enabled_breakout_sessions: bool = None,
+                         tracking_codes: list[TrackingCodeItemForCreateMeetingObject] = None,
+                         enabled_audio_watermark: bool = None,
+                         audio_connection_options: MeetingSeriesObjectAudioConnectionOptions = None,
+                         require_attendee_login: bool = None,
+                         restrict_to_invitees: bool = None) -> MeetingSeriesObject:
         """
         Update a Meeting
 
@@ -3952,41 +4036,76 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :rtype: :class:`MeetingSeriesObject`
         """
         body = dict()
-        body['title'] = title
-        body['agenda'] = agenda
-        body['password'] = password
-        body['start'] = start
-        body['end'] = end
-        body['timezone'] = timezone
-        body['recurrence'] = recurrence
-        body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
-        body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
-        body['enabledJoinBeforeHost'] = enabled_join_before_host
-        body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
-        body['joinBeforeHostMinutes'] = join_before_host_minutes
-        body['excludePassword'] = exclude_password
-        body['publicMeeting'] = public_meeting
-        body['reminderTime'] = reminder_time
-        body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
-        body['sessionTypeId'] = session_type_id
-        body['enabledWebcastView'] = enabled_webcast_view
-        body['panelistPassword'] = panelist_password
-        body['enableAutomaticLock'] = enable_automatic_lock
-        body['automaticLockMinutes'] = automatic_lock_minutes
-        body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
-        body['allowAuthenticatedDevices'] = allow_authenticated_devices
-        body['sendEmail'] = send_email
-        body['hostEmail'] = host_email
-        body['siteUrl'] = site_url
-        body['meetingOptions'] = loads(meeting_options.model_dump_json())
-        body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
-        body['integrationTags'] = integration_tags
-        body['enabledBreakoutSessions'] = enabled_breakout_sessions
-        body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
-        body['enabledAudioWatermark'] = enabled_audio_watermark
-        body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
-        body['requireAttendeeLogin'] = require_attendee_login
-        body['restrictToInvitees'] = restrict_to_invitees
+        if title is not None:
+            body['title'] = title
+        if agenda is not None:
+            body['agenda'] = agenda
+        if password is not None:
+            body['password'] = password
+        if start is not None:
+            body['start'] = start
+        if end is not None:
+            body['end'] = end
+        if timezone is not None:
+            body['timezone'] = timezone
+        if recurrence is not None:
+            body['recurrence'] = recurrence
+        if enabled_auto_record_meeting is not None:
+            body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+        if allow_any_user_to_be_co_host is not None:
+            body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+        if enabled_join_before_host is not None:
+            body['enabledJoinBeforeHost'] = enabled_join_before_host
+        if enable_connect_audio_before_host is not None:
+            body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+        if join_before_host_minutes is not None:
+            body['joinBeforeHostMinutes'] = join_before_host_minutes
+        if exclude_password is not None:
+            body['excludePassword'] = exclude_password
+        if public_meeting is not None:
+            body['publicMeeting'] = public_meeting
+        if reminder_time is not None:
+            body['reminderTime'] = reminder_time
+        if unlocked_meeting_join_security is not None:
+            body['unlockedMeetingJoinSecurity'] = enum_str(unlocked_meeting_join_security)
+        if session_type_id is not None:
+            body['sessionTypeId'] = session_type_id
+        if enabled_webcast_view is not None:
+            body['enabledWebcastView'] = enabled_webcast_view
+        if panelist_password is not None:
+            body['panelistPassword'] = panelist_password
+        if enable_automatic_lock is not None:
+            body['enableAutomaticLock'] = enable_automatic_lock
+        if automatic_lock_minutes is not None:
+            body['automaticLockMinutes'] = automatic_lock_minutes
+        if allow_first_user_to_be_co_host is not None:
+            body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+        if allow_authenticated_devices is not None:
+            body['allowAuthenticatedDevices'] = allow_authenticated_devices
+        if send_email is not None:
+            body['sendEmail'] = send_email
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if site_url is not None:
+            body['siteUrl'] = site_url
+        if meeting_options is not None:
+            body['meetingOptions'] = loads(meeting_options.model_dump_json())
+        if attendee_privileges is not None:
+            body['attendeePrivileges'] = loads(attendee_privileges.model_dump_json())
+        if integration_tags is not None:
+            body['integrationTags'] = integration_tags
+        if enabled_breakout_sessions is not None:
+            body['enabledBreakoutSessions'] = enabled_breakout_sessions
+        if tracking_codes is not None:
+            body['trackingCodes'] = loads(TypeAdapter(list[TrackingCodeItemForCreateMeetingObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
+        if enabled_audio_watermark is not None:
+            body['enabledAudioWatermark'] = enabled_audio_watermark
+        if audio_connection_options is not None:
+            body['audioConnectionOptions'] = loads(audio_connection_options.model_dump_json())
+        if require_attendee_login is not None:
+            body['requireAttendeeLogin'] = require_attendee_login
+        if restrict_to_invitees is not None:
+            body['restrictToInvitees'] = restrict_to_invitees
         url = self.ep(f'{meeting_id}')
         data = super().put(url, json=body)
         r = MeetingSeriesObject.model_validate(data)
@@ -4026,9 +4145,10 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         url = self.ep(f'{meeting_id}')
         super().delete(url, params=params)
 
-    def join_a_meeting(self, meeting_id: str, meeting_number: str, web_link: str, join_directly: bool, email: str,
-                       display_name: str, password: str, expiration_minutes: int, registration_id: Union[str,
-                       datetime]) -> JoinMeetingLinkObject:
+    def join_a_meeting(self, meeting_id: str = None, meeting_number: str = None, web_link: str = None,
+                       join_directly: bool = None, email: str = None, display_name: str = None, password: str = None,
+                       expiration_minutes: int = None, registration_id: Union[str,
+                       datetime] = None) -> JoinMeetingLinkObject:
         """
         Join a Meeting
 
@@ -4082,15 +4202,24 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :rtype: :class:`JoinMeetingLinkObject`
         """
         body = dict()
-        body['meetingId'] = meeting_id
-        body['meetingNumber'] = meeting_number
-        body['webLink'] = web_link
-        body['joinDirectly'] = join_directly
-        body['email'] = email
-        body['displayName'] = display_name
-        body['password'] = password
-        body['expirationMinutes'] = expiration_minutes
-        body['registrationId'] = registration_id
+        if meeting_id is not None:
+            body['meetingId'] = meeting_id
+        if meeting_number is not None:
+            body['meetingNumber'] = meeting_number
+        if web_link is not None:
+            body['webLink'] = web_link
+        if join_directly is not None:
+            body['joinDirectly'] = join_directly
+        if email is not None:
+            body['email'] = email
+        if display_name is not None:
+            body['displayName'] = display_name
+        if password is not None:
+            body['password'] = password
+        if expiration_minutes is not None:
+            body['expirationMinutes'] = expiration_minutes
+        if registration_id is not None:
+            body['registrationId'] = registration_id
         url = self.ep('join')
         data = super().post(url, json=body)
         r = JoinMeetingLinkObject.model_validate(data)
@@ -4235,9 +4364,12 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         params = {}
         params['meetingId'] = meeting_id
         body = dict()
-        body['recordingStarted'] = recording_started
-        body['recordingPaused'] = recording_paused
-        body['locked'] = locked
+        if recording_started is not None:
+            body['recordingStarted'] = recording_started
+        if recording_paused is not None:
+            body['recordingPaused'] = recording_paused
+        if locked is not None:
+            body['locked'] = locked
         url = self.ep('controls')
         data = super().put(url, params=params, json=body)
         r = Control.model_validate(data)
@@ -4334,14 +4466,16 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         r = Registration.model_validate(data)
         return r
 
-    def update_meeting_registration_form(self, meeting_id: str, host_email: str, require_first_name: bool,
-                                         require_last_name: bool, require_email: bool, require_job_title: bool,
-                                         require_company_name: bool, require_address1: bool, require_address2: bool,
-                                         require_city: bool, require_state: bool, require_zip_code: bool,
-                                         require_country_region: bool, require_work_phone: bool, require_fax: bool,
-                                         max_register_num: int,
-                                         customized_questions: list[CustomizedQuestionForCreateMeeting],
-                                         rules: list[StandardRegistrationApproveRule]) -> Registration:
+    def update_meeting_registration_form(self, meeting_id: str, host_email: str = None,
+                                         require_first_name: bool = None, require_last_name: bool = None,
+                                         require_email: bool = None, require_job_title: bool = None,
+                                         require_company_name: bool = None, require_address1: bool = None,
+                                         require_address2: bool = None, require_city: bool = None,
+                                         require_state: bool = None, require_zip_code: bool = None,
+                                         require_country_region: bool = None, require_work_phone: bool = None,
+                                         require_fax: bool = None, max_register_num: int = None,
+                                         customized_questions: list[CustomizedQuestionForCreateMeeting] = None,
+                                         rules: list[StandardRegistrationApproveRule] = None) -> Registration:
         """
         Update Meeting Registration Form
 
@@ -4404,23 +4538,40 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :rtype: :class:`Registration`
         """
         body = dict()
-        body['hostEmail'] = host_email
-        body['requireFirstName'] = require_first_name
-        body['requireLastName'] = require_last_name
-        body['requireEmail'] = require_email
-        body['requireJobTitle'] = require_job_title
-        body['requireCompanyName'] = require_company_name
-        body['requireAddress1'] = require_address1
-        body['requireAddress2'] = require_address2
-        body['requireCity'] = require_city
-        body['requireState'] = require_state
-        body['requireZipCode'] = require_zip_code
-        body['requireCountryRegion'] = require_country_region
-        body['requireWorkPhone'] = require_work_phone
-        body['requireFax'] = require_fax
-        body['maxRegisterNum'] = max_register_num
-        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedQuestionForCreateMeeting]).dump_json(customized_questions, by_alias=True, exclude_none=True))
-        body['rules'] = loads(TypeAdapter(list[StandardRegistrationApproveRule]).dump_json(rules, by_alias=True, exclude_none=True))
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if require_first_name is not None:
+            body['requireFirstName'] = require_first_name
+        if require_last_name is not None:
+            body['requireLastName'] = require_last_name
+        if require_email is not None:
+            body['requireEmail'] = require_email
+        if require_job_title is not None:
+            body['requireJobTitle'] = require_job_title
+        if require_company_name is not None:
+            body['requireCompanyName'] = require_company_name
+        if require_address1 is not None:
+            body['requireAddress1'] = require_address1
+        if require_address2 is not None:
+            body['requireAddress2'] = require_address2
+        if require_city is not None:
+            body['requireCity'] = require_city
+        if require_state is not None:
+            body['requireState'] = require_state
+        if require_zip_code is not None:
+            body['requireZipCode'] = require_zip_code
+        if require_country_region is not None:
+            body['requireCountryRegion'] = require_country_region
+        if require_work_phone is not None:
+            body['requireWorkPhone'] = require_work_phone
+        if require_fax is not None:
+            body['requireFax'] = require_fax
+        if max_register_num is not None:
+            body['maxRegisterNum'] = max_register_num
+        if customized_questions is not None:
+            body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedQuestionForCreateMeeting]).dump_json(customized_questions, by_alias=True, exclude_none=True))
+        if rules is not None:
+            body['rules'] = loads(TypeAdapter(list[StandardRegistrationApproveRule]).dump_json(rules, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registration')
         data = super().put(url, json=body)
         r = Registration.model_validate(data)
@@ -4443,10 +4594,11 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         super().delete(url)
 
     def register_a_meeting_registrant(self, meeting_id: str, first_name: str, last_name: str, email: str,
-                                      send_email: bool, job_title: str, company_name: str, address1: str,
-                                      address2: str, city: str, state: str, zip_code: int, country_region: str,
-                                      work_phone: str, fax: str, customized_questions: list[CustomizedRegistrant],
-                                      current: bool = None, host_email: str = None) -> RegistrantCreateResponse:
+                                      current: bool = None, host_email: str = None, send_email: bool = None,
+                                      job_title: str = None, company_name: str = None, address1: str = None,
+                                      address2: str = None, city: str = None, state: str = None, zip_code: int = None,
+                                      country_region: str = None, work_phone: str = None, fax: str = None,
+                                      customized_questions: list[CustomizedRegistrant] = None) -> RegistrantCreateResponse:
         """
         Register a Meeting Registrant
 
@@ -4466,6 +4618,16 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :type last_name: str
         :param email: The registrant's email.
         :type email: str
+        :param current: Whether or not to retrieve only the current scheduled meeting of the meeting series, i.e. the
+            meeting ready to join or start or the upcoming meeting of the meeting series. If it's `true`, return
+            details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start
+            or the upcoming scheduled meeting of the meeting series. If it's `false` or not specified, return details
+            for the entire meeting series. This parameter only applies to meeting series.
+        :type current: bool
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
+            they manage and the API will return details for a meeting that is hosted by that user.
+        :type host_email: str
         :param send_email: If `true` send email to the registrant. Default: `true`.
         :type send_email: bool
         :param job_title: The registrant's job title. Registration options define whether or not this is required.
@@ -4495,16 +4657,6 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :param customized_questions: The registrant's answers for customized questions. Registration options define
             whether or not this is required.
         :type customized_questions: list[CustomizedRegistrant]
-        :param current: Whether or not to retrieve only the current scheduled meeting of the meeting series, i.e. the
-            meeting ready to join or start or the upcoming meeting of the meeting series. If it's `true`, return
-            details for the current scheduled meeting of the series, i.e. the scheduled meeting ready to join or start
-            or the upcoming scheduled meeting of the meeting series. If it's `false` or not specified, return details
-            for the entire meeting series. This parameter only applies to meeting series.
-        :type current: bool
-        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
-            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
-            they manage and the API will return details for a meeting that is hosted by that user.
-        :type host_email: str
         :rtype: :class:`RegistrantCreateResponse`
         """
         params = {}
@@ -4516,18 +4668,30 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         body['firstName'] = first_name
         body['lastName'] = last_name
         body['email'] = email
-        body['sendEmail'] = send_email
-        body['jobTitle'] = job_title
-        body['companyName'] = company_name
-        body['address1'] = address1
-        body['address2'] = address2
-        body['city'] = city
-        body['state'] = state
-        body['zipCode'] = zip_code
-        body['countryRegion'] = country_region
-        body['workPhone'] = work_phone
-        body['fax'] = fax
-        body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedRegistrant]).dump_json(customized_questions, by_alias=True, exclude_none=True))
+        if send_email is not None:
+            body['sendEmail'] = send_email
+        if job_title is not None:
+            body['jobTitle'] = job_title
+        if company_name is not None:
+            body['companyName'] = company_name
+        if address1 is not None:
+            body['address1'] = address1
+        if address2 is not None:
+            body['address2'] = address2
+        if city is not None:
+            body['city'] = city
+        if state is not None:
+            body['state'] = state
+        if zip_code is not None:
+            body['zipCode'] = zip_code
+        if country_region is not None:
+            body['countryRegion'] = country_region
+        if work_phone is not None:
+            body['workPhone'] = work_phone
+        if fax is not None:
+            body['fax'] = fax
+        if customized_questions is not None:
+            body['customizedQuestions'] = loads(TypeAdapter(list[CustomizedRegistrant]).dump_json(customized_questions, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registrants')
         data = super().post(url, params=params, json=body)
         r = RegistrantCreateResponse.model_validate(data)
@@ -4568,7 +4732,8 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['items'] = loads(TypeAdapter(list[RegistrantFormObject]).dump_json(items, by_alias=True, exclude_none=True))
+        if items is not None:
+            body['items'] = loads(TypeAdapter(list[RegistrantFormObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registrants/bulkInsert')
         data = super().post(url, params=params, json=body)
         r = TypeAdapter(list[RegistrantCreateResponse]).validate_python(data['items'])
@@ -4668,9 +4833,10 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         url = self.ep(f'{meeting_id}/registrants')
         return self.session.follow_pagination(url=url, model=Registrant, item_key='items', params=params)
 
-    def query_meeting_registrants(self, meeting_id: str, status: RegistrantStatus,
-                                  order_type: QueryRegistrantsOrderType, order_by: QueryRegistrantsOrderBy,
-                                  emails: list[str], current: bool = None, host_email: str = None,
+    def query_meeting_registrants(self, meeting_id: str, emails: list[str], current: bool = None,
+                                  host_email: str = None, status: RegistrantStatus = None,
+                                  order_type: QueryRegistrantsOrderType = None,
+                                  order_by: QueryRegistrantsOrderBy = None,
                                   **params) -> Generator[Registrant, None, None]:
         """
         Query Meeting Registrants
@@ -4683,12 +4849,6 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
             supported. See the `Meetings Overview
             <https://developer.webex.com/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances>`_ for more information about meeting types.
         :type meeting_id: str
-        :param status: Registrant's status.
-        :type status: RegistrantStatus
-        :param order_type: Sort order for the registrants.
-        :type order_type: QueryRegistrantsOrderType
-        :param order_by: Registrant ordering field. Ordered by `registrationTime` by default.
-        :type order_by: QueryRegistrantsOrderBy
         :param emails: List of registrant email addresses.
         :type emails: list[str]
         :param current: Whether or not to retrieve only the current scheduled meeting of the meeting series, i.e. the
@@ -4701,6 +4861,12 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for a meeting that is hosted by that user.
         :type host_email: str
+        :param status: Registrant's status.
+        :type status: RegistrantStatus
+        :param order_type: Sort order for the registrants.
+        :type order_type: QueryRegistrantsOrderType
+        :param order_by: Registrant ordering field. Ordered by `registrationTime` by default.
+        :type order_by: QueryRegistrantsOrderBy
         :return: Generator yielding :class:`Registrant` instances
         """
         if current is not None:
@@ -4708,9 +4874,12 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['status'] = enum_str(status)
-        body['orderType'] = enum_str(order_type)
-        body['orderBy'] = enum_str(order_by)
+        if status is not None:
+            body['status'] = enum_str(status)
+        if order_type is not None:
+            body['orderType'] = enum_str(order_type)
+        if order_by is not None:
+            body['orderBy'] = enum_str(order_by)
         body['emails'] = emails
         url = self.ep(f'{meeting_id}/registrants/query')
         return self.session.follow_pagination(url=url, model=Registrant, item_key='items', params=params, json=body)
@@ -4755,8 +4924,10 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         body = dict()
-        body['sendEmail'] = send_email
-        body['registrants'] = loads(TypeAdapter(list[Registrants]).dump_json(registrants, by_alias=True, exclude_none=True))
+        if send_email is not None:
+            body['sendEmail'] = send_email
+        if registrants is not None:
+            body['registrants'] = loads(TypeAdapter(list[Registrants]).dump_json(registrants, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/registrants/{status_op_type}')
         super().post(url, params=params, json=body)
 
@@ -4820,9 +4991,9 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         r = MeetingSeriesObjectSimultaneousInterpretation.model_validate(data)
         return r
 
-    def create_a_meeting_interpreter(self, meeting_id: str, language_code1: str, language_code2: str, email: str,
-                                     display_name: str, host_email: str,
-                                     send_email: bool) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
+    def create_a_meeting_interpreter(self, meeting_id: str, language_code1: str, language_code2: str,
+                                     email: str = None, display_name: str = None, host_email: str = None,
+                                     send_email: bool = None) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
         """
         Create a Meeting Interpreter
 
@@ -4859,10 +5030,14 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         body = dict()
         body['languageCode1'] = language_code1
         body['languageCode2'] = language_code2
-        body['email'] = email
-        body['displayName'] = display_name
-        body['hostEmail'] = host_email
-        body['sendEmail'] = send_email
+        if email is not None:
+            body['email'] = email
+        if display_name is not None:
+            body['displayName'] = display_name
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if send_email is not None:
+            body['sendEmail'] = send_email
         url = self.ep(f'{meeting_id}/interpreters')
         data = super().post(url, json=body)
         r = InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.model_validate(data)
@@ -4930,8 +5105,9 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         return r
 
     def update_a_meeting_interpreter(self, meeting_id: str, interpreter_id: str, language_code1: str,
-                                     language_code2: str, email: str, display_name: str, host_email: str,
-                                     send_email: bool) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
+                                     language_code2: str, email: str = None, display_name: str = None,
+                                     host_email: str = None,
+                                     send_email: bool = None) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
         """
         Update a Meeting Interpreter
 
@@ -4969,10 +5145,14 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         body = dict()
         body['languageCode1'] = language_code1
         body['languageCode2'] = language_code2
-        body['email'] = email
-        body['displayName'] = display_name
-        body['hostEmail'] = host_email
-        body['sendEmail'] = send_email
+        if email is not None:
+            body['email'] = email
+        if display_name is not None:
+            body['displayName'] = display_name
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if send_email is not None:
+            body['sendEmail'] = send_email
         url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
         data = super().put(url, json=body)
         r = InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.model_validate(data)
@@ -5006,8 +5186,9 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
         super().delete(url, params=params)
 
-    def update_meeting_breakout_sessions(self, meeting_id: str, host_email: str, send_email: bool,
-                                         items: list[BreakoutSessionObject]) -> list[GetBreakoutSessionObject]:
+    def update_meeting_breakout_sessions(self, meeting_id: str, items: list[BreakoutSessionObject],
+                                         host_email: str = None,
+                                         send_email: bool = None) -> list[GetBreakoutSessionObject]:
         """
         Update Meeting Breakout Sessions
 
@@ -5018,13 +5199,6 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
             `personal room
             <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting.
         :type meeting_id: str
-        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
-            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
-            they manage and the API will return details for a meeting that is hosted by that user.
-        :type host_email: str
-        :param send_email: Whether or not to send emails to host and invitees. It is an optional field and default
-            value is true.
-        :type send_email: bool
         :param items: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They
             allow a subset of participants to collaborate and share ideas over audio and video. Use breakout sessions
             for workshops, classrooms, or for when you need a moment to talk privately with a few participants outside
@@ -5032,11 +5206,20 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
             In webinars, if hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to
             `panelist`. Breakout session is not supported for a meeting with simultaneous interpretation.
         :type items: list[BreakoutSessionObject]
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
+            they manage and the API will return details for a meeting that is hosted by that user.
+        :type host_email: str
+        :param send_email: Whether or not to send emails to host and invitees. It is an optional field and default
+            value is true.
+        :type send_email: bool
         :rtype: list[GetBreakoutSessionObject]
         """
         body = dict()
-        body['hostEmail'] = host_email
-        body['sendEmail'] = send_email
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if send_email is not None:
+            body['sendEmail'] = send_email
         body['items'] = loads(TypeAdapter(list[BreakoutSessionObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/breakoutSessions')
         data = super().put(url, json=body)
@@ -5163,9 +5346,9 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         url = self.ep(f'{meeting_id}/surveyResults')
         return self.session.follow_pagination(url=url, model=SurveyResultObject, item_key='items', params=params)
 
-    def get_meeting_survey_links(self, meeting_id: str, host_email: str, meeting_start_time_from: Union[str, datetime],
-                                 meeting_start_time_to: Union[str, datetime],
-                                 emails: list[str]) -> list[SurveyLinkObject]:
+    def get_meeting_survey_links(self, meeting_id: str, emails: list[str], host_email: str = None,
+                                 meeting_start_time_from: Union[str, datetime] = None,
+                                 meeting_start_time_to: Union[str, datetime] = None) -> list[SurveyLinkObject]:
         """
         Get Meeting Survey Links
 
@@ -5180,6 +5363,8 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :param meeting_id: Unique identifier for the meeting. Only applies to webinars. Meetings and personal room
             meetings are not supported.
         :type meeting_id: str
+        :param emails: Participants' email list. The maximum size of `emails` is 100.
+        :type emails: list[str]
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin on-behalf-of scopes. An admin can specify the email of the meeting host who
             is in a site he manages and the API returns post survey links on behalf of the meeting host.
@@ -5202,14 +5387,15 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
             equals `meetingStartTimeFrom` plus `1` month; if `meetingStartTimeFrom` is also not specified, the default
             value for `meetingStartTimeTo` is the current date and time.
         :type meeting_start_time_to: Union[str, datetime]
-        :param emails: Participants' email list. The maximum size of `emails` is 100.
-        :type emails: list[str]
         :rtype: list[SurveyLinkObject]
         """
         body = dict()
-        body['hostEmail'] = host_email
-        body['meetingStartTimeFrom'] = meeting_start_time_from
-        body['meetingStartTimeTo'] = meeting_start_time_to
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if meeting_start_time_from is not None:
+            body['meetingStartTimeFrom'] = meeting_start_time_from
+        if meeting_start_time_to is not None:
+            body['meetingStartTimeTo'] = meeting_start_time_to
         body['emails'] = emails
         url = self.ep(f'{meeting_id}/surveyLinks')
         data = super().post(url, json=body)
@@ -5238,9 +5424,12 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         :rtype: list[InvitationSourceObject]
         """
         body = dict()
-        body['hostEmail'] = host_email
-        body['personId'] = person_id
-        body['items'] = loads(TypeAdapter(list[InvitationSourceCreateObject]).dump_json(items, by_alias=True, exclude_none=True))
+        if host_email is not None:
+            body['hostEmail'] = host_email
+        if person_id is not None:
+            body['personId'] = person_id
+        if items is not None:
+            body['items'] = loads(TypeAdapter(list[InvitationSourceCreateObject]).dump_json(items, by_alias=True, exclude_none=True))
         url = self.ep(f'{meeting_id}/invitationSources')
         data = super().post(url, json=body)
         r = TypeAdapter(list[InvitationSourceObject]).validate_python(data['items'])
@@ -5318,8 +5507,8 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         r = MeetingTrackingCodesObject.model_validate(data)
         return r
 
-    def reassign_meetings_to_a_new_host(self, host_email: str = None,
-                                        meeting_ids: list[str] = None) -> list[ReassignMeetingResponseObject]:
+    def reassign_meetings_to_a_new_host(self, host_email: str,
+                                        meeting_ids: list[str]) -> list[ReassignMeetingResponseObject]:
         """
         Reassign Meetings to a New Host
 

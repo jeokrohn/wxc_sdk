@@ -92,8 +92,10 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         body['userId'] = user_id
         body['spEnterpriseId'] = sp_enterprise_id
         body['displayName'] = display_name
-        body['primaryPhoneNumber'] = primary_phone_number
-        body['extension'] = extension
+        if primary_phone_number is not None:
+            body['primaryPhoneNumber'] = primary_phone_number
+        if extension is not None:
+            body['extension'] = extension
         url = self.ep()
         data = super().post(url, json=body)
         r = WorkspaceResponse.model_validate(data)
@@ -117,9 +119,12 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :rtype: :class:`WorkspaceResponse`
         """
         body = dict()
-        body['userId'] = user_id
-        body['primaryPhoneNumber'] = primary_phone_number
-        body['extension'] = extension
+        if user_id is not None:
+            body['userId'] = user_id
+        if primary_phone_number is not None:
+            body['primaryPhoneNumber'] = primary_phone_number
+        if extension is not None:
+            body['extension'] = extension
         url = self.ep(f'{workspace_id}')
         data = super().put(url, json=body)
         r = WorkspaceResponse.model_validate(data)

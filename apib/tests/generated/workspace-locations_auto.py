@@ -156,8 +156,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = TypeAdapter(list[Location]).validate_python(data['items'])
         return r
 
-    def create_a_workspace_location(self, display_name: str, address: str, country_code: str, city_name: str,
-                                    latitude: int, longitude: int, notes: str) -> Location:
+    def create_a_workspace_location(self, display_name: str, address: str, country_code: str, latitude: int,
+                                    longitude: int, city_name: str = None, notes: str = None) -> Location:
         """
         Create a Workspace Location
 
@@ -171,12 +171,12 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type address: str
         :param country_code: The location country code (ISO 3166-1).
         :type country_code: str
-        :param city_name: The location city name.
-        :type city_name: str
         :param latitude: The location latitude.
         :type latitude: int
         :param longitude: The location longitude.
         :type longitude: int
+        :param city_name: The location city name.
+        :type city_name: str
         :param notes: Notes associated with the location.
         :type notes: str
         :rtype: :class:`Location`
@@ -185,10 +185,12 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         body['displayName'] = display_name
         body['address'] = address
         body['countryCode'] = country_code
-        body['cityName'] = city_name
+        if city_name is not None:
+            body['cityName'] = city_name
         body['latitude'] = latitude
         body['longitude'] = longitude
-        body['notes'] = notes
+        if notes is not None:
+            body['notes'] = notes
         url = self.ep()
         data = super().post(url, json=body)
         r = Location.model_validate(data)
@@ -210,9 +212,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = Location.model_validate(data)
         return r
 
-    def update_a_workspace_location(self, location_id: str, id: str, display_name: str, address: str,
-                                    country_code: str, city_name: str, latitude: int, longitude: int,
-                                    notes: str) -> Location:
+    def update_a_workspace_location(self, location_id: str, display_name: str, address: str, country_code: str,
+                                    latitude: int, longitude: int, id: str = None, city_name: str = None,
+                                    notes: str = None) -> Location:
         """
         Update a Workspace Location
 
@@ -225,33 +227,36 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
-        :param id: Unique identifier for the location.
-        :type id: str
         :param display_name: A friendly name for the location.
         :type display_name: str
         :param address: The location address.
         :type address: str
         :param country_code: The location country code (ISO 3166-1).
         :type country_code: str
-        :param city_name: The location city name.
-        :type city_name: str
         :param latitude: The location latitude.
         :type latitude: int
         :param longitude: The location longitude.
         :type longitude: int
+        :param id: Unique identifier for the location.
+        :type id: str
+        :param city_name: The location city name.
+        :type city_name: str
         :param notes: Notes associated with the location.
         :type notes: str
         :rtype: :class:`Location`
         """
         body = dict()
-        body['id'] = id
+        if id is not None:
+            body['id'] = id
         body['displayName'] = display_name
         body['address'] = address
         body['countryCode'] = country_code
-        body['cityName'] = city_name
+        if city_name is not None:
+            body['cityName'] = city_name
         body['latitude'] = latitude
         body['longitude'] = longitude
-        body['notes'] = notes
+        if notes is not None:
+            body['notes'] = notes
         url = self.ep(f'{location_id}')
         data = super().put(url, json=body)
         r = Location.model_validate(data)
@@ -288,7 +293,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = TypeAdapter(list[Floor]).validate_python(data['items'])
         return r
 
-    def create_a_workspace_location_floor(self, location_id: str, floor_number: int, display_name: str) -> Floor:
+    def create_a_workspace_location_floor(self, location_id: str, floor_number: int,
+                                          display_name: str = None) -> Floor:
         """
         Create a Workspace Location Floor
 
@@ -306,7 +312,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         """
         body = dict()
         body['floorNumber'] = floor_number
-        body['displayName'] = display_name
+        if display_name is not None:
+            body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors')
         data = super().post(url, json=body)
         r = Floor.model_validate(data)
@@ -331,7 +338,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         return r
 
     def update_a_workspace_location_floor(self, location_id: str, floor_id: str, floor_number: int,
-                                          display_name: str) -> Floor:
+                                          display_name: str = None) -> Floor:
         """
         Update a Workspace Location Floor
 
@@ -353,7 +360,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         """
         body = dict()
         body['floorNumber'] = floor_number
-        body['displayName'] = display_name
+        if display_name is not None:
+            body['displayName'] = display_name
         url = self.ep(f'{location_id}/floors/{floor_id}')
         data = super().put(url, json=body)
         r = Floor.model_validate(data)

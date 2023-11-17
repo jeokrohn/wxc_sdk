@@ -219,12 +219,18 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         body = dict()
         body['title'] = title
-        body['teamId'] = team_id
-        body['classificationId'] = classification_id
-        body['isLocked'] = is_locked
-        body['isPublic'] = is_public
-        body['description'] = description
-        body['isAnnouncementOnly'] = is_announcement_only
+        if team_id is not None:
+            body['teamId'] = team_id
+        if classification_id is not None:
+            body['classificationId'] = classification_id
+        if is_locked is not None:
+            body['isLocked'] = is_locked
+        if is_public is not None:
+            body['isPublic'] = is_public
+        if description is not None:
+            body['description'] = description
+        if is_announcement_only is not None:
+            body['isAnnouncementOnly'] = is_announcement_only
         url = self.ep()
         data = super().post(url, json=body)
         r = Room.model_validate(data)
@@ -307,13 +313,20 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         body = dict()
         body['title'] = title
-        body['classificationId'] = classification_id
-        body['teamId'] = team_id
-        body['isLocked'] = is_locked
-        body['isPublic'] = is_public
-        body['description'] = description
-        body['isAnnouncementOnly'] = is_announcement_only
-        body['isReadOnly'] = is_read_only
+        if classification_id is not None:
+            body['classificationId'] = classification_id
+        if team_id is not None:
+            body['teamId'] = team_id
+        if is_locked is not None:
+            body['isLocked'] = is_locked
+        if is_public is not None:
+            body['isPublic'] = is_public
+        if description is not None:
+            body['description'] = description
+        if is_announcement_only is not None:
+            body['isAnnouncementOnly'] = is_announcement_only
+        if is_read_only is not None:
+            body['isReadOnly'] = is_read_only
         url = self.ep(f'{room_id}')
         data = super().put(url, json=body)
         r = Room.model_validate(data)

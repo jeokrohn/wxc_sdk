@@ -273,7 +273,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['destination'] = destination
-        body['endpointId'] = endpoint_id
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
         url = self.ep('dial')
         data = super().post(url, json=body)
         r = DialResponse.model_validate(data)
@@ -298,7 +299,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        body['endpointId'] = endpoint_id
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
         url = self.ep('answer')
         super().post(url, json=body)
 
@@ -317,7 +319,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        body['action'] = enum_str(action)
+        if action is not None:
+            body['action'] = enum_str(action)
         url = self.ep('reject')
         super().post(url, json=body)
 
@@ -386,8 +389,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        body['destination'] = destination
-        body['toVoicemail'] = to_voicemail
+        if destination is not None:
+            body['destination'] = destination
+        if to_voicemail is not None:
+            body['toVoicemail'] = to_voicemail
         url = self.ep('divert')
         super().post(url, json=body)
 
@@ -427,9 +432,12 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: None
         """
         body = dict()
-        body['callId1'] = call_id1
-        body['callId2'] = call_id2
-        body['destination'] = destination
+        if call_id1 is not None:
+            body['callId1'] = call_id1
+        if call_id2 is not None:
+            body['callId2'] = call_id2
+        if destination is not None:
+            body['destination'] = destination
         url = self.ep('transfer')
         super().post(url, json=body)
 
@@ -454,8 +462,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        body['destination'] = destination
-        body['isGroupPark'] = is_group_park
+        if destination is not None:
+            body['destination'] = destination
+        if is_group_park is not None:
+            body['isGroupPark'] = is_group_park
         url = self.ep('park')
         data = super().post(url, json=body)
         r = PartyInformation.model_validate(data['parkedAgainst'])
@@ -481,8 +491,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: :class:`DialResponse`
         """
         body = dict()
-        body['destination'] = destination
-        body['endpointId'] = endpoint_id
+        if destination is not None:
+            body['destination'] = destination
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
         url = self.ep('retrieve')
         data = super().post(url, json=body)
         r = DialResponse.model_validate(data)
@@ -500,7 +512,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
+        if call_id is not None:
+            body['callId'] = call_id
         url = self.ep('startRecording')
         super().post(url, json=body)
 
@@ -516,7 +529,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
+        if call_id is not None:
+            body['callId'] = call_id
         url = self.ep('stopRecording')
         super().post(url, json=body)
 
@@ -532,7 +546,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
+        if call_id is not None:
+            body['callId'] = call_id
         url = self.ep('pauseRecording')
         super().post(url, json=body)
 
@@ -548,7 +563,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
+        if call_id is not None:
+            body['callId'] = call_id
         url = self.ep('resumeRecording')
         super().post(url, json=body)
 
@@ -568,8 +584,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
-        body['dtmf'] = dtmf
+        if call_id is not None:
+            body['callId'] = call_id
+        if dtmf is not None:
+            body['dtmf'] = dtmf
         url = self.ep('transmitDtmf')
         super().post(url, json=body)
 
@@ -585,7 +603,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: None
         """
         body = dict()
-        body['callId'] = call_id
+        if call_id is not None:
+            body['callId'] = call_id
         url = self.ep('push')
         super().post(url, json=body)
 
@@ -609,8 +628,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :rtype: :class:`DialResponse`
         """
         body = dict()
-        body['target'] = target
-        body['endpointId'] = endpoint_id
+        if target is not None:
+            body['target'] = target
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
         url = self.ep('pickup')
         data = super().post(url, json=body)
         r = DialResponse.model_validate(data)
@@ -635,7 +656,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['target'] = target
-        body['endpointId'] = endpoint_id
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
         url = self.ep('bargeIn')
         data = super().post(url, json=body)
         r = DialResponse.model_validate(data)

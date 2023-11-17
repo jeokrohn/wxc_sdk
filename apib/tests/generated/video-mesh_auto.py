@@ -1733,7 +1733,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         return r
 
     def trigger_on_demand_test_for_cluster(self, cluster_id: str, type: TriggerOnDemandBodyType,
-                                           nodes: list[str]) -> TriggeredTestStatus1:
+                                           nodes: list[str] = None) -> TriggeredTestStatus1:
         """
         Trigger on-demand test for cluster
 
@@ -1751,7 +1751,8 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         """
         body = dict()
         body['type'] = enum_str(type)
-        body['nodes'] = nodes
+        if nodes is not None:
+            body['nodes'] = nodes
         url = self.ep(f'triggerTest/clusters/{cluster_id}')
         data = super().post(url, json=body)
         r = TriggeredTestStatus1.model_validate(data)

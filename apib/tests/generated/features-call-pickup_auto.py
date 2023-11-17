@@ -168,7 +168,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         url = self.ep(f'')
         return self.session.follow_pagination(url=url, model=ListCallPickupObject, item_key='callPickups', params=params)
 
-    def create_a_call_pickup(self, location_id: str, name: str, agents: list[str], org_id: str = None) -> str:
+    def create_a_call_pickup(self, location_id: str, name: str, agents: list[str] = None, org_id: str = None) -> str:
         """
         Create a Call Pickup
 
@@ -196,7 +196,8 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['agents'] = agents
+        if agents is not None:
+            body['agents'] = agents
         url = self.ep(f'')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -259,7 +260,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         r = GetCallPickupObject.model_validate(data)
         return r
 
-    def update_a_call_pickup(self, location_id: str, call_pickup_id: str, name: str, agents: list[str],
+    def update_a_call_pickup(self, location_id: str, call_pickup_id: str, name: str = None, agents: list[str] = None,
                              org_id: str = None) -> str:
         """
         Update a Call Pickup
@@ -289,8 +290,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['agents'] = agents
+        if name is not None:
+            body['name'] = name
+        if agents is not None:
+            body['agents'] = agents
         url = self.ep(f'{call_pickup_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']

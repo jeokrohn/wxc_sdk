@@ -317,8 +317,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks')
         return self.session.follow_pagination(url=url, model=ListCallParkObject, item_key='callParks', params=params)
 
-    def create_a_call_park(self, location_id: str, name: str, recall: PutRecallHuntGroupObject, agents: list[str],
-                           org_id: str = None) -> str:
+    def create_a_call_park(self, location_id: str, name: str, recall: PutRecallHuntGroupObject,
+                           agents: list[str] = None, org_id: str = None) -> str:
         """
         Create a Call Park
 
@@ -349,7 +349,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         body = dict()
         body['name'] = name
         body['recall'] = loads(recall.model_dump_json())
-        body['agents'] = agents
+        if agents is not None:
+            body['agents'] = agents
         url = self.ep(f'locations/{location_id}/callParks')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -412,8 +413,9 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         r = GetCallParkObject.model_validate(data)
         return r
 
-    def update_a_call_park(self, location_id: str, call_park_id: str, name: str, recall: PutRecallHuntGroupObject,
-                           agents: list[str], org_id: str = None) -> str:
+    def update_a_call_park(self, location_id: str, call_park_id: str, name: str = None,
+                           recall: PutRecallHuntGroupObject = None, agents: list[str] = None,
+                           org_id: str = None) -> str:
         """
         Update a Call Park
 
@@ -444,9 +446,12 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['recall'] = loads(recall.model_dump_json())
-        body['agents'] = agents
+        if name is not None:
+            body['name'] = name
+        if recall is not None:
+            body['recall'] = loads(recall.model_dump_json())
+        if agents is not None:
+            body['agents'] = agents
         url = self.ep(f'locations/{location_id}/callParks/{call_park_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
@@ -561,8 +566,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         r = GetCallParkSettingsObject.model_validate(data)
         return r
 
-    def update_call_park_settings(self, location_id: str, call_park_recall: PutRecallHuntGroupObject,
-                                  call_park_settings: CallParkSettingsObject, org_id: str = None):
+    def update_call_park_settings(self, location_id: str, call_park_recall: PutRecallHuntGroupObject = None,
+                                  call_park_settings: CallParkSettingsObject = None, org_id: str = None):
         """
         Update Call Park settings
 
@@ -587,8 +592,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['callParkRecall'] = loads(call_park_recall.model_dump_json())
-        body['callParkSettings'] = loads(call_park_settings.model_dump_json())
+        if call_park_recall is not None:
+            body['callParkRecall'] = loads(call_park_recall.model_dump_json())
+        if call_park_settings is not None:
+            body['callParkSettings'] = loads(call_park_settings.model_dump_json())
         url = self.ep(f'locations/{location_id}/callParks/settings')
         super().put(url, params=params, json=body)
 
@@ -739,8 +746,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParkExtensions/{call_park_extension_id}')
         super().delete(url, params=params)
 
-    def update_a_call_park_extension(self, location_id: str, call_park_extension_id: str, name: str, extension: str,
-                                     org_id: str = None):
+    def update_a_call_park_extension(self, location_id: str, call_park_extension_id: str, name: str = None,
+                                     extension: str = None, org_id: str = None):
         """
         Update a Call Park Extension
 
@@ -771,7 +778,9 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['extension'] = extension
+        if name is not None:
+            body['name'] = name
+        if extension is not None:
+            body['extension'] = extension
         url = self.ep(f'locations/{location_id}/callParkExtensions/{call_park_extension_id}')
         super().put(url, params=params, json=body)

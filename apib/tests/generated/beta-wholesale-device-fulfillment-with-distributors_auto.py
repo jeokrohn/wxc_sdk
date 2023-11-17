@@ -302,7 +302,7 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         return self.session.follow_pagination(url=url, model=OrderResponse, item_key='items', params=params)
 
     def create_a_wholesale_device_order(self, description: str, org_id: str, shipping_details: OrderShippingDetails,
-                                        line_items: list[OrderRequestLineItem]) -> OrderResponse:
+                                        line_items: list[OrderRequestLineItem] = None) -> OrderResponse:
         """
         Create a Wholesale Device Order
 
@@ -322,7 +322,8 @@ class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesal
         body['description'] = description
         body['orgId'] = org_id
         body['shippingDetails'] = loads(shipping_details.model_dump_json())
-        body['lineItems'] = loads(TypeAdapter(list[OrderRequestLineItem]).dump_json(line_items, by_alias=True, exclude_none=True))
+        if line_items is not None:
+            body['lineItems'] = loads(TypeAdapter(list[OrderRequestLineItem]).dump_json(line_items, by_alias=True, exclude_none=True))
         url = self.ep('orders')
         data = super().post(url, json=body)
         r = OrderResponse.model_validate(data)

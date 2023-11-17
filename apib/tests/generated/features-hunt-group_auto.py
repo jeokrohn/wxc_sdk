@@ -583,11 +583,11 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep('huntGroups')
         return self.session.follow_pagination(url=url, model=ListHuntGroupObject, item_key='huntGroups', params=params)
 
-    def create_a_hunt_group(self, location_id: str, name: str, phone_number: str, extension: Union[str, datetime],
-                            language_code: str, first_name: str, last_name: str, time_zone: str,
-                            call_policies: PostHuntGroupCallPolicyObject,
+    def create_a_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject,
                             agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
-                            org_id: str = None) -> str:
+                            phone_number: str = None, extension: Union[str, datetime] = None,
+                            language_code: str = None, first_name: str = None, last_name: str = None,
+                            time_zone: str = None, org_id: str = None) -> str:
         """
         Create a Hunt Group
 
@@ -603,6 +603,12 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param name: Unique name for the hunt group.
         :type name: str
+        :param call_policies: Policy controlling how calls are routed to agents.
+        :type call_policies: PostHuntGroupCallPolicyObject
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
+        :param enabled: Whether or not the hunt group is enabled.
+        :type enabled: bool
         :param phone_number: Primary phone number of the hunt group. Either phone number or extension are required.
         :type phone_number: str
         :param extension: Primary phone extension of the hunt group. Either phone number or extension are required.
@@ -616,12 +622,6 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
-        :param call_policies: Policy controlling how calls are routed to agents.
-        :type call_policies: PostHuntGroupCallPolicyObject
-        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
-        :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
-        :param enabled: Whether or not the hunt group is enabled.
-        :type enabled: bool
         :param org_id: Create the hunt group for this organization.
         :type org_id: str
         :rtype: str
@@ -631,12 +631,18 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
@@ -700,11 +706,12 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         r = GetHuntGroupObject.model_validate(data)
         return r
 
-    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str, phone_number: str,
-                            extension: Union[str, datetime], distinctive_ring: bool,
-                            alternate_numbers: list[AlternateNumbersWithPattern], language_code: str, first_name: str,
-                            last_name: str, time_zone: str, call_policies: PostHuntGroupCallPolicyObject,
-                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
+    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str = None, phone_number: str = None,
+                            extension: Union[str, datetime] = None, distinctive_ring: bool = None,
+                            alternate_numbers: list[AlternateNumbersWithPattern] = None, language_code: str = None,
+                            first_name: str = None, last_name: str = None, time_zone: str = None,
+                            call_policies: PostHuntGroupCallPolicyObject = None,
+                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject] = None, enabled: bool = None,
                             org_id: str = None):
         """
         Update a Hunt Group
@@ -757,18 +764,30 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['distinctiveRing'] = distinctive_ring
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
-        body['languageCode'] = language_code
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['timeZone'] = time_zone
-        body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
-        body['enabled'] = enabled
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if distinctive_ring is not None:
+            body['distinctiveRing'] = distinctive_ring
+        if alternate_numbers is not None:
+            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if call_policies is not None:
+            body['callPolicies'] = loads(call_policies.model_dump_json())
+        if agents is not None:
+            body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        if enabled is not None:
+            body['enabled'] = enabled
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)
 
@@ -799,7 +818,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         return r
 
     def update_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding,
+                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
                                                          org_id: str = None):
         """
         Update Call Forwarding Settings for a Hunt Group
@@ -823,16 +842,17 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['callForwarding'] = loads(call_forwarding.model_dump_json())
+        if call_forwarding is not None:
+            body['callForwarding'] = loads(call_forwarding.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
         super().put(url, params=params, json=body)
 
     def create_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str,
-                                                                 enabled: bool, holiday_schedule: str,
-                                                                 business_schedule: str,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
                                                                  calls_from: CreateForwardingRuleObjectCallsFrom,
                                                                  calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 enabled: bool = None, holiday_schedule: str = None,
+                                                                 business_schedule: str = None,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
                                                                  org_id: str = None) -> str:
         """
         Create a Selective Call Forwarding Rule for a Hunt Group
@@ -855,6 +875,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type hunt_group_id: str
         :param name: Unique name for the selective rule in the hunt group.
         :type name: str
+        :param calls_from: Settings related to the rule matching based on incoming caller ID.
+        :type calls_from: CreateForwardingRuleObjectCallsFrom
+        :param calls_to: Settings related to the rule matching based on the destination number.
+        :type calls_to: CreateForwardingRuleObjectCallsTo
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
         :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
@@ -866,10 +890,6 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :param forward_to: Controls what happens when the rule matches including the destination number for the call
             forwarding.
         :type forward_to: CreateForwardingRuleObjectForwardTo
-        :param calls_from: Settings related to the rule matching based on incoming caller ID.
-        :type calls_from: CreateForwardingRuleObjectCallsFrom
-        :param calls_to: Settings related to the rule matching based on the destination number.
-        :type calls_to: CreateForwardingRuleObjectCallsTo
         :param org_id: Create the hunt group rule for this organization.
         :type org_id: str
         :rtype: str
@@ -879,10 +899,14 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['enabled'] = enabled
-        body['holidaySchedule'] = holiday_schedule
-        body['businessSchedule'] = business_schedule
-        body['forwardTo'] = loads(forward_to.model_dump_json())
+        if enabled is not None:
+            body['enabled'] = enabled
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if business_schedule is not None:
+            body['businessSchedule'] = business_schedule
+        if forward_to is not None:
+            body['forwardTo'] = loads(forward_to.model_dump_json())
         body['callsFrom'] = loads(calls_from.model_dump_json())
         body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules')
@@ -926,11 +950,12 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                                 rule_id: str, name: str, enabled: bool,
-                                                                 holiday_schedule: str, business_schedule: str,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo,
-                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
-                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
+                                                                 rule_id: str, name: str = None, enabled: bool = None,
+                                                                 holiday_schedule: str = None,
+                                                                 business_schedule: str = None,
+                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
+                                                                 calls_from: CreateForwardingRuleObjectCallsFrom = None,
+                                                                 calls_to: CreateForwardingRuleObjectCallsTo = None,
                                                                  org_id: str = None) -> str:
         """
         Update a Selective Call Forwarding Rule for a Hunt Group
@@ -978,13 +1003,20 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['enabled'] = enabled
-        body['holidaySchedule'] = holiday_schedule
-        body['businessSchedule'] = business_schedule
-        body['forwardTo'] = loads(forward_to.model_dump_json())
-        body['callsFrom'] = loads(calls_from.model_dump_json())
-        body['callsTo'] = loads(calls_to.model_dump_json())
+        if name is not None:
+            body['name'] = name
+        if enabled is not None:
+            body['enabled'] = enabled
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if business_schedule is not None:
+            body['businessSchedule'] = business_schedule
+        if forward_to is not None:
+            body['forwardTo'] = loads(forward_to.model_dump_json())
+        if calls_from is not None:
+            body['callsFrom'] = loads(calls_from.model_dump_json())
+        if calls_to is not None:
+            body['callsTo'] = loads(calls_to.model_dump_json())
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']

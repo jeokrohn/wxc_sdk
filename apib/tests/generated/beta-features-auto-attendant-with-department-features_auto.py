@@ -342,14 +342,16 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         r = GetAutoAttendantObject.model_validate(data)
         return r
 
-    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, phone_number: str,
-                                 extension: Union[str, datetime], first_name: str, last_name: str,
-                                 alternate_numbers: list[AlternateNumbersObject], language_code: str,
-                                 business_schedule: str, holiday_schedule: str,
-                                 extension_dialing: GetAutoAttendantObjectExtensionDialing,
-                                 name_dialing: GetAutoAttendantObjectExtensionDialing, time_zone: str,
-                                 business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject,
-                                 department: GetAutoAttendantObjectDepartment, org_id: str = None):
+    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, business_schedule: str,
+                                 name: str = None, phone_number: str = None, extension: Union[str, datetime] = None,
+                                 first_name: str = None, last_name: str = None,
+                                 alternate_numbers: list[AlternateNumbersObject] = None, language_code: str = None,
+                                 holiday_schedule: str = None,
+                                 extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
+                                 name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
+                                 business_hours_menu: HoursMenuObject = None,
+                                 after_hours_menu: HoursMenuObject = None,
+                                 department: GetAutoAttendantObjectDepartment = None, org_id: str = None):
         """
         Update an Auto Attendant
 
@@ -365,6 +367,8 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         :type location_id: str
         :param auto_attendant_id: Update an auto attendant with the matching ID.
         :type auto_attendant_id: str
+        :param business_schedule: Business hours for the auto attendant.
+        :type business_schedule: str
         :param name: Unique name for the auto attendant.
         :type name: str
         :param phone_number: Auto attendant phone number. Either phone number or extension should be present as
@@ -380,8 +384,6 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         :type alternate_numbers: list[AlternateNumbersObject]
         :param language_code: Language code for the auto attendant.
         :type language_code: str
-        :param business_schedule: Business hours for the auto attendant.
-        :type business_schedule: str
         :param holiday_schedule: Holiday schedule for the auto attendant.
         :type holiday_schedule: str
         :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
@@ -405,20 +407,34 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['name'] = name
-        body['phoneNumber'] = phone_number
-        body['extension'] = extension
-        body['firstName'] = first_name
-        body['lastName'] = last_name
-        body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
-        body['languageCode'] = language_code
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if alternate_numbers is not None:
+            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+        if language_code is not None:
+            body['languageCode'] = language_code
         body['businessSchedule'] = business_schedule
-        body['holidaySchedule'] = holiday_schedule
-        body['extensionDialing'] = enum_str(extension_dialing)
-        body['nameDialing'] = enum_str(name_dialing)
-        body['timeZone'] = time_zone
-        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
-        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
-        body['department'] = loads(department.model_dump_json())
+        if holiday_schedule is not None:
+            body['holidaySchedule'] = holiday_schedule
+        if extension_dialing is not None:
+            body['extensionDialing'] = enum_str(extension_dialing)
+        if name_dialing is not None:
+            body['nameDialing'] = enum_str(name_dialing)
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        if business_hours_menu is not None:
+            body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+        if after_hours_menu is not None:
+            body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+        if department is not None:
+            body['department'] = loads(department.model_dump_json())
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url, params=params, json=body)

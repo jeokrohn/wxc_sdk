@@ -69,7 +69,7 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         r = data['inboundPSTNCallsEnabled']
         return r
 
-    def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool,
+    def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool = None,
                                                     org_id: str = None):
         """
         Update the location compliance announcement
@@ -96,6 +96,7 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
+        if inbound_pstncalls_enabled is not None:
+            body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
         url = self.ep(f'')
         super().put(url, params=params, json=body)

@@ -182,9 +182,12 @@ class WebhooksApi(ApiChild, base='webhooks'):
         body['targetUrl'] = target_url
         body['resource'] = enum_str(resource)
         body['event'] = enum_str(event)
-        body['filter'] = filter
-        body['secret'] = secret
-        body['ownedBy'] = owned_by
+        if filter is not None:
+            body['filter'] = filter
+        if secret is not None:
+            body['secret'] = secret
+        if owned_by is not None:
+            body['ownedBy'] = owned_by
         url = self.ep()
         data = super().post(url, json=body)
         r = Webhook.model_validate(data)
@@ -240,9 +243,12 @@ class WebhooksApi(ApiChild, base='webhooks'):
         body = dict()
         body['name'] = name
         body['targetUrl'] = target_url
-        body['secret'] = secret
-        body['ownedBy'] = owned_by
-        body['status'] = enum_str(status)
+        if secret is not None:
+            body['secret'] = secret
+        if owned_by is not None:
+            body['ownedBy'] = owned_by
+        if status is not None:
+            body['status'] = enum_str(status)
         url = self.ep(f'{webhook_id}')
         data = super().put(url, json=body)
         r = Webhook.model_validate(data)

@@ -248,7 +248,7 @@ class GetTelephonyLocationObject(ApiModel):
     #: External Caller ID Name value. Unicode characters.
     #: example: 'Big Corp Denver'
     external_caller_id_name: Optional[str] = None
-    #: Limit on the number of people at the location, Read-Only.
+    #: Limit on the number of people at the location. Read-Only.
     #: example: 500000
     user_limit: Optional[int] = None
     #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to
@@ -259,6 +259,9 @@ class GetTelephonyLocationObject(ApiModel):
     #: Must dial to reach an outside line, default is None.
     #: example: 'Rcdn'
     outside_dial_digit: Optional[str] = None
+    #: True when enforcing outside dial digit at location level to make PSTN calls.
+    #: example: True
+    enforce_outside_dial_digit: Optional[bool] = None
     #: Must dial a prefix when calling between locations having same extension within same location.
     #: example: '2'
     routing_prefix: Optional[datetime] = None
@@ -281,6 +284,9 @@ class ListLocationObject(ApiModel):
     #: Must dial to reach an outside line, default is None.
     #: example: '12'
     outside_dial_digit: Optional[datetime] = None
+    #: True when enforcing outside dial digit at location level to make PSTN calls.
+    #: example: True
+    enforce_outside_dial_digit: Optional[bool] = None
     #: Must dial a prefix when calling between locations having the same extension within the same location.
     #: example: '2'
     routing_prefix: Optional[datetime] = None
@@ -360,10 +366,10 @@ class ExtentionStatusObject(ApiModel):
     #: Indicates the extention ID for the status.
     #: example: 1234
     extension: Optional[datetime] = None
-    #: Indicates the status for the given extention id.
+    #: Indicates the status for the given extention ID.
     #: example: VALID
     state: Optional[ExtensionStatusObjectState] = None
-    #: Error Code.
+    #: Error code.
     #: example: 59475
     error_code: Optional[int] = None
     #: example: The extension is not available. It is already assigned to a virtual extension
@@ -402,6 +408,9 @@ class PutTelephonyLocationObject(ApiModel):
     #: Must dial to reach an outside line. Default is None.
     #: example: '12'
     outside_dial_digit: Optional[datetime] = None
+    #: True when enforcing outside dial digit at location level to make PSTN calls.
+    #: example: True
+    enforce_outside_dial_digit: Optional[bool] = None
     #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
     #: example: '2'
     routing_prefix: Optional[datetime] = None
@@ -423,7 +432,7 @@ class RouteIdentity(ApiModel):
 
 
 class StatusOfExtensionsObject(ApiModel):
-    #: Status of the validated array of extensions
+    #: Status of the validated array of extensions.
     #: example: OK
     status: Optional[PostValidateExtensionResponseStatus] = None
     #: Array of extensions statuses.
@@ -573,7 +582,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
                                               connection: GetTelephonyLocationObjectConnection,
                                               external_caller_id_name: str, p_access_network_info: str,
                                               outside_dial_digit: Union[str, datetime], routing_prefix: Union[str,
-                                              datetime], charge_number: str, org_id: str = None):
+                                              datetime], charge_number: str, enforce_outside_dial_digit: bool = None,
+                                              org_id: str = None):
         """
         Update Location Webex Calling Details
 
@@ -607,6 +617,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :param charge_number: Chargeable number for the line placing the call. When this is set, all calls placed from
             this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
         :type charge_number: str
+        :param enforce_outside_dial_digit: True when enforcing outside dial digit at location level to make PSTN calls.
+        :type enforce_outside_dial_digit: bool
         :param org_id: Updating Webex Calling location attributes for this organization.
         :type org_id: str
         :rtype: None
@@ -621,13 +633,15 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         body['externalCallerIdName'] = external_caller_id_name
         body['pAccessNetworkInfo'] = p_access_network_info
         body['outsideDialDigit'] = outside_dial_digit
+        if enforce_outside_dial_digit is not None:
+            body['enforceOutsideDialDigit'] = enforce_outside_dial_digit
         body['routingPrefix'] = routing_prefix
         body['chargeNumber'] = charge_number
         url = self.ep(f'locations/{location_id}')
         super().put(url, params=params, json=body)
 
-    def change_announcement_language(self, location_id: str, agent_enabled: bool, service_enabled: bool,
-                                     announcement_language_code: str, org_id: str = None):
+    def change_announcement_language(self, location_id: str, announcement_language_code: str,
+                                     agent_enabled: bool = None, service_enabled: bool = None, org_id: str = None):
         """
         Change Announcement Language
 
@@ -642,12 +656,12 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
 
         :param location_id: Change announcement language for this location.
         :type location_id: str
+        :param announcement_language_code: Language code.
+        :type announcement_language_code: str
         :param agent_enabled: Set to `true` to change announcement language for existing people and workspaces.
         :type agent_enabled: bool
         :param service_enabled: Set to `true` to change announcement language for existing feature configurations.
         :type service_enabled: bool
-        :param announcement_language_code: Language code.
-        :type announcement_language_code: str
         :param org_id: Change announcement language for this organization.
         :type org_id: str
         :rtype: None
@@ -656,8 +670,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['agentEnabled'] = agent_enabled
-        body['serviceEnabled'] = service_enabled
+        if agent_enabled is not None:
+            body['agentEnabled'] = agent_enabled
+        if service_enabled is not None:
+            body['serviceEnabled'] = service_enabled
         body['announcementLanguageCode'] = announcement_language_code
         url = self.ep(f'locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
         super().post(url, params=params, json=body)
@@ -770,7 +786,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/features/emergencyCallbackNumber')
         super().put(url, params=params, json=body)
 
-    def validate_the_list_of_extensions(self, extensions: list[str],
+    def validate_the_list_of_extensions(self, extensions: list[str] = None,
                                         org_id: str = None) -> PostValidateExtensionResponse:
         """
         Validate the List of Extensions
@@ -789,7 +805,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['extensions'] = extensions
+        if extensions is not None:
+            body['extensions'] = extensions
         url = self.ep('actions/validateExtensions/invoke')
         data = super().post(url, params=params, json=body)
         r = PostValidateExtensionResponse.model_validate(data)
@@ -823,9 +840,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         r = StatusOfExtensionsObject.model_validate(data)
         return r
 
-    def update_music_on_hold(self, location_id: str, call_hold_enabled: bool, call_park_enabled: bool,
-                             greeting: GetMusicOnHoldObjectGreeting, audio_file: AudioAnnouncementFileGetObject,
-                             org_id: str = None):
+    def update_music_on_hold(self, location_id: str, greeting: GetMusicOnHoldObjectGreeting,
+                             call_hold_enabled: bool = None, call_park_enabled: bool = None,
+                             audio_file: AudioAnnouncementFileGetObject = None, org_id: str = None):
         """
         Update Music On Hold
 
@@ -838,12 +855,12 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
 
         :param location_id: Update music on hold settings for this location.
         :type location_id: str
+        :param greeting: Greeting type for the location.
+        :type greeting: GetMusicOnHoldObjectGreeting
         :param call_hold_enabled: If enabled, music will be played when call is placed on hold.
         :type call_hold_enabled: bool
         :param call_park_enabled: If enabled, music will be played when call is parked.
         :type call_park_enabled: bool
-        :param greeting: Greeting type for the location.
-        :type greeting: GetMusicOnHoldObjectGreeting
         :param audio_file: Announcement Audio File details when greeting is selected to be `CUSTOM`.
         :type audio_file: AudioAnnouncementFileGetObject
         :param org_id: Update music on hold settings for this organization.
@@ -854,10 +871,13 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['callHoldEnabled'] = call_hold_enabled
-        body['callParkEnabled'] = call_park_enabled
+        if call_hold_enabled is not None:
+            body['callHoldEnabled'] = call_hold_enabled
+        if call_park_enabled is not None:
+            body['callParkEnabled'] = call_park_enabled
         body['greeting'] = enum_str(greeting)
-        body['audioFile'] = loads(audio_file.model_dump_json())
+        if audio_file is not None:
+            body['audioFile'] = loads(audio_file.model_dump_json())
         url = self.ep(f'locations/{location_id}/musicOnHold')
         super().put(url, params=params, json=body)
 
@@ -956,9 +976,9 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
-        :param route_group_name: Return the list of route identities matching the Route group name..
+        :param route_group_name: Return the list of route identities matching the Route group name.
         :type route_group_name: str
-        :param trunk_name: Return the list of route identities matching the Trunk name..
+        :param trunk_name: Return the list of route identities matching the Trunk name.
         :type trunk_name: str
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
