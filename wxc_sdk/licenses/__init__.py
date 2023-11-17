@@ -278,6 +278,17 @@ class LicensesApi(ApiChild, base='licenses'):
             organization ID from the OAuth token is used.
         :type org_id: str
         :rtype: :class:`UserLicensesResponse`
+
+        Example:
+
+            .. code-block:: python
+
+                self.api.licenses.assign_licenses_to_users(
+                    person_id=new_user.person_id,
+                    licenses=[LicenseRequest(id=calling_license_id,
+                                             properties=LicenseProperties(location_id=target_location.location_id,
+                                                                          extension=extension))])
+
         """
         body = dict()
         if email is not None:

@@ -2,17 +2,19 @@
 Test for person numbers
 """
 import asyncio
+import json
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from random import choice
 from time import sleep
 from typing import ClassVar
 
-from tests.base import TestCaseWithUsers, async_test, TestWithLocations
+from tests.base import TestCaseWithUsers, async_test, TestWithLocations, TestCaseWithLog
 from tests.testutil import LocationInfo, us_location_info, available_tns, random_users, as_available_tns, \
     get_calling_license, available_extensions
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import PatternAction, RingPattern
+from wxc_sdk.licenses import LicenseRequest, LicenseProperties
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
 from wxc_sdk.person_settings.numbers import UpdatePersonNumbers, UpdatePersonPhoneNumber, PersonNumbers
@@ -115,7 +117,8 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
                     calling_license_id = get_calling_license(api=self.api)
 
                     # we also need a new extension
-                    self.new_extension = available_extensions(api=self.api, location_id=self.target_location.location_id)[0]
+                    self.new_extension = \
+                        available_extensions(api=self.api, location_id=self.target_location.location_id)[0]
 
                     # need routing prefix
                     self.routing_prefix = self.api.telephony.location.details(
@@ -220,6 +223,45 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
 
         # work number should be gone
         self.assert_tn_and_extension(work=None, extension=self.new_extension)
+
+
+class TestCreateCallingUser(TestWithLocations):
+
+    @async_test
+    async def test_create_user_and_update_license(self):
+        # pick random calling location
+        target_location = choice(self.locations)
+        print(f'Target location "{target_location.name}"')
+
+        with self.no_log():
+            # we need an extension for the new user
+            extension = available_extensions(api=self.api, location_id=target_location.location_id)[0]
+
+            # get random user
+            random_user = (await random_users(api=self.async_api, user_count=1))[0]
+
+            # determine calling license id
+            calling_license_id = get_calling_license(api=self.api)
+
+        # create user
+        new_user = self.api.people.create(
+            settings=Person(emails=[random_user.email],
+                            display_name=random_user.display_name,
+                            first_name=random_user.name.first,
+                            last_name=random_user.name.last))
+        print(f'Created new user "{new_user.display_name}"')
+        try:
+            license_response = self.api.licenses.assign_licenses_to_users(
+                person_id=new_user.person_id,
+                licenses=[LicenseRequest(id=calling_license_id,
+                                         properties=LicenseProperties(location_id=target_location.location_id,
+                                                                      extension=extension))])
+            print(f'Enabled "{new_user.display_name}" for calling with extension {extension}')
+            print('License response')
+            print(json.dumps(license_response.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
+        finally:
+            self.api.people.delete_person(person_id=new_user.person_id)
+            print(f'deleted "{new_user.display_name}"')
 
 
 @dataclass(init=False)

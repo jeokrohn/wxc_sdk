@@ -124,62 +124,63 @@ class TestPeople(TestCaseWithLog):
         self.assertTrue(all('userName' in item for item in list_requests[1].response_body.get('items')),
                         'list by id doesn\'t return userName')
 
-    class TestPeoplePhoneNumbers(TestCaseWithLog):
-        """
-        Take a look at people phone numbers
-        """
 
-        @async_test
-        async def test_001_show_numbers(self):
-            users = calling_users(api=self.api)
+class TestPeoplePhoneNumbers(TestCaseWithLog):
+    """
+    Take a look at people phone numbers
+    """
 
-            async def user_info(user: Person) -> tuple[Person, PersonNumbers]:
-                return await asyncio.gather(self.async_api.people.details(person_id=user.person_id, calling_data=True),
-                                            self.async_api.person_settings.numbers.read(person_id=user.person_id))
+    @async_test
+    async def test_001_show_numbers(self):
+        users = calling_users(api=self.api)
 
-            numbers, details_and_number_list = await asyncio.gather(
-                self.async_api.telephony.phone_numbers(),
-                asyncio.gather(*[user_info(user) for user in users]))
-            user_details, user_numbers = zip(*details_and_number_list)
-            err = False
-            for person, person_numbers in zip(user_details, user_numbers):
-                person: Person
-                person_numbers: PersonNumbers
-                person_error = False
-                print(f'{person.display_name}:', end='')
-                if len(person.phone_numbers) != len(person_numbers.phone_numbers):
-                    person_error = True
-                    print(f' different # of phone numbers via person API and person_settings '
-                          f'({len(person.phone_numbers)} != {len(person_numbers.phone_numbers)})')
-                    extensions = [pn.extension for pn in person_numbers.phone_numbers
-                                  if pn.extension]
-                    direct_numbers = [pn.direct_number for pn in person_numbers.phone_numbers
-                                      if pn.direct_number]
-                    person_phone_numbers = [pn.value for pn in person.phone_numbers]
-                    extensions_not_in_person = [ext for ext in extensions
-                                                if ext not in person_phone_numbers]
-                    if extensions_not_in_person:
-                        print(f' extensions not in person data: {", ".join(extensions_not_in_person)}')
-                    direct_numbers_not_in_person = [dn for dn in direct_numbers
-                                                    if dn not in person_phone_numbers]
-                    if direct_numbers_not_in_person:
-                        print(f' direct numbers no in person data: {", ".join(direct_numbers_not_in_person)}')
-                    person_phone_number_not_in_person_settings = [p for p in person_phone_numbers
-                                                                  if p not in extensions and p not in direct_numbers]
-                    if person_phone_number_not_in_person_settings:
-                        print(f'  person phone numbers not an extension or direct number: '
-                              f'{", ".join(person_phone_number_not_in_person_settings)}', end='')
+        async def user_info(user: Person) -> tuple[Person, PersonNumbers]:
+            return await asyncio.gather(self.async_api.people.details(person_id=user.person_id, calling_data=True),
+                                        self.async_api.person_settings.numbers.read(person_id=user.person_id))
 
-                        # some numbers might actually end with an extension: these probably are ESN?
-                        person_phone_numbers_esn = [p for p in person_phone_number_not_in_person_settings
-                                                    if any(p.endswith(ext) for ext in extensions)]
-                        if len(person_phone_numbers_esn) == len(person_phone_number_not_in_person_settings):
-                            print(', all of them seem to be ESN?')
-                        else:
-                            print(f', some seem to be not an ESN: '
-                                  f'{", ".join(p for p in person_phone_number_not_in_person_settings if p not in person_phone_numbers_esn)}')
+        numbers, details_and_number_list = await asyncio.gather(
+            self.async_api.telephony.phone_numbers(),
+            asyncio.gather(*[user_info(user) for user in users]))
+        user_details, user_numbers = zip(*details_and_number_list)
+        err = False
+        for person, person_numbers in zip(user_details, user_numbers):
+            person: Person
+            person_numbers: PersonNumbers
+            person_error = False
+            print(f'{person.display_name}:', end='')
+            if len(person.phone_numbers) != len(person_numbers.phone_numbers):
+                person_error = True
+                print(f' different # of phone numbers via person API and person_settings '
+                      f'({len(person.phone_numbers)} != {len(person_numbers.phone_numbers)})')
+                extensions = [pn.extension for pn in person_numbers.phone_numbers
+                              if pn.extension]
+                direct_numbers = [pn.direct_number for pn in person_numbers.phone_numbers
+                                  if pn.direct_number]
+                person_phone_numbers = [pn.value for pn in person.phone_numbers]
+                extensions_not_in_person = [ext for ext in extensions
+                                            if ext not in person_phone_numbers]
+                if extensions_not_in_person:
+                    print(f' extensions not in person data: {", ".join(extensions_not_in_person)}')
+                direct_numbers_not_in_person = [dn for dn in direct_numbers
+                                                if dn not in person_phone_numbers]
+                if direct_numbers_not_in_person:
+                    print(f' direct numbers no in person data: {", ".join(direct_numbers_not_in_person)}')
+                person_phone_number_not_in_person_settings = [p for p in person_phone_numbers
+                                                              if p not in extensions and p not in direct_numbers]
+                if person_phone_number_not_in_person_settings:
+                    print(f'  person phone numbers not an extension or direct number: '
+                          f'{", ".join(person_phone_number_not_in_person_settings)}', end='')
 
-                if not person_error:
-                    print(f' ok: {", ".join(pn.value for pn in person.phone_numbers)}')
-                err = err or person_error
-            self.assertFalse(err, 'Some number issues...')
+                    # some numbers might actually end with an extension: these probably are ESN?
+                    person_phone_numbers_esn = [p for p in person_phone_number_not_in_person_settings
+                                                if any(p.endswith(ext) for ext in extensions)]
+                    if len(person_phone_numbers_esn) == len(person_phone_number_not_in_person_settings):
+                        print(', all of them seem to be ESN?')
+                    else:
+                        print(f', some seem to be not an ESN: '
+                              f'{", ".join(p for p in person_phone_number_not_in_person_settings if p not in person_phone_numbers_esn)}')
+
+            if not person_error:
+                print(f' ok: {", ".join(pn.value for pn in person.phone_numbers)}')
+            err = err or person_error
+        self.assertFalse(err, 'Some number issues...')
