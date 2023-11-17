@@ -25,6 +25,7 @@ Release history
 - feat: new API :attr:`wxc_sdk.telephony.jobs.JobsApi.apply_line_key_templates`
 - feat: improved handling of floor actions in TelephonyApi
 - feat: deprecation warnings for create/update on workspace locations
+- feat: new :meth:`wxc_sdk.licenses.LicensesApi.assigned_users`, :meth:`wxc_sdk.licenses.LicensesApi.assign_licenses_to_users`
 
 1.16.1
 ------

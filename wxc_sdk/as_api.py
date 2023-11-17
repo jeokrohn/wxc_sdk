@@ -1083,11 +1083,21 @@ class AsLicensesApi(AsApiChild, base='licenses'):
     Licenses
 
     An allowance for features and services that are provided to users on a Webex services subscription. Cisco and its
-    partners manage the amount of licenses provided to administrators and users. This license resource can be accessed
-    only by an admin.
+    partners manage the amount of licenses provided to administrators and users. License can be assigned only by
+    admins.
+
+    Viewing the list of all licenses in your organization and viewing license details requires an administrator auth
+    token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:licenses_read`.
+
+    Updating the licenses of users requires an administrator auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:people_write`.
+
+    To learn about how to allocate Hybrid Services licenses, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
 
-    def list_gen(self, org_id: str = None) -> AsyncGenerator[License, None, None]:
+    async def list(self, org_id: str = None) -> list[License]:
         """
         List all licenses for a given organization. If no org_id is specified, the default is the organization of
         the authenticated user.
@@ -1099,25 +1109,10 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         :return: yields :class:`License` instances
         """
         params = org_id and {'orgId': org_id} or None
-        ep = self.ep()
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=ep, model=License, params=params)
-
-    async def list(self, org_id: str = None) -> List[License]:
-        """
-        List all licenses for a given organization. If no org_id is specified, the default is the organization of
-        the authenticated user.
-
-        Response properties that are not applicable to the license will not be present in the response.
-
-        :param org_id: List licenses for this organization.
-        :type org_id: str
-        :return: yields :class:`License` instances
-        """
-        params = org_id and {'orgId': org_id} or None
-        ep = self.ep()
-        # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=ep, model=License, params=params)]
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[License]).validate_python(data['items'])
+        return r
 
     async def details(self, license_id) -> License:
         """
@@ -1132,6 +1127,89 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         """
         ep = self.ep(license_id)
         return License.model_validate(await self.get(ep))
+
+    def assigned_users_gen(self, license_id: str, **params) -> AsyncGenerator[LicenseUser, None, None]:
+        """
+        Get users license is assigned to, by license ID.
+
+        Specify the license ID in the `licenseId` parameter in the URI.
+        Long result sets will be
+        split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param license_id: The unique identifier for the license.
+        :type license_id: str
+        """
+        ep = self.ep(license_id)
+        params['includeAssignedTo'] = 'user'
+        return self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users',
+                                              params=params)
+
+    async def assigned_users(self, license_id: str, **params) -> List[LicenseUser]:
+        """
+        Get users license is assigned to, by license ID.
+
+        Specify the license ID in the `licenseId` parameter in the URI.
+        Long result sets will be
+        split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param license_id: The unique identifier for the license.
+        :type license_id: str
+        """
+        ep = self.ep(license_id)
+        params['includeAssignedTo'] = 'user'
+        return [o async for o in self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users',
+                                              params=params)]
+
+    async def assign_licenses_to_users(self, email: str = None, person_id: str = None,
+                                 licenses: List[LicenseRequest] = None, site_urls: List[SiteUrlsRequest] = None,
+                                 org_id: str = None) -> UserLicensesResponse:
+        """
+        Assign Licenses to Users
+
+        Assign licenses and attendee `siteUrls` to existing users. Only an admin can assign licenses. Only existing
+        users can be assigned a license. Assign meeting licenses to users outside your organization (Status will be
+        pending until the user accepts the invite)
+
+        At least one of the following body parameters is required to assign license to the user: `email`, `personId`.
+        For Calling license assignment, properties `phoneNumber` or `extension` are required. If `phoneNumber` is not
+        provided then `locationId` is mandatory.
+
+        When assigning licenses and attendee siteUrls to a user who does not belong to the organization, the licenses
+        and siteUrls remain in pending state until the user accepts them. The `pendingLicenses` and `pendingSiteUrls`
+        are part of the response.
+
+        :param email: Email address of the user.
+        :type email: str
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :param licenses: An array of licenses to be assigned to the user.
+        :type licenses: list[LicenseRequest]
+        :param site_urls: An array of siteUrls to be assigned to the user.
+        :type site_urls: list[SiteUrlsRequest]
+        :param org_id: The ID of the organization to which the licenses and siteUrls belong. If not specified, the
+            organization ID from the OAuth token is used.
+        :type org_id: str
+        :rtype: :class:`UserLicensesResponse`
+        """
+        body = dict()
+        if email is not None:
+            body['email'] = email
+        if person_id is not None:
+            body['personId'] = person_id
+        if org_id is not None:
+            body['orgId'] = org_id
+        if licenses is not None:
+            body['licenses'] = loads(
+                TypeAdapter(list[LicenseRequest]).dump_json(licenses, by_alias=True, exclude_none=True))
+        if site_urls is not None:
+            body['siteUrls'] = loads(
+                TypeAdapter(list[SiteUrlsRequest]).dump_json(site_urls, by_alias=True, exclude_none=True))
+        url = self.ep('users')
+        data = await super().patch(url, json=body)
+        r = UserLicensesResponse.model_validate(data)
+        return r
 
 
 class AsLocationsApi(AsApiChild, base='locations'):

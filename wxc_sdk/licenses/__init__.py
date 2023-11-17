@@ -6,15 +6,19 @@ partners manage the amount of licenses provided to administrators and users. Thi
 only by an admin.
 """
 from collections.abc import Generator
-from typing import Optional
+from datetime import datetime
+from json import loads
+from typing import Optional, List
 
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from ..api_child import ApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
 
-__all__ = ['SiteType', 'License', 'LicensesApi']
+__all__ = ['SiteType', 'License', 'LicensesApi', 'LicenseUser', 'LicenseUserType', 'LicenseRequestOperation',
+           'LicenseProperties', 'LicenseRequest', 'SiteAccountType', 'SiteUrlsRequest', 'SiteResponse',
+           'UserLicensesResponse']
 
 
 class SiteType(str, Enum):
@@ -68,16 +72,135 @@ class License(ApiModel):
         return self.name == 'Webex Calling - Workspaces'
 
 
+class LicenseUserType(str, Enum):
+    #: User resides in the license-owned organization.
+    internal = 'INTERNAL'
+    #: User resides outside the license-owned organization.
+    external = 'EXTERNAL'
+
+
+class LicenseUser(ApiModel):
+    #: A unique identifier for the user.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
+    id: Optional[str] = None
+    #: Indicates if the user is internal or external to the organization.
+    #: example: INTERNAL
+    type: Optional[LicenseUserType] = None
+    #: The full name of the user.
+    #: example: John Andersen
+    display_name: Optional[str] = None
+    #: Email address of the user.
+    #: example: john.andersen@example.com
+    email: Optional[str] = None
+
+
+class LicenseRequestOperation(str, Enum):
+    #: Remove the license from the user
+    remove = 'remove'
+    #: Assign the license to the user
+    add = 'add'
+
+
+class LicenseProperties(ApiModel):
+    #: The ID of the location for this user. Applicable to Webex Calling license.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzYzNzE1
+    location_id: Optional[str] = None
+    #: Work phone number for the user. Applicable to Webex Calling license.
+    #: example: 14085267209
+    phone_number: Optional[str] = None
+    #: Webex Calling extension of the user. Applicable to Webex Calling license.
+    #: example: 133
+    extension: Optional[str] = None
+
+
+class LicenseRequest(ApiModel):
+    #: A unique identifier for the license.
+    #: example: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh
+    id: Optional[str] = None
+    #: Operation type. The default operation is `add` if no operation is specified.
+    #: example: add
+    operation: Optional[LicenseRequestOperation] = None
+    #: Properties for the license. Either `phoneNumber` or `extension` are mandatory for assigning Webex Calling
+    #: licenses. If `phoneNumber` is not provided then `locationId` is mandatory.
+    properties: Optional[LicenseProperties] = None
+
+
+class SiteAccountType(str, Enum):
+    #: Attendee account on the site.
+    attendee = 'attendee'
+    #: Host account on the site.
+    host = 'host'
+
+
+class SiteUrlsRequest(ApiModel):
+    #: Attendee access on the site.
+    #: example: mysite.webex.com
+    site_url: Optional[str] = None
+    #: Account type. Only `attendee` type is supported. For host account, remove attendee and assign the license on
+    #: that site.
+    #: example: attendee
+    account_type: Optional[SiteAccountType] = None
+    #: Operation type. The default operation is `add` if no operation is specified.
+    #: example: add
+    operation: Optional[LicenseRequestOperation] = None
+
+
+class SiteResponse(ApiModel):
+    #: `siteUrl` assigned to the user.
+    #: example: mysite.webex.com
+    site_url: Optional[str] = None
+    #: Account Type of the site.
+    #: example: attendee
+    account_type: Optional[SiteAccountType] = None
+
+
+class UserLicensesResponse(ApiModel):
+    #: The ID of the organization to which this user belongs.
+    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
+    org_id: Optional[str] = None
+    #: A unique identifier for the user.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
+    person_id: Optional[str] = None
+    #: The email address of this user.
+    #: example: john.andersen@example.com
+    email: Optional[str] = None
+    #: An array of license strings that are assigned to this user.
+    #: example: ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh',
+    # 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi',
+    # 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LTIzNDItMGY0NTU2YWRlZXJm']
+    licenses: Optional[list[str]] = None
+    #: An array of `siteUrls` and their `accountType` that are assigned to this user.
+    site_urls: Optional[list[SiteResponse]] = None
+    #: An array of license strings that are in pending state. This is only applicable to users outside the
+    #: organization.
+    #: example: ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYWJj',
+    # 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWFiY2Rl']
+    pending_licenses: Optional[list[str]] = None
+    #: An array of `siteUrls` and their `accountType` that are in pending state. This is only applicable to users
+    #: outside the organization.
+    pending_site_urls: Optional[list[SiteResponse]] = None
+
+
 class LicensesApi(ApiChild, base='licenses'):
     """
     Licenses
 
     An allowance for features and services that are provided to users on a Webex services subscription. Cisco and its
-    partners manage the amount of licenses provided to administrators and users. This license resource can be accessed
-    only by an admin.
+    partners manage the amount of licenses provided to administrators and users. License can be assigned only by
+    admins.
+
+    Viewing the list of all licenses in your organization and viewing license details requires an administrator auth
+    token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:licenses_read`.
+
+    Updating the licenses of users requires an administrator auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:people_write`.
+
+    To learn about how to allocate Hybrid Services licenses, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
 
-    def list(self, org_id: str = None) -> Generator[License, None, None]:
+    def list(self, org_id: str = None) -> list[License]:
         """
         List all licenses for a given organization. If no org_id is specified, the default is the organization of
         the authenticated user.
@@ -89,9 +212,10 @@ class LicensesApi(ApiChild, base='licenses'):
         :return: yields :class:`License` instances
         """
         params = org_id and {'orgId': org_id} or None
-        ep = self.ep()
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=ep, model=License, params=params)
+        url = self.ep()
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[License]).validate_python(data['items'])
+        return r
 
     def details(self, license_id) -> License:
         """
@@ -106,3 +230,69 @@ class LicensesApi(ApiChild, base='licenses'):
         """
         ep = self.ep(license_id)
         return License.model_validate(self.get(ep))
+
+    def assigned_users(self, license_id: str, **params) -> Generator[LicenseUser, None, None]:
+        """
+        Get users license is assigned to, by license ID.
+
+        Specify the license ID in the `licenseId` parameter in the URI.
+        Long result sets will be
+        split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param license_id: The unique identifier for the license.
+        :type license_id: str
+        """
+        ep = self.ep(license_id)
+        params['includeAssignedTo'] = 'user'
+        return self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users',
+                                              params=params)
+
+    def assign_licenses_to_users(self, email: str = None, person_id: str = None,
+                                 licenses: List[LicenseRequest] = None, site_urls: List[SiteUrlsRequest] = None,
+                                 org_id: str = None) -> UserLicensesResponse:
+        """
+        Assign Licenses to Users
+
+        Assign licenses and attendee `siteUrls` to existing users. Only an admin can assign licenses. Only existing
+        users can be assigned a license. Assign meeting licenses to users outside your organization (Status will be
+        pending until the user accepts the invite)
+
+        At least one of the following body parameters is required to assign license to the user: `email`, `personId`.
+        For Calling license assignment, properties `phoneNumber` or `extension` are required. If `phoneNumber` is not
+        provided then `locationId` is mandatory.
+
+        When assigning licenses and attendee siteUrls to a user who does not belong to the organization, the licenses
+        and siteUrls remain in pending state until the user accepts them. The `pendingLicenses` and `pendingSiteUrls`
+        are part of the response.
+
+        :param email: Email address of the user.
+        :type email: str
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :param licenses: An array of licenses to be assigned to the user.
+        :type licenses: list[LicenseRequest]
+        :param site_urls: An array of siteUrls to be assigned to the user.
+        :type site_urls: list[SiteUrlsRequest]
+        :param org_id: The ID of the organization to which the licenses and siteUrls belong. If not specified, the
+            organization ID from the OAuth token is used.
+        :type org_id: str
+        :rtype: :class:`UserLicensesResponse`
+        """
+        body = dict()
+        if email is not None:
+            body['email'] = email
+        if person_id is not None:
+            body['personId'] = person_id
+        if org_id is not None:
+            body['orgId'] = org_id
+        if licenses is not None:
+            body['licenses'] = loads(
+                TypeAdapter(list[LicenseRequest]).dump_json(licenses, by_alias=True, exclude_none=True))
+        if site_urls is not None:
+            body['siteUrls'] = loads(
+                TypeAdapter(list[SiteUrlsRequest]).dump_json(site_urls, by_alias=True, exclude_none=True))
+        url = self.ep('users')
+        data = super().patch(url, json=body)
+        r = UserLicensesResponse.model_validate(data)
+        return r

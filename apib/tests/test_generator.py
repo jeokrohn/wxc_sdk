@@ -32,7 +32,7 @@ class GeneratorTest(ApibTest):
         err = None
 
         # ignore these APIB files
-        ignore = {'device-configurations.apib'}
+        ignore = {'device-configurations.apib', 'convergedRecordings.apib'}
 
         for apib_path in self.apib_paths:
             apib_path_base = os.path.basename(apib_path)
