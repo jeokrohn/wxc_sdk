@@ -78,7 +78,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :type model: DECTNetworkModel
         :param default_access_code_enabled: If set to true, need to provide a default access code that will be shared
             for all users in this network to pair their lines to the next available handset. Otherwise, each user will
-            get a unique 4-digit access code that will be auto-generated.
+            get a unique 4-digit access code that will be auto-generated. Note: There is currently no public API to
+            retrieve the auto generated access codes for handsets. Use Control Hub instead.
         :type default_access_code_enabled: bool
         :param default_access_code: If `defaultAccessCodeEnabled` is set to true, then provide a default access code
             that needs to be a 4-numeric digit. The access code should be unique to the DECT network for the location.
