@@ -51,6 +51,11 @@ for i in ${@}; do
         apisum=true
         ;;
 
+        apib)
+        all=
+        apib=true
+        ;;
+
         *)
         echo "Unknown argument: $i"
         exit 1
@@ -62,6 +67,11 @@ done
 if [ ${all} ]; then
   echo "==> Cleaning previous build artifacts"
   script/clean
+fi
+
+if [ ${all} ] || [ ${apib} ]; then
+    echo "==> Creating Python sources from APIB files"
+    script/apib2py.py "*.apib" --exclude "device\-configurations|convergedRecordings"
 fi
 
 
