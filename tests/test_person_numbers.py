@@ -3,7 +3,7 @@ Test for person numbers
 """
 import asyncio
 import json
-from contextlib import contextmanager
+from contextlib import contextmanager, asynccontextmanager
 from dataclasses import dataclass, field
 from random import choice
 from time import sleep
@@ -13,13 +13,14 @@ from tests.base import TestCaseWithUsers, async_test, TestWithLocations, TestCas
 from tests.testutil import LocationInfo, us_location_info, available_tns, random_users, as_available_tns, \
     get_calling_license, available_extensions
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import PatternAction, RingPattern
+from wxc_sdk.common import PatternAction, RingPattern, OwnerType
 from wxc_sdk.licenses import LicenseRequest, LicenseProperties
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
 from wxc_sdk.person_settings.numbers import UpdatePersonNumbers, UpdatePersonPhoneNumber, PersonNumbers
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberType
+from wxc_sdk.telephony.location import TelephonyLocation
 
 
 class TestRead(TestCaseWithUsers):
@@ -226,12 +227,22 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
 
 
 class TestCreateCallingUser(TestWithLocations):
+    """
+    Two tests around calling users
+        * create calling user w/ extension
+        * create calling user w/ extension and then update extension
+    """
 
-    @async_test
-    async def test_create_user_and_update_license(self):
+    @asynccontextmanager
+    async def generate_temp_user_with_extension(self) -> tuple[Location, str, Person]:
+        """
+        Generate a temp test user, enable that user for calling with extension in location and validate
+        yields target location, extension, and generated user
+        """
         # pick random calling location
         target_location = choice(self.locations)
         print(f'Target location "{target_location.name}"')
+        target_location_calling = self.api.telephony.location.details(location_id=target_location.location_id)
 
         with self.no_log():
             # we need an extension for the new user
@@ -259,9 +270,124 @@ class TestCreateCallingUser(TestWithLocations):
             print(f'Enabled "{new_user.display_name}" for calling with extension {extension}')
             print('License response')
             print(json.dumps(license_response.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
+
+            # get user details to check phone number setting
+            user_after = self.api.people.details(person_id=new_user.person_id, calling_data=True)
+
+            # calling license has to be present
+            self.assertTrue(calling_license_id in user_after.licenses,
+                            'Calling license not present in user after update')
+            # user should only have one phone number
+            self.assertEqual(1, len(user_after.phone_numbers),
+                             'Expected exactly one user phone number')
+            # .. a work extension
+            self.assertEqual(PhoneNumberType.work_extension, user_after.phone_numbers[0].number_type,
+                             'Phone number type should be work extension')
+            # .. where the value is the concatenation of the site code and the extension
+            pn_value = user_after.phone_numbers[0].value
+
+            if target_location_calling.routing_prefix:
+                self.assertEqual(f'{target_location_calling.routing_prefix}{extension}', pn_value,
+                                 'wrong ESN')
+            else:
+                self.assertEqual(extension, pn_value,
+                                 'wrong extension')
+
+            # .. the phone number should be the primary number
+            self.assertTrue(user_after.phone_numbers[0].primary,
+                            'phone number should be primary')
+
+            # also the extension should now exist as number in the location
+            numbers_after = list(self.api.telephony.phone_numbers(location_id=target_location.location_id,
+                                                                  extension=extension))
+
+            self.assertEqual(1, len(numbers_after),
+                             'Expected exactly one result when searching for extension on location')
+            number = numbers_after[0]
+            self.assertEqual(extension, number.extension,
+                             'Wrong extension')
+            self.assertIsNotNone(number.owner,
+                                 'number has to have an owner')
+            owner = number.owner
+            self.assertEqual(OwnerType.people, owner.owner_type)
+            self.assertEqual(new_user.person_id, owner.owner_id)
+
+            self.assertEqual(target_location.location_id, number.location.id,
+                             'Unexpected location id')
+            yield target_location, extension, user_after, target_location_calling
+
         finally:
             self.api.people.delete_person(person_id=new_user.person_id)
             print(f'deleted "{new_user.display_name}"')
+            # extension should not exist any more
+            numbers_after = list(self.api.telephony.phone_numbers(location_id=target_location.location_id,
+                                                                  extension=extension))
+            self.assertEqual(0, len(numbers_after))
+
+    @async_test
+    async def test_create_user_and_update_license(self):
+        """
+        Create a user, update the calling license, set extension and check consistency
+        """
+        async with self.generate_temp_user_with_extension():
+            pass
+
+    @async_test
+    async def test_create_calling_user_and_change_extension(self):
+        """
+        create a calling user with an extension, change extension and check consistency
+        :return:
+        """
+        async with self.generate_temp_user_with_extension() as ctx:
+            target_location, extension, new_user, telephony_location = ctx
+            target_location: Location
+            extension: str
+            new_user: Person
+            telephony_location: TelephonyLocation
+            # get an available extension in location
+            with self.no_log():
+                new_extension = available_extensions(api=self.api, location_id=target_location.location_id)[0]
+            new_work_extension = new_extension
+            if telephony_location.routing_prefix:
+                new_work_extension = f'{telephony_location.routing_prefix}{new_work_extension}'
+
+            # try to assign the new extension
+            person_settings = new_user.model_copy(deep=True)
+            person_settings.phone_numbers = [PhoneNumber(type=PhoneNumberType.work_extension,
+                                                         value=new_work_extension,
+                                                         primary=True)]
+            person_settings.extension = new_extension
+            updated_user = self.api.people.update(person=person_settings, calling_data=True)
+
+            # user should only have one phone number
+            self.assertEqual(1, len(updated_user.phone_numbers),
+                             'Expected exactly one user phone number')
+            # .. a work extension
+            self.assertEqual(PhoneNumberType.work_extension, updated_user.phone_numbers[0].number_type,
+                             'Phone number type should be work extension')
+            # .. where the value is the concatenation of the site code and the extension
+            pn_value = updated_user.phone_numbers[0].value
+
+            if telephony_location.routing_prefix:
+                self.assertEqual(f'{telephony_location.routing_prefix}{extension}', pn_value,
+                                 'wrong ESN')
+            else:
+                self.assertEqual(extension, pn_value,
+                                 'wrong extension')
+
+            # .. the phone number should be the primary number
+            self.assertTrue(updated_user.phone_numbers[0].primary,
+                            'phone number should be primary')
+
+            # old extension does not exist in location any more
+            numbers = list(self.api.telephony.phone_numbers(location_id=target_location.location_id,
+                                                            number_type=NumberType.extension))
+            self.assertIsNone(next((n for n in numbers if n.extension == extension), None))
+            # new extension should exist in location
+            number = next((n for n in numbers if n.extension == new_extension), None)
+            self.assertIsNotNone(number)
+            self.assertIsNotNone(number.owner)
+            self.assertEqual(new_user.person_id, number.owner.owner_id)
 
 
 @dataclass(init=False)
