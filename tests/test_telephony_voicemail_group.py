@@ -490,8 +490,9 @@ class TestVmGroup(TestWithLocations):
         success_response_times = success_response_times or [None]
         print(f'Success: min={min(success_response_times):.2f}, max={max(success_response_times):.2f}, '
               f'mean={mean(success_response_times):.2f}')
-        print(f'Failure: min={min(failure_response_times):.2f}, max={max(failure_response_times):.2f}, '
-              f'mean={mean(failure_response_times):.2f}')
+        if failure_response_times:
+            print(f'Failure: min={min(failure_response_times):.2f}, max={max(failure_response_times):.2f}, '
+                  f'mean={mean(failure_response_times):.2f}')
 
         self.assertFalse(any(isinstance(r, Exception) for r in results))
 

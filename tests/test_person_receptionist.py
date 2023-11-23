@@ -118,9 +118,6 @@ class TestRead(TestCaseWithUsers):
         Apparently extensions returned for members can have different formats:
             * ESN (site code - extension): the member is in a different location than the user
             * extension: the member is in the same location as the user
-
-        # TODO: defect, wrong extension format. Some extensions are returned as ESN with hyphen before the extension,
-            # CALL-68675 -- provide feedback in Jira and close
         """
         with self.target_user() as target_user:
             target_user: Person
