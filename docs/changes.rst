@@ -27,6 +27,7 @@ Release history
 - feat: deprecation warnings for create/update on workspace locations
 - feat: new :meth:`wxc_sdk.licenses.LicensesApi.assigned_users`, :meth:`wxc_sdk.licenses.LicensesApi.assign_licenses_to_users`
 - feat: new :attr:`wxc_sdk.workspaces.Workspace.location_id`
+- feat: call record events :class:`wxc_sdk.events.EventResource`, :class:`wxc_sdk.events.EventData`
 
 1.16.1
 ------

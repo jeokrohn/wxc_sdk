@@ -30,6 +30,8 @@ class EventResource(str, Enum):
     files = 'files'
     #: State change on a file preview
     file_transcodings = 'file_transcodings'
+    #: A Webex call was made to/from a user
+    call_records = 'call_records'
 
 
 class EventType(str, Enum):
@@ -42,41 +44,18 @@ class EventType(str, Enum):
     #: The meeting has ended
     ended = 'ended'
     read = 'read'
+    all = 'all'
 
 
 class EventData(ApiModel):
-    id: Optional[str] = None
     title: Optional[str] = None
-    room_id: Optional[str] = None
     type: Optional[str] = None
-    room_type: Optional[str] = None
     is_room_hidden: Optional[bool] = None
-    org_id: Optional[str] = None
-    text: Optional[str] = None
     files: Optional[list[str]] = None
-    person_id: Optional[str] = None
-    person_email: Optional[str] = None
     person_org_id: Optional[str] = None
     person_display_name: Optional[str] = None
     is_moderator: Optional[bool] = None
     is_monitor: Optional[bool] = None
-    meeting_id: Optional[str] = None
-    creator_id: Optional[str] = None
-    #: The meeting's host data
-    host: Optional[object] = None
-    #: Common Identity (CI) authenticated meeting attendees
-    attendees: Optional[list[Any]] = None
-    #: indicates whether or not the Voice Assistant was enabled during the meeting. If true a transcript should be
-    #: available a couple minutes after the meeting ended at the meetingTranscripts resource
-    transcription_enabled: Optional[str] = None
-    #: indicates if recording was enabled for all or parts of the meeting. If true a recording should be available
-    #: shortly after the meeting ended at the recordings resource
-    recording_enabled: Optional[str] = None
-    #: indicates i chat messages were exchanged during the meeting in the meetings client (not the unified client).
-    #: If true these messages can be accessed by a compliance officer at the postMeetingsChat resource. Meetings chat
-    #: collection must be custom enabled.
-    has_post_meetings_chat: Optional[str] = None
-    created: Optional[datetime] = None
     updated: Optional[datetime] = None
     markdown: Optional[str] = None
     html: Optional[str] = None
@@ -89,6 +68,106 @@ class EventData(ApiModel):
     is_public: Optional[bool] = None
     made_public: Optional[datetime] = None
     is_announcement_only: Optional[bool] = None
+
+    #: example: Y2lzY29...
+    id: Optional[str] = None
+    #: example: Y2lzY29zc...
+    room_id: Optional[str] = None
+    #: example: group
+    room_type: Optional[str] = None
+    #: example: Y2lzY2...
+    org_id: Optional[str] = None
+    #: example: PROJECT UPDATE - A new project plan has been published on Box: http://box.com/s/lf5vj. The PM for
+    #: this project is Mike C. and the Engineering Manager is Jane W.
+    text: Optional[str] = None
+    #: example: Y2lzY29zcGFy...
+    person_id: Optional[str] = None
+    #: example: matt@example.com
+    person_email: Optional[str] = None
+    #: example: 16ce696f75844d24b2d4fab04b4419af_I_183979003076423608
+    meeting_id: Optional[str] = None
+    #: example: Y2lzY29z...
+    creator_id: Optional[str] = None
+    #: The meeting's host data
+    host: Optional[Any] = None
+    #: Common Identity (CI) authenticated meeting attendees
+    attendees: Optional[list[str]] = None
+    #: indicates whether or not the Voice Assistant was enabled during the meeting. If `true` a transcript should be
+    #: available a couple minutes after the meeting ended at the `meetingTranscripts resource
+    #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_
+    #: example: yes
+    transcription_enabled: Optional[str] = None
+    #: indicates if recording was enabled for all or parts of the meeting. If `true` a recording should be available
+    #: shortly after the meeting ended at the `recordings resource
+    #: <https://developer.webex.com/docs/api/v1/recordings>`_
+    #: example: yes
+    recording_enabled: Optional[str] = None
+    #: indicates if chat messages were exchanged during the meeting in the meetings client (not the unified client). If
+    #: `true` these messages can be accessed by a compliance officer at the `postMeetingsChat
+    #: <https://developer.webex.com/docs/api/v1/meetings-chat>`_ resource. Meetings chat
+    #: collection must be custom enabled.
+    #: example: yes
+    has_post_meetings_chat: Optional[str] = None
+    #: telephony; corelation id
+    #: example: fdda8613-d34b-424c-8c6a-44ff2e19379c
+    correlation_id: Optional[str] = None
+    #: telephony; call types (examples
+    #: `VIDEO_DIALIN`,`VIDEO_DIALOUT`,`CASCADE`,`HYBRID_CASCADE`,`PSTN_SIP`,`PSTN_DIALIN`,`PSTN_DIALOUT`,
+    #: `PSTN_ONLY_DIALIN`,`PSTN_ONLY_DIALOUT`,`H323`,`H323_IP`,`SIP_ENTERPRISE`,`SIP_MOBILE`,`SIP_NATIONAL`,
+    #: `SIP_INTERNATIONAL`,`SIP_EMERGENCY`,`SIP_OPERATOR`,`SIP_SHORTCODE`,`SIP_TOLLFREE`,`SIP_PREMIUM`,`SIP_URI`,
+    #: `SIP_INBOUND`,`UNKNOWN`,`ZTM`,`SIP_MEETING`)
+    #: example: SIP_ENTERPRISE
+    call_type: Optional[str] = None
+    #: telephony; user id of the CDR owner
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zZjEwMTU1NC04ZGJjLTQyMmUtOGEzZC1kYTk1YTI3NWZlNzU
+    user_id: Optional[str] = None
+    #: telephony; type of user
+    #: (`User`,`Anchor`,`AutomatedAttendantBasic`,`AutomatedAttendantStandard`,`AutomatedAttendantVideo`,
+    #: `BroadworksAnywhere`,`CallCenterBasic`,`CallCenterPremium`,`CallCenterStandard`,`CollaborateBridge`,
+    #: `ContactCenterAdaptor`,`FindMeFollowMe`,`FlexibleSeatingHost`,`GroupCall`,`GroupPaging`,`HuntGroup`,
+    #: `LocalGateway`,`MeetMeConference`,`Place`,`RoutePoint`,`SystemVoicePortal`,`VoiceMailGroup`,
+    #: `VoiceMailRetrieval`,`VoiceXML`,`VirtualLine`,`Unknown`)
+    #: example: User
+    user_type: Optional[str] = None
+    #: telephony; `ORIGINATING` or `TERMINATING`
+    #: example: ORIGINTATING
+    call_direction: Optional[str] = None
+    #: telephony; indicates if the call was answered
+    #: example: true
+    is_call_answered: Optional[bool] = None
+    #: telephony; duration of call in seconds
+    #: example: 192
+    call_duration_seconds: Optional[datetime] = None
+    #: telephony; ISO 8601
+    #: example: 2023-02-08T06:12:43.976Z
+    call_start_time: Optional[datetime] = None
+    #: telephony; ISO 8601
+    #: example: 2023-02-08T06:12:47.012Z
+    call_answer_time: Optional[datetime] = None
+    #: telephony; ISO 8601
+    #: example: 2023-02-08T06:15:19.112Z
+    call_transfer_time: Optional[datetime] = None
+    #: telephony; originating number
+    #: example: 910481234
+    calling_number: Optional[str] = None
+    #: telephony
+    #: example: 211
+    calling_line_id: Optional[str] = None
+    #: telephony; destination number
+    #: example: 4089671221
+    called_number: Optional[str] = None
+    #: telephony
+    #: example: 219
+    called_line_id: Optional[str] = None
+    #: telephony
+    #: example: 123
+    dialed_digits: Optional[str] = None
+    #: telephony
+    call_redirecting_number: Optional[str] = None
+    #: telephony
+    call_redirected_reason: Optional[str] = None
+    #: example: 2016-05-16T21:34:59.324Z
+    created: Optional[datetime] = None
 
 
 class ComplianceEvent(ApiModel):

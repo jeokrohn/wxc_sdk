@@ -44,41 +44,97 @@ class EventData(ApiModel):
     #: indicates whether or not the Voice Assistant was enabled during the meeting. If `true` a transcript should be
     #: available a couple minutes after the meeting ended at the `meetingTranscripts resource
     #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_
+    #: example: yes
     transcription_enabled: Optional[str] = None
     #: indicates if recording was enabled for all or parts of the meeting. If `true` a recording should be available
     #: shortly after the meeting ended at the `recordings resource
     #: <https://developer.webex.com/docs/api/v1/recordings>`_
+    #: example: yes
     recording_enabled: Optional[str] = None
     #: indicates if chat messages were exchanged during the meeting in the meetings client (not the unified client). If
     #: `true` these messages can be accessed by a compliance officer at the `postMeetingsChat
     #: <https://developer.webex.com/docs/api/v1/meetings-chat>`_ resource. Meetings chat
     #: collection must be custom enabled.
+    #: example: yes
     has_post_meetings_chat: Optional[str] = None
+    #: telephony; corelation id
+    #: example: fdda8613-d34b-424c-8c6a-44ff2e19379c
+    corelation_id: Optional[str] = None
+    #: telephony; call types (examples
+    #: `VIDEO_DIALIN`,`VIDEO_DIALOUT`,`CASCADE`,`HYBRID_CASCADE`,`PSTN_SIP`,`PSTN_DIALIN`,`PSTN_DIALOUT`,`PSTN_ONLY_DIALIN`,`PSTN_ONLY_DIALOUT`,`H323`,`H323_IP`,`SIP_ENTERPRISE`,`SIP_MOBILE`,`SIP_NATIONAL`,`SIP_INTERNATIONAL`,`SIP_EMERGENCY`,`SIP_OPERATOR`,`SIP_SHORTCODE`,`SIP_TOLLFREE`,`SIP_PREMIUM`,`SIP_URI`,`SIP_INBOUND`,`UNKNOWN`,`ZTM`,`SIP_MEETING`)
+    #: example: SIP_ENTERPRISE
+    call_type: Optional[str] = None
+    #: telephony; user id of the CDR owner
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zZjEwMTU1NC04ZGJjLTQyMmUtOGEzZC1kYTk1YTI3NWZlNzU
+    user_id: Optional[str] = None
+    #: telephony; type of user
+    #: (`User`,`Anchor`,`AutomatedAttendantBasic`,`AutomatedAttendantStandard`,`AutomatedAttendantVideo`,`BroadworksAnywhere`,`CallCenterBasic`,`CallCenterPremium`,`CallCenterStandard`,`CollaborateBridge`,`ContactCenterAdaptor`,`FindMeFollowMe`,`FlexibleSeatingHost`,`GroupCall`,`GroupPaging`,`HuntGroup`,`LocalGateway`,`MeetMeConference`,`Place`,`RoutePoint`,`SystemVoicePortal`,`VoiceMailGroup`,`VoiceMailRetrieval`,`VoiceXML`,`VirtualLine`,`Unknown`)
+    #: example: User
+    user_type: Optional[str] = None
+    #: telephony; `ORIGINATING` or `TERMINATING`
+    #: example: ORIGINTATING
+    call_direction: Optional[str] = None
+    #: telephony; indicates if the call was answered
+    #: example: true
+    is_call_answered: Optional[str] = None
+    #: telephony; duration of call in seconds
+    #: example: 192
+    call_duration_seconds: Optional[datetime] = None
+    #: telephony; ISO 8601
+    #: example: 2023-02-08T06:12:43.976Z
+    call_start_time: Optional[datetime] = None
+    #: telephony; ISO 8601
+    #: example: 2023-02-08T06:12:47.012Z
+    call_answer_time: Optional[datetime] = None
+    #: telephony; ISO 8601
+    #: example: 2023-02-08T06:15:19.112Z
+    call_transfer_time: Optional[datetime] = None
+    #: telephony; originating number
+    #: example: 910481234
+    calling_number: Optional[str] = None
+    #: telephony
+    #: example: 211
+    calling_line_id: Optional[datetime] = None
+    #: telephony; destination number
+    #: example: 4089671221
+    called_number: Optional[str] = None
+    #: telephony
+    #: example: 219
+    called_line_id: Optional[datetime] = None
+    #: telephony
+    #: example: 123
+    dialed_digits: Optional[datetime] = None
+    #: telephony
+    call_redirecting_number: Optional[str] = None
+    #: telephony
+    call_redirected_reason: Optional[str] = None
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None
 
 
 class EventResourceEnum(str, Enum):
-    #: State changed on a messages resource
-    messages = 'messages'
-    #: State changed on a memberships resource
-    memberships = 'memberships'
+    #: State changed on a card attachment
+    attachment_actions = 'attachmentActions'
+    #: A Webex call was made to/from a user
+    call_records = 'call_records'
+    #: State change on a file preview
+    file_transcodings = 'file_transcodings'
+    #: State changed on a file download
+    files = 'files'
+    #: State changed on a meeting message, i.e. message exchanged as part of a meeting
+    meeting_messages = 'meetingMessages'
     #: State change on a meeting ( here combined with type = 'ended' )
     meetings = 'meetings'
     #: State change on a automatic transcript resource for Webex Assistant
     meeting_transcripts = 'meetingTranscripts'
-    #: State changed on a meeting message, i.e. message exchanged as part of a meeting
-    meeting_messages = 'meetingMessages'
-    #: State changed on a room tabs in a space
-    tabs = 'tabs'
+    #: State changed on a memberships resource
+    memberships = 'memberships'
+    #: State changed on a messages resource
+    messages = 'messages'
     #: State changed on a space classification
     rooms = 'rooms'
-    #: State changed on a card attachment
-    attachment_actions = 'attachmentActions'
-    #: State changed on a file download
-    files = 'files'
-    #: State change on a file preview
-    file_transcodings = 'file_transcodings'
+    #: State changed on a room tabs in a space
+    tabs = 'tabs'
 
 
 class EventTypeEnum(str, Enum):
