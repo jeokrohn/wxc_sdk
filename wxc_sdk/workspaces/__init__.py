@@ -119,6 +119,9 @@ class Workspace(ApiModel):
     org_id: Optional[str] = None
     #: Location associated with the workspace.
     workspace_location_id: Optional[str] = None
+    #: Location associated with the workspace (ID to use for the `/locations API
+    #: <https://developer.webex.com/docs/api/v1/locations>`_).
+    location_id: Optional[str] = None
     #: Floor associated with the workspace.
     floor_id: Optional[str] = None
     #: A friendly name for the workspace.

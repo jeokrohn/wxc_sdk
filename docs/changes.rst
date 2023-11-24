@@ -26,6 +26,7 @@ Release history
 - feat: improved handling of floor actions in TelephonyApi
 - feat: deprecation warnings for create/update on workspace locations
 - feat: new :meth:`wxc_sdk.licenses.LicensesApi.assigned_users`, :meth:`wxc_sdk.licenses.LicensesApi.assign_licenses_to_users`
+- feat: new :attr:`wxc_sdk.workspaces.Workspace.location_id`
 
 1.16.1
 ------

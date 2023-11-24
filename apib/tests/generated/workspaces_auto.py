@@ -127,12 +127,16 @@ class Workspace(ApiModel):
     #: Unique identifier for the Workspace.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFUy81MTAxQjA3Qi00RjhGLTRFRjctQjU2NS1EQjE5QzdCNzIzRjc
     id: Optional[str] = None
-    #: `OrgId` associate with the workspace.
+    #: `OrgId` associated with the workspace.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY
     org_id: Optional[str] = None
     #: Location associated with the workspace.
     #: example: YL34GrT...
     workspace_location_id: Optional[str] = None
+    #: Location associated with the workspace (ID to use for the `/locations API
+    #: <https://developer.webex.com/docs/api/v1/locations>`_).
+    #: example: Y2lzY29...
+    location_id: Optional[str] = None
     #: Floor associated with the workspace.
     #: example: Y2lzY29z...
     floor_id: Optional[str] = None
@@ -346,7 +350,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     """
 
     def list_workspaces(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
-                        capacity: int = None, type: WorkspaceUpdateRequestType = None, start: int = None,
+                        capacity: int = None, type: WorkspaceUpdateRequestType = None,
                         calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
                         org_id: str = None, **params) -> Generator[Workspace, None, None]:
@@ -372,8 +376,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type capacity: int
         :param type: List workspaces by type.
         :type type: WorkspaceUpdateRequestType
-        :param start: Offset. Default is 0.
-        :type start: int
         :param calling: List workspaces by calling type.
         :type calling: WorkspaceCallingType
         :param supported_devices: List workspaces by supported devices.
@@ -399,8 +401,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['capacity'] = capacity
         if type is not None:
             params['type'] = type
-        if start is not None:
-            params['start'] = start
         if calling is not None:
             params['calling'] = calling
         if supported_devices is not None:
