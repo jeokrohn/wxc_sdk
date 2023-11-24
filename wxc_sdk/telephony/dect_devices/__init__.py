@@ -168,9 +168,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         super().post(url, params=params, json=body)
 
-    def available_members(self, org_id: str = None, start: int = None, member_name: str = None,
-                          phone_number: str = None, order: str = None, exclude_virtual_profile: bool = None,
-                          device_location_id: str = None, **params) -> Generator[AvailableMember, None, None]:
+    def available_members(self, member_name: str = None, phone_number: str = None, order: str = None,
+                          exclude_virtual_profile: bool = None, org_id: str = None,
+                          **params) -> Generator[AvailableMember, None, None]:
         """
         Search Available Members
 
@@ -178,10 +178,6 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
         This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`
 
-        :param org_id: Search members in this organization.
-        :type org_id: str
-        :param start: Specifies the offset from the first result that you want to fetch.
-        :type start: int
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
@@ -192,14 +188,12 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :param exclude_virtual_profile: If true, search results will exclude virtual lines in the member list. NOTE:
             Virtual lines cannot be assigned as the primary line.
         :type exclude_virtual_profile: bool
-        :param device_location_id: Location ID of DECT network.
-        :type device_location_id: str
+        :param org_id: Search members in this organization.
+        :type org_id: str
         :return: Generator yielding :class:`AvailableMember` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if member_name is not None:
             params['memberName'] = member_name
         if phone_number is not None:
@@ -208,7 +202,5 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
             params['order'] = order
         if exclude_virtual_profile is not None:
             params['excludeVirtualProfile'] = str(exclude_virtual_profile).lower()
-        if device_location_id is not None:
-            params['deviceLocationId'] = device_location_id
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)
