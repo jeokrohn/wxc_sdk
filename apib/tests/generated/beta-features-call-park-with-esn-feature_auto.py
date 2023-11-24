@@ -20,10 +20,10 @@ __auto__ = ['GetAvailableAgentsFromCallParksResponse', 'GetCallParkExtensionObje
 class GetCallParkExtensionObject(ApiModel):
     #: The extension for the call park extension.
     #: example: 1415
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341415
     esn: Optional[str] = None
@@ -68,10 +68,10 @@ class GetUserNumberItemObject(ApiModel):
     external: Optional[str] = None
     #: Extension of a person or workspace.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None
@@ -109,10 +109,10 @@ class ListCPCallParkExtensionObject(ApiModel):
     id: Optional[str] = None
     #: The extension for the call park.
     #: example: 1415
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341415
     esn: Optional[str] = None
@@ -144,10 +144,10 @@ class ListCallParkExtensionObject(ApiModel):
     id: Optional[str] = None
     #: The extension for the call park extension.
     #: example: 1415
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341415
     esn: Optional[str] = None
@@ -264,9 +264,8 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/availableUsers')
         return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallParksObject, item_key='agents', params=params)
 
-    def read_the_list_of_call_park_extensions(self, extension: Union[str, datetime] = None, name: str = None,
-                                              location_id: str = None, location_name: str = None, order: str = None,
-                                              org_id: str = None,
+    def read_the_list_of_call_park_extensions(self, extension: str = None, name: str = None, location_id: str = None,
+                                              location_name: str = None, order: str = None, org_id: str = None,
                                               **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         Read the List of Call Park Extensions
@@ -281,7 +280,7 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         `spark-admin:telephony_config_read`.
 
         :param extension: Only return call park extensions with the matching extension.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param name: Only return call park extensions with the matching name.
         :type name: str
         :param location_id: Only return call park extensions with matching location ID.
@@ -298,9 +297,6 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         if extension is not None:
-            if isinstance(extension, str):
-                extension = isoparse(extension)
-            extension = dt_iso_str(extension)
             params['extension'] = extension
         if name is not None:
             params['name'] = name

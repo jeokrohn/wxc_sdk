@@ -28,7 +28,7 @@ class QuestionType(str, Enum):
 class Option(ApiModel):
     #: The order of the option.
     #: example: 1
-    order: Optional[datetime] = None
+    order: Optional[str] = None
     #: The value of the option.
     #: example: China
     value: Optional[str] = None
@@ -43,7 +43,7 @@ class Question(ApiModel):
     id: Optional[str] = None
     #: The order of the question.
     #: example: 1
-    order: Optional[datetime] = None
+    order: Optional[str] = None
     #: The question.
     #: example: Where is Webex exclusively sold through local partners?
     title: Optional[str] = None
@@ -93,7 +93,7 @@ class PollCollectionResponse(ApiModel):
 class AnswerSummaryItem(ApiModel):
     #: The order of the answer in the question.
     #: example: 1
-    order: Optional[datetime] = None
+    order: Optional[str] = None
     #: The content of the answer.
     #: example: China
     value: Optional[str] = None
@@ -142,7 +142,7 @@ class QuestionResult(ApiModel):
     id: Optional[str] = None
     #: The order of the question in the poll.
     #: example: 1
-    order: Optional[datetime] = None
+    order: Optional[str] = None
     #: The question.
     #: example: What colors do you like?
     title: Optional[str] = None

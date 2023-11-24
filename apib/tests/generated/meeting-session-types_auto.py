@@ -33,7 +33,7 @@ class SiteSessionTypeType(str, Enum):
 class SiteSessionType(ApiModel):
     #: The ID of the session type.
     #: example: 3
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: The short name of the session type.
     #: example: PRO
     short_name: Optional[str] = None
@@ -51,7 +51,7 @@ class SiteSessionType(ApiModel):
 class SessionType(ApiModel):
     #: The ID of the session type.
     #: example: 3
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: The short name of the session type.
     #: example: PRO
     short_name: Optional[str] = None

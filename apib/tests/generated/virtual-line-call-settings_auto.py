@@ -30,7 +30,7 @@ class ListVirtualLineObjectNumber(ApiModel):
     external: Optional[str] = None
     #: Virtual Line extension.  Either `external` or `extension` is mandatory.
     #: example: 6101
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Number is Primary or Alternative Number.
     #: example: True
     primary: Optional[bool] = None

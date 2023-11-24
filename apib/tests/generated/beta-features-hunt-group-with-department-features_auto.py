@@ -133,10 +133,10 @@ class GetPersonPlaceObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of person or workspace.
     #: example: 1234
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Weight of person or workspace. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
 
 
 class GetHuntGroupObject(ApiModel):
@@ -151,7 +151,7 @@ class GetHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
@@ -204,7 +204,7 @@ class ListHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the hunt group is enabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -260,7 +260,7 @@ class PostPersonPlaceObject(ApiModel):
     id: Optional[str] = None
     #: Weight of person or workspace. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
 
 
 class ModifyHuntGroupObject(ApiModel):
@@ -272,7 +272,7 @@ class ModifyHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
@@ -402,7 +402,7 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         return r
 
     def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str = None, phone_number: str = None,
-                            extension: Union[str, datetime] = None, distinctive_ring: bool = None,
+                            extension: str = None, distinctive_ring: bool = None,
                             alternate_numbers: list[AlternateNumbersWithPattern] = None, language_code: str = None,
                             first_name: str = None, last_name: str = None, time_zone: str = None,
                             call_policies: PostHuntGroupCallPolicyObject = None,
@@ -428,7 +428,7 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :param phone_number: Primary phone number of the hunt group.
         :type phone_number: str
         :param extension: Primary phone extension of the hunt group.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param distinctive_ring: Whether or not the hunt group has the distinctive ring option enabled.
         :type distinctive_ring: bool
         :param alternate_numbers: The alternate numbers feature allows you to assign multiple phone numbers or

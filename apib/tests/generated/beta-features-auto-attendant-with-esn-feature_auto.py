@@ -134,13 +134,13 @@ class GetAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341001
-    esn: Optional[datetime] = None
+    esn: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
     #: First name defined for an auto attendant.
@@ -196,13 +196,13 @@ class ListAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341001
-    esn: Optional[datetime] = None
+    esn: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
 

@@ -729,8 +729,8 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         return r
 
     def search_users(self, org_id: str, filter: str = None, attributes: str = None, excluded_attributes: str = None,
-                     sort_by: str = None, sort_order: str = None, start_index: Union[str, datetime] = None,
-                     count: Union[str, datetime] = None, return_groups: str = None, include_group_details: str = None,
+                     sort_by: str = None, sort_order: str = None, start_index: str = None, count: str = None,
+                     return_groups: str = None, include_group_details: str = None,
                      group_usage_types: str = None) -> SearchUserResponse:
         """
         Search users
@@ -804,9 +804,9 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
             'ascending' and 'descending'.
         :type sort_order: str
         :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
-        :type start_index: Union[str, datetime]
+        :type start_index: str
         :param count: An integer indicating the desired maximum number of query results per page.  The default is 10.
-        :type count: Union[str, datetime]
+        :type count: str
         :param return_groups: Define whether the group information needs to be returned.  The default is false.
         :type return_groups: str
         :param include_group_details: Define whether the group information with details need been returned. The default
@@ -828,14 +828,8 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         if sort_order is not None:
             params['sortOrder'] = sort_order
         if start_index is not None:
-            if isinstance(start_index, str):
-                start_index = isoparse(start_index)
-            start_index = dt_iso_str(start_index)
             params['startIndex'] = start_index
         if count is not None:
-            if isinstance(count, str):
-                count = isoparse(count)
-            count = dt_iso_str(count)
             params['count'] = count
         if return_groups is not None:
             params['returnGroups'] = return_groups

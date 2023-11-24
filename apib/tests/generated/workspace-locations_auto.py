@@ -12,13 +12,18 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['Floor', 'Location', 'WorkspaceLocationFloorsCollectionResponse', 'WorkspaceLocationFloorsCreationRequest',
-            'WorkspaceLocationsCollectionResponse', 'WorkspaceLocationsCreationRequest']
+            'WorkspaceLocationsCollectionResponse', 'WorkspaceLocationsCreationRequest',
+            'WorkspaceLocationsUpdateRequest']
 
 
 class Location(ApiModel):
     #: Unique identifier for the location.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9XT1JLU1BBQ0VfTE9DQVRJT04vM2E2ZmYzNzMtNjhhNy00NGU0LTkxZDYtYTI3NDYwZTBhYzVjIzUxOWY2N2E1LTlkOTktNGM2My04YTA5LWI5MTcxY2M2NmJkMQ==
     id: Optional[str] = None
+    #: The ID to use for this location in the `/locations API
+    #: <https://developer.webex.com/docs/api/v1/locations>`_
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzA2OWEzMDY2LTgwNjMtNDI0Zi05YmE0LTBhZDdhMmYxMzNjNQ
+    location_id: Optional[str] = None
     #: A friendly name for the location.
     #: example: Cisco Barcelona
     display_name: Optional[str] = None
@@ -43,6 +48,33 @@ class Location(ApiModel):
 
 
 class WorkspaceLocationsCreationRequest(ApiModel):
+    #: A friendly name for the location.
+    #: example: Cisco Barcelona
+    display_name: Optional[str] = None
+    #: The location address.
+    #: example: Carrer de Pere IV, Barcelona, Spain
+    address: Optional[str] = None
+    #: The location country code (ISO 3166-1).
+    #: example: ES
+    country_code: Optional[str] = None
+    #: The location city name.
+    #: example: Barcelona
+    city_name: Optional[str] = None
+    #: The location latitude.
+    #: example: 41
+    latitude: Optional[int] = None
+    #: The location longitude.
+    #: example: 2
+    longitude: Optional[int] = None
+    #: Notes associated with the location.
+    #: example: A note about the location
+    notes: Optional[str] = None
+
+
+class WorkspaceLocationsUpdateRequest(ApiModel):
+    #: Unique identifier for the location.
+    #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9XT1JLU1BBQ0VfTE9DQVRJT04vM2E2ZmYzNzMtNjhhNy00NGU0LTkxZDYtYTI3NDYwZTBhYzVjIzUxOWY2N2E1LTlkOTktNGM2My04YTA5LWI5MTcxY2M2NmJkMQ==
+    id: Optional[str] = None
     #: A friendly name for the location.
     #: example: Cisco Barcelona
     display_name: Optional[str] = None
@@ -104,6 +136,13 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     """
     Workspace Locations
     
+    The Workspace Locations API is deprecated and will be decommissioned November
+    30, 2024. Please start using the `/locations API
+    <https://developer.webex.com/docs/api/v1/locations>`_ for
+    all future projects.
+    
+    
+    
     A `Workspace
     <https://developer.webex.com/docs/api/v1/workspaces>`_ Location is a physical location with a name, address, country, city, latitude and longitude.
     
@@ -120,6 +159,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
                                  city_name: str = None, org_id: str = None) -> list[Location]:
         """
         List Workspace Locations
+
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
 
         List workspace locations. Use query parameters to filter the response. The `orgId` parameter can only be used
         by admin users of another
@@ -200,6 +243,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         """
         Get a Workspace Location Details
 
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+
         Shows details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI.
         Requires an administrator auth token with the `spark-admin:workspace_locations_read` scope.
 
@@ -217,6 +264,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
                                     notes: str = None) -> Location:
         """
         Update a Workspace Location
+
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
 
         Updates details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI. The
         request should include all details for the location returned in a previous call to
@@ -266,6 +317,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         """
         Delete a Workspace Location
 
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+
         Deletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new
         location can be reassigned to them.
         Requires an administrator auth token with the `spark-admin:workspace_locations_write` scope.
@@ -280,6 +335,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     def list_workspace_location_floors(self, location_id: str) -> list[Floor]:
         """
         List Workspace Location Floors
+
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
 
         List workspace location floors.
         Requires an administrator auth token with the `spark-admin:workspace_locations_read` scope.
@@ -297,6 +356,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
                                           display_name: str = None) -> Floor:
         """
         Create a Workspace Location Floor
+
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
 
         Create a new floor in the given location. The `displayName` parameter is optional, and omitting it will result
         in the creation of a floor without that value set.
@@ -323,6 +386,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         """
         Get a Workspace Location Floor Details
 
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+
         Shows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.
         Requires an administrator auth token with the `spark-admin:workspace_locations_read` scope.
 
@@ -341,6 +408,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
                                           display_name: str = None) -> Floor:
         """
         Update a Workspace Location Floor
+
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
 
         Updates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all
         details for the floor returned by a previous call to `Get Workspace Location Floor Details
@@ -370,6 +441,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     def delete_a_workspace_location_floor(self, location_id: str, floor_id: str):
         """
         Delete a Workspace Location Floor
+
+        <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
+        2024. Please start using the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
 
         Deletes a floor, by ID.
         Requires an administrator auth token with the `spark-admin:workspace_locations_write` scope.

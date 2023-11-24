@@ -86,7 +86,7 @@ class Subscriber(ApiModel):
     mobile_phone_number: Optional[str] = None
     #: The extension number configured against the subscriber on BroadWorks.
     #: example: 1212
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: The Webex for BroadWorks Package assigned to the subscriber.
     #: example: standard
     package: Optional[SubscriberPackage] = None
@@ -225,8 +225,8 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
     def provision_a_broad_works_subscriber(self, provisioning_id: str, user_id: str, sp_enterprise_id: str,
                                            first_name: str, last_name: str, package: SubscriberPackage,
                                            primary_phone_number: str = None, mobile_phone_number: str = None,
-                                           extension: Union[str, datetime] = None, email: str = None,
-                                           language: str = None, timezone: str = None) -> Subscriber:
+                                           extension: str = None, email: str = None, language: str = None,
+                                           timezone: str = None) -> Subscriber:
         """
         Provision a BroadWorks Subscriber
 
@@ -258,7 +258,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
             value on update will remove the already configured mobile phone number.
         :type mobile_phone_number: str
         :param extension: The extension number configured against the subscriber on BroadWorks.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param email: The email address of the subscriber (mandatory for the trusted email provisioning flow).
         :type email: str
         :param language: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language
@@ -313,8 +313,8 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
 
     def update_a_broad_works_subscriber(self, subscriber_id: str, user_id: str = None, first_name: str = None,
                                         last_name: str = None, primary_phone_number: str = None,
-                                        mobile_phone_number: str = None, extension: Union[str, datetime] = None,
-                                        timezone: str = None, package: str = None) -> Subscriber:
+                                        mobile_phone_number: str = None, extension: str = None, timezone: str = None,
+                                        package: str = None) -> Subscriber:
         """
         Update a BroadWorks Subscriber
 
@@ -344,7 +344,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
             value on update will remove the already configured mobile phone number.
         :type mobile_phone_number: str
         :param extension: The extension number configured against the subscriber on BroadWorks.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param timezone: The time zone associated with the subscriber. Refer to the `Webex Meetings Site Timezone
             <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_
             section of the `Webex for BroadWorks
@@ -394,8 +394,8 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
                                                       first_name: str = None, last_name: str = None,
                                                       package: SubscriberPackage = None,
                                                       primary_phone_number: str = None,
-                                                      mobile_phone_number: str = None, extension: Union[str,
-                                                      datetime] = None, language: str = None, timezone: str = None,
+                                                      mobile_phone_number: str = None, extension: str = None,
+                                                      language: str = None, timezone: str = None,
                                                       customer_info: PrecheckABroadworksSubscriberProvisioningCustomerInfo = None) -> SubscriberProvisioningPrecheckResponse:
         """
         Precheck a Broadworks Subscriber Provisioning
@@ -433,7 +433,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         :param mobile_phone_number: The mobile phone number configured against the subscriber on BroadWorks.
         :type mobile_phone_number: str
         :param extension: The extension number configured against the subscriber on BroadWorks.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param language: The ISO 639-1 language code associated with the subscriber. Reserved for future use. Any value
             currently specified will be ignored during subscriber provisioning.
         :type language: str

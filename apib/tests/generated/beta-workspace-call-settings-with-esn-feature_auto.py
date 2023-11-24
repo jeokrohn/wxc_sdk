@@ -25,10 +25,10 @@ class MonitoredElementCallParkExtension(ApiModel):
     name: Optional[str] = None
     #: Extension of call park extension.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None
@@ -53,10 +53,10 @@ class UserNumberItem(ApiModel):
     external: Optional[str] = None
     #: Extension of person or workspace. Either `phoneNumber` or `extension` is mandatory.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None
@@ -110,10 +110,10 @@ class PhoneNumbers(ApiModel):
     external: Optional[str] = None
     #: Extension for workspace.
     #: example: 123
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 1234123
     esn: Optional[str] = None

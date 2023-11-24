@@ -58,7 +58,7 @@ class MemberObject(ApiModel):
     extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 1234000
     esn: Optional[str] = None
@@ -192,7 +192,7 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         return r
 
     def search_members(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
-                       extension: Union[str, datetime] = None, org_id: str = None,
+                       extension: str = None, org_id: str = None,
                        **params) -> Generator[SearchMemberObject, None, None]:
         """
         Search Members
@@ -215,7 +215,7 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         :param phone_number: Search (Contains) based on number.
         :type phone_number: str
         :param extension: Search (Contains) based on extension.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param org_id: Retrieves the list of available members on the device in this organization.
         :type org_id: str
         :return: Generator yielding :class:`SearchMemberObject` instances
@@ -228,9 +228,6 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         if extension is not None:
-            if isinstance(extension, str):
-                extension = isoparse(extension)
-            extension = dt_iso_str(extension)
             params['extension'] = extension
         url = self.ep(f'availableMembers')
         return self.session.follow_pagination(url=url, model=SearchMemberObject, item_key='members', params=params)

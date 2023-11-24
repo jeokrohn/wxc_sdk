@@ -197,7 +197,7 @@ class CallForwardSelectiveCallsToNumbersObject(ApiModel):
     phone_number: Optional[str] = None
     #: Calls To extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Calls to type options.
     #: example: PRIMARY
     type: Optional[CallForwardSelectiveCallsToNumbersObjectType] = None
@@ -348,7 +348,7 @@ class GetAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
     #: First name defined for an auto attendant.
@@ -404,7 +404,7 @@ class ListAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
 
@@ -444,7 +444,7 @@ class ModifyAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: First name defined for an auto attendant.
     #: example: Main Line AA
     first_name: Optional[str] = None
@@ -574,10 +574,9 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
 
     def create_an_auto_attendant(self, location_id: str, name: str, business_schedule: str,
                                  business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
-                                 phone_number: str = None, extension: Union[str, datetime] = None,
-                                 first_name: str = None, last_name: str = None,
-                                 alternate_numbers: list[AlternateNumbersObject] = None, language_code: str = None,
-                                 holiday_schedule: str = None,
+                                 phone_number: str = None, extension: str = None, first_name: str = None,
+                                 last_name: str = None, alternate_numbers: list[AlternateNumbersObject] = None,
+                                 language_code: str = None, holiday_schedule: str = None,
                                  extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
                                  name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
                                  org_id: str = None) -> str:
@@ -605,7 +604,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :param phone_number: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
         :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param first_name: First name defined for an auto attendant.
         :type first_name: str
         :param last_name: Last name defined for an auto attendant.
@@ -661,10 +660,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         return r
 
     def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str = None,
-                                 phone_number: str = None, extension: Union[str, datetime] = None,
-                                 first_name: str = None, last_name: str = None,
-                                 alternate_numbers: list[AlternateNumbersObject] = None, language_code: str = None,
-                                 business_schedule: str = None, holiday_schedule: str = None,
+                                 phone_number: str = None, extension: str = None, first_name: str = None,
+                                 last_name: str = None, alternate_numbers: list[AlternateNumbersObject] = None,
+                                 language_code: str = None, business_schedule: str = None,
+                                 holiday_schedule: str = None,
                                  extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
                                  name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
                                  business_hours_menu: HoursMenuGetObject = None,
@@ -689,7 +688,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :param phone_number: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
         :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param first_name: First name defined for an auto attendant.
         :type first_name: str
         :param last_name: Last name defined for an auto attendant.

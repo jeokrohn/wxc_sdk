@@ -121,7 +121,7 @@ class GetAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
     #: First name defined for an auto attendant.
@@ -188,7 +188,7 @@ class ListAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
     #: Specifies the department information.
@@ -204,7 +204,7 @@ class ModifyAutoAttendantObject(ApiModel):
     phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
     #: example: 1001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: First name defined for an auto attendant.
     #: example: Main Line AA
     first_name: Optional[str] = None
@@ -338,7 +338,7 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         return r
 
     def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, business_schedule: str,
-                                 name: str = None, phone_number: str = None, extension: Union[str, datetime] = None,
+                                 name: str = None, phone_number: str = None, extension: str = None,
                                  first_name: str = None, last_name: str = None,
                                  alternate_numbers: list[AlternateNumbersObject] = None, language_code: str = None,
                                  holiday_schedule: str = None,
@@ -370,7 +370,7 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
             mandatory.
         :type phone_number: str
         :param extension: Auto attendant extension. Either phone number or extension should be present as mandatory.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param first_name: First name defined for an auto attendant.
         :type first_name: str
         :param last_name: Last name defined for an auto attendant.

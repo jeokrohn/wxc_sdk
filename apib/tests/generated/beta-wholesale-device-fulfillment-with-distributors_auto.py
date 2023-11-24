@@ -129,7 +129,7 @@ class Person(ApiModel):
 class OrderResponseLineItem(ApiModel):
     #: The order line item number.
     #: example: 1
-    line_item_number: Optional[datetime] = None
+    line_item_number: Optional[str] = None
     #: The line item catalog identifier.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0NBVEFMT0dJVEVNLzZmN2QzMTFjLTc1YjEtNGM4Ny04YTMyLTIwODMwNjcyYjE4Yg
     catalog_id: Optional[str] = None

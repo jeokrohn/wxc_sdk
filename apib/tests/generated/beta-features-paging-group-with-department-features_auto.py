@@ -41,7 +41,7 @@ class GetPagingGroupAgentObject(ApiModel):
     phone_number: Optional[str] = None
     #: Agents extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
 
 
 class GetPagingGroupObjectDepartment(ApiModel):
@@ -69,7 +69,7 @@ class GetPagingGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Paging language. Minimum length is 1. Maximum length is 40.
     #: example: English
     language: Optional[str] = None
@@ -107,7 +107,7 @@ class ListPagingGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Name of location for paging group.
     #: example: Alaska
     location_name: Optional[str] = None
@@ -137,7 +137,7 @@ class UpdatePagingGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Language code.
     #: example: en_us
     language_code: Optional[str] = None
@@ -261,8 +261,8 @@ class BetaFeaturesPagingGroupWithDepartmentFeaturesApi(ApiChild, base='telephony
         return r
 
     def update_a_paging_group(self, location_id: str, paging_id: str, enabled: bool = None, name: str = None,
-                              phone_number: str = None, extension: Union[str, datetime] = None,
-                              language_code: str = None, first_name: str = None, last_name: str = None,
+                              phone_number: str = None, extension: str = None, language_code: str = None,
+                              first_name: str = None, last_name: str = None,
                               originator_caller_id_enabled: bool = None, originators: list[str] = None,
                               targets: list[str] = None, department: UpdatePagingGroupObjectDepartment = None,
                               org_id: str = None):
@@ -291,7 +291,7 @@ class BetaFeaturesPagingGroupWithDepartmentFeaturesApi(ApiChild, base='telephony
         :type phone_number: str
         :param extension: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or
             extension is mandatory.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".

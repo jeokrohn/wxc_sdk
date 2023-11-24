@@ -48,7 +48,7 @@ class AnnouncementResponse(ApiModel):
     file_name: Optional[str] = None
     #: Size of the file in kilobytes.
     #: example: 356
-    file_size: Optional[datetime] = None
+    file_size: Optional[str] = None
     #: Media file type of the announcement file.
     #: example: WAV
     media_file_type: Optional[str] = None
@@ -108,7 +108,7 @@ class AnnouncementsListResponse(ApiModel):
     file_name: Optional[str] = None
     #: Size of the file in kilobytes.
     #: example: 356
-    file_size: Optional[datetime] = None
+    file_size: Optional[str] = None
     #: Media file type of the announcement file.
     #: example: WAV
     media_file_type: Optional[str] = None

@@ -79,7 +79,7 @@ class EventData(ApiModel):
     is_call_answered: Optional[str] = None
     #: telephony; duration of call in seconds
     #: example: 192
-    call_duration_seconds: Optional[datetime] = None
+    call_duration_seconds: Optional[str] = None
     #: telephony; ISO 8601
     #: example: 2023-02-08T06:12:43.976Z
     call_start_time: Optional[datetime] = None
@@ -94,16 +94,16 @@ class EventData(ApiModel):
     calling_number: Optional[str] = None
     #: telephony
     #: example: 211
-    calling_line_id: Optional[datetime] = None
+    calling_line_id: Optional[str] = None
     #: telephony; destination number
     #: example: 4089671221
     called_number: Optional[str] = None
     #: telephony
     #: example: 219
-    called_line_id: Optional[datetime] = None
+    called_line_id: Optional[str] = None
     #: telephony
     #: example: 123
-    dialed_digits: Optional[datetime] = None
+    dialed_digits: Optional[str] = None
     #: telephony
     call_redirecting_number: Optional[str] = None
     #: telephony

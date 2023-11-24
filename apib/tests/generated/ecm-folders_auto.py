@@ -33,10 +33,10 @@ class ECMFolder(ApiModel):
     room_type: Optional[ECMFolderRoomType] = None
     #: Sharepoint or OneDrive drive id. It can be queried via MS Graph APIs.
     #: example: 123
-    drive_id: Optional[datetime] = None
+    drive_id: Optional[str] = None
     #: Sharepoint or OneDrive item id. It can be queried via MS Graph APIs.
     #: example: 456
-    item_id: Optional[datetime] = None
+    item_id: Optional[str] = None
     #: Indicates if this is the default content storage for the room.
     #: example: false
     default_folder: Optional[str] = None
@@ -86,9 +86,8 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         r = TypeAdapter(list[ECMFolder]).validate_python(data['items'])
         return r
 
-    def create_an_ecm_folder_configuration(self, room_id: str, content_url: str, display_name: str,
-                                           drive_id: Union[str, datetime], item_id: Union[str, datetime],
-                                           default_folder: str) -> ECMFolder:
+    def create_an_ecm_folder_configuration(self, room_id: str, content_url: str, display_name: str, drive_id: str,
+                                           item_id: str, default_folder: str) -> ECMFolder:
         """
         Create an ECM folder configuration
 
@@ -105,9 +104,9 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :param display_name: This should match the folder name in the ECM backend.
         :type display_name: str
         :param drive_id: Sharepoint or OneDrive drive id. It can be queried via MS Graph APIs.
-        :type drive_id: Union[str, datetime]
+        :type drive_id: str
         :param item_id: Sharepoint or OneDrive item id. It can be queried via MS Graph APIs.
-        :type item_id: Union[str, datetime]
+        :type item_id: str
         :param default_folder: Makes the folder the default storage for the space.
         :type default_folder: str
         :rtype: :class:`ECMFolder`
@@ -139,9 +138,8 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         r = ECMFolder.model_validate(data)
         return r
 
-    def update_an_ecm_linked_folder(self, id: str, room_id: str, content_url: str, display_name: str,
-                                    drive_id: Union[str, datetime], item_id: Union[str, datetime],
-                                    default_folder: str) -> ECMFolder:
+    def update_an_ecm_linked_folder(self, id: str, room_id: str, content_url: str, display_name: str, drive_id: str,
+                                    item_id: str, default_folder: str) -> ECMFolder:
         """
         Update an ECM Linked Folder
 
@@ -160,9 +158,9 @@ class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):
         :param display_name: This should match the folder name in the ECM backend.
         :type display_name: str
         :param drive_id: Sharepoint or OneDrive drive id. It can be queried via MS Graph APIs.
-        :type drive_id: Union[str, datetime]
+        :type drive_id: str
         :param item_id: Sharepoint or OneDrive item id. It can be queried via MS Graph APIs.
-        :type item_id: Union[str, datetime]
+        :type item_id: str
         :param default_folder: Makes the folder the default storage for the space.
         :type default_folder: str
         :rtype: :class:`ECMFolder`

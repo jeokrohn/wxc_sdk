@@ -34,7 +34,7 @@ class CDR(ApiModel):
     #: The authorization code admin created for a location or site for users to use. Collected by the
     #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     #: example: 107
-    authorization_code: Optional[datetime] = Field(alias='Authorization code', default=None)
+    authorization_code: Optional[str] = Field(alias='Authorization code', default=None)
     #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if
     #: necessary.
     #: example: SSE1101163211405201218829100@10.177.4.29
@@ -87,7 +87,7 @@ class CDR(ApiModel):
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the
     #: called party.
     #: example: 2002
-    called_number: Optional[datetime] = Field(alias='Called number', default=None)
+    called_number: Optional[str] = Field(alias='Called number', default=None)
     #: For incoming calls, the calling line ID of the calling party. For outgoing calls, it's the calling line ID of
     #: the user.
     #: example: YOURCLIDGOESHERE
@@ -95,7 +95,7 @@ class CDR(ApiModel):
     #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of
     #: the user.
     #: example: 2001
-    calling_number: Optional[datetime] = Field(alias='Calling number', default=None)
+    calling_number: Optional[str] = Field(alias='Calling number', default=None)
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
     #: 
     #: - SIP
@@ -136,7 +136,7 @@ class CDR(ApiModel):
     #: number field.
     #: This field is only used for originating (outgoing) Calls and is not available for terminating (incoming) Calls.
     #: example: 1246
-    dialed_digits: Optional[datetime] = Field(alias='Dialed digits', default=None)
+    dialed_digits: Optional[str] = Field(alias='Dialed digits', default=None)
     #: Whether the call was inbound or outbound. The possible values are:
     #: 
     #: - ORIGINATING
@@ -442,7 +442,7 @@ class CDR(ApiModel):
     site_main_number: Optional[str] = Field(alias='Site main number', default=None)
     #: Site timezone is the offset in minutes from UTC time of the user's timezone.
     #: example: -300
-    site_timezone: Optional[datetime] = Field(alias='Site timezone', default=None)
+    site_timezone: Optional[str] = Field(alias='Site timezone', default=None)
     #: A unique identifier for the site associated with the call. Unique across Cisco products.
     #: example: 474d4f70-4ef5-4d52-9e1d-b207086629e0
     site_uuid: Optional[str] = Field(alias='Site UUID', default=None)

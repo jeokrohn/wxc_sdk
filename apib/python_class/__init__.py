@@ -628,6 +628,39 @@ class PythonAPI:
         return full_api_source
 
 
+def guess_datetime_or_int(sample: Optional[str], type_hint: Optional[str]) -> tuple[Optional[Union[str, int]], str]:
+    """
+    Guess type of sample and return tuple:
+        * sample value
+        * Python type: datetime, str, or int
+
+    Only assume datetime if the sample doesn't parse as int
+    """
+    if sample is None:
+        return sample, 'str'
+
+    # is it a datetime?
+    try:
+        dateutil.parser.parse(sample)
+        python_type = 'datetime'
+    except (OverflowError, dateutil.parser.ParserError, TypeError):
+        # probably a string
+        return sample, 'str'
+    except Exception as e:
+        raise NotImplementedError(f'Unexpected error when trying to parse a string: {e}')
+
+    # only assume datetime if sample doesn't parse as int
+    try:
+        sample = int(sample)
+    except ValueError:
+        pass
+    else:
+        if type_hint == 'string':
+            return str(sample), 'str'
+        return sample, 'int'
+    return sample, python_type
+
+
 @dataclass(init=False)
 class PythonClassRegistry:
     # context used to disambiguate class names in the registry
@@ -758,15 +791,7 @@ class PythonClassRegistry:
         if value.element == 'string':
             sample = value.content
             # could be a datetime
-            if sample is None:
-                python_type = 'str'
-            else:
-                try:
-                    dateutil.parser.parse(sample)
-                    python_type = 'datetime'
-                except (OverflowError, dateutil.parser.ParserError):
-                    # probably a string
-                    python_type = 'str'
+            sample, python_type = guess_datetime_or_int(sample, 'string')
         elif value.element == 'array':
             sample = None
             if not isinstance(value.content, list):
@@ -1336,6 +1361,9 @@ class PythonClassRegistry:
             type_hint = None
         else:
             type_hint = member.meta.title
+            if type_hint is None and member.value and member.value.element.lower() == 'string':
+                # use value as fallback
+                type_hint = member.value.element
         optional = 'required' not in member.type_attributes
 
         # now try to determine the actual Python type and sample value
@@ -1457,18 +1485,7 @@ class PythonClassRegistry:
             else:
                 raise NotImplementedError(f'unhandled sample: {sample}')
         elif type_hint_lower == 'string' or type_hint_lower is None:
-            # could be a datetime
-            if sample is None:
-                python_type = 'str'
-            else:
-                try:
-                    dateutil.parser.parse(sample)
-                    python_type = 'datetime'
-                except (OverflowError, dateutil.parser.ParserError, TypeError):
-                    # probably a string
-                    python_type = 'str'
-                except Exception as e:
-                    raise NotImplementedError(f'Unexpected error when trying to parse a string: {e}')
+            sample, python_type = guess_datetime_or_int(sample, type_hint_lower)
         elif type_hint_lower == 'number':
             # can be int or float
             if sample is None:

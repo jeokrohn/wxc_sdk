@@ -441,8 +441,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         url = self.ep('transfer')
         super().post(url, json=body)
 
-    def park(self, call_id: str, destination: Union[str, datetime] = None,
-             is_group_park: str = None) -> PartyInformation:
+    def park(self, call_id: str, destination: str = None, is_group_park: str = None) -> PartyInformation:
         """
         Park
 
@@ -454,7 +453,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param destination: Identifes where the call is to be parked. If not provided, the call is parked against the
             parking user. The destination can be digits or a URI. Some examples for destination include: `1234`,
             `2223334444`, `+12223334444`, `*73`, `tel:+12223334444`, `user@company.domain`, `sip:user@company.domain`
-        :type destination: Union[str, datetime]
+        :type destination: str
         :param is_group_park: If set to`true`, the call is parked against an automatically selected member of the
             user's call park group and the destination parameter is ignored.
         :type is_group_park: str
@@ -471,7 +470,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         r = PartyInformation.model_validate(data['parkedAgainst'])
         return r
 
-    def retrieve(self, destination: Union[str, datetime] = None, endpoint_id: str = None) -> DialResponse:
+    def retrieve(self, destination: str = None, endpoint_id: str = None) -> DialResponse:
         """
         Retrieve
 
@@ -483,7 +482,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             used as the destination for the retrieve command. If not provided, the call parked against the retrieving
             user is retrieved. The destination can be digits or a URI. Some examples for destination include: `1234`,
             `2223334444`, `+12223334444`, `*73`, `tel:+12223334444`, `user@company.domain`, `sip:user@company.domain`
-        :type destination: Union[str, datetime]
+        :type destination: str
         :param endpoint_id: The ID of the device or application to use for the retrieval. The `endpointId` must be one
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
@@ -608,7 +607,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         url = self.ep('push')
         super().post(url, json=body)
 
-    def pickup(self, target: Union[str, datetime] = None, endpoint_id: str = None) -> DialResponse:
+    def pickup(self, target: str = None, endpoint_id: str = None) -> DialResponse:
         """
         Pickup
 
@@ -620,7 +619,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             user's call pickup group is picked up. The target can be digits or a URI. Some examples for target
             include: `1234`, `2223334444`, `+12223334444`, `tel:+12223334444`, `user@company.domain`,
             `sip:user@company.domain`
-        :type target: Union[str, datetime]
+        :type target: str
         :param endpoint_id: The ID of the device or application to use for the pickup. The `endpointId` must be one of
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
@@ -637,7 +636,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         r = DialResponse.model_validate(data)
         return r
 
-    def barge_in(self, target: Union[str, datetime], endpoint_id: str = None) -> DialResponse:
+    def barge_in(self, target: str, endpoint_id: str = None) -> DialResponse:
         """
         Barge In
 
@@ -647,7 +646,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param target: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target
             include: `1234`, `2223334444`, `+12223334444`, `tel:+12223334444`, `user@company.domain`,
             `sip:user@company.domain`
-        :type target: Union[str, datetime]
+        :type target: str
         :param endpoint_id: The ID of the device or application to use for the barge-in. The `endpointId` must be one
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.

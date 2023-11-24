@@ -60,10 +60,10 @@ class SnippetObject(ApiModel):
     start: Optional[datetime] = None
     #: Offset from the beginning of the closed captions in milliseconds indicating the start time of the snippet.
     #: example: 1000
-    offset_millisecond: Optional[datetime] = None
+    offset_millisecond: Optional[str] = None
     #: Duration of the snippet in milliseconds.
     #: example: 2000
-    duration_millisecond: Optional[datetime] = None
+    duration_millisecond: Optional[str] = None
     #: Original language of the snippet.
     #: example: en
     language: Optional[str] = None

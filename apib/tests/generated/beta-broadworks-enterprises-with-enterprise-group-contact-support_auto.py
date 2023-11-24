@@ -165,7 +165,7 @@ class TriggerUserDirectorySyncResponseUserResponse(ApiModel):
     last_name: Optional[str] = None
     #: Extension of the user on Broadworks.
     #: example: 4653
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Phone number of the user on Broadworks.
     #: example: +35391884653
     number: Optional[str] = None

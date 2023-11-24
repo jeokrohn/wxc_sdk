@@ -2139,7 +2139,7 @@ class Registrant(ApiModel):
     #: Registrant's registration ID. Registrants have a special number to identify a registrations if it is
     #: webinar-enabled and enabled registration ID.
     #: example: 1111
-    registration_id: Optional[datetime] = None
+    registration_id: Optional[str] = None
 
 
 class RegistrantCreateResponse(ApiModel):
@@ -2245,7 +2245,7 @@ class MeetingSessionTypeObjectType(str, Enum):
 class MeetingSessionTypeObject(ApiModel):
     #: Unique identifier for the meeting session type.
     #: example: 628
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Name of the meeting session type.
     #: example: Webex Meetings EC 2.0 meeting
     name: Optional[str] = None
@@ -2359,7 +2359,7 @@ class JoinMeetingObject(ApiModel):
     expiration_minutes: Optional[int] = None
     #: Required when the meeting is webinar-enabled and enabled registration ID.
     #: example: 1111
-    registration_id: Optional[datetime] = None
+    registration_id: Optional[str] = None
     #: Email address for the meeting host. This attribute should be set if the user or application calling the API has
     #: the admin on-behalf-of scopes. This parameter is required for a `Service App
     #: <https://developer.webex.com/docs/service-apps>`_. It only applies to meetings, not
@@ -2583,7 +2583,7 @@ class InvitationSourceCreateObject(ApiModel):
 class InvitationSourceObject(ApiModel):
     #: Unique identifier for invitation source.
     #: example: 1
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Source ID for invitation.
     #: example: cisco
     source_id: Optional[str] = None
@@ -2652,7 +2652,7 @@ class OptionsForTrackingCodeObject(ApiModel):
 class MeetingTrackingCodesObject(ApiModel):
     #: Unique identifier for the tracking code.
     #: example: 1
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Name for the tracking code.
     #: example: Department
     name: Optional[str] = None
@@ -2698,7 +2698,7 @@ class ReassignMeetingResponseObject(ApiModel):
     meeting_id: Optional[str] = None
     #: HTTP status code for the meeting reassignment result.
     #: example: 404
-    http_status: Optional[datetime] = None
+    http_status: Optional[str] = None
     #: General message for the host reassignment of `meetingId` if it fails.
     #: example: The requested resource could not be found.
     message: Optional[str] = None
@@ -4138,7 +4138,7 @@ class MeetingsApi(ApiChild, base='meetings'):
 
     def join_a_meeting(self, meeting_id: str = None, meeting_number: str = None, web_link: str = None,
                        join_directly: bool = None, email: str = None, display_name: str = None, password: str = None,
-                       expiration_minutes: int = None, registration_id: Union[str, datetime] = None,
+                       expiration_minutes: int = None, registration_id: str = None,
                        host_email: str = None) -> JoinMeetingLinkObject:
         """
         Join a Meeting
@@ -4197,7 +4197,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param expiration_minutes: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
         :type expiration_minutes: int
         :param registration_id: Required when the meeting is webinar-enabled and enabled registration ID.
-        :type registration_id: Union[str, datetime]
+        :type registration_id: str
         :param host_email: Email address for the meeting host. This attribute should be set if the user or application
             calling the API has the admin on-behalf-of scopes. This parameter is required for a `Service App
             <https://developer.webex.com/docs/service-apps>`_. It only

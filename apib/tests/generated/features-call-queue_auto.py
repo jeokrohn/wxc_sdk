@@ -183,7 +183,7 @@ class CallForwardingNumbers(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the call queue.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Type of
     #: example: PRIMARY
     type: Optional[CallForwardingNumbersType] = None
@@ -482,7 +482,7 @@ class PostPersonPlaceVirtualLineCallQueueObject(ApiModel):
     id: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
     #: Skill level of person, workspace or virtual line. Only applied when call routing type is `SKILL_BASED`.
     #: example: 1
     skill_level: Optional[int] = None
@@ -497,7 +497,7 @@ class CreateCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the call queue. Either a `phoneNumber` or extension is mandatory.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Language code.
     #: example: en-US
     language_code: Optional[str] = None
@@ -691,7 +691,7 @@ class GetCallQueueNightServiceObject(ApiModel):
     action: Optional[GetCallQueueHolidayObjectAction] = None
     #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
     #: example: 1234
-    transfer_phone_number: Optional[datetime] = None
+    transfer_phone_number: Optional[str] = None
     #: Specifies if an announcement plays to callers before applying the action.
     #: example: True
     play_announcement_before_enabled: Optional[bool] = None
@@ -758,10 +758,10 @@ class GetPersonPlaceVirtualLineCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of person, workspace or virtual line.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call `routingType` is `SKILL_BASED`.
     #: example: 1
     skill_level: Optional[int] = None
@@ -801,7 +801,7 @@ class GetCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the call queue.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
     #: example: True
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
@@ -896,7 +896,7 @@ class ListCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the call queue.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the call queue is enabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -950,7 +950,7 @@ class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
     id: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
     #: Skill level of person, workspace or virtual line. Only applied when call routing type is `SKILL_BASED`.
     #: example: 1
     skill_level: Optional[int] = None
@@ -984,7 +984,7 @@ class ModifyCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the call queue.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
@@ -1014,7 +1014,7 @@ class PatchCallQueueNightServiceObject(ApiModel):
     action: Optional[GetCallQueueHolidayObjectAction] = None
     #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
     #: example: 1234
-    transfer_phone_number: Optional[datetime] = None
+    transfer_phone_number: Optional[str] = None
     #: Specifies if an announcement plays to callers before applying the action.
     #: example: True
     play_announcement_before_enabled: Optional[bool] = None
@@ -1120,7 +1120,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def create_a_call_queue(self, location_id: str, name: str, call_policies: GetCallQueueCallPolicyObject,
                             queue_settings: CallQueueQueueSettingsGetObject,
                             agents: list[PostPersonPlaceVirtualLineCallQueueObject], phone_number: str = None,
-                            extension: Union[str, datetime] = None, language_code: str = None, first_name: str = None,
+                            extension: str = None, language_code: str = None, first_name: str = None,
                             last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None,
                             phone_number_for_outgoing_calls_enabled: bool = None, org_id: str = None) -> str:
         """
@@ -1153,7 +1153,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             mandatory.
         :type phone_number: str
         :param extension: Primary phone extension of the call queue. Either a `phoneNumber` or extension is mandatory.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
@@ -1268,7 +1268,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def update_a_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsGetObject,
                             enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None,
                             last_name: str = None, time_zone: str = None, phone_number: str = None,
-                            extension: Union[str, datetime] = None,
+                            extension: str = None,
                             alternate_number_settings: GetCallQueueObjectAlternateNumberSettings = None,
                             call_policies: GetCallQueueCallPolicyObject = None,
                             allow_call_waiting_for_agents_enabled: bool = None,
@@ -1313,7 +1313,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param phone_number: Primary phone number of the call queue.
         :type phone_number: str
         :param extension: Extension of the call queue.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param alternate_number_settings: The alternate numbers feature allows you to assign multiple phone numbers or
             extensions to a call queue. Each number will reach the same greeting and each menu will function
             identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
@@ -1822,7 +1822,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                           force_night_service_enabled: bool,
                                           manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                           action: GetCallQueueHolidayObjectAction = None,
-                                          transfer_phone_number: Union[str, datetime] = None,
+                                          transfer_phone_number: str = None,
                                           audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
                                           business_hours_name: str = None,
                                           business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel = None,
@@ -1862,7 +1862,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type action: GetCallQueueHolidayObjectAction
         :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
             also be an extension.
-        :type transfer_phone_number: Union[str, datetime]
+        :type transfer_phone_number: str
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
         :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
         :param business_hours_name: Name of the schedule configured for a night service as one of from

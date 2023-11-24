@@ -118,7 +118,7 @@ class LicenseProperties(ApiModel):
     phone_number: Optional[str] = None
     #: Webex Calling extension of the user. Applicable to Webex Calling license.
     #: example: 133
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
 
 
 class LicenseRequest(ApiModel):

@@ -107,7 +107,7 @@ class Person(ApiModel):
     phone_numbers: Optional[list[PersonPhoneNumbers]] = None
     #: The Webex Calling extension for the person. Only applies to a person with a Webex Calling license
     #: example: 133
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: The ID of the location for this person retrieved from BroadCloud.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzYzNzE1
     location_id: Optional[str] = None
@@ -299,7 +299,7 @@ class PeopleApi(ApiChild, base='people'):
         return self.session.follow_pagination(url=url, model=Person, item_key='items', params=params)
 
     def create_a_person(self, emails: list[str], calling_data: bool = None,
-                        phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: Union[str, datetime] = None,
+                        phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: str = None,
                         location_id: str = None, display_name: str = None, first_name: str = None,
                         last_name: str = None, avatar: str = None, roles: list[str] = None,
                         licenses: list[str] = None, department: str = None, manager: str = None,
@@ -340,7 +340,7 @@ class PeopleApi(ApiChild, base='people'):
         :type phone_numbers: list[CreateAPersonPhoneNumbers]
         :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
             Calling license.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param location_id: The ID of the location for this person.
         :type location_id: str
         :param display_name: The full name of the person.
@@ -446,7 +446,7 @@ class PeopleApi(ApiChild, base='people'):
 
     def update_a_person(self, person_id: str, display_name: str, calling_data: bool = None,
                         show_all_types: bool = None, emails: list[str] = None,
-                        phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: Union[str, datetime] = None,
+                        phone_numbers: list[CreateAPersonPhoneNumbers] = None, extension: str = None,
                         location_id: str = None, first_name: str = None, last_name: str = None, nick_name: str = None,
                         avatar: str = None, roles: list[str] = None, licenses: list[str] = None,
                         department: str = None, manager: str = None, manager_id: str = None, title: str = None,
@@ -500,7 +500,7 @@ class PeopleApi(ApiChild, base='people'):
         :type phone_numbers: list[CreateAPersonPhoneNumbers]
         :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
             Calling license
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param location_id: The ID of the location for this person.
         :type location_id: str
         :param first_name: The first name of the person.

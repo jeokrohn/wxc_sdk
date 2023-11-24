@@ -192,10 +192,10 @@ class GetPersonPlaceObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of person or workspace.
     #: example: 1234
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Weight of person or workspace. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
 
 
 class GetCallQueueObject(ApiModel):
@@ -220,7 +220,7 @@ class GetCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the call queue.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
@@ -264,7 +264,7 @@ class ListCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the call queue.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the call queue is enabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -284,7 +284,7 @@ class PostPersonPlaceObject(ApiModel):
     id: Optional[str] = None
     #: Weight of person or workspace. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
 
 
 class ModifyCallQueueObject(ApiModel):
@@ -312,7 +312,7 @@ class ModifyCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the call queue.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
@@ -438,7 +438,7 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
     def update_a_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject,
                             enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None,
                             last_name: str = None, time_zone: str = None, phone_number: str = None,
-                            extension: Union[str, datetime] = None,
+                            extension: str = None,
                             alternate_number_settings: GetCallQueueObjectAlternateNumberSettings = None,
                             call_policies: GetCallQueueCallPolicyObject = None,
                             allow_call_waiting_for_agents_enabled: bool = None,
@@ -482,7 +482,7 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         :param phone_number: Primary phone number of the call queue.
         :type phone_number: str
         :param extension: Extension of the call queue.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param alternate_number_settings: The alternate numbers feature allows you to assign multiple phone numbers or
             extensions to a call queue. Each number will reach the same greeting and each menu will function
             identically to the main number. The alternate numbers option enables you to have up to ten (10) phone

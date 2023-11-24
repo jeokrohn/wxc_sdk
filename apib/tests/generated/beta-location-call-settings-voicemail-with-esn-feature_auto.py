@@ -86,7 +86,7 @@ class GetLocationVoicemailGroupObject(ApiModel):
     extension: Optional[int] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 123423455
     esn: Optional[str] = None
@@ -142,11 +142,11 @@ class GetVoicemailGroupObject(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
     location_id: Optional[str] = None
     #: Extension of the voicemail group.
-    #: example: 0007
-    extension: Optional[datetime] = None
+    #: example: 7
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12340007
     esn: Optional[str] = None

@@ -189,7 +189,7 @@ class Customer(ApiModel):
     dnis: Optional[str] = None
     #: The ID assigned to an entry point.
     #: example: 11
-    entrypoint_id: Optional[datetime] = None
+    entrypoint_id: Optional[str] = None
     #: The name of the entry point, which is the landing place for customer calls on the Webex Contact Center system.
     #: Calls are moved from the entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesEP
@@ -252,7 +252,7 @@ class CustomerSession(Customer):
     ivr_duration: Optional[int] = None
     #: A string that identifies a queue.
     #: example: 20
-    queue_id: Optional[datetime] = None
+    queue_id: Optional[str] = None
     #: The number of queues contact entered.
     #: example: 1
     queue_count: Optional[int] = None

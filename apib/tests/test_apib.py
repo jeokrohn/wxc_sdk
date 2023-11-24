@@ -463,6 +463,63 @@ class ReadAPIB(ApibTest):
         print(f'member content attributes: {", ".join(sorted(content_attrs))}')
         print(f'member content value attributes: {", ".join(sorted(member_content_value_attrs))}')
 
+    def test_parameter_members_typehint_based_on_meta_and_or_value(self):
+        """
+        go through all member elements that describe parameters and try to figure out how to best derive a type_hint
+        Outcome:
+            * meta is always present
+            * meta.title can be none
+            * meta.title is the best type hint
+            * if meta.title is None then we can fall back to value
+        """
+        logging.getLogger().setLevel(logging.INFO)
+        member_value_elements = set()
+        meta_titles = set()
+        type_hints = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            for attr_info in all_attrs(data):
+                try:
+                    if attr_info.attr_value['element'] != 'member':
+                        continue
+                except (TypeError, KeyError):
+                    continue
+                m = re.match(r'^.+?\.(\w+)\.\w+\[\d+]$', attr_info.path)
+                self.assertIsNotNone(m)
+                parent = m.group(1)
+                if parent != 'hrefVariables':
+                    continue
+                member = ApibMember.model_validate(attr_info.attr_value)
+                value = member.value
+                meta = member.meta
+
+                member_value_hint = '-'
+                if value:
+                    member_value_elements.add(value.element)
+                    member_value_hint = value.element
+                meta_value_hint = '-'
+                if meta:
+                    meta_title = meta.title
+                    if meta_title is None:
+                        meta_title = '<none>'
+                    meta_value_hint = meta_title
+                    meta_titles.add(meta_title)
+                type_hints.add(f'{member_value_hint}/{meta_value_hint}')
+
+                if meta_value_hint == '<none>':
+                    # figure out where this is happening and print some info
+                    transition_data = next((data for data in attr_info.data_path
+                                            if isinstance(data, dict) and data.get('element') == 'transition'))
+                    transition = ApibTransition.model_validate(transition_data)
+                    print(f'meta.title is none: {path}, {transition.title}, {member.key}')
+                    foo = 1
+
+        print(f'Member value elements: {", ".join(sorted(member_value_elements))}')
+        print(f'Meta titles: {", ".join(sorted(meta_titles))}')
+        print('type hints:')
+        print('\n'.join(f'* {h}' for h in sorted(type_hints)))
+        ...
+
     def test_type_attributes(self):
         """
         Are 'type_attributes' really always an 'array' with string elements only?

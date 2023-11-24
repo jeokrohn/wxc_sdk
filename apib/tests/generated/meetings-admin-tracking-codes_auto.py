@@ -89,7 +89,7 @@ class ScheduleStartCodeObject(ApiModel):
 class GetTrackingCodeObject(ApiModel):
     #: Unique identifier for tracking code.
     #: example: 1
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Name for tracking code.
     #: example: Department
     name: Optional[str] = None
@@ -134,7 +134,7 @@ class CreateOrUpdateTrackingCodeObject(ApiModel):
 class GetTrackingCodeItemForUserObject(ApiModel):
     #: Unique identifier for tracking code.
     #: example: 1
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Name for tracking code.
     #: example: Department
     name: Optional[str] = None
@@ -221,8 +221,7 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         r = TypeAdapter(list[GetTrackingCodeObject]).validate_python(data['items'])
         return r
 
-    def get_a_tracking_code(self, tracking_code_id: Union[str, datetime],
-                            site_url: str = None) -> GetTrackingCodeObject:
+    def get_a_tracking_code(self, tracking_code_id: str, site_url: str = None) -> GetTrackingCodeObject:
         """
         Get a Tracking Code
 
@@ -238,7 +237,7 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         profile attributes, the response returns details for a mapped tracking code.
 
         :param tracking_code_id: Unique identifier for the tracking code whose details are being requested.
-        :type tracking_code_id: Union[str, datetime]
+        :type tracking_code_id: str
         :param site_url: URL of the Webex site which the API retrieves the tracking code from. If not specified, the
             API retrieves the tracking code from the user's preferred site. All available Webex sites and the
             preferred sites of a user can be retrieved by the `Get Site List
@@ -388,7 +387,7 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         r = GetTrackingCodeObject.model_validate(data)
         return r
 
-    def delete_a_tracking_code(self, tracking_code_id: Union[str, datetime], site_url: str):
+    def delete_a_tracking_code(self, tracking_code_id: str, site_url: str):
         """
         Delete a Tracking Code
 
@@ -404,7 +403,7 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         process is completed.
 
         :param tracking_code_id: Unique identifier for the tracking code to be deleted.
-        :type tracking_code_id: Union[str, datetime]
+        :type tracking_code_id: str
         :param site_url: URL of the Webex site from which the API deletes the tracking code. All available Webex sites
             and preferred sites of a user can be retrieved by the `Get Site List
             <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.

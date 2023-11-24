@@ -124,7 +124,7 @@ class CallForwardingNumbers(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the call queue.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Type of
     #: example: PRIMARY
     type: Optional[CallForwardingNumbersType] = None
@@ -272,7 +272,7 @@ class PostPersonPlaceVirtualLineHuntGroupObject(ApiModel):
     id: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
 
 
 class CreateHuntGroupObject(ApiModel):
@@ -284,7 +284,7 @@ class CreateHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group. Either phone number or extension are required.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Language code.
     #: example: en-US
     language_code: Optional[str] = None
@@ -385,10 +385,10 @@ class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of person, workspace or virtual line.
     #: example: 1234
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
 
 
 class GetHuntGroupObject(ApiModel):
@@ -403,7 +403,7 @@ class GetHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
@@ -454,7 +454,7 @@ class ListHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the hunt group is enabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -484,7 +484,7 @@ class ModifyHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
     distinctive_ring: Optional[bool] = None
@@ -580,9 +580,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
 
     def create_a_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject,
                             agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
-                            phone_number: str = None, extension: Union[str, datetime] = None,
-                            language_code: str = None, first_name: str = None, last_name: str = None,
-                            time_zone: str = None, org_id: str = None) -> str:
+                            phone_number: str = None, extension: str = None, language_code: str = None,
+                            first_name: str = None, last_name: str = None, time_zone: str = None,
+                            org_id: str = None) -> str:
         """
         Create a Hunt Group
 
@@ -607,7 +607,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :param phone_number: Primary phone number of the hunt group. Either phone number or extension are required.
         :type phone_number: str
         :param extension: Primary phone extension of the hunt group. Either phone number or extension are required.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
@@ -702,7 +702,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str = None, phone_number: str = None,
-                            extension: Union[str, datetime] = None, distinctive_ring: bool = None,
+                            extension: str = None, distinctive_ring: bool = None,
                             alternate_numbers: list[AlternateNumbersWithPattern] = None, language_code: str = None,
                             first_name: str = None, last_name: str = None, time_zone: str = None,
                             call_policies: PostHuntGroupCallPolicyObject = None,
@@ -728,7 +728,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :param phone_number: Primary phone number of the hunt group.
         :type phone_number: str
         :param extension: Primary phone extension of the hunt group.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param distinctive_ring: Whether or not the hunt group has the distinctive ring option enabled.
         :type distinctive_ring: bool
         :param alternate_numbers: The alternate numbers feature allows you to assign multiple phone numbers or

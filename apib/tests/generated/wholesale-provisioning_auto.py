@@ -368,7 +368,7 @@ class UpdateAWholesaleSubscriberProvisioningParameters(ApiModel):
     #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when
     #: changing from the webex_meetings package to any calling-enabled package.
     #: example: 5221
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: A unique identifier for the location. This id should be retrieved via the `List Locations
     #: <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ API.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==

@@ -44,7 +44,7 @@ class GetPagingGroupAgentObject(ApiModel):
     phone_number: Optional[str] = None
     #: Agents extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
 
 
 class GetPagingGroupObject(ApiModel):
@@ -64,7 +64,7 @@ class GetPagingGroupObject(ApiModel):
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate toll free number.
     toll_free_number: Optional[bool] = None
     #: Paging language. Minimum length is 1. Maximum length is 40.
@@ -103,7 +103,7 @@ class ListPagingGroupObject(ApiModel):
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Name of location for paging group.
     #: example: Alaska
     location_name: Optional[str] = None
@@ -125,7 +125,7 @@ class PostPagingGroupObject(ApiModel):
     #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Language code.
     #: example: en_us
     language_code: Optional[str] = None
@@ -159,7 +159,7 @@ class UpdatePagingGroupObject(ApiModel):
     #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Language code.
     #: example: en_us
     language_code: Optional[str] = None
@@ -246,11 +246,10 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         url = self.ep('paging')
         return self.session.follow_pagination(url=url, model=ListPagingGroupObject, item_key='locationPaging', params=params)
 
-    def create_a_new_paging_group(self, location_id: str, name: str, phone_number: str = None, extension: Union[str,
-                                  datetime] = None, language_code: str = None, first_name: str = None,
-                                  last_name: str = None, originator_caller_id_enabled: bool = None,
-                                  originators: list[str] = None, targets: list[str] = None,
-                                  org_id: str = None) -> str:
+    def create_a_new_paging_group(self, location_id: str, name: str, phone_number: str = None, extension: str = None,
+                                  language_code: str = None, first_name: str = None, last_name: str = None,
+                                  originator_caller_id_enabled: bool = None, originators: list[str] = None,
+                                  targets: list[str] = None, org_id: str = None) -> str:
         """
         Create a new Paging Group
 
@@ -272,7 +271,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param extension: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or
             `extension` is mandatory.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name that displays when a group page is performed. Minimum length is 1. Maximum length
@@ -379,8 +378,8 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_paging_group(self, location_id: str, paging_id: str, enabled: bool = None, name: str = None,
-                              phone_number: str = None, extension: Union[str, datetime] = None,
-                              language_code: str = None, first_name: str = None, last_name: str = None,
+                              phone_number: str = None, extension: str = None, language_code: str = None,
+                              first_name: str = None, last_name: str = None,
                               originator_caller_id_enabled: bool = None, originators: list[str] = None,
                               targets: list[str] = None, org_id: str = None):
         """
@@ -409,7 +408,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param extension: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or
             `extension` is mandatory.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".

@@ -31,7 +31,7 @@ __auto__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLev
 class AuthorizationCode(ApiModel):
     #: Indicates an access code.
     #: example: 4856
-    code: Optional[datetime] = None
+    code: Optional[str] = None
     #: Indicates the description of the access code.
     #: example: Marketing's access code
     description: Optional[str] = None
@@ -317,7 +317,7 @@ class MonitoredElementCallParkExtension(ApiModel):
     name: Optional[str] = None
     #: Extension of call park extension.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Name of location for call park extension.
     #: example: Alaska
     location: Optional[str] = None
@@ -339,7 +339,7 @@ class UserNumberItem(ApiModel):
     external: Optional[str] = None
     #: Extension of person or workspace. Either `phoneNumber` or `extension` is mandatory.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate primary phone.
     #: example: True
     primary: Optional[bool] = None
@@ -390,7 +390,7 @@ class PhoneNumbers(ApiModel):
     external: Optional[str] = None
     #: Extension for workspace.
     #: example: 123
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: If `true`, the primary number.
     #: example: True
     primary: Optional[bool] = None
@@ -1221,8 +1221,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url, params=params, json=body)
 
-    def create_access_codes_for_a_workspace(self, workspace_id: str, code: Union[str, datetime], description: str,
-                                            org_id: str = None):
+    def create_access_codes_for_a_workspace(self, workspace_id: str, code: str, description: str, org_id: str = None):
         """
         Create Access Codes for a Workspace
 
@@ -1237,7 +1236,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
         :param code: Indicates an access code.
-        :type code: Union[str, datetime]
+        :type code: str
         :param description: Indicates the description of the access code.
         :type description: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another

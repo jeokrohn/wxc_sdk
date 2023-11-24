@@ -147,8 +147,8 @@ class GetVoicePortalObject(ApiModel):
     #: example: en_us
     language_code: Optional[str] = None
     #: Extension of incoming call.
-    #: example: 0007
-    extension: Optional[datetime] = None
+    #: example: 7
+    extension: Optional[str] = None
     #: Phone Number of incoming call.
     #: example: +1345325235
     phone_number: Optional[str] = None
@@ -253,8 +253,8 @@ class GetVoicemailGroupObject(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
     location_id: Optional[str] = None
     #: Extension of the voicemail group.
-    #: example: 0007
-    extension: Optional[datetime] = None
+    #: example: 7
+    extension: Optional[str] = None
     #: Phone number of the voicemail group.
     #: example: +1345325235
     phone_number: Optional[str] = None
@@ -360,8 +360,8 @@ class PutVoicePortalObject(ApiModel):
     #: example: en_us
     language_code: Optional[str] = None
     #: Extension of incoming call.
-    #: example: 0007
-    extension: Optional[datetime] = None
+    #: example: 7
+    extension: Optional[str] = None
     #: Phone Number of incoming call.
     #: example: +1345325235
     phone_number: Optional[str] = None
@@ -481,8 +481,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         return r
 
     def update_voice_portal(self, location_id: str, name: str, language_code: str, first_name: str, last_name: str,
-                            passcode: PutVoicePortalObjectPasscode, extension: Union[str, datetime] = None,
-                            phone_number: str = None, org_id: str = None):
+                            passcode: PutVoicePortalObjectPasscode, extension: str = None, phone_number: str = None,
+                            org_id: str = None):
         """
         Update VoicePortal
 
@@ -507,7 +507,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :param passcode: Voice Portal Admin Passcode.
         :type passcode: PutVoicePortalObjectPasscode
         :param extension: Extension of incoming call.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param phone_number: Phone Number of incoming call.
         :type phone_number: str
         :param org_id: Update voicemail rules for this organization.

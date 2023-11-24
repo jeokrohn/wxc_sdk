@@ -17,9 +17,9 @@ __auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'Crea
             'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject',
             'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject',
             'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject',
-            'ListCallParkExtensionObject', 'ListCallParkObject', 'ModifyCallExtensionParkObject',
-            'ModifyCallParkObject', 'ModifyCallParkSettingsObject', 'PutRecallHuntGroupObject',
-            'ReadTheListOfCallParkExtensionsResponse', 'ReadTheListOfCallParksResponse']
+            'ListCallParkExtensionObject', 'ListCallParkObject', 'ModifyCallParkObject',
+            'ModifyCallParkSettingsObject', 'PutRecallHuntGroupObject', 'ReadTheListOfCallParkExtensionsResponse',
+            'ReadTheListOfCallParksResponse']
 
 
 class CallParkSettingsObjectRingPattern(str, Enum):
@@ -59,7 +59,7 @@ class GetAvailableRecallHuntGroupsObject(ApiModel):
 class GetCallParkExtensionObject(ApiModel):
     #: The extension for the call park extension.
     #: example: 1415
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Unique name for the call park extension.
     #: example: 14159265
     name: Optional[str] = None
@@ -101,7 +101,7 @@ class GetUserNumberItemObject(ApiModel):
     external: Optional[str] = None
     #: Extension of a person or workspace.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate a primary phone.
     #: example: True
     primary: Optional[bool] = None
@@ -136,7 +136,7 @@ class ListCPCallParkExtensionObject(ApiModel):
     id: Optional[str] = None
     #: The extension for the call park.
     #: example: 1415
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: A unique name for the call park extension.
     #: example: 14159265
     name: Optional[str] = None
@@ -172,7 +172,7 @@ class ListCallParkExtensionObject(ApiModel):
     id: Optional[str] = None
     #: The extension for the call park extension.
     #: example: 1415
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: A unique name for the call park extension.
     #: example: 14159265
     name: Optional[str] = None
@@ -197,15 +197,6 @@ class ListCallParkObject(ApiModel):
     #: ID of the location for the call park.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
     location_id: Optional[str] = None
-
-
-class ModifyCallExtensionParkObject(ApiModel):
-    #: Name for the call park extension. The maximum length is 30.
-    #: example: Illinois, Call Park Extension
-    name: Optional[str] = None
-    #: Unique extension which will be assigned to call park extension. The minimum length is 2, maximum length is 6.
-    #: example: 407721
-    extension: Optional[str] = None
 
 
 class PutRecallHuntGroupObject(ApiModel):
@@ -586,9 +577,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/settings')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_call_park_extensions(self, extension: Union[str, datetime] = None, name: str = None,
-                                              location_id: str = None, location_name: str = None, order: str = None,
-                                              org_id: str = None,
+    def read_the_list_of_call_park_extensions(self, extension: str = None, name: str = None, location_id: str = None,
+                                              location_name: str = None, order: str = None, org_id: str = None,
                                               **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         Read the List of Call Park Extensions
@@ -603,7 +593,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         scope of `spark-admin:telephony_config_read`.
 
         :param extension: Only return call park extensions with the matching extension.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param name: Only return call park extensions with the matching name.
         :type name: str
         :param location_id: Only return call park extensions with matching location ID.
@@ -620,9 +610,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         if extension is not None:
-            if isinstance(extension, str):
-                extension = isoparse(extension)
-            extension = dt_iso_str(extension)
             params['extension'] = extension
         if name is not None:
             params['name'] = name

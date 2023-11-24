@@ -32,7 +32,7 @@ class GetUserNumberItemObject(ApiModel):
     external: Optional[str] = None
     #: Extension of a person or workspace.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Flag to indicate a primary phone.
     #: example: True
     primary: Optional[bool] = None

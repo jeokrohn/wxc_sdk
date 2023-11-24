@@ -314,7 +314,7 @@ class HostedAgent(ApiModel):
     phone_number: Optional[str] = None
     #: Person or workspace's extension.
     #: example: 111
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
 
 
 class ServiceType(str, Enum):
@@ -356,7 +356,7 @@ class HostedFeature(ApiModel):
     phone_number: Optional[str] = None
     #: User or place's extension.
     #: example: 111
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
 
 
 class LocalGatewayUsageCount(ApiModel):
@@ -626,8 +626,8 @@ class VirtualExtension(ApiModel):
     #: example: displayName1
     display_name: Optional[str] = None
     #: Extension that the virtual extension is associated with.
-    #: example: 0007
-    extension: Optional[datetime] = None
+    #: example: 7
+    extension: Optional[str] = None
     #: Phone number that the virtual extension is associated with.
     #: example: 8701278963
     phone_number: Optional[str] = None
@@ -703,11 +703,11 @@ class TestCallRoutingPostResponse(ApiModel):
     #: Matching destination type for the call.
     destination_type: Optional[DestinationType] = None
     #: FAC code if `destinationType` is FAC. The routing address will be returned for all other destination types.
-    #: example: 007
-    routing_address: Optional[datetime] = None
+    #: example: 7
+    routing_address: Optional[str] = None
     #: Outside access code.
     #: example: 1234
-    outside_access_code: Optional[datetime] = None
+    outside_access_code: Optional[str] = None
     #: `true` if the call would be rejected.
     is_rejected: Optional[bool] = None
     #: Returned when `destinationType` is `HOSTED_AGENT`.
@@ -923,16 +923,16 @@ class ReadTheListOfRoutingGroupsResponse(ApiModel):
 class ReadTheUsageOfARoutingGroupResponse(ApiModel):
     #: Number of PSTN connection locations associated to this route group.
     #: example: 1
-    pstn_connection_count: Optional[datetime] = None
+    pstn_connection_count: Optional[str] = None
     #: Number of call to extension locations associated to this route group.
     #: example: 1
-    call_to_extension_count: Optional[datetime] = None
+    call_to_extension_count: Optional[str] = None
     #: Number of dial plan locations associated to this route group.
     #: example: 1
-    dial_plan_count: Optional[datetime] = None
+    dial_plan_count: Optional[str] = None
     #: Number of route list locations associated to this route group.
     #: example: 1
-    route_list_count: Optional[datetime] = None
+    route_list_count: Optional[str] = None
 
 
 class ReadTheRouteListsOfARoutingGroupResponse(ApiModel):
@@ -971,7 +971,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: Union[str, datetime],
+    def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
                           originator_number: str = None, org_id: str = None) -> TestCallRoutingPostResponse:
         """
         Test Call Routing
@@ -994,7 +994,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type originator_type: OriginatorType
         :param destination: This element specifies called party.  It can be any dialable string, for example, an ESN
             number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
-        :type destination: Union[str, datetime]
+        :type destination: str
         :param originator_number: Only used when originatorType is `TRUNK`. This element could be a phone number or
             URI.
         :type originator_number: str

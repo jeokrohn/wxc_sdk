@@ -31,10 +31,10 @@ class GetUserNumberItemObject(ApiModel):
     external: Optional[str] = None
     #: Extension of a person or workspace.
     #: example: 8080
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None

@@ -123,16 +123,16 @@ class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of person, workspace or virtual line.
     #: example: 1234
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341234
     esn: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
 
 
 class GetHuntGroupObject(ApiModel):
@@ -147,10 +147,10 @@ class GetHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12347781
     esn: Optional[str] = None
@@ -204,10 +204,10 @@ class ListHuntGroupObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group.
     #: example: 7781
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12347781
     esn: Optional[str] = None

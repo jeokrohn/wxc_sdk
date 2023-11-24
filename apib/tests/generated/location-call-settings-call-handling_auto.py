@@ -101,7 +101,7 @@ class GetAutoTransferNumberObject(ApiModel):
 class GetLocationAccessCodeObjectAccessCodes(ApiModel):
     #: Access code number.
     #: example: 123
-    code: Optional[datetime] = None
+    code: Optional[str] = None
     #: Access code description.
     #: example: Main Access Code
     description: Optional[str] = None

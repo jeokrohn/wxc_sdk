@@ -2235,7 +2235,7 @@ class MeetingSessionTypeObjectType(str, Enum):
 class MeetingSessionTypeObject(ApiModel):
     #: Unique identifier for the meeting session type.
     #: example: 628
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Name of the meeting session type.
     #: example: Webex Meetings EC 2.0 meeting
     name: Optional[str] = None
@@ -2523,7 +2523,7 @@ class InvitationSourceCreateObject(ApiModel):
 class InvitationSourceObject(ApiModel):
     #: Unique identifier for invitation source.
     #: example: 1
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Source ID for invitation.
     #: example: cisco
     source_id: Optional[str] = None
@@ -2592,7 +2592,7 @@ class OptionsForTrackingCodeObject(ApiModel):
 class MeetingTrackingCodesObject(ApiModel):
     #: Unique identifier for the tracking code.
     #: example: 1
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Name for the tracking code.
     #: example: Department
     name: Optional[str] = None
@@ -2638,7 +2638,7 @@ class ReassignMeetingResponseObject(ApiModel):
     meeting_id: Optional[str] = None
     #: HTTP status code for the meeting reassignment result.
     #: example: 404
-    http_status: Optional[datetime] = None
+    http_status: Optional[str] = None
     #: General message for the host reassignment of `meetingId` if it fails.
     #: example: The requested resource could not be found.
     message: Optional[str] = None

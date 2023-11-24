@@ -32,10 +32,10 @@ class CallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: When not null, indicates the Call Queue's extension number.
     #: example: 8100
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348100
     esn: Optional[str] = None
@@ -93,7 +93,7 @@ class AvailableSharedLineMemberItem(ApiModel):
     extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12340000
     esn: Optional[str] = None
@@ -131,13 +131,13 @@ class GetSharedLineMemberItem(ApiModel):
     phone_number: Optional[str] = None
     #: Phone extension of a person or workspace.
     #: example: 1111
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341111
-    esn: Optional[datetime] = None
+    esn: Optional[str] = None
     #: Device port number assigned to a person or workspace.
     #: example: 1
     port: Optional[int] = None
@@ -165,7 +165,7 @@ class GetSharedLineMemberItem(ApiModel):
     hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
-    hotline_destination: Optional[datetime] = None
+    hotline_destination: Optional[str] = None
     #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
     #: the endpoints on the device. When set to `false`, a call decline request is only declined at the current
     #: endpoint.
@@ -206,10 +206,10 @@ class MonitoredNumberObject(ApiModel):
     external: Optional[str] = None
     #: Extension number of the monitored person, workspace or virtual line.
     #: example: 1088
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341088
     esn: Optional[str] = None
@@ -255,10 +255,10 @@ class GetMonitoredElementsObjectCallparkextension(ApiModel):
     name: Optional[str] = None
     #: The extension number for the call park extension.
     #: example: 4001
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12344001
     esn: Optional[str] = None
@@ -295,10 +295,10 @@ class GetNumbersPhoneNumbers(ApiModel):
     direct_number: Optional[str] = None
     #: Extension.
     #: example: 1234
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341234
     esn: Optional[str] = None
@@ -598,8 +598,8 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
 
     def search_shared_line_appearance_members(self, person_id: str, application_id: str, max_: str = None,
                                               start: str = None, location: str = None, name: str = None,
-                                              number: str = None, order: str = None, extension: Union[str,
-                                              datetime] = None) -> list[AvailableSharedLineMemberItem]:
+                                              number: str = None, order: str = None,
+                                              extension: str = None) -> list[AvailableSharedLineMemberItem]:
         """
         Search Shared-Line Appearance Members
 
@@ -624,7 +624,7 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
         :param order: Sort by first name (`fname`) or last name (`lname`).
         :type order: str
         :param extension: Search for users with extensions that match the query.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :rtype: list[AvailableSharedLineMemberItem]
         """
         body = dict()

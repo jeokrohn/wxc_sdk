@@ -349,16 +349,16 @@ class GetPersonPlaceVirtualLineCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of person, workspace or virtual line.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12345309
     esn: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
-    weight: Optional[datetime] = None
+    weight: Optional[str] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call `routingType` is `SKILL_BASED`.
     #: example: 1
     skill_level: Optional[int] = None
@@ -398,10 +398,10 @@ class GetCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the call queue.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12345309
     esn: Optional[str] = None
@@ -442,10 +442,10 @@ class ListCallQueueObject(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the call queue.
     #: example: 5309
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routing_prefix: Optional[datetime] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12345309
     esn: Optional[str] = None

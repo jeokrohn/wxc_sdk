@@ -31,7 +31,7 @@ class ValidationRulesCollection(ApiModel):
 class Template(ApiModel):
     #: Unique identifier representing a report.
     #: example: 130
-    id: Optional[datetime] = None
+    id: Optional[str] = None
     #: Name of the template.
     #: example: Client Version
     title: Optional[str] = None
