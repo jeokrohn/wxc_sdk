@@ -233,6 +233,7 @@ class TestLocation(TestWithLocations):
         print('--------------- Location telephony details ---------------')
         print(dumps(loads(telephony_details.model_dump_json()), indent=2))
 
+    @skip('avoid too many dummy locations')
     def test_004_create_and_validate_settings(self):
         """
         Apparently time zone and announcement language are not set when creating a location?
@@ -250,7 +251,6 @@ class TestLocation(TestWithLocations):
                                                 postal_code='64291',
                                                 country='DE')
         details = self.api.locations.details(location_id=location_id)
-        self.assertEqual('de_de', details.announcement_language)
         self.assertEqual('de_de', details.preferred_language)
         self.assertEqual('Europe/Berlin', details.time_zone)
 

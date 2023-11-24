@@ -57,9 +57,9 @@ class Location(ApiModel):
     time_zone: Optional[str] = None
     #: Default email language.
     preferred_language: Optional[str] = None
-    #: Location's phone announcement language.
-    announcement_language: Optional[str] = None
+    #: Latitude
     latitude: Optional[float] = None
+    #: Longitude
     longitude: Optional[float] = None
     #: Notes
     notes: Optional[str] = None
