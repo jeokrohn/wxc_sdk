@@ -472,8 +472,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def list_locations_webex_calling_details(self, start: int = None, name: str = None, order: str = None,
-                                             org_id: str = None,
+    def list_locations_webex_calling_details(self, name: str = None, order: str = None, org_id: str = None,
                                              **params) -> Generator[ListLocationObject, None, None]:
         """
         List Locations Webex Calling Details
@@ -484,8 +483,6 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         organization require an administrator auth token with the
         `spark-admin:telephony_config_read` scope.
 
-        :param start: Specify the offset from the first result that you want to fetch.
-        :type start: int
         :param name: List locations whose name contains this string.
         :type name: str
         :param order: Sort the list of locations based on `name`, either asc or desc.
@@ -496,8 +493,6 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if order is not None:
@@ -678,8 +673,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
         super().post(url, params=params, json=body)
 
-    def read_the_list_of_dial_patterns(self, dial_plan_id: str, dial_pattern: str = None, start: int = None,
-                                       order: str = None, org_id: str = None, **params) -> Generator[str, None, None]:
+    def read_the_list_of_dial_patterns(self, dial_plan_id: str, dial_pattern: str = None, order: str = None,
+                                       org_id: str = None, **params) -> Generator[str, None, None]:
         """
         Read the List of Dial Patterns
 
@@ -701,8 +696,6 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         Valid wildcard characters are `!` (matches any sequence of digits) and `X` (matches a single digit, 0-9).
         The `!` wildcard can only occur once at the end and only in an E.164 pattern
         :type dial_pattern: str
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the dial patterns according to the designated fields.  Available sort fields:
             `dialPattern`.
         :type order: str
@@ -715,8 +708,6 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         if dial_pattern is not None:
             params['dialPattern'] = dial_pattern
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
@@ -961,9 +952,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/privateNetworkConnect')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_routing_choices(self, route_group_name: str = None, trunk_name: str = None, start: int = None,
-                                         order: str = None, org_id: str = None,
-                                         **params) -> Generator[RouteIdentity, None, None]:
+    def read_the_list_of_routing_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
+                                         org_id: str = None, **params) -> Generator[RouteIdentity, None, None]:
         """
         Read the List of Routing Choices
 
@@ -980,8 +970,6 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type route_group_name: str
         :param trunk_name: Return the list of route identities matching the Trunk name.
         :type trunk_name: str
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the route identities according to the designated fields.  Available sort fields:
             `routeName`, `routeType`.
         :type order: str
@@ -995,8 +983,6 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             params['routeGroupName'] = route_group_name
         if trunk_name is not None:
             params['trunkName'] = trunk_name
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('routeChoices')

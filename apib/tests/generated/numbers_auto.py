@@ -490,7 +490,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         r = ValidateNumbersResponse.model_validate(data)
         return r
 
-    def get_phone_numbers_for_an_organization_with_given_criterias(self, location_id: str = None, start: int = None,
+    def get_phone_numbers_for_an_organization_with_given_criterias(self, location_id: str = None,
                                                                    phone_number: str = None, available: bool = None,
                                                                    order: str = None, owner_name: str = None,
                                                                    owner_id: str = None,
@@ -516,8 +516,6 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :param location_id: Return the list of phone numbers for this location within the given organization. The
             maximum length is 36.
         :type location_id: str
-        :param start: Start at the zero-based offset in the list of matching phone numbers. Default is 0.
-        :type start: int
         :param phone_number: Search for this `phoneNumber`.
         :type phone_number: str
         :param available: Search among the available phone numbers. This parameter cannot be used along with
@@ -557,8 +555,6 @@ class NumbersApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if start is not None:
-            params['start'] = start
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         if available is not None:
@@ -588,8 +584,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep('numbers')
         return self.session.follow_pagination(url=url, model=NumberObject, item_key='phoneNumbers', params=params)
 
-    def list_manage_numbers_jobs(self, start: int = None, org_id: str = None,
-                                 **params) -> Generator[StartJobResponse, None, None]:
+    def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
         """
         List Manage Numbers Jobs
 
@@ -603,16 +598,12 @@ class NumbersApi(ApiChild, base='telephony/config'):
         This API requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param start: Start at the zero-based offset in the list of jobs. Default is 0.
-        :type start: int
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
         :return: Generator yielding :class:`StartJobResponse` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         url = self.ep('jobs/numbers/manageNumbers')
         return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items', params=params)
 
@@ -743,7 +734,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke')
         super().post(url, params=params)
 
-    def list_manage_numbers_job_errors(self, job_id: str = None, start: int = None, org_id: str = None,
+    def list_manage_numbers_job_errors(self, job_id: str = None, org_id: str = None,
                                        **params) -> Generator[ItemObject, None, None]:
         """
         List Manage Numbers Job errors
@@ -770,15 +761,11 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         :param job_id: Retrieve the error details for this `jobId`.
         :type job_id: str
-        :param start: Specifies the error offset from the first result that you want to fetch.
-        :type start: int
         :param org_id: Retrieve list of jobs for this organization.
         :type org_id: str
         :return: Generator yielding :class:`ItemObject` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)

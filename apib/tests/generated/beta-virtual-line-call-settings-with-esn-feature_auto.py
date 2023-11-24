@@ -107,7 +107,7 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
     `spark-admin:telephony_config_read.
     """
 
-    def read_the_list_of_virtual_lines(self, location_id: list[str] = None, start: int = None, id: list[str] = None,
+    def read_the_list_of_virtual_lines(self, location_id: list[str] = None, id: list[str] = None,
                                        owner_name: list[str] = None, phone_number: list[str] = None,
                                        location_name: list[str] = None, order: list[str] = None,
                                        has_device_assigned: bool = None, has_extension_assigned: bool = None,
@@ -127,8 +127,6 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
         :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
             `?locationId=locId1&locationId=locId2`.
         :type location_id: list[str]
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values -
             `?id=id1&id=id2`.
         :type id: list[str]
@@ -162,8 +160,6 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = ','.join(location_id)
-        if start is not None:
-            params['start'] = start
         if id is not None:
             params['id'] = ','.join(id)
         if owner_name is not None:

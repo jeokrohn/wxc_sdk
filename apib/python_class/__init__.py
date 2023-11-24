@@ -227,12 +227,16 @@ class Endpoint:
         Href parameter, filtered for paginated methods if needed
         """
         if self.paginated:
-            p_filter = {'max', 'offset'}
+            # remove max, offset, and start if "max" is there
+            if next((p for p in self.href_parameter if p.name == 'max'), None):
+                p_filter = {'max', 'offset', 'start'}
+            else:
+                p_filter = set()
         else:
             p_filter = set()
         return (p for p in self.href_parameter if p.name not in p_filter)
 
-    def parameters_for_args(self)->Generator[Parameter, None, None]:
+    def parameters_for_args(self) -> Generator[Parameter, None, None]:
         """
         Generator for parameters in order required for method arguments
         """
@@ -673,7 +677,7 @@ class PythonClassRegistry:
         if qualident in self._classes:
             log.warning(f'python class name "{pc.name}" already registered')
             qualident = next((name
-                              for i in range(1, 10)
+                              for i in range(1, 100)
                               if (name := f'{qualident}{i}') not in self._classes))
             log.warning(f'class name "{pc.name}" not unique using qualident "{qualident}" instead')
         pc.name = qualident

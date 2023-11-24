@@ -191,8 +191,8 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         r = GetMemberResponse.model_validate(data)
         return r
 
-    def search_members(self, device_id: str, location_id: str, start: int = None, member_name: str = None,
-                       phone_number: str = None, extension: Union[str, datetime] = None, org_id: str = None,
+    def search_members(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
+                       extension: Union[str, datetime] = None, org_id: str = None,
                        **params) -> Generator[SearchMemberObject, None, None]:
         """
         Search Members
@@ -210,8 +210,6 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         :type device_id: str
         :param location_id: Unique identifier for the location.
         :type location_id: str
-        :param start: Specifies the offset from the first result that you want to fetch.
-        :type start: int
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
@@ -225,8 +223,6 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         if org_id is not None:
             params['orgId'] = org_id
         params['locationId'] = location_id
-        if start is not None:
-            params['start'] = start
         if member_name is not None:
             params['memberName'] = member_name
         if phone_number is not None:

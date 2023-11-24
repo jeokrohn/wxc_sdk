@@ -269,9 +269,8 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
     query parameter.
     """
 
-    def read_the_list_of_schedules(self, location_id: str, type: GetScheduleObjectType = None, start: int = None,
-                                   name: str = None, org_id: str = None,
-                                   **params) -> Generator[ListScheduleObject, None, None]:
+    def read_the_list_of_schedules(self, location_id: str, type: GetScheduleObjectType = None, name: str = None,
+                                   org_id: str = None, **params) -> Generator[ListScheduleObject, None, None]:
         """
         Read the List of Schedules
 
@@ -287,8 +286,6 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type location_id: str
         :param type: Type of the schedule.
         :type type: GetScheduleObjectType
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return schedules with the matching name.
         :type name: str
         :param org_id: List schedules for this organization.
@@ -299,8 +296,6 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
             params['orgId'] = org_id
         if type is not None:
             params['type'] = type
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         url = self.ep(f'')

@@ -222,9 +222,8 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         r = GetCallParkObject.model_validate(data)
         return r
 
-    def get_available_agents_from_call_parks(self, location_id: str, call_park_name: str = None, start: int = None,
-                                             name: str = None, phone_number: str = None, order: str = None,
-                                             org_id: str = None,
+    def get_available_agents_from_call_parks(self, location_id: str, call_park_name: str = None, name: str = None,
+                                             phone_number: str = None, order: str = None, org_id: str = None,
                                              **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
         """
         Get available agents from Call Parks
@@ -240,8 +239,6 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param call_park_name: Only return available agents from call parks with the matching name.
         :type call_park_name: str
-        :param start: Start at the zero-based offset in the list of matching available agents.
-        :type start: int
         :param name: Only return available agents with the matching name.
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
@@ -258,8 +255,6 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         if call_park_name is not None:
             params['callParkName'] = call_park_name
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
@@ -269,9 +264,9 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/availableUsers')
         return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallParksObject, item_key='agents', params=params)
 
-    def read_the_list_of_call_park_extensions(self, start: int = None, extension: Union[str, datetime] = None,
-                                              name: str = None, location_id: str = None, location_name: str = None,
-                                              order: str = None, org_id: str = None,
+    def read_the_list_of_call_park_extensions(self, extension: Union[str, datetime] = None, name: str = None,
+                                              location_id: str = None, location_name: str = None, order: str = None,
+                                              org_id: str = None,
                                               **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         Read the List of Call Park Extensions
@@ -285,8 +280,6 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param extension: Only return call park extensions with the matching extension.
         :type extension: Union[str, datetime]
         :param name: Only return call park extensions with the matching name.
@@ -304,8 +297,6 @@ class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if extension is not None:
             if isinstance(extension, str):
                 extension = isoparse(extension)

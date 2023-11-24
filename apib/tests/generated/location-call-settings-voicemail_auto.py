@@ -556,9 +556,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         r = GetVoicePortalPasscodeRuleObject.model_validate(data)
         return r
 
-    def list_voicemail_group(self, location_id: str = None, start: int = None, name: str = None,
-                             phone_number: str = None, org_id: str = None,
-                             **params) -> Generator[GetVoicemailGroupObject, None, None]:
+    def list_voicemail_group(self, location_id: str = None, name: str = None, phone_number: str = None,
+                             org_id: str = None, **params) -> Generator[GetVoicemailGroupObject, None, None]:
         """
         List VoicemailGroup
 
@@ -572,8 +571,6 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
 
         :param location_id: Location to which the voicemail group belongs.
         :type location_id: str
-        :param start: Offset from the first result that you want to fetch.
-        :type start: int
         :param name: Search (Contains) based on voicemail group name
         :type name: str
         :param phone_number: Search (Contains) based on number or extension
@@ -586,8 +583,6 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
             params['locationId'] = location_id
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:

@@ -265,9 +265,8 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
     query parameter.
     """
 
-    def read_the_list_of_auto_attendants(self, location_id: str = None, start: int = None, name: str = None,
-                                         phone_number: str = None, department_id: str = None,
-                                         department_name: str = None, org_id: str = None,
+    def read_the_list_of_auto_attendants(self, location_id: str = None, name: str = None, phone_number: str = None,
+                                         department_id: str = None, department_name: str = None, org_id: str = None,
                                          **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         Read the List of Auto Attendants
@@ -282,8 +281,6 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
 
         :param location_id: Return the list of auto attendants for this location.
         :type location_id: str
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return auto attendants with the matching name.
         :type name: str
         :param phone_number: Only return auto attendants with the matching phone number.
@@ -300,8 +297,6 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:

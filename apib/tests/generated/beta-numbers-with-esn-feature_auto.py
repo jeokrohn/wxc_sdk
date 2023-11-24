@@ -104,7 +104,7 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
     query parameter.
     """
 
-    def get_phone_numbers_for_an_organization_with_given_criterias(self, location_id: str = None, start: int = None,
+    def get_phone_numbers_for_an_organization_with_given_criterias(self, location_id: str = None,
                                                                    phone_number: str = None, available: bool = None,
                                                                    order: str = None, owner_name: str = None,
                                                                    owner_id: str = None,
@@ -130,8 +130,6 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
         :param location_id: Return the list of phone numbers for this location within the given organization. The
             maximum length is 36.
         :type location_id: str
-        :param start: Start at the zero-based offset in the list of matching phone numbers. Default is 0.
-        :type start: int
         :param phone_number: Search for this `phoneNumber`.
         :type phone_number: str
         :param available: Search among the available phone numbers. This parameter cannot be used along with
@@ -171,8 +169,6 @@ class BetaNumbersWithESNFeatureApi(ApiChild, base='telephony/config/numbers'):
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if start is not None:
-            params['start'] = start
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         if available is not None:

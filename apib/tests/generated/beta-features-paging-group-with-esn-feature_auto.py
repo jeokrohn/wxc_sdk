@@ -157,9 +157,8 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
     query parameter.
     """
 
-    def read_the_list_of_paging_groups(self, start: int = None, location_id: str = None, name: str = None,
-                                       phone_number: str = None, org_id: str = None,
-                                       **params) -> Generator[ListPagingGroupObject, None, None]:
+    def read_the_list_of_paging_groups(self, location_id: str = None, name: str = None, phone_number: str = None,
+                                       org_id: str = None, **params) -> Generator[ListPagingGroupObject, None, None]:
         """
         Read the List of Paging Groups
 
@@ -172,8 +171,6 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param start: Start at the zero-based offset in the list of matching objects. Default is 0
-        :type start: int
         :param location_id: Return only paging groups with matching location ID. Default is all locations
         :type location_id: str
         :param name: Return only paging groups with the matching name.
@@ -186,8 +183,6 @@ class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if location_id is not None:
             params['locationId'] = location_id
         if name is not None:

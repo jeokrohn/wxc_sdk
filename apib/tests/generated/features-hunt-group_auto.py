@@ -544,9 +544,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_hunt_groups(self, location_id: str = None, start: int = None, name: str = None,
-                                     phone_number: str = None, org_id: str = None,
-                                     **params) -> Generator[ListHuntGroupObject, None, None]:
+    def read_the_list_of_hunt_groups(self, location_id: str = None, name: str = None, phone_number: str = None,
+                                     org_id: str = None, **params) -> Generator[ListHuntGroupObject, None, None]:
         """
         Read the List of Hunt Groups
 
@@ -560,8 +559,6 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
 
         :param location_id: Only return hunt groups with matching location ID.
         :type location_id: str
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return hunt groups with the matching name.
         :type name: str
         :param phone_number: Only return hunt groups with the matching primary phone number or extension.
@@ -574,8 +571,6 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:

@@ -133,9 +133,8 @@ class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/l
         r = GetCallPickupObject.model_validate(data)
         return r
 
-    def get_available_agents_from_call_pickups(self, location_id: str, call_pickup_name: str = None, start: int = None,
-                                               name: str = None, phone_number: str = None, order: str = None,
-                                               org_id: str = None,
+    def get_available_agents_from_call_pickups(self, location_id: str, call_pickup_name: str = None, name: str = None,
+                                               phone_number: str = None, order: str = None, org_id: str = None,
                                                **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
         """
         Get available agents from Call Pickups
@@ -151,8 +150,6 @@ class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/l
         :type location_id: str
         :param call_pickup_name: Only return available agents from call pickups with the matching name.
         :type call_pickup_name: str
-        :param start: Start at the zero-based offset in the list of matching available agents.
-        :type start: int
         :param name: Only return available agents with the matching name.
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
@@ -169,8 +166,6 @@ class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/l
             params['orgId'] = org_id
         if call_pickup_name is not None:
             params['callPickupName'] = call_pickup_name
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:

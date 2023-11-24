@@ -79,7 +79,7 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
     
     """
 
-    def get_a_list_of_departments(self, start: int = None, name: str = None, id: str = None, org_id: str = None,
+    def get_a_list_of_departments(self, name: str = None, id: str = None, org_id: str = None,
                                   **params) -> Generator[DepartmentResponse, None, None]:
         """
         Get a List of Departments
@@ -92,8 +92,6 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param start: Specifies the offset from the first result that you want to fetch.
-        :type start: int
         :param name: Specifies the case insensitive substring to be matched against the department names.
         :type name: str
         :param id: Specifies the department ID you want to fetch.
@@ -104,8 +102,6 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if id is not None:

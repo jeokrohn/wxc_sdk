@@ -189,7 +189,7 @@ class DevicesApi(ApiChild, base='devices'):
                      display_name: str = None, product: ListDevicesProduct = None, type: ListDevicesType = None,
                      tag: str = None, connection_status: str = None, serial: str = None, software: str = None,
                      upgrade_channel: str = None, error_code: str = None, capability: DeviceCapabilities = None,
-                     permission: str = None, mac: str = None, start: int = None, org_id: str = None,
+                     permission: str = None, mac: str = None, org_id: str = None,
                      **params) -> Generator[Device, None, None]:
         """
         List Devices
@@ -244,9 +244,6 @@ class DevicesApi(ApiChild, base='devices'):
         :param mac:
         List devices with this MAC address.
         :type mac: str
-        :param start:
-        Offset. Default is 0.
-        :type start: int
         :param org_id:
         List devices in this organization. Only admin users of another organization (such as partners) may use this
         parameter.
@@ -285,8 +282,6 @@ class DevicesApi(ApiChild, base='devices'):
             params['permission'] = permission
         if mac is not None:
             params['mac'] = mac
-        if start is not None:
-            params['start'] = start
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, item_key='items', params=params)
 

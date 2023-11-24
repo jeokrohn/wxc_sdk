@@ -280,8 +280,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_call_parks(self, location_id: str, start: int = None, order: str = None, name: str = None,
-                                    org_id: str = None, **params) -> Generator[ListCallParkObject, None, None]:
+    def read_the_list_of_call_parks(self, location_id: str, order: str = None, name: str = None, org_id: str = None,
+                                    **params) -> Generator[ListCallParkObject, None, None]:
         """
         Read the List of Call Parks
 
@@ -296,8 +296,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
 
         :param location_id: Return the list of call parks for this location.
         :type location_id: str
-        :param start: Start at the zero-based offset in the list of matching call parks. Default is 0.
-        :type start: int
         :param order: Sort the list of call parks by name, either ASC or DSC. Default is ASC.
         :type order: str
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
@@ -308,8 +306,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if name is not None:
@@ -457,9 +453,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def get_available_agents_from_call_parks(self, location_id: str, call_park_name: str = None, start: int = None,
-                                             name: str = None, phone_number: str = None, order: str = None,
-                                             org_id: str = None,
+    def get_available_agents_from_call_parks(self, location_id: str, call_park_name: str = None, name: str = None,
+                                             phone_number: str = None, order: str = None, org_id: str = None,
                                              **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
         """
         Get available agents from Call Parks
@@ -475,8 +470,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param call_park_name: Only return available agents from call parks with the matching name.
         :type call_park_name: str
-        :param start: Start at the zero-based offset in the list of matching available agents.
-        :type start: int
         :param name: Only return available agents with the matching name.
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
@@ -493,8 +486,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         if call_park_name is not None:
             params['callParkName'] = call_park_name
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
@@ -504,8 +495,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/availableUsers')
         return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallParksObject, item_key='agents', params=params)
 
-    def get_available_recall_hunt_groups_from_call_parks(self, location_id: str, start: int = None, name: str = None,
-                                                         order: str = None, org_id: str = None,
+    def get_available_recall_hunt_groups_from_call_parks(self, location_id: str, name: str = None, order: str = None,
+                                                         org_id: str = None,
                                                          **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
         """
         Get available recall hunt groups from Call Parks
@@ -519,8 +510,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
 
         :param location_id: Return the available recall hunt groups for this location.
         :type location_id: str
-        :param start: Start at the zero-based offset in the list of matching available recall hunt groups.
-        :type start: int
         :param name: Only return available recall hunt groups with the matching name.
         :type name: str
         :param order: Order the available recall hunt groups according to the designated fields. Available sort fields:
@@ -532,8 +521,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if order is not None:
@@ -599,9 +586,9 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/settings')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_call_park_extensions(self, start: int = None, extension: Union[str, datetime] = None,
-                                              name: str = None, location_id: str = None, location_name: str = None,
-                                              order: str = None, org_id: str = None,
+    def read_the_list_of_call_park_extensions(self, extension: Union[str, datetime] = None, name: str = None,
+                                              location_id: str = None, location_name: str = None, order: str = None,
+                                              org_id: str = None,
                                               **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         Read the List of Call Park Extensions
@@ -615,8 +602,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param extension: Only return call park extensions with the matching extension.
         :type extension: Union[str, datetime]
         :param name: Only return call park extensions with the matching name.
@@ -634,8 +619,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
         if extension is not None:
             if isinstance(extension, str):
                 extension = isoparse(extension)

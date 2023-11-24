@@ -156,7 +156,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
 
     def fetch_list_of_announcement_greetings_on_location_and_organization_level(self,
                                                                                 location_id: FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId = None,
-                                                                                start: int = None, order: str = None,
+                                                                                order: str = None,
                                                                                 file_name: str = None,
                                                                                 file_type: str = None,
                                                                                 media_file_type: str = None,
@@ -175,8 +175,6 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :param location_id: Return the list of enterprise or Location announcement files. Without this parameter, the
             Enterprise level announcements are returned.
         :type location_id: FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Sort the list according to fileName or fileSize. The default sort will be in Ascending order.
         :type order: str
         :param file_name: Return the list of announcements with the given fileName.
@@ -195,8 +193,6 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if file_name is not None:
