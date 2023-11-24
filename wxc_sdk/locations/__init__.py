@@ -57,6 +57,8 @@ class Location(ApiModel):
     time_zone: Optional[str] = None
     #: Default email language.
     preferred_language: Optional[str] = None
+    #: Location's phone announcement language. This attribute is required when enabling a location for Webex Calling
+    announcement_language: Optional[str] = None
     #: Latitude
     latitude: Optional[float] = None
     #: Longitude

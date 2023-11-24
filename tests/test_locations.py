@@ -381,6 +381,7 @@ class TestUnifiedLocations(TestCaseWithLog):
                 print(f'unexpected result: {details}')
         self.assertFalse(err)
 
+    @skip('workspace locations deprecated')
     def test_003_create_wsl_and_check_in_locations(self):
         """
         create a workspace location and verify that it shows up in location list
@@ -437,6 +438,7 @@ class TestUnifiedLocations(TestCaseWithLog):
                 print(f'{wsl.display_name}: {result}')
         self.assertFalse(any(map(lambda r: isinstance(r, Exception), delete_results)))
 
+    @skip('workspace locations deprecated')
     def test_003_create_workspace_location_and_upgrade_to_calling(self):
         """
         Create a workspace location and upgrade to calling
