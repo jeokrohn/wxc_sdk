@@ -537,7 +537,7 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
             body['templateId'] = template_id
         if location_ids is not None:
             body['locationIds'] = location_ids
-        if exclude_devices_with_custom_layout  is not None:
+        if exclude_devices_with_custom_layout is not None:
             body['excludeDevicesWithCustomLayout'] = exclude_devices_with_custom_layout
         if include_device_tags is not None:
             body['includeDeviceTags'] = include_device_tags

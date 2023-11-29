@@ -6,7 +6,6 @@ partners manage the amount of licenses provided to administrators and users. Thi
 only by an admin.
 """
 from collections.abc import Generator
-from datetime import datetime
 from json import loads
 from typing import Optional, List
 

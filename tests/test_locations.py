@@ -655,7 +655,6 @@ class TestUpdateTelephony(TestCaseWithLog):
             self.assertEqual(400, rest_error.status)
             self.assertEqual(5600, rest_error.detail.code)
 
-
     @async_test
     async def test_003_oac(self):
         """
@@ -938,7 +937,7 @@ class TestLocationConsistency(TestCaseWithLog):
                 # add entities to dict
                 for en in entities:
                     cache[webex_id_to_uuid(key_attr(en))] = en
-            if (en:=cache.get(owner_uuid)) is None:
+            if (en := cache.get(owner_uuid)) is None:
                 return f'{entity} not found'
             en_webex_id = key_attr(en)
             decoded_en_webex_id = base64.b64decode(en_webex_id+'==').decode()
@@ -970,7 +969,7 @@ class TestLocationConsistency(TestCaseWithLog):
             return ''
 
         # noinspection PyShadowingNames
-        def check_devices_and_owners(numbers: list[NumberListPhoneNumber])->bool:
+        def check_devices_and_owners(numbers: list[NumberListPhoneNumber]) -> bool:
             """
             For each device that belongs to a user or workspace we want to find a number with the respective owner id
             """
@@ -1070,7 +1069,7 @@ class TestLocationConsistency(TestCaseWithLog):
         if numbers_in_workspaces:
             # key: workstation display name
             # value: owner UUID
-            owner_name_and_id:dict[str, str] = dict()
+            owner_name_and_id: dict[str, str] = dict()
             for number in numbers_in_workspaces:
                 owner_display_name = f'{number.owner.first_name} {number.owner.last_name.strip(".")}'.strip()
                 owner_name_and_id[owner_display_name] = base64.b64decode(number.owner.owner_id + '==').decode()

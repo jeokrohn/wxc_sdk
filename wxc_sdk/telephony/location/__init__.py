@@ -2,7 +2,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
 
-from pydantic import Field, model_validator
+from pydantic import Field
 
 from .intercept import LocationInterceptApi
 from .internal_dialing import InternalDialingApi

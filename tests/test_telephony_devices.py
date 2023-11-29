@@ -419,7 +419,7 @@ class TestDeviceSettings(TestsWithDevices):
     @TestsWithDevices.async_test
     async def test_001_get_device_settings(self):
         # device settings can only be read for primary devices
-        devices = [device for device in self.devices if device.device_type==PrimaryOrShared.primary]
+        devices = [device for device in self.devices if device.device_type == PrimaryOrShared.primary]
         tasks = [self.async_api.telephony.devices.device_settings(device_id=device.device_id,
                                                                   device_model=device.model)
                  for device in devices]
@@ -439,7 +439,7 @@ class TestDeviceSettings(TestsWithDevices):
         get device settings of a specific device and update that at the device level
         """
         # get device settings for all devices
-        devices = [device for device in self.devices if device.device_type==PrimaryOrShared.primary]
+        devices = [device for device in self.devices if device.device_type == PrimaryOrShared.primary]
         with self.no_log():
             # noinspection PyTypeChecker
             settings = await asyncio.gather(

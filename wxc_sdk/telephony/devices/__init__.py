@@ -181,7 +181,7 @@ class ProgrammableLineKey(ApiModel):
     line_key_value: Optional[str] = None
 
     @classmethod
-    def standard_plk_list(cls, lines: int)->list['ProgrammableLineKey']:
+    def standard_plk_list(cls, lines: int = 10) -> list['ProgrammableLineKey']:
         """
         get a standard list of programmable line keys of given length.
         1st line key is primary line and all other are "open"
@@ -189,7 +189,7 @@ class ProgrammableLineKey(ApiModel):
         :param lines: number of programmable line keys
         :return: list of programmable line keys
         """
-        r = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open) for i in range(1, 11)]
+        r = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open) for i in range(1, lines+1)]
         r[0].line_key_type = LineKeyType.primary_line
         return r
 
@@ -477,6 +477,8 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
 
         :param template: Line key template to create
         :type template: LineKeyTemplate
+        :param org_id: id of organization to create the line key template in
+        :type org_id: str
         :return: id of new line key template
         :rtype: str
         """

@@ -83,7 +83,6 @@ class Location(ApiModel):
 
 class Floor(ApiModel):
     #: Unique identifier for the floor.
-    #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL1dPUktTUEFDRV9MT0NBVElPTl9GTE9PUi83NDhkZDNmMS1iYmE5LTQxMDItODk5NC00M2IyOTM2MzNlNjY
     id: Optional[str] = None
     #: Unique identifier for the location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4NjczZDIwLWM0M2EtNDQ5Ni1iYWIxLTNiMjhhZGJjMjViYQ
@@ -95,7 +94,7 @@ class Floor(ApiModel):
     #: example: The basement
     display_name: Optional[str] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
         date for update
 

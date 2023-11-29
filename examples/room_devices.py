@@ -61,10 +61,11 @@ from yaml import safe_load, safe_dump
 
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
+from wxc_sdk.common import OwnerType
 from wxc_sdk.devices import Device
 from wxc_sdk.integration import Integration
 from wxc_sdk.locations import Location
-from wxc_sdk.telephony import OwnerType, NumberListPhoneNumber
+from wxc_sdk.telephony import NumberListPhoneNumber
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace, WorkspaceSupportedDevices, CallingType, WorkspaceCalling

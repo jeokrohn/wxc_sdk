@@ -3,7 +3,7 @@ Person numbers API
 """
 from typing import Optional, Literal
 
-from pydantic import Field, field_validator
+from pydantic import Field
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
@@ -24,6 +24,7 @@ class PersonPhoneNumber(ApiModel):
     extension: Optional[str] = None
     #: Optional ring pattern and this is applicable only for alternate numbers.
     ring_pattern: Optional[RingPattern] = None
+
 
 class PersonNumbers(ApiModel):
     """

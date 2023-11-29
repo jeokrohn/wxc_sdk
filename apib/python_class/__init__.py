@@ -612,7 +612,7 @@ class PythonAPI:
         class_name = class_name or f'{words_to_camel(self.title)}Api'
         base = commonprefix([f'{ep.url}/' for ep in self.endpoints])
         # remove everything after the last '/'
-        base = re.sub('/\w*$', '', base)
+        base = re.sub(r'/\w*$', '', base)
         doc_lines = chain([self.title, ''], self.cleaned_doc_string.splitlines())
         docstring = '\n'.join(chain.from_iterable(break_line(line, prefix=' ' * 4) for line in doc_lines))
         class_head = self.class_template.format(class_name=class_name,

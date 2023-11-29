@@ -1092,4 +1092,3 @@ class ApplyLineKeyTemplateAction(str, Enum):
     apply_template = 'APPLY_TEMPLATE'
     #: Used to reset devices to its default Linekey Template configurations.
     apply_default_templates = 'APPLY_DEFAULT_TEMPLATES'
-

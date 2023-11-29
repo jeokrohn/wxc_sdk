@@ -51,21 +51,23 @@ def snake_case(s: str) -> str:
 def sanitize_class_name(class_name: Optional[str]) -> str:
     if class_name is None:
         return class_name
-    class_name, _ = re.subn('\W', '', class_name)
+    class_name, _ = re.subn(r'\W', '', class_name)
     return class_name
 
 
-def break_line(line: str, width: int = None, prefix: str = '', prefix_first_line: str = None) -> Generator[str, None, None]:
+def break_line(line: str, width: int = None, prefix: str = '',
+               prefix_first_line: str = None) -> Generator[str, None, None]:
     """
     Break line in multiple lines of given length
     """
-    def net_len(p: str)->int:
+
+    def net_len(p: str) -> int:
         # len(p) only counting text (w/o links)
         p, _ = LINKS.subn('\\1', p)
         r = len(p)
         return r
 
-    def cannot_be_line_start(p: str)->bool:
+    def cannot_be_line_start(p: str) -> bool:
         # some parts cannot be at start of line
         return False
 
@@ -146,8 +148,10 @@ def remove_links(line: str) -> str:
     """
     Remove markup for links from line and keep the URL
     """
-    def repl(m: Match)->str:
+
+    def repl(m: Match) -> str:
         return f'`{m.group(1)}<{m.group(2)}>`_'
+
     line, _ = LINKS.subn(repl, line)
     return line
 
@@ -159,7 +163,8 @@ def links_to_rst(line: str, prefix: str, prefix_first_line: str) -> Generator[st
     """
     Generate (multiple) lines required for lines with links. RST links are multi-line
     """
-    def repl(m: Match)->str:
+
+    def repl(m: Match) -> str:
         # an RST link looks like this:
         #   External hyperlinks, like `Python
         #   <https://www.python.org/>`_.
@@ -190,14 +195,15 @@ def remove_html_comments(text: str) -> str:
 
 
 def remove_div(text: str):
-    def repl(m: Match)->str:
+    def repl(m: Match) -> str:
         r = html2text(m.group(0))
         return r
-    text,_ = re.subn(r'<div>.+?</div>', repl, text)
+
+    text, _ = re.subn(r'<div>.+?</div>', repl, text)
     return text
 
 
-def line_parts(line: str)->Iterator[str]:
+def line_parts(line: str) -> Iterator[str]:
     fiter = re.finditer(r"""(?P<word>\s*
                                      (?:     # split lines in sequences of ...
                                      (?:\[               # links: start with a squared bracket

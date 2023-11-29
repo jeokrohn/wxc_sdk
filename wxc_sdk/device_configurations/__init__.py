@@ -1,6 +1,4 @@
-from typing import Literal, Any, Optional, Union, NamedTuple, List
-
-from pydantic import parse_obj_as, TypeAdapter
+from typing import Literal, Any, Optional, NamedTuple, List
 
 from wxc_sdk.api_child import ApiChild
 
@@ -18,6 +16,7 @@ class DeviceConfigurationSourceEditability(ApiModel):
     #: The reason the value is not editable on this source.
     #:
     #: * NOT_AUTHORIZED - User is not authorized to edit any values.
+    #:
     #: * CONFIG_MANAGED_BY_DIFFERENT_AUTHORITY - The configuration is managed by a different authority. For example CUCM.
     reason: Optional[str] = None
 
