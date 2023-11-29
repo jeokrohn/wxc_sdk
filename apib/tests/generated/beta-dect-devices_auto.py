@@ -43,7 +43,7 @@ class CreateDECTNetwork(ApiModel):
     #: If `defaultAccessCodeEnabled` is set to true, then provide a default access code that needs to be a 4-numeric
     #: digit. The access code should be unique to the DECT network for the location.
     #: example: 1551
-    default_access_code: Optional[datetime] = None
+    default_access_code: Optional[str] = None
 
 
 class BaseStationPostResult(ApiModel):
@@ -122,7 +122,7 @@ class AvailableMember(ApiModel):
     phone_number: Optional[str] = None
     #: Extension of the member.
     #: example: 1234
-    extension: Optional[datetime] = None
+    extension: Optional[str] = None
     #: Line type indicates if the associated line is a primary line or a shared line.
     line_type: Optional[LineType] = None
     #: Indicates the type of the member.
@@ -161,8 +161,8 @@ class BetaDECTDevicesSettingsApi(ApiChild, base='telephony/config'):
     """
 
     def create_a_dect_network(self, location_id: str, name: str, model: CreateDECTNetworkModel,
-                              default_access_code_enabled: bool, default_access_code: Union[str, datetime],
-                              display_name: str = None, org_id: str = None) -> str:
+                              default_access_code_enabled: bool, default_access_code: str, display_name: str = None,
+                              org_id: str = None) -> str:
         """
         Create a DECT Network
 
@@ -186,7 +186,7 @@ class BetaDECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type default_access_code_enabled: bool
         :param default_access_code: If `defaultAccessCodeEnabled` is set to true, then provide a default access code
             that needs to be a 4-numeric digit. The access code should be unique to the DECT network for the location.
-        :type default_access_code: Union[str, datetime]
+        :type default_access_code: str
         :param display_name: Add a default name (11 characters max) to display for all handsets. If left blank, the
             default name will be an indexed number followed by the DECT network name.
         :type display_name: str
@@ -276,10 +276,9 @@ class BetaDECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         super().post(url, params=params, json=body)
 
-    def search_available_members(self, member_name: str = None, phone_number: str = None, extension: Union[str,
-                                 datetime] = None, location_id: str = None, order: str = None,
-                                 exclude_virtual_line: bool = None, org_id: str = None,
-                                 **params) -> Generator[AvailableMember, None, None]:
+    def search_available_members(self, member_name: str = None, phone_number: str = None, extension: str = None,
+                                 location_id: str = None, order: str = None, exclude_virtual_line: bool = None,
+                                 org_id: str = None, **params) -> Generator[AvailableMember, None, None]:
         """
         Search Available Members
 
@@ -292,7 +291,7 @@ class BetaDECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :param phone_number: Search (Contains) based on number.
         :type phone_number: str
         :param extension: Search (Contains) based on extension.
-        :type extension: Union[str, datetime]
+        :type extension: str
         :param location_id: List members for the location ID.
         :type location_id: str
         :param order: Sort the list of available members on the device in ascending order by name, using either last
@@ -312,9 +311,6 @@ class BetaDECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         if extension is not None:
-            if isinstance(extension, str):
-                extension = isoparse(extension)
-            extension = dt_iso_str(extension)
             params['extension'] = extension
         if location_id is not None:
             params['locationId'] = location_id

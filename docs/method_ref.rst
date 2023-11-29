@@ -17,6 +17,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.attachment_actions.details
         Shows details for a attachment action, by ID
      - :meth:`~wxc_sdk.attachment_actions.AttachmentActionsApi.details`
+   * - api.authorizations.delete
+        Deletes an authorization, by authorization ID or client ID and org ID
+     - :meth:`~wxc_sdk.authorizations.AuthorizationsApi.delete`
+   * - api.authorizations.list
+        Lists all authorizations for a user
+     - :meth:`~wxc_sdk.authorizations.AuthorizationsApi.list`
    * - api.cdr.get_cdr_history
         Provides Webex Calling Detailed Call History data for your organization
      - :meth:`~wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`
@@ -80,6 +86,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.groups.update
         update group information
      - :meth:`~wxc_sdk.groups.GroupsApi.update`
+   * - api.licenses.assign_licenses_to_users
+        Assign Licenses to Users
+     - :meth:`~wxc_sdk.licenses.LicensesApi.assign_licenses_to_users`
+   * - api.licenses.assigned_users
+        Get users license is assigned to, by license ID
+     - :meth:`~wxc_sdk.licenses.LicensesApi.assigned_users`
    * - api.licenses.details
         Shows details for a license, by ID
      - :meth:`~wxc_sdk.licenses.LicensesApi.details`
@@ -93,28 +105,28 @@ The second column of the table has a link to the documentation of the method.
         Create a new Location for a given organization
      - :meth:`~wxc_sdk.locations.LocationsApi.create`
    * - api.locations.create_floor
-        Create a new floor in the given location
+        Create a Location Floor
      - :meth:`~wxc_sdk.locations.LocationsApi.create_floor`
    * - api.locations.delete_floor
-        Deletes a floor, by ID
+        Delete a Location Floor
      - :meth:`~wxc_sdk.locations.LocationsApi.delete_floor`
    * - api.locations.details
         Shows details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.details`
    * - api.locations.floor_details
-        Shows details for a floor, by ID
+        Get Location Floor Details
      - :meth:`~wxc_sdk.locations.LocationsApi.floor_details`
    * - api.locations.list
         List locations for an organization
      - :meth:`~wxc_sdk.locations.LocationsApi.list`
    * - api.locations.list_floors
-        List location floors
+        List Location Floors
      - :meth:`~wxc_sdk.locations.LocationsApi.list_floors`
    * - api.locations.update
         Update details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.update`
    * - api.locations.update_floor
-        Updates details for a floor, by ID
+        Update a Location Floor
      - :meth:`~wxc_sdk.locations.LocationsApi.update_floor`
    * - api.meetings.create
         Creates a new meeting
@@ -242,6 +254,27 @@ The second column of the table has a link to the documentation of the method.
    * - api.meetings.qualities.meeting_qualities
         Get quality data for a meeting, by meetingId
      - :meth:`~wxc_sdk.meetings.qualities.MeetingQualitiesApi.meeting_qualities`
+   * - api.meetings.recordings.delete_a_recording
+        Delete a Recording
+     - :meth:`~wxc_sdk.meetings.recordings.RecordingsApi.delete_a_recording`
+   * - api.meetings.recordings.get_recording_details
+        Get Recording Details
+     - :meth:`~wxc_sdk.meetings.recordings.RecordingsApi.get_recording_details`
+   * - api.meetings.recordings.list_recordings
+        List Recordings
+     - :meth:`~wxc_sdk.meetings.recordings.RecordingsApi.list_recordings`
+   * - api.meetings.recordings.list_recordings_for_an_admin_or_compliance_officer
+        List Recordings For an Admin or Compliance Officer
+     - :meth:`~wxc_sdk.meetings.recordings.RecordingsApi.list_recordings_for_an_admin_or_compliance_officer`
+   * - api.meetings.recordings.move_recordings_into_the_recycle_bin
+        Move Recordings into the Recycle Bin
+     - :meth:`~wxc_sdk.meetings.recordings.RecordingsApi.move_recordings_into_the_recycle_bin`
+   * - api.meetings.recordings.purge_recordings_from_recycle_bin
+        Purge Recordings from Recycle Bin
+     - :meth:`~wxc_sdk.meetings.recordings.RecordingsApi.purge_recordings_from_recycle_bin`
+   * - api.meetings.recordings.restore_recordings_from_recycle_bin
+        Restore Recordings from Recycle Bin
+     - :meth:`~wxc_sdk.meetings.recordings.RecordingsApi.restore_recordings_from_recycle_bin`
    * - api.meetings.transcripts.delete
         Removes a transcript with a specified transcript ID
      - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.delete`
@@ -770,21 +803,51 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.calls.transmit_dtmf
         Transmit DTMF digits to a call
      - :meth:`~wxc_sdk.telephony.calls.CallsApi.transmit_dtmf`
+   * - api.telephony.dect_devices.add_a_handset
+        Add a Handset to a DECT Network
+     - :meth:`~wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_a_handset`
+   * - api.telephony.dect_devices.available_members
+        Search Available Members
+     - :meth:`~wxc_sdk.telephony.dect_devices.DECTDevicesApi.available_members`
+   * - api.telephony.dect_devices.create_base_stations
+        Create Multiple Base Stations
+     - :meth:`~wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_base_stations`
+   * - api.telephony.dect_devices.create_dect_network
+        Create a DECT Network
+     - :meth:`~wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_dect_network`
    * - api.telephony.devices.apply_changes
         Apply Changes for a specific device
      - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.apply_changes`
    * - api.telephony.devices.available_members
         Search members that can be assigned to the device
      - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.available_members`
+   * - api.telephony.devices.create_line_key_template
+        Create a Line Key Template
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.create_line_key_template`
    * - api.telephony.devices.dect_devices
         Read the DECT device type list
      - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.dect_devices`
+   * - api.telephony.devices.delete_line_key_template
+        Delete a Line Key Template
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_line_key_template`
    * - api.telephony.devices.device_settings
         Get override settings for a device
      - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.device_settings`
+   * - api.telephony.devices.line_key_template_details
+        Get details of a Line Key Template
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.line_key_template_details`
+   * - api.telephony.devices.list_line_key_templates
+        Read the list of Line Key Templates
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.list_line_key_templates`
    * - api.telephony.devices.members
         Get Device Members
      - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.members`
+   * - api.telephony.devices.modify_line_key_template
+        Modify a Line Key Template
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.modify_line_key_template`
+   * - api.telephony.devices.preview_apply_line_key_template
+        Preview Apply Line Key Template
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.preview_apply_line_key_template`
    * - api.telephony.devices.update_device_settings
         Modify override settings for a device
      - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.update_device_settings`
@@ -812,6 +875,18 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.huntgroup.update
         Update a Hunt Group
      - :meth:`~wxc_sdk.telephony.huntgroup.HuntGroupApi.update`
+   * - api.telephony.jobs.apply_line_key_templates.apply
+        Apply a Line key Template
+     - :meth:`~wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.apply`
+   * - api.telephony.jobs.apply_line_key_templates.job_errors
+        Get job errors for an Apply Line Key Template job
+     - :meth:`~wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.job_errors`
+   * - api.telephony.jobs.apply_line_key_templates.job_status
+        Get the job status of an Apply Line Key Template job
+     - :meth:`~wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.job_status`
+   * - api.telephony.jobs.apply_line_key_templates.list_jobs
+        Get List of Apply Line Key Template jobs
+     - :meth:`~wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.list_jobs`
    * - api.telephony.jobs.device_settings.change
         Change device settings across organization or locations jobs
      - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change`
@@ -1154,6 +1229,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.prem_pstn.trunk.usage
         Get Local Gateway Usage Count
      - :meth:`~wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.usage`
+   * - api.telephony.prem_pstn.trunk.usage_call_to_extension
+        Get local gateway call to on-premises extension usage for a trunk
+     - :meth:`~wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.usage_call_to_extension`
    * - api.telephony.prem_pstn.trunk.usage_dial_plan
         Get Local Gateway Dial Plan Usage for a Trunk
      - :meth:`~wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.usage_dial_plan`
