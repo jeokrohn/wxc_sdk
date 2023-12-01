@@ -161,7 +161,7 @@ class Workspace(ApiModel):
 
     def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         """
-        restore calling type
+        restore hotdesking status
 
         :meta private:
         """

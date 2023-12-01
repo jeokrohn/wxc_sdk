@@ -145,8 +145,8 @@ class OverflowSetting(ApiModel):
     #: How to handle new calls when the queue is full.
     greeting: Optional[Greeting] = None
     #: Array of announcement files to be played as overflow greetings. These files are from the list of announcement
-    #:  files associated with this call queue. For CUSTOM announcement, a minimum of 1 file is mandatory,
-    #:  and the maximum is 4.
+    #: files associated with this call queue. For CUSTOM announcement, a minimum of 1 file is mandatory,
+    #: and the maximum is 4.
     audio_announcement_files: Optional[list[AnnAudioFile]] = None
 
     @staticmethod
