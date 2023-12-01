@@ -187,7 +187,8 @@ def main() -> int:
                 log('skipping update, test run only')
             else:
                 log('updating calling settings')
-                update = Workspace(calling=WorkspaceCalling(type=CallingType.free))
+                update = ws.model_copy(deep=True)
+                update.calling = WorkspaceCalling(type=CallingType.free)
                 await api.workspaces.update(workspace_id=ws.workspace_id, settings=update)
             log('done')
 
