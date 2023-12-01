@@ -307,7 +307,11 @@ def main() -> int:
 
 
 if __name__ == '__main__':
-    logging.getLogger().setLevel(logging.INFO)
+    root_logger = logging.getLogger()
+    h = logging.StreamHandler(stream=sys.stderr)
+    h.setLevel(logging.INFO)
+    root_logger.setLevel(logging.INFO)
+    root_logger.addHandler(h)
 
     # log REST API interactions to file
     file_fmt = logging.Formatter(fmt='%(asctime)s %(levelname)s %(message)s')
