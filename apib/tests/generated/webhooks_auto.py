@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Webhook', 'WebhookCollectionResponse', 'WebhookEvent', 'WebhookResource', 'WebhookStatus']
+__auto__ = ['Webhook', 'WebhookEvent', 'WebhookResource', 'WebhookStatus', 'WebhooksApi']
 
 
 class WebhookResource(str, Enum):
@@ -101,10 +101,6 @@ class Webhook(ApiModel):
     #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     #: example: org
     owned_by: Optional[str] = None
-
-
-class WebhookCollectionResponse(ApiModel):
-    items: Optional[list[Webhook]] = None
 
 
 class WebhooksApi(ApiChild, base='webhooks'):

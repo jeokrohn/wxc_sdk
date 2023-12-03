@@ -14,18 +14,16 @@ from wxc_sdk.base import SafeEnum as Enum
 __auto__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
             'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'CLIDPolicySelection',
             'CallForwardingAlwaysGet', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet',
-            'CallForwardingPlaceSettingGet', 'CallWaiting', 'CallingPermission', 'CallingPermissionAction',
+            'CallForwardingPlaceSettingGet', 'CallingPermission', 'CallingPermissionAction',
             'CallingPermissionCallType', 'ExternalCallerIdNamePolicy', 'GetMusicOnHoldObject',
             'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch',
             'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch',
-            'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType', 'InterceptPatch',
+            'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType',
             'ListNumbersAssociatedWithASpecificWorkspaceResponse', 'Location', 'ModifyPlaceCallForwardSettings',
-            'ModifyPlaceCallerIdGet', 'MonitoredElementCallParkExtension', 'MonitoredElementItem',
-            'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumbers', 'PlaceCallerIdGet',
-            'PutMusicOnHoldObject', 'TransferNumberGet', 'UserInboundPermissionGet',
-            'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet', 'UserMonitoringPatch', 'UserNumberItem',
-            'UserOutgoingPermissionGet', 'UserPlaceAuthorizationCodeListGet', 'UserPlaceAuthorizationCodeListPatch',
-            'Workspace']
+            'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
+            'MonitoredElementUserType', 'PhoneNumbers', 'PlaceCallerIdGet', 'TransferNumberGet',
+            'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet',
+            'UserNumberItem', 'UserOutgoingPermissionGet', 'Workspace', 'WorkspaceCallSettingsApi']
 
 
 class AuthorizationCode(ApiModel):
@@ -98,12 +96,6 @@ class CallForwardingPlaceSettingGet(ApiModel):
     busy: Optional[CallForwardingBusyGet] = None
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
     no_answer: Optional[CallForwardingNoAnswerGet] = None
-
-
-class CallWaiting(ApiModel):
-    #: Call Waiting state.
-    #: example: True
-    enabled: Optional[bool] = None
 
 
 class CallingPermissionCallType(str, Enum):
@@ -263,49 +255,12 @@ class InterceptIncomingPatch(ApiModel):
     announcements: Optional[InterceptAnnouncementsPatch] = None
 
 
-class InterceptPatch(ApiModel):
-    #: `true` if call interception is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Settings related to how incoming calls are handled when the intercept feature is enabled.
-    incoming: Optional[InterceptIncomingPatch] = None
-    #: Settings related to how outgoing calls are handled when the intercept feature is enabled.
-    outgoing: Optional[InterceptOutGoingGet] = None
-
-
 class ModifyPlaceCallForwardSettings(ApiModel):
     #: Call forwarding settings for a Workspace.
     call_forwarding: Optional[CallForwardingPlaceSettingGet] = None
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
     #: reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[CallForwardingBusyGet] = None
-
-
-class ModifyPlaceCallerIdGet(ApiModel):
-    #: Which type of outgoing Caller ID will be used.
-    #: example: DIRECT_LINE
-    selected: Optional[CLIDPolicySelection] = None
-    #: This value must be an assigned number from the workspace's location.
-    #: example: +12815550003
-    custom_number: Optional[str] = None
-    #: Workspace's caller ID display name.
-    #: example: Clockmaker's shop 7.1
-    display_name: Optional[str] = None
-    #: Workspace's caller ID display details.
-    #: example: .
-    display_detail: Optional[str] = None
-    #: Flag to block call forwarding.
-    #: example: True
-    block_in_forward_calls_enabled: Optional[bool] = None
-    #: Designates which type of External Caller ID Name policy is used. Default is `DIRECT_LINE`.
-    #: example: DIRECT_LINE
-    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
-    #: Custom External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
-    #: example: Custom external caller name
-    custom_external_caller_id_name: Optional[str] = None
-    #: External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
-    #: example: Anna
-    location_external_caller_id_name: Optional[str] = None
 
 
 class MonitoredElementCallParkExtension(ApiModel):
@@ -477,30 +432,12 @@ class UserMonitoringGet(ApiModel):
     monitored_elements: Optional[MonitoredElementItem] = None
 
 
-class UserMonitoringPatch(ApiModel):
-    #: Call park notification is enabled or disabled.
-    #: example: True
-    enable_call_park_notification: Optional[bool] = None
-    #: Array of ID strings of monitored elements.
-    monitored_elements: Optional[list[str]] = None
-
-
 class UserOutgoingPermissionGet(ApiModel):
     #: Outgoing Permission state. If disabled, the default settings are used.
     #: example: True
     use_custom_enabled: Optional[bool] = None
     #: Workspace's list of outgoing permissions.
     calling_permissions: Optional[list[CallingPermission]] = None
-
-
-class UserPlaceAuthorizationCodeListGet(ApiModel):
-    #: Indicates the set of activation codes and description.
-    access_codes: Optional[list[AuthorizationCode]] = None
-
-
-class UserPlaceAuthorizationCodeListPatch(ApiModel):
-    #: Indicates access codes to delete.
-    delete_codes: Optional[list[str]] = None
 
 
 class AudioAnnouncementFileGetObjectMediaFileType(str, Enum):
@@ -540,17 +477,6 @@ class GetMusicOnHoldObject(ApiModel):
     #: false, music on hold is turned off for the workspace. In both cases, music on hold will not be played.
     #: example: True
     moh_location_enabled: Optional[bool] = None
-    #: Greeting type for the workspace.
-    #: example: DEFAULT
-    greeting: Optional[InterceptAnnouncementsGetGreeting] = None
-    #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
-    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
-
-
-class PutMusicOnHoldObject(ApiModel):
-    #: Music on hold is enabled or disabled for the workspace.
-    #: example: True
-    moh_enabled: Optional[bool] = None
     #: Greeting type for the workspace.
     #: example: DEFAULT
     greeting: Optional[InterceptAnnouncementsGetGreeting] = None

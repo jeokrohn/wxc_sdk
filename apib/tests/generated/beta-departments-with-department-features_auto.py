@@ -11,14 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['DepartmentCollectionRequest', 'DepartmentCollectionResponse', 'DepartmentResponse',
-            'DepartmentResponseDepartment', 'DepartmentResponseWithId']
-
-
-class DepartmentCollectionRequest(ApiModel):
-    #: Name of the department.
-    #: example: HR
-    name: Optional[str] = None
+__auto__ = ['BetaDepartmentsWithDepartmentFeaturesApi', 'DepartmentResponse', 'DepartmentResponseDepartment']
 
 
 class DepartmentResponseDepartment(ApiModel):
@@ -36,17 +29,6 @@ class DepartmentResponseDepartment(ApiModel):
 class DepartmentResponse(ApiModel):
     #: Specifies the department information.
     department: Optional[DepartmentResponseDepartment] = None
-
-
-class DepartmentCollectionResponse(ApiModel):
-    #: List of departments.
-    departments: Optional[list[DepartmentResponse]] = None
-
-
-class DepartmentResponseWithId(ApiModel):
-    #: Unique identifier of the department.
-    #: example: Y2lzY29zcGFyazovL3VzL1NDSU1fR1JPVVAvZjA2ZWRiOGMtMjMxNC00ZTcxLWIzNzgtZTdiMmQwNjk3OTliOjk2YWJjMmFhLTNkY2MtMTFlNS1hMTUyLWZlMzQ4MTljZGM5YQ
-    id: Optional[str] = None
 
 
 class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/departments'):

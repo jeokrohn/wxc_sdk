@@ -11,13 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetComplianceAnnouncementObject']
-
-
-class GetComplianceAnnouncementObject(ApiModel):
-    #: Flag to indicate whether the Call Recording START/STOP announcement is played to an internal caller.
-    #: example: True
-    inbound_pstncalls_enabled: Optional[bool] = Field(alias='inboundPSTNCallsEnabled', default=None)
+__auto__ = ['BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi']
 
 
 class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, base='telephony/config/locations/{locationId}/callRecording/complianceAnnouncement'):

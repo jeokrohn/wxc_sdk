@@ -11,10 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListMeetingAttendeeReportsResponse', 'ListMeetingUsageReportsResponse', 'MeetingAttendeeReportObject',
-            'MeetingAttendeeReportObjectParticipantType', 'MeetingUsageReportObject',
+__auto__ = ['MeetingAttendeeReportObject', 'MeetingAttendeeReportObjectParticipantType', 'MeetingUsageReportObject',
             'MeetingUsageReportObjectScheduledType', 'MeetingUsageReportObjectServiceType',
-            'MeetingUsageReportTrackingCodeObject']
+            'MeetingUsageReportTrackingCodeObject', 'MeetingsSummaryReportApi']
 
 
 class MeetingUsageReportObjectScheduledType(str, Enum):
@@ -191,16 +190,6 @@ class MeetingAttendeeReportObject(ApiModel):
     registered: Optional[bool] = None
     #: Whether or not the attendee has been invited to the meeting.
     invited: Optional[bool] = None
-
-
-class ListMeetingUsageReportsResponse(ApiModel):
-    #: An array of meeting usage report objects.
-    items: Optional[list[MeetingUsageReportObject]] = None
-
-
-class ListMeetingAttendeeReportsResponse(ApiModel):
-    #: An array of meeting attendee report objects.
-    items: Optional[list[MeetingAttendeeReportObject]] = None
 
 
 class MeetingsSummaryReportApi(ApiChild, base='meetingReports'):

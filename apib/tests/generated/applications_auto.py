@@ -12,7 +12,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['Application', 'ApplicationOrgSubmissionStatus', 'ApplicationSubmissionStatus', 'ApplicationType',
-            'ApplicationsCollectionResponse', 'ListApplicationsOrderBy', 'ListApplicationsType']
+            'ApplicationsApi', 'ListApplicationsOrderBy', 'ListApplicationsType']
 
 
 class ApplicationType(str, Enum):
@@ -136,10 +136,6 @@ class Application(ApiModel):
     #: The date and time the application was created.
     #: example: 2017-10-01T07:00:00.000Z
     created: Optional[datetime] = None
-
-
-class ApplicationsCollectionResponse(ApiModel):
-    items: Optional[list[Application]] = None
 
 
 class ListApplicationsType(str, Enum):

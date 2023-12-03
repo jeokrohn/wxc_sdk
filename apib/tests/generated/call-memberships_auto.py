@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallMembership', 'CallMembershipAudio', 'CallMembershipCollectionResponse', 'CallMembershipStatus',
+__auto__ = ['CallMembership', 'CallMembershipAudio', 'CallMembershipStatus', 'CallMembershipsApi',
             'ListCallMembershipsCallStatus', 'ListCallMembershipsIsHost']
 
 
@@ -73,10 +73,6 @@ class CallMembership(ApiModel):
     #: The date and time when the call membership was created.
     #: example: 2015-10-18T14:26:16.203Z
     created: Optional[datetime] = None
-
-
-class CallMembershipCollectionResponse(ApiModel):
-    items: Optional[list[CallMembership]] = None
 
 
 class ListCallMembershipsCallStatus(str, Enum):

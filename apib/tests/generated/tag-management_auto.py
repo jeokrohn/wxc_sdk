@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CustomerTagsResponse', 'SubscriptionTagsResponse', 'TagsObj', 'TagsRequest']
+__auto__ = ['CustomerTagsResponse', 'PartnerTagsApi', 'SubscriptionTagsResponse', 'TagsObj']
 
 
 class TagsObj(ApiModel):
@@ -21,11 +21,6 @@ class TagsObj(ApiModel):
     #: Description of the tag
     #: example: Tag description
     description: Optional[str] = None
-
-
-class TagsRequest(ApiModel):
-    #: An array of tags.
-    tags: Optional[list[TagsObj]] = None
 
 
 class CustomerTagsResponse(ApiModel):

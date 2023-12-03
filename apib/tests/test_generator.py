@@ -41,7 +41,7 @@ class GeneratorTest(ApibTest):
             # if apib_path_base != 'location-call-settings.apib':
             #     continue
             try:
-                code_gen = CodeGenerator()
+                code_gen = CodeGenerator(with_unreferenced_classes=False)
                 code_gen.read_blueprint(apib_path)
                 code_gen.cleanup()
             except Exception as e:

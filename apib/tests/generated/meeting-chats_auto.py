@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ChatObject', 'ChatObjectSender', 'ListMeetingChatsResponse']
+__auto__ = ['ChatObject', 'ChatObjectSender', 'MeetingChatsApi']
 
 
 class ChatObjectSender(ApiModel):
@@ -53,11 +53,6 @@ class ChatObject(ApiModel):
     sender: Optional[ChatObjectSender] = None
     #: Information of the receivers of the chat snippet.
     receivers: Optional[list[ChatObjectSender]] = None
-
-
-class ListMeetingChatsResponse(ApiModel):
-    #: Chat array
-    items: Optional[list[ChatObject]] = None
 
 
 class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):

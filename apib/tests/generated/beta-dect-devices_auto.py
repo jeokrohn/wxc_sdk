@@ -11,8 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AddDECTHandset', 'AvailableMember', 'AvailableMembersResponse', 'BaseStationPostResult',
-            'BaseStationResponse', 'BaseStationsPostResponse', 'CreateADectNetworkResponse', 'CreateDECTNetwork',
+__auto__ = ['AvailableMember', 'BaseStationPostResult', 'BaseStationResponse', 'BetaDECTDevicesSettingsApi',
             'CreateDECTNetworkModel', 'LineType', 'Location', 'MemberType']
 
 
@@ -21,29 +20,6 @@ class CreateDECTNetworkModel(str, Enum):
     dms_cisco_dbs110 = 'DMS Cisco DBS110'
     #: Supports 250 base stations and 1000 line ports.
     dms_cisco_dbs210 = 'DMS Cisco DBS210'
-
-
-class CreateDECTNetwork(ApiModel):
-    #: Name of the DECT network. Min and max length supported for the DECT network name are 1 and 40 respectively.
-    #: example: test-dect
-    name: Optional[str] = None
-    #: Add a default name (11 characters max) to display for all handsets. If left blank, the default name will be an
-    #: indexed number followed by the DECT network name.
-    #: example: test-dect
-    display_name: Optional[str] = None
-    #: Select a device model type depending on the number of base stations and handset lines needed in the DECT
-    #: network.
-    model: Optional[CreateDECTNetworkModel] = None
-    #: If set to true, need to provide a default access code that will be shared for all users in this network to pair
-    #: their lines to the next available handset. Otherwise, each user will get a unique 4-digit access code that will
-    #: be auto-generated. Note: There is currently no public API to retrieve the auto generated access codes for
-    #: handsets. Use Control Hub instead.
-    #: example: True
-    default_access_code_enabled: Optional[bool] = None
-    #: If `defaultAccessCodeEnabled` is set to true, then provide a default access code that needs to be a 4-numeric
-    #: digit. The access code should be unique to the DECT network for the location.
-    #: example: 1551
-    default_access_code: Optional[str] = None
 
 
 class BaseStationPostResult(ApiModel):
@@ -62,24 +38,6 @@ class BaseStationResponse(ApiModel):
     mac: Optional[str] = None
     #: Object with base station POST Result.
     result: Optional[BaseStationPostResult] = None
-
-
-class BaseStationsPostResponse(ApiModel):
-    #: List of base station MAC addresses that have to be added to the DECT network.
-    base_stations: Optional[list[BaseStationResponse]] = None
-
-
-class AddDECTHandset(ApiModel):
-    #: ID of the member on line1 of the handset. Members can be PEOPLE or PLACE.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
-    line1_member_id: Optional[str] = None
-    #: ID of the member on line2 of the handset. Members can be PEOPLE, PLACE, or VIRTUAL_LINE.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
-    line2_member_id: Optional[str] = None
-    #: Custom display name on the handset. Min and max length supported for the custom display name is 1 and 16
-    #: respectively
-    #: example: handsetDisplayName
-    custom_display_name: Optional[str] = None
 
 
 class LineType(str, Enum):
@@ -129,16 +87,6 @@ class AvailableMember(ApiModel):
     member_type: Optional[MemberType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
-
-
-class AvailableMembersResponse(ApiModel):
-    members: Optional[list[AvailableMember]] = None
-
-
-class CreateADectNetworkResponse(ApiModel):
-    #: A unique identifier for the DECT network.
-    #: example: Y2lzY29zcGFyazovL3VzL0RFQ1RfREVWX05FVC81NmRiMjRkMy03YTdhLTQwYTItOWFjOS1iMjMzMjc3OTIxNzf
-    dect_network_id: Optional[str] = None
 
 
 class BetaDECTDevicesSettingsApi(ApiChild, base='telephony/config'):

@@ -11,7 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetComplianceAnnouncementObject', 'GetOrgComplianceAnnouncementObject']
+__auto__ = ['BetaFeaturesCallRecordingWithComplianceAnnouncementFeaturePhase3Api', 'GetComplianceAnnouncementObject',
+            'GetOrgComplianceAnnouncementObject']
 
 
 class GetComplianceAnnouncementObject(ApiModel):

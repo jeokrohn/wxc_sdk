@@ -11,7 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['HistoricalDataRelatedToMeetingsResponse', 'HistoricalDataRelatedToMeetingsResponseMetrics',
+__auto__ = ['HistoricalAnalyticsAPIsApi', 'HistoricalDataRelatedToMeetingsResponse',
+            'HistoricalDataRelatedToMeetingsResponseMetrics',
             'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods',
             'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation',
             'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByRoles',

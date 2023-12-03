@@ -13,31 +13,28 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __auto__ = ['AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel',
             'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType',
-            'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGet',
-            'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
-            'CallForwardingNumbers', 'CallForwardingNumbersType', 'CallQueueAudioFilesObject',
+            'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGetCallForwarding',
+            'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType',
             'CallQueueHolidaySchedulesObject', 'CallQueueHolidaySchedulesObjectScheduleLevel',
             'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage',
             'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage',
             'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
             'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting',
             'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode',
-            'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateACallQueueResponse', 'CreateCallQueueObject',
-            'CreateForwardingRuleObject', 'CreateForwardingRuleObjectCallsFrom',
+            'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateForwardingRuleObjectCallsFrom',
             'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
             'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-            'CreateForwardingRuleObjectForwardToSelection', 'GetAnnouncementFileInfo', 'GetCallQueueCallPolicyObject',
-            'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
-            'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
-            'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
+            'CreateForwardingRuleObjectForwardToSelection', 'FeaturesCallQueueApi', 'GetAnnouncementFileInfo',
+            'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
+            'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueForcedForwardObject',
+            'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject',
+            'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
             'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
             'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject',
             'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType',
             'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'MediaType',
-            'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding', 'ModifyCallQueueHolidayObject',
-            'ModifyCallQueueObject', 'ModifyPersonPlaceVirtualLineCallQueueObject',
-            'PatchCallQueueNightServiceObject', 'PostPersonPlaceVirtualLineCallQueueObject',
-            'ReadTheListOfCallQueueAnnouncementFilesResponse', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
+            'ModifyCallForwardingObjectCallForwarding', 'ModifyPersonPlaceVirtualLineCallQueueObject',
+            'PostPersonPlaceVirtualLineCallQueueObject', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -163,11 +160,6 @@ class CallForwardSettingsGetCallForwarding(ApiModel):
     rules: Optional[list[CallForwardRulesGet]] = None
 
 
-class CallForwardSettingsGet(ApiModel):
-    #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    call_forwarding: Optional[CallForwardSettingsGetCallForwarding] = None
-
-
 class CallForwardingNumbersType(str, Enum):
     #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is a primary
     #: number or extension.
@@ -187,15 +179,6 @@ class CallForwardingNumbers(ApiModel):
     #: Type of
     #: example: PRIMARY
     type: Optional[CallForwardingNumbersType] = None
-
-
-class CallQueueAudioFilesObject(ApiModel):
-    #: Name of the file.
-    #: example: AudioFile1.wav
-    file_name: Optional[str] = None
-    #: Media Type of the audio file.
-    #: example: WAV
-    media_file_type: Optional[AudioAnnouncementFileFeatureGetObjectMediaFileType] = None
 
 
 class CallQueueHolidaySchedulesObjectScheduleLevel(str, Enum):
@@ -488,42 +471,6 @@ class PostPersonPlaceVirtualLineCallQueueObject(ApiModel):
     skill_level: Optional[int] = None
 
 
-class CreateCallQueueObject(ApiModel):
-    #: Unique name for the call queue.
-    #: example: CallQueue-1
-    name: Optional[str] = None
-    #: Primary phone number of the call queue. Either a `phoneNumber` or `extension` is mandatory.
-    #: example: +12225555309
-    phone_number: Optional[str] = None
-    #: Primary phone extension of the call queue. Either a `phoneNumber` or extension is mandatory.
-    #: example: 5309
-    extension: Optional[str] = None
-    #: Language code.
-    #: example: en-US
-    language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
-    #: example: Hakim
-    first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to `phoneNumber` if set,
-    #: otherwise defaults to call group name.
-    #: example: Smith
-    last_name: Optional[str] = None
-    #: Time zone for the call queue.
-    #: example: America/Chicago
-    time_zone: Optional[str] = None
-    #: Policy controlling how calls are routed to `agents`.
-    call_policies: Optional[GetCallQueueCallPolicyObject] = None
-    #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsGetObject] = None
-    #: People, workspaces and virtual lines that are eligible to receive calls.
-    agents: Optional[list[PostPersonPlaceVirtualLineCallQueueObject]] = None
-    #: Whether or not to allow agents to join or unjoin a queue.
-    allow_agent_join_enabled: Optional[bool] = None
-    #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
-    #: example: True
-    phone_number_for_outgoing_calls_enabled: Optional[bool] = None
-
-
 class CreateForwardingRuleObjectForwardToSelection(str, Enum):
     #: When the rule matches, forward to the destination for the hunt group.
     forward_to_default_number = 'FORWARD_TO_DEFAULT_NUMBER'
@@ -570,27 +517,6 @@ class CreateForwardingRuleObjectCallsFrom(ApiModel):
 class CreateForwardingRuleObjectCallsTo(ApiModel):
     #: Array of numbers to be matched against the calling destination number.
     numbers: Optional[list[CallForwardingNumbers]] = None
-
-
-class CreateForwardingRuleObject(ApiModel):
-    #: Unique name for the selective rule in the hunt group.
-    #: example: New Selective Rule
-    name: Optional[str] = None
-    #: Reflects if rule is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
-    #: example: HolidayScheduleOne
-    holiday_schedule: Optional[str] = None
-    #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
-    #: example: BusinessScheduleTwo
-    business_schedule: Optional[str] = None
-    #: Controls what happens when the rule matches including the destination number for the call forwarding.
-    forward_to: Optional[CreateForwardingRuleObjectForwardTo] = None
-    #: Settings related to the rule matching based on incoming caller ID.
-    calls_from: Optional[CreateForwardingRuleObjectCallsFrom] = None
-    #: Settings related to the rule matching based on the destination number.
-    calls_to: Optional[CreateForwardingRuleObjectCallsTo] = None
 
 
 class MediaType(str, Enum):
@@ -912,38 +838,6 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
     rules: Optional[list[CallForwardRulesSet]] = None
 
 
-class ModifyCallForwardingObject(ApiModel):
-    #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    call_forwarding: Optional[ModifyCallForwardingObjectCallForwarding] = None
-
-
-class ModifyCallQueueHolidayObject(ApiModel):
-    #: Enable or Disable the call queue holiday service routing policy.
-    #: example: True
-    holiday_service_enabled: Optional[bool] = None
-    #: Specifies call processing action type.
-    #: example: BUSY
-    action: Optional[GetCallQueueHolidayObjectAction] = None
-    #: Specifies whether the schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from
-    #: `holidaySchedules` list)
-    #: example: LOCATION
-    holiday_schedule_level: Optional[CallQueueHolidaySchedulesObjectScheduleLevel] = None
-    #: Name of the schedule configured for a holiday service as one of from `holidaySchedules` list.
-    #: example: 2022 Holidays Period
-    holiday_schedule_name: Optional[str] = None
-    #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
-    #: example: 1235557890
-    transfer_phone_number: Optional[str] = None
-    #: Specifies if an announcement plays to callers before applying the action.
-    #: example: True
-    play_announcement_before_enabled: Optional[bool] = None
-    #: Specifies what type of announcement to be played.
-    #: example: DEFAULT
-    audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
-    #: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
-    audio_files: Optional[list[AudioAnnouncementFileFeatureGetObject]] = None
-
-
 class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: ID of person, workspace or virtual line.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFLzgzYjQ0OTIyLWZlOWYtMTFlYi1hNGI4LTMzNjI3YmVkNjdiNQ
@@ -957,105 +851,6 @@ class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: Indicates the join status of the agent for this queue. The default value for newly added agents is `true`.
     #: example: True
     join_enabled: Optional[bool] = None
-
-
-class ModifyCallQueueObject(ApiModel):
-    #: Whether or not the call queue is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Unique name for the call queue.
-    #: example: CallQueue-1
-    name: Optional[str] = None
-    #: Language code.
-    #: example: en-US
-    language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this call queue. Defaults to `.`.
-    #: example: Hakim
-    first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set,
-    #: otherwise defaults to call group name.
-    #: example: Smith
-    last_name: Optional[str] = None
-    #: Time zone for the hunt group.
-    #: example: America/Chicago
-    time_zone: Optional[str] = None
-    #: Primary phone number of the call queue.
-    #: example: +12225555309
-    phone_number: Optional[str] = None
-    #: Extension of the call queue.
-    #: example: 5309
-    extension: Optional[str] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
-    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
-    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-    alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
-    #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[GetCallQueueCallPolicyObject] = None
-    #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsGetObject] = None
-    #: Flag to indicate whether call waiting is enabled for agents.
-    allow_call_waiting_for_agents_enabled: Optional[bool] = None
-    #: People, workspaces and virtual lines that are eligible to receive calls.
-    agents: Optional[list[ModifyPersonPlaceVirtualLineCallQueueObject]] = None
-    #: Whether or not to allow agents to join or unjoin a queue.
-    allow_agent_join_enabled: Optional[bool] = None
-    #: When `true`, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing
-    #: calls.
-    #: example: True
-    phone_number_for_outgoing_calls_enabled: Optional[bool] = None
-
-
-class PatchCallQueueNightServiceObject(ApiModel):
-    #: Enable or disable call queue night service routing policy.
-    #: example: True
-    night_service_enabled: Optional[bool] = None
-    #: Specifies call processing action type.
-    #: example: TRANSFER
-    action: Optional[GetCallQueueHolidayObjectAction] = None
-    #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
-    #: example: 1234
-    transfer_phone_number: Optional[str] = None
-    #: Specifies if an announcement plays to callers before applying the action.
-    #: example: True
-    play_announcement_before_enabled: Optional[bool] = None
-    #: Specifies the type of announcements to played.
-    #: example: NORMAL
-    announcement_mode: Optional[GetCallQueueNightServiceObjectAnnouncementMode] = None
-    #: Specifies what type of announcements to be played when `announcementMode` is `NORMAL`.
-    #: example: DEFAULT
-    audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
-    #: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
-    audio_files: Optional[list[AudioAnnouncementFileFeatureGetObject]] = None
-    #: Name of the schedule configured for a night service as one of from `businessHourSchedules` list.
-    #: example: Working Hour
-    business_hours_name: Optional[str] = None
-    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from
-    #: `businessHourSchedules` list)
-    #: example: ORGANIZATION
-    business_hours_level: Optional[CallQueueHolidaySchedulesObjectScheduleLevel] = None
-    #: Force night service regardless of business hour schedule.
-    #: example: True
-    force_night_service_enabled: Optional[bool] = None
-    #: Specifies what type of announcement to be played when `announcementMode` is `MANUAL`.
-    #: example: DEFAULT
-    manual_audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
-    #: List Of pre-configured Audio Files.
-    manual_audio_files: Optional[list[AudioAnnouncementFileFeatureGetObject]] = None
-
-
-class ReadTheListOfCallQueuesResponse(ApiModel):
-    #: Array of call queues.
-    queues: Optional[list[ListCallQueueObject]] = None
-
-
-class CreateACallQueueResponse(ApiModel):
-    #: ID of the newly created call queue.
-    id: Optional[str] = None
-
-
-class ReadTheListOfCallQueueAnnouncementFilesResponse(ApiModel):
-    #: Array of announcements for this call queue.
-    announcements: Optional[list[GetAnnouncementFileInfo]] = None
 
 
 class FeaturesCallQueueApi(ApiChild, base='telephony/config'):

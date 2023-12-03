@@ -11,13 +11,14 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow',
+__auto__ = ['AlternateNumbersWithPattern', 'BetaFeaturesCallQueueWithDepartmentFeaturesApi',
+            'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow',
             'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting',
             'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
             'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
             'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueObjectDepartment', 'GetPersonPlaceObject',
-            'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObject', 'ModifyCallQueueObjectDepartment',
-            'PostPersonPlaceObject', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
+            'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObjectDepartment', 'PostPersonPlaceObject',
+            'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -285,53 +286,6 @@ class PostPersonPlaceObject(ApiModel):
     #: Weight of person or workspace. Only applied when call policy is `WEIGHTED`.
     #: example: 50
     weight: Optional[str] = None
-
-
-class ModifyCallQueueObject(ApiModel):
-    #: Whether or not the call queue is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Unique name for the call queue.
-    #: example: CallQueue-1
-    name: Optional[str] = None
-    #: Language code.
-    #: example: en-US
-    language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
-    #: example: Hakim
-    first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set,
-    #: otherwise defaults to call group name.
-    #: example: Smith
-    last_name: Optional[str] = None
-    #: Time zone for the hunt group.
-    #: example: America/Chicago
-    time_zone: Optional[str] = None
-    #: Primary phone number of the call queue.
-    #: example: 5558675309
-    phone_number: Optional[str] = None
-    #: Extension of the call queue.
-    #: example: 7781
-    extension: Optional[str] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
-    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
-    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-    alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
-    #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[GetCallQueueCallPolicyObject] = None
-    #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsObject] = None
-    #: Flag to indicate whether call waiting is enabled for agents.
-    allow_call_waiting_for_agents_enabled: Optional[bool] = None
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[PostPersonPlaceObject]] = None
-    #: Specifies the department information.
-    department: Optional[ModifyCallQueueObjectDepartment] = None
-
-
-class ReadTheListOfCallQueuesResponse(ApiModel):
-    #: Array of call queues.
-    queues: Optional[list[ListCallQueueObject]] = None
 
 
 class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):

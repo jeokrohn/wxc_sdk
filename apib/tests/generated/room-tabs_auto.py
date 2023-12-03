@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['RoomTab', 'RoomTabRoomType', 'RoomTabsCollectionResponse']
+__auto__ = ['RoomTab', 'RoomTabRoomType', 'RoomTabsApi']
 
 
 class RoomTabRoomType(str, Enum):
@@ -43,10 +43,6 @@ class RoomTab(ApiModel):
     #: The date and time when the Room Tab was created.
     #: example: 2015-10-18T14:26:16.203Z
     created: Optional[datetime] = None
-
-
-class RoomTabsCollectionResponse(ApiModel):
-    items: Optional[list[RoomTab]] = None
 
 
 class RoomTabsApi(ApiChild, base='room/tabs'):

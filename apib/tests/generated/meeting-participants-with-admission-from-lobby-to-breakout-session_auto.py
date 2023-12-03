@@ -11,9 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdmitParticipant', 'AdmitParticipantsObject', 'Device', 'DeviceAudioType', 'DeviceCallType',
-            'InProgressDevice', 'InProgressParticipant', 'InProgressParticipantState',
-            'ListMeetingParticipantsResponse', 'Participant', 'ParticipantState', 'ParticipantVideo']
+__auto__ = ['AdmitParticipant', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice',
+            'InProgressParticipant', 'InProgressParticipantState',
+            'MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi', 'Participant', 'ParticipantState',
+            'ParticipantVideo']
 
 
 class ParticipantVideo(str, Enum):
@@ -227,14 +228,6 @@ class AdmitParticipant(ApiModel):
     #: main session if the value is empty.
     #: example: 23e16d67-17f3-3ef1-b830-f33d17c0232e
     breakout_session_id: Optional[str] = None
-
-
-class AdmitParticipantsObject(ApiModel):
-    items: Optional[list[AdmitParticipant]] = None
-
-
-class ListMeetingParticipantsResponse(ApiModel):
-    items: Optional[list[Participant]] = None
 
 
 class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, base='meetingParticipants'):

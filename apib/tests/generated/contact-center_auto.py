@@ -12,10 +12,9 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['AgentStats', 'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'Artifact',
-            'ArtifactAttributes', 'FieldValidationError', 'GetAgentsStatisticsInterval', 'ListCapturesQuery',
+            'ArtifactAttributes', 'ContactCenterApi', 'GetAgentsStatisticsInterval', 'ListCapturesQuery',
             'ListCapturesResponse', 'Meta', 'QueueStats', 'QueueStatsResponse', 'Recording', 'RecordingStatus',
-            'Task', 'TaskAttributes', 'TaskAttributesContext', 'TaskAttributesStatus', 'TaskOwner',
-            'TaskWithCaptures', 'TasksResponse', 'TasksValidationError']
+            'Task', 'TaskAttributes', 'TaskAttributesStatus', 'TaskOwner', 'TaskWithCaptures', 'TasksResponse']
 
 
 class Meta(ApiModel):
@@ -31,10 +30,6 @@ class TaskOwner(ApiModel):
     #: Name of the agent last assigned to this task.
     #: example: Joseph Lambert
     name: Optional[str] = None
-
-
-class TaskAttributesContext(ApiModel):
-    ...
 
 
 class TaskAttributesStatus(str, Enum):
@@ -97,23 +92,6 @@ class TasksResponse(ApiModel):
     meta: Optional[Meta] = None
     #: List of tasks retrieved according to query parameters.
     data: Optional[list[Task]] = None
-
-
-class FieldValidationError(ApiModel):
-    #: example: pageSize
-    field: Optional[str] = None
-    #: example: Invalid pageSize parameter
-    message: Optional[str] = None
-
-
-class TasksValidationError(ApiModel):
-    field_errors: Optional[list[FieldValidationError]] = None
-    #: example: INTEGRATION-9bcdc696-57fa-4e91-b5aa-57a66a347c23
-    tracking_id: Optional[str] = None
-    #: example: The request was not processed
-    message: Optional[str] = None
-    #: example: 400
-    code: Optional[int] = None
 
 
 class AgentStatsChannelChannelType(str, Enum):

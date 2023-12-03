@@ -11,23 +11,19 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnswerForCustomizedQuestion', 'BatchRegisterMeetingRegistrantsResponse',
-            'BatchUpdateMeetingRegistrantsStatusStatusOpType', 'BreakoutSessionObject', 'Control',
-            'CreateInvitationSourcesResponse', 'CreateMeetingObject', 'CreateMeetingObjectRegistration',
+__auto__ = ['AnswerForCustomizedQuestion', 'BatchUpdateMeetingRegistrantsStatusStatusOpType', 'BreakoutSessionObject',
+            'Control', 'CreateMeetingObject', 'CreateMeetingObjectRegistration',
             'CreateMeetingObjectSimultaneousInterpretation', 'CustomizedQuestionForCreateMeeting',
             'CustomizedQuestionForCreateMeetingOptions', 'CustomizedQuestionForCreateMeetingRules',
             'CustomizedQuestionForCreateMeetingRulesCondition', 'CustomizedQuestionForCreateMeetingRulesResult',
             'CustomizedQuestionForCreateMeetingType', 'CustomizedQuestionForGetMeeting',
             'CustomizedQuestionForGetMeetingRules', 'CustomizedRegistrant', 'DetailedTemplateObject',
-            'GetBreakoutSessionObject', 'GetBreakoutSessionsObject', 'GetMeetingSurveyLinksResponse',
-            'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting',
+            'GetBreakoutSessionObject', 'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting',
             'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject',
-            'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'JoinMeetingLinkObject', 'JoinMeetingObject',
-            'LinksObjectForTelephony', 'ListMeetingInterpretersResponse', 'ListMeetingRegistrantsResponse',
-            'ListMeetingSessionTypesResponse', 'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse',
-            'ListMeetingsOfAMeetingSeriesMeetingType', 'ListMeetingsOfAMeetingSeriesResponse',
-            'ListMeetingsOfAMeetingSeriesState', 'ListMeetingsResponse', 'MeetingSeriesObject',
-            'MeetingSeriesObjectAttendeePrivileges', 'MeetingSeriesObjectAudioConnectionOptions',
+            'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'JoinMeetingLinkObject',
+            'LinksObjectForTelephony', 'ListMeetingsOfAMeetingSeriesMeetingType', 'ListMeetingsOfAMeetingSeriesState',
+            'MeetingSeriesObject', 'MeetingSeriesObjectAttendeePrivileges',
+            'MeetingSeriesObjectAudioConnectionOptions',
             'MeetingSeriesObjectAudioConnectionOptionsAudioConnectionType',
             'MeetingSeriesObjectAudioConnectionOptionsEntryAndExitTone', 'MeetingSeriesObjectForListMeeting',
             'MeetingSeriesObjectMeetingOptions', 'MeetingSeriesObjectMeetingOptionsNoteType',
@@ -38,16 +34,14 @@ __auto__ = ['AnswerForCustomizedQuestion', 'BatchRegisterMeetingRegistrantsRespo
             'MeetingSeriesObjectWithAdhoc', 'MeetingSeriesObjectWithAdhocRegistration',
             'MeetingSeriesObjectWithAdhocTelephony', 'MeetingSessionTypeObject', 'MeetingSessionTypeObjectType',
             'MeetingTrackingCodesObject', 'MeetingTrackingCodesObjectInputMode', 'MeetingTrackingCodesObjectService',
-            'MeetingTrackingCodesObjectType', 'OptionsForTrackingCodeObject', 'QueryRegistrants',
+            'MeetingTrackingCodesObjectType', 'MeetingsWithAudioWatermarkApi', 'OptionsForTrackingCodeObject',
             'QueryRegistrantsOrderBy', 'QueryRegistrantsOrderType', 'QuestionObject', 'QuestionObjectType',
             'QuestionOptionObject', 'QuestionWithAnswersObject', 'ReassignMeetingErrorDescriptionObject',
-            'ReassignMeetingRequestObject', 'ReassignMeetingResponseObject', 'ReassignMeetingsToANewHostResponse',
-            'Registrant', 'RegistrantCreateResponse', 'RegistrantFormObject', 'RegistrantStatus', 'Registrants',
-            'Registration', 'RegistrationForUpdate', 'ScheduledMeetingObject', 'StandardRegistrationApproveRule',
-            'StandardRegistrationApproveRuleQuestion', 'SurveyLinkObject', 'SurveyLinkRequestObject', 'SurveyObject',
-            'SurveyResultObject', 'TemplateObject', 'TemplateObjectTemplateType',
-            'TrackingCodeItemForCreateMeetingObject', 'UpdateInterpreterObject',
-            'UpdateMeetingBreakoutSessionsObject', 'UpdateMeetingObject']
+            'ReassignMeetingResponseObject', 'Registrant', 'RegistrantCreateResponse', 'RegistrantFormObject',
+            'RegistrantStatus', 'Registrants', 'Registration', 'ScheduledMeetingObject',
+            'StandardRegistrationApproveRule', 'StandardRegistrationApproveRuleQuestion', 'SurveyLinkObject',
+            'SurveyObject', 'SurveyResultObject', 'TemplateObject', 'TemplateObjectTemplateType',
+            'TrackingCodeItemForCreateMeetingObject']
 
 
 class InviteeObjectForCreateMeeting(ApiModel):
@@ -1456,157 +1450,6 @@ class ScheduledMeetingObject(ApiModel):
     restrict_to_invitees: Optional[bool] = None
 
 
-class UpdateMeetingObject(ApiModel):
-    #: Meeting title. The title can be a maximum of 128 characters long.
-    #: example: John's Meeting
-    title: Optional[str] = None
-    #: Meeting agenda. The agenda can be a maximum of 1300 characters long.
-    #: example: John's Agenda
-    agenda: Optional[str] = None
-    #: Meeting password. Must conform to the site's password complexity settings. Read `password management
-    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details.
-    #: example: BgJep@43
-    password: Optional[str] = None
-    #: Date and time for the start of meeting in any `ISO 8601
-    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `start` cannot be before current date
-    #: and time or after `end`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
-    #: hours. Refer to the `Webex Meetings
-    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date and time for
-    #: a meeting. Please note that when a meeting is being updated, `start` of the meeting will be accurate to
-    #: minutes, not seconds or milliseconds. Therefore, if `start` is within the same minute as the current time,
-    #: `start` will be adjusted to the upcoming minute; otherwise, `start` will be adjusted with seconds and
-    #: milliseconds stripped off. For instance, if the current time is `2022-03-01T10:32:16.657+08:00`, `start` of
-    #: `2022-03-01T10:32:28.076+08:00` or `2022-03-01T10:32:41+08:00` will be adjusted to `2022-03-01T10:33:00+08:00`,
-    #: and `start` of `2022-03-01T11:32:28.076+08:00` or `2022-03-01T11:32:41+08:00` will be adjusted to
-    #: `2022-03-01T11:32:00+08:00`.
-    #: example: 2020-05-15T20:30:00-08:00
-    start: Optional[datetime] = None
-    #: Date and time for the end of meeting in any `ISO 8601
-    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. `end` cannot be before current date and
-    #: time or before `start`. Duration between `start` and `end` cannot be shorter than 10 minutes or longer than 24
-    #: hours. Refer to the `Webex Meetings
-    #: <https://developer.webex.com/docs/meetings#restrictions-on-updating-a-meeting>`_ guide for more information about restrictions on updating date and time for
-    #: a meeting. Please note that when a meeting is being updated, `end` of the meeting will be accurate to minutes,
-    #: not seconds or milliseconds. Therefore, `end` will be adjusted with seconds and milliseconds stripped off. For
-    #: instance, `end` of `2022-03-01T11:52:28.076+08:00` or `2022-03-01T11:52:41+08:00` will be adjusted to
-    #: `2022-03-01T11:52:00+08:00`.
-    #: example: 2020-05-15T21:30:00-08:00
-    end: Optional[datetime] = None
-    #: `Time zone
-    #: <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in which the meeting was originally scheduled (conforming with the `IANA time zone database
-    #: example: America/Los_Angeles
-    timezone: Optional[str] = None
-    #: Meeting series recurrence rule (conforming with `RFC 2445
-    #: <https://www.ietf.org/rfc/rfc2445.txt>`_). Applies only to a recurring meeting series, not to a
-    #: meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly `recurrence` rule
-    #: are not supported, only the first day or date specified is taken. For example,
-    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as
-    #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
-    #: example: FREQ=DAILY;INTERVAL=1;COUNT=20
-    recurrence: Optional[str] = None
-    #: Whether or not meeting is recorded automatically.
-    enabled_auto_record_meeting: Optional[bool] = None
-    #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
-    #: meeting. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
-    #: user's preferred site.
-    allow_any_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to join the meeting before the host joins the meeting.
-    enabled_join_before_host: Optional[bool] = None
-    #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This
-    #: attribute is only applicable if the `enabledJoinBeforeHost` attribute is set to true.
-    enable_connect_audio_before_host: Optional[bool] = None
-    #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
-    #: applicable if the `enabledJoinBeforeHost` attribute is set to true. Valid options for a meeting are `0`, `5`,
-    #: `10`, and `15`, and valid options for a webinar are `0`, `15`, `30`, `45`, and `60`. The default is `0` if not
-    #: specified.
-    #: example: 15
-    join_before_host_minutes: Optional[int] = None
-    #: Whether or not to exclude the meeting password from the email invitation.
-    exclude_password: Optional[bool] = None
-    #: Whether or not to allow the meeting to be listed on the public calendar.
-    public_meeting: Optional[bool] = None
-    #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    #: example: 30
-    reminder_time: Optional[int] = None
-    #: Specifies how the people who aren't on the invite can join the unlocked meeting.
-    #: example: allowJoin
-    unlocked_meeting_join_security: Optional[MeetingSeriesObjectUnlockedMeetingJoinSecurity] = None
-    #: Unique identifier for a meeting session type for the user. This attribute is required while scheduling webinar
-    #: meeting. All available meeting session types enabled for the user can be retrieved by
-    #: `List Meeting Session Types
-    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types>`_ API.
-    #: example: 3
-    session_type_id: Optional[int] = None
-    #: Whether or not webcast view is enabled.
-    enabled_webcast_view: Optional[bool] = None
-    #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
-    #: `password management
-    #: <https://help.webex.com/en-us/zrupm6/Manage-Security-Options-for-Your-Site-in-Webex-Site-Administration>`_ for details. If not specified, a random password conforming to the site's password rules
-    #: will be generated automatically.
-    #: example: GwLqa@78
-    panelist_password: Optional[str] = None
-    #: Whether or not to automatically lock the meeting after it starts.
-    enable_automatic_lock: Optional[bool] = None
-    #: The number of minutes after the meeting begins, for automatically locking it.
-    #: example: 10
-    automatic_lock_minutes: Optional[int] = None
-    #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
-    #: cohost. The target site is specified by `siteUrl` parameter when creating the meeting; if not specified, it's
-    #: user's preferred site.
-    allow_first_user_to_be_co_host: Optional[bool] = None
-    #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
-    #: without a prompt.
-    allow_authenticated_devices: Optional[bool] = None
-    #: Whether or not to send emails to host and invitees. It is an optional field and default value is true.
-    #: example: True
-    send_email: Optional[bool] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
-    #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be
-    #: the meeting host.
-    #: example: john.andersen@example.com
-    host_email: Optional[str] = None
-    #: URL of the Webex site which the meeting is updated on. If not specified, the meeting is created on user's
-    #: preferred site. All available Webex sites and preferred site of the user can be retrieved by `Get Site List`
-    #: API.
-    #: example: example.webex.com
-    site_url: Optional[str] = None
-    #: Meeting Options.
-    meeting_options: Optional[MeetingSeriesObjectMeetingOptions] = None
-    #: Attendee Privileges. This attribute is not supported for a webinar.
-    attendee_privileges: Optional[MeetingSeriesObjectAttendeePrivileges] = None
-    #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
-    #: Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The
-    #: maximum size of `integrationTags` is 3 and each item of `integrationTags` can be a maximum of 64 characters
-    #: long. Please note that an empty or null `integrationTags` will delete all existing integration tags for the
-    #: meeting implicitly. Developer can update integration tags for a `meetingSeries` but he cannot update it for a
-    #: `scheduledMeeting` or a `meeting` instance.
-    integration_tags: Optional[list[str]] = None
-    #: Whether or not breakout sessions are enabled. If the value of `enabledBreakoutSessions` is false, users can not
-    #: set breakout sessions. If the value of `enabledBreakoutSessions` is true, users can update breakout sessions
-    #: using the `Update Breakout Sessions
-    #: <https://developer.webex.com/docs/api/v1/meetings/{meetingId}/breakoutSessions>`_ API. Updating breakout sessions are not supported by this API.
-    enabled_breakout_sessions: Optional[bool] = None
-    #: Tracking codes information. All available tracking codes and their options for the specified site can be
-    #: retrieved by `List Meeting Tracking Codes
-    #: <https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes>`_ API. If an optional tracking code is missing from the `trackingCodes`
-    #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
-    #: `inputMode` of a tracking code is `select`, its value must be one of the site-level options or the user-level
-    #: value. Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
-    tracking_codes: Optional[list[TrackingCodeItemForCreateMeetingObject]] = None
-    #: Whether or not audio watermark is enabled.
-    enabled_audio_watermark: Optional[bool] = None
-    #: Audio connection options.
-    audio_connection_options: Optional[MeetingSeriesObjectAudioConnectionOptions] = None
-    #: Require attendees to sign in before joining the webinar. This option works when the value of `scheduledType`
-    #: attribute is `webinar`. Please note that `requireAttendeeLogin` cannot be set if someone has already registered
-    #: for the webinar.
-    require_attendee_login: Optional[bool] = None
-    #: Restrict webinar to invited attendees only. This option works when the registration option is disabled and the
-    #: value of `scheduledType` attribute is `webinar`. Please note that `restrictToInvitees` cannot be set to `true`
-    #: if `requireAttendeeLogin` is `false`.
-    restrict_to_invitees: Optional[bool] = None
-
-
 class CustomizedQuestionForCreateMeetingOptions(ApiModel):
     #: The content of the option.
     #: example: green
@@ -2225,21 +2068,6 @@ class QueryRegistrantsOrderBy(str, Enum):
     email = 'email'
 
 
-class QueryRegistrants(ApiModel):
-    #: Registrant's status.
-    #: example: pending
-    status: Optional[RegistrantStatus] = None
-    #: Sort order for the registrants.
-    #: example: DESC
-    order_type: Optional[QueryRegistrantsOrderType] = None
-    #: Registrant ordering field. Ordered by `registrationTime` by default.
-    #: example: registrationTime
-    order_by: Optional[QueryRegistrantsOrderBy] = None
-    #: List of registrant email addresses.
-    #: example: ['bob@example.com']
-    emails: Optional[list[str]] = None
-
-
 class MeetingSessionTypeObjectType(str, Enum):
     #: Meeting session type for a meeting.
     meeting = 'meeting'
@@ -2264,54 +2092,6 @@ class MeetingSessionTypeObject(ApiModel):
     attendees_capacity: Optional[int] = None
 
 
-class UpdateInterpreterObject(ApiModel):
-    #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language
-    #: channel. The language codes conform with `ISO 639-1
-    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.
-    #: example: en
-    language_code1: Optional[str] = None
-    #: The pair of `languageCode1` and `languageCode2` form a bi-directional simultaneous interpretation language
-    #: channel. The language codes conform with `ISO 639-1
-    #: <https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>`_.
-    #: example: de
-    language_code2: Optional[str] = None
-    #: Email address of meeting interpreter. If not specified, it'll be an empty interpreter for the bi-directional
-    #: language channel. Please note that multiple interpreters with different emails can be assigned to the same
-    #: bi-directional language channel, but the same email cannot be assigned to more than one interpreter.
-    #: example: marcus.tuchel@example.com
-    email: Optional[str] = None
-    #: Display name of meeting interpreter. If the interpreter is already an invitee of the meeting and it has a
-    #: different display name, that invitee's display name will be overwritten by this attribute.
-    #: example: Tuchel
-    display_name: Optional[str] = None
-    #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
-    #: has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage
-    #: to be the meeting host.
-    #: example: brenda.song@example.com
-    host_email: Optional[str] = None
-    #: If `true`, send email to the interpreter.
-    #: example: True
-    send_email: Optional[bool] = None
-
-
-class UpdateMeetingBreakoutSessionsObject(ApiModel):
-    #: Email address for the meeting host. This parameter is only used if the user or application calling the API has
-    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API
-    #: will return details for a meeting that is hosted by that user.
-    #: example: john.andersen@example.com
-    host_email: Optional[str] = None
-    #: Whether or not to send emails to host and invitees. It is an optional field and default value is true.
-    #: example: True
-    send_email: Optional[bool] = None
-    #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of
-    #: participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops,
-    #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main
-    #: session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if
-    #: hosts preassign attendees to breakout sessions, the role of `attendee` will be changed to `panelist`. Breakout
-    #: session is not supported for a meeting with simultaneous interpretation.
-    items: Optional[list[BreakoutSessionObject]] = None
-
-
 class GetBreakoutSessionObject(ApiModel):
     #: Unique identifier for breakout session.
     #: example: 18d2e565770c4eee918784ee333510ec
@@ -2321,52 +2101,6 @@ class GetBreakoutSessionObject(ApiModel):
     name: Optional[str] = None
     #: Invitees for breakout session.
     invitees: Optional[list[str]] = None
-
-
-class GetBreakoutSessionsObject(ApiModel):
-    #: Breakout Sessions information for meeting.
-    items: Optional[list[GetBreakoutSessionObject]] = None
-
-
-class JoinMeetingObject(ApiModel):
-    #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't
-    #: apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled
-    #: `personal room
-    #: <https://help.webex.com/en-us/article/nul0wut/Webex-Personal-Rooms-in-Webex-Meetings>`_ meeting is also supported for this API.
-    #: example: 98d8c2212c9d62b162b9565932735e58_I_231409844992607809
-    meeting_id: Optional[str] = None
-    #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
-    #: instances which have ended.
-    #: example: 123456789
-    meeting_number: Optional[str] = None
-    #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
-    #: join.
-    #: example: https://site4-example.webex.com/site4/j.php?MTID=md41817da6a55b0925530cb88b3577b1e
-    web_link: Optional[str] = None
-    #: Whether or not to redirect to `joinLink`. It is an optional field and default value is true.
-    join_directly: Optional[bool] = None
-    #: Email address of meeting participant. If `email` is specified, the link is generated for the user of `email`;
-    #: otherwise, the API returns the link for the user calling the API. `email` is required for a `guest issuer
-    #: <https://developer.webex.com/docs/guest-issuer>`_.
-    #: example: brenda.song@example.com
-    email: Optional[str] = None
-    #: Display name of meeting participant. If `displayName` is specified, `email` must be specified as well. If
-    #: `email` is specified and `displayName` is not, display name is the same as `email`. If neither `displayName`
-    #: nor `email` is specified, the API returns the link for the user calling the API. The maximum length of
-    #: `displayName` is 128 characters. `displayName` is required for a `guest issuer
-    #: <https://developer.webex.com/docs/guest-issuer>`_.
-    #: example: Brenda Song
-    display_name: Optional[str] = None
-    #: Required when the meeting is protected by a password and the current user is not privileged to view it if they
-    #: are not a host, cohost, or invitee.
-    #: example: BgJep@43
-    password: Optional[str] = None
-    #: Expiration duration of `joinLink` in minutes. Must be between 1 and 60.
-    #: example: 5
-    expiration_minutes: Optional[int] = None
-    #: Required when the meeting is webinar-enabled and enabled registration ID.
-    #: example: 1111
-    registration_id: Optional[str] = None
 
 
 class JoinMeetingLinkObject(ApiModel):
@@ -2483,84 +2217,6 @@ class SurveyResultObject(ApiModel):
     questions: Optional[list[QuestionWithAnswersObject]] = None
 
 
-class RegistrationForUpdate(ApiModel):
-    #: - Email address for the meeting host. This parameter is only used if the user or application calling the API has
-    #: the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the API
-    #: will return an update for a meeting that is hosted by that user.
-    #: example: 'john.andersen@example.com'
-    host_email: Optional[str] = None
-    #: Whether or not a registrant's first name is required for meeting registration. This option must always be
-    #: `true`.
-    #: example: True
-    require_first_name: Optional[bool] = None
-    #: Whether or not a registrant's last name is required for meeting registration. This option must always be `true`.
-    #: example: True
-    require_last_name: Optional[bool] = None
-    #: Whether or not a registrant's email is required for meeting registration. This option must always be `true`.
-    #: example: True
-    require_email: Optional[bool] = None
-    #: Whether or not a registrant's job title is shown or required for meeting registration.
-    require_job_title: Optional[bool] = None
-    #: Whether or not a registrant's company name is shown or required for meeting registration.
-    require_company_name: Optional[bool] = None
-    #: Whether or not a registrant's first address field is shown or required for meeting registration.
-    require_address1: Optional[bool] = None
-    #: Whether or not a registrant's second address field is shown or required for meeting registration.
-    require_address2: Optional[bool] = None
-    #: Whether or not a registrant's city is shown or required for meeting registration.
-    require_city: Optional[bool] = None
-    #: Whether or not a registrant's state is shown or required for meeting registration.
-    require_state: Optional[bool] = None
-    #: Whether or not a registrant's postal code is shown or required for meeting registration.
-    require_zip_code: Optional[bool] = None
-    #: Whether or not a registrant's country or region is shown or required for meeting registration.
-    require_country_region: Optional[bool] = None
-    #: Whether or not a registrant's work phone number is shown or required for meeting registration.
-    require_work_phone: Optional[bool] = None
-    #: Whether or not a registrant's fax number is shown or required for meeting registration.
-    require_fax: Optional[bool] = None
-    #: Maximum number of meeting registrations. This only applies to meetings. The maximum number of participants for
-    #: meetings and webinars, with the limit based on the user capacity and controlled by a toggle at the site level.
-    #: The default maximum number of participants for webinars is 10000, but the actual maximum number of participants
-    #: is limited by the user capacity.
-    #: example: 1000
-    max_register_num: Optional[int] = None
-    #: Customized questions for meeting registration.
-    customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None
-    #: The approval rule for standard questions.
-    rules: Optional[list[StandardRegistrationApproveRule]] = None
-
-
-class SurveyLinkRequestObject(ApiModel):
-    #: Email address for the meeting host. This parameter is only used if the user or application calling the API has
-    #: the admin on-behalf-of scopes. An admin can specify the email of the meeting host who is in a site he manages
-    #: and the API returns post survey links on behalf of the meeting host.
-    #: example: john.andersen@example.com
-    host_email: Optional[str] = None
-    #: Start date and time (inclusive) in any `ISO 8601
-    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format for the meeting objects being requested and
-    #: conforms with the `timezone` in the request header if specified. `meetingStartTimeFrom` cannot be after
-    #: `meetingStartTimeTo`. Only applies when `meetingId` is not an instance ID. The API generates survey links for
-    #: the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and
-    #: `meetingStartTimeTo`. If not specified, `meetingStartTimeFrom` equals `meetingStartTimeTo` minus `1` month; if
-    #: `meetingStartTimeTo` is also not specified, the default value for `meetingStartTimeFrom` is `1` month before
-    #: the current date and time.
-    #: example: 2019-03-18T09:30:00Z
-    meeting_start_time_from: Optional[datetime] = None
-    #: End date and time (exclusive) in any `ISO 8601
-    #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format for the meeting objects being requested and
-    #: conforms with the `timezone` in the request header if specified. `meetingStartTimeTo` cannot be prior to
-    #: `meetingStartTimeFrom`. Only applies when `meetingId` is not an instance ID. The API generates survey links for
-    #: the last instance of `meetingId` in the time range specified by `meetingStartTimeFrom` and
-    #: `meetingStartTimeTo`. If not specified, `meetingStartTimeTo` equals `meetingStartTimeFrom` plus `1` month; if
-    #: `meetingStartTimeFrom` is also not specified, the default value for `meetingStartTimeTo` is the current date
-    #: and time.
-    #: example: 2019-03-25T09:30:00Z
-    meeting_start_time_to: Optional[datetime] = None
-    #: Participants' email list. The maximum size of `emails` is 100.
-    emails: Optional[list[str]] = None
-
-
 class SurveyLinkObject(ApiModel):
     #: Participant email.
     #: example: kingu1@example.com
@@ -2673,18 +2329,6 @@ class MeetingTrackingCodesObject(ApiModel):
     type: Optional[MeetingTrackingCodesObjectType] = None
 
 
-class ReassignMeetingRequestObject(ApiModel):
-    #: Email address of the new meeting host.
-    #: example: john.andersen@example.com
-    host_email: Optional[str] = None
-    #: List of meeting series IDs to be reassigned the new host. The size is between 1 and 100. All the meetings of
-    #: `meetingIds` should belong to the same site, which is the `siteUrl` in the request header, if specified, or the
-    #: admin user's preferred site, if not specified. All available Webex sites and the preferred sites of a user can
-    #: be retrieved by `Get Site List
-    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-    meeting_ids: Optional[list[str]] = None
-
-
 class ReassignMeetingErrorDescriptionObject(ApiModel):
     #: Detailed description for the host reassignment of `meetingId` if it fails.
     #: example: The meeting is not found.
@@ -2705,11 +2349,6 @@ class ReassignMeetingResponseObject(ApiModel):
     errors: Optional[list[ReassignMeetingErrorDescriptionObject]] = None
 
 
-class ListMeetingsResponse(ApiModel):
-    #: Meetings array.
-    items: Optional[list[MeetingSeriesObjectForListMeeting]] = None
-
-
 class ListMeetingsOfAMeetingSeriesMeetingType(str, Enum):
     scheduled_meeting = 'scheduledMeeting'
     meeting = 'meeting'
@@ -2724,60 +2363,11 @@ class ListMeetingsOfAMeetingSeriesState(str, Enum):
     missed = 'missed'
 
 
-class ListMeetingsOfAMeetingSeriesResponse(ApiModel):
-    #: Meetings array.
-    items: Optional[list[ScheduledMeetingObject]] = None
-
-
-class ListMeetingTemplatesResponse(ApiModel):
-    #: Meeting templates array.
-    items: Optional[list[TemplateObject]] = None
-
-
-class ListMeetingSessionTypesResponse(ApiModel):
-    #: Meeting session type array
-    items: Optional[list[MeetingSessionTypeObject]] = None
-
-
-class BatchRegisterMeetingRegistrantsResponse(ApiModel):
-    items: Optional[list[RegistrantCreateResponse]] = None
-
-
-class ListMeetingRegistrantsResponse(ApiModel):
-    #: Registrants array.
-    items: Optional[list[Registrant]] = None
-
-
 class BatchUpdateMeetingRegistrantsStatusStatusOpType(str, Enum):
     approve = 'approve'
     reject = 'reject'
     cancel = 'cancel'
     bulk_delete = 'bulkDelete'
-
-
-class ListMeetingInterpretersResponse(ApiModel):
-    #: Array of meeting interpreters.
-    items: Optional[list[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting]] = None
-
-
-class ListMeetingSurveyResultsResponse(ApiModel):
-    #: SurveyResult array
-    items: Optional[list[SurveyResultObject]] = None
-
-
-class GetMeetingSurveyLinksResponse(ApiModel):
-    #: Survey link array
-    items: Optional[list[SurveyLinkObject]] = None
-
-
-class CreateInvitationSourcesResponse(ApiModel):
-    #: Invitation source array.
-    items: Optional[list[InvitationSourceObject]] = None
-
-
-class ReassignMeetingsToANewHostResponse(ApiModel):
-    #: Array of meeting reassignment results.
-    items: Optional[list[ReassignMeetingResponseObject]] = None
 
 
 class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):

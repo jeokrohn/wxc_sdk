@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['MediaSessionQuality', 'MediaSessionQualityNetworkType', 'MeetingQualitiesResponse', 'Resources',
-            'VideoIn', 'VideoInTransportType']
+__auto__ = ['MediaSessionQuality', 'MediaSessionQualityNetworkType', 'MeetingQualitiesApi', 'Resources', 'VideoIn',
+            'VideoInTransportType']
 
 
 class MediaSessionQualityNetworkType(str, Enum):
@@ -165,10 +165,6 @@ class MediaSessionQuality(ApiModel):
     share_out: Optional[list[VideoIn]] = None
     #: Device resources such as CPU and memory.
     resources: Optional[list[Resources]] = None
-
-
-class MeetingQualitiesResponse(ApiModel):
-    items: Optional[list[MediaSessionQuality]] = None
 
 
 class MeetingQualitiesApi(ApiChild, base='meeting/qualities'):

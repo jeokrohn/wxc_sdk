@@ -11,9 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnswerSummaryItem', 'Link', 'Option', 'Poll', 'PollCollectionResponse', 'PollResult',
-            'PollResultCollectionResponse', 'Question', 'QuestionResult', 'QuestionType', 'Respondent',
-            'RespondentCollectionResponse', 'RespondentsReferenceLinks']
+__auto__ = ['AnswerSummaryItem', 'Link', 'MeetingPollsApi', 'Option', 'Poll', 'PollResult', 'Question',
+            'QuestionResult', 'QuestionType', 'Respondent', 'RespondentsReferenceLinks']
 
 
 class QuestionType(str, Enum):
@@ -84,10 +83,6 @@ class Poll(ApiModel):
     person_id: Optional[str] = None
     #: Poll's questions.
     questions: Optional[list[Question]] = None
-
-
-class PollCollectionResponse(ApiModel):
-    items: Optional[list[Poll]] = None
 
 
 class AnswerSummaryItem(ApiModel):
@@ -191,14 +186,6 @@ class PollResult(ApiModel):
     person_id: Optional[str] = None
     #: An array of questions in this poll.
     questions: Optional[list[QuestionResult]] = None
-
-
-class PollResultCollectionResponse(ApiModel):
-    items: Optional[list[PollResult]] = None
-
-
-class RespondentCollectionResponse(ApiModel):
-    items: Optional[list[Respondent]] = None
 
 
 class MeetingPollsApi(ApiChild, base='meetings'):

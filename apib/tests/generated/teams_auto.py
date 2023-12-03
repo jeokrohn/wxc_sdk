@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Team', 'TeamCollectionResponse']
+__auto__ = ['Team', 'TeamsApi']
 
 
 class Team(ApiModel):
@@ -27,10 +27,6 @@ class Team(ApiModel):
     #: The date and time the team was created.
     #: example: 2015-10-18T14:26:16.000Z
     created: Optional[datetime] = None
-
-
-class TeamCollectionResponse(ApiModel):
-    items: Optional[list[Team]] = None
 
 
 class TeamsApi(ApiChild, base='teams'):

@@ -69,9 +69,11 @@ class Parameter:
         python_class = self.registry.get(self.python_type)
         return python_class.is_enum
 
-    def source_for_arg_list(self) -> str:
+    def source_for_arg_list(self, class_names: set[str]) -> str:
         """
         representation of parameter in argument list in def
+
+        :param class_names: set of names of referenced classes
         """
         python_type = self.python_type
         if python_type == 'datetime':
@@ -79,6 +81,8 @@ class Parameter:
         arg = f'{self.python_name}:&{python_type}'
         if self.optional:
             arg = f'{arg}&=&None'
+        if self.referenced_class:
+            class_names.add(self.referenced_class)
         return arg
 
     def source_for_docstring(self) -> Generator[str, None, None]:
@@ -278,9 +282,12 @@ class Endpoint:
                 return result_class.attributes[0]
         return None
 
-    def source_def_line(self, source: SourceIO):
+    def source_def_line(self, source: SourceIO, class_names: set[str]):
         """
         Write Python source for def line to source
+
+        :param source: generated source code
+        :param class_names: set of names of referenced classes
         """
         # generate def line
         # in the prepared def line use "&" instead of " " for spaces where we don't want to break the line
@@ -291,7 +298,7 @@ class Endpoint:
 
         # comma separated list of all parameters
         param_line = ', '.join(chain(['self'],
-                                     (parameter.source_for_arg_list()
+                                     (parameter.source_for_arg_list(class_names=class_names)
                                       for parameter in self.parameters_for_args())))
 
         # for methods with pagination we want to add a **params parameter
@@ -302,14 +309,20 @@ class Endpoint:
             if m is None:
                 raise ValueError(f'Can\'t extract paginated result from "{result_type}"')
             result_type = m.group(1)
+            if paginated.referenced_class:
+                class_names.add(paginated.referenced_class)
             param_line = f'{param_line}, **params)&->&Generator[{result_type},&None,&None]'
         else:
             param_line = f'{param_line})'
             if self.result:
                 if sra := self.single_result_attribute:
                     r_type = sra.python_type
+                    if sra.referenced_class:
+                        class_names.add(sra.referenced_class)
                 else:
                     r_type = self.result
+                    if self.result_referenced_class:
+                        class_names.add(self.result_referenced_class)
                 param_line = f'{param_line}&->&{r_type}'
 
         # now write def with parameters to string
@@ -409,13 +422,15 @@ class Endpoint:
                                 source.print(f"r = TypeAdapter({sra.python_type}).validate_python(data['{sra.name}'])")
                 source.print(f'return r')
 
-    def source(self, base: str) -> str:
+    def source(self, base: str, class_names: set[str]) -> str:
         """
         Create Python source for endpoint under some class
+
+        :param base: base URL, common URL for all endpoints
+        :param class_names: set of names of referenced classes
         """
         source = SourceIO()
-
-        self.source_def_line(source)
+        self.source_def_line(source, class_names=class_names)
 
         self.source_docstring(source)
 
@@ -437,9 +452,12 @@ class Endpoint:
                 list(map(source.print, p.source_for_body_init()))
 
         # code to determine URL (make sure to set URL parameters)
+        # we only need the part of the endpoint URL after the common base URL
         url = self.url[len(base):].strip('/')
         if any(p.url_parameter for p in self.href_parameter):
-            # massage url parameters in url
+            # generate Python code that uses an f-string to determine the URL
+            # for that we have to replace href parameter names in URL with python names
+            # 'locations/{locationId}/dectNetworks'  --> url = self.ep(f'locations/{location_id}/dectNetworks')
             for p in self.href_parameter:
                 if not p.url_parameter:
                     continue
@@ -605,11 +623,16 @@ class PythonAPI:
         """
         return self.docstring and remove_div(remove_html_comments(self.docstring)) or ''
 
-    def source(self, class_name: str = None) -> str:
+    def source(self, *, class_name: str = None, class_names: set[str]) -> str:
         """
-        Generate API source for given class name. If class name is not given, then class name is derived from API title
+        Generate API source for given class name. If class name is not given, then class name is derived from API
+        title.
+        While generating sources collect name sof classes actually referenced by endpoints
         """
         class_name = class_name or f'{words_to_camel(self.title)}Api'
+        # add API class name to referenced classes
+        class_names.add(class_name)
+
         base = commonprefix([f'{ep.url}/' for ep in self.endpoints])
         # remove everything after the last '/'
         base = re.sub(r'/\w*$', '', base)
@@ -622,7 +645,7 @@ class PythonAPI:
         # full API source is head followed by source for each endpoint
         full_api_source = '\n'.join(s
                                     for s in chain([class_head],
-                                                   (ep.source(base=base)
+                                                   (ep.source(base=base, class_names=class_names)
                                                     for ep in self.endpoints))
                                     if s)
         return full_api_source

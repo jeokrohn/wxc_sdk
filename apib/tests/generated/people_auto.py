@@ -11,9 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'Person', 'PersonAddresses',
-            'PersonCollectionResponse', 'PersonInvitePending', 'PersonPhoneNumbers', 'PersonPhoneNumbersType',
-            'PersonStatus', 'PersonType']
+__auto__ = ['CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'PeopleApi', 'Person', 'PersonAddresses',
+            'PersonInvitePending', 'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonStatus', 'PersonType']
 
 
 class PersonPhoneNumbersType(str, Enum):
@@ -194,13 +193,6 @@ class Person(ApiModel):
     type: Optional[PersonType] = None
 
 
-class PersonCollectionResponse(ApiModel):
-    #: An array of person objects.
-    items: Optional[list[Person]] = None
-    #: An array of person IDs that could not be found.
-    not_found_ids: Optional[list[str]] = None
-
-
 class CreateAPersonPhoneNumbersType(str, Enum):
     work = 'work'
 
@@ -220,7 +212,7 @@ class PeopleApi(ApiChild, base='people'):
     
     People are registered users of Webex. Searching and viewing People requires an auth token with a `scope
     <https://developer.webex.com/docs/integrations#scopes>`_ of
-    `spark:people_read`. Viewing the list of all People in your Organization requires an administrator auth token with
+    `spark:people_read`. Viewing the list of all People in your organization requires an administrator auth token with
     `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token with
     the `spark-admin:people_write` and `spark-admin:people_read` scope.
     
@@ -244,7 +236,9 @@ class PeopleApi(ApiChild, base='people'):
         Response properties associated with a user's presence status, such as `status` or `lastActivity`, will only be
         returned for people within your organization or an organization you manage. Presence information will not be
         returned if the authenticated user has `disabled status sharing
-        <https://help.webex.com/nkzs6wl/>`_.
+        <https://help.webex.com/nkzs6wl/>`_. Calling /people frequently to poll `status`
+        information for a large set of users will quickly lead to `429` errros and throttling of such requests and is
+        therefore discouraged.
 
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as `true`. Admin users can list all users in a location or with a specific phone number. Admin users

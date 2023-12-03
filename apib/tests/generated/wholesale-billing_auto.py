@@ -12,7 +12,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['ListReport', 'ListReportStatus', 'ListReportType', 'ListWholesaleBillingReportsSortBy', 'Report',
-            'ReportError', 'ReportId', 'WholesaleBillingReportsListResponse']
+            'ReportError', 'ReportId', 'WholesaleBillingReportsApi']
 
 
 class ListReportStatus(str, Enum):
@@ -104,11 +104,6 @@ class ReportId(ApiModel):
     #: Billing Report Type
     #: example: PARTNER
     type: Optional[ListReportType] = None
-
-
-class WholesaleBillingReportsListResponse(ApiModel):
-    #: An array of report objects.
-    items: Optional[list[ListReport]] = None
 
 
 class ListWholesaleBillingReportsSortBy(str, Enum):

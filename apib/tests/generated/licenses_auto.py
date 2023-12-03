@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetLicenseDetailsIncludeAssignedTo', 'License', 'LicenseCollectionResponse', 'LicenseProperties',
-            'LicenseRequest', 'LicenseRequestOperation', 'LicenseSiteType', 'LicensewithUsers', 'PatchUserLicenses',
-            'SiteResponse', 'SiteResponseAccountType', 'SiteUrlsRequest', 'SiteUrlsRequestAccountType',
-            'UserLicensesResponse', 'Users', 'UsersType']
+__auto__ = ['GetLicenseDetailsIncludeAssignedTo', 'License', 'LicenseProperties', 'LicenseRequest',
+            'LicenseRequestOperation', 'LicenseSiteType', 'LicensesApi', 'LicensewithUsers', 'SiteResponse',
+            'SiteResponseAccountType', 'SiteUrlsRequest', 'SiteUrlsRequestAccountType', 'UserLicensesResponse',
+            'Users', 'UsersType']
 
 
 class LicenseSiteType(str, Enum):
@@ -48,10 +48,6 @@ class License(ApiModel):
     #: The type of site associated with this license.
     #: example: Control Hub managed site
     site_type: Optional[LicenseSiteType] = None
-
-
-class LicenseCollectionResponse(ApiModel):
-    items: Optional[list[License]] = None
 
 
 class UsersType(str, Enum):
@@ -149,23 +145,6 @@ class SiteUrlsRequest(ApiModel):
     #: Operation type. The default operation is `add` if no operation is specified.
     #: example: add
     operation: Optional[LicenseRequestOperation] = None
-
-
-class PatchUserLicenses(ApiModel):
-    #: Email address of the user.
-    #: example: john.andersen@example.com
-    email: Optional[str] = None
-    #: A unique identifier for the user.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    person_id: Optional[str] = None
-    #: The ID of the organization to which the licenses and siteUrls belong. If not specified, the organization ID from
-    #: the OAuth token is used.
-    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    org_id: Optional[str] = None
-    #: An array of licenses to be assigned to the user.
-    licenses: Optional[list[LicenseRequest]] = None
-    #: An array of siteUrls to be assigned to the user.
-    site_urls: Optional[list[SiteUrlsRequest]] = None
 
 
 class SiteResponseAccountType(str, Enum):

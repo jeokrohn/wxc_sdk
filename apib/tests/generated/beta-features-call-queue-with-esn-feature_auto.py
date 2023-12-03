@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject',
+__auto__ = ['AlternateNumbersWithPattern', 'BetaFeaturesCallQueueWithESNFeatureApi', 'CallQueueQueueSettingsObject',
             'CallQueueQueueSettingsObjectComfortMessage', 'CallQueueQueueSettingsObjectComfortMessageBypass',
             'CallQueueQueueSettingsObjectMohMessage', 'CallQueueQueueSettingsObjectMohMessageNormalSource',
             'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction',
@@ -21,7 +21,7 @@ __auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject',
             'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
             'GetCallQueueObjectAlternateNumberSettings', 'GetPersonPlaceVirtualLineCallQueueObject',
             'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection',
-            'ListCallQueueObject', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
+            'ListCallQueueObject', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -452,11 +452,6 @@ class ListCallQueueObject(ApiModel):
     #: Whether or not the call queue is enabled.
     #: example: True
     enabled: Optional[bool] = None
-
-
-class ReadTheListOfCallQueuesResponse(ApiModel):
-    #: Array of call queues.
-    queues: Optional[list[ListCallQueueObject]] = None
 
 
 class BetaFeaturesCallQueueWithESNFeatureApi(ApiChild, base='telephony/config'):

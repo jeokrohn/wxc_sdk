@@ -11,15 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'CreateACallParkResponse',
-            'GetAvailableAgentsFromCallParksResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse',
+__auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'FeaturesCallParkApi',
             'GetAvailableRecallHuntGroupsObject', 'GetCallParkExtensionObject', 'GetCallParkObject',
             'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject',
             'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject',
             'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject',
-            'ListCallParkExtensionObject', 'ListCallParkObject', 'ModifyCallParkObject',
-            'ModifyCallParkSettingsObject', 'PutRecallHuntGroupObject', 'ReadTheListOfCallParkExtensionsResponse',
-            'ReadTheListOfCallParksResponse']
+            'ListCallParkExtensionObject', 'ListCallParkObject', 'PutRecallHuntGroupObject']
 
 
 class CallParkSettingsObjectRingPattern(str, Enum):
@@ -206,49 +203,6 @@ class PutRecallHuntGroupObject(ApiModel):
     #: Call park recall options.
     #: example: ALERT_PARKING_USER_FIRST_THEN_HUNT_GROUP
     option: Optional[GetRecallHuntGroupObjectOption] = None
-
-
-class ModifyCallParkObject(ApiModel):
-    #: Unique name for the call park. The maximum length is 80.
-    #: example: technical support - insurance - customer 1
-    name: Optional[str] = None
-    #: Recall options that are added to call park.
-    recall: Optional[PutRecallHuntGroupObject] = None
-    #: Array of ID strings of people, workspaces and virtual lines that are added to call park.
-    agents: Optional[list[str]] = None
-
-
-class ModifyCallParkSettingsObject(ApiModel):
-    #: Recall options that are added to call park.
-    call_park_recall: Optional[PutRecallHuntGroupObject] = None
-    #: Setting controlling call park behavior.
-    call_park_settings: Optional[CallParkSettingsObject] = None
-
-
-class ReadTheListOfCallParksResponse(ApiModel):
-    #: Array of call parks.
-    call_parks: Optional[list[ListCallParkObject]] = None
-
-
-class CreateACallParkResponse(ApiModel):
-    #: ID of the newly created call park.
-    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUEFSSy9WR1Z6ZEMxRFVFY3RNZz09
-    id: Optional[str] = None
-
-
-class GetAvailableAgentsFromCallParksResponse(ApiModel):
-    #: Array of agents.
-    agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]] = None
-
-
-class GetAvailableRecallHuntGroupsFromCallParksResponse(ApiModel):
-    #: Array of available recall hunt groups.
-    hunt_groups: Optional[list[GetAvailableRecallHuntGroupsObject]] = None
-
-
-class ReadTheListOfCallParkExtensionsResponse(ApiModel):
-    #: Array of call park extensions.
-    call_park_extensions: Optional[list[ListCallParkExtensionObject]] = None
 
 
 class FeaturesCallParkApi(ApiChild, base='telephony/config'):

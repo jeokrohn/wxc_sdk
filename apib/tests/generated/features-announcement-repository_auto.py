@@ -11,10 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnnouncementResponse', 'AnnouncementResponseWithId', 'AnnouncementUsageResponse',
-            'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject',
-            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId',
-            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse', 'LocationObject']
+__auto__ = ['AnnouncementResponse', 'AnnouncementUsageResponse', 'AnnouncementsListResponse',
+            'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FeaturesAnnouncementRepositoryApi',
+            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'LocationObject']
 
 
 class FeatureReferenceObject(ApiModel):
@@ -60,12 +59,6 @@ class AnnouncementResponse(ApiModel):
     feature_reference_count: Optional[int] = None
     #: Call features referenced by this announcement.
     feature_references: Optional[list[FeatureReferenceObject]] = None
-
-
-class AnnouncementResponseWithId(ApiModel):
-    #: Unique identifier of the announcement.
-    #: example: Y2lzY29zcGFyazovL3VzL0FOTk9VTkNFTUVOVC8wOWJmNTQwYS05ZWE0LTRhMzktOWI3Mi0xN2Q2MTE0ZTVjMjE
-    id: Optional[str] = None
 
 
 class AnnouncementUsageResponse(ApiModel):
@@ -126,11 +119,6 @@ class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId(s
     all = 'all'
     locations = 'locations'
     y2lz_y29zc_gfyazov_l3_vz_l0x_pq0_fusu9_olz_mx_mtyx = 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx'
-
-
-class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse(ApiModel):
-    #: Array of announcements.
-    announcements: Optional[list[AnnouncementsListResponse]] = None
 
 
 class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):

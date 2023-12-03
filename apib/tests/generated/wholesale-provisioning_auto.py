@@ -11,17 +11,17 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Address', 'Customer', 'CustomerListResponse', 'CustomerProvisioningPrecheckResponse',
-            'CustomerProvisioningPrecheckResponseInfo', 'CustomerStatus', 'Error', 'Package', 'PackageName',
-            'PackageStatus', 'PrecheckAWholesaleCustomerProvisioningCustomerInfo',
+__auto__ = ['Address', 'Customer', 'CustomerProvisioningPrecheckResponse', 'CustomerProvisioningPrecheckResponseInfo',
+            'CustomerStatus', 'Error', 'Package', 'PackageName', 'PackageStatus',
+            'PrecheckAWholesaleCustomerProvisioningCustomerInfo',
             'PrecheckAWholesaleSubscriberProvisioningCustomerInfo', 'ProvisionAWholesaleCustomerCustomerInfo',
             'ProvisionAWholesaleCustomerProvisioningParameters',
             'ProvisionAWholesaleCustomerProvisioningParametersCalling',
             'ProvisionAWholesaleCustomerProvisioningParametersCallingLocation',
             'ProvisionAWholesaleCustomerProvisioningParametersMeetings',
-            'ProvisionAWholesaleSubscriberProvisioningParameters', 'ResourceDetails', 'ResourceURL', 'SubPartner',
-            'SubPartnerProvisioningState', 'SubPartnersListResponse', 'Subscriber', 'SubscriberListResponse',
-            'SubscriberPackage', 'SubscriberStatus', 'UpdateAWholesaleSubscriberProvisioningParameters']
+            'ProvisionAWholesaleSubscriberProvisioningParameters', 'ResourceDetails', 'SubPartner',
+            'SubPartnerProvisioningState', 'Subscriber', 'SubscriberPackage', 'SubscriberStatus',
+            'UpdateAWholesaleSubscriberProvisioningParameters', 'WholesaleProvisioningApi']
 
 
 class Address(ApiModel):
@@ -160,11 +160,6 @@ class Customer(ApiModel):
     errors: Optional[list[Error]] = None
 
 
-class CustomerListResponse(ApiModel):
-    #: An array of Customer objects.
-    items: Optional[list[Customer]] = None
-
-
 class CustomerProvisioningPrecheckResponseInfo(ApiModel):
     #: Provisioning Precheck `infoCode`.
     #: example: 100
@@ -181,13 +176,6 @@ class CustomerProvisioningPrecheckResponse(ApiModel):
     message: Optional[str] = None
     #: A list of ProvisioningPreCheckResponseInfo object.
     info: Optional[CustomerProvisioningPrecheckResponseInfo] = None
-
-
-class ResourceURL(ApiModel):
-    #: A URL which points to the `Get a Wholesale Customer
-    #: <https://developer.webex.com/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer>`_ endpoint for the provisioned customer.
-    #: example: "https://webexapis.com/v1/wholesale/customers/Y2lzY29zcGFyazovL3VzL0VOVEVSUFJJU0UvNTJjZjU3NmQtNjBhOC00MDdhLWIyMmMtNDY3YzUxNTkxOTA4"
-    url: Optional[str] = None
 
 
 class SubPartnerProvisioningState(str, Enum):
@@ -214,11 +202,6 @@ class SubPartner(ApiModel):
     #: 02-22T13:43:41.117Z' (string) - The date and time from which new billing for the sub-partner started.
     #: example: '2023
     billing_start_date: Optional[datetime] = None
-
-
-class SubPartnersListResponse(ApiModel):
-    #: An array of `SubPartner` objects.
-    items: Optional[list[SubPartner]] = None
 
 
 class SubscriberPackage(str, Enum):
@@ -276,11 +259,6 @@ class Subscriber(ApiModel):
     #: The date and time the provisioning status of the subscriber last changed.
     #: example: 2020-03-18T16:05:34.000Z
     last_status_change: Optional[datetime] = None
-
-
-class SubscriberListResponse(ApiModel):
-    #: An array of Subscriber objects.
-    items: Optional[list[Subscriber]] = None
 
 
 class ProvisionAWholesaleCustomerCustomerInfo(ApiModel):

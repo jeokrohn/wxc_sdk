@@ -11,10 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateAScheduleResponse', 'GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType',
-            'ListScheduleObject', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject',
-            'ModifyScheduleObject', 'PostScheduleObject', 'ReadTheListOfSchedulesResponse', 'RecurWeeklyObject',
-            'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject',
+__auto__ = ['GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType', 'ListScheduleObject',
+            'LocationCallSettingsSchedulesApi', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject',
+            'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject',
             'RecurYearlyByDayObjectDay', 'RecurYearlyByDayObjectWeek', 'RecurrenceObject']
 
 
@@ -221,35 +220,6 @@ class ModifyScheduleEventObject(ApiModel):
     all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None
-
-
-class ModifyScheduleObject(ApiModel):
-    #: Unique name for the schedule.
-    #: example: AUTOATTENDANT-BUSINESS-HOURS
-    name: Optional[str] = None
-    #: List of schedule events.
-    events: Optional[list[ModifyScheduleEventListObject]] = None
-
-
-class PostScheduleObject(ApiModel):
-    #: Type of the schedule.
-    #: example: businessHours
-    type: Optional[GetScheduleObjectType] = None
-    #: Unique name for the schedule.
-    #: example: AUTOATTENDANT-BUSINESS-HOURS
-    name: Optional[str] = None
-    #: List of schedule events.
-    events: Optional[list[ModifyScheduleEventObject]] = None
-
-
-class ReadTheListOfSchedulesResponse(ApiModel):
-    #: Array of schedules.
-    schedules: Optional[list[ListScheduleObject]] = None
-
-
-class CreateAScheduleResponse(ApiModel):
-    #: ID of the newly created schedule.
-    id: Optional[str] = None
 
 
 class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/locations/{locationId}/schedules'):

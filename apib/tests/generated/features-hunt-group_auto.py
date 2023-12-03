@@ -11,19 +11,17 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGet',
+__auto__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRulesSet',
             'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
-            'CallForwardingNumbers', 'CallForwardingNumbersType', 'CreateAHuntGroupResponse',
-            'CreateForwardingRuleObject', 'CreateForwardingRuleObjectCallsFrom',
+            'CallForwardingNumbers', 'CallForwardingNumbersType', 'CreateForwardingRuleObjectCallsFrom',
             'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
             'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-            'CreateForwardingRuleObjectForwardToSelection', 'CreateHuntGroupObject', 'GetForwardingRuleObject',
+            'CreateForwardingRuleObjectForwardToSelection', 'FeaturesHuntGroupApi', 'GetForwardingRuleObject',
             'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
             'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
-            'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyCallForwardingObject',
-            'ModifyCallForwardingObjectCallForwarding', 'ModifyHuntGroupObject', 'PostHuntGroupCallPolicyObject',
-            'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceVirtualLineHuntGroupObject',
-            'ReadTheListOfHuntGroupsResponse', 'RingPatternObject']
+            'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyCallForwardingObjectCallForwarding',
+            'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer',
+            'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -104,11 +102,6 @@ class CallForwardSettingsGetCallForwarding(ApiModel):
     rules: Optional[list[CallForwardRulesGet]] = None
 
 
-class CallForwardSettingsGet(ApiModel):
-    #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    call_forwarding: Optional[CallForwardSettingsGetCallForwarding] = None
-
-
 class CallForwardingNumbersType(str, Enum):
     #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is a primary
     #: number or extension.
@@ -176,27 +169,6 @@ class CreateForwardingRuleObjectCallsFrom(ApiModel):
 class CreateForwardingRuleObjectCallsTo(ApiModel):
     #: Array of numbers to be matched against the calling destination number.
     numbers: Optional[list[CallForwardingNumbers]] = None
-
-
-class CreateForwardingRuleObject(ApiModel):
-    #: Unique name for the selective rule in the hunt group.
-    #: example: New Selective Rule
-    name: Optional[str] = None
-    #: Reflects if rule is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
-    #: example: HolidayScheduleOne
-    holiday_schedule: Optional[str] = None
-    #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
-    #: example: BusinessScheduleTwo
-    business_schedule: Optional[str] = None
-    #: Controls what happens when the rule matches including the destination number for the call forwarding.
-    forward_to: Optional[CreateForwardingRuleObjectForwardTo] = None
-    #: Settings related to the rule matching based on incoming caller ID.
-    calls_from: Optional[CreateForwardingRuleObjectCallsFrom] = None
-    #: Settings related to the rule matching based on the destination number.
-    calls_to: Optional[CreateForwardingRuleObjectCallsTo] = None
 
 
 class HuntPolicySelection(str, Enum):
@@ -273,38 +245,6 @@ class PostPersonPlaceVirtualLineHuntGroupObject(ApiModel):
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
     weight: Optional[str] = None
-
-
-class CreateHuntGroupObject(ApiModel):
-    #: Unique name for the hunt group.
-    #: example: 5558675309-Group
-    name: Optional[str] = None
-    #: Primary phone number of the hunt group. Either phone number or extension are required.
-    #: example: 5558675309
-    phone_number: Optional[str] = None
-    #: Primary phone extension of the hunt group. Either phone number or extension are required.
-    #: example: 7781
-    extension: Optional[str] = None
-    #: Language code.
-    #: example: en-US
-    language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
-    #: example: Hakim
-    first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
-    #: otherwise defaults to call group name.
-    #: example: Smith
-    last_name: Optional[str] = None
-    #: Time zone for the hunt group.
-    #: example: America/Chicago
-    time_zone: Optional[str] = None
-    #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[PostHuntGroupCallPolicyObject] = None
-    #: People, workspaces and virtual lines that are eligible to  receive calls.
-    agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]] = None
-    #: Whether or not the hunt group is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
 
 
 class GetForwardingRuleObject(ApiModel):
@@ -468,60 +408,6 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
     selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesSet]] = None
-
-
-class ModifyCallForwardingObject(ApiModel):
-    #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    call_forwarding: Optional[ModifyCallForwardingObjectCallForwarding] = None
-
-
-class ModifyHuntGroupObject(ApiModel):
-    #: Unique name for the hunt group.
-    #: example: 5558675309-Group
-    name: Optional[str] = None
-    #: Primary phone number of the hunt group.
-    #: example: 5558675309
-    phone_number: Optional[str] = None
-    #: Primary phone extension of the hunt group.
-    #: example: 7781
-    extension: Optional[str] = None
-    #: Whether or not the hunt group has the distinctive ring option enabled.
-    #: example: True
-    distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
-    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
-    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
-    alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
-    #: Language code.
-    #: example: en-US
-    language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
-    #: example: Hakim
-    first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
-    #: otherwise defaults to call group name.
-    #: example: Smith
-    last_name: Optional[str] = None
-    #: Time zone for the hunt group.
-    #: example: America/Chicago
-    time_zone: Optional[str] = None
-    #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[PostHuntGroupCallPolicyObject] = None
-    #: People, workspaces and virtual lines that are eligible to  receive calls.
-    agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]] = None
-    #: Whether or not the hunt group is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-
-
-class ReadTheListOfHuntGroupsResponse(ApiModel):
-    #: Array of hunt groups.
-    hunt_groups: Optional[list[ListHuntGroupObject]] = None
-
-
-class CreateAHuntGroupResponse(ApiModel):
-    #: ID of the newly created hunt group.
-    id: Optional[str] = None
 
 
 class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):

@@ -11,8 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Alarm', 'AlarmCollection', 'AlarmSeverity', 'Connector', 'ConnectorCollection', 'ConnectorStatus',
-            'ConnectorType']
+__auto__ = ['Alarm', 'AlarmSeverity', 'Connector', 'ConnectorStatus', 'ConnectorType', 'HybridConnectorsApi']
 
 
 class ConnectorStatus(str, Enum):
@@ -110,15 +109,6 @@ class Connector(ApiModel):
     version: Optional[str] = None
     #: A list of alarms raised on the connector.
     alarms: Optional[list[Alarm]] = None
-
-
-class ConnectorCollection(ApiModel):
-    #: An array of hybrid connector objects.
-    items: Optional[list[Connector]] = None
-
-
-class AlarmCollection(ApiModel):
-    items: Optional[list[Alarm]] = None
 
 
 class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):

@@ -13,7 +13,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __auto__ = ['ExecuteCommandArguments', 'ExecuteCommandBody', 'ExecuteCommandBodyBooking',
             'ExecuteCommandBodyBookingOrganizer', 'ExecuteCommandBodyBookingTime', 'ExecuteCommandResponse',
-            'QueryStatusResponse', 'QueryStatusResponseResult', 'QueryStatusResponseResultAudio']
+            'QueryStatusResponse', 'QueryStatusResponseResult', 'QueryStatusResponseResultAudio', 'XAPIApi']
 
 
 class QueryStatusResponseResultAudio(ApiModel):

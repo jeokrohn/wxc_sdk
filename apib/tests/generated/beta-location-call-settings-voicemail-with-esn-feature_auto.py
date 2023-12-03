@@ -11,11 +11,11 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage',
-            'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting',
-            'GetLocationVoicemailGroupObjectMessageStorage',
+__auto__ = ['BetaLocationCallSettingsVoicemailWithESNFeatureApi', 'GetLocationVoicemailGroupObject',
+            'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage',
+            'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage',
             'GetLocationVoicemailGroupObjectMessageStorageStorageType',
-            'GetLocationVoicemailGroupObjectNotifications', 'GetVoicemailGroupObject', 'ListVoicemailGroupResponse']
+            'GetLocationVoicemailGroupObjectNotifications', 'GetVoicemailGroupObject']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):
@@ -159,11 +159,6 @@ class GetVoicemailGroupObject(ApiModel):
     #: Flag to indicate if the number is toll free.
     #: example: True
     toll_free_number: Optional[bool] = None
-
-
-class ListVoicemailGroupResponse(ApiModel):
-    #: Array of VoicemailGroups.
-    voicemail_groups: Optional[list[GetVoicemailGroupObject]] = None
 
 
 class BetaLocationCallSettingsVoicemailWithESNFeatureApi(ApiChild, base='telephony/config'):

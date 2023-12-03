@@ -11,28 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AggregatedMetric', 'DurationMetric', 'RawMetric', 'WorkspaceDurationMetricsResponse',
+__auto__ = ['DurationMetric', 'RawMetric', 'WorkspaceDurationMetricsResponse',
             'WorkspaceDurationMetricsResponseAggregation', 'WorkspaceDurationMetricsResponseMeasurement',
-            'WorkspaceMetricsResponse', 'WorkspaceMetricsResponseAggregation', 'WorkspaceMetricsResponseMetricName',
-            'WorkspaceMetricsResponseSortBy', 'WorkspaceMetricsResponseUnit']
-
-
-class AggregatedMetric(ApiModel):
-    #: Timestamp indicating the start of the aggregation bucket (ISO 8601).
-    #: example: 2021-10-21T12:00:00
-    start: Optional[datetime] = None
-    #: Timestamp indicating the end of the aggregation bucket (ISO 8601).
-    #: example: 2021-10-21T13:00:00
-    end: Optional[datetime] = None
-    #: The mean measurement value in the bucket.
-    #: example: 12
-    mean: Optional[int] = None
-    #: The lowest measurement value in the bucket.
-    #: example: 5
-    min: Optional[int] = None
-    #: The highest measurement value in the bucket.
-    #: example: 8
-    max_: Optional[int] = None
+            'WorkspaceMetricsApi', 'WorkspaceMetricsResponse', 'WorkspaceMetricsResponseAggregation',
+            'WorkspaceMetricsResponseMetricName', 'WorkspaceMetricsResponseSortBy', 'WorkspaceMetricsResponseUnit']
 
 
 class RawMetric(ApiModel):

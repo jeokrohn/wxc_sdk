@@ -11,8 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ApplicationUsage', 'ApplicationUsageCollectionResponse', 'ApplicationUsagePolicyAction',
-            'ListApplicationUsageOrderBy']
+__auto__ = ['ApplicationUsage', 'ApplicationUsageApi', 'ApplicationUsagePolicyAction', 'ListApplicationUsageOrderBy']
 
 
 class ApplicationUsagePolicyAction(str, Enum):
@@ -66,10 +65,6 @@ class ApplicationUsage(ApiModel):
     #: The date and time this application's usage was last updated.
     #: example: 2018-10-01T07:00:00.000Z
     last_updated: Optional[datetime] = None
-
-
-class ApplicationUsageCollectionResponse(ApiModel):
-    items: Optional[list[ApplicationUsage]] = None
 
 
 class ListApplicationUsageOrderBy(str, Enum):

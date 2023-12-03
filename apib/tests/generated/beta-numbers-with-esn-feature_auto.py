@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'NumberListGetObject', 'NumberObject',
-            'NumberObjectLocation', 'NumberObjectOwner']
+__auto__ = ['BetaNumbersWithESNFeatureApi', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
+            'NumberObject', 'NumberObjectLocation', 'NumberObjectOwner']
 
 
 class NumberObjectLocation(ApiModel):
@@ -66,11 +66,6 @@ class NumberObject(ApiModel):
     toll_free_number: Optional[bool] = None
     location: Optional[NumberObjectLocation] = None
     owner: Optional[NumberObjectOwner] = None
-
-
-class NumberListGetObject(ApiModel):
-    #: Array of phone numbers.
-    phone_numbers: Optional[list[NumberObject]] = None
 
 
 class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):

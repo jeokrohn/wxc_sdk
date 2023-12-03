@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Organization', 'OrganizationCollectionResponse', 'OrganizationSupportedContentType']
+__auto__ = ['Organization', 'OrganizationSupportedContentType', 'OrganizationsWithECMApi']
 
 
 class OrganizationSupportedContentType(str, Enum):
@@ -36,10 +36,6 @@ class Organization(ApiModel):
     #: The date and time the organization was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-
-
-class OrganizationCollectionResponse(ApiModel):
-    items: Optional[list[Organization]] = None
 
 
 class OrganizationsWithECMApi(ApiChild, base='organizations'):

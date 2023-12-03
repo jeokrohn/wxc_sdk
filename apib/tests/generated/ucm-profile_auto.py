@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetManagerProfileObject', 'ReadTheListOfUcManagerProfilesResponse']
+__auto__ = ['GetManagerProfileObject', 'UCMProfileApi']
 
 
 class GetManagerProfileObject(ApiModel):
@@ -21,11 +21,6 @@ class GetManagerProfileObject(ApiModel):
     #: Unique name for the calling UC Manager Profile.
     #: example: UC Profile2
     name: Optional[str] = None
-
-
-class ReadTheListOfUcManagerProfilesResponse(ApiModel):
-    #: Array of manager profiles.
-    calling_profiles: Optional[list[GetManagerProfileObject]] = None
 
 
 class UCMProfileApi(ApiChild, base='telephony/config/callingProfiles'):

@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetMemberResponse', 'LineType', 'Location', 'MemberObject', 'MemberType', 'SearchMemberObject',
-            'SearchMemberResponse']
+__auto__ = ['BetaDeviceCallSettingsWithESNFeatureApi', 'GetMemberResponse', 'LineType', 'Location', 'MemberObject',
+            'MemberType', 'SearchMemberObject']
 
 
 class LineType(str, Enum):
@@ -142,11 +142,6 @@ class SearchMemberObject(ApiModel):
     member_type: Optional[MemberType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
-
-
-class SearchMemberResponse(ApiModel):
-    #: List of members available for the device.
-    members: Optional[list[SearchMemberObject]] = None
 
 
 class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/devices/{deviceId}'):

@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Error', 'PrecheckABroadworksSubscriberProvisioningCustomerInfo', 'Subscriber', 'SubscriberListResponse',
+__auto__ = ['BroadWorksSubscribersApi', 'Error', 'PrecheckABroadworksSubscriberProvisioningCustomerInfo', 'Subscriber',
             'SubscriberPackage', 'SubscriberProvisioningPrecheckResponse',
             'SubscriberProvisioningPrecheckResponseInfo', 'SubscriberStatus']
 
@@ -114,11 +114,6 @@ class Subscriber(ApiModel):
     provisioning_id: Optional[str] = None
     #: Indicates if the subscriber was self activated, rather than provisioned via these APIs.
     self_activated: Optional[bool] = None
-
-
-class SubscriberListResponse(ApiModel):
-    #: An array of Subscriber objects.
-    items: Optional[list[Subscriber]] = None
 
 
 class SubscriberProvisioningPrecheckResponseInfo(ApiModel):

@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ResourceGroupMembership', 'ResourceGroupMembershipCollectionResponse', 'ResourceGroupMembershipStatus']
+__auto__ = ['ResourceGroupMembership', 'ResourceGroupMembershipStatus', 'ResourceGroupMembershipsApi']
 
 
 class ResourceGroupMembershipStatus(str, Enum):
@@ -42,10 +42,6 @@ class ResourceGroupMembership(ApiModel):
     #: The activation status of the resource group membership.
     #: example: activated
     status: Optional[ResourceGroupMembershipStatus] = None
-
-
-class ResourceGroupMembershipCollectionResponse(ApiModel):
-    items: Optional[list[ResourceGroupMembership]] = None
 
 
 class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):

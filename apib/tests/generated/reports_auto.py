@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateAReportResponse', 'Report', 'ReportCollectionResponse']
+__auto__ = ['Report', 'ReportsApi']
 
 
 class Report(ApiModel):
@@ -48,17 +48,6 @@ class Report(ApiModel):
     #: The link from which the report can be downloaded.
     #: example: https://downloadservicebts.webex.com/api?reportId=Y2lzY29zcGFyazovL3VzL1JFUE9SVC9hZDBkMjA1NzVkYTA0NWE0OGZhZDQ3ZDk3NGFiNDFmMg
     download_url: Optional[str] = Field(alias='downloadURL', default=None)
-
-
-class ReportCollectionResponse(ApiModel):
-    #: An array of report objects.
-    report_attributes: Optional[list[Report]] = Field(alias='Report Attributes', default=None)
-
-
-class CreateAReportResponse(ApiModel):
-    #: The unique identifier for the report.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mYzhjMWFhMS00OTM5LTQ2NjEtODAwMy1hYWE0MzFmZWM0ZmE
-    id: Optional[str] = None
 
 
 class ReportsApi(ApiChild, base='reports'):

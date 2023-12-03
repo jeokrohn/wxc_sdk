@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetCallRecordingObject', 'GetCallRecordingObjectOrganization', 'GetCallRecordingTermsOfServiceObject',
-            'GetComplianceAnnouncementObject', 'GetOrgComplianceAnnouncementObject',
-            'ModifyCallRecordingSettingsObject', 'ModifyCallRecordingTermsOfServiceObject']
+__auto__ = ['FeaturesCallRecordingApi', 'GetCallRecordingObject', 'GetCallRecordingObjectOrganization',
+            'GetCallRecordingTermsOfServiceObject', 'GetComplianceAnnouncementObject',
+            'GetOrgComplianceAnnouncementObject']
 
 
 class GetCallRecordingObjectOrganization(ApiModel):
@@ -84,18 +84,6 @@ class GetOrgComplianceAnnouncementObject(ApiModel):
     #: Number of seconds to wait before playing the compliance announcement.
     #: example: 10
     delay_in_seconds: Optional[int] = None
-
-
-class ModifyCallRecordingSettingsObject(ApiModel):
-    #: Whether or not the call recording is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-
-
-class ModifyCallRecordingTermsOfServiceObject(ApiModel):
-    #: Whether or not the call recording terms of service are enabled.
-    #: example: True
-    terms_of_service_enabled: Optional[bool] = None
 
 
 class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):

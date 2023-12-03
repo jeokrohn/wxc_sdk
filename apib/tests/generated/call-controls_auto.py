@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Call', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallPersonalityEnum', 'CallStateEnum',
-            'CallTypeEnum', 'DialResponse', 'ListCallHistoryResponse', 'ListCallsResponse', 'ParkResponse',
-            'PartyInformation', 'RecallInformation', 'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation',
-            'RedirectionReasonEnum', 'RejectActionEnum']
+__auto__ = ['Call', 'CallControlsApi', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallPersonalityEnum',
+            'CallStateEnum', 'CallTypeEnum', 'DialResponse', 'PartyInformation', 'RecallInformation',
+            'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation', 'RedirectionReasonEnum',
+            'RejectActionEnum']
 
 
 class RejectActionEnum(str, Enum):
@@ -221,19 +221,6 @@ class DialResponse(ApiModel):
     #: are part of the same call session.
     #: example: MmFmNThiZjktYWE3Ny00NWE5LThiMDEtYzI4NDMxZWYwNzRm
     call_session_id: Optional[str] = None
-
-
-class ParkResponse(ApiModel):
-    #: The details of where the call has been parked.
-    parked_against: Optional[PartyInformation] = None
-
-
-class ListCallsResponse(ApiModel):
-    items: Optional[list[Call]] = None
-
-
-class ListCallHistoryResponse(ApiModel):
-    items: Optional[list[CallHistoryRecord]] = None
 
 
 class CallControlsApi(ApiChild, base='telephony/calls'):

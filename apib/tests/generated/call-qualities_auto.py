@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AudioIn', 'AudioInType', 'CallsQualitiesResponse', 'MediaSessionQuality', 'VideoIn']
+__auto__ = ['AudioIn', 'AudioInType', 'CallQualitiesApi', 'MediaSessionQuality', 'VideoIn']
 
 
 class VideoIn(ApiModel):
@@ -88,10 +88,6 @@ class MediaSessionQuality(ApiModel):
     video_in: Optional[list[VideoIn]] = None
     #: The collection of downstream audio quality data.
     audio_in: Optional[list[AudioIn]] = None
-
-
-class CallsQualitiesResponse(ApiModel):
-    items: Optional[list[MediaSessionQuality]] = None
 
 
 class CallQualitiesApi(ApiChild, base='call/qualities'):

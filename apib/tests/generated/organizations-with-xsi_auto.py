@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Organization', 'OrganizationCollectionResponse']
+__auto__ = ['Organization', 'OrganizationsWithXsiApi']
 
 
 class Organization(ApiModel):
@@ -36,10 +36,6 @@ class Organization(ApiModel):
     #: `api-` prepended to the `bcBaseDomain` value for the organization.
     #: example: api-us.bcld.webex.com
     xsi_domain: Optional[str] = None
-
-
-class OrganizationCollectionResponse(ApiModel):
-    items: Optional[list[Organization]] = None
 
 
 class OrganizationsWithXsiApi(ApiChild, base='organizations'):

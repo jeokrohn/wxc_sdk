@@ -12,14 +12,13 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType',
-            'GeneratePasswordPostResponse', 'GetAutoTransferNumberObject', 'GetLocationAccessCodeObject',
-            'GetLocationAccessCodeObjectAccessCodes', 'GetLocationInterceptObject',
+            'GetAutoTransferNumberObject', 'GetLocationAccessCodeObjectAccessCodes', 'GetLocationInterceptObject',
             'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements',
             'GetLocationInterceptObjectIncomingAnnouncementsGreeting',
             'GetLocationInterceptObjectIncomingAnnouncementsNewNumber', 'GetLocationInterceptObjectIncomingType',
-            'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType',
-            'GetLocationOutgoingPermissionResponse', 'InternalDialingGet', 'InternalDialingPut', 'PasswordGenerate',
-            'PutAccessCodeLocationObject', 'RouteIdentity', 'RouteType', 'UnknownExtensionRouteIdentity']
+            'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType', 'InternalDialingGet',
+            'LocationCallSettingsCallHandlingApi', 'PasswordGenerate', 'RouteIdentity', 'RouteType',
+            'UnknownExtensionRouteIdentity']
 
 
 class CallingPermissionObjectCallType(str, Enum):
@@ -77,12 +76,6 @@ class CallingPermissionObject(ApiModel):
     transfer_enabled: Optional[bool] = None
 
 
-class GeneratePasswordPostResponse(ApiModel):
-    #: Example password.
-    #: example: xyz123!
-    example_sip_password: Optional[str] = None
-
-
 class GetAutoTransferNumberObject(ApiModel):
     #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_1` will be transferred
     #: to this number.
@@ -105,11 +98,6 @@ class GetLocationAccessCodeObjectAccessCodes(ApiModel):
     #: Access code description.
     #: example: Main Access Code
     description: Optional[str] = None
-
-
-class GetLocationAccessCodeObject(ApiModel):
-    #: Access code details
-    access_codes: Optional[GetLocationAccessCodeObjectAccessCodes] = None
 
 
 class GetLocationInterceptObjectIncomingType(str, Enum):
@@ -224,28 +212,9 @@ class UnknownExtensionRouteIdentity(ApiModel):
     type: Optional[RouteType] = None
 
 
-class InternalDialingPut(ApiModel):
-    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the
-    #: selected route group/trunk as premises calls.
-    #: example: True
-    enable_unknown_extension_route_policy: Optional[bool] = None
-    #: Type associated with the identity.
-    unknown_extension_route_identity: Optional[UnknownExtensionRouteIdentity] = None
-
-
 class PasswordGenerate(str, Enum):
     #: SIP password setting
     sip = 'SIP'
-
-
-class PutAccessCodeLocationObject(ApiModel):
-    #: Array of string to delete access codes. For example, ["1234","2345"]
-    delete_codes: Optional[list[str]] = None
-
-
-class GetLocationOutgoingPermissionResponse(ApiModel):
-    #: Array of calling permissions.
-    calling_permissions: Optional[list[CallingPermissionObject]] = None
 
 
 class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locations/{locationId}'):

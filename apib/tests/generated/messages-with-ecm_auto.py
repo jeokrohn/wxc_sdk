@@ -11,8 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Attachment', 'DirectMessage', 'DirectMessageCollectionResponse', 'File', 'FileType', 'Message',
-            'MessageCollectionResponse', 'MessageRoomType']
+__auto__ = ['Attachment', 'DirectMessage', 'File', 'FileType', 'Message', 'MessageRoomType', 'MessagesWithECMApi']
 
 
 class MessageRoomType(str, Enum):
@@ -124,14 +123,6 @@ class DirectMessage(ApiModel):
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-
-
-class MessageCollectionResponse(ApiModel):
-    items: Optional[list[Message]] = None
-
-
-class DirectMessageCollectionResponse(ApiModel):
-    items: Optional[list[DirectMessage]] = None
 
 
 class MessagesWithECMApi(ApiChild, base='messages'):

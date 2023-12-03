@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdmitParticipantsObject', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice',
-            'InProgressParticipant', 'InProgressParticipantState', 'ListMeetingParticipantsResponse', 'Participant',
-            'ParticipantID', 'ParticipantState', 'ParticipantVideo']
+__auto__ = ['Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice', 'InProgressParticipant',
+            'InProgressParticipantState', 'MeetingParticipantsApi', 'Participant', 'ParticipantID',
+            'ParticipantState', 'ParticipantVideo']
 
 
 class ParticipantVideo(str, Enum):
@@ -226,14 +226,6 @@ class ParticipantID(ApiModel):
     #: The ID that identifies the meeting participant.
     #: example: 560d7b784f5143e3be2fc3064a5c4999_I_204252993233618782_23e16d67-17f3-3ef1-b830-f33d17c0232e
     participant_id: Optional[str] = None
-
-
-class AdmitParticipantsObject(ApiModel):
-    items: Optional[list[ParticipantID]] = None
-
-
-class ListMeetingParticipantsResponse(ApiModel):
-    items: Optional[list[Participant]] = None
 
 
 class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):

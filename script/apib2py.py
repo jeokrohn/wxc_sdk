@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 CLI tool to generate Python source from APIB file
-    usage: apib2py.py [-h] [--pypath PYPATH] [--pysrc PYSRC] [--nobeta] [--exclude EXCLUDE] apib
+    usage: apib2py.py [-h] [--pypath PYPATH] [--pysrc PYSRC] [--nobeta] [--exclude EXCLUDE] [--with-unref] apib
 
     positional arguments:
       apib               name of API file. If name is given w/o oath then default path from environment APIB_PATH
@@ -16,6 +16,7 @@ CLI tool to generate Python source from APIB file
                          parameter is missing then the output name is based on the basename of given APIB name
       --nobeta           Exclude all "beta-" APIB files
       --exclude EXCLUDE  Python.re to exclude some APIB files; matches on basenames of APIB files
+      --with-unref       include unreferenced classes
 """
 import argparse
 import glob
@@ -50,6 +51,8 @@ def main():
                         help='Exclude all "beta-" APIB files')
     parser.add_argument('--exclude', type=str,
                         help='Python.re to exclude some APIB files; matches on basenames of APIB files')
+    parser.add_argument('--with-unref', action='store_true',
+                        help='include unreferenced classes')
     args = parser.parse_args()
 
     apib_path = args.apib
@@ -86,7 +89,7 @@ def main():
         """
         Convert one APIB file
         """
-        code_gen = CodeGenerator()
+        code_gen = CodeGenerator(with_unreferenced_classes=args.with_unref)
         code_gen.read_blueprint(apib_path)
         code_gen.cleanup()
 

@@ -11,16 +11,15 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateANewVoicemailGroupForALocationResponse', 'GetLocationVoicemailGroupObject',
-            'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage',
-            'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage',
+__auto__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage',
+            'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting',
+            'GetLocationVoicemailGroupObjectMessageStorage',
             'GetLocationVoicemailGroupObjectMessageStorageStorageType',
-            'GetLocationVoicemailGroupObjectNotifications', 'GetLocationVoicemailObject', 'GetVoicePortalObject',
+            'GetLocationVoicemailGroupObjectNotifications', 'GetVoicePortalObject',
             'GetVoicePortalPasscodeRuleObject', 'GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes',
-            'GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits', 'GetVoicePortalPasscodeRuleObjectExpirePasscode',
-            'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicePortalPasscodeRuleObjectLength',
-            'GetVoicemailGroupObject', 'ListVoicemailGroupResponse', 'PostLocationVoicemailGroupObject',
-            'PutLocationVoicemailGroupObject', 'PutVoicePortalObject', 'PutVoicePortalObjectPasscode']
+            'GetVoicePortalPasscodeRuleObjectExpirePasscode', 'GetVoicePortalPasscodeRuleObjectFailedAttempts',
+            'GetVoicePortalPasscodeRuleObjectLength', 'GetVoicemailGroupObject', 'LocationCallSettingsVoicemailApi',
+            'PutVoicePortalObjectPasscode']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):
@@ -127,12 +126,6 @@ class GetLocationVoicemailGroupObject(ApiModel):
     voice_message_forwarding_enabled: Optional[bool] = None
 
 
-class GetLocationVoicemailObject(ApiModel):
-    #: Set to `true` to enable voicemail transcription.
-    #: example: True
-    voicemail_transcription_enabled: Optional[bool] = None
-
-
 class GetVoicePortalObject(ApiModel):
     #: Voice Portal ID
     #: example: Y2lzY29zcGFyazovL3VzL1ZPSUNFTUFJTF9HUk9VUC8yZmQzZGMwMy0yZWRhLTQ4NmUtODdhYS0xODY1ZDI5YWExZWI
@@ -185,10 +178,6 @@ class GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes(ApiModel):
     #: Number of required passcodes changes. The minimum value is 1. The maximum value is 10.
     #: example: 3
     number_of_passcodes: Optional[int] = None
-
-
-class GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits(ApiModel):
-    ...
 
 
 class GetVoicePortalPasscodeRuleObjectLength(ApiModel):
@@ -266,83 +255,6 @@ class GetVoicemailGroupObject(ApiModel):
     toll_free_number: Optional[bool] = None
 
 
-class PostLocationVoicemailGroupObject(ApiModel):
-    #: Set name to create new voicemail group for a particular location for a customer.
-    #: example: VGName
-    name: Optional[str] = None
-    #: Set voicemail group phone number for this particular location.
-    #: example: +1234234324
-    phone_number: Optional[str] = None
-    #: Set unique voicemail group extension number for this particular location.
-    #: example: 23455
-    extension: Optional[int] = None
-    #: Set voicemail group caller ID first name.
-    #: example: Customer
-    first_name: Optional[str] = None
-    #: Set voicemail group called ID last name.
-    #: example: Support
-    last_name: Optional[str] = None
-    #: Set passcode to access voicemail group when calling.
-    #: example: 1234
-    passcode: Optional[int] = None
-    #: Language code for voicemail group audio announcement.
-    #: example: en_us
-    language_code: Optional[str] = None
-    #: Message storage information
-    message_storage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
-    #: Message notifications
-    notifications: Optional[GetLocationVoicemailGroupObjectNotifications] = None
-    #: Fax message information
-    fax_message: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
-    #: Transfer message information
-    transfer_to_number: Optional[GetLocationVoicemailGroupObjectNotifications] = None
-    #: Message copy information
-    email_copy_of_message: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
-
-
-class PutLocationVoicemailGroupObject(ApiModel):
-    #: Set the name of the voicemail group.
-    #: example: VGName
-    name: Optional[str] = None
-    #: Set voicemail group phone number.
-    #: example: +1234234324
-    phone_number: Optional[str] = None
-    #: Set unique voicemail group extension number.
-    #: example: 23455
-    extension: Optional[int] = None
-    #: Set the voicemail group caller ID first name.
-    #: example: Customer
-    first_name: Optional[str] = None
-    #: Set the voicemail group called ID last name.
-    #: example: Support
-    last_name: Optional[str] = None
-    #: Set to `true` to enable the voicemail group.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Set passcode to access voicemail group when calling.
-    #: example: 1234
-    passcode: Optional[int] = None
-    #: Language code for the voicemail group audio announcement.
-    #: example: en_us
-    language_code: Optional[str] = None
-    #: Voicemail group greeting type.
-    #: example: DEFAULT
-    greeting: Optional[GetLocationVoicemailGroupObjectGreeting] = None
-    #: CUSTOM greeting for previously uploaded.
-    #: example: short greeting.wav
-    greeting_description: Optional[str] = None
-    #: Message storage information
-    message_storage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
-    #: Message notifications
-    notifications: Optional[GetLocationVoicemailGroupObjectNotifications] = None
-    #: Fax message receive settings
-    fax_message: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
-    #: Transfer message information
-    transfer_to_number: Optional[GetLocationVoicemailGroupObjectNotifications] = None
-    #: Message copy information
-    email_copy_of_message: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
-
-
 class PutVoicePortalObjectPasscode(ApiModel):
     #: New passcode.
     #: example: testPass123
@@ -350,39 +262,6 @@ class PutVoicePortalObjectPasscode(ApiModel):
     #: Confirm new passcode.
     #: example: testPass123
     confirm_passcode: Optional[str] = None
-
-
-class PutVoicePortalObject(ApiModel):
-    #: Voice Portal Name.
-    #: example: test voicePortal
-    name: Optional[str] = None
-    #: Language code for voicemail group audio announcement.
-    #: example: en_us
-    language_code: Optional[str] = None
-    #: Extension of incoming call.
-    #: example: 7
-    extension: Optional[str] = None
-    #: Phone Number of incoming call.
-    #: example: +1345325235
-    phone_number: Optional[str] = None
-    #: Caller ID First Name.
-    #: example: firstName
-    first_name: Optional[str] = None
-    #: Caller ID Last Name.
-    #: example: lastName
-    last_name: Optional[str] = None
-    #: Voice Portal Admin Passcode.
-    passcode: Optional[PutVoicePortalObjectPasscode] = None
-
-
-class ListVoicemailGroupResponse(ApiModel):
-    #: Array of VoicemailGroups.
-    voicemail_groups: Optional[list[GetVoicemailGroupObject]] = None
-
-
-class CreateANewVoicemailGroupForALocationResponse(ApiModel):
-    #: UUID of the newly created voice mail group.
-    id: Optional[str] = None
 
 
 class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):

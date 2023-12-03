@@ -11,8 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateALocationResponse', 'Floor', 'FloorCollectionResponse', 'FloorCreationRequest', 'Location',
-            'LocationAddress', 'LocationsCollectionResponse', 'PostCommonLocationObject', 'PutCommonLocationObject']
+__auto__ = ['Floor', 'Location', 'LocationAddress', 'LocationsApi']
 
 
 class LocationAddress(ApiModel):
@@ -62,52 +61,6 @@ class Location(ApiModel):
     notes: Optional[str] = None
 
 
-class PutCommonLocationObject(ApiModel):
-    #: The name of the location.
-    #: example: 'Denver'
-    name: Optional[str] = None
-    #: Time zone associated with this location, refer to this `link
-    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
-    #: example: 'America/Chicago'
-    time_zone: Optional[str] = None
-    #: Default email language.
-    #: example: 'en_us'
-    preferred_language: Optional[str] = None
-    #: The address of the location.
-    address: Optional[LocationAddress] = None
-
-
-class PostCommonLocationObject(ApiModel):
-    #: The name of the location.
-    #: example: 'Denver'
-    name: Optional[str] = None
-    #: Time zone associated with this location, refer to this `link
-    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
-    #: example: 'America/Chicago'
-    time_zone: Optional[str] = None
-    #: Default email language.
-    #: example: 'en_us'
-    preferred_language: Optional[str] = None
-    #: Location's phone announcement language.
-    #: example: 'fr_fr'
-    announcement_language: Optional[str] = None
-    #: The address of the location.
-    address: Optional[LocationAddress] = None
-    #: Latitude
-    #: example: 12.935784
-    latitude: Optional[datetime] = None
-    #: Longitude
-    #: example: 77.697332
-    longitude: Optional[datetime] = None
-    #: Notes
-    #: example: 123 Some St. Denver Location
-    notes: Optional[str] = None
-
-
-class LocationsCollectionResponse(ApiModel):
-    items: Optional[list[Location]] = None
-
-
 class Floor(ApiModel):
     #: Unique identifier for the floor.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL1dPUktTUEFDRV9MT0NBVElPTl9GTE9PUi83NDhkZDNmMS1iYmE5LTQxMDItODk5NC00M2IyOTM2MzNlNjY
@@ -121,26 +74,6 @@ class Floor(ApiModel):
     #: The floor display name.
     #: example: The basement
     display_name: Optional[str] = None
-
-
-class FloorCreationRequest(ApiModel):
-    #: The floor number.
-    #: example: -1
-    floor_number: Optional[int] = None
-    #: The floor display name.
-    #: example: The basement
-    display_name: Optional[str] = None
-
-
-class FloorCollectionResponse(ApiModel):
-    #: An array of floor objects.
-    items: Optional[list[Floor]] = None
-
-
-class CreateALocationResponse(ApiModel):
-    #: ID of the newly created location.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
-    id: Optional[str] = None
 
 
 class LocationsApi(ApiChild, base='locations'):

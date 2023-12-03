@@ -11,8 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ClientTypeDistributionTrend1', 'ClienttypedistributionCollectionforOrg', 'ClienttypedistributionforOrg',
-            'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a']
+__auto__ = ['ClientTypeDistributionTrend1', 'ClienttypedistributionCollectionforOrg',
+            'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a',
+            'VideoMeshClientTypeDistributionAPIApi']
 
 
 class ClusterClientTypeDistributionDetailsBlr1a(ApiModel):
@@ -60,10 +61,6 @@ class ClienttypedistributionCollectionforOrg(ApiModel):
     aggregation_interval: Optional[datetime] = None
     #: Client Type Distribution details for the organization.
     items: Optional[list[ClientTypeDistributionTrend1]] = None
-
-
-class ClienttypedistributionforOrg(ApiModel):
-    items: Optional[list[ClienttypedistributionCollectionforOrg]] = None
 
 
 class VideoMeshClientTypeDistributionAPIApi(ApiChild, base='videoMesh/clientTypeDistribution'):

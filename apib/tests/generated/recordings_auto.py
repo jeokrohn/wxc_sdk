@@ -11,12 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BulkPurgeRecordingObject', 'BulkRestoreRecordingObject', 'BulkSoftDeleteRecordingObject',
-            'DeleteRecordingObject', 'ListRecordingsForAnAdminOrComplianceOfficerResponse', 'ListRecordingsFormat',
-            'ListRecordingsResponse', 'ListRecordingsStatus', 'RecordingObject', 'RecordingObjectForAdminAndCO',
+__auto__ = ['ListRecordingsFormat', 'ListRecordingsStatus', 'RecordingObject', 'RecordingObjectForAdminAndCO',
             'RecordingObjectFormat', 'RecordingObjectServiceType', 'RecordingObjectStatus',
             'RecordingObjectWithDirectDownloadLinks', 'RecordingObjectWithDirectDownloadLinksStatus',
-            'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks']
+            'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks', 'RecordingsApi']
 
 
 class RecordingObjectFormat(str, Enum):
@@ -271,58 +269,6 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     status: Optional[RecordingObjectWithDirectDownloadLinksStatus] = None
 
 
-class DeleteRecordingObject(ApiModel):
-    #: Reason for deleting a recording. Only required when a Compliance Officer is operating on another user's
-    #: recording.
-    #: example: audit
-    reason: Optional[str] = None
-    #: Compliance Officer's explanation for deleting a recording. The comment can be a maximum of 255 characters long.
-    #: example: Maintain data privacy
-    comment: Optional[str] = None
-
-
-class BulkSoftDeleteRecordingObject(ApiModel):
-    #: Recording IDs for removing recordings into the recycle bin in batch. Please note that all the recording IDs
-    #: should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
-    recording_ids: Optional[list[str]] = None
-    #: URL of the Webex site from which the API deletes recordings. If not specified, the API deletes recordings from
-    #: the user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by the
-    #: `Get Site List
-    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-    #: example: example.webex.com
-    site_url: Optional[str] = None
-
-
-class BulkRestoreRecordingObject(ApiModel):
-    #: If not specified or `false`, restores the recordings specified by `recordingIds`. If `true`, restores all
-    #: recordings from the recycle bin.
-    restore_all: Optional[bool] = None
-    #: Recording IDs for recovering recordings from the recycle bin in batch. Note that all the recording IDs should
-    #: belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
-    recording_ids: Optional[list[str]] = None
-    #: URL of the Webex site from which the API restores recordings. If not specified, the API restores recordings from
-    #: a user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by
-    #: `Get Site List
-    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-    #: example: example.webex.com
-    site_url: Optional[str] = None
-
-
-class BulkPurgeRecordingObject(ApiModel):
-    #: If not specified or `false`, purges the recordings specified by `recordingIds`. If `true`, purges all recordings
-    #: from the recycle bin.
-    purge_all: Optional[bool] = None
-    #: Recording IDs for purging recordings from the recycle bin in batch. Note that all the recording IDs should
-    #: belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
-    recording_ids: Optional[list[str]] = None
-    #: URL of the Webex site from which the API purges recordings. If not specified, the API purges recordings from
-    #: user's preferred site. All available Webex sites and preferred sites of the user can be retrieved by
-    #: `Get Site List
-    #: <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-    #: example: example.webex.com
-    site_url: Optional[str] = None
-
-
 class ListRecordingsFormat(str, Enum):
     mp4 = 'MP4'
     arf = 'ARF'
@@ -331,16 +277,6 @@ class ListRecordingsFormat(str, Enum):
 class ListRecordingsStatus(str, Enum):
     available = 'available'
     deleted = 'deleted'
-
-
-class ListRecordingsResponse(ApiModel):
-    #: An array of recording objects.
-    items: Optional[list[RecordingObject]] = None
-
-
-class ListRecordingsForAnAdminOrComplianceOfficerResponse(ApiModel):
-    #: An array of recording objects.
-    items: Optional[list[RecordingObjectForAdminAndCO]] = None
 
 
 class RecordingsApi(ApiChild, base=''):

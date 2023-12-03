@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject',
-            'GetPagingGroupObjectDepartment', 'ListPagingGroupObject', 'ReadTheListOfPagingGroupsResponse',
-            'UpdatePagingGroupObject', 'UpdatePagingGroupObjectDepartment']
+__auto__ = ['BetaFeaturesPagingGroupWithDepartmentFeaturesApi', 'GetPagingGroupAgentObject',
+            'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'GetPagingGroupObjectDepartment',
+            'ListPagingGroupObject', 'UpdatePagingGroupObjectDepartment']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):
@@ -122,47 +122,6 @@ class UpdatePagingGroupObjectDepartment(ApiModel):
     #: Unique identifier of the department.  Set to null to remove entity from department.
     #: example: Y2lzY29zcGFyazovL3VzL1NDSU1fR1JPVVAvZjA2ZWRiOGMtMjMxNC00ZTcxLWIzNzgtZTdiMmQwNjk3OTliOjk2YWJjMmFhLTNkY2MtMTFlNS1hMTUyLWZlMzQ4MTljZGM5YQ
     id: Optional[str] = None
-
-
-class UpdatePagingGroupObject(ApiModel):
-    #: Whether or not the paging group is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
-    #: example: PagingGroup-1
-    name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
-    #: mandatory.
-    #: example: +15558675309
-    phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
-    #: example: 7781
-    extension: Optional[str] = None
-    #: Language code.
-    #: example: en_us
-    language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".
-    #: example: Hakim
-    first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set,
-    #: otherwise defaults to call group name.
-    #: example: Smith
-    last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
-    #: ID.
-    #: example: True
-    originator_caller_id_enabled: Optional[bool] = None
-    #: An array of people and/or workspaces, who may originate pages to this paging group.
-    originators: Optional[list[str]] = None
-    #: People, including workspaces, that are added to paging group as paging call targets.
-    targets: Optional[list[str]] = None
-    #: Specifies the department information.
-    department: Optional[UpdatePagingGroupObjectDepartment] = None
-
-
-class ReadTheListOfPagingGroupsResponse(ApiModel):
-    #: Array of paging groups.
-    location_paging: Optional[list[ListPagingGroupObject]] = None
 
 
 class BetaFeaturesPagingGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):

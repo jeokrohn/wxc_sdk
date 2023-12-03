@@ -11,28 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CapabilityMap', 'CapabilityResponse', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar',
-            'WorkspaceCalendarType', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
-            'WorkspaceCollectionResponse', 'WorkspaceCreationRequest', 'WorkspaceCreationRequestCalendar',
-            'WorkspaceCreationRequestCalling', 'WorkspaceCreationRequestCallingWebexCalling',
-            'WorkspaceCreationRequestHotdeskingStatus', 'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus',
-            'WorkspaceSupportedDevices', 'WorkspaceType', 'WorkspaceType1', 'WorkspaceUpdateRequest',
-            'WorkspaceUpdateRequestType']
-
-
-class WorkspaceType(str, Enum):
-    #: High concentration.
-    focus = 'focus'
-    #: Brainstorm/collaboration.
-    huddle = 'huddle'
-    #: Dedicated meeting space.
-    meeting_room = 'meetingRoom'
-    #: Unstructured agile.
-    open = 'open'
-    #: Individual.
-    desk = 'desk'
-    #: Unspecified.
-    other = 'other'
+__auto__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType',
+            'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
+            'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
+            'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus',
+            'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices',
+            'WorkspaceType1', 'WorkspaceUpdateRequestType', 'WorkspacesApi']
 
 
 class WorkspaceType1(str, Enum):
@@ -205,46 +189,6 @@ class WorkspaceCreationRequestHotdeskingStatus(str, Enum):
     off = 'off'
 
 
-class WorkspaceCreationRequest(ApiModel):
-    #: A friendly name for the workspace.
-    #: example: SFO-12 Capanina
-    display_name: Optional[str] = None
-    #: `OrgId` associated with the workspace. Only admin users of another organization (such as partners) may use this
-    #: parameter.
-    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY
-    org_id: Optional[str] = None
-    #: Location associated with the workspace. Must be provided when the `floorId` is set.
-    #: example: YL34GrT...
-    workspace_location_id: Optional[str] = None
-    #: Floor associated with the workspace.
-    #: example: Y2lzY29z...
-    floor_id: Optional[str] = None
-    #: How many people the workspace is suitable for. If set, must be 0 or higher.
-    #: example: 5
-    capacity: Optional[int] = None
-    #: The type that best describes the workspace.
-    type: Optional[WorkspaceType1] = None
-    #: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
-    sip_address: Optional[str] = None
-    #: Calling types supported on create are `freeCalling`, `webexEdgeForDevices`, `thirdPartySipCalling`,
-    #: `webexCalling` and `none`. Default is `freeCalling`.
-    calling: Optional[WorkspaceCreationRequestCalling] = None
-    #: Workspace calendar configuration. Provide a type (`microsoft`, `google` or `none`) and an `emailAddress`.
-    #: Default is `none`.
-    calendar: Optional[WorkspaceCreationRequestCalendar] = None
-    #: Notes associated to the workspace.
-    #: example: this is a note
-    notes: Optional[str] = None
-    #: Hot desking status of the workspace.
-    #: example: on
-    hotdesking_status: Optional[WorkspaceCreationRequestHotdeskingStatus] = None
-    #: To enable device hosted meetings, set a Webex `siteUrl` and the `enabled` flag to `true`.
-    device_hosted_meetings: Optional[WorkspaceDeviceHostedMeetings] = None
-    #: The supported devices for the workspace. Default is `collaborationDevices`.
-    #: example: collaborationDevices
-    supported_devices: Optional[WorkspaceSupportedDevices] = None
-
-
 class WorkspaceUpdateRequestType(str, Enum):
     #: No workspace type set.
     not_set = 'notSet'
@@ -260,45 +204,6 @@ class WorkspaceUpdateRequestType(str, Enum):
     desk = 'desk'
     #: Unspecified.
     other = 'other'
-
-
-class WorkspaceUpdateRequest(ApiModel):
-    #: A friendly name for the workspace.
-    #: example: SFO-12 Capanina
-    display_name: Optional[str] = None
-    #: Location associated with the workspace. Must be provided when the `floorId` is set.
-    #: example: YL34GrT...
-    workspace_location_id: Optional[str] = None
-    #: Floor associated with the workspace.
-    #: example: Y2lzY29z...
-    floor_id: Optional[str] = None
-    #: How many people the workspace is suitable for. If set, must be 0 or higher.
-    #: example: 5
-    capacity: Optional[int] = None
-    #: The type that best describes the workspace.
-    #: example: focus
-    type: Optional[WorkspaceUpdateRequestType] = None
-    #: An empty/null calendar field will not cause any changes. Provide a type (`microsoft`, `google` or `none`) and an
-    #: `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none` type does not require
-    #: an `emailAddress`.
-    calendar: Optional[WorkspaceCreationRequestCalendar] = None
-    #: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
-    sip_address: Optional[str] = None
-    #: Calling types supported on update are `freeCalling`, `thirdPartySipCalling`, `webexCalling` and `none`.
-    calling: Optional[WorkspaceCreationRequestCalling] = None
-    #: Notes associated to the workspace.
-    #: example: this is a note
-    notes: Optional[str] = None
-    #: Hot desking status of the workspace.
-    #: example: on
-    hotdesking_status: Optional[WorkspaceCreationRequestHotdeskingStatus] = None
-    #: To enable device hosted meetings, set a Webex `siteUrl` and the `enabled` flag to `true`.
-    device_hosted_meetings: Optional[WorkspaceDeviceHostedMeetings] = None
-
-
-class WorkspaceCollectionResponse(ApiModel):
-    #: An array of workspace objects.
-    items: Optional[list[Workspace]] = None
 
 
 class SupportAndConfiguredInfo(ApiModel):
@@ -325,11 +230,6 @@ class CapabilityMap(ApiModel):
     air_quality: Optional[SupportAndConfiguredInfo] = None
     #: Relative humidity.
     relative_humidity: Optional[SupportAndConfiguredInfo] = None
-
-
-class CapabilityResponse(ApiModel):
-    #: The map of workspace capabilities.
-    capabilities: Optional[CapabilityMap] = None
 
 
 class WorkspacesApi(ApiChild, base='workspaces'):

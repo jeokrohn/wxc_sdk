@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ECMFolder', 'ECMFolderCollectionResponse', 'ECMFolderRoomType']
+__auto__ = ['ECMFolder', 'ECMFolderLinkingApi', 'ECMFolderRoomType']
 
 
 class ECMFolderRoomType(str, Enum):
@@ -52,10 +52,6 @@ class ECMFolder(ApiModel):
     #: The date and time when the folder link was created.
     #: example: 2015-10-18T14:26:16.203Z
     created: Optional[datetime] = None
-
-
-class ECMFolderCollectionResponse(ApiModel):
-    items: Optional[list[ECMFolder]] = None
 
 
 class ECMFolderLinkingApi(ApiChild, base='room/linkedFolders'):

@@ -11,12 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'GetHuntGroupCallPolicyObject',
-            'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer',
-            'GetHuntGroupObject', 'GetHuntGroupObjectDepartment', 'GetPersonPlaceObject', 'HuntPolicySelection',
-            'ListHuntGroupObject', 'ModifyHuntGroupObject', 'ModifyHuntGroupObjectDepartment',
+__auto__ = ['AlternateNumbersWithPattern', 'BetaFeaturesHuntGroupWithDepartmentFeaturesApi',
+            'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
+            'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetHuntGroupObjectDepartment',
+            'GetPersonPlaceObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyHuntGroupObjectDepartment',
             'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceObject',
-            'ReadTheListOfHuntGroupsResponse', 'RingPatternObject']
+            'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -261,52 +261,6 @@ class PostPersonPlaceObject(ApiModel):
     #: Weight of person or workspace. Only applied when call policy is `WEIGHTED`.
     #: example: 50
     weight: Optional[str] = None
-
-
-class ModifyHuntGroupObject(ApiModel):
-    #: Unique name for the hunt group.
-    #: example: 5558675309-Group
-    name: Optional[str] = None
-    #: Primary phone number of the hunt group.
-    #: example: 5558675309
-    phone_number: Optional[str] = None
-    #: Primary phone extension of the hunt group.
-    #: example: 7781
-    extension: Optional[str] = None
-    #: Whether or not the hunt group has the distinctive ring option enabled.
-    #: example: True
-    distinctive_ring: Optional[bool] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
-    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
-    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
-    alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
-    #: Language code.
-    #: example: en-US
-    language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to ".".
-    #: example: Hakim
-    first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
-    #: otherwise defaults to call group name.
-    #: example: Smith
-    last_name: Optional[str] = None
-    #: Time zone for the hunt group.
-    #: example: America/Chicago
-    time_zone: Optional[str] = None
-    #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[PostHuntGroupCallPolicyObject] = None
-    #: People, including workspaces, that are eligible to  receive calls.
-    agents: Optional[list[PostPersonPlaceObject]] = None
-    #: Whether or not the hunt group is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Department the huntgroup is assigned to.
-    department: Optional[ModifyHuntGroupObjectDepartment] = None
-
-
-class ReadTheListOfHuntGroupsResponse(ApiModel):
-    #: Array of hunt groups.
-    hunt_groups: Optional[list[ListHuntGroupObject]] = None
 
 
 class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):

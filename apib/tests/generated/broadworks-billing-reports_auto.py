@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BillingReportsListResponse', 'ListReport', 'Report', 'ReportError', 'ReportId', 'ReportStatus']
+__auto__ = ['BroadWorksBillingReportsApi', 'ListReport', 'Report', 'ReportError', 'ReportStatus']
 
 
 class ReportError(ApiModel):
@@ -21,12 +21,6 @@ class ReportError(ApiModel):
     #: A textual representation of the error code.
     #: example: Billing Report not found.
     description: Optional[str] = None
-
-
-class ReportId(ApiModel):
-    #: A unique report ID that corresponds to a billing report.
-    #: example: 'Y2lzY29zcGFyazovL3VzL0JJTExJTkdfUkVQT1JULzViOGQ1MThhLThmMDAtNDUxYi1hNDA2LWVhZjQ5YjRhN2ZhOA'
-    id: Optional[str] = None
 
 
 class ReportStatus(str, Enum):
@@ -76,11 +70,6 @@ class ListReport(ApiModel):
     #: The status of the billing report.
     #: example: IN_PROGRESS
     status: Optional[ReportStatus] = None
-
-
-class BillingReportsListResponse(ApiModel):
-    #: An array of reports objects.
-    items: Optional[list[ListReport]] = None
 
 
 class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):

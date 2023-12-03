@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CDR', 'CDRResponse']
+__auto__ = ['CDR', 'ReportsDetailedCallHistoryApi']
 
 
 class CDR(ApiModel):
@@ -499,10 +499,6 @@ class CDR(ApiModel):
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     #: example: 47f0d0c2-f05a-44cc-870d-7a3daf859c6c
     user_uuid: Optional[str] = Field(alias='User UUID', default=None)
-
-
-class CDRResponse(ApiModel):
-    items: Optional[list[CDR]] = None
 
 
 class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):

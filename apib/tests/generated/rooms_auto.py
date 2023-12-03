@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListRoomsSortBy', 'Room', 'RoomCollectionResponse', 'RoomMeetingDetails', 'RoomType']
+__auto__ = ['ListRoomsSortBy', 'Room', 'RoomMeetingDetails', 'RoomType', 'RoomsApi']
 
 
 class RoomType(str, Enum):
@@ -68,10 +68,6 @@ class Room(ApiModel):
     #: The description of the space.
     #: example: Company Announcements
     description: Optional[str] = None
-
-
-class RoomCollectionResponse(ApiModel):
-    items: Optional[list[Room]] = None
 
 
 class RoomMeetingDetails(ApiModel):

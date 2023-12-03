@@ -11,9 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['DeleteTranscriptObject', 'DownloadAMeetingTranscriptFormat', 'ListMeetingTranscriptsResponse',
-            'ListSnippetsOfAMeetingTranscriptResponse', 'SnippetObject', 'TranscriptObject', 'TranscriptObjectStatus',
-            'UpdateSnippetObject']
+__auto__ = ['DownloadAMeetingTranscriptFormat', 'MeetingTranscriptsApi', 'SnippetObject', 'TranscriptObject',
+            'TranscriptObjectStatus']
 
 
 class TranscriptObjectStatus(str, Enum):
@@ -83,38 +82,9 @@ class SnippetObject(ApiModel):
     duration_millisecond: Optional[int] = None
 
 
-class UpdateSnippetObject(ApiModel):
-    #: Reason for snippet update; only required for Compliance Officers.
-    #: example: audit
-    reason: Optional[str] = None
-    #: Text for the snippet.
-    #: example: Hello everybody
-    text: Optional[str] = None
-
-
-class DeleteTranscriptObject(ApiModel):
-    #: Reason for deleting a transcript. Only required when a Compliance Officer is operating on another user's
-    #: transcript.
-    #: example: audit
-    reason: Optional[str] = None
-    #: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
-    #: example: Maintain data privacy
-    comment: Optional[str] = None
-
-
-class ListMeetingTranscriptsResponse(ApiModel):
-    #: Transcript array.
-    items: Optional[list[TranscriptObject]] = None
-
-
 class DownloadAMeetingTranscriptFormat(str, Enum):
     vtt = 'vtt'
     txt = 'txt'
-
-
-class ListSnippetsOfAMeetingTranscriptResponse(ApiModel):
-    #: Transcript snippet array
-    items: Optional[list[SnippetObject]] = None
 
 
 class MeetingTranscriptsApi(ApiChild, base=''):

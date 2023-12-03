@@ -11,15 +11,13 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetRecordingAuditReportDetailsResponse', 'ListMeetingArchiveSummariesResponse',
-            'ListOfRecordingAuditReportSummariesResponse', 'MeetingRecordingArchiveChat',
-            'MeetingRecordingArchiveParticipant', 'MeetingRecordingArchivePoll',
+__auto__ = ['MeetingRecordingArchiveChat', 'MeetingRecordingArchiveParticipant', 'MeetingRecordingArchivePoll',
             'MeetingRecordingArchivePollAnswerSummary', 'MeetingRecordingArchivePollContent',
             'MeetingRecordingArchivePollQuestion', 'MeetingRecordingArchivePollQuestionQuestion',
             'MeetingRecordingArchivePollRespondent', 'MeetingRecordingArchiveQA', 'MeetingRecordingArchiveQAAnswer',
             'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser', 'RecordingAchriveSummaryObject',
-            'RecordingAchriveSummaryObjectServiceType', 'RecordingArchiveReportObject', 'RecordingReportObject',
-            'RecordingReportSummaryObject', 'SystemInfoCatalog']
+            'RecordingAchriveSummaryObjectServiceType', 'RecordingArchiveReportObject', 'RecordingReportApi',
+            'RecordingReportObject', 'RecordingReportSummaryObject', 'SystemInfoCatalog']
 
 
 class RecordingReportSummaryObject(ApiModel):
@@ -377,21 +375,6 @@ class RecordingArchiveReportObject(ApiModel):
     qas: Optional[list[MeetingRecordingArchiveQA]] = None
     #: The system Information of the meeting archive, which can be only supported when serviceType is `SupportCenter`.
     system_infos: Optional[list[MeetingRecordingArchiveSystemInfo]] = None
-
-
-class ListOfRecordingAuditReportSummariesResponse(ApiModel):
-    #: An array of recording audit report summaries objects.
-    items: Optional[list[RecordingReportSummaryObject]] = None
-
-
-class GetRecordingAuditReportDetailsResponse(ApiModel):
-    #: An array of recording audit report objects.
-    items: Optional[list[RecordingReportObject]] = None
-
-
-class ListMeetingArchiveSummariesResponse(ApiModel):
-    #: An array of meeting archive summaries objects.
-    items: Optional[list[RecordingAchriveSummaryObject]] = None
 
 
 class RecordingReportApi(ApiChild, base='recordingReport'):

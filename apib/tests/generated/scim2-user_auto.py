@@ -13,13 +13,13 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __auto__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse',
             'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedGroupObject',
-            'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUser',
-            'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType', 'PostUser',
+            'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUserOperations',
+            'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType',
             'PostUserUrnietfparamsscimschemasextensionenterprise20User',
             'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager',
-            'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUser', 'PutUserAddresses',
-            'PutUserPhoneNumbers', 'PutUserPhoneNumbersType', 'RoleObject', 'RoleObjectType', 'SearchUserResponse',
-            'SipAddressObject', 'SipAddressObjectType', 'UserTypeObject']
+            'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUserAddresses', 'PutUserPhoneNumbers',
+            'PutUserPhoneNumbersType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
+            'SipAddressObjectType', 'UserTypeObject']
 
 
 class PatchUserOperationsOp(str, Enum):
@@ -38,14 +38,6 @@ class PatchUserOperations(ApiModel):
     #: New value.
     #: example: new displayName value
     value: Optional[str] = None
-
-
-class PatchUser(ApiModel):
-    #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:api:messages:2.0:PatchOp']
-    schemas: Optional[list[str]] = None
-    #: A list of patch operations.
-    operations: Optional[list[PatchUserOperations]] = Field(alias='Operations', default=None)
 
 
 class PostUserUrnietfparamsscimschemasextensionenterprise20UserManager(ApiModel):
@@ -258,136 +250,6 @@ class EmailObject(ApiModel):
     primary: Optional[bool] = None
 
 
-class PostUser(ApiModel):
-    #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
-    schemas: Optional[list[str]] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
-    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
-    #: is required to be unique within Webex.
-    #: example: user1@example.com
-    user_name: Optional[str] = None
-    #: The type of the user.
-    #: example: user
-    user_type: Optional[UserTypeObject] = None
-    #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
-    #: example: Sales manager
-    title: Optional[str] = None
-    #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
-    #: example: True
-    active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
-    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
-    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
-    #: 
-    #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
-    #: example: en_US
-    preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
-    #: Acceptable values for this field are based on the `ISO-696
-    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
-    #: followed by an _ and then the 2 letter country code.  Examples are:
-    #: 
-    #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
-    #: example: en_US
-    locale: Optional[str] = None
-    #: The user's time zone specified in the `IANA timezone
-    #: <https://nodatime.org/timezones>`_ timezone format, for example, "America/Los_Angeles".
-    #: example: America/Los_Angeles
-    timezone: Optional[str] = None
-    #: A fully qualified URL pointing to a page representing the user's online profile.
-    #: example: https://jojowiki.com/Jonathan_Joestar
-    profile_url: Optional[str] = None
-    #: External identity.
-    #: example: externalIdValue
-    external_id: Optional[str] = None
-    #: The value to display or show the user's name in Webex.
-    #: example: Mr. Jonathan Jane Joestar, III
-    display_name: Optional[str] = None
-    #: A casual name of the user.  The value Bob when the user's formal name is Robert.
-    #: example: JoJo
-    nick_name: Optional[str] = None
-    #: The components of the user's real name.
-    name: Optional[NameObject] = None
-    #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phone_numbers: Optional[list[PutUserPhoneNumbers]] = None
-    #: A list of photos for the user that represent a thing the user has.
-    photos: Optional[list[PhotoObject]] = None
-    #: User's physical mailing address.
-    addresses: Optional[list[PutUserAddresses]] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
-    #: address must be the same value as the user's userName.
-    emails: Optional[list[EmailObject]] = None
-    #: SCIM2 enterprise extension
-    urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
-    #: The Cisco extension of SCIM 2.
-    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
-
-
-class PutUser(ApiModel):
-    #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
-    schemas: Optional[list[str]] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
-    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
-    #: is required to b unique within Webex.
-    #: example: user1Changed@example.com
-    user_name: Optional[str] = None
-    #: The type of the user.
-    #: example: user
-    user_type: Optional[UserTypeObject] = None
-    #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
-    #: example: Sales manager
-    title: Optional[str] = None
-    #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
-    #: example: True
-    active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
-    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
-    #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
-    #: 
-    #: en_US : for english spoken in the United States, fr_FR: for french spoken in France.
-    #: example: en_US
-    preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
-    #: Acceptable values for this field are based on the  `ISO-696
-    #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
-    #: followed by an _ and then the 2 letter country code.  Examples are:
-    #: 
-    #: en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
-    #: example: en_US
-    locale: Optional[str] = None
-    #: The user's time zone specified in the `IANA timezone
-    #: <https://nodatime.org/timezones>`_ timezone format. e.g: "America/Los_Angeles".
-    #: example: America/Los_Angeles
-    timezone: Optional[str] = None
-    #: A fully qualified URL pointing to a page representing the user's online profile.
-    #: example: https://jojowiki.com/Jonathan_Joestar
-    profile_url: Optional[str] = None
-    #: External identity.
-    #: example: externalIdNewValue
-    external_id: Optional[str] = None
-    #: The value to display or show the user's name in Webex.
-    #: example: Mr. Jonathan Jane Joestar, III
-    display_name: Optional[str] = None
-    #: A casual name of the user.  The value Bob when the user's formal name is Robert.
-    #: example: JoJo
-    nick_name: Optional[str] = None
-    #: A list of user's phone numbers with an indicator of primary to specify the users main number.
-    phone_numbers: Optional[list[PutUserPhoneNumbers]] = None
-    #: A list of photos for the user that represent a thing the user has.
-    photos: Optional[list[PhotoObject]] = None
-    #: A physical mailing address of user.
-    addresses: Optional[list[PutUserAddresses]] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
-    #: address must be the same value as the user's userName.
-    emails: Optional[list[EmailObject]] = None
-    #: SCIM2 enterprise extention
-    urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
-    #: cisco extention of SCIM 2
-    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
-
-
 class ManagerResponseObject(ApiModel):
     #: Webex Identity assigned user identifier of the user's manager. The manager must be in the same org as the user.
     #: example: b5717a4a-0169-43b2-ac3c-db20ba4e72cd
@@ -488,25 +350,6 @@ class GetUserResponse(ApiModel):
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[GetUserResponseUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
     urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
-
-
-class RoleObjectType(str, Enum):
-    #: Webex Identity roles: "id_full_admin", "id_user_admin", "id_readonly_admin", "id_device_admin".
-    cirole = 'cirole'
-    #: service registered role.
-    servicerole = 'servicerole'
-
-
-class RoleObject(ApiModel):
-    #: The role value.
-    #: example: id_full_admin
-    value: Optional[str] = None
-    #: The type of the role.
-    #: example: cirole
-    type: Optional[RoleObjectType] = None
-    #: A human-readable description, primarily used for display purposes.
-    #: example: role description
-    display: Optional[str] = None
 
 
 class SearchUserResponse(ApiModel):

@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Call', 'CallStatus', 'CallsCollectionResponse']
+__auto__ = ['Call', 'CallStatus', 'CallsApi']
 
 
 class CallStatus(str, Enum):
@@ -43,10 +43,6 @@ class Call(ApiModel):
     #: The date and time when the call was created.
     #: example: 2016-04-21T17:00:00.000Z
     created: Optional[datetime] = None
-
-
-class CallsCollectionResponse(ApiModel):
-    items: Optional[list[Call]] = None
 
 
 class CallsApi(ApiChild, base='calls'):

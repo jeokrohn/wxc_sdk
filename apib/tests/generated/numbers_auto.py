@@ -11,12 +11,11 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdminBatchStartJobObject', 'CountObject', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject',
+__auto__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject',
             'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'ItemObject', 'JobExecutionStatusObject',
-            'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'MoveNumberValidationError',
-            'Number', 'NumberItem', 'NumberListGetObject', 'NumberObject', 'NumberObjectLocation',
-            'NumberObjectOwner', 'NumberState', 'NumbersDelete', 'NumbersPost', 'StartJobResponse', 'State', 'Status',
-            'StepExecutionStatusesObject', 'ValidateNumbersResponse']
+            'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
+            'NumberObjectLocation', 'NumberObjectOwner', 'NumberState', 'NumbersApi', 'StartJobResponse', 'State',
+            'Status', 'StepExecutionStatusesObject', 'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -25,17 +24,6 @@ class NumberItem(ApiModel):
     location_id: Optional[str] = None
     #: Indicates the numbers to be moved from one location to another location.
     numbers: Optional[list[str]] = None
-
-
-class AdminBatchStartJobObject(ApiModel):
-    #: Indicates the kind of operation to be carried out.
-    #: example: MOVE
-    operation: Optional[str] = None
-    #: The target location within organization where the unassigned numbers will be moved from the source location.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA
-    target_location_id: Optional[str] = None
-    #: Indicates the numbers to be moved from source to target locations.
-    number_list: Optional[list[NumberItem]] = None
 
 
 class CountObject(ApiModel):
@@ -74,10 +62,6 @@ class ItemObject(ApiModel):
     #: Unique identifier to track the HTTP requests.
     tracking_id: Optional[str] = None
     error: Optional[ErrorObject] = None
-
-
-class ErrorResponseObject(ApiModel):
-    items: Optional[list[ItemObject]] = None
 
 
 class StepExecutionStatusesObject(ApiModel):
@@ -163,17 +147,6 @@ class StartJobResponse(ApiModel):
     counts: Optional[CountObject] = None
 
 
-class JobListResponse(ApiModel):
-    #: Lists all jobs for the customer in order of most recent one to oldest one irrespective of its status.
-    items: Optional[list[StartJobResponse]] = None
-
-
-class MoveNumberValidationError(ApiModel):
-    #: Unique identifier to track the HTTP requests.
-    tracking_id: Optional[str] = None
-    error: Optional[ErrorObject] = None
-
-
 class NumberState(str, Enum):
     #: Phone number is available.
     available = 'AVAILABLE'
@@ -246,28 +219,11 @@ class NumberObject(ApiModel):
     owner: Optional[NumberObjectOwner] = None
 
 
-class NumberListGetObject(ApiModel):
-    #: Array of phone numbers.
-    phone_numbers: Optional[list[NumberObject]] = None
-
-
-class NumbersDelete(ApiModel):
-    #: List of phone numbers that need to be deleted.
-    phone_numbers: Optional[list[str]] = None
-
-
 class State(str, Enum):
     #: Active state.
     _active_ = 'ACTIVE'
     #: Inactive state
     _inactive_ = 'INACTIVE'
-
-
-class NumbersPost(ApiModel):
-    #: List of phone numbers that need to be added.
-    phone_numbers: Optional[list[str]] = None
-    #: State of the phone numbers.
-    state: Optional[State] = None
 
 
 class Status(str, Enum):
@@ -332,6 +288,7 @@ class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):
     contact_center_link = 'CONTACT_CENTER_LINK'
     route_list = 'ROUTE_LIST'
     voicemail_group = 'VOICEMAIL_GROUP'
+    virtual_line = 'VIRTUAL_LINE'
 
 
 class NumbersApi(ApiChild, base='telephony/config'):

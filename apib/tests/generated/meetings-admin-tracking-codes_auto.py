@@ -11,11 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateOrUpdateTrackingCodeObject', 'GetTrackingCodeForUserObject', 'GetTrackingCodeItemForUserObject',
-            'GetTrackingCodeObject', 'GetTrackingCodeObjectHostProfileCode', 'GetTrackingCodeObjectInputMode',
-            'GetTrackingCodesObject', 'OptionsForTrackingCodeObject', 'ScheduleStartCodeObject',
-            'ScheduleStartCodeObjectService', 'ScheduleStartCodeObjectType', 'UpdateTrackingCodeForUserObject',
-            'UpdateTrackingCodeItemForUserObject']
+__auto__ = ['GetTrackingCodeForUserObject', 'GetTrackingCodeItemForUserObject', 'GetTrackingCodeObject',
+            'GetTrackingCodeObjectHostProfileCode', 'GetTrackingCodeObjectInputMode', 'OptionsForTrackingCodeObject',
+            'ScheduleStartCodeObject', 'ScheduleStartCodeObjectService', 'ScheduleStartCodeObjectType',
+            'TrackingCodesApi', 'UpdateTrackingCodeItemForUserObject']
 
 
 class OptionsForTrackingCodeObject(ApiModel):
@@ -106,31 +105,6 @@ class GetTrackingCodeObject(ApiModel):
     schedule_start_codes: Optional[list[ScheduleStartCodeObject]] = None
 
 
-class GetTrackingCodesObject(ApiModel):
-    #: Tracking codes information.
-    items: Optional[list[GetTrackingCodeObject]] = None
-
-
-class CreateOrUpdateTrackingCodeObject(ApiModel):
-    #: Name for tracking code. The name cannot be empty and the maximum size is 120 characters.
-    #: example: Department
-    name: Optional[str] = None
-    #: Site URL for the tracking code.
-    #: example: example.webex.com
-    site_url: Optional[str] = None
-    #: Tracking code option list. The maximum size of `options` is 500.
-    options: Optional[list[OptionsForTrackingCodeObject]] = None
-    #: Select an option for how users can provide a code value. Please note that if users set `inputMode` as
-    #: `hostProfileSelect`, `scheduleStartCode` should be `null`, which means `hostProfileSelect` only applies to
-    #: "Host Profile".
-    input_mode: Optional[GetTrackingCodeObjectInputMode] = None
-    #: Type for the host profile.
-    host_profile_code: Optional[GetTrackingCodeObjectHostProfileCode] = None
-    #: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The
-    #: maximum size of `scheduleStartCodes` is 5.
-    schedule_start_codes: Optional[list[ScheduleStartCodeObject]] = None
-
-
 class GetTrackingCodeItemForUserObject(ApiModel):
     #: Unique identifier for tracking code.
     #: example: 1
@@ -162,22 +136,6 @@ class UpdateTrackingCodeItemForUserObject(ApiModel):
     name: Optional[str] = None
     #: Value for tracking code. `value` cannot be empty and the maximum size is 120 characters.
     value: Optional[str] = None
-
-
-class UpdateTrackingCodeForUserObject(ApiModel):
-    #: Site URL for the tracking code.
-    #: example: example.webex.com
-    site_url: Optional[str] = None
-    #: Unique identifier for the user. At least one parameter of `personId` or `email` is required. `personId` must
-    #: precede `email` if both are specified.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xOGJiOWNjMC0zMWM2LTQ3MzYtYmE4OC0wMDk5ZmQzNDNmODE
-    person_id: Optional[str] = None
-    #: Email address for the user. At least one parameter of `personId` or `email` is required. `personId` must precede
-    #: `email` if both are specified.
-    #: example: john.andersen@example.com
-    email: Optional[str] = None
-    #: Tracking code information for updates.
-    tracking_codes: Optional[list[UpdateTrackingCodeItemForUserObject]] = None
 
 
 class TrackingCodesApi(ApiChild, base='admin/meeting'):

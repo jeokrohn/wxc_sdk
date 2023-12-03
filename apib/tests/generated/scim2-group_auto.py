@@ -15,9 +15,10 @@ __auto__ = ['GetGroupResponse', 'GetGroupResponseMembers',
             'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group',
             'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GroupMemberObject',
             'GroupMemberResponse', 'GroupMemberResponseMembers', 'ManagedByObject', 'MetaObject',
-            'MetaObjectResourceType', 'PatchGroup', 'PatchGroupOperations', 'PatchGroupOperationsOp', 'PostGroup',
+            'MetaObjectResourceType', 'PatchGroupOperations', 'PatchGroupOperationsOp',
             'PostGroupUrnscimschemasextensionciscowebexidentity20Group',
-            'PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners', 'SearchGroupResponse']
+            'PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners', 'SCIM2GroupsApi',
+            'SearchGroupResponse']
 
 
 class PatchGroupOperationsOp(str, Enum):
@@ -36,14 +37,6 @@ class PatchGroupOperations(ApiModel):
     #: New value.
     #: example: new attribute value
     value: Optional[str] = None
-
-
-class PatchGroup(ApiModel):
-    #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:api:messages:2.0:PatchOp']
-    schemas: Optional[list[str]] = None
-    #: A list of patch operations.
-    operations: Optional[list[PatchGroupOperations]] = Field(alias='Operations', default=None)
 
 
 class PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners(ApiModel):
@@ -84,22 +77,6 @@ class GroupMemberObject(ApiModel):
     #: A label indicating the type of resource, for example user, machine, or group.
     #: example: user
     type: Optional[str] = None
-
-
-class PostGroup(ApiModel):
-    #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:schemas:core:2.0:Group', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:Group']
-    schemas: Optional[list[str]] = None
-    #: A human-readable name for the Group.
-    #: example: group1@example.com
-    display_name: Optional[str] = None
-    #: An identifier for the resource as defined by the provisioning client.
-    #: example: test
-    external_id: Optional[str] = None
-    #: A list of members of this group.
-    members: Optional[list[GroupMemberObject]] = None
-    #: The Cisco extension of SCIM 2.
-    urn_scim_schemas_extension_cisco_webexidentity_2_0_group: Optional[PostGroupUrnscimschemasextensionciscowebexidentity20Group] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
 
 
 class GetGroupResponseMembers(ApiModel):

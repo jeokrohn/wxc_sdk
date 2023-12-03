@@ -11,13 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['WorkspacePersonalizationRequest', 'WorkspacePersonalizationTaskResponse']
-
-
-class WorkspacePersonalizationRequest(ApiModel):
-    #: The user that the device will become personalised for.
-    #: example: julie@example.com
-    email: Optional[str] = None
+__auto__ = ['WorkspacePersonalizationApi', 'WorkspacePersonalizationTaskResponse']
 
 
 class WorkspacePersonalizationTaskResponse(ApiModel):

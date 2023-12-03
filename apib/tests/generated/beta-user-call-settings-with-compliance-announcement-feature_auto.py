@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallRecordingInfo', 'CallRecordingInfoNotification', 'CallRecordingInfoNotificationType',
-            'CallRecordingInfoRecord', 'CallRecordingInfoRepeat', 'CallRecordingInfoStartStopAnnouncement',
-            'CallRecordingPut']
+__auto__ = ['BetaUserCallSettingsWithComplianceAnnouncementFeatureApi', 'CallRecordingInfo',
+            'CallRecordingInfoNotification', 'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord',
+            'CallRecordingInfoRepeat', 'CallRecordingInfoStartStopAnnouncement']
 
 
 class CallRecordingInfoRecord(str, Enum):
@@ -88,26 +88,6 @@ class CallRecordingInfo(ApiModel):
     #: Unique person identifier utilized by the service provider providing call recording service.
     #: example: a34iidrh5o@64941297.int10.bcld.webex.com
     external_identifier: Optional[str] = None
-    #: Call Recording starts and stops announcement settings.
-    start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
-
-
-class CallRecordingPut(ApiModel):
-    #: `true` if call recording is enabled.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Call recording scenario.
-    #: example: Never
-    record: Optional[CallRecordingInfoRecord] = None
-    #: When `true`, voicemail messages are also recorded.
-    record_voicemail_enabled: Optional[bool] = None
-    #: When enabled, an announcement is played when call recording starts and an announcement is played when call
-    #: recording ends.
-    start_stop_announcement_enabled: Optional[bool] = None
-    #: Pause/resume notification settings.
-    notification: Optional[CallRecordingInfoNotification] = None
-    #: Beep sound plays periodically.
-    repeat: Optional[CallRecordingInfoRepeat] = None
     #: Call Recording starts and stops announcement settings.
     start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
 

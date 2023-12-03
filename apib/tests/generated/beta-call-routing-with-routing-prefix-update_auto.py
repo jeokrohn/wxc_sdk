@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BatchJobError', 'BatchResponse', 'Counts', 'Error', 'ErrorMessage', 'JobExecutionStatus',
-            'StepExecutionStatuses']
+__auto__ = ['BatchJobError', 'BatchResponse', 'BetaCallRoutingWithRoutingPrefixUpdateApi', 'Counts', 'Error',
+            'ErrorMessage', 'JobExecutionStatus', 'StepExecutionStatuses']
 
 
 class StepExecutionStatuses(ApiModel):

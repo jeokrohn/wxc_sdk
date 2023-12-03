@@ -11,11 +11,11 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'GetAutoAttendantObject',
+__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern',
+            'BetaFeaturesAutoAttendantWithDepartmentFeaturesApi', 'GetAutoAttendantObject',
             'GetAutoAttendantObjectDepartment', 'GetAutoAttendantObjectExtensionDialing', 'HoursMenuObject',
             'HoursMenuObjectGreeting', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction',
-            'KeyConfigurationsObjectKey', 'ListAutoAttendantObject', 'ListAutoAttendantObjectDepartment',
-            'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
+            'KeyConfigurationsObjectKey', 'ListAutoAttendantObject', 'ListAutoAttendantObjectDepartment']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -193,55 +193,6 @@ class ListAutoAttendantObject(ApiModel):
     toll_free_number: Optional[bool] = None
     #: Specifies the department information.
     department: Optional[ListAutoAttendantObjectDepartment] = None
-
-
-class ModifyAutoAttendantObject(ApiModel):
-    #: Unique name for the auto attendant.
-    #: example: Main Line IA - Test
-    name: Optional[str] = None
-    #: Auto attendant phone number. Either phone number or extension should be present as mandatory.
-    #: example: +19705550028
-    phone_number: Optional[str] = None
-    #: Auto attendant extension. Either phone number or extension should be present as mandatory.
-    #: example: 1001
-    extension: Optional[str] = None
-    #: First name defined for an auto attendant.
-    #: example: Main Line AA
-    first_name: Optional[str] = None
-    #: Last name defined for an auto attendant.
-    #: example: Test
-    last_name: Optional[str] = None
-    #: Alternate numbers defined for the auto attendant.
-    alternate_numbers: Optional[list[AlternateNumbersObject]] = None
-    #: Language code for the auto attendant.
-    #: example: en_us
-    language_code: Optional[str] = None
-    #: Business hours for the auto attendant.
-    #: example: Peak Season Hours
-    business_schedule: Optional[str] = None
-    #: Holiday schedule for the auto attendant.
-    #: example: Corporate Holidays
-    holiday_schedule: Optional[str] = None
-    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
-    #: example: ENTERPRISE
-    extension_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
-    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
-    #: example: ENTERPRISE
-    name_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
-    #: Time zone defined for the auto attendant.
-    #: example: America/Los_Angeles
-    time_zone: Optional[str] = None
-    #: Business hours menu defined for the auto attendant.
-    business_hours_menu: Optional[HoursMenuObject] = None
-    #: After hours menu defined for the auto attendant.
-    after_hours_menu: Optional[HoursMenuObject] = None
-    #: Specifies the department information.
-    department: Optional[GetAutoAttendantObjectDepartment] = None
-
-
-class ReadTheListOfAutoAttendantsResponse(ApiModel):
-    #: Array of auto attendants.
-    auto_attendants: Optional[list[ListAutoAttendantObject]] = None
 
 
 class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):

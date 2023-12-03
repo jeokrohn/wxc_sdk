@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GroupResponse', 'GroupsCollectionResponse', 'Member', 'PatchGroup', 'PatchMemberWithOperation',
-            'PostGroup', 'PostMember']
+__auto__ = ['GroupResponse', 'GroupsApi', 'GroupsCollectionResponse', 'Member', 'PatchMemberWithOperation',
+            'PostMember']
 
 
 class Member(ApiModel):
@@ -39,34 +39,6 @@ class PatchMemberWithOperation(ApiModel):
     #: Operation type. The default operation is `add` if no operation is specified.
     #: example: add
     operation: Optional[str] = None
-
-
-class PostGroup(ApiModel):
-    #: The name of the group.
-    #: example: Sales Group
-    display_name: Optional[str] = None
-    #: The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth
-    #: token is used.
-    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNDhhZGI4MS0yOGY5LTRhYjUtYjJkNi1lOWI0OTRlNzJhMDY
-    org_id: Optional[str] = None
-    #: Description of the group.
-    #: example: Salas Group in San Jose
-    description: Optional[str] = None
-    #: An array of members. Maximum of 500 members can be provided. To add more members, use the `Update a Group
-    #: <https://developer.webex.com/docs/api/v1/groups/update-a-group>`_ API to
-    #: add additional members.
-    members: Optional[list[PostMember]] = None
-
-
-class PatchGroup(ApiModel):
-    #: The name of the group.
-    #: example: New Sales Group
-    display_name: Optional[str] = None
-    #: Description of the group.
-    #: example: Sales Group in LA
-    description: Optional[str] = None
-    #: An array of members operations.
-    members: Optional[list[PatchMemberWithOperation]] = None
 
 
 class GroupResponse(ApiModel):

@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetAvailableAgentsFromCallParksResponse', 'GetCallParkExtensionObject', 'GetCallParkObject',
+__auto__ = ['BetaFeaturesCallParkWithESNFeatureApi', 'GetCallParkExtensionObject', 'GetCallParkObject',
             'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType',
             'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject',
-            'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject', 'ReadTheListOfCallParkExtensionsResponse']
+            'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject']
 
 
 class GetCallParkExtensionObject(ApiModel):
@@ -160,16 +160,6 @@ class ListCallParkExtensionObject(ApiModel):
     #: Name of location for call park extension.
     #: example: WXCSIVDKCPAPIC4S1
     location_name: Optional[str] = None
-
-
-class GetAvailableAgentsFromCallParksResponse(ApiModel):
-    #: Array of agents.
-    agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]] = None
-
-
-class ReadTheListOfCallParkExtensionsResponse(ApiModel):
-    #: Array of call park extensions.
-    call_park_extensions: Optional[list[ListCallParkExtensionObject]] = None
 
 
 class BetaFeaturesCallParkWithESNFeatureApi(ApiChild, base='telephony/config'):

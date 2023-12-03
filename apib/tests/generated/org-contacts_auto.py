@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BulkCreate', 'BulkCreateContacts', 'BulkDelete', 'Contact', 'ContactEmails', 'ContactEmailsType',
-            'ContactIms', 'ContactImsType', 'ContactPhoneNumbers', 'ContactPhoneNumbersType',
-            'ContactPrimaryContactMethod', 'ContactResponse', 'ContactSipAddresses', 'ContactSipAddressesType',
-            'ContactSource', 'Meta', 'SearchResponse']
+__auto__ = ['BulkCreateContacts', 'ContactEmails', 'ContactEmailsType', 'ContactIms', 'ContactImsType',
+            'ContactPhoneNumbers', 'ContactPhoneNumbersType', 'ContactPrimaryContactMethod', 'ContactResponse',
+            'ContactSipAddresses', 'ContactSipAddressesType', 'ContactSource', 'Meta', 'OrganizationContactsApi',
+            'SearchResponse']
 
 
 class ContactPrimaryContactMethod(str, Enum):
@@ -118,47 +118,6 @@ class ContactIms(ApiModel):
     primary: Optional[bool] = None
 
 
-class Contact(ApiModel):
-    #: "urn:cisco:codev:identity:contact:core:1.0".
-    #: example: urn:cisco:codev:identity:contact:core:1.0
-    schemas: Optional[str] = None
-    #: The full name of the contact.
-    #: example: John Andersen
-    display_name: Optional[str] = None
-    #: The first name of the contact.
-    #: example: John
-    first_name: Optional[str] = None
-    #: The last name of the contact.
-    #: example: Andersen
-    last_name: Optional[str] = None
-    #: The company the contact is working for.
-    #: example: Cisco Systems
-    company_name: Optional[str] = None
-    #: The contact's title.
-    #: example: GM
-    title: Optional[str] = None
-    #: Contact's address.
-    #: example: {\"city\" : \"Milpitas\", \"country\" : \"US\", \"street\" : \"1099 Bird Ave.\", \"zipCode\" : \"99212\"}
-    address: Optional[str] = None
-    #: The URL to the person's avatar in PNG format.
-    #: example: https://avatar-prod-us-east-2.webexcontent.com/default_avatar~1600
-    avatar_url: Optional[str] = Field(alias='avatarURL', default=None)
-    #: The contact's primary contact method.
-    #: example: SIPADDRESS
-    primary_contact_method: Optional[ContactPrimaryContactMethod] = None
-    #: Where the data come from.
-    #: example: Webex4Broadworks
-    source: Optional[ContactSource] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.
-    emails: Optional[list[ContactEmails]] = None
-    #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phone_numbers: Optional[list[ContactPhoneNumbers]] = None
-    #: The sipAddress values for the user.
-    sip_addresses: Optional[list[ContactSipAddresses]] = None
-    #: Instant messaging addresses for the user.
-    ims: Optional[list[ContactIms]] = None
-
-
 class BulkCreateContacts(ApiModel):
     #: The full name of the contact.
     #: example: John Andersen
@@ -195,23 +154,6 @@ class BulkCreateContacts(ApiModel):
     sip_addresses: Optional[list[ContactSipAddresses]] = None
     #: Instant messaging addresses for the user.
     ims: Optional[list[ContactIms]] = None
-
-
-class BulkCreate(ApiModel):
-    #: "urn:cisco:codev:identity:contact:core:1.0".
-    #: example: urn:cisco:codev:identity:contact:core:1.0
-    schemas: Optional[str] = None
-    #: Contains a list of contacts to be created/updated.
-    contacts: Optional[list[BulkCreateContacts]] = None
-
-
-class BulkDelete(ApiModel):
-    #: "urn:cisco:codev:identity:contact:core:1.0".
-    #: example: urn:cisco:codev:identity:contact:core:1.0
-    schemas: Optional[str] = None
-    #: List of UUIDs for the contacts.
-    #: example: ['8a5fac49-2c5f-4773-aec7-02db0e3a9d72']
-    object_ids: Optional[list[str]] = None
 
 
 class Meta(ApiModel):

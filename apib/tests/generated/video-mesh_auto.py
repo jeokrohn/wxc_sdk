@@ -12,33 +12,29 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['BandwidthTest', 'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BulkUpdateEventThresholdResponse',
-            'ClientTypeDistributionTrend1', 'ClienttypedistributionCollectionforOrg', 'ClienttypedistributionforOrg',
-            'CloudOverflowTrend1', 'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline',
-            'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterDetails',
+            'ClientTypeDistributionTrend1', 'ClienttypedistributionCollectionforOrg', 'CloudOverflowTrend1',
+            'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline',
+            'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a',
             'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a',
             'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ',
-            'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization',
-            'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode',
-            'ConnectivityTestResultsObject', 'EventThresholdBody', 'EventThresholdBodyEventName', 'FailureDetails3',
-            'GetEntityThresholdConfig1', 'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName',
+            'ClusterUtilizationTrend1', 'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode',
+            'ConnectivityTestResultsObject', 'FailureDetails3', 'GetEntityThresholdConfig1',
+            'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName',
             'ListEventThresholdConfigurationEventScope', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType',
-            'MediaHealthMonitoringResultsCollectionfororganization', 'MediaHealthMonitoringResultsforOrganization',
-            'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringTestResultsSuccess',
+            'MediaHealthMonitoringResultsCollectionfororganization', 'MediaHealthMonitoringTestResultsFailure',
             'MediaHealthMonitoringclusters', 'MediaHealthMonitoringforfirstcluster',
-            'MediaHealthMonitoringsecondnode', 'MediaSignallingtestResultFailure', 'MediaSignallingtestResultSuccess',
-            'NodeAvailability', 'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1',
-            'NodeStatusList1Status', 'NodesAvailability', 'OverflowDetails1', 'OverflowtoCloud',
-            'OverflowtoCloudCollection', 'PerClusterConnectivityResult1', 'PerNodeConnectivityResult1',
-            'ReachabilityTestResults', 'ReachabilityTestResultsforcluster', 'ReachabilityTestResultsforfirstcluster',
-            'ReachabilityTestresultsStunresults1', 'ReachabilityTestresultsSuccess',
-            'ReachabilityTestresultsdestinationcluster', 'ReachabilityTestresultsfirstnode',
-            'ReachabilityTestresultsfororganization', 'RedirectCollectionForOrg', 'RedirectTrend1', 'RedirectforOrg',
-            'ServiceTypeResult2', 'ServiceTypeResult4', 'SingleNodeAvailability', 'SingleNodeAvailability1',
-            'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'TriggerOnDemandBody',
-            'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggeredTestResult', 'TriggeredTestStatus1',
+            'MediaHealthMonitoringsecondnode', 'MediaSignallingtestResultFailure', 'NodeAvailability',
+            'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status',
+            'OverflowDetails1', 'OverflowtoCloudCollection', 'PerClusterConnectivityResult1',
+            'PerNodeConnectivityResult1', 'ReachabilityTestResultsforcluster',
+            'ReachabilityTestResultsforfirstcluster', 'ReachabilityTestresultsStunresults1',
+            'ReachabilityTestresultsSuccess', 'ReachabilityTestresultsdestinationcluster',
+            'ReachabilityTestresultsfirstnode', 'ReachabilityTestresultsfororganization', 'RedirectCollectionForOrg',
+            'RedirectTrend1', 'ServiceTypeResult4', 'SingleNodeAvailability1', 'SingleNodeAvailabilityCollection',
+            'SingleNodeAvailableTimeline', 'TriggerOnDemandBodyType', 'TriggeredTestResult', 'TriggeredTestStatus1',
             'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds',
             'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UtilizationMetricsT1SJ',
-            'WebSocketConnectivityTest']
+            'VideoMeshApi']
 
 
 class ClusterAvailableTimeline(ApiModel):
@@ -84,10 +80,6 @@ class ClusterAvailabilityCollection(ApiModel):
     #: End date and time (inclusive) of the availability data.
     #: example: 2021-09-15T17:53:00Z
     to_: Optional[datetime] = None
-
-
-class ClustersAvailability(ApiModel):
-    items: Optional[list[ClusterAvailabilityCollection]] = None
 
 
 class NodeAvailableTimeline(ApiModel):
@@ -143,10 +135,6 @@ class NodeAvailabilityCollection(ApiModel):
     to_: Optional[datetime] = None
 
 
-class NodesAvailability(ApiModel):
-    items: Optional[list[NodeAvailabilityCollection]] = None
-
-
 class SingleNodeAvailableTimeline(ApiModel):
     #: Start date and time of the segment of availability data.
     #: example: 2021-09-15T15:53:00Z
@@ -190,10 +178,6 @@ class SingleNodeAvailabilityCollection(ApiModel):
     #: End date and time (inclusive) of the availability data.
     #: example: 2021-09-15T17:53:00Z
     to_: Optional[datetime] = None
-
-
-class SingleNodeAvailability(ApiModel):
-    items: Optional[list[SingleNodeAvailabilityCollection]] = None
 
 
 class MediaSignallingtestResultFailure(ApiModel):
@@ -260,30 +244,6 @@ class MediaHealthMonitoringResultsCollectionfororganization(ApiModel):
     items: Optional[list[MediaHealthMonitoringclusters]] = None
 
 
-class MediaHealthMonitoringResultsforOrganization(ApiModel):
-    items: Optional[list[MediaHealthMonitoringResultsCollectionfororganization]] = None
-
-
-class MediaSignallingtestResultSuccess(ApiModel):
-    #: The name of the test.
-    #: example: Media Signalling
-    test_name: Optional[str] = None
-    #: The result, either `Success` or `Failed`.
-    #: example: Success
-    test_result: Optional[str] = None
-
-
-class MediaHealthMonitoringTestResultsSuccess(ApiModel):
-    #: The timestamp of the test run.
-    #: example: 2022-03-15T15:53:00Z
-    timestamp: Optional[datetime] = None
-    #: Unique ID of the test.
-    #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT01NQU5EX0lELzJjM2M5ZjllLTczZDktNDQ2MC1hNjY4LTA0NzE2MmZmMWJhYzo2NTJmNmMxMC01NjgxLTExZWQtOTkyZS1kNTY5YzlkMDlhNzU
-    id: Optional[str] = None
-    #: Test results of Media Signalling, SIP Signalling, Media Cascade runs.
-    test_results: Optional[list[MediaSignallingtestResultSuccess]] = None
-
-
 class OverflowDetails1(ApiModel):
     #: The reason for this overflow.
     #: example: Capacity exceeded
@@ -319,10 +279,6 @@ class OverflowtoCloudCollection(ApiModel):
     aggregation_interval: Optional[datetime] = None
     #: Overflow data for the organization.
     items: Optional[list[CloudOverflowTrend1]] = None
-
-
-class OverflowtoCloud(ApiModel):
-    items: Optional[list[OverflowtoCloudCollection]] = None
 
 
 class ClusterRedirectDetailsBlr1a(ApiModel):
@@ -370,10 +326,6 @@ class RedirectCollectionForOrg(ApiModel):
     aggregation_interval: Optional[datetime] = None
     #: Redirect details for the organization.
     items: Optional[list[RedirectTrend1]] = None
-
-
-class RedirectforOrg(ApiModel):
-    items: Optional[list[RedirectCollectionForOrg]] = None
 
 
 class UtilizationMetricsT1SJ(ApiModel):
@@ -424,10 +376,6 @@ class ClusterUtilizationCollection(ApiModel):
     to_: Optional[datetime] = None
     #: Utilization details of the Video Mesh cluster
     items: Optional[list[ClusterUtilizationTrend1]] = None
-
-
-class ClustersUtilization(ApiModel):
-    items: Optional[list[ClusterUtilizationCollection]] = None
 
 
 class ReachabilityTestresultsSuccess(ApiModel):
@@ -507,10 +455,6 @@ class ReachabilityTestresultsfororganization(ApiModel):
     items: Optional[list[ReachabilityTestResultsforcluster]] = None
 
 
-class ReachabilityTestResults(ApiModel):
-    items: Optional[list[ReachabilityTestresultsfororganization]] = None
-
-
 class BlrNodeLocation(ApiModel):
     #: Country code of the Location where the Video Mesh node is deployed.
     #: example: IN
@@ -579,10 +523,6 @@ class ClusterDetailsCollection(ApiModel):
     items: Optional[list[BlrClusterDetails]] = None
 
 
-class ClusterDetails(ApiModel):
-    items: Optional[list[ClusterDetailsCollection]] = None
-
-
 class TriggeredTestResult(ApiModel):
     #: Test type of the command ID.
     #: example: MediaHealthMonitorTest
@@ -633,21 +573,6 @@ class TriggerOnDemandBodyType(str, Enum):
     network_test = 'NetworkTest'
     #: Used to test the meetings and call health of Video Mesh nodes using signalling and cascading methods.
     media_health_monitor_test = 'MediaHealthMonitorTest'
-
-
-class TriggerOnDemandBody(ApiModel):
-    #: Test type to trigger on node.
-    #: example: ReachabilityTest
-    type: Optional[TriggerOnDemandBodyType] = None
-
-
-class TriggerOnDemandBodyCluster(ApiModel):
-    #: Test type to trigger on node.
-    #: example: ReachabilityTest
-    type: Optional[TriggerOnDemandBodyType] = None
-    #: List of nodes to test.
-    #: example: ['Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT05ORUNUT1IvMmMzYzlmOWUtNzNkOS00NDYwLWE2NjgtMDQ3MTYyZmYxYmFjOjE1NmRmNzg5Yzg1NTRkNTVhMjc1ZGU5OTc4Zjk5MDJk', 'Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DT05ORUNUT1IvMmMzYzlmOWUtNzNkOS00NDYwLWE2NjgtMDQ3MTYyZmYxYmFjOjE1NmRmNzg5Yzg1NTRhYmNhZGVmZ2U5OTc4Zjk5MDJk']
-    nodes: Optional[list[str]] = None
 
 
 class FailureDetails3(ApiModel):
@@ -729,23 +654,6 @@ class ConnectivityTestResultsObject(ApiModel):
     items: Optional[list[ConnectivityTestResultsClustersObject1]] = None
 
 
-class ServiceTypeResult2(ApiModel):
-    #: Service for which the test was executed.
-    #: example: ThirdPartyCloud
-    service_type: Optional[str] = None
-    #: Result of the test executed.
-    #: example: Success
-    test_result: Optional[str] = None
-
-
-class WebSocketConnectivityTest(ApiModel):
-    #: The type of test result.
-    #: example: WebSocketConnectivityTest
-    type: Optional[str] = None
-    #: Test Results from different services.
-    results: Optional[list[ServiceTypeResult2]] = None
-
-
 class ClusterClientTypeDistributionDetailsBlr1a(ApiModel):
     #: The type of device.
     #: example: sipEndpoint
@@ -793,10 +701,6 @@ class ClienttypedistributionCollectionforOrg(ApiModel):
     items: Optional[list[ClientTypeDistributionTrend1]] = None
 
 
-class ClienttypedistributionforOrg(ApiModel):
-    items: Optional[list[ClienttypedistributionCollectionforOrg]] = None
-
-
 class UpdateEventThresholdConfig1(ApiModel):
     #: Threshold value (in percentage) to trigger an event.
     #: example: 40
@@ -839,19 +743,6 @@ class BulkUpdateEventThresholdResponse(ApiModel):
     #: List of failed or invalid event threshold IDs.
     #: example: ['Y2lzY29zcGFyazovL3VzL0VWRU5ULzQyN2U5ZTk2LTczYTctNDYwYS04MGZhLTcyNWU4MWE2MDg3ZjowM2ZkYjkzZC1jNTllLTQzMjQtODIwNS1lNDIyYzA3NGQ5Mzg']
     failed_event_threshold_ids: Optional[list[str]] = None
-
-
-class EventThresholdBodyEventName(str, Enum):
-    #: Event name for cluster call redirects.
-    cluster_calls_redirected = 'clusterCallsRedirected'
-    #: Event name for organization call overflows.
-    org_calls_overflowed = 'orgCallsOverflowed'
-    none_ = 'none'
-
-
-class EventThresholdBody(ApiModel):
-    #: The name of the event corresponding to the `entitiyId`.
-    event_name: Optional[EventThresholdBodyEventName] = None
 
 
 class ListMediaHealthMonitoringToolTestResultsV2TriggerType(str, Enum):

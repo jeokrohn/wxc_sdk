@@ -11,10 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateACallPickupResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetCallPickupObject',
-            'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObjectType',
-            'GetUserNumberItemObject', 'ListCallPickupObject', 'ModifyCallPickupObject',
-            'ReadTheListOfCallPickupsResponse']
+__auto__ = ['FeaturesCallPickupApi', 'GetCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject',
+            'GetPersonPlaceVirtualLineCallPickupObjectType', 'GetUserNumberItemObject', 'ListCallPickupObject']
 
 
 class GetPersonPlaceVirtualLineCallPickupObjectType(str, Enum):
@@ -85,29 +83,6 @@ class ListCallPickupObject(ApiModel):
     #: ID of the location for call pickup.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
     location_id: Optional[str] = None
-
-
-class ModifyCallPickupObject(ApiModel):
-    #: Unique name for the call pickup. The maximum length is 80.
-    #: example: North Alaska-Group
-    name: Optional[str] = None
-    #: An array of people, workspace, and virtual lines IDs, that are added to call pickup.
-    agents: Optional[list[str]] = None
-
-
-class ReadTheListOfCallPickupsResponse(ApiModel):
-    #: Array of call pickups.
-    call_pickups: Optional[list[ListCallPickupObject]] = None
-
-
-class CreateACallPickupResponse(ApiModel):
-    #: ID of the newly created call pickup.
-    id: Optional[str] = None
-
-
-class GetAvailableAgentsFromCallPickupsResponse(ApiModel):
-    #: Array of agents.
-    agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject]] = None
 
 
 class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{locationId}/callPickups'):

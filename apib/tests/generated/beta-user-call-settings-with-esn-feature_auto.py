@@ -11,13 +11,13 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AgentAvaliableCallQueueIdList', 'AgentCallQueueId', 'AvailableSharedLineMemberItem',
-            'AvailableSharedLineMemberList', 'CallQueueObject', 'GetMonitoredElementsObject',
-            'GetMonitoredElementsObjectCallparkextension', 'GetMonitoredElementsObjectMember', 'GetNumbers',
-            'GetNumbersPhoneNumbers', 'GetNumbersPhoneNumbersRingPattern', 'GetSharedLineMemberItem',
-            'GetSharedLineMemberList', 'LineType', 'Location', 'MonitoredMemberObject', 'MonitoredNumberObject',
-            'MonitoringSettings', 'PeopleOrPlaceOrVirtualLineType', 'PrivacyGet', 'PushToTalkAccessType',
-            'PushToTalkConnectionType', 'PushToTalkInfo', 'ReceptionInfo', 'UserType']
+__auto__ = ['AgentCallQueueId', 'AvailableSharedLineMemberItem', 'BetaUserCallSettingsWithESNFeatureApi',
+            'CallQueueObject', 'GetMonitoredElementsObject', 'GetMonitoredElementsObjectCallparkextension',
+            'GetMonitoredElementsObjectMember', 'GetNumbers', 'GetNumbersPhoneNumbers',
+            'GetNumbersPhoneNumbersRingPattern', 'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'LineType',
+            'Location', 'MonitoredMemberObject', 'MonitoredNumberObject', 'MonitoringSettings',
+            'PeopleOrPlaceOrVirtualLineType', 'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType',
+            'PushToTalkInfo', 'ReceptionInfo', 'UserType']
 
 
 class CallQueueObject(ApiModel):
@@ -39,13 +39,6 @@ class CallQueueObject(ApiModel):
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348100
     esn: Optional[str] = None
-
-
-class AgentAvaliableCallQueueIdList(ApiModel):
-    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for
-    #: outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number
-    #: setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
-    available_queues: Optional[list[CallQueueObject]] = None
 
 
 class AgentCallQueueId(ApiModel):
@@ -102,10 +95,6 @@ class AvailableSharedLineMemberItem(ApiModel):
     line_type: Optional[LineType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
-
-
-class AvailableSharedLineMemberList(ApiModel):
-    members: Optional[list[AvailableSharedLineMemberItem]] = None
 
 
 class UserType(str, Enum):

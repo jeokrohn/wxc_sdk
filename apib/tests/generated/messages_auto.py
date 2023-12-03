@@ -11,9 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'Attachment', 'DirectMessage',
-            'DirectMessageCollectionResponse', 'ListMessage', 'ListMessageCollectionResponse', 'Message',
-            'MessageCollectionResponse', 'MessageRoomType']
+__auto__ = ['AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'Attachment', 'DirectMessage', 'ListMessage',
+            'Message', 'MessageRoomType', 'MessagesApi']
 
 
 class MessageRoomType(str, Enum):
@@ -225,18 +224,6 @@ class DirectMessage(ApiModel):
     #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file
     #: not posted using the voice clip feature.
     is_voice_clip: Optional[bool] = None
-
-
-class MessageCollectionResponse(ApiModel):
-    items: Optional[list[Message]] = None
-
-
-class ListMessageCollectionResponse(ApiModel):
-    items: Optional[list[ListMessage]] = None
-
-
-class DirectMessageCollectionResponse(ApiModel):
-    items: Optional[list[DirectMessage]] = None
 
 
 class MessagesApi(ApiChild, base='messages'):

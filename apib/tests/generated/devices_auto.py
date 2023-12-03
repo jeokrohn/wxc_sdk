@@ -11,9 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActivationCode', 'Device', 'DeviceCapabilities', 'DeviceCollectionResponse', 'DeviceConnectionStatus',
-            'DevicePermissions', 'ListDevicesProduct', 'ListDevicesType', 'ManagedBy', 'ModifyDeviceTagsOp',
-            'NetworkConnectivityType']
+__auto__ = ['ActivationCode', 'Device', 'DeviceCapabilities', 'DeviceConnectionStatus', 'DevicesApi',
+            'ListDevicesProduct', 'ListDevicesType', 'ManagedBy', 'ModifyDeviceTagsOp', 'NetworkConnectivityType']
 
 
 class ActivationCode(ApiModel):
@@ -124,15 +123,6 @@ class Device(ApiModel):
     #: Entity managing the device configuration.
     #: example: CISCO
     managed_by: Optional[ManagedBy] = None
-
-
-class DeviceCollectionResponse(ApiModel):
-    items: Optional[list[Device]] = None
-
-
-class DevicePermissions(str, Enum):
-    xapi_readonly = 'xapi:readonly'
-    xapi_all = 'xapi:all'
 
 
 class DeviceCapabilities(str, Enum):

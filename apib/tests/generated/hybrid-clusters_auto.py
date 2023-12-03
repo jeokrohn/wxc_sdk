@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Cluster', 'ClusterCollection']
+__auto__ = ['Cluster', 'HybridClustersApi']
 
 
 class Cluster(ApiModel):
@@ -27,11 +27,6 @@ class Cluster(ApiModel):
     #: The ID of the resource group this cluster belongs to.
     #: example: Y2lzY29zcGFyazovL3
     resource_group_id: Optional[str] = None
-
-
-class ClusterCollection(ApiModel):
-    #: An array of hybrid cluster objects.
-    items: Optional[list[Cluster]] = None
 
 
 class HybridClustersApi(ApiChild, base='hybrid/clusters'):

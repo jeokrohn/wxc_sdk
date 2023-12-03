@@ -11,10 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CatalogListResponse', 'CatalogResponse', 'CatalogResponseAvailability', 'DistributorDetailsResponse',
-            'DistributorDetailsResponseCapabilities', 'DistributorListResponse', 'DistributorResponse',
-            'OrderListResponse', 'OrderRequest', 'OrderRequestLineItem', 'OrderResponse', 'OrderResponseLineItem',
-            'OrderShippingDetails', 'Person']
+__auto__ = ['BetaWholesaleDeviceFulfillmentWithDistributorsApi', 'CatalogResponse', 'CatalogResponseAvailability',
+            'DistributorDetailsResponse', 'DistributorDetailsResponseCapabilities', 'DistributorResponse',
+            'OrderRequestLineItem', 'OrderResponse', 'OrderResponseLineItem', 'OrderShippingDetails', 'Person']
 
 
 class CatalogResponseAvailability(str, Enum):
@@ -43,11 +42,6 @@ class CatalogResponse(ApiModel):
     #: The catalog item manufacturer name.
     #: example: Cisco
     manufacturer_name: Optional[str] = None
-
-
-class CatalogListResponse(ApiModel):
-    #: An array of Catalog Response objects.
-    items: Optional[list[CatalogResponse]] = None
 
 
 class DistributorDetailsResponseCapabilities(str, Enum):
@@ -80,11 +74,6 @@ class DistributorResponse(ApiModel):
     #: The distributor details url.
     #: example: https://webexapis.com/v1/wholesale/device/fulfillment/distributors/Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0RJU1RSSUJVVE9SL2MwNTYzN2U3LWE3MmYtNDcxZS05N2ZhLTVjNDM1MTRkODdkNA
     url: Optional[str] = None
-
-
-class DistributorListResponse(ApiModel):
-    #: An array of Distributor Response objects.
-    items: Optional[list[DistributorResponse]] = None
 
 
 class OrderShippingDetails(ApiModel):
@@ -176,11 +165,6 @@ class OrderResponse(ApiModel):
     line_items: Optional[list[OrderResponseLineItem]] = None
 
 
-class OrderListResponse(ApiModel):
-    #: An array of Order Response objects.
-    items: Optional[list[OrderResponse]] = None
-
-
 class OrderRequestLineItem(ApiModel):
     #: The line item catalog identifier.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0NBVEFMT0dJVEVNLzZmN2QzMTFjLTc1YjEtNGM4Ny04YTMyLTIwODMwNjcyYjE4Yg
@@ -191,19 +175,6 @@ class OrderRequestLineItem(ApiModel):
     #: The workspace ID which the line item is associated with.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL1BMQUNFLzg2NDc2MmI4LTVlZGYtNDc0NC04ZWNmLTEyMjQ2OGIzMzFhMA
     workspace_id: Optional[str] = None
-
-
-class OrderRequest(ApiModel):
-    #: Description of the order.
-    #: example: Almond Telecom Initial Cisco Device Order
-    description: Optional[str] = None
-    #: A unique identifier for the customer.
-    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    org_id: Optional[str] = None
-    #: The order delivery shipping details.
-    shipping_details: Optional[OrderShippingDetails] = None
-    #: A list of order line items.
-    line_items: Optional[list[OrderRequestLineItem]] = None
 
 
 class BetaWholesaleDeviceFulfillmentWithDistributorsApi(ApiChild, base='wholesale/deviceFulfillment'):

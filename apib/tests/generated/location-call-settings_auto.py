@@ -11,25 +11,15 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ArrayOfExtensionsObject', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
+__auto__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
             'AudioAnnouncementFileGetObjectMediaFileType', 'CallBackEffectiveLevel', 'CallBackMemberType',
             'CallBackQuality', 'CallBackSelected', 'ExtensionStatusObject', 'ExtensionStatusObjectState',
-            'ExtentionStatusObject', 'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo',
-            'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetMusicOnHoldObject',
-            'GetMusicOnHoldObjectGreeting', 'GetPrivateNetworkConnectObject',
+            'GetLocationCallBackNumberObjectLocationInfo', 'GetLocationCallBackNumberObjectLocationMemberInfo',
+            'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
             'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject',
             'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'ListLocationObject',
-            'ListLocationsWebexCallingDetailsResponse', 'LocationCallingResponseWithId',
-            'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest',
-            'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse',
-            'PostValidateExtensionResponseStatus', 'PutLocationCallBackNumberObject', 'PutTelephonyLocationObject',
-            'ReadTheListOfDialPatternsResponse', 'ReadTheListOfRoutingChoicesResponse', 'RouteIdentity', 'RouteType',
-            'StatusOfExtensionsObject']
-
-
-class ArrayOfExtensionsObject(ApiModel):
-    #: Array of extensions that will be validated.
-    extensions: Optional[list[str]] = None
+            'LocationCallSettingsApi', 'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse',
+            'PostValidateExtensionResponseStatus', 'RouteIdentity', 'RouteType']
 
 
 class CallBackEffectiveLevel(str, Enum):
@@ -43,6 +33,7 @@ class CallBackEffectiveLevel(str, Enum):
 class CallBackMemberType(str, Enum):
     people = 'PEOPLE'
     place = 'PLACE'
+    virtual_line = 'VIRTUAL_LINE'
 
 
 class CallBackQuality(str, Enum):
@@ -131,16 +122,6 @@ class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
     quality: Optional[CallBackQuality] = None
 
 
-class GetLocationCallBackNumberObject(ApiModel):
-    #: Data relevant to this location.
-    location_info: Optional[GetLocationCallBackNumberObjectLocationInfo] = None
-    #: Data relevant to the user/place (member) selected for ECBN.
-    location_member_info: Optional[GetLocationCallBackNumberObjectLocationMemberInfo] = None
-    #: Selected number type to configure emergency call back.
-    #: example: LOCATION_MEMBER_NUMBER
-    selected: Optional[CallBackSelected] = None
-
-
 class GetMusicOnHoldObjectGreeting(str, Enum):
     #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets
     #: the customer know they are still connected.
@@ -199,12 +180,6 @@ class GetPrivateNetworkConnectObjectNetworkConnectionType(str, Enum):
     public_internet = 'PUBLIC_INTERNET'
     #: Use private network connect for the location's connection type.
     private_network = 'PRIVATE_NETWORK'
-
-
-class GetPrivateNetworkConnectObject(ApiModel):
-    #: Network Connection Type for the location.
-    #: example: PUBLIC_INTERNET
-    network_connection_type: Optional[GetPrivateNetworkConnectObjectNetworkConnectionType] = None
 
 
 class GetTelephonyLocationObjectCallingLineId(ApiModel):
@@ -297,22 +272,6 @@ class ListLocationObject(ApiModel):
     e911_setup_required: Optional[bool] = None
 
 
-class LocationCallingResponseWithId(ApiModel):
-    #: A unique identifier for the location.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
-    id: Optional[str] = None
-
-
-class PostLocationAnnouncementLanguageObject(ApiModel):
-    #: Set to `true` to change announcement language for existing people and workspaces.
-    agent_enabled: Optional[bool] = None
-    #: Set to `true` to change announcement language for existing feature configurations.
-    service_enabled: Optional[bool] = None
-    #: Language code.
-    #: example: en_us
-    announcement_language_code: Optional[str] = None
-
-
 class PostLocationCallingRequestAddress(ApiModel):
     #: Address 1 of the location.
     #: example: 771 Alder Drive
@@ -334,27 +293,6 @@ class PostLocationCallingRequestAddress(ApiModel):
     country: Optional[str] = None
 
 
-class PostLocationCallingRequest(ApiModel):
-    #: A unique identifier for the location.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
-    id: Optional[str] = None
-    #: The name of the location.
-    #: example: 'Denver'
-    name: Optional[str] = None
-    #: Time zone associated with this location. Refer to this `link
-    #: <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for the format.
-    #: example: 'America/Chicago'
-    time_zone: Optional[str] = None
-    #: Default email language.
-    #: example: 'en_us'
-    preferred_language: Optional[str] = None
-    #: Location's phone announcement language.
-    #: example: 'fr_fr'
-    announcement_language: Optional[str] = None
-    #: The address of the location.
-    address: Optional[PostLocationCallingRequestAddress] = None
-
-
 class PostValidateExtensionResponseStatus(str, Enum):
     #: Validated succesfully.
     ok = 'OK'
@@ -362,62 +300,10 @@ class PostValidateExtensionResponseStatus(str, Enum):
     errors = 'ERRORS'
 
 
-class ExtentionStatusObject(ApiModel):
-    #: Indicates the extention ID for the status.
-    #: example: 1234
-    extension: Optional[datetime] = None
-    #: Indicates the status for the given extention ID.
-    #: example: VALID
-    state: Optional[ExtensionStatusObjectState] = None
-    #: Error code.
-    #: example: 59475
-    error_code: Optional[int] = None
-    #: example: The extension is not available. It is already assigned to a virtual extension
-    message: Optional[str] = None
-
-
 class PostValidateExtensionResponse(ApiModel):
     #: OK , ERRORS
     status: Optional[PostValidateExtensionResponseStatus] = None
-    extension_status: Optional[list[ExtentionStatusObject]] = None
-
-
-class PutLocationCallBackNumberObject(ApiModel):
-    #: Selected number type to configure emergency call back.
-    #: example: LOCATION_MEMBER_NUMBER
-    selected: Optional[CallBackSelected] = None
-    #: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is selected.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hOTc0MzVjZi0zYTZmLTRmNGYtOWU1OC00OTI2OTQ5MDkwMWY
-    location_member_id: Optional[str] = None
-
-
-class PutTelephonyLocationObject(ApiModel):
-    #: Location's phone announcement language.
-    #: example: 'fr_fr'
-    announcement_language: Optional[str] = None
-    #: Location calling line information.
-    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
-    #: Connection details can only be modified to and from local PSTN types of `TRUNK` and `ROUTE_GROUP`.
-    connection: Optional[GetTelephonyLocationObjectConnection] = None
-    #: Denve' (string) - External Caller ID Name value. Unicode characters.
-    #: example: 'Big Corp
-    external_caller_id_name: Optional[str] = None
-    #: Location Identifier.
-    #: example: 'Rcdn'
-    p_access_network_info: Optional[str] = None
-    #: Must dial to reach an outside line. Default is None.
-    #: example: '12'
-    outside_dial_digit: Optional[datetime] = None
-    #: True when enforcing outside dial digit at location level to make PSTN calls.
-    #: example: True
-    enforce_outside_dial_digit: Optional[bool] = None
-    #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
-    #: example: '2'
-    routing_prefix: Optional[datetime] = None
-    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
-    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
-    #: example: '+14158952369'
-    charge_number: Optional[str] = None
+    extension_status: Optional[list[ExtensionStatusObject]] = None
 
 
 class RouteIdentity(ApiModel):
@@ -429,30 +315,6 @@ class RouteIdentity(ApiModel):
     name: Optional[str] = None
     #: Type associated with the identity.
     type: Optional[RouteType] = None
-
-
-class StatusOfExtensionsObject(ApiModel):
-    #: Status of the validated array of extensions.
-    #: example: OK
-    status: Optional[PostValidateExtensionResponseStatus] = None
-    #: Array of extensions statuses.
-    extension_status: Optional[list[ExtensionStatusObject]] = None
-
-
-class ListLocationsWebexCallingDetailsResponse(ApiModel):
-    #: Array of locations.
-    locations: Optional[list[ListLocationObject]] = None
-
-
-class ReadTheListOfDialPatternsResponse(ApiModel):
-    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
-    #: optional wildcard characters.
-    dial_patterns: Optional[list[str]] = None
-
-
-class ReadTheListOfRoutingChoicesResponse(ApiModel):
-    #: Array of route identities.
-    route_identities: Optional[list[RouteIdentity]] = None
 
 
 class LocationCallSettingsApi(ApiChild, base='telephony/config'):
@@ -804,7 +666,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def validate_extensions(self, location_id: str, extensions: list[str],
-                            org_id: str = None) -> StatusOfExtensionsObject:
+                            org_id: str = None) -> PostValidateExtensionResponse:
         """
         Validate Extensions
 
@@ -819,7 +681,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type extensions: list[str]
         :param org_id: Validate extensions for this organization.
         :type org_id: str
-        :rtype: :class:`StatusOfExtensionsObject`
+        :rtype: :class:`PostValidateExtensionResponse`
         """
         params = {}
         if org_id is not None:
@@ -828,7 +690,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         body['extensions'] = extensions
         url = self.ep(f'locations/{location_id}/actions/validateExtensions/invoke')
         data = super().post(url, params=params, json=body)
-        r = StatusOfExtensionsObject.model_validate(data)
+        r = PostValidateExtensionResponse.model_validate(data)
         return r
 
     def update_music_on_hold(self, location_id: str, greeting: GetMusicOnHoldObjectGreeting,

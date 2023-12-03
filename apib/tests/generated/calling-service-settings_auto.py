@@ -11,13 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes',
+__auto__ = ['CallingServiceSettingsApi', 'GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes',
             'GetVoicemailRulesObjectDefaultVoicemailPinRules',
             'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences',
             'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits',
             'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode',
-            'GetVoicemailSettingsObject', 'Language', 'PutVoicemailRulesObject',
-            'ReadTheListOfAnnouncementLanguagesResponse']
+            'GetVoicemailSettingsObject', 'Language']
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiModel):
@@ -116,25 +115,6 @@ class Language(ApiModel):
     #: Language code.
     #: example: en_us
     code: Optional[str] = None
-
-
-class PutVoicemailRulesObject(ApiModel):
-    #: Set to `true` to enable the default voicemail passcode.
-    default_voicemail_pin_enabled: Optional[bool] = None
-    #: Default voicemail passcode.
-    #: example: 147852
-    default_voicemail_pin: Optional[str] = None
-    #: Settings for passcode expiry.
-    expire_passcode: Optional[GetVoicemailRulesObjectExpirePasscode] = None
-    #: Settings for passcode changes.
-    change_passcode: Optional[GetVoicemailRulesObjectExpirePasscode] = None
-    #: Settings for previous passcode usage.
-    block_previous_passcodes: Optional[GetVoicemailRulesObjectBlockPreviousPasscodes] = None
-
-
-class ReadTheListOfAnnouncementLanguagesResponse(ApiModel):
-    #: Array of Languages.
-    languages: Optional[list[Language]] = None
 
 
 class CallingServiceSettingsApi(ApiChild, base='telephony/config'):

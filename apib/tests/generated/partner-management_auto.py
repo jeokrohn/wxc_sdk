@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['IdentityManagedOrg', 'ManagedOrgsResponse', 'PartnerAdminUser', 'PartneradminsfororgResponse']
+__auto__ = ['IdentityManagedOrg', 'PartnerAdminUser', 'PartnerAdministratorsApi']
 
 
 class IdentityManagedOrg(ApiModel):
@@ -42,16 +42,6 @@ class PartnerAdminUser(ApiModel):
     #: The role of this partner admin in the given customer org.
     #: example: id_full_admin
     role_in_customer_org: Optional[str] = None
-
-
-class ManagedOrgsResponse(ApiModel):
-    #: An array of managed orgs objects.
-    items: Optional[list[IdentityManagedOrg]] = None
-
-
-class PartneradminsfororgResponse(ApiModel):
-    #: An array of partner admin user details.
-    items: Optional[list[PartnerAdminUser]] = None
 
 
 class PartnerAdministratorsApi(ApiChild, base='partner/organizations'):

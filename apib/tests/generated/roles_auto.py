@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Role', 'RoleCollectionResponse']
+__auto__ = ['Role', 'RolesApi']
 
 
 class Role(ApiModel):
@@ -21,10 +21,6 @@ class Role(ApiModel):
     #: The name of the role.
     #: example: Full Administrator
     name: Optional[str] = None
-
-
-class RoleCollectionResponse(ApiModel):
-    items: Optional[list[Role]] = None
 
 
 class RolesApi(ApiChild, base='roles'):

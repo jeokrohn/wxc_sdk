@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['HydraClassification', 'OrganizationsSpaceClassificationCollectionResponse']
+__auto__ = ['ClassificationsApi', 'HydraClassification']
 
 
 class HydraClassification(ApiModel):
@@ -36,10 +36,6 @@ class HydraClassification(ApiModel):
     #: A unique identifier for the Webex organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     org_id: Optional[str] = None
-
-
-class OrganizationsSpaceClassificationCollectionResponse(ApiModel):
-    items: Optional[list[HydraClassification]] = None
 
 
 class ClassificationsApi(ApiChild, base='classifications'):

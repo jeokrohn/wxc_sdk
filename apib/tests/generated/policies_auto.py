@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListPoliciesType', 'Policy', 'PolicyAction', 'PolicyCollectionResponse', 'PolicyType']
+__auto__ = ['ListPoliciesType', 'PoliciesApi', 'Policy', 'PolicyAction', 'PolicyType']
 
 
 class PolicyType(str, Enum):
@@ -54,10 +54,6 @@ class Policy(ApiModel):
     #: The date and time the policy was created.
     #: example: 2017-05-10T19:39:27.970Z
     created: Optional[datetime] = None
-
-
-class PolicyCollectionResponse(ApiModel):
-    items: Optional[list[Policy]] = None
 
 
 class ListPoliciesType(str, Enum):

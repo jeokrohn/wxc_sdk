@@ -11,11 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Event', 'EventCollectionResponse', 'EventData', 'EventDataHost', 'EventResourceEnum', 'EventTypeEnum']
-
-
-class EventDataHost(ApiModel):
-    ...
+__auto__ = ['Event', 'EventData', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi']
 
 
 class EventData(ApiModel):
@@ -175,10 +171,6 @@ class Event(ApiModel):
     #: `meetings
     #: <https://developer.webex.com/docs/api/v1/meetings>`_, `tabs
     data: Optional[EventData] = None
-
-
-class EventCollectionResponse(ApiModel):
-    items: Optional[list[Event]] = None
 
 
 class EventsApi(ApiChild, base='events'):

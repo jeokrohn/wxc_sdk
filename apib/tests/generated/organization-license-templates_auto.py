@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GroupMembers', 'Groups', 'Template', 'TemplateCollectionResponse', 'TemplateTemplateType']
+__auto__ = ['OrganizationLicenseTemplatesApi', 'Template', 'TemplateTemplateType']
 
 
 class TemplateTemplateType(str, Enum):
@@ -34,21 +34,6 @@ class Template(ApiModel):
     #: An array of group ids associated with template
     #: example: ['Y2lzY29zcGFyazovL45zL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh', 'Y2lzY29zcGFyazovL3VzL0xOU0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh']
     groups: Optional[list[str]] = None
-
-
-class TemplateCollectionResponse(ApiModel):
-    items: Optional[list[Template]] = None
-
-
-class GroupMembers(ApiModel):
-    #: example: Y2lzY29zcGFyazovL45zL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xJWU1LWExNTItZmUzNDgxOWNkYsgh
-    id: Optional[str] = None
-    #: example: Test Group
-    display_name: Optional[str] = None
-
-
-class Groups(ApiModel):
-    items: Optional[list[GroupMembers]] = None
 
 
 class OrganizationLicenseTemplatesApi(ApiChild, base='organization'):

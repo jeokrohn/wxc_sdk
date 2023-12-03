@@ -19,8 +19,7 @@ __auto__ = ['GetMeetingConfigurationCommonSettingObject',
             'GetMeetingConfigurationCommonSettingObjectSecurityOptions',
             'GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria',
             'GetMeetingConfigurationCommonSettingObjectSiteOptions',
-            'GetMeetingConfigurationCommonSettingObjectTelephonyConfig',
-            'UpdateMeetingConfigurationCommonSettingObject']
+            'GetMeetingConfigurationCommonSettingObjectTelephonyConfig', 'SiteApi']
 
 
 class GetMeetingConfigurationCommonSettingObjectSiteOptions(ApiModel):
@@ -131,18 +130,6 @@ class GetMeetingConfigurationCommonSettingObject(ApiModel):
     #: Telephony Configuration on WebEx Super Admin (These options are read-only, unable to update by Update Common
     #: Settings API).
     telephony_config: Optional[GetMeetingConfigurationCommonSettingObjectTelephonyConfig] = None
-    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but
-    #: individual users can change them).
-    default_scheduler_options: Optional[GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions] = None
-    #: Schedule Meeting Options on Webex Administration.
-    schedule_meeting_options: Optional[GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions] = None
-    #: Security Options on Webex Administration.
-    security_options: Optional[GetMeetingConfigurationCommonSettingObjectSecurityOptions] = None
-
-
-class UpdateMeetingConfigurationCommonSettingObject(ApiModel):
-    #: Site Options on Webex Administration.
-    site_options: Optional[GetMeetingConfigurationCommonSettingObjectSiteOptions] = None
     #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but
     #: individual users can change them).
     default_scheduler_options: Optional[GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions] = None

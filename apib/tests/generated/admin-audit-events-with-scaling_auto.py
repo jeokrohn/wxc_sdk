@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AuditEvent', 'AuditEventCategoryCollectionResponse', 'AuditEventCollectionResponse', 'AuditEventData']
+__auto__ = ['AdminAuditEventsWithScalingApi', 'AuditEvent', 'AuditEventData']
 
 
 class AuditEventData(ApiModel):
@@ -82,17 +82,6 @@ class AuditEvent(ApiModel):
     #: The `personId` of the person who made the change.
     #: example: MjQ4Njg2OTYtYWMwZC00ODY4LWJkMjEtZGUxZDc4MzhjOTdm
     actor_id: Optional[str] = None
-
-
-class AuditEventCollectionResponse(ApiModel):
-    #: An array of audit event objects. See `this article
-    #: <https://help.webex.com/n3b0w6x/>`_ for details about each event type.
-    items: Optional[list[AuditEvent]] = None
-
-
-class AuditEventCategoryCollectionResponse(ApiModel):
-    #: An array of audit event categories.
-    event_categories: Optional[list[str]] = None
 
 
 class AdminAuditEventsWithScalingApi(ApiChild, base='adminAudit'):

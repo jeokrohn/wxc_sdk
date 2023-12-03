@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ResourceGroup', 'ResourceGroupCollectionResponse']
+__auto__ = ['ResourceGroup', 'ResourceGroupsApi']
 
 
 class ResourceGroup(ApiModel):
@@ -24,10 +24,6 @@ class ResourceGroup(ApiModel):
     #: The ID of the organization to which this resource group belongs.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     org_id: Optional[str] = None
-
-
-class ResourceGroupCollectionResponse(ApiModel):
-    items: Optional[list[ResourceGroup]] = None
 
 
 class ResourceGroupsApi(ApiChild, base='resourceGroups'):

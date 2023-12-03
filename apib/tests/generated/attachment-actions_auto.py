@@ -11,12 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AttachmentAction', 'AttachmentActivity', 'AttachmentActivityType', 'SubmitCardAction',
-            'SubmitCardActionInputs', 'SubmitCardActionResponse']
-
-
-class AttachmentAction(ApiModel):
-    ...
+__auto__ = ['AttachmentActionsApi', 'AttachmentActivity', 'AttachmentActivityType', 'SubmitCardActionInputs']
 
 
 class SubmitCardActionInputs(ApiModel):
@@ -32,31 +27,6 @@ class SubmitCardActionInputs(ApiModel):
 
 class AttachmentActivityType(str, Enum):
     submit = 'submit'
-
-
-class SubmitCardAction(AttachmentAction):
-    #: Type of action
-    #: example: submit
-    type: Optional[AttachmentActivityType] = None
-    #: The parent message on which the attachment action was performed.
-    #: example: GFyazovL3VzL1BFT1BMRS80MDNlZmUwNy02Yzc3LTQyY2UtOWI4NC
-    message_id: Optional[str] = None
-    inputs: Optional[SubmitCardActionInputs] = None
-
-
-class SubmitCardActionResponse(SubmitCardAction):
-    #: The unique identifier of the action.
-    #: example: Y2lzY29zcGFyazovL3VzL0NBTExTLzU0MUFFMzBFLUUyQzUtNERENi04NTM4LTgzOTRDODYzM0I3MQo
-    id: Optional[str] = None
-    #: The person who performed the action.
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS83MTZlOWQxYy1jYTQ0LTRmZ
-    person_id: Optional[str] = None
-    #: The room in which the action was performed.
-    #: example: L3VzL1BFT1BMRS80MDNlZmUwNy02Yzc3LTQyY2UtOWI
-    room_id: Optional[str] = None
-    #: The timestamp of the action.
-    #: example: 2016-05-10T19:41:00.100Z
-    created: Optional[datetime] = None
 
 
 class AttachmentActivity(ApiModel):

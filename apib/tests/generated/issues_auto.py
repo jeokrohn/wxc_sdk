@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Issue', 'IssueStatus', 'IssueType', 'IssuesCollectionResponse']
+__auto__ = ['Issue', 'IssueStatus', 'IssueType', 'IssuesAPIApi']
 
 
 class IssueType(str, Enum):
@@ -92,11 +92,6 @@ class Issue(ApiModel):
     #: Any custom identifier associated with the issue, such as from an external ticketing system.
     #: example: TICKET-12345
     external_key: Optional[str] = None
-
-
-class IssuesCollectionResponse(ApiModel):
-    #: An array of issue objects.
-    items: Optional[list[Issue]] = None
 
 
 class IssuesAPIApi(ApiChild, base='issues'):

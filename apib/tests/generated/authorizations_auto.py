@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Authorization', 'AuthorizationType', 'AuthorizationsCollectionResponse']
+__auto__ = ['Authorization', 'AuthorizationType', 'AuthorizationsApi']
 
 
 class AuthorizationType(str, Enum):
@@ -40,10 +40,6 @@ class Authorization(ApiModel):
     #: The type of token associated with the authorization.
     #: example: refresh
     type: Optional[AuthorizationType] = None
-
-
-class AuthorizationsCollectionResponse(ApiModel):
-    items: Optional[list[Authorization]] = None
 
 
 class AuthorizationsApi(ApiChild, base='authorizations'):

@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['SecurityAuditEvent', 'SecurityAuditEventCollectionResponse', 'SecurityAuditEventData']
+__auto__ = ['SecurityAuditEvent', 'SecurityAuditEventData', 'SecurityAuditEventsApi']
 
 
 class SecurityAuditEventData(ApiModel):
@@ -58,11 +58,6 @@ class SecurityAuditEvent(ApiModel):
     #: The `personId` of the person who made the change.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82ZWVmOGE4ZS1lNzg3LTQzMWUtOWM3ZC1hOGVjZmU1MjM5Nzc
     actor_id: Optional[str] = None
-
-
-class SecurityAuditEventCollectionResponse(ApiModel):
-    #: array of monitoring Audit events
-    items: Optional[list[SecurityAuditEvent]] = None
 
 
 class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
