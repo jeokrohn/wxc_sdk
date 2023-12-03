@@ -2,6 +2,7 @@
 Test reading apib files
 """
 import glob
+import json
 import logging
 import os.path
 import re
@@ -1449,6 +1450,40 @@ class ReadAPIB(ApibTest):
         print(f'parents: {", ".join(sorted(parents))}')
         print(f'member value types: {", ".join(sorted(member_value_types))}')
 
+        if err:
+            raise err
+
+    def test_parsed_http_response_message_body(self):
+        """
+        look at parsed 'httpResponse' elements and validate message_body
+        """
+        self.stream_handler.setLevel(logging.ERROR)
+        err = None
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            try:
+                parsed = ApibParseResult.model_validate(data)
+            except Exception as e:
+                print(f'{path}: failed to parse, {e}')
+                err = err or e
+                continue
+            for el_info in parsed.elements_with_path():
+                if not isinstance(el_info.element, ApibHttpResponse):
+                    continue
+                http_response: ApibHttpResponse = el_info.element
+                message_body = http_response.message_body
+                if not message_body:
+                    continue
+                try:
+                    json.loads(message_body)
+                except Exception as e:
+                    print(f'{path}: Invalid message body')
+                    print(f'  {el_info.elem_path_extended}')
+                    print(f'  {e}')
+                    print(f'  body:')
+                    print('\n'.join(f'    {l}' for l in message_body.splitlines() if l.strip()))
+
+                    err = err or e
         if err:
             raise err
 
