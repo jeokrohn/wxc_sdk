@@ -729,6 +729,32 @@ class TestUpdateTelephony(TestCaseWithLog):
             await self.update_and_verify(target=target, update=update, expected=expected)
 
     @async_test
+    async def test_set_oac_and_validate_oac_enforcement(self):
+        """
+        Try to change OAC and verify that OAC enforcement policy doesn't get changed
+        """
+        async with self.target_location() as target:
+            target: TelephonyLocation
+            # enable OAC enforcement
+            settings = TelephonyLocation(enforce_outside_dial_digit=True)
+            lapi = self.api.telephony.location
+            lapi.update(location_id=target.location_id, settings=settings)
+
+            # validate
+            after = lapi.details(location_id=target.location_id)
+            self.assertTrue(after.enforce_outside_dial_digit)
+
+            # update OAC
+            old_oac = target.outside_dial_digit
+            settings = TelephonyLocation(outside_dial_digit='6')
+            lapi.update(location_id=target.location_id, settings=settings)
+
+            # validate OAC enforcement
+            after = lapi.details(location_id=target.location_id)
+            self.assertTrue(after.enforce_outside_dial_digit)
+            self.assertEqual('6', after.outside_dial_digit)
+
+    @async_test
     async def test_007_set_pstn(self):
         """
         Create a new location and try to set PSTN choice on that location once
