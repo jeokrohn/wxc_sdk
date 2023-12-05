@@ -242,16 +242,14 @@ class AsAuthorizationsApi(AsApiChild, base='authorizations'):
         :param org_id: The ID of the organization. If no orgId is specified, use orgId from the OAuth token.
         :type org_id: str
         """
-        params = {to_camel(k): v
-                  for k, v in locals().items()
-                  if k not in {'self'} and v is not None}
-        if frozenset(params) not in {frozenset({'authorizationId'}),
-                                     frozenset({'clientId'}),
-                                     frozenset({'clientId', 'orgId'})}:
-            raise ValueError(
-                'Invalid parameter combination: exactly one of authorization_id or client_id has to be present '
-                'and org_id can only be combined with client_id. ')
-        url = self.ep()
+        if authorization_id:
+            url = self.ep(authorization_id)
+            params = None
+        else:
+            url = self.ep()
+            params = client_id and {'clientId': client_id} or dict()
+            if org_id:
+                params['orgId'] = org_id
         await super().delete(url, params=params)
 
 

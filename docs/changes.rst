@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- fix: :meth:`wxc_sdk.authorizations.AuthorizationsApi.delete`, corrected parameter handling
+
 1.17.0
 ------
 - feat: device configurations API :attr:`wxc_sdk.WebexSimpleApi.device_configurations`
