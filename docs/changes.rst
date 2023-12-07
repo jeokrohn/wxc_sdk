@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.17.1
+------
 - fix: :meth:`wxc_sdk.authorizations.AuthorizationsApi.delete`, corrected parameter handling
 
 1.17.0
