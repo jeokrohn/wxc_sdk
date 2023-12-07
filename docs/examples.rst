@@ -277,6 +277,36 @@ Source: |room_devices.py|_
 .. literalinclude:: ../examples/room_devices.py
     :linenos:
 
+
+Logout users by selectively revoking authorizations
+---------------------------------------------------
+
+Selectively revoke authorizations.
+
+    | usage: logout_users.py [-h] [--appname APPNAME] [--test] email
+    | 
+    | CLI tool to logout users to revoke user authorizations
+    | 
+    | positional arguments:
+    |   email              single email or path to file w/ email addresses (one email address per line). "all" can be
+    |                      used to print authorizations for all users. "all" cannot be combined with other parameters
+    |                      and no authorizations will be revoked in this case."
+    | 
+    | optional arguments:
+    |   -h, --help         show this help message and exit
+    |   --appname APPNAME  regular expression matching authorization application names. When missing authorizations for
+    |                      all client ids defined in the script are revoked
+    |   --test             test run only
+
+Source: |logout_users.py|_
+
+.. |logout_users.py| replace:: ``logout_users.py``
+
+.. literalinclude:: ../examples/logout_users.py
+    :linenos:
+
+
+
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _"Integrations" page on developer.cisco.com: https://developer.webex.com/docs/integrations
 
@@ -294,6 +324,7 @@ Source: |room_devices.py|_
 .. _service_app.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/service_app.py
 .. _catch_tns.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/catch_tns.py
 .. _room_devices.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/room_devices.py
+.. _logout_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/logout_users.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
