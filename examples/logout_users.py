@@ -2,7 +2,7 @@
 """
     usage: logout_users.py [-h] [--appname APPNAME] [--test] email
 
-    CLI tool to logout users to revoke user authorizations
+    CLI tool to logout users by revoking user authorizations
 
     positional arguments:
       email              single email or path to file w/ email addresses (one email address per line). "all" can be
@@ -118,7 +118,7 @@ def auth_str(auth: Authorization) -> str:
 
 async def main() -> int:
     parser = ArgumentParser(prog=basename(__file__),
-                            description='CLI tool to logout users to revoke user authorizations')
+                            description='CLI tool to logout users by revoking user authorizations')
     parser.add_argument('email',
                         help='single email or path to file w/ email addresses (one email address per line). "all" can '
                              'be used to print authorizations for all users. "all" cannot be combined with other '

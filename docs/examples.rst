@@ -285,7 +285,7 @@ Selectively revoke authorizations.
 
     | usage: logout_users.py [-h] [--appname APPNAME] [--test] email
     | 
-    | CLI tool to logout users to revoke user authorizations
+    | CLI tool to logout users by revoking user authorizations
     | 
     | positional arguments:
     |   email              single email or path to file w/ email addresses (one email address per line). "all" can be
