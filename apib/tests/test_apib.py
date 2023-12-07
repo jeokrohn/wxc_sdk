@@ -1,6 +1,7 @@
 """
 Test reading apib files
 """
+import copy
 import glob
 import json
 import logging
@@ -711,7 +712,7 @@ class ReadAPIB(ApibTest):
                             self.assertTrue('fixed' in attribute_set)
                         foo = 1
                 if default is not None:
-                    # default is someting like:
+                    # default is something like:
                     #   {'content': {'content': 'name', 'element': 'string'}, 'element': 'enum'}
                     self.assertEqual('enum', default['element'])
                     default_content = ApibString.model_validate(default['content'])
@@ -774,6 +775,74 @@ class ReadAPIB(ApibTest):
                 except AssertionError as e:
                     raise e
         print(', '.join(sorted(ds_child_elements)))
+
+    def test_enums_with_empty_enumeration(self):
+        """
+        Look for enums which have empty enumeration elements
+        """
+        err = None
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            if path != 'applications.apib':
+                continue
+            enum_attr_infos = []
+            for attr_info in all_attrs(data):
+                try:
+                    element = attr_info.attr_value.get('element')
+                    if element != 'enum':
+                        continue
+                except AttributeError:
+                    continue
+                enum_attr_infos.append((attr_info, copy.deepcopy(attr_info.attr_value)))
+                content = attr_info.attr_value
+                try:
+                    # try to determine where we came from
+                    # look ar the last entry in the data path and determine the key for the content we are looking at
+                    # if that's not 'enumerations' then this might me the default value
+                    parent_key = next((k for k, v in attr_info.data_path[-1].items() if v == content), None)
+                    self.assertIn(parent_key, {'value', 'default'}, 'Unexpected parent key')
+                    if parent_key == 'default':
+                        # we have to have content
+                        self.assertIn('content', content, 'No "content" in "enum" element content under "default"')
+                        continue
+                    try:
+                        enumerations = content['attributes']['enumerations']['content']
+                    except KeyError as e:
+                        self.assertTrue(False, f'Failed to get enumerations from attributes.enumerations.content: {e}')
+                    self.assertTrue(isinstance(enumerations, list),
+                                    f'enumerations has to be a list, is {enumerations.__class__.__name__}')
+                    enumerations: list[dict]
+                    enums_not_string_element = [enum for enum in enumerations
+                                                if 'element' not in enum or enum['element'] != 'string']
+                    self.assertTrue(not enums_not_string_element,
+                                    f'all enumerations need to be "string" element: '
+                                    f'{", ".join(json.dumps(enum) for enum in enums_not_string_element)}')
+                    enums_no_content = [enum for enum in enumerations
+                                        if 'content' not in enum]
+                    self.assertTrue(not enums_no_content,
+                                    f'all enumerations need to have "content": '
+                                    f'{", ".join(json.dumps(enum) for enum in enums_no_content)}')
+                    # enum values need to be unique
+                    enum_values = [enum['content'] for enum in enumerations]
+                    self.assertEqual(len(enum_values), len(set(enum_values)),
+                                     f'non unique enum values: {", ".join(enum_values)}')
+                    parsed_enum = ApibEnum.model_validate(attr_info.attr_value)
+                    self.assertEqual(len(enumerations), len(parsed_enum.enumerations))
+
+                except AssertionError as e:
+                    err = err or e
+                    print(f'{path}: {e}')
+            parsed_api = ApibParseResult.model_validate(data)
+            parsed_enums = [el_info
+                            for el_info in parsed_api.elements_with_path()
+                            if isinstance(el_info.element, ApibEnum)]
+            suspicious = [(attr_info, attr_value) for attr_info, attr_value in enum_attr_infos
+                          if attr_info.attr_value!=attr_value]
+            foo = 1
+        if err:
+            raise err
+
+
 
     def test_007_find_key_value(self):
         """

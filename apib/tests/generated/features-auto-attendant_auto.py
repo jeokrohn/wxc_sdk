@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -26,7 +26,7 @@ __auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'Audi
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
-    _0 = '0'
+    d0 = '0'
     normal = 'NORMAL'
     long_long = 'LONG_LONG'
     short_short_long = 'SHORT_SHORT_LONG'
@@ -50,7 +50,7 @@ class AudioAnnouncementFileObjectMediaFileType(str, Enum):
     #: WMA File Extension.
     wma = 'WMA'
     #: 3GP File Extension.
-    _3_gp = '3GP'
+    d3_gp = '3GP'
 
 
 class AudioAnnouncementFileGetObjectLevel(str, Enum):
@@ -249,16 +249,16 @@ class HoursMenuGetObjectGreeting(str, Enum):
 
 
 class KeyConfigurationsGetObjectKey(str, Enum):
-    _0 = '0'
-    _1 = '1'
-    _2 = '2'
-    _3 = '3'
-    _4 = '4'
-    _5 = '5'
-    _6 = '6'
-    _7 = '7'
-    _8 = '8'
-    _9 = '9'
+    d0 = '0'
+    d1 = '1'
+    d2 = '2'
+    d3 = '3'
+    d4 = '4'
+    d5 = '5'
+    d6 = '6'
+    d7 = '7'
+    d8 = '8'
+    d9 = '9'
     none_ = 'none'
     _ = '#'
 

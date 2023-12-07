@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -179,7 +179,7 @@ class CustomerProvisioningPrecheckResponse(ApiModel):
 
 
 class SubPartnerProvisioningState(str, Enum):
-    _active_ = 'active'
+    active = 'active'
     #: Sub-partner can provision new customers and subscribers or update, delete existing ones.
     active = 'active'
     #: Sub-partner cannot provision, update customers and subscribers but can delete existing ones.

@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -55,7 +55,7 @@ class TaskAttributes(ApiModel):
     last_updated_time: Optional[int] = None
     owner: Optional[TaskOwner] = None
     queue: Optional[TaskOwner] = None
-    context: Optional[TaskAttributesContext] = None
+    context: Optional[Any] = None
     #: Customer's channel-specific identifier. For telephony, this is the phone number. For email and chat, this is the
     #: email address.
     #: example: chatuser@email.com
@@ -240,9 +240,9 @@ class ListCapturesResponse(ApiModel):
 
 
 class GetAgentsStatisticsInterval(str, Enum):
-    _15 = '15'
-    _30 = '30'
-    _60 = '60'
+    d15 = '15'
+    d30 = '30'
+    d60 = '60'
 
 
 class ListCapturesQuery(ApiModel):

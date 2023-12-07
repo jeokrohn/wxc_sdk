@@ -444,6 +444,8 @@ class ApibEnumElement(ApibString, WithTypeAttributes, override_element_type_for=
         #     },
         #     "content": "*"
         #     },
+        if 'content' not in data:
+            foo = 1
         if not data.get('content'):
             if data.get('samples'):
                 data = {

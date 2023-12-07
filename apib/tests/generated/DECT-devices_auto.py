@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AvailableMembersResponse', 'BaseStationPostResult', 'BaseStationResponse', 'CreateDECTNetworkModel',
+__auto__ = ['AvailableMember', 'BaseStationPostResult', 'BaseStationResponse', 'CreateDECTNetworkModel',
             'DECTDevicesSettingsApi', 'LineType', 'Location', 'MemberType']
 
 
@@ -65,7 +65,7 @@ class Location(ApiModel):
     name: Optional[str] = None
 
 
-class AvailableMembersResponse(ApiModel):
+class AvailableMember(ApiModel):
     #: Unique identifier for the member.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
@@ -220,10 +220,9 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         super().post(url, params=params, json=body)
 
-    def search_available_members(self, start: int = None, max_: int = None, member_name: str = None,
-                                 phone_number: str = None, extension: str = None, location_id: str = None,
-                                 order: str = None, exclude_virtual_line: bool = None,
-                                 org_id: str = None) -> AvailableMembersResponse:
+    def search_available_members(self, member_name: str = None, phone_number: str = None, extension: str = None,
+                                 location_id: str = None, order: str = None, exclude_virtual_line: bool = None,
+                                 org_id: str = None, **params) -> Generator[AvailableMember, None, None]:
         """
         Search Available Members
 
@@ -231,10 +230,6 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
 
         This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
-        :param start: Specifies the offset from the first result that you want to fetch.
-        :type start: int
-        :param max_: Specifies the maximum number of records that you want to fetch.
-        :type max_: int
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
@@ -251,15 +246,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type exclude_virtual_line: bool
         :param org_id: Search members in this organization.
         :type org_id: str
-        :rtype: :class:`AvailableMembersResponse`
+        :return: Generator yielding :class:`AvailableMember` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
-        if max_ is not None:
-            params['max'] = max_
         if member_name is not None:
             params['memberName'] = member_name
         if phone_number is not None:
@@ -273,6 +263,4 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         if exclude_virtual_line is not None:
             params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
         url = self.ep('devices/availableMembers')
-        data = super().get(url, params=params)
-        r = AvailableMembersResponse.model_validate(data)
-        return r
+        return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)

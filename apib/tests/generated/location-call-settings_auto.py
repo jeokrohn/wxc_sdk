@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -27,7 +27,7 @@ class CallBackEffectiveLevel(str, Enum):
     location_number = 'LOCATION_NUMBER'
     #: Assigned number of a user or workspace in the location.
     location_member_number = 'LOCATION_MEMBER_NUMBER'
-    _none_ = 'NONE'
+    none_ = 'NONE'
 
 
 class CallBackMemberType(str, Enum):
@@ -136,7 +136,7 @@ class AudioAnnouncementFileGetObjectMediaFileType(str, Enum):
     #: WMA File Extension.
     wma = 'WMA'
     #: 3GP File Extension.
-    _3_gp = '3GP'
+    d3_gp = '3GP'
 
 
 class AudioAnnouncementFileGetObjectLevel(str, Enum):

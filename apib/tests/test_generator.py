@@ -164,3 +164,28 @@ class GeneratorTest(ApibTest):
                 err = err or e
         if err:
             raise err
+
+    def test_read_all_apib_find_list_methods_and_check_return_type(self):
+        logging.getLogger().setLevel(logging.INFO)
+        code_gen = self.codegen_with_all_apib()
+        code_gen.cleanup()
+        err = None
+        for apib, ep in code_gen.all_endpoints():
+            if ep.method != 'GET' or 'list' not in ep.name:
+                continue
+            try:
+                if not ep.returns_list:
+                    # is at least one of the returned attributes a list?
+                    if ep.result and ep.result == ep.result_referenced_class and (rc := code_gen.class_registry.get(ep.result)):
+                        list_attr = next((attr for attr in rc.attributes if attr.python_type.startswith('list[')), None)
+                        self.assertIsNotNone(list_attr, 'No list attribute')
+                        print(f'{apib}/{ep.name}: returns_list is None but result class "{rc.name}" has: '
+                              f'{list_attr.name}: {list_attr.python_type}')
+                        self.assertGreater(len(rc.attributes), 1, 'list attribute is only attribute')
+                        continue
+                    self.assertTrue(False, 'list method w/o result referenced class')
+            except AssertionError as e:
+                err = err or e
+                print(f'!!! {apib}/{ep.name}: {e}')
+        if err:
+            raise err

@@ -1,6 +1,7 @@
+import json
 import logging
 import re
-from collections import defaultdict
+from collections import defaultdict, Counter
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
 from functools import partial
@@ -195,6 +196,8 @@ class Endpoint:
     result: str = field(default=None, repr=False)
     # references class if python result type is a class or references a class, e.g. list[SomeObject]
     result_referenced_class: str = field(default=None, repr=False)
+    # example response body
+    response_body: str = field(default=None)
     registry: 'PythonClassRegistry' = field(default=None, repr=False)
 
     @property
@@ -224,6 +227,33 @@ class Endpoint:
             if result_attribute.python_type.startswith('list['):
                 return result_attribute
             log.warning(f'endpoint "{self.name}" has "max" parameter, but 1st result attribute is not a list')
+        return None
+
+    @property
+    def returns_list(self)->Optional[str]:
+        """
+        if endpoint is a 'list' endpoint return the base datatype of the list
+        """
+        if self.method != 'GET':
+            return None
+
+        def attribute_list_base(a: Attribute)->Optional[str]:
+            if a.referenced_class:
+                return a.referenced_class
+            m = re.match(r'list\[(\S+)]', a.python_type)
+            return m and m.group(1)
+
+        if pa := self.paginated:
+            return attribute_list_base(pa)
+
+        if sa := self.single_result_attribute:
+            return attribute_list_base(sa)
+
+        if self.result and self.result.startswith('list['):
+            if self.result_referenced_class:
+                return self.result_referenced_class
+            m = re.match(r'list\[(\S+)]', self.result)
+            return m and m.group(1)
         return None
 
     def href_parameters_filtered(self) -> Iterable[Parameter]:
@@ -512,11 +542,13 @@ class Attribute:
         if for_enum:
             # something like:
             #   wav = 'WAV'
-            name = snake_case(self.name)
+            name = self.name.strip('"')
+            name = name.strip("'")
+            name = snake_case(name)
             if name == 'none':
                 name = 'none_'
             name, _ = subn(r'[^a-z0-9]', '_', name)
-            name = sub('^([0-9])', '_\\1', name)
+            name = sub('^([0-9])', 'd\\1', name)
             value = self.name
             value = value.replace("'", '')
             lines.append(f"{name} = '{value}'")
@@ -556,6 +588,16 @@ class PythonClass:
     description: str = field(default=None)
     is_enum: bool = field(default=None)
     baseclass: str = field(default=None)
+
+    def __post_init__(self):
+        # attribute names need to be unique
+        names = Counter(attr.name for attr in self.attributes)
+        if not self.attributes:
+            raise ValueError(f'class {self.name} has no attributes')
+
+        not_unique = [name for name, c in names.items() if c > 1]
+        if not_unique:
+            raise KeyError(f'class {self.name} has duplicate attributes: {", ".join(not_unique)}')
 
     def source(self) -> Optional[str]:
         """
@@ -871,10 +913,15 @@ class PythonClassRegistry:
             python_type = sanitize_class_name(python_type)
             referenced_class = python_type
             class_attributes = self._python_class_attributes(basename=referenced_class, members=value.content)
-            new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                    description=value.description, is_enum=False, baseclass=None)
-            self._add_class(new_class)
-            python_type = new_class.name
+            if class_attributes:
+                new_class = PythonClass(name=referenced_class, attributes=class_attributes,
+                                        description=value.description, is_enum=False, baseclass=None)
+                self._add_class(new_class)
+                python_type = new_class.name
+            else:
+                # attribute type is a generic "object"
+                python_type = 'Any'
+                referenced_class = None
         elif value.element == 'number':
             sample = value.content
             # can be int or float
@@ -1339,12 +1386,14 @@ class PythonClassRegistry:
                         if not self.get(class_name=result):
                             raise KeyError(f'class "{result}" not found')
             referenced_class = referenced_class or result
+            response_body = response and response.message_body
             endpoint = Endpoint(name=name, method=method, host=host, url=url,
                                 title=transition.title,
                                 docstring=transition.docstring,
                                 href_parameter=href_parameters,
                                 body_parameter=body_parameters,
                                 body_class_name=body_class_name,
+                                response_body=response_body,
                                 result=result,
                                 result_referenced_class=referenced_class,
                                 registry=self)

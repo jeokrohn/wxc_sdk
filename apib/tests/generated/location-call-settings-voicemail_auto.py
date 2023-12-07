@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -202,7 +202,7 @@ class GetVoicePortalPasscodeRuleObject(ApiModel):
     #: + enabled: true (boolean) - If enabled, passcode should not contain repeated digits.
     #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1.
     #: The maximum value is 6.
-    block_repeated_digits: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
+    block_repeated_digits: Optional[Any] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     #: 
     #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a
@@ -211,7 +211,7 @@ class GetVoicePortalPasscodeRuleObject(ApiModel):
     #: maximum value is 5.
     #: + numberOfDescendingDigits: `3` (number) -  Number of descending digits in sequence. The minimum value is 2. The
     #: maximum value is 5.
-    block_contiguous_sequences: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
+    block_contiguous_sequences: Optional[Any] = None
     #: Allowed length of the passcode.
     length: Optional[GetVoicePortalPasscodeRuleObjectLength] = None
     #: If enabled, the passcode do not contain repeated pattern.

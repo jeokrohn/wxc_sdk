@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -11,11 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListPoliciesType', 'PoliciesApi', 'Policy', 'PolicyAction', 'PolicyType']
+__auto__ = ['PoliciesApi', 'Policy', 'PolicyAction', 'PolicyType']
 
 
 class PolicyType(str, Enum):
-    default = 'Default'
     #: Default policy for the org.
     default = 'default'
     #: Customized policy for an App.
@@ -43,7 +42,7 @@ class Policy(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY
     org_id: Optional[str] = None
     #: A policy type for the policy.
-    #: example: Default
+    #: example: default
     type: Optional[PolicyType] = None
     #: The `personIds` for the people this policy applies to.
     #: example: ['Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0', 'Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0', 'Y2lzY29zcGFyazovL3VzL0NBTExTLzU0MUFFMzBFLUUyQzUtNERENi04NTM4LTgzOTRDODYzM0I3MQo']
@@ -56,11 +55,6 @@ class Policy(ApiModel):
     created: Optional[datetime] = None
 
 
-class ListPoliciesType(str, Enum):
-    default = 'default'
-    custom = 'custom'
-
-
 class PoliciesApi(ApiChild, base='policies'):
     """
     Policies
@@ -71,9 +65,9 @@ class PoliciesApi(ApiChild, base='policies'):
     organization.
     """
 
-    def list_policies(self, type: ListPoliciesType, app_id: list[str] = None, person_id: list[str] = None,
-                      name: str = None, action: PolicyAction = None, to_: Union[str, datetime] = None,
-                      cursor: str = None, org_id: str = None, **params) -> Generator[Policy, None, None]:
+    def list_policies(self, type: PolicyType, app_id: list[str] = None, person_id: list[str] = None, name: str = None,
+                      action: PolicyAction = None, to_: Union[str, datetime] = None, cursor: str = None,
+                      org_id: str = None, **params) -> Generator[Policy, None, None]:
         """
         List Policies
 
@@ -84,7 +78,7 @@ class PoliciesApi(ApiChild, base='policies'):
         <https://developer.webex.com/docs/basics#pagination>`_.
 
         :param type: List policies which apply to this policy type.
-        :type type: ListPoliciesType
+        :type type: PolicyType
         :param app_id: List policies which apply to this app, by ID.
         :type app_id: list[str]
         :param person_id: List policies which apply to this person, by ID.
@@ -122,7 +116,7 @@ class PoliciesApi(ApiChild, base='policies'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Policy, item_key='items', params=params)
 
-    def create_a_policy(self, type: ListPoliciesType, action: PolicyAction, app_id: str = None, name: str = None,
+    def create_a_policy(self, type: PolicyType, action: PolicyAction, app_id: str = None, name: str = None,
                         person_ids: list[str] = None) -> Policy:
         """
         Create a Policy
@@ -130,7 +124,7 @@ class PoliciesApi(ApiChild, base='policies'):
         Add a new policy.
 
         :param type: Specify a policy type.
-        :type type: ListPoliciesType
+        :type type: PolicyType
         :param action: Specify policy action.
         :type action: PolicyAction
         :param app_id: Specify the `appId` for the policy.

@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -34,7 +34,7 @@ class EventData(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82YWE2ZGE5OS0xYzdlLTQ4MWItODY3YS03MWY2NTIwNDk0MzM
     creator_id: Optional[str] = None
     #: The meeting's host data
-    host: Optional[EventDataHost] = None
+    host: Optional[Any] = None
     #: Common Identity (CI) authenticated meeting attendees
     attendees: Optional[list[str]] = None
     #: indicates whether or not the Voice Assistant was enabled during the meeting. If `true` a transcript should be

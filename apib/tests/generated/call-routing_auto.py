@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union
+from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -11,22 +11,16 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActionOnRouteList', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType', 'DeviceStatus',
-            'DeviceType', 'DialPattern', 'DialPatternPut', 'DialPatternStatus', 'DialPatternValidate',
-            'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost',
-            'DialPlanPut', 'Emergency', 'FeatureAccessCode', 'GetLocalGatewayDialPlanUsageForATrunkResponse',
-            'GetLocationsUsingTheLocalGatewayAsPstnConnectionRoutingResponse',
-            'GetRouteGroupsUsingTheLocalGatewayResponse', 'HostedAgent', 'HostedAgentType', 'HostedFeature',
-            'LocalGatewayUsageCount', 'LocalGateways', 'ModifyNumbersForRouteListResponse', 'NumberStatus',
-            'OriginatorType', 'PbxUser', 'PostResponse', 'PstnNumber', 'ReadTheListOfDialPlansResponse',
-            'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfTrunksResponse',
-            'ReadTheRouteListsOfARoutingGroupResponse', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus',
-            'ResponseStatusType', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet',
-            'RouteGroupUsageRouteListItem', 'RouteList', 'RouteListGet', 'RouteListNumberListGet',
-            'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteListPatch', 'RouteListPost', 'RouteType',
-            'ServiceType', 'TestCallRoutingPostResponse', 'Trunk', 'TrunkFQDNValidatePost', 'TrunkGet',
-            'TrunkGetOutboundProxy', 'TrunkPost', 'TrunkPut', 'TrunkType', 'TrunkTypeGetList',
-            'TrunkTypeWithDeviceType', 'VirtualExtension', 'VirtualExtensionRange']
+__auto__ = ['ActionOnRouteList', 'CallRoutingApi', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType',
+            'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate',
+            'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'Emergency',
+            'FeatureAccessCode', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount',
+            'LocalGateways', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PstnNumber',
+            'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup',
+            'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
+            'RouteListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ServiceType',
+            'TestCallRoutingPostResponse', 'Trunk', 'TrunkGet', 'TrunkType', 'TrunkTypeWithDeviceType',
+            'VirtualExtension', 'VirtualExtensionRange']
 
 
 class ActionOnRouteList(str, Enum):
@@ -142,14 +136,6 @@ class DialPattern(ApiModel):
     action: Optional[ActionOnRouteList] = None
 
 
-class DialPatternPut(ApiModel):
-    #: Array of dial patterns to add or delete. Dial Pattern that is not present in the request is not modified.
-    dial_patterns: Optional[list[DialPattern]] = None
-    #: Delete all the dial patterns for a dial plan.
-    #: example: True
-    delete_all_dial_patterns: Optional[bool] = None
-
-
 class DialPatternStatus(str, Enum):
     #: Invalid pattern
     invalid = 'INVALID'
@@ -225,31 +211,6 @@ class DialPlanGet(ApiModel):
     route_type: Optional[RouteType] = None
     #: Customer information.
     customer: Optional[Customer] = None
-
-
-class DialPlanPost(ApiModel):
-    #: A unique name for the dial plan.
-    #: example: dialPlanName
-    name: Optional[str] = None
-    #: ID of route type associated with the dial plan.
-    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    route_id: Optional[str] = None
-    #: Route Type associated with the dial plan.
-    route_type: Optional[RouteType] = None
-    #: An Array of dial patterns.
-    #: example: ['+5555,+5556']
-    dial_patterns: Optional[list[str]] = None
-
-
-class DialPlanPut(ApiModel):
-    #: A unique name for the dial plan.
-    #: example: dialPlanName
-    name: Optional[str] = None
-    #: ID of route type associated with the dial plan.
-    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    route_id: Optional[str] = None
-    #: Route Type associated with the dial plan.
-    route_type: Optional[RouteType] = None
 
 
 class Emergency(ApiModel):
@@ -433,12 +394,6 @@ class PbxUser(ApiModel):
     trunk_location_id: Optional[str] = None
 
 
-class PostResponse(ApiModel):
-    #: ID of the Route Group.
-    #: example: 'Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzE4YzFhMGRkLWJhMjctNDkwMS1hNGUxLTBlNWIyNzM1YzlkZg'
-    id: Optional[str] = None
-
-
 class PstnNumber(ApiModel):
     #: Trunk name.
     #: example: trunkName1
@@ -506,14 +461,6 @@ class RouteGroupGet(ApiModel):
     local_gateways: Optional[list[LocalGateways]] = None
 
 
-class RouteGroupPatch(ApiModel):
-    #: A unique name for the Route Group.
-    #: example: routeGroupName
-    name: Optional[str] = None
-    #: Local Gateways that are part of this Route Group.
-    local_gateways: Optional[list[LocalGateways]] = None
-
-
 class RouteGroupUsageRouteListItem(ApiModel):
     #: Route list ID.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0xJU1QvOTljNjJkMGQtNmFhYi00NGQ0LWE0ZTctZjk0MjQ4OWVhMWJj
@@ -565,11 +512,6 @@ class RouteListGet(ApiModel):
     route_group: Optional[RouteGroup] = None
 
 
-class RouteListNumberListGet(ApiModel):
-    #: Numbers assigned to the Route list.
-    numbers: Optional[list[str]] = None
-
-
 class RouteListNumberPatch(ApiModel):
     #: Number to be deleted/added.
     #: example: +2147891122
@@ -589,27 +531,6 @@ class RouteListNumberPatchResponse(ApiModel):
     #: Message of the number add status.
     #: example: Invalid Number
     message: Optional[str] = None
-
-
-class RouteListPatch(ApiModel):
-    #: Route List new name.
-    #: example: New Route List
-    name: Optional[str] = None
-    #: New route group ID.
-    #: example: NTJiZmUxNDAtYjIwMS00NTUzLWI1OGQtMmVkNDU1NTFmYTUy
-    route_group_id: Optional[str] = None
-
-
-class RouteListPost(ApiModel):
-    #: Name of the Route List
-    #: example: RouteList01
-    name: Optional[str] = None
-    #: Location associated with the Route List.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2JjNWUwNWFjLTI5ZmEtNGY0NS05MmM1LWUxZTExMDc0OTIwZg
-    location_id: Optional[str] = None
-    #: ID of the route group associated with Route List.
-    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2ZjN2EzZDU2LTg1OGMtNDVkZC1iZDA1LTE2OWM2NGU1OTRmMQ
-    route_group_id: Optional[str] = None
 
 
 class VirtualExtension(ApiModel):
@@ -760,22 +681,6 @@ class Trunk(ApiModel):
     trunk_type: Optional[TrunkType] = None
 
 
-class TrunkFQDNValidatePost(ApiModel):
-    #: FQDN or SRV address of the trunk.
-    #: example: lgw1.london
-    address: Optional[str] = None
-    #: Domain name of the trunk.
-    #: example: acme.corp
-    domain: Optional[str] = None
-    #: FQDN port of the trunk.
-    #: example: 5000
-    port: Optional[int] = None
-
-
-class TrunkGetOutboundProxy(ApiModel):
-    ...
-
-
 class TrunkGet(ApiModel):
     #: A unique name for the trunk.
     #: example: trunkName
@@ -797,7 +702,7 @@ class TrunkGet(ApiModel):
     pilot_user_id: Optional[str] = None
     #: Contains the body of the HTTP response received following the request to Console API and will not be set if the
     #: response has no body.
-    outbound_proxy: Optional[TrunkGetOutboundProxy] = None
+    outbound_proxy: Optional[Any] = None
     #: User's authentication service information.
     #: example: lg1_sias10_cpapi12446_LGU
     sip_authentication_user_name: Optional[str] = None
@@ -830,94 +735,11 @@ class TrunkGet(ApiModel):
     max_concurrent_calls: Optional[int] = None
 
 
-class TrunkPost(ApiModel):
-    #: A unique name for the trunk.
-    #: example: trunkName
-    name: Optional[str] = None
-    #: ID of location associated with the trunk.
-    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    location_id: Optional[str] = None
-    #: A password to use on the trunk.
-    #: example: password
-    password: Optional[str] = None
-    #: Dual Identity Support setting impacts the handling of the From header and P-Asserted-Identity header when
-    #: sending an initial SIP `INVITE` to the trunk for an outbound call.
-    #: example: True
-    dual_identity_support_enabled: Optional[bool] = None
-    #: Trunk Type associated with the trunk.
-    trunk_type: Optional[TrunkType] = None
-    #: Device type assosiated with trunk.
-    #: example: Cisco Unified Border Element
-    device_type: Optional[str] = None
-    #: FQDN or SRV address. Required to create a static certificate-based trunk.
-    #: example: lgw1.london
-    address: Optional[str] = None
-    #: Domain name. Required to create a static certificate based trunk.
-    #: example: acme.corp
-    domain: Optional[str] = None
-    #: FQDN port. Required to create a static certificate-based trunk.
-    #: example: 5000
-    port: Optional[int] = None
-    #: Max Concurrent call. Required to create a static certificate based trunk.
-    #: example: 1000
-    max_concurrent_calls: Optional[int] = None
-
-
-class TrunkPut(ApiModel):
-    #: A unique name for the dial plan.
-    #: example: dialPlanName
-    name: Optional[str] = None
-    #: A password to use on the trunk.
-    #: example: password
-    password: Optional[str] = None
-    #: Determines the behavior of the From and PAI headers on outbound calls.
-    #: example: True
-    dual_identity_support_enabled: Optional[bool] = None
-    #: Max Concurrent call. Required to create a static certificate-based trunk.
-    #: example: 1000
-    max_concurrent_calls: Optional[int] = None
-
-
 class TrunkTypeWithDeviceType(ApiModel):
     #: Trunk Type associated with the trunk.
     trunk_type: Optional[TrunkType] = None
     #: Device types for trunk configuration.
     device_types: Optional[list[DeviceType]] = None
-
-
-class TrunkTypeGetList(ApiModel):
-    #: Trunk type with device types.
-    trunk_types: Optional[list[TrunkTypeWithDeviceType]] = None
-
-
-class GetLocalGatewayDialPlanUsageForATrunkResponse(ApiModel):
-    #: Array of dial Plans.
-    dial_plans: Optional[list[Customer]] = None
-
-
-class GetLocationsUsingTheLocalGatewayAsPstnConnectionRoutingResponse(ApiModel):
-    #: Array of locations.
-    locations: Optional[list[Customer]] = None
-
-
-class GetRouteGroupsUsingTheLocalGatewayResponse(ApiModel):
-    #: Array of route Groups.
-    route_group: Optional[list[RouteGroup]] = None
-
-
-class ReadTheListOfDialPlansResponse(ApiModel):
-    #: Array of dial plans.
-    dial_plans: Optional[list[DialPlan]] = None
-
-
-class ReadTheListOfTrunksResponse(ApiModel):
-    #: Array of trunks.
-    trunks: Optional[list[Trunk]] = None
-
-
-class ReadTheListOfRoutingGroupsResponse(ApiModel):
-    #: Array of route groups.
-    route_groups: Optional[list[RouteGroup]] = None
 
 
 class ReadTheUsageOfARoutingGroupResponse(ApiModel):
@@ -933,21 +755,6 @@ class ReadTheUsageOfARoutingGroupResponse(ApiModel):
     #: Number of route list locations associated to this route group.
     #: example: 1
     route_list_count: Optional[str] = None
-
-
-class ReadTheRouteListsOfARoutingGroupResponse(ApiModel):
-    #: Array of route lists.
-    route_group_usage_route_list_get: Optional[list[RouteGroupUsageRouteListGet]] = None
-
-
-class ReadTheListOfRouteListsResponse(ApiModel):
-    #: Array of route lists.
-    route_lists: Optional[list[RouteList]] = None
-
-
-class ModifyNumbersForRouteListResponse(ApiModel):
-    #: Array of number statuses.
-    number_status: Optional[list[RouteListNumberPatchResponse]] = None
 
 
 class CallRoutingApi(ApiChild, base='telephony/config'):
