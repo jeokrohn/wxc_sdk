@@ -149,7 +149,6 @@ async def main() -> int:
         auths.sort(key=lambda a: f'{a.application_name}{a.type}')
 
         # determine set of authorization ids to revoke
-        # --> we only revoke refresh tokens; that also revokes the access tokens
         if appname:
             auths_to_delete = set(a.id for a in auths
                                   if appname_re.match(a.application_name))
