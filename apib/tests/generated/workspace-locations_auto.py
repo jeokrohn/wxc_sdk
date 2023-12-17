@@ -65,9 +65,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     Workspace Locations
     
     The Workspace Locations API is deprecated and will be decommissioned November
-    30, 2024. Please start using the `/locations API
-    <https://developer.webex.com/docs/api/v1/locations>`_ for
-    all future projects.
+    30, 2024. Please use the `/locations API
+    <https://developer.webex.com/docs/api/v1/locations>`_ for future
+    projects, and use `locationId` instead of `workspaceLocationId` when
+    interacting with device or workspace APIs.
     
     
     
@@ -89,8 +90,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         List Workspace Locations
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         List workspace locations. Use query parameters to filter the response. The `orgId` parameter can only be used
         by admin users of another
@@ -133,8 +135,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Create a Workspace Location
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Create a location. The `cityName` and `notes` parameters are optional, and omitting them will result in the
         creation of a location without values for those attributes.
@@ -176,8 +179,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Get a Workspace Location Details
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Shows details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI.
         Requires an administrator auth token with the `spark-admin:workspace_locations_read` scope.
@@ -198,8 +202,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Update a Workspace Location
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Updates details for a location, by ID. Specify the location ID in the `locationId` parameter in the URI. The
         request should include all details for the location returned in a previous call to
@@ -250,8 +255,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Delete a Workspace Location
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Deletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new
         location can be reassigned to them.
@@ -269,8 +275,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         List Workspace Location Floors
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         List workspace location floors.
         Requires an administrator auth token with the `spark-admin:workspace_locations_read` scope.
@@ -290,8 +297,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Create a Workspace Location Floor
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Create a new floor in the given location. The `displayName` parameter is optional, and omitting it will result
         in the creation of a floor without that value set.
@@ -319,8 +327,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Get a Workspace Location Floor Details
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Shows details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI.
         Requires an administrator auth token with the `spark-admin:workspace_locations_read` scope.
@@ -342,8 +351,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Update a Workspace Location Floor
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Updates details for a floor, by ID. Specify the floor ID in the `floorId` parameter in the URI. Include all
         details for the floor returned by a previous call to `Get Workspace Location Floor Details
@@ -375,8 +385,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         Delete a Workspace Location Floor
 
         <div><Callout type="warning">The Workspace Locations API is deprecated and will be decommissioned November 30,
-        2024. Please start using the `/locations API
-        <https://developer.webex.com/docs/api/v1/locations>`_ for all future projects.</Callout></div>
+        2024. Please use the `/locations API
+        <https://developer.webex.com/docs/api/v1/locations>`_ for future projects, and use `locationId` instead of `workspaceLocationId`
+        when interacting with device or workspace APIs.</Callout></div>
 
         Deletes a floor, by ID.
         Requires an administrator auth token with the `spark-admin:workspace_locations_write` scope.
