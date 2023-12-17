@@ -2,6 +2,7 @@ Release history
 ===============
 
 - feat: virtual line settings: call intercept, call recording, call waiting, forwarding, incoming/outgoing call permissions, directory search, DECT networks, :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`
+- feat: call recording settings API: :class:`wxc_sdk.telephony.call_recording.CallRecordingSettingsApi`
 
 1.17.1
 ------

@@ -10,6 +10,7 @@ from pydantic import Field, TypeAdapter, field_validator
 from .access_codes import AccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
+from .call_recording import CallRecordingSettingsApi
 from .callpark import CallParkApi
 from .callpark_extension import CallparkExtensionApi
 from .callpickup import CallPickupApi
@@ -437,6 +438,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     callpark: CallParkApi
     callpark_extension: CallparkExtensionApi
     callqueue: CallQueueApi
+    call_recording: CallRecordingSettingsApi
     dect_devices: DECTDevicesApi
     #: WxC device operations
     devices: TelephonyDevicesApi
@@ -466,6 +468,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.announcements_repo = AnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.call_intercept = LocationInterceptApi(session=session)
+        self.call_recording = CallRecordingSettingsApi(session=session)
         self.calls = CallsApi(session=session)
         self.callpark = CallParkApi(session=session)
         self.callpark_extension = CallparkExtensionApi(session=session)

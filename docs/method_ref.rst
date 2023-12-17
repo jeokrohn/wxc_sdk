@@ -411,7 +411,7 @@ The second column of the table has a link to the documentation of the method.
         Configure a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure`
    * - api.person_settings.caller_id.configure_settings
-        
+        Configure a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings`
    * - api.person_settings.caller_id.read
         Retrieve a Person's Caller ID Settings
@@ -698,6 +698,30 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.call_intercept.read
         Get Location Intercept
      - :meth:`~wxc_sdk.telephony.location.intercept.LocationInterceptApi.read`
+   * - api.telephony.call_recording.read
+        Get Call Recording Settings
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read`
+   * - api.telephony.call_recording.read_location_compliance_announcement
+        Get Details for the location compliance announcement setting
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_location_compliance_announcement`
+   * - api.telephony.call_recording.read_org_compliance_announcement
+        Get Details for the organization compliance announcement setting
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_org_compliance_announcement`
+   * - api.telephony.call_recording.read_terms_of_service
+        Get Call Recording Terms Of Service Settings
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_terms_of_service`
+   * - api.telephony.call_recording.update
+        Update Call Recording Settings
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update`
+   * - api.telephony.call_recording.update_location_compliance_announcement
+        Update the location compliance announcement
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_location_compliance_announcement`
+   * - api.telephony.call_recording.update_org_compliance_announcement
+        Update the organization compliance announcement
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_org_compliance_announcement`
+   * - api.telephony.call_recording.update_terms_of_service
+        Update Call Recording Terms Of Service Settings
+     - :meth:`~wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_terms_of_service`
    * - api.telephony.callpark.available_agents
         Get available agents from Call Parks
      - :meth:`~wxc_sdk.telephony.callpark.CallParkApi.available_agents`
@@ -1271,9 +1295,81 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.schedules.update
         Update a Schedule
      - :meth:`~wxc_sdk.common.schedules.ScheduleApi.update`
+   * - api.telephony.virtual_lines.assigned_devices
+        Get List of Devices assigned for a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.assigned_devices`
+   * - api.telephony.virtual_lines.create
+        Create a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.create`
+   * - api.telephony.virtual_lines.dect_networks
+        Get List of Dect Networks Handsets for a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.dect_networks`
+   * - api.telephony.virtual_lines.delete
+        Delete a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.delete`
+   * - api.telephony.virtual_lines.details
+        Get Details for a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.details`
+   * - api.telephony.virtual_lines.get_phone_number
+        Get Phone Number assigned for a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.get_phone_number`
    * - api.telephony.virtual_lines.list
         List all Virtual Lines for the organization
      - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.list`
+   * - api.telephony.virtual_lines.update
+        Update a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.update`
+   * - api.telephony.virtual_lines.update_directory_search
+        Update Directory search for a Virtual Line
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.update_directory_search`
+   * - api.telephony.virtual_lines.call_intercept.configure
+        Configure Call Intercept Settings for a Person
+     - :meth:`~wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure`
+   * - api.telephony.virtual_lines.call_intercept.greeting
+        Configure Call Intercept Greeting for a Person
+     - :meth:`~wxc_sdk.person_settings.call_intercept.CallInterceptApi.greeting`
+   * - api.telephony.virtual_lines.call_intercept.read
+        Read Call Intercept Settings for a Person
+     - :meth:`~wxc_sdk.person_settings.call_intercept.CallInterceptApi.read`
+   * - api.telephony.virtual_lines.call_recording.configure
+        Configure Call Recording Settings for a Person
+     - :meth:`~wxc_sdk.person_settings.call_recording.CallRecordingApi.configure`
+   * - api.telephony.virtual_lines.call_recording.read
+        Read Call Recording Settings for a Person
+     - :meth:`~wxc_sdk.person_settings.call_recording.CallRecordingApi.read`
+   * - api.telephony.virtual_lines.call_waiting.configure
+        Configure Call Waiting Settings for a Person
+     - :meth:`~wxc_sdk.person_settings.call_waiting.CallWaitingApi.configure`
+   * - api.telephony.virtual_lines.call_waiting.read
+        Read Call Waiting Settings for a Person
+     - :meth:`~wxc_sdk.person_settings.call_waiting.CallWaitingApi.read`
+   * - api.telephony.virtual_lines.caller_id.configure
+        Configure a Person's Caller ID Settings
+     - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure`
+   * - api.telephony.virtual_lines.caller_id.configure_settings
+        Configure a Person's Caller ID Settings
+     - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings`
+   * - api.telephony.virtual_lines.caller_id.read
+        Retrieve a Person's Caller ID Settings
+     - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.read`
+   * - api.telephony.virtual_lines.forwarding.configure
+        Configure a Person's Call Forwarding Settings
+     - :meth:`~wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure`
+   * - api.telephony.virtual_lines.forwarding.read
+        Retrieve a Person's Call Forwarding Settings
+     - :meth:`~wxc_sdk.person_settings.forwarding.PersonForwardingApi.read`
+   * - api.telephony.virtual_lines.permissions_in.configure
+        Configure a Person's Barge In Settings
+     - :meth:`~wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure`
+   * - api.telephony.virtual_lines.permissions_in.read
+        Read Incoming Permission Settings for a Person
+     - :meth:`~wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.read`
+   * - api.telephony.virtual_lines.permissions_out.configure
+        Configure a Person's Outgoing Calling Permissions Settings
+     - :meth:`~wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure`
+   * - api.telephony.virtual_lines.permissions_out.read
+        Retrieve a Person's Outgoing Calling Permissions Settings
+     - :meth:`~wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read`
    * - api.telephony.voice_messaging.delete
         Delete a specfic voicemail message for the user
      - :meth:`~wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.delete`
@@ -1392,7 +1488,7 @@ The second column of the table has a link to the documentation of the method.
         Configure a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure`
    * - api.workspace_settings.caller_id.configure_settings
-        
+        Configure a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings`
    * - api.workspace_settings.caller_id.read
         Retrieve a Person's Caller ID Settings

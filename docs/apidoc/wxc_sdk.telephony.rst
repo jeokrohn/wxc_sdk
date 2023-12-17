@@ -13,6 +13,7 @@ Subpackages
    :maxdepth: 4
 
    wxc_sdk.telephony.announcements_repo
+   wxc_sdk.telephony.call_recording
    wxc_sdk.telephony.callqueue
    wxc_sdk.telephony.dect_devices
    wxc_sdk.telephony.devices
