@@ -12,8 +12,9 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['AnnouncementResponse', 'AnnouncementUsageResponse', 'AnnouncementsListResponse',
-            'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FeaturesAnnouncementRepositoryApi',
-            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'LocationObject']
+            'AnnouncementsListResponseLevel', 'BetaFeaturesAnnouncementRepositoryWithLocationAdminSupportApi',
+            'FeatureReferenceObject', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId',
+            'LocationObject']
 
 
 class FeatureReferenceObject(ApiModel):
@@ -121,9 +122,9 @@ class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId(s
     y2lz_y29zc_gfyazov_l3_vz_l0x_pq0_fusu9_olz_mx_mtyx = 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx'
 
 
-class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
+class BetaFeaturesAnnouncementRepositoryWithLocationAdminSupportApi(ApiChild, base='telephony/config'):
     """
-    Features:  Announcement Repository
+    Beta Features:  Announcement Repository with Location Admin Support
     
     Not supported for Webex for Government (FedRAMP)
     
@@ -193,120 +194,6 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
             params['name'] = name
         url = self.ep('announcements')
         return self.session.follow_pagination(url=url, model=AnnouncementsListResponse, item_key='announcements', params=params)
-
-    def upload_a_binary_announcement_greeting_at_organization_level(self, org_id: str = None) -> str:
-        """
-        Upload a binary announcement greeting at organization level
-
-        Upload a binary file to the announcement repository at an organization level.
-
-        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
-
-        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
-        Content-Type.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write` .
-
-        :param org_id: Create an announcement in this organization.
-        :type org_id: str
-        :rtype: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('announcements')
-        data = super().post(url, params=params)
-        r = data['id']
-        return r
-
-    def fetch_repository_usage_for_announcements_for_an_organization(self,
-                                                                     org_id: str = None) -> AnnouncementUsageResponse:
-        """
-        Fetch repository usage for announcements for an organization
-
-        Retrieves repository usage for announcements for an organization.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param org_id: Get announcement usage in this organization.
-        :type org_id: str
-        :rtype: :class:`AnnouncementUsageResponse`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('announcements/usage')
-        data = super().get(url, params=params)
-        r = AnnouncementUsageResponse.model_validate(data)
-        return r
-
-    def delete_an_announcement_greeting_of_the_organization(self, announcement_id: str, org_id: str = None):
-        """
-        Delete an announcement greeting of the organization
-
-        Delete an announcement greeting for an organization.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param announcement_id: Unique identifier of an announcement.
-        :type announcement_id: str
-        :param org_id: Delete an announcement in this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        params['announcementId'] = announcement_id
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('announcements/{announcementsId}')
-        super().delete(url, params=params)
-
-    def fetch_details_of_a_binary_announcement_greeting_at_the_organization_level(self, announcement_id: str,
-                                                                                  org_id: str = None) -> AnnouncementResponse:
-        """
-        Fetch details of a binary announcement greeting at the organization level
-
-        Fetch details of a binary announcement greeting by its ID at an organization level.
-
-        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param announcement_id: Unique identifier of an announcement.
-        :type announcement_id: str
-        :param org_id: Get an announcement in this organization.
-        :type org_id: str
-        :rtype: :class:`AnnouncementResponse`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'announcements/{announcement_id}')
-        data = super().get(url, params=params)
-        r = AnnouncementResponse.model_validate(data)
-        return r
-
-    def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str, org_id: str = None):
-        """
-        Modify a binary announcement greeting at organization level
-
-        Modify an existing announcement greeting at an organization level.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param announcement_id: Unique identifier of an announcement.
-        :type announcement_id: str
-        :param org_id: Modify an announcement in this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'announcements/{announcement_id}')
-        super().put(url, params=params)
 
     def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, org_id: str = None) -> str:
         """
@@ -409,20 +296,14 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = AnnouncementResponse.model_validate(data)
         return r
 
-    def modify_a_binary_announcement_greeting_at_location_level(self, location_id: str, announcement_id: str,
-                                                                org_id: str = None):
+    def modify_a_binary_announcement_greeting(self, location_id: str, announcement_id: str, org_id: str = None):
         """
-        Modify a binary announcement greeting at location level
+        Modify a binary announcement greeting
 
         Modify an existing announcement greeting at a location level.
 
-        An admin can upload a file or modify an existing file at a location level. This file will be uploaded to the
-        announcement repository.
-
-        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
-        Content-Type.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This API requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Unique identifier of a location where an announcement is being created.
         :type location_id: str
