@@ -177,7 +177,8 @@ class Person(ApiModel):
     #: The current presence status of the person. This will only be returned for people within your organization or an
     #: organization you manage. Presence information will not be shown if the authenticated user has
     #: `disabled status sharing
-    #: <https://help.webex.com/nkzs6wl/>`_.
+    #: <https://help.webex.com/nkzs6wl/>`_. Presence status is different from Control Hub's "Last Service Access Time" which
+    #: indicates the last time an oAuth token was issued for this user.
     #: example: active
     status: Optional[PersonStatus] = None
     #: Whether or not an invite is pending for the user to complete account activation. This property is only returned

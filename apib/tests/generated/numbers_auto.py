@@ -316,8 +316,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         Adds a specified set of phone numbers to a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format for all countries, except for the United States, which can also follow the National
-        format. Active phone numbers are in service.
+        must follow E.164 format. Active phone numbers are in service.
 
         Adding a phone number to a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
@@ -354,8 +353,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         Activate the specified set of phone numbers in a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format for all countries, except for the United States, which can also follow the National
-        format. Active phone numbers are in service.
+        must follow E.164 format. Active phone numbers are in service.
 
         Activating a phone number in a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
@@ -389,8 +387,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         Remove the specified set of phone numbers from a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format for all countries, except for the United States, which can also follow the National
-        format. Active phone numbers are in service.
+        must follow E.164 format. Active phone numbers are in service.
 
         Removing a phone number from a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.

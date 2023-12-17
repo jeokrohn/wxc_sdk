@@ -521,7 +521,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     within the organization.
     
     Viewing the list of settings in a workspace /v1/workspaces API requires an full, device, or read-only administrator
-    auth token with the `spark-admin:workspaces_read` scope.
+    or location administrator auth token with the `spark-admin:workspaces_read` scope.
     
     Adding, updating, or deleting settings in a workspace /v1/workspaces API requires an full or device administrator
     auth token with the `spark-admin:workspaces_write` scope.
@@ -886,8 +886,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
         To configure music on hold setting for a workspace, music on hold setting must be enabled for this location.
 
-        This API requires a full or device administrator auth token with the `spark-admin:telephony_config_write`
-        scope.
+        This API requires a full or device administrator or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
