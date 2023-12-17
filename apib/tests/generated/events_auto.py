@@ -111,6 +111,8 @@ class EventData(ApiModel):
 class EventResourceEnum(str, Enum):
     #: State changed on a card attachment
     attachment_actions = 'attachmentActions'
+    #: A user sent or received a SMS message
+    business_texts = 'businessTexts'
     #: A Webex call was made to/from a user
     call_records = 'call_records'
     #: State change on a file preview

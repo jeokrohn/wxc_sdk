@@ -30,6 +30,8 @@ class EventResource(str, Enum):
     files = 'files'
     #: State change on a file preview
     file_transcodings = 'file_transcodings'
+    #: A user sent or received a SMS message
+    business_texts = 'businessTexts'
     #: A Webex call was made to/from a user
     call_records = 'call_records'
 
