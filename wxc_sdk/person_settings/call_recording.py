@@ -107,10 +107,21 @@ class CallRecordingSetting(ApiModel):
                                     start_stop_announcement=StartStopAnnouncement(internal_calls_enabled=False,
                                                                                   pstn_calls_enabled=False))
 
+    def update(self) -> dict:
+        """
+        date for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+                               exclude={'service_provider', 'external_group', 'external_identifier'})
+
 
 class CallRecordingApi(PersonSettingsApiChild):
     """
     API for person's call recording settings
+
+    Also used for virtual lines
     """
 
     feature = 'callRecording'
@@ -157,8 +168,5 @@ class CallRecordingApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(recording.model_dump_json())
-        for key in ['serviceProvider', 'externalGroup', 'externalIdentifier']:
-            # remove attribute not present in update
-            data.pop(key, None)
+        data = recording.update()
         self.put(ep, params=params, json=data)

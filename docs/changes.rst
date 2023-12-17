@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: virtual line settings: call intercept, call recording, call waiting, forwarding, incoming/outgoing call permissions, directory search, DECT networks, :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`
+
 1.17.1
 ------
 - fix: :meth:`wxc_sdk.authorizations.AuthorizationsApi.delete`, corrected parameter handling

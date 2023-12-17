@@ -5624,18 +5624,22 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
     feature = None
 
     def __init__(self, *, session: AsRestSession,
-                 workspaces: bool = False, locations: bool = False):
+                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
         # set parameters to get the correct URL templates
         #
         #               selector                    feature_prefix  url template
-        # workspaces    workspaces                  /features/      workspaces/{person_id}/features/{feature}{path}
-        # locations     telephony/config/locations  /               telephony/config/locations/{person_id}{path}
-        # person        people                      /features       people/{person_id}/features/{feature}{path}
+        # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
+        # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
+        # person        people                          /features       people/{person_id}/features/{feature}{path}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         self.feature_prefix = '/features/'
         if workspaces:
             self.selector = 'workspaces'
         elif locations:
             self.selector = 'telephony/config/locations'
+            self.feature_prefix = '/'
+        elif virtual_lines:
+            self.selector = 'telephony/config/virtualLines'
             self.feature_prefix = '/'
         else:
             self.selector = 'people'
@@ -5660,10 +5664,11 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         path = path and f'/{path}' or ''
         # url templates:
         #
-        #               selector                    feature_prefix  url template
-        # workspaces    workspaces                  /features/      workspaces/{person_id}/features/{feature}{path}
-        # locations     telephony/config/locations  /               telephony/config/locations/{person_id}{path}
-        # person        people                      /features       people/{person_id}/features/{feature}{path}
+        #               selector                        feature_prefix  url template
+        # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
+        # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
+        # person        people                          /features       people/{person_id}/features/{feature}{path}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         return self.session.ep(f'{self.selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
 
 
@@ -5779,6 +5784,8 @@ class AsBargeApi(AsPersonSettingsApiChild):
 class AsCallInterceptApi(AsPersonSettingsApiChild):
     """
     API for person's call intercept settings
+
+    Also used for virtual lines and workspaces
     """
 
     feature = 'intercept'
@@ -5831,12 +5838,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(intercept.model_dump_json())
-        try:
-            # remove attribute not present in update
-            data['incoming']['announcements'].pop('fileName', None)
-        except KeyError:
-            pass
+        data = intercept.update()
         await self.put(ep, params=params, json=data)
 
     async def greeting(self, person_id: str, content: Union[BufferedReader, str],
@@ -5888,6 +5890,8 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
 class AsCallRecordingApi(AsPersonSettingsApiChild):
     """
     API for person's call recording settings
+
+    Also used for virtual lines
     """
 
     feature = 'callRecording'
@@ -5934,16 +5938,15 @@ class AsCallRecordingApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(recording.model_dump_json())
-        for key in ['serviceProvider', 'externalGroup', 'externalIdentifier']:
-            # remove attribute not present in update
-            data.pop(key, None)
+        data = recording.update()
         await self.put(ep, params=params, json=data)
 
 
 class AsCallWaitingApi(AsPersonSettingsApiChild):
     """
     API for person's call waiting settings
+
+    Also used for virtual lines, worekspaces
     """
 
     feature = 'callWaiting'
@@ -6002,6 +6005,8 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
 class AsCallerIdApi(AsPersonSettingsApiChild):
     """
     API for person's caller id settings
+
+    Also used for: virtual lines, workspaces
     """
 
     feature = 'callerId'
@@ -6071,17 +6076,36 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         await self.put(ep, params=params, json=data)
 
     async def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
+        """
+        Configure a Person's Caller ID Settings
+
+        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their own settings.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: new settings
+        :type settings: CallerId
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+
+        Example:
+
+            .. code-block:: python
+
+                api = self.api.telephony.virtual_lines.caller_id
+                caller_id_settings = api.read(person_id=self.target.id)
+                caller_id_settings.block_in_forward_calls_enabled = True
+                api.configure_settings(person_id=self.target.id, settings=caller_id_settings)
+
+        """
         params = org_id and {'orgId': org_id} or None
-        data = settings.model_dump_json(exclude_unset=True, include={'selected': True,
-                                                          'custom_number': True,
-                                                          'first_name': True,
-                                                          'last_name': True,
-                                                          'block_in_forward_calls_enabled': True,
-                                                          'external_caller_id_name_policy': True,
-                                                          'custom_external_caller_id_name': True,
-                                                          })
+        data = settings.update()
         ep = self.f_ep(person_id=person_id)
-        await self.put(ep, params=params, data=data)
+        await self.put(ep, params=params, json=data)
 
 
 class AsCallingBehaviorApi(AsPersonSettingsApiChild):
@@ -6327,6 +6351,8 @@ class AsHotelingApi(AsPersonSettingsApiChild):
 class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
     """
     API for person's incoming permissions settings
+
+    Also user for virtual lines, workspaces
     """
 
     feature = 'incomingPermission'
@@ -6640,7 +6666,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
     """
     API for person's outgoing permissions settings
 
-    also used for workspace and location outgoing permissions
+    Also used for workspace, location, and virtual line outgoing permissions
     """
     #: Only available for workspaces and locations
     transfer_numbers: AsTransferNumbersApi
@@ -6650,8 +6676,8 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
     feature = 'outgoingPermission'
 
     def __init__(self, *, session: AsRestSession,
-                 workspaces: bool = False, locations: bool = False):
-        super().__init__(session=session, workspaces=workspaces, locations=locations)
+                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
+        super().__init__(session=session, workspaces=workspaces, locations=locations, virtual_lines=virtual_lines)
         if workspaces:
             # auto transfer numbers API seems to only exist for workspaces
             self.transfer_numbers = AsTransferNumbersApi(session=session,
@@ -6662,6 +6688,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
                                                        locations=True)
             self.access_codes = None
         else:
+            # users and virtual lines don't have transfer numbers nor access codes
             self.transfer_numbers = None
             self.access_codes = None
 
@@ -6715,6 +6742,8 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
 class AsPersonForwardingApi(AsPersonSettingsApiChild):
     """
     API for person's call forwarding settings
+
+    Also used for virtual lines, workspaces
     """
 
     feature = 'callForwarding'
@@ -6776,15 +6805,27 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
+
+        Example:
+
+            .. code-block:: python
+
+                api = self.api.telephony.virtual_lines.forwarding
+
+                forwarding = api.read(person_id=self.target.id)
+                always = CallForwardingAlways(
+                    enabled=True,
+                    destination='9999',
+                    destination_voicemail_enabled=True,
+                    ring_reminder_enabled=True)
+                forwarding.call_forwarding.always = always
+                api.configure(person_id=self.target.id, forwarding=update)
+
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        # system_max_number_of_ring cannot be used in update
-        data = forwarding.model_dump_json(
-            exclude={'call_forwarding':
-                         {'no_answer':
-                              {'system_max_number_of_rings': True}}})
-        await self.put(ep, params=params, data=data)
+        data = forwarding.update()
+        await self.put(ep, params=params, json=data)
 
 
 class AsPreferredAnswerApi(AsApiChild, base='telephony/config/people'):
@@ -14379,6 +14420,326 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
 
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
+    #: caller id settings
+    caller_id: AsCallerIdApi
+    #: call waiting settings
+    call_waiting: AsCallWaitingApi
+    #: forwarding settings
+    forwarding: AsPersonForwardingApi
+    #: incoming permissions
+    permissions_in: AsIncomingPermissionsApi
+    #: outgoing permissions
+    permissions_out: AsOutgoingPermissionsApi
+    #: call intercept settings
+    call_intercept: AsCallInterceptApi
+    #: call recording settings
+    call_recording: AsCallRecordingApi
+
+    def __init__(self, session):
+        super().__init__(session=session)
+        self.caller_id = AsCallerIdApi(session=session, virtual_lines=True)
+        self.call_waiting = AsCallWaitingApi(session=session, virtual_lines=True)
+        self.forwarding = AsPersonForwardingApi(session=session, virtual_lines=True)
+        self.permissions_in = AsIncomingPermissionsApi(session=session, virtual_lines=True)
+        self.permissions_out = AsOutgoingPermissionsApi(session=session, virtual_lines=True)
+        self.call_intercept = AsCallInterceptApi(session=session, virtual_lines=True)
+        self.call_recording = AsCallRecordingApi(session=session, virtual_lines=True)
+
+    async def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
+               phone_number: str = None, extension: str = None, caller_id_last_name: str = None,
+               caller_id_first_name: str = None, caller_id_number: str = None,
+               org_id: str = None) -> str:
+        """
+        Create a Virtual Line
+
+        Create new Virtual Line for the given location.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Creating a virtual line requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
+        :type first_name: str
+        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 30.
+        :type last_name: str
+        :param location_id: ID of location for virtual line.
+        :type location_id: str
+        :param display_name: Display name defined for a virtual line.
+        :type display_name: str
+        :param phone_number: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either
+            `phoneNumber` or `extension` is mandatory.
+        :type phone_number: str
+        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 6. Either `phoneNumber`
+            or `extension` is mandatory.
+        :type extension: str
+        :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
+            length is 1. Maximum length is 30.
+        :type caller_id_last_name: str
+        :param caller_id_first_name: First name used in the Calling Line ID and for dial-by-name functions. Minimum
+            length is 1. Maximum length is 30.
+        :type caller_id_first_name: str
+        :param caller_id_number: Phone number to appear as the CLID for all calls. Minimum length is 1. Maximum length
+            is 23.
+        :type caller_id_number: str
+        :param org_id: Create the virtual line for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        if display_name is not None:
+            body['displayName'] = display_name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        body['locationId'] = location_id
+        if caller_id_last_name is not None:
+            body['callerIdLastName'] = caller_id_last_name
+        if caller_id_first_name is not None:
+            body['callerIdFirstName'] = caller_id_first_name
+        if caller_id_number is not None:
+            body['callerIdNumber'] = caller_id_number
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def delete(self, virtual_line_id: str, org_id: str = None):
+        """
+        Delete a Virtual Line
+
+        Delete the designated Virtual Line.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Deleting a virtual line requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param virtual_line_id: Delete the virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param org_id: Delete the virtual line from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}')
+        await super().delete(url, params=params)
+
+    async def details(self, virtual_line_id: str, org_id: str = None) -> VirtualLine:
+        """
+        Get Details for a Virtual Line
+
+        Retrieve Virtual Line details.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Retrieving virtual line details requires a full or user or read-only administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param org_id: Retrieve virtual line settings from this organization.
+        :type org_id: str
+        :rtype: :class:`GetVirtualLineObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}')
+        data = await super().get(url, params=params)
+        r = VirtualLine.model_validate(data)
+        return r
+
+    async def update(self, virtual_line_id: str, first_name: str = None, last_name: str = None,
+               display_name: str = None, phone_number: str = None, extension: str = None,
+               announcement_language: str = None, caller_id_last_name: str = None,
+               caller_id_first_name: str = None, caller_id_number: str = None, time_zone: str = None,
+               org_id: str = None):
+        """
+        Update a Virtual Line
+
+        Update the designated Virtual Line.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Updating a virtual line requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param virtual_line_id: Update settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
+        :type first_name: str
+        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 30.
+        :type last_name: str
+        :param display_name: Display name defined for a virtual line.
+        :type display_name: str
+        :param phone_number: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either
+            `phoneNumber` or `extension` is mandatory.
+        :type phone_number: str
+        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 6. Either `phoneNumber`
+            or `extension` is mandatory.
+        :type extension: str
+        :param announcement_language: Virtual Line's announcement language.
+        :type announcement_language: str
+        :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
+            length is 1. Maximum length is 30.
+        :type caller_id_last_name: str
+        :param caller_id_first_name: First name used in the Calling Line ID and for dial-by-name functions. Minimum
+            length is 1. Maximum length is 30.
+        :type caller_id_first_name: str
+        :param caller_id_number: Phone number to appear as the CLID for all calls. Minimum length is 1. Maximum length
+            is 23.
+        :type caller_id_number: str
+        :param time_zone: Time zone defined for the virtual line.
+        :type time_zone: str
+        :param org_id: Update virtual line settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if display_name is not None:
+            body['displayName'] = display_name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if announcement_language is not None:
+            body['announcementLanguage'] = announcement_language
+        if caller_id_last_name is not None:
+            body['callerIdLastName'] = caller_id_last_name
+        if caller_id_first_name is not None:
+            body['callerIdFirstName'] = caller_id_first_name
+        if caller_id_number is not None:
+            body['callerIdNumber'] = caller_id_number
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        url = self.ep(f'{virtual_line_id}')
+        await super().put(url, params=params, json=body)
+
+    async def get_phone_number(self, virtual_line_id: str,
+                         org_id: str = None) -> VirtualLineNumberPhoneNumber:
+        """
+        Get Phone Number assigned for a Virtual Line
+
+        Get details on the assigned phone number and extension for the virtual line.
+
+        Retrieving virtual line phone number details requires a full or user or read-only administrator auth token
+        with
+        a scope of `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param org_id: Retrieve virtual line settings from this organization.
+        :type org_id: str
+        :rtype: GetVirtualLineNumberObjectPhoneNumber
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}/number')
+        data = await super().get(url, params=params)
+        r = VirtualLineNumberPhoneNumber.model_validate(data['phoneNumber'])
+        return r
+
+    async def update_directory_search(self, virtual_line_id: str, enabled: bool, org_id: str = None):
+        """
+        Update Directory search for a Virtual Line
+
+        Update the directory search for a designated Virtual Line.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Updating Directory search for a virtual line requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param virtual_line_id: Update settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param enabled: Whether or not the directory search for a virtual line is enabled.
+        :type enabled: bool
+        :param org_id: Update virtual line settings from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep(f'{virtual_line_id}/directorySearch')
+        await super().put(url, params=params, json=body)
+
+    async def assigned_devices(self, virtual_line_id: str, org_id: str = None) -> VirtualLineDevices:
+        """
+        Get List of Devices assigned for a Virtual Line
+
+        Retrieve Device details assigned for a virtual line.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param org_id: Retrieve virtual line settings from this organization.
+        :type org_id: str
+        :rtype: :class:`VirtualLineDevices`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}/devices')
+        data = await super().get(url, params=params)
+        r = VirtualLineDevices.model_validate(data)
+        return r
+
+    async def dect_networks(self, virtual_line_id: str, org_id: str = None) -> list[VirtualLineDectNetwork]:
+        """
+        Get List of Dect Networks Handsets for a Virtual Line
+
+        Retrieve DECT Network details assigned for a virtual line.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param org_id: Retrieve virtual line settings from this organization.
+        :type org_id: str
+        :rtype: list[VirtualLineDectNetwork]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}/dects')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[VirtualLineDectNetwork]).validate_python(data['dectNetworks'])
+        return r
+
     def list_gen(self, org_id: str = None, location_id: list[str] = None,
              id: list[str] = None, owner_name: list[str] = None, phone_number: list[str] = None,
              location_name: list[str] = None, order: list[str] = None, has_device_assigned: bool = None,

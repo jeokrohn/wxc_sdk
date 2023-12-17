@@ -2,8 +2,11 @@
 Outgoing permissions API and datatypes
 
 API is used in:
-* person settings
+
+    * person settings
+
 * location settings
+
 * workspace settings
 """
 import json
@@ -119,7 +122,18 @@ class CallingPermissions(ApiModel):
         except AttributeError:
             # ignore AttributeError; call_type most probably was a string already -> use lower case as attribute name
             call_type = call_type.lower()
-        return self.__dict__.get(call_type, None)
+        try:
+            return getattr(self, call_type)
+        except AttributeError:
+            return None
+
+    def permissions_dict(self) -> dict[str, CallTypePermission]:
+        """
+        Get a dictionary of all permissions. Key is the call type and the value is the permission for this call type
+
+        :return: dict of all permissions
+        """
+        return {ct: ctp for ct, ctp in self}
 
     @staticmethod
     def allow_all() -> 'CallingPermissions':
@@ -194,12 +208,12 @@ class OutgoingPermissions(ApiModel):
             return v
         r = {}
         for entry in v:
-            call_type = entry.pop('callType')
-            r[call_type.lower()] = entry
+            call_type = entry['callType']
+            r[call_type.lower()] = {k: v for k, v in entry.items() if k != 'callType'}
         return r
 
     # noinspection PyMethodOverriding
-    def model_dump_json(self, drop_call_types: set[str] = None) -> str:
+    def model_dump(self, drop_call_types: set[str] = None) -> dict:
         """
 
         :meta private:
@@ -209,10 +223,10 @@ class OutgoingPermissions(ApiModel):
         if drop_call_types is None:
             # default call types to be excluded from updates
             drop_call_types = {'url_dialing', 'unknown', 'casual'}
-        data = self.model_dump(exclude={'calling_permissions'}, by_alias=True)
+        # dump w/o calling_permissions; we build that extra
+        data = super().model_dump(exclude={'calling_permissions'}, by_alias=True)
         if self.calling_permissions is not None:
             permissions = []
-            # for call_type, call_type_permission in self.calling_permissions.__dict__.items():
             for call_type, call_type_permission in self.calling_permissions:
                 call_type_permission: CallTypePermission
                 if not call_type_permission or (call_type in drop_call_types):
@@ -221,7 +235,16 @@ class OutgoingPermissions(ApiModel):
                 ct_dict['callType'] = call_type.upper()
                 permissions.append(ct_dict)
             data['callingPermissions'] = permissions
-        return json.dumps(data)
+        return data
+
+    def model_dump_json(self, drop_call_types: set[str] = None) -> str:
+        """
+
+        :meta private:
+        calling permissions are converted back to a list of objects.
+        drop_call_types can be a set of call types to be excluded from callingPermissions
+        """
+        return json.dumps(self.model_dump(drop_call_types))
 
 
 class AutoTransferNumbers(ApiModel):
@@ -394,7 +417,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
     """
     API for person's outgoing permissions settings
 
-    also used for workspace and location outgoing permissions
+    Also used for workspace, location, and virtual line outgoing permissions
     """
     #: Only available for workspaces and locations
     transfer_numbers: TransferNumbersApi
@@ -404,8 +427,8 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
     feature = 'outgoingPermission'
 
     def __init__(self, *, session: RestSession,
-                 workspaces: bool = False, locations: bool = False):
-        super().__init__(session=session, workspaces=workspaces, locations=locations)
+                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
+        super().__init__(session=session, workspaces=workspaces, locations=locations, virtual_lines=virtual_lines)
         if workspaces:
             # auto transfer numbers API seems to only exist for workspaces
             self.transfer_numbers = TransferNumbersApi(session=session,
@@ -416,6 +439,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
                                                        locations=True)
             self.access_codes = None
         else:
+            # users and virtual lines don't have transfer numbers nor access codes
             self.transfer_numbers = None
             self.access_codes = None
 

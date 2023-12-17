@@ -118,10 +118,21 @@ class InterceptSetting(ApiModel):
                                 incoming=InterceptSettingIncoming.default(),
                                 outgoing=InterceptSettingOutgoing.default())
 
+    def update(self) -> dict:
+        """
+        data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+                               exclude={'incoming': {'announcements': 'file_name'}})
+
 
 class CallInterceptApi(PersonSettingsApiChild):
     """
     API for person's call intercept settings
+
+    Also used for virtual lines and workspaces
     """
 
     feature = 'intercept'
@@ -174,12 +185,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(intercept.model_dump_json())
-        try:
-            # remove attribute not present in update
-            data['incoming']['announcements'].pop('fileName', None)
-        except KeyError:
-            pass
+        data = intercept.update()
         self.put(ep, params=params, json=data)
 
     def greeting(self, person_id: str, content: Union[BufferedReader, str],

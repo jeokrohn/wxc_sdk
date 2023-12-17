@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, ClassVar
 
 from pydantic import Field, field_validator
 
@@ -47,34 +47,55 @@ class CallerId(ApiModel):
         """
         return plus1(v)
 
-    #: Allowed types for the selected field.
+    #: Allowed types for the `selected` field. This field is read-only and cannot be modified.
     caller_id_types: Optional[list[CallerIdSelectedType]] = Field(alias='types', default=None)
-    #: Which type of outgoing Caller ID will be used.
-    selected: CallerIdSelectedType
-    #: Direct number which will be shown if DIRECT_LINE is selected.
+    #: Which type of outgoing Caller ID will be used. This setting is for the number portion.
+    #: example: DIRECT_LINE
+    selected: Optional[CallerIdSelectedType] = None
+    #: Direct number which will be shown if `DIRECT_LINE` is selected.
+    #: example: 2025551212
     direct_number: Optional[str] = None
-    #: Extension number which will be shown if DIRECT_LINE is selected.
+    #: Extension number which will be shown if `DIRECT_LINE` is selected.
+    #: example: 3456
     extension_number: Optional[str] = None
-    #: Location number which will be shown if LOCATION_NUMBER is selected.
+    #: Location number which will be shown if `LOCATION_NUMBER` is selected.
+    #: example: 2025551212
     location_number: Optional[str] = None
-    #: True id the location number is toll free
-    toll_free_location_number: Optional[bool] = None
-    #: Mobile number which will be shown if MOBILE_NUMBER is selected.
+    #: Mobile number which will be shown if `MOBILE_NUMBER` is selected.
+    #: example: 2025552121
     mobile_number: Optional[str] = None
-    #: This value must be an assigned number from the person's location.
+    #: Flag to indicate if the location number is toll-free number.
+    toll_free_location_number: Optional[bool] = None
+    #: This value must be an assigned number from the virtual line's location.
+    #: example: 2025551212
     custom_number: Optional[str] = None
-    #: Person's Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not allowed.
+    #: Person's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: example: Hakim
     first_name: Optional[str] = None
-    #: Person's Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not allowed.
+    #: Person's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: example: Gonzales
     last_name: Optional[str] = None
-    #: block caller id in forwarded calls
+    #: `true` if the virtual line's identity is blocked when receiving a transferred or forwarded call.
+    #: example: True
     block_in_forward_calls_enabled: Optional[bool] = None
-    #: Designates which type of External Caller ID Name policy is used. Default is DIRECT_LINE.
+    #: Designates which type of External Caller Id Name policy is used. Default is `DIRECT_LINE`.
+    #: example: DIRECT_LINE
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
-    #: Custom External Caller Name, which will be shown if External Caller ID Name is OTHER.
+    #: Custom External Caller Name, which will be shown if External Caller Id Name is `OTHER`.
+    #: example: Hakim custom
     custom_external_caller_id_name: Optional[str] = None
-    #: location external caller ID name
+    #: Location's caller ID. This field is read-only and cannot be modified.
+    #: example: Hakim location
     location_external_caller_id_name: Optional[str] = None
+
+    fields_for_update: ClassVar[set[str]] = {
+            'selected',
+            'custom_number',
+            'first_name',
+            'last_name',
+            'external_caller_id_name_policy',
+            'block_in_forward_calls_enabled',
+            'custom_external_caller_id_name'}
 
     def configure_params(self) -> dict:
         """
@@ -93,22 +114,22 @@ class CallerId(ApiModel):
                                                        **caller_id.configure_params())
 
         """
-        data = self.model_dump()
-        to_keep = {
-            'selected',
-            'custom_number',
-            'first_name',
-            'last_name',
-            'external_caller_id_name_policy',
-            'custom_external_caller_id_name'}
-        result = {k: v for k, v in data.items()
-                  if v is not None and k in to_keep}
-        return result
+        return self.model_dump(mode='json', exclude_none=True, by_alias=False, include=self.fields_for_update)
+
+    def update(self) -> dict:
+        """
+        data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True, include=self.fields_for_update)
 
 
 class CallerIdApi(PersonSettingsApiChild):
     """
     API for person's caller id settings
+
+    Also used for: virtual lines, workspaces
     """
 
     feature = 'callerId'
@@ -178,14 +199,33 @@ class CallerIdApi(PersonSettingsApiChild):
         self.put(ep, params=params, json=data)
 
     def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
+        """
+        Configure a Person's Caller ID Settings
+
+        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their own settings.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: new settings
+        :type settings: CallerId
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+
+        Example:
+
+            .. code-block:: python
+
+                api = self.api.telephony.virtual_lines.caller_id
+                caller_id_settings = api.read(person_id=self.target.id)
+                caller_id_settings.block_in_forward_calls_enabled = True
+                api.configure_settings(person_id=self.target.id, settings=caller_id_settings)
+
+        """
         params = org_id and {'orgId': org_id} or None
-        data = settings.model_dump_json(exclude_unset=True, include={'selected': True,
-                                                          'custom_number': True,
-                                                          'first_name': True,
-                                                          'last_name': True,
-                                                          'block_in_forward_calls_enabled': True,
-                                                          'external_caller_id_name_policy': True,
-                                                          'custom_external_caller_id_name': True,
-                                                          })
+        data = settings.update()
         ep = self.f_ep(person_id=person_id)
-        self.put(ep, params=params, data=data)
+        self.put(ep, params=params, json=data)

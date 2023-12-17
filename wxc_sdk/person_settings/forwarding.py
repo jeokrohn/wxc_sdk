@@ -86,10 +86,21 @@ class PersonForwardingSetting(ApiModel):
         return PersonForwardingSetting(call_forwarding=CallForwardingPerson.default(),
                                        business_continuity=CallForwardingCommon.default())
 
+    def update(self) -> dict:
+        """
+        data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+                               exclude={'call_forwarding': {'no_answer': {'system_max_number_of_rings': True}}})
+
 
 class PersonForwardingApi(PersonSettingsApiChild):
     """
     API for person's call forwarding settings
+
+    Also used for virtual lines, workspaces
     """
 
     feature = 'callForwarding'
@@ -151,12 +162,24 @@ class PersonForwardingApi(PersonSettingsApiChild):
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
+
+        Example:
+
+            .. code-block:: python
+
+                api = self.api.telephony.virtual_lines.forwarding
+
+                forwarding = api.read(person_id=self.target.id)
+                always = CallForwardingAlways(
+                    enabled=True,
+                    destination='9999',
+                    destination_voicemail_enabled=True,
+                    ring_reminder_enabled=True)
+                forwarding.call_forwarding.always = always
+                api.configure(person_id=self.target.id, forwarding=update)
+
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        # system_max_number_of_ring cannot be used in update
-        data = forwarding.model_dump_json(
-            exclude={'call_forwarding':
-                         {'no_answer':
-                              {'system_max_number_of_rings': True}}})
-        self.put(ep, params=params, data=data)
+        data = forwarding.update()
+        self.put(ep, params=params, json=data)

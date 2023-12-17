@@ -140,7 +140,8 @@ from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList, R
     UpdateNumbersResponse
 from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, OutboundProxy, ResponseStatus,\
     ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
-from wxc_sdk.telephony.virtual_line import VirtualLine
+from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDectNetwork, VirtualLineDevices,\
+    VirtualLineLocation, VirtualLineNumber, VirtualLineNumberPhoneNumber
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits,\
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, VoiceMailRules
 from wxc_sdk.telephony.voice_messaging import MessageSummary, VoiceMailPartyInformation, VoiceMessageDetails
@@ -253,13 +254,14 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
            'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
            'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState',
-           'VirtualExtensionDestination', 'VirtualLine', 'VlanSetting', 'VoiceMailPartyInformation', 'VoiceMailRules',
-           'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
-           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
-           'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
-           'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'Webhook', 'WebhookCreate', 'WebhookEvent',
-           'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting',
-           'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceType', 'Workspace',
-           'WorkspaceCalling', 'WorkspaceEmail', 'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers',
-           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1',
-           'to_camel', 'webex_id_to_uuid']
+           'VirtualExtensionDestination', 'VirtualLine', 'VirtualLineDectNetwork', 'VirtualLineDevices',
+           'VirtualLineLocation', 'VirtualLineNumber', 'VirtualLineNumberPhoneNumber', 'VlanSetting',
+           'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',
+           'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
+           'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
+           'VoicemailSettings', 'VoicemailTransferToNumber', 'VolumeSettings', 'WaitMessageSetting', 'WaitMode',
+           'Webhook', 'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource',
+           'WebhookStatus', 'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork',
+           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceEmail', 'WorkspaceLocation',
+           'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling',
+           '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

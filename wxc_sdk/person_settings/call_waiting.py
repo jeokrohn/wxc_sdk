@@ -11,6 +11,8 @@ __all__ = ['CallWaitingApi']
 class CallWaitingApi(PersonSettingsApiChild):
     """
     API for person's call waiting settings
+
+    Also used for virtual lines, worekspaces
     """
 
     feature = 'callWaiting'

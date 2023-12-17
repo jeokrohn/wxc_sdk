@@ -21,21 +21,23 @@ __all__ = ['LocationAddress', 'Location', 'Floor', 'LocationsApi']
 
 
 class LocationAddress(ApiModel):
-    """
-    Address of a :class:`Location`
-    """
-
-    #: address line 1
-    address1: str
-    #: address line 2
+    #: Address 1 of the location.
+    #: example: 771 Alder Drive
+    address1: Optional[str] = None
+    #: Address 2 of the location.
+    #: example: Cisco Site 5
     address2: Optional[str] = None
-    #: city
-    city: str
-    #: state
+    #: City of the location.
+    #: example: Milpitas
+    city: Optional[str] = None
+    #: State code of the location.
+    #: example: CA
     state: Optional[str] = None
-    #: ZIP/Postal code
+    #: Postal code of the location.
+    #: example: 95035
     postal_code: Optional[str] = None
-    #: country
+    #: ISO-3166 2-Letter country code of the location.
+    #: example: US
     country: Optional[str] = None
 
 

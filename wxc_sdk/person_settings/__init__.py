@@ -30,7 +30,7 @@ from .voicemail import VoicemailApi
 from ..api_child import ApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
-from ..common import UserType, PrimaryOrShared
+from ..common import UserType, PrimaryOrShared, IdAndName
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 
@@ -89,9 +89,11 @@ class TelephonyDevice(ApiModel):
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     device_type: PrimaryOrShared = Field(alias='type')
     #: Owner of device.
-    owner: DeviceOwner
+    owner: Optional[DeviceOwner] = None
     #: Activation state of device.
     activation_state: DeviceActivationState
+    # location details, only returned in context of virtual lines?
+    location: Optional[IdAndName] = None
 
 
 class PersonDevicesResponse(ApiModel):

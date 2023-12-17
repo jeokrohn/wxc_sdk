@@ -12,18 +12,22 @@ class PersonSettingsApiChild(ApiChild, base=''):
     feature = None
 
     def __init__(self, *, session: RestSession,
-                 workspaces: bool = False, locations: bool = False):
+                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
         # set parameters to get the correct URL templates
         #
         #               selector                    feature_prefix  url template
-        # workspaces    workspaces                  /features/      workspaces/{person_id}/features/{feature}{path}
-        # locations     telephony/config/locations  /               telephony/config/locations/{person_id}{path}
-        # person        people                      /features       people/{person_id}/features/{feature}{path}
+        # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
+        # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
+        # person        people                          /features       people/{person_id}/features/{feature}{path}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         self.feature_prefix = '/features/'
         if workspaces:
             self.selector = 'workspaces'
         elif locations:
             self.selector = 'telephony/config/locations'
+            self.feature_prefix = '/'
+        elif virtual_lines:
+            self.selector = 'telephony/config/virtualLines'
             self.feature_prefix = '/'
         else:
             self.selector = 'people'
@@ -48,8 +52,9 @@ class PersonSettingsApiChild(ApiChild, base=''):
         path = path and f'/{path}' or ''
         # url templates:
         #
-        #               selector                    feature_prefix  url template
-        # workspaces    workspaces                  /features/      workspaces/{person_id}/features/{feature}{path}
-        # locations     telephony/config/locations  /               telephony/config/locations/{person_id}{path}
-        # person        people                      /features       people/{person_id}/features/{feature}{path}
+        #               selector                        feature_prefix  url template
+        # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
+        # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
+        # person        people                          /features       people/{person_id}/features/{feature}{path}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         return self.session.ep(f'{self.selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
