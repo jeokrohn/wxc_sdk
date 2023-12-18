@@ -189,6 +189,8 @@ def main() -> int:
                 log('updating calling settings')
                 update = ws.model_copy(deep=True)
                 update.calling = WorkspaceCalling(type=CallingType.free)
+                update.workspace_location_id = None
+                update.location_id = None
                 await api.workspaces.update(workspace_id=ws.workspace_id, settings=update)
             log('done')
 
