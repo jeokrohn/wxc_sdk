@@ -370,8 +370,16 @@ class Endpoint:
         # now to the docstring
         source.print(f'"""')
         if self.title:
-            source.print(f'{self.title}')
-            print(file=source)
+            # suppress title if title is repeated in 1st line of docstring.
+            skip_title = False
+            first_docstring_line = self.docstring and next(l for l in self.docstring.splitlines())
+            if first_docstring_line:
+                first_docstring_line = first_docstring_line.strip('.')
+                if self.title.lower() == first_docstring_line.lower():
+                    skip_title = True
+            if not skip_title:
+                source.print(f'{self.title}')
+                print(file=source)
         if self.docstring:
             for line in lines_for_docstring(docstring=self.docstring,
                                             width=112):
