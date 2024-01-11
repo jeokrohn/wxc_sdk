@@ -676,6 +676,11 @@ class PythonAPI:
         class_names.add(class_name)
 
         base = commonprefix([f'{ep.url}/' for ep in self.endpoints])
+        # base cannot have url parameters
+        # --> cut base if there is a url parameter in there
+        match_before_parameter = re.match(r'(.+?/)\{', base)
+        if match_before_parameter:
+            base = match_before_parameter.group(1)
         # remove everything after the last '/'
         base = re.sub(r'/\w*$', '', base)
         doc_lines = chain([self.title, ''], self.cleaned_doc_string.splitlines())
