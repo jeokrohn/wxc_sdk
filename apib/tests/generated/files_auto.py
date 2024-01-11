@@ -47,7 +47,7 @@ class File(ApiModel):
     external_content: Optional[FileExternalContent] = None
 
 
-class FilesApi(ApiChild, base='files/{fileId}'):
+class FilesApi(ApiChild, base='files'):
     """
     Files
     
@@ -61,7 +61,7 @@ class FilesApi(ApiChild, base='files/{fileId}'):
         :type file_id: str
         :rtype: :class:`File`
         """
-        url = self.ep(f'')
+        url = self.ep(f'{file_id}')
         data = super().get(url)
         r = File.model_validate(data)
         return r

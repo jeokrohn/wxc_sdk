@@ -221,7 +221,7 @@ class SearchResponse(ApiModel):
     total: Optional[int] = None
 
 
-class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/contacts'):
+class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
     """
     Organization Contacts
     
@@ -299,7 +299,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
         body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses, by_alias=True, exclude_none=True))
         body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims, by_alias=True, exclude_none=True))
-        url = self.ep(f'')
+        url = self.ep(f'{org_id}/contacts')
         super().post(url, json=body)
 
     def get_a_contact(self, org_id: str, contact_id: str) -> ContactResponse:
@@ -317,7 +317,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type contact_id: str
         :rtype: :class:`ContactResponse`
         """
-        url = self.ep(f'{contact_id}')
+        url = self.ep(f'{org_id}/contacts/{contact_id}')
         data = super().get(url)
         r = ContactResponse.model_validate(data)
         return r
@@ -385,7 +385,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         body['phoneNumbers'] = loads(TypeAdapter(list[ContactPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
         body['sipAddresses'] = loads(TypeAdapter(list[ContactSipAddresses]).dump_json(sip_addresses, by_alias=True, exclude_none=True))
         body['ims'] = loads(TypeAdapter(list[ContactIms]).dump_json(ims, by_alias=True, exclude_none=True))
-        url = self.ep(f'{contact_id}')
+        url = self.ep(f'{org_id}/contacts/{contact_id}')
         super().patch(url, json=body)
 
     def delete_a_contact(self, org_id: str, contact_id: str):
@@ -404,10 +404,11 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type contact_id: str
         :rtype: None
         """
-        url = self.ep(f'{contact_id}')
+        url = self.ep(f'{org_id}/contacts/{contact_id}')
         super().delete(url)
 
-    def list_contacts(self, org_id: str, keyword: str = None, limit: int = None, source: str = None) -> SearchResponse:
+    def list_contacts(self, org_id: str, keyword: str = None, limit: int = None, source: str = None,
+                      group_ids: list[str] = None) -> SearchResponse:
         """
         List Contacts
 
@@ -415,6 +416,8 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
 
         `keyword` can be the value of "displayName", "firstName", "lastName", "email". An empty string of `keyword`
         means get all contacts.
+
+        `groupIds` is a comma separated list group IDs. Results are filtered based on those group IDs.
 
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
@@ -428,6 +431,8 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         :type limit: int
         :param source: List contacts with source.
         :type source: str
+        :param group_ids: Filter contacts based on groups.
+        :type group_ids: list[str]
         :rtype: :class:`SearchResponse`
         """
         params = {}
@@ -437,7 +442,9 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
             params['limit'] = limit
         if source is not None:
             params['source'] = source
-        url = self.ep(f'search')
+        if group_ids is not None:
+            params['groupIds'] = ','.join(group_ids)
+        url = self.ep(f'{org_id}/contacts/search')
         data = super().get(url, params=params)
         r = SearchResponse.model_validate(data)
         return r
@@ -460,7 +467,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         body = dict()
         body['schemas'] = schemas
         body['contacts'] = loads(TypeAdapter(list[BulkCreateContacts]).dump_json(contacts, by_alias=True, exclude_none=True))
-        url = self.ep(f'bulk')
+        url = self.ep(f'{org_id}/contacts/bulk')
         super().post(url, json=body)
 
     def bulk_delete_contacts(self, org_id: str, schemas: str, object_ids: list[str]):
@@ -481,5 +488,5 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations/{orgId}/con
         body = dict()
         body['schemas'] = schemas
         body['objectIds'] = object_ids
-        url = self.ep(f'bulk/delete')
+        url = self.ep(f'{org_id}/contacts/bulk/delete')
         super().post(url, json=body)

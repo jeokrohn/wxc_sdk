@@ -92,7 +92,7 @@ class CallRecordingInfo(ApiModel):
     start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
 
 
-class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='people/{personId}/features/callRecording'):
+class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='people'):
     """
     Beta User Call Settings with Compliance Announcement Feature
     
@@ -133,7 +133,7 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'')
+        url = self.ep(f'{person_id}/features/callRecording')
         data = super().get(url, params=params)
         r = CallRecordingInfo.model_validate(data)
         return r
@@ -197,5 +197,5 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
             body['repeat'] = loads(repeat.model_dump_json())
         if start_stop_announcement is not None:
             body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
-        url = self.ep(f'')
+        url = self.ep(f'{person_id}/features/callRecording')
         super().put(url, params=params, json=body)

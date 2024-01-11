@@ -502,8 +502,8 @@ class PeopleApi(ApiChild, base='people'):
         :type first_name: str
         :param last_name: The last name of the person.
         :type last_name: str
-        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update
-            request.
+        :param nick_name: The nickname of the person if configured. This cannot be overwritten and instead will be set
+            to the firstName automatically in update requests.
         :type nick_name: str
         :param avatar: The URL to the person's avatar in PNG format.
         :type avatar: str

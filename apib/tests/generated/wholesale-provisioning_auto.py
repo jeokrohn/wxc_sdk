@@ -262,7 +262,7 @@ class Subscriber(ApiModel):
 
 
 class ProvisionAWholesaleCustomerCustomerInfo(ApiModel):
-    #: The name of the Wholesale customer.
+    #: The name of the Wholesale customer. Name cannot include the "%" character.
     #: example: John's Pizza
     name: Optional[str] = None
     #: The primary email address of the customer.

@@ -235,3 +235,27 @@ class VoicemailApi(PersonSettingsApiChild):
         """
         self._configure_greeting(person_id=person_id, content=content, upload_as=upload_as, org_id=org_id,
                                  greeting_key='uploadNoAnswerGreeting')
+
+    def modify_passcode(self, person_id: str, passcode: str, org_id: str = None):
+        """
+        Modify a person's voicemail passcode.
+
+        Modifying a person's voicemail passcode requires a full administrator, user administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Modify voicemail passcode for this person.
+        :type person_id: str
+        :param passcode: Voicemail access passcode. The minimum length of the passcode is 6 and the maximum length is
+            30.
+        :type passcode: str
+        :param org_id: Modify voicemail passcode for a person in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['passcode'] = passcode
+        url = self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
+        super().put(url, params=params, json=body)

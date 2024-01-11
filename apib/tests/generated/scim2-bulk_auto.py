@@ -48,7 +48,7 @@ class BulkUser(ApiModel):
     operations: Optional[list[BulkUserOperations]] = None
 
 
-class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Bulk'):
+class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim'):
     """
     Bulk Manage SCIM 2 Users and Groups
     
@@ -130,7 +130,7 @@ class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim/{orgId}/v2/
         body['schemas'] = schemas
         body['failOnErrors'] = fail_on_errors
         body['operations'] = loads(TypeAdapter(list[BulkUserOperations]).dump_json(operations, by_alias=True, exclude_none=True))
-        url = self.ep(f'')
+        url = self.ep(f'{org_id}/v2/Bulk')
         data = super().post(url, json=body)
         r = BulkUser.model_validate(data)
         return r

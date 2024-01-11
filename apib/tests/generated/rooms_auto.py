@@ -123,8 +123,6 @@ class RoomsApi(ApiChild, base='rooms'):
                    datetime] = None, to_: Union[str, datetime] = None, sort_by: ListRoomsSortBy = None,
                    **params) -> Generator[Room, None, None]:
         """
-        List Rooms
-
         List rooms.
 
         The `title` of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer

@@ -144,7 +144,7 @@ class SearchMemberObject(ApiModel):
     location: Optional[Location] = None
 
 
-class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/devices/{deviceId}'):
+class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/devices'):
     """
     Beta Device Call Settings with ESN Feature
     
@@ -181,7 +181,7 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'members')
+        url = self.ep(f'{device_id}/members')
         data = super().get(url, params=params)
         r = GetMemberResponse.model_validate(data)
         return r
@@ -224,5 +224,5 @@ class BetaDeviceCallSettingsWithESNFeatureApi(ApiChild, base='telephony/config/d
             params['phoneNumber'] = phone_number
         if extension is not None:
             params['extension'] = extension
-        url = self.ep(f'availableMembers')
+        url = self.ep(f'{device_id}/availableMembers')
         return self.session.follow_pagination(url=url, model=SearchMemberObject, item_key='members', params=params)

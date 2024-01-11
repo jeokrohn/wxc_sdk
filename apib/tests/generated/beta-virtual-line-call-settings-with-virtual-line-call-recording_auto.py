@@ -89,7 +89,7 @@ class CallRecordingInfo(ApiModel):
     start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
 
 
-class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base='telephony/config/virtualLines/{virtualLineId}/callRecording'):
+class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base='telephony/config/virtualLines'):
     """
     Beta Virtual Line Call Settings with Virtual Line Call Recording
     
@@ -126,7 +126,7 @@ class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base=
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'')
+        url = self.ep(f'{virtual_line_id}/callRecording')
         data = super().get(url, params=params)
         r = CallRecordingInfo.model_validate(data)
         return r
@@ -184,5 +184,5 @@ class BetaVirtualLineCallSettingsWithVirtualLineCallRecordingApi(ApiChild, base=
             body['repeat'] = loads(repeat.model_dump_json())
         if start_stop_announcement is not None:
             body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
-        url = self.ep(f'')
+        url = self.ep(f'{virtual_line_id}/callRecording')
         super().put(url, params=params, json=body)

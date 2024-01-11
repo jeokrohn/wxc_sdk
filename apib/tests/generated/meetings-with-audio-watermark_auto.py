@@ -2890,7 +2890,7 @@ class MeetingsWithAudioWatermarkApi(ApiChild, base='meetings'):
         parameters is specified, the `meetingType` must be "meeting" and `state` must be "ended". These parameters are
         null by default.
 
-        * The `current` parameter only applies to meeting series. If it's `true`, the `start` and `end` attributes of
+        * The `current` parameter only applies to meeting series. If it's `false`, the `start` and `end` attributes of
         each returned meeting series object are for the first scheduled meeting of that series. If it's `true` or not
         specified, the `start` and `end` attributes are for the scheduled meeting which is ready to start or join or
         the upcoming scheduled meeting of that series.

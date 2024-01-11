@@ -46,8 +46,6 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
 
     def list_resource_groups(self, org_id: str = None) -> list[ResourceGroup]:
         """
-        List Resource Groups
-
         List resource groups.
 
         Use query parameters to filter the response.

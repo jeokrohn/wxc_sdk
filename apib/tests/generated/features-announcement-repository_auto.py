@@ -362,8 +362,6 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
 
     def delete_an_announcement_greeting_in_a_location(self, location_id: str, org_id: str = None):
         """
-        Delete an announcement greeting in a location
-
         Delete an announcement greeting in a location.
 
         This API requires a full administrator or location administrator auth token with a scope of

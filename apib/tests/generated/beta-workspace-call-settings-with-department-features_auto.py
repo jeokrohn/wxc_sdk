@@ -30,7 +30,7 @@ class PutPersonOrWorkspaceDetailsObjectDepartment(ApiModel):
     id: Optional[str] = None
 
 
-class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/workspaces/{workspaceId}'):
+class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/workspaces'):
     """
     Beta Workspace Call Settings with Department Features
     
@@ -73,7 +73,7 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'')
+        url = self.ep(f'{workspace_id}')
         data = super().get(url, params=params)
         r = GetPersonOrWorkspaceDetailsObjectDepartment.model_validate(data['department'])
         return r
@@ -106,5 +106,5 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
         body = dict()
         if department is not None:
             body['department'] = loads(department.model_dump_json())
-        url = self.ep(f'')
+        url = self.ep(f'{workspace_id}')
         super().put(url, params=params, json=body)

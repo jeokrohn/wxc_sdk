@@ -14,7 +14,7 @@ from wxc_sdk.base import SafeEnum as Enum
 __auto__ = ['MeetingMessagesApi']
 
 
-class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
+class MeetingMessagesApi(ApiChild, base='meeting/messages'):
     """
     Meeting Messages
     
@@ -54,5 +54,5 @@ class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
         :type meeting_message_id: str
         :rtype: None
         """
-        url = self.ep(f'')
+        url = self.ep(f'{meeting_message_id}')
         super().delete(url)

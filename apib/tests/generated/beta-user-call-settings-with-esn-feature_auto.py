@@ -428,8 +428,6 @@ class BetaUserCallSettingsWithESNFeatureApi(ApiChild, base=''):
 
     def retrieve_a_call_queue_agent_s_caller_id_information(self, person_id: str) -> AgentCallQueueId:
         """
-        Retrieve a Call Queue Agent's Caller ID information
-
         Retrieve a call queue agent's Caller ID information.
 
         Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone

@@ -85,7 +85,7 @@ class ListCallPickupObject(ApiModel):
     location_id: Optional[str] = None
 
 
-class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{locationId}/callPickups'):
+class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
     """
     Features:  Call Pickup
     
@@ -136,7 +136,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
             params['order'] = order
         if name is not None:
             params['name'] = name
-        url = self.ep(f'')
+        url = self.ep(f'{location_id}/callPickups')
         return self.session.follow_pagination(url=url, model=ListCallPickupObject, item_key='callPickups', params=params)
 
     def create_a_call_pickup(self, location_id: str, name: str, agents: list[str] = None, org_id: str = None) -> str:
@@ -169,7 +169,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         body['name'] = name
         if agents is not None:
             body['agents'] = agents
-        url = self.ep(f'')
+        url = self.ep(f'{location_id}/callPickups')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -198,7 +198,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{call_pickup_id}')
+        url = self.ep(f'{location_id}/callPickups/{call_pickup_id}')
         super().delete(url, params=params)
 
     def get_details_for_a_call_pickup(self, location_id: str, call_pickup_id: str,
@@ -226,7 +226,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{call_pickup_id}')
+        url = self.ep(f'{location_id}/callPickups/{call_pickup_id}')
         data = super().get(url, params=params)
         r = GetCallPickupObject.model_validate(data)
         return r
@@ -265,7 +265,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
             body['name'] = name
         if agents is not None:
             body['agents'] = agents
-        url = self.ep(f'{call_pickup_id}')
+        url = self.ep(f'{location_id}/callPickups/{call_pickup_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
         return r
@@ -309,5 +309,5 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations/{location
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
-        url = self.ep(f'availableUsers')
+        url = self.ep(f'{location_id}/callPickups/availableUsers')
         return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallPickupObject, item_key='agents', params=params)

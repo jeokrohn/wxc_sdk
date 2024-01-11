@@ -113,8 +113,6 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
                               status: CallMembershipStatus = None, from_: Union[str, datetime] = None, to_: Union[str,
                               datetime] = None, **params) -> Generator[CallMembership, None, None]:
         """
-        List Call Memberships
-
         List call memberships.
 
         By default, lists call memberships for all calls in which the authenticated user is an active participant.

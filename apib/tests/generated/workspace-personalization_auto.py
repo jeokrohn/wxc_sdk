@@ -22,7 +22,7 @@ class WorkspacePersonalizationTaskResponse(ApiModel):
     error_description: Optional[str] = None
 
 
-class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
+class WorkspacePersonalizationApi(ApiChild, base='workspaces'):
     """
     Workspace Personalization
     
@@ -67,7 +67,7 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
         """
         body = dict()
         body['email'] = email
-        url = self.ep(f'personalize')
+        url = self.ep(f'{workspace_id}/personalize')
         super().post(url, json=body)
 
     def get_personalization_task(self, workspace_id: str) -> WorkspacePersonalizationTaskResponse:
@@ -86,7 +86,7 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}'):
         :type workspace_id: str
         :rtype: :class:`WorkspacePersonalizationTaskResponse`
         """
-        url = self.ep(f'personalizationTask')
+        url = self.ep(f'{workspace_id}/personalizationTask')
         data = super().get(url)
         r = WorkspacePersonalizationTaskResponse.model_validate(data)
         return r

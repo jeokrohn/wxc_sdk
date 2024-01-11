@@ -262,8 +262,6 @@ class LocationsApi(ApiChild, base='locations'):
 
     def list_location_floors(self, location_id: str) -> list[Floor]:
         """
-        List Location Floors
-
         List location floors.
         Requires an administrator auth token with the `spark-admin:locations_read` scope.
 

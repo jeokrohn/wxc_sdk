@@ -231,7 +231,7 @@ class GetHuntGroupObject(ApiModel):
     enabled: Optional[bool] = None
 
 
-class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='telephony/config/locations/{locationId}/huntGroups'):
+class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='telephony/config/locations'):
     """
     Beta Features:  Hunt Group with Configure On-prem Phone Numbers
     
@@ -328,7 +328,7 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
-        url = self.ep(f'')
+        url = self.ep(f'{location_id}/huntGroups')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -357,7 +357,7 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{hunt_group_id}')
+        url = self.ep(f'{location_id}/huntGroups/{hunt_group_id}')
         data = super().get(url, params=params)
         r = GetHuntGroupObject.model_validate(data)
         return r
@@ -451,5 +451,5 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         body['addressAgents'] = loads(TypeAdapter(list[AddressAgentHuntGroupObject]).dump_json(address_agents, by_alias=True, exclude_none=True))
         if enabled is not None:
             body['enabled'] = enabled
-        url = self.ep(f'{hunt_group_id}')
+        url = self.ep(f'{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)

@@ -827,8 +827,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
                                                       org_id: str = None,
                                                       **params) -> Generator[Customer, None, None]:
         """
-        Get Local Gateway Dial Plan Usage for a Trunk
-
         Get Local Gateway Dial Plan Usage for a Trunk.
 
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -862,8 +860,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     def get_locations_using_the_local_gateway_as_pstn_connection_routing(self, trunk_id: str,
                                                                          org_id: str = None) -> list[Customer]:
         """
-        Get Locations Using the Local Gateway as PSTN Connection Routing
-
         Get Locations Using the Local Gateway as PSTN Connection Routing.
 
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -890,8 +886,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def get_route_groups_using_the_local_gateway(self, trunk_id: str, org_id: str = None) -> list[RouteGroup]:
         """
-        Get Route Groups Using the Local Gateway
-
         Get Route Groups Using the Local Gateway.
 
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -918,8 +912,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def get_local_gateway_usage_count(self, trunk_id: str, org_id: str = None) -> LocalGatewayUsageCount:
         """
-        Get Local Gateway Usage Count
-
         Get Local Gateway Usage Count
 
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -982,8 +974,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def validate_a_dial_pattern(self, dial_patterns: list[str], org_id: str = None) -> DialPatternValidateResult:
         """
-        Validate a Dial Pattern
-
         Validate a Dial Pattern.
 
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -1951,8 +1941,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     def get_numbers_assigned_to_a_route_list(self, route_list_id: str, order: str = None, number: str = None,
                                              org_id: str = None, **params) -> Generator[str, None, None]:
         """
-        Get Numbers assigned to a Route List
-
         Get numbers assigned to a Route List
 
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
@@ -1984,8 +1972,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
                                                                           name: list[str] = None, org_id: str = None,
                                                                           **params) -> Generator[Customer, None, None]:
         """
-        Get Local Gateway Call to On-Premises Extension Usage for a Trunk
-
         Get local gateway call to on-premises extension usage for a trunk.
 
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local

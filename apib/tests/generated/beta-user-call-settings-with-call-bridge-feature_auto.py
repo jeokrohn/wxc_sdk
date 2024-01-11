@@ -14,7 +14,7 @@ from wxc_sdk.base import SafeEnum as Enum
 __auto__ = ['BetaUserCallSettingsWithCallBridgeFeatureApi']
 
 
-class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/config/people/{personId}/features/callBridge'):
+class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/config/people'):
     """
     Beta User Call Settings with Call Bridge Feature
     
@@ -53,7 +53,7 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'')
+        url = self.ep(f'{person_id}/features/callBridge')
         data = super().get(url, params=params)
         r = data['warningToneEnabled']
         return r
@@ -85,5 +85,5 @@ class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/con
         body = dict()
         if warning_tone_enabled is not None:
             body['warningToneEnabled'] = warning_tone_enabled
-        url = self.ep(f'')
+        url = self.ep(f'{person_id}/features/callBridge')
         super().put(url, params=params, json=body)

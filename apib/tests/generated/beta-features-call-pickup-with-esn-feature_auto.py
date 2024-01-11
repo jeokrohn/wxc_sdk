@@ -77,7 +77,7 @@ class GetCallPickupObject(ApiModel):
     agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject]] = None
 
 
-class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/locations/{locationId}/callPickups'):
+class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/locations'):
     """
     Beta Features:  Call Pickup with ESN Feature
     
@@ -123,7 +123,7 @@ class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/l
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{call_pickup_id}')
+        url = self.ep(f'{location_id}/callPickups/{call_pickup_id}')
         data = super().get(url, params=params)
         r = GetCallPickupObject.model_validate(data)
         return r
@@ -167,5 +167,5 @@ class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/l
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
-        url = self.ep(f'availableUsers')
+        url = self.ep(f'{location_id}/callPickups/availableUsers')
         return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallPickupObject, item_key='agents', params=params)

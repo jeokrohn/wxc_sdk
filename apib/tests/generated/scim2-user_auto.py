@@ -369,7 +369,7 @@ class SearchUserResponse(ApiModel):
     resources: Optional[list[GetUserResponse]] = Field(alias='Resources', default=None)
 
 
-class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
+class SCIM2UsersApi(ApiChild, base='identity/scim'):
     """
     SCIM 2 Users
     
@@ -519,7 +519,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails, by_alias=True, exclude_none=True))
         body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
-        url = self.ep(f'')
+        url = self.ep(f'{org_id}/v2/Users')
         data = super().post(url, json=body)
         r = GetUserResponse.model_validate(data)
         return r
@@ -566,7 +566,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type user_id: str
         :rtype: :class:`GetUserResponse`
         """
-        url = self.ep(f'{user_id}')
+        url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().get(url)
         r = GetUserResponse.model_validate(data)
         return r
@@ -648,7 +648,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type sort_order: str
         :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
         :type start_index: str
-        :param count: An integer indicating the desired maximum number of query results per page.  The default is 10.
+        :param count: An integer indicating the desired maximum number of query results per page.  The default is 100.
         :type count: str
         :param return_groups: Define whether the group information needs to be returned.  The default is false.
         :type return_groups: str
@@ -680,7 +680,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
             params['includeGroupDetails'] = include_group_details
         if group_usage_types is not None:
             params['groupUsageTypes'] = group_usage_types
-        url = self.ep(f'')
+        url = self.ep(f'{org_id}/v2/Users')
         data = super().get(url, params=params)
         r = SearchUserResponse.model_validate(data)
         return r
@@ -819,7 +819,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails, by_alias=True, exclude_none=True))
         body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
-        url = self.ep(f'{user_id}')
+        url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().put(url, json=body)
         r = GetUserResponse.model_validate(data)
         return r
@@ -976,7 +976,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         body = dict()
         body['schemas'] = schemas
         body['Operations'] = loads(TypeAdapter(list[PatchUserOperations]).dump_json(operations, by_alias=True, exclude_none=True))
-        url = self.ep(f'{user_id}')
+        url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().patch(url, json=body)
         r = GetUserResponse.model_validate(data)
         return r
@@ -1015,5 +1015,5 @@ class SCIM2UsersApi(ApiChild, base='identity/scim/{orgId}/v2/Users'):
         :type user_id: str
         :rtype: None
         """
-        url = self.ep(f'{user_id}')
+        url = self.ep(f'{org_id}/v2/Users/{user_id}')
         super().delete(url)

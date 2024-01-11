@@ -156,7 +156,7 @@ class ListNumbersAssociatedWithASpecificWorkspaceResponse(ApiModel):
     organization: Optional[Location] = None
 
 
-class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{workspaceId}/features'):
+class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces'):
     """
     Beta Workspace Call Settings with ESN Feature
     
@@ -201,7 +201,7 @@ class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{wor
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'monitoring')
+        url = self.ep(f'{workspace_id}/features/monitoring')
         data = super().get(url, params=params)
         r = UserMonitoringGet.model_validate(data)
         return r
@@ -227,7 +227,7 @@ class BetaWorkspaceCallSettingsWithESNFeatureApi(ApiChild, base='workspaces/{wor
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'numbers')
+        url = self.ep(f'{workspace_id}/features/numbers')
         data = super().get(url, params=params)
         r = ListNumbersAssociatedWithASpecificWorkspaceResponse.model_validate(data)
         return r

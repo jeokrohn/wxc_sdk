@@ -14,7 +14,7 @@ from wxc_sdk.base import SafeEnum as Enum
 __auto__ = ['BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi']
 
 
-class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, base='telephony/config/locations/{locationId}/callRecording/complianceAnnouncement'):
+class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, base='telephony/config/locations'):
     """
     Beta Features:  Call Recording with Compliance Announcement Feature
     
@@ -58,7 +58,7 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'')
+        url = self.ep(f'{location_id}/callRecording/complianceAnnouncement')
         data = super().get(url, params=params)
         r = data['inboundPSTNCallsEnabled']
         return r
@@ -66,8 +66,6 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
     def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool = None,
                                                     org_id: str = None):
         """
-        Update the location compliance announcement
-
         Update the location compliance announcement.
 
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
@@ -92,5 +90,5 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeatureApi(ApiChild, ba
         body = dict()
         if inbound_pstncalls_enabled is not None:
             body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
-        url = self.ep(f'')
+        url = self.ep(f'{location_id}/callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)

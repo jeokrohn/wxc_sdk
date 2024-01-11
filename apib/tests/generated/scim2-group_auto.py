@@ -207,7 +207,7 @@ class GroupMemberResponse(ApiModel):
     members: Optional[list[GroupMemberResponseMembers]] = None
 
 
-class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
+class SCIM2GroupsApi(ApiChild, base='identity/scim'):
     """
     SCIM 2 Groups
     
@@ -281,7 +281,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         body['externalId'] = external_id
         body['members'] = loads(TypeAdapter(list[GroupMemberObject]).dump_json(members, by_alias=True, exclude_none=True))
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
-        url = self.ep(f'')
+        url = self.ep(f'{org_id}/v2/Groups')
         data = super().post(url, json=body)
         r = GetGroupResponse.model_validate(data)
         return r
@@ -336,7 +336,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         params = {}
         if excluded_attributes is not None:
             params['excludedAttributes'] = excluded_attributes
-        url = self.ep(f'{group_id}')
+        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         data = super().get(url, params=params)
         r = GetGroupResponse.model_validate(data)
         return r
@@ -396,7 +396,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         :type attributes: str
         :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
         :type start_index: int
-        :param count: An integer indicating the desired maximum number of query results per page. The default is 10.
+        :param count: An integer indicating the desired maximum number of query results per page. The default is 100.
         :type count: int
         :param sort_by: A string indicating the attribute whose value be used to order the returned responses. Now we
             only allow `displayName, id, meta.lastModified` to sort.
@@ -429,7 +429,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
             params['includeMembers'] = str(include_members).lower()
         if member_type is not None:
             params['memberType'] = member_type
-        url = self.ep(f'')
+        url = self.ep(f'{org_id}/v2/Groups')
         data = super().get(url, params=params)
         r = SearchGroupResponse.model_validate(data)
         return r
@@ -499,7 +499,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
             params['count'] = count
         if member_type is not None:
             params['memberType'] = member_type
-        url = self.ep(f'{group_id}/Members')
+        url = self.ep(f'{org_id}/v2/Groups/{group_id}/Members')
         data = super().get(url, params=params)
         r = GroupMemberResponse.model_validate(data)
         return r
@@ -577,7 +577,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         body['externalId'] = external_id
         body['members'] = loads(TypeAdapter(list[GroupMemberObject]).dump_json(members, by_alias=True, exclude_none=True))
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
-        url = self.ep(f'{group_id}')
+        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         data = super().put(url, json=body)
         r = GetGroupResponse.model_validate(data)
         return r
@@ -742,7 +742,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         body = dict()
         body['schemas'] = schemas
         body['Operations'] = loads(TypeAdapter(list[PatchGroupOperations]).dump_json(operations, by_alias=True, exclude_none=True))
-        url = self.ep(f'{group_id}')
+        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         data = super().patch(url, json=body)
         r = GetGroupResponse.model_validate(data)
         return r
@@ -784,5 +784,5 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim/{orgId}/v2/Groups'):
         :type group_id: str
         :rtype: None
         """
-        url = self.ep(f'{group_id}')
+        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         super().delete(url)

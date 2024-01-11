@@ -534,8 +534,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def retrieve_call_forwarding_settings_for_a_workspace(self, workspace_id: str,
                                                           org_id: str = None) -> ModifyPlaceCallForwardSettings:
         """
-        Retrieve Call Forwarding Settings for a Workspace
-
         Retrieve Call Forwarding Settings for a Workspace.
 
         Three types of call forwarding are supported:
@@ -576,8 +574,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
                                                         business_continuity: CallForwardingBusyGet,
                                                         org_id: str = None):
         """
-        Modify Call Forwarding Settings for a Workspace
-
         Modify call forwarding settings for a Workspace.
 
         Three types of call forwarding are supported:
@@ -622,8 +618,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
     def retrieve_call_waiting_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> bool:
         """
-        Retrieve Call Waiting Settings for a Workspace
-
         Retrieve Call Waiting Settings for a Workspace.
 
         Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can
@@ -652,8 +646,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def modify_call_waiting_settings_for_a_workspace(self, workspace_id: str, enabled: bool = None,
                                                      org_id: str = None):
         """
-        Modify Call Waiting Settings for a Workspace
-
         Modify Call Waiting Settings for a Workspace.
 
         Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can
@@ -684,8 +676,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
     def retrieve_caller_id_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> PlaceCallerIdGet:
         """
-        Retrieve Caller ID Settings for a Workspace
-
         Retrieve Caller ID Settings for a Workspace.
 
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
@@ -718,8 +708,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
                                                   custom_external_caller_id_name: str = None,
                                                   location_external_caller_id_name: str = None, org_id: str = None):
         """
-        Modify Caller ID Settings for a Workspace
-
         Modify Caller ID settings for a Workspace.
 
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
@@ -810,8 +798,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def modify_monitoring_settings_for_a_workspace(self, workspace_id: str, enable_call_park_notification: bool = None,
                                                    monitored_elements: list[str] = None, org_id: str = None):
         """
-        Modify Monitoring Settings for a Workspace
-
         Modify Monitoring settings for a Workspace.
 
         Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
@@ -848,8 +834,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def retrieve_music_on_hold_settings_for_a_workspace(self, workspace_id: str,
                                                         org_id: str = None) -> GetMusicOnHoldObject:
         """
-        Retrieve Music On Hold Settings for a Workspace
-
         Retrieve Music On Hold Settings for a Workspace.
 
         Music on hold is played when a caller is put on hold, or the call is parked.
@@ -878,8 +862,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
                                                       audio_announcement_file: AudioAnnouncementFileGetObject = None,
                                                       org_id: str = None):
         """
-        Modify Music On Hold Settings for a Workspace
-
         Modify music on hold settings for a Workspace.
 
         Music on hold is played when a caller is put on hold, or the call is parked.
@@ -945,8 +927,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def retrieve_incoming_permission_settings_for_a_workspace(self, workspace_id: str,
                                                               org_id: str = None) -> UserInboundPermissionGet:
         """
-        Retrieve Incoming Permission Settings for a Workspace
-
         Retrieve Incoming Permission settings for a Workspace.
 
         Incoming permission settings allow modifying permissions for a workspace that can be different from the
@@ -977,8 +957,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
                                                             internal_calls_enabled: bool = None,
                                                             collect_calls_enabled: bool = None, org_id: str = None):
         """
-        Modify Incoming Permission Settings for a Workspace
-
         Modify Incoming Permission settings for a Workspace.
 
         Incoming permission settings allow modifying permissions for a workspace that can be different from the
@@ -1022,8 +1000,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def retrieve_outgoing_permission_settings_for_a_workspace(self, workspace_id: str,
                                                               org_id: str = None) -> UserOutgoingPermissionGet:
         """
-        Retrieve Outgoing Permission Settings for a Workspace
-
         Retrieve Outgoing Permission settings for a Workspace.
 
         Turn on outgoing call settings for this workspace to override the calling settings from the location that are
@@ -1089,8 +1065,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
     def retrieve_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None) -> list[AuthorizationCode]:
         """
-        Retrieve Access Codes for a Workspace
-
         Retrieve Access codes for a Workspace.
 
         Access codes are used to bypass permissions.
@@ -1118,8 +1092,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def modify_access_codes_for_a_workspace(self, workspace_id: str, delete_codes: list[str] = None,
                                             org_id: str = None):
         """
-        Modify Access Codes for a Workspace
-
         Modify Access codes for a workspace.
 
         Access codes are used to bypass permissions.
@@ -1258,8 +1230,6 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def retrieve_transfer_numbers_settings_for_a_workspace(self, workspace_id: str,
                                                            org_id: str = None) -> TransferNumberGet:
         """
-        Retrieve Transfer Numbers Settings for a Workspace
-
         Retrieve Transfer Numbers Settings for a Workspace.
 
         When calling a specific call type, this workspace will be automatically transferred to another number. The

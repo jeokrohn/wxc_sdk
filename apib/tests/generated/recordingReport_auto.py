@@ -426,7 +426,9 @@ class RecordingReportApi(ApiChild, base='recordingReport'):
         :type to_: Union[str, datetime]
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
-            site they manage and the API will return recording audit report summaries of that user.
+            site they manage and the API will return recording audit report summaries of that user. If a special value
+            of `all` is set for `hostEmail`, the admin can list recording audit report summaries of all users on the
+            target site, not of a single user.
         :type host_email: str
         :param site_url: URL of the Webex site which the API lists recording audit report summaries from. If not
             specified, the API lists summary audit report for recordings from the user's preferred site. All available
