@@ -44,6 +44,8 @@ class License(ApiModel):
     total_units: int
     #: Total number of license units consumed.
     consumed_units: int
+    consumed_by_users: Optional[int] = None
+    consumed_by_workspaces: Optional[int] = None
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
     subscription_id: Optional[str] = None
     #: The Webex Meetings site associated with this license.
@@ -60,14 +62,23 @@ class License(ApiModel):
 
     @property
     def webex_calling_professional(self) -> bool:
+        """
+        is this a Webex Calling professional license
+        """
         return self.name == 'Webex Calling - Professional'
 
     @property
     def webex_calling_basic(self) -> bool:
+        """
+        is this a Webex Calling basic license
+        """
         return self.name == 'Webex Calling - Basic'
 
     @property
     def webex_calling_workspaces(self) -> bool:
+        """
+        is this a Webex Calling workspace license
+        """
         return self.name == 'Webex Calling - Workspaces'
 
 
