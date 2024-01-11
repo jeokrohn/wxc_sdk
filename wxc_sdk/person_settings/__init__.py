@@ -179,6 +179,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.people)
         self.voicemail = VoicemailApi(session=session)
 
+    # TODO: move to voicemail API?
     def reset_vm_pin(self, person_id: str, org_id: str = None):
         """
         Reset Voicemail PIN

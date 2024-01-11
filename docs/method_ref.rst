@@ -533,6 +533,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.voicemail.configure_no_answer_greeting
         Configure No Answer Voicemail Greeting for a Person
      - :meth:`~wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting`
+   * - api.person_settings.voicemail.modify_passcode
+        Modify a person's voicemail passcode
+     - :meth:`~wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode`
    * - api.person_settings.voicemail.read
         Read Voicemail Settings for a Person
      - :meth:`~wxc_sdk.person_settings.voicemail.VoicemailApi.read`

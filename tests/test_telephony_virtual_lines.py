@@ -42,7 +42,7 @@ class VirtualLineTest(TestWithLocations):
                                                         location_id=location.location_id)
 
     @asynccontextmanager
-    async def assert_virtual_lines(self, min_count: int, min_create: int = 0):
+    async def assert_virtual_lines(self, min_count: int, min_create: int = 0, delete_after_test: bool = True):
         """
         Guarantee that we have "enough" virtual lines for the test
         yields a VirtualLineContext instance
@@ -77,7 +77,7 @@ class VirtualLineTest(TestWithLocations):
         try:
             yield None
         finally:
-            if not new_vl_ids:
+            if not new_vl_ids or not delete_after_test:
                 return
             # delete all virtual lines we created temporarily
             with self.no_log():
@@ -422,7 +422,7 @@ class TestWithTemporaryVirtualLine(VirtualLineTest):
 
         new_extension = next(self.extensions)
         api = self.api.telephony.virtual_lines
-        vl_id = api.create(first_name='VL', last_name=new_extension,
+        vl_id = api.create(first_name='VL', last_name=f'last {new_extension}',
                            location_id=self.target_location.location_id,
                            extension=new_extension)
         virtual_lines = list(api.list(id=[vl_id]))
@@ -615,6 +615,15 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         # verify that the made up permission is present in the serialized data
         dumped = parsed_response.model_dump()
         self.assertEqual(response_body, dumped)
+
+
+class TestBulkDelete(TestWithLocations):
+    @async_test
+    async def test_001_bulk_delete(self):
+        target_location = choice(self.locations)
+        vl_ids = await create_virtual_lines(api=self.async_api, location_id=target_location.location_id, vl_count=20)
+        await asyncio.gather(*[self.async_api.telephony.virtual_lines.delete(virtual_line_id=vl_id)
+                               for vl_id in vl_ids])
 
 
 class TestDeleteAll(TestCaseWithLog):
