@@ -98,9 +98,15 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :type org_id: str
         """
         if authorization_id:
+            if client_id or org_id:
+                raise ValueError(
+                    'Invalid parameter combination: authorization_id cannot be combined with client_id or org_id.')
             url = self.ep(authorization_id)
             params = None
         else:
+            if not client_id:
+                raise ValueError(
+                    'Invalid parameter combination: client_id is required when authorization_id is not specified.')
             url = self.ep()
             params = client_id and {'clientId': client_id} or dict()
             if org_id:
