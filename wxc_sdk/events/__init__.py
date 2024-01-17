@@ -82,6 +82,7 @@ class EventData(ApiModel):
     #: example: PROJECT UPDATE - A new project plan has been published on Box: http://box.com/s/lf5vj. The PM for
     #: this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
+    attachments: Optional[list[Any]] = None
     #: example: Y2lzY29zcGFy...
     person_id: Optional[str] = None
     #: example: matt@example.com
