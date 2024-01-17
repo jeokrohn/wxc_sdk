@@ -4,12 +4,14 @@ Test for receptionist client settings
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from unittest import skip
 
 from wxc_sdk.all_types import Person, ReceptionistSettings
 from wxc_sdk.rest import RestError
 from tests.base import TestCaseWithUsers
 
 
+@skip('Receptionist client is not available anymore')
 class TestRead(TestCaseWithUsers):
 
     # noinspection DuplicatedCode,PyShadowingNames
