@@ -22,6 +22,10 @@ class PersonPhoneNumber(ApiModel):
     direct_number: Optional[str] = None
     #: Extension
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str] = None
     #: Optional ring pattern and this is applicable only for alternate numbers.
     ring_pattern: Optional[RingPattern] = None
 
