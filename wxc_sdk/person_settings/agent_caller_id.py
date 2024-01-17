@@ -25,6 +25,10 @@ class AgentQueue(ApiModel):
     phone_number: Optional[str] = None
     #: When not null, indicates the Call Queue's extension number.
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    esn: Optional[str] = None
 
 
 class QueueCallerId(ApiModel):
