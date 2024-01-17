@@ -46,8 +46,6 @@ class Device(ApiModel):
     display_name: str
     #: The workspace associated with the device.
     workspace_id: Optional[str] = None
-    #: The workspace location associated with the device.
-    workspace_location_id: Optional[str] = None
     #: The person associated with the device.
     person_id: Optional[str] = None
     #: The organization associated with the device
@@ -84,6 +82,10 @@ class Device(ApiModel):
     upgrade_channel: Optional[str] = None
     #: The date and time that the device was registered, in ISO8601 format.
     created: Optional[datetime] = None
+    #: The location associated with the device.
+    location_id: Optional[str] = None
+    #: The workspace location associated with the device.
+    workspace_location_id: Optional[str] = None
     #: The date and time that the device was first seen, in ISO8601 format.
     first_seen: Optional[datetime] = None
     #: The date and time that the device was last seen, in ISO8601 format.
