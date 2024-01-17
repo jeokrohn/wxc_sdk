@@ -50,6 +50,8 @@ class DeviceOwner(ApiModel):
     first_name: str
     #: user or workspace?
     owner_type: UserType = Field(alias='type')
+    #: user location
+    location: Optional[IdAndName] = None
 
 
 class DeviceActivationState(str, Enum):
