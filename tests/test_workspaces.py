@@ -425,7 +425,7 @@ class TestCreate(TestWithLocations):
             type=CallingType.free)
         print(f'Updating workspace "{name}" in location "{target_location.name}" ')
         after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
-                                                   settings=update)
+                                           settings=update)
         print(f'after update:')
         print(json.dumps(json.loads(after.model_dump_json()), indent=2))
 

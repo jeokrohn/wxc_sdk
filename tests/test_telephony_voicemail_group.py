@@ -486,10 +486,11 @@ class TestVmGroup(TestWithLocations):
                                   if request.status == 204]
 
         # avoid empty sequence for min(), max(), mean()
-        failure_response_times = failure_response_times or [None]
-        success_response_times = success_response_times or [None]
-        print(f'Success: min={min(success_response_times):.2f}, max={max(success_response_times):.2f}, '
-              f'mean={mean(success_response_times):.2f}')
+        failure_response_times = failure_response_times or None
+        success_response_times = success_response_times or None
+        if success_response_times:
+            print(f'Success: min={min(success_response_times):.2f}, max={max(success_response_times):.2f}, '
+                  f'mean={mean(success_response_times):.2f}')
         if failure_response_times:
             print(f'Failure: min={min(failure_response_times):.2f}, max={max(failure_response_times):.2f}, '
                   f'mean={mean(failure_response_times):.2f}')
