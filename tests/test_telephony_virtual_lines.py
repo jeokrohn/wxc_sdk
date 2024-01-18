@@ -446,7 +446,8 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         """
         display_name = f'custom VL-{self.target.number.extension}'
         api = self.api.telephony.virtual_lines
-        api.update(virtual_line_id=self.target.id, display_name=display_name)
+        api.update(virtual_line_id=self.target.id, display_name=display_name, first_name=self.target_detail.first_name,
+                   last_name=self.target_detail.last_name)
         after_details = api.details(virtual_line_id=self.target.id)
         self.assertEqual(display_name, after_details.display_name)
         after_details.display_name = self.target_detail.display_name
