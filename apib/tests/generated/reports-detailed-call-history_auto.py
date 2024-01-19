@@ -29,8 +29,8 @@ class CDR(ApiModel):
     answer_time: Optional[datetime] = Field(alias='Answer time', default=None)
     #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered, and one will
     #: be answered.
-    #: example: true
-    answered: Optional[str] = Field(alias='Answered', default=None)
+    #: example: True
+    answered: Optional[bool] = Field(alias='Answered', default=None)
     #: The authorization code admin created for a location or site for users to use. Collected by the
     #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     #: example: 107

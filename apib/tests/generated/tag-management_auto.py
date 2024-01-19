@@ -49,8 +49,7 @@ class SubscriptionTagsResponse(ApiModel):
     #: example: Sub119911
     subscription_id: Optional[str] = None
     #: boolean flag for trial or not.
-    #: example: false
-    trial: Optional[str] = None
+    trial: Optional[bool] = None
 
 
 class PartnerTagsApi(ApiChild, base='partner/tags'):

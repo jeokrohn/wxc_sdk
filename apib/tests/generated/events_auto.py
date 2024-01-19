@@ -71,8 +71,8 @@ class EventData(ApiModel):
     #: example: ORIGINTATING
     call_direction: Optional[str] = None
     #: telephony; indicates if the call was answered
-    #: example: true
-    is_call_answered: Optional[str] = None
+    #: example: True
+    is_call_answered: Optional[bool] = None
     #: telephony; duration of call in seconds
     #: example: 192
     call_duration_seconds: Optional[str] = None

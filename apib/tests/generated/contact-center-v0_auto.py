@@ -259,8 +259,8 @@ class ActivityListDatasetMetadata(ApiModel):
     number_of_records_found: Optional[int] = None
     #: example: 3
     number_of_records_in_dataset: Optional[int] = None
-    #: example: true
-    is_complete: Optional[str] = None
+    #: example: True
+    is_complete: Optional[bool] = None
 
 
 class ActivityList(ApiModel):

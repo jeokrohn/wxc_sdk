@@ -298,8 +298,8 @@ class CallQueueQueueSettingsGetObjectWaitMessage(ApiModel):
     #: The international numbers for callback is enabled/disabled. The default value is `false`.
     international_callback_enabled: Optional[bool] = None
     #: Play updated estimated wait message.
-    #: example: true
-    play_updated_estimated_wait_message: Optional[str] = None
+    #: example: True
+    play_updated_estimated_wait_message: Optional[bool] = None
 
 
 class CallQueueQueueSettingsGetObjectComfortMessage(ApiModel):

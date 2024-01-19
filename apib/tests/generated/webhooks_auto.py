@@ -161,7 +161,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param event: The event type for the webhook.
         :type event: WebhookEvent
         :param filter: The filter that defines the webhook scope. See `Filtering Webhooks
-            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information.
+            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information. Please
+            note that if a filter of `hostEmail` or `hostUserId` is specified, `ownedBy` must be set to `org`.
         :type filter: str
         :param secret: The secret used to generate payload signature.
         :type secret: str

@@ -2886,6 +2886,9 @@ class MeetingsApi(ApiChild, base='meetings'):
 
         * `trackingCodes` is not supported for ended meeting instances.
 
+        * A full admin or a content admin can list all the ended and ongoing meeting instances of the organization he
+        manages with the `meeting:admin_schedule_read` scope and `meetingType=meeting` parameter.
+
         #### Request Header
 
         * `password`: Meeting password. Required when the meeting is protected by a password and the current user is
@@ -2965,7 +2968,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type to_: Union[str, datetime]
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
-            they manage and the API will return details for meetings that are hosted by that user.
+            they manage and the API returns meetings as if the user calling the API were the user of `hostEmail`
+            themself, and the meetings returned by the API include the meetings where the user of `hostEmail` is the
+            meeting host and those where they are an invitee.
         :type host_email: str
         :param site_url: URL of the Webex site which the API lists meetings from. If not specified, the API lists
             meetings from user's all sites. All available Webex sites of the user can be retrieved by `Get Site List`
@@ -3303,7 +3308,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :param host_email: Email address for the meeting host. This attribute should only be set if the user or
             application calling the API has the admin-level scopes. When used, the admin may specify the email of a
-            user in a site they manage to be the meeting host.
+            user in a site they manage to be the meeting host. The field is not editable and is only used to patch a
+            meeting on behalf of the real meeting host. Please use the `Reassign Meetings to a New Host
+            <https://developer.webex.com/docs/api/v1/meetings/reassign-meetings-to-a-new-host>`_ API if you need
+            to update the meeting host.
         :type host_email: str
         :param site_url: URL of the Webex site which the meeting is updated on. If not specified, the meeting is
             created on user's preferred site. All available Webex sites and preferred site of the user can be
@@ -3565,7 +3573,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :param host_email: Email address for the meeting host. This attribute should only be set if the user or
             application calling the API has the admin-level scopes. When used, the admin may specify the email of a
-            user in a site they manage to be the meeting host.
+            user in a site they manage to be the meeting host. The field is not editable and is only used to update a
+            meeting on behalf of the real meeting host. Please use the `Reassign Meetings to a New Host
+            <https://developer.webex.com/docs/api/v1/meetings/reassign-meetings-to-a-new-host>`_ API if you need
+            to update the meeting host.
         :type host_email: str
         :param site_url: URL of the Webex site which the meeting is updated on. If not specified, the meeting is
             created on user's preferred site. All available Webex sites and preferred site of the user can be

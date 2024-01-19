@@ -96,8 +96,6 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeaturePhase3Api(ApiChi
                                                         outbound_pstncalls_delay_enabled: bool = None,
                                                         delay_in_seconds: int = None, org_id: str = None):
         """
-        Update the organization compliance announcement
-
         Update the organization compliance announcement.
 
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
@@ -171,8 +169,6 @@ class BetaFeaturesCallRecordingWithComplianceAnnouncementFeaturePhase3Api(ApiChi
                                                     outbound_pstncalls_delay_enabled: bool = None,
                                                     delay_in_seconds: int = None, org_id: str = None):
         """
-        Update the location compliance announcement
-
         Update the location compliance announcement.
 
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback

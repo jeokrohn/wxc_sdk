@@ -134,8 +134,8 @@ class GetSharedLineMemberItem(ApiModel):
     #: example: True
     t38_fax_compression_enabled: Optional[bool] = None
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
-    #: example: true
-    primary_owner: Optional[str] = None
+    #: example: True
+    primary_owner: Optional[bool] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None

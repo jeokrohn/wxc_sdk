@@ -527,6 +527,12 @@ class Attribute:
     referenced_class: str
     optional: bool = field(default=False)
 
+    def __post_init__(self):
+        if (self.sample and isinstance(self.sample, str) and self.sample.lower() in {'true', 'false'} and
+                self.python_type != 'bool'):
+            log.warning(f'attribute "{self.name}" has sample value `{self.sample}` but is a {self.python_type} '
+                        f'instead of a bool')
+
     @classmethod
     def from_enum(cls, enum_element: ApibEnum) -> Generator['Attribute', None, None]:
         """

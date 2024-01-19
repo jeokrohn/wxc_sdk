@@ -38,8 +38,7 @@ class ECMFolder(ApiModel):
     #: example: 456
     item_id: Optional[str] = None
     #: Indicates if this is the default content storage for the room.
-    #: example: false
-    default_folder: Optional[str] = None
+    default_folder: Optional[bool] = None
     #: This should match the folder name in the ECM backend.
     #: example: OneDrive folder for shared documents
     display_name: Optional[str] = None
