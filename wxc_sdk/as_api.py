@@ -5391,7 +5391,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Person, params=params)]
 
-    async def create(self, settings: Person, calling_data: bool = False) -> Person:
+    async def create(self, settings: Person, calling_data: bool = False, min_response: bool = None) -> Person:
         """
         Create a Person
 
@@ -5414,10 +5414,17 @@ class AsPeopleApi(AsApiChild, base='people'):
         :type settings: Person
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+        :param min_response: Set to `true` to improve performance by omitting person details and returning only the ID
+            in the response when successful. If unsuccessful the response will have optional error details.
+        :type min_response: bool
         :return: new user
         :rtype: Person
         """
-        params = calling_data and {'callingData': 'true'} or None
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = str(calling_data).lower()
+        if min_response is not None:
+            params['minResponse'] = str(min_response).lower()
         url = self.ep()
         data = settings.model_dump_json(exclude={'person_id': True,
                                                  'created': True,
@@ -5463,7 +5470,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         ep = self.ep(path=person_id)
         await self.delete(ep)
 
-    async def update(self, person: Person, calling_data: bool = False, show_all_types: bool = False) -> Person:
+    async def update(self, person: Person, calling_data: bool = False, show_all_types: bool = False,
+               min_response: bool = None) -> Person:
         """
         Update details for a person, by ID.
 
@@ -5493,6 +5501,9 @@ class AsPeopleApi(AsApiChild, base='people'):
         :type calling_data: bool
         :param show_all_types: Include additional user data like #attendee role
         :type show_all_types: bool
+        :param min_response: Set to `true` to improve performance by omitting person details in the response. If
+            unsuccessful the response will have optional error details.
+        :type min_response: bool
         :return: Person details
         :rtype: Person
         """
@@ -5501,6 +5512,8 @@ class AsPeopleApi(AsApiChild, base='people'):
             params['callingData'] = 'true'
         if show_all_types:
             params['showAllTypes'] = 'true'
+        if min_response:
+            params['minResponse'] = 'true'
 
         if not all(v is not None
                    for v in (person.display_name, person.first_name, person.last_name)):
