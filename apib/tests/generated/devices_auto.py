@@ -108,7 +108,10 @@ class Device(ApiModel):
     #: The date and time that the device was registered, in ISO8601 format.
     #: example: 2016-04-21T17:00:00.000Z
     created: Optional[datetime] = None
-    #: The workspace location associated with the device.
+    #: The location associated with the device.
+    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
+    location_id: Optional[str] = None
+    #: The workspace location associated with the device. Deprecated, prefer `locationId`.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     workspace_location_id: Optional[str] = None
     #: Error codes coming from the device.
@@ -172,15 +175,16 @@ class DevicesApi(ApiChild, base='devices'):
     * Adding, updating, or deleting all devices in an organization requires an administrator auth token with the
     `spark-admin:devices_write` scope.
     
-    * Generating an activation code requires an auth token with the `identity:placeonetimepassword_create` scope.
+    * Generating an activation code requires an auth token with the `identity:placeonetimepassword_create` and
+    `spark-admin:devices_write` scopes.
     """
 
-    def list_devices(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
-                     display_name: str = None, product: ListDevicesProduct = None, type: ListDevicesType = None,
-                     tag: str = None, connection_status: str = None, serial: str = None, software: str = None,
-                     upgrade_channel: str = None, error_code: str = None, capability: DeviceCapabilities = None,
-                     permission: str = None, mac: str = None, org_id: str = None,
-                     **params) -> Generator[Device, None, None]:
+    def list_devices(self, person_id: str = None, workspace_id: str = None, location_id: str = None,
+                     workspace_location_id: str = None, display_name: str = None, product: ListDevicesProduct = None,
+                     type: ListDevicesType = None, tag: str = None, connection_status: str = None, serial: str = None,
+                     software: str = None, upgrade_channel: str = None, error_code: str = None,
+                     capability: DeviceCapabilities = None, permission: str = None, mac: str = None,
+                     org_id: str = None, **params) -> Generator[Device, None, None]:
         """
         List Devices
 
@@ -194,8 +198,11 @@ class DevicesApi(ApiChild, base='devices'):
         :param workspace_id:
         List devices by workspace ID.
         :type workspace_id: str
+        :param location_id:
+        List devices by location ID.
+        :type location_id: str
         :param workspace_location_id:
-        List devices by workspace location ID.
+        List devices by workspace location ID. Deprecated, prefer `locationId`.
         :type workspace_location_id: str
         :param display_name:
         List devices with this display name.
@@ -246,6 +253,8 @@ class DevicesApi(ApiChild, base='devices'):
             params['workspaceId'] = workspace_id
         if org_id is not None:
             params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
         if workspace_location_id is not None:
             params['workspaceLocationId'] = workspace_location_id
         if display_name is not None:
@@ -371,7 +380,8 @@ class DevicesApi(ApiChild, base='devices'):
         Create a Device Activation Code
 
         Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by
-        `personId`. This requires an auth token with the `identity:placeonetimepassword_create` scope.
+        `personId`. This requires an auth token with the `identity:placeonetimepassword_create` and
+        `spark-admin:devices_write` scopes.
 
         * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
         calling type to `freeCalling`.

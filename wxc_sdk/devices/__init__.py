@@ -164,11 +164,12 @@ class DevicesApi(ApiChild, base='devices'):
         super().__init__(session=session)
         self.settings_jobs = DeviceSettingsJobsApi(session=session)
 
-    def list(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
-             display_name: str = None, product: str = None, product_type: ProductType = None, tag: str = None,
-             connection_status: ConnectionStatus = None, serial: str = None, software: str = None,
-             upgrade_channel: str = None, error_code: str = None, capability: str = None,
-             permission: str = None, mac: str = None, org_id: str = None, **params) -> Generator[Device, None, None]:
+    def list(self, person_id: str = None, workspace_id: str = None, location_id: str = None,
+             workspace_location_id: str = None, display_name: str = None, product: str = None,
+             product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
+             serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
+             capability: str = None, permission: str = None, mac: str = None, org_id: str = None,
+             **params) -> Generator[Device, None, None]:
         """
         List Devices
 
@@ -179,7 +180,9 @@ class DevicesApi(ApiChild, base='devices'):
         :type person_id: str
         :param workspace_id: List devices by workspace ID.
         :type workspace_id: str
-        :param workspace_location_id: List devices by workspace location ID.
+        :param location_id: List devices by location ID.
+        :type location_id: str
+        :param workspace_location_id: List devices by workspace location ID. Deprecated, prefer `location_id`.
         :type workspace_location_id: str
         :param display_name: List devices with this display name.
         :type display_name: str
@@ -286,8 +289,21 @@ class DevicesApi(ApiChild, base='devices'):
         """
         Create a Device Activation Code
 
-        Generate an activation code for a device in a specific workspace by workspaceId. Currently, activation codes
-        may only be generated for shared workspaces--personal mode is not supported.
+        Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by
+        `personId`. This requires an auth token with the `identity:placeonetimepassword_create` and
+        `spark-admin:devices_write` scopes.
+
+        * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
+        calling type to `freeCalling`.
+
+        * Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.
+
+        * If no `model` is supplied, the `code` returned will only be accepted on RoomOS devices.
+
+        * If your device is a phone, you must provide the `model` as a field. You can get the `model` from the
+        `supported devices
+        <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
+
 
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str

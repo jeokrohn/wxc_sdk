@@ -588,11 +588,12 @@ class AsDevicesApi(AsApiChild, base='devices'):
         super().__init__(session=session)
         self.settings_jobs = AsDeviceSettingsJobsApi(session=session)
 
-    def list_gen(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
-             display_name: str = None, product: str = None, product_type: ProductType = None, tag: str = None,
-             connection_status: ConnectionStatus = None, serial: str = None, software: str = None,
-             upgrade_channel: str = None, error_code: str = None, capability: str = None,
-             permission: str = None, mac: str = None, org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
+    def list_gen(self, person_id: str = None, workspace_id: str = None, location_id: str = None,
+             workspace_location_id: str = None, display_name: str = None, product: str = None,
+             product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
+             serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
+             capability: str = None, permission: str = None, mac: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[Device, None, None]:
         """
         List Devices
 
@@ -603,7 +604,9 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type person_id: str
         :param workspace_id: List devices by workspace ID.
         :type workspace_id: str
-        :param workspace_location_id: List devices by workspace location ID.
+        :param location_id: List devices by location ID.
+        :type location_id: str
+        :param workspace_location_id: List devices by workspace location ID. Deprecated, prefer `location_id`.
         :type workspace_location_id: str
         :param display_name: List devices with this display name.
         :type display_name: str
@@ -644,11 +647,12 @@ class AsDevicesApi(AsApiChild, base='devices'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')
 
-    async def list(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
-             display_name: str = None, product: str = None, product_type: ProductType = None, tag: str = None,
-             connection_status: ConnectionStatus = None, serial: str = None, software: str = None,
-             upgrade_channel: str = None, error_code: str = None, capability: str = None,
-             permission: str = None, mac: str = None, org_id: str = None, **params) -> List[Device]:
+    async def list(self, person_id: str = None, workspace_id: str = None, location_id: str = None,
+             workspace_location_id: str = None, display_name: str = None, product: str = None,
+             product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
+             serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
+             capability: str = None, permission: str = None, mac: str = None, org_id: str = None,
+             **params) -> List[Device]:
         """
         List Devices
 
@@ -659,7 +663,9 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type person_id: str
         :param workspace_id: List devices by workspace ID.
         :type workspace_id: str
-        :param workspace_location_id: List devices by workspace location ID.
+        :param location_id: List devices by location ID.
+        :type location_id: str
+        :param workspace_location_id: List devices by workspace location ID. Deprecated, prefer `location_id`.
         :type workspace_location_id: str
         :param display_name: List devices with this display name.
         :type display_name: str
@@ -766,8 +772,21 @@ class AsDevicesApi(AsApiChild, base='devices'):
         """
         Create a Device Activation Code
 
-        Generate an activation code for a device in a specific workspace by workspaceId. Currently, activation codes
-        may only be generated for shared workspaces--personal mode is not supported.
+        Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by
+        `personId`. This requires an auth token with the `identity:placeonetimepassword_create` and
+        `spark-admin:devices_write` scopes.
+
+        * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
+        calling type to `freeCalling`.
+
+        * Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.
+
+        * If no `model` is supplied, the `code` returned will only be accepted on RoomOS devices.
+
+        * If your device is a phone, you must provide the `model` as a field. You can get the `model` from the
+        `supported devices
+        <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
+
 
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str
@@ -16402,11 +16421,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
     relevant endpoints.
     """
 
-    def list_gen(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
-             capacity: int = None,
-             workspace_type: WorkSpaceType = None, calling: CallingType = None,
-             supported_devices: WorkspaceSupportedDevices = None, calendar: CalendarType = None,
-             org_id: str = None, **params) -> AsyncGenerator[Workspace, None, None]:
+    def list_gen(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
+             display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
+             calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
+             calendar: CalendarType = None, org_id: str = None, **params) -> AsyncGenerator[Workspace, None, None]:
         """
         List Workspaces
 
@@ -16416,8 +16434,12 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         on category) and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or
         capacity.
 
-        :param workspace_location_id: Location associated with the workspace. Can be a lcoation id or a workspace
-            location id.
+        :param location_id: Location associated with the workspace. Values must originate from the /locations API and
+            not the legacy /workspaceLocations API.
+        :type location_id: str
+        :param workspace_location_id: Location associated with the workspace. Both values from the /locations API and
+            the legacy /workspaceLocations API are supported. This field is deprecated and integrations should prefer
+            `locationId` going forward.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str
@@ -16452,11 +16474,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
 
-    async def list(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
-             capacity: int = None,
-             workspace_type: WorkSpaceType = None, calling: CallingType = None,
-             supported_devices: WorkspaceSupportedDevices = None, calendar: CalendarType = None,
-             org_id: str = None, **params) -> List[Workspace]:
+    async def list(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
+             display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
+             calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
+             calendar: CalendarType = None, org_id: str = None, **params) -> List[Workspace]:
         """
         List Workspaces
 
@@ -16466,8 +16487,12 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         on category) and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or
         capacity.
 
-        :param workspace_location_id: Location associated with the workspace. Can be a lcoation id or a workspace
-            location id.
+        :param location_id: Location associated with the workspace. Values must originate from the /locations API and
+            not the legacy /workspaceLocations API.
+        :type location_id: str
+        :param workspace_location_id: Location associated with the workspace. Both values from the /locations API and
+            the legacy /workspaceLocations API are supported. This field is deprecated and integrations should prefer
+            `locationId` going forward.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str
@@ -16506,17 +16531,19 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         Create a Workspace
 
-        The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus parameters are optional,
-        and omitting them will result in the creation of a workspace without these values set, or set to their
-        default. A workspaceLocationId must be provided when the floorId is set. Calendar and calling can also be set
-        for a new workspace. Omitting them will default to free calling and no calendaring. The orgId parameter can
-        only be used by admin users of another organization (such as partners).
+        The `locationId`, `workspaceLocationId`, `floorId`, `capacity`, `type`, `notes` and `hotdeskingStatus`
+        parameters are optional, and omitting them will result in the creation of a workspace without these values
+        set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling
+        can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The
+        `orgId` parameter can only be used by admin users of another organization (such as partners).
 
-        Information for Webex Calling fields may be found here: locations and available numbers.
+        * Information for Webex Calling fields may be found here: `locations
+        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
 
-        The locationId and supportedDevices fields cannot be changed once configured.
+        * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
-        When creating a webexCalling workspace, a locationId and either a phoneNumber or extension or both is required.
+        * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
+        required.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -16552,23 +16579,26 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         Updates details for a workspace by ID.
 
-        Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that
-        are present in a GET request for the workspace details. Not including the optional capacity, type or notes
-        fields will result in the fields no longer being defined for the workspace. A workspaceLocationId must be
-        provided when the floorId is set. The workspaceLocationId, floorId, supportedDevices, calendar and calling
-        fields do not change when omitted from the update request.
+        Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
+        are present in a `GET request for the workspace details
+        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
+        `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
+        provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
+        `calendar` and `calling` fields do not change when omitted from the update request.
 
-        Information for Webex Calling fields may be found here: locations and available numbers.
+        * Information for Webex Calling fields may be found here: `locations
+        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
 
-        Updating the calling parameter is only supported if the existing calling type is freeCalling, none,
-        thirdPartySipCalling or webexCalling.
+        * Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`,
+        `thirdPartySipCalling` or `webexCalling`.
 
-        Updating the calling parameter to none, thirdPartySipCalling or webexCalling is not supported if the
+        * Updating the `calling` parameter to `none`, `thirdPartySipCalling` or `webexCalling` is not supported if the
         workspace contains any devices.
 
-        The locationId and supportedDevices fields cannot be changed once configured.
+        * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
-        When updating webexCalling information, a locationId and either a phoneNumber or extension or both is required.
+        * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
+        required.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str

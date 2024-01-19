@@ -114,13 +114,13 @@ class Workspace(ApiModel):
     #: `OrgId` associated with the workspace.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY
     org_id: Optional[str] = None
-    #: Location associated with the workspace.
-    #: example: YL34GrT...
-    workspace_location_id: Optional[str] = None
     #: Location associated with the workspace (ID to use for the `/locations API
     #: <https://developer.webex.com/docs/api/v1/locations>`_).
     #: example: Y2lzY29...
     location_id: Optional[str] = None
+    #: Legacy workspace location ID associated with the workspace. Prefer `locationId`.
+    #: example: YL34GrT...
+    workspace_location_id: Optional[str] = None
     #: Floor associated with the workspace.
     #: example: Y2lzY29z...
     floor_id: Optional[str] = None
@@ -249,23 +249,26 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     the relevant endpoints.
     """
 
-    def list_workspaces(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
-                        capacity: int = None, type: WorkspaceUpdateRequestType = None,
+    def list_workspaces(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
+                        display_name: str = None, capacity: int = None, type: WorkspaceUpdateRequestType = None,
                         calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
                         org_id: str = None, **params) -> Generator[Workspace, None, None]:
         """
-        List Workspaces
-
         List workspaces.
 
         Use query parameters to filter the response. The `orgId` parameter can only be used by admin users of another
-        organization (such as partners). The `workspaceLocationId`, `floorId`, `capacity` and `type` fields will only
-        be present for workspaces that have a value set for them. The special values `notSet` (for filtering on
-        category) and `-1` (for filtering on capacity) can be used to filter for workspaces without a type and/or
-        capacity.
+        organization (such as partners). The `locationId`, `workspaceLocationId`, `floorId`, `capacity` and `type`
+        fields will only be present for workspaces that have a value set for them. The special values `notSet` (for
+        filtering on category) and `-1` (for filtering on capacity) can be used to filter for workspaces without a
+        type and/or capacity.
 
-        :param workspace_location_id: Location associated with the workspace.
+        :param location_id: Location associated with the workspace. Values must originate from the /locations API and
+            not the legacy /workspaceLocations API.
+        :type location_id: str
+        :param workspace_location_id: Location associated with the workspace. Both values from the /locations API and
+            the legacy /workspaceLocations API are supported. This field is deprecated and integrations should prefer
+            `locationId` going forward.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str
@@ -291,6 +294,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         if org_id is not None:
             params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
         if workspace_location_id is not None:
             params['workspaceLocationId'] = workspace_location_id
         if floor_id is not None:
@@ -312,23 +317,21 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
-    def create_a_workspace(self, display_name: str, workspace_location_id: str = None, floor_id: str = None,
-                           capacity: int = None, type: WorkspaceType1 = None, sip_address: str = None,
-                           calling: WorkspaceCreationRequestCalling = None,
+    def create_a_workspace(self, display_name: str, location_id: str = None, workspace_location_id: str = None,
+                           floor_id: str = None, capacity: int = None, type: WorkspaceType1 = None,
+                           sip_address: str = None, calling: WorkspaceCreationRequestCalling = None,
                            calendar: WorkspaceCreationRequestCalendar = None, notes: str = None,
                            hotdesking_status: WorkspaceCreationRequestHotdeskingStatus = None,
                            device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
                            supported_devices: WorkspaceSupportedDevices = None, org_id: str = None) -> Workspace:
         """
-        Create a Workspace
-
         Create a workspace.
 
-        The `workspaceLocationId`, `floorId`, `capacity`, `type`, `notes` and `hotdeskingStatus`  parameters are
-        optional, and omitting them will result in the creation of a workspace without these values set, or set to
-        their default. A `workspaceLocationId` must be provided when the `floorId` is set. Calendar and calling can
-        also be set for a new workspace. Omitting them will default to free calling and no calendaring. The `orgId`
-        parameter can only be used by admin users of another organization (such as partners).
+        The `locationId`, `workspaceLocationId`, `floorId`, `capacity`, `type`, `notes` and `hotdeskingStatus`
+        parameters are optional, and omitting them will result in the creation of a workspace without these values
+        set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling
+        can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The
+        `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
         <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
@@ -340,8 +343,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         :param display_name: A friendly name for the workspace.
         :type display_name: str
-        :param workspace_location_id: Location associated with the workspace. Must be provided when the `floorId` is
-            set.
+        :param location_id: Location associated with the workspace. Must be provided when the `floorId` is set.
+        :type location_id: str
+        :param workspace_location_id: Legacy workspace location ID associated with the workspace. Prefer `locationId`.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str
@@ -375,6 +379,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         body['displayName'] = display_name
         if org_id is not None:
             body['orgId'] = org_id
+        if location_id is not None:
+            body['locationId'] = location_id
         if workspace_location_id is not None:
             body['workspaceLocationId'] = workspace_location_id
         if floor_id is not None:
@@ -408,8 +414,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         Shows details for a workspace, by ID.
 
-        The `workspaceLocationId`, `floorId`, `capacity`, `type` and `notes` fields will only be present if they have
-        been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.
+        The `locationId`, `workspaceLocationId`, `floorId`, `capacity`, `type` and `notes` fields will only be present
+        if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -420,11 +426,11 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         r = Workspace.model_validate(data)
         return r
 
-    def update_a_workspace(self, workspace_id: str, display_name: str = None, workspace_location_id: str = None,
-                           floor_id: str = None, capacity: int = None, type: WorkspaceUpdateRequestType = None,
-                           calendar: WorkspaceCreationRequestCalendar = None, sip_address: str = None,
-                           calling: WorkspaceCreationRequestCalling = None, notes: str = None,
-                           hotdesking_status: WorkspaceCreationRequestHotdeskingStatus = None,
+    def update_a_workspace(self, workspace_id: str, display_name: str = None, location_id: str = None,
+                           workspace_location_id: str = None, floor_id: str = None, capacity: int = None,
+                           type: WorkspaceUpdateRequestType = None, calendar: WorkspaceCreationRequestCalendar = None,
+                           sip_address: str = None, calling: WorkspaceCreationRequestCalling = None,
+                           notes: str = None, hotdesking_status: WorkspaceCreationRequestHotdeskingStatus = None,
                            device_hosted_meetings: WorkspaceDeviceHostedMeetings = None) -> Workspace:
         """
         Update a Workspace
@@ -434,8 +440,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
         <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
-        `notes` fields will result in the fields no longer being defined for the workspace. A `workspaceLocationId`
-        must be provided when the `floorId` is set. The `workspaceLocationId`, `floorId`, `supportedDevices`,
+        `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
+        provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.
 
         * Information for Webex Calling fields may be found here: `locations
@@ -456,8 +462,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type workspace_id: str
         :param display_name: A friendly name for the workspace.
         :type display_name: str
-        :param workspace_location_id: Location associated with the workspace. Must be provided when the `floorId` is
-            set.
+        :param location_id: Location associated with the workspace. Must be provided when the `floorId` is set.
+        :type location_id: str
+        :param workspace_location_id: Legacy workspace location ID associated with the workspace. Prefer `locationId`.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str
@@ -486,6 +493,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         body = dict()
         if display_name is not None:
             body['displayName'] = display_name
+        if location_id is not None:
+            body['locationId'] = location_id
         if workspace_location_id is not None:
             body['workspaceLocationId'] = workspace_location_id
         if floor_id is not None:
