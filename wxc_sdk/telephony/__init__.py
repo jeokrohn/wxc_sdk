@@ -54,6 +54,8 @@ __all__ = ['NumberListPhoneNumberType',
 class NumberListPhoneNumberType(str, Enum):
     primary = 'PRIMARY'
     alternate = 'ALTERNATE'
+    fax = 'FAX'
+    dnis = 'DNIS'
 
 
 class NumberListPhoneNumber(ApiModel):

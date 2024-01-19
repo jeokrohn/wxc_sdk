@@ -12,7 +12,10 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __auto__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'ItemObject', 'JobExecutionStatusObject',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasState', 'ItemObject', 'JobExecutionStatusObject',
             'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
             'NumberObjectLocation', 'NumberObjectOwner', 'NumberState', 'NumbersApi', 'StartJobResponse', 'State',
             'Status', 'StepExecutionStatusesObject', 'ValidateNumbersResponse']
@@ -291,6 +294,26 @@ class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):
     virtual_line = 'VIRTUAL_LINE'
 
 
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType(str, Enum):
+    number = 'NUMBER'
+    extension = 'EXTENSION'
+    default = 'Default'
+
+
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType(str, Enum):
+    primary = 'PRIMARY'
+    alternate = 'ALTERNATE'
+    fax = 'FAX'
+    dnis = 'DNIS'
+    default = 'Default'
+
+
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriasState(str, Enum):
+    active = 'ACTIVE'
+    inactive = 'INACTIVE'
+    default = 'Default'
+
+
 class NumbersApi(ApiChild, base='telephony/config'):
     """
     Numbers
@@ -449,8 +472,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
                                                                    order: str = None, owner_name: str = None,
                                                                    owner_id: str = None,
                                                                    owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType = None,
-                                                                   extension: str = None, number_type: str = None,
-                                                                   phone_number_type: str = None, state: str = None,
+                                                                   extension: str = None,
+                                                                   number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType = None,
+                                                                   phone_number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType = None,
+                                                                   state: GetPhoneNumbersForAnOrganizationWithGivenCriteriasState = None,
                                                                    details: bool = None,
                                                                    toll_free_numbers: bool = None,
                                                                    restricted_non_geo_numbers: bool = None,
@@ -488,18 +513,19 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :param extension: Returns the list of PSTN phone numbers with the given extension.
         :type extension: str
         :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers. This
-            parameter cannot be used along with `available` or `state`.
-        :type number_type: str
-        :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given `phoneNumberType`.
-        :type phone_number_type: str
-        :param state: Returns the list of PSTN phone numbers with matching state.
-        :type state: str
-        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
+            parameter cannot be used along with `available` or `state`.Possible input values
+        :type number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType
+        :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given
+            `phoneNumberType`.Possible input values
+        :type phone_number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType
+        :param state: Returns the list of PSTN phone numbers with matching state.Possible input values
+        :type state: GetPhoneNumbersForAnOrganizationWithGivenCriteriasState
+        :param details: Returns the overall count of the PSTN phone numbers along with other details for a given
             organization.
         :type details: bool
         :param toll_free_numbers: Returns the list of toll free phone numbers.
         :type toll_free_numbers: bool
-        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
+        :param restricted_non_geo_numbers: Returns the list of restricted non-geographical numbers.
         :type restricted_non_geo_numbers: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
@@ -670,8 +696,6 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
     def abandon_the_manage_numbers_job(self, job_id: str = None, org_id: str = None):
         """
-        Abandon the Manage Numbers Job
-
         Abandon the Manage Numbers Job.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
