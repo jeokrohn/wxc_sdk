@@ -39,4 +39,5 @@ async def get_calling_users():
         print(f'Got details for {len(details)} users in {expired * 1000:.3f} ms')
 
 
-asyncio.run(get_calling_users())
+if __name__ == '__main__':
+    asyncio.run(get_calling_users())
