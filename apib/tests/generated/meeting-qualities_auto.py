@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['MediaSessionQuality', 'MediaSessionQualityNetworkType', 'MeetingQualitiesApi', 'Resources', 'VideoIn',
-            'VideoInTransportType']
+__all__ = ['MediaSessionQuality', 'MediaSessionQualityNetworkType', 'MeetingQualitiesApi', 'Resources', 'VideoIn',
+           'VideoInTransportType']
 
 
 class MediaSessionQualityNetworkType(str, Enum):

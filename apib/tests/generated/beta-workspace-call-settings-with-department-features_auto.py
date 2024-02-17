@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaWorkspaceCallSettingsWithDepartmentFeaturesApi', 'GetPersonOrWorkspaceDetailsObjectDepartment',
-            'PutPersonOrWorkspaceDetailsObjectDepartment']
+__all__ = ['BetaWorkspaceCallSettingsWithDepartmentFeaturesApi', 'GetPersonOrWorkspaceDetailsObjectDepartment',
+           'PutPersonOrWorkspaceDetailsObjectDepartment']
 
 
 class GetPersonOrWorkspaceDetailsObjectDepartment(ApiModel):

@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaUserCallSettingsWithCallBridgeFeatureApi']
+__all__ = ['BetaUserCallSettingsWithCallBridgeFeatureApi']
 
 
 class BetaUserCallSettingsWithCallBridgeFeatureApi(ApiChild, base='telephony/config/people'):

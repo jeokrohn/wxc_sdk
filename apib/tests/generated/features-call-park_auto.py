@@ -11,12 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'FeaturesCallParkApi',
-            'GetAvailableRecallHuntGroupsObject', 'GetCallParkExtensionObject', 'GetCallParkObject',
-            'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject',
-            'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject',
-            'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject',
-            'ListCallParkExtensionObject', 'ListCallParkObject', 'PutRecallHuntGroupObject']
+__all__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'FeaturesCallParkApi',
+           'GetAvailableRecallHuntGroupsObject', 'GetCallParkExtensionObject', 'GetCallParkObject',
+           'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject',
+           'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject',
+           'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject',
+           'ListCallParkExtensionObject', 'ListCallParkObject', 'PutRecallHuntGroupObject']
 
 
 class CallParkSettingsObjectRingPattern(str, Enum):
@@ -377,7 +377,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type name: str
         :param recall: Recall options that are added to call park.
         :type recall: PutRecallHuntGroupObject
-        :param agents: Array of ID strings of people, workspaces and virtual lines that are added to call park.
+        :param agents: Array of ID strings of people, workspaces and virtual lines that are added to call park. The new
+            list of `agents` will replace any existing call park agents list.
         :type agents: list[str]
         :param org_id: Update call park settings from this organization.
         :type org_id: str

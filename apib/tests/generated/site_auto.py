@@ -11,15 +11,15 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetMeetingConfigurationCommonSettingObject',
-            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions',
-            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsEntryAndExitTone',
-            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsTelephonySupport',
-            'GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions',
-            'GetMeetingConfigurationCommonSettingObjectSecurityOptions',
-            'GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria',
-            'GetMeetingConfigurationCommonSettingObjectSiteOptions',
-            'GetMeetingConfigurationCommonSettingObjectTelephonyConfig', 'SiteApi']
+__all__ = ['GetMeetingConfigurationCommonSettingObject',
+           'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions',
+           'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsEntryAndExitTone',
+           'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsTelephonySupport',
+           'GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions',
+           'GetMeetingConfigurationCommonSettingObjectSecurityOptions',
+           'GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria',
+           'GetMeetingConfigurationCommonSettingObjectSiteOptions',
+           'GetMeetingConfigurationCommonSettingObjectTelephonyConfig', 'SiteApi']
 
 
 class GetMeetingConfigurationCommonSettingObjectSiteOptions(ApiModel):

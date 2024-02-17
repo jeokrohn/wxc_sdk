@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaFeaturesCallParkWithESNFeatureApi', 'GetCallParkExtensionObject', 'GetCallParkObject',
-            'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType',
-            'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject',
-            'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject']
+__all__ = ['BetaFeaturesCallParkWithESNFeatureApi', 'GetCallParkExtensionObject', 'GetCallParkObject',
+           'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType',
+           'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject',
+           'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject']
 
 
 class GetCallParkExtensionObject(ApiModel):

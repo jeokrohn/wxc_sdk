@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AgentStats', 'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'Artifact',
-            'ArtifactAttributes', 'ContactCenterApi', 'GetAgentsStatisticsInterval', 'ListCapturesQuery',
-            'ListCapturesResponse', 'Meta', 'QueueStats', 'QueueStatsResponse', 'Recording', 'RecordingStatus',
-            'Task', 'TaskAttributes', 'TaskAttributesStatus', 'TaskOwner', 'TaskWithCaptures', 'TasksResponse']
+__all__ = ['AgentStats', 'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'Artifact',
+           'ArtifactAttributes', 'ContactCenterApi', 'GetAgentsStatisticsInterval', 'ListCapturesQuery',
+           'ListCapturesResponse', 'Meta', 'QueueStats', 'QueueStatsResponse', 'Recording', 'RecordingStatus', 'Task',
+           'TaskAttributes', 'TaskAttributesStatus', 'TaskOwner', 'TaskWithCaptures', 'TasksResponse']
 
 
 class Meta(ApiModel):

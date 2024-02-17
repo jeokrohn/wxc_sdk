@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaCallControlsWithMuteAndUnmuteFeatureApi', 'Call', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum',
-            'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'DialResponse', 'PartyInformation',
-            'RecallInformation', 'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation',
-            'RedirectionReasonEnum', 'RejectActionEnum']
+__all__ = ['BetaCallControlsWithMuteAndUnmuteFeatureApi', 'Call', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum',
+           'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'DialResponse', 'PartyInformation',
+           'RecallInformation', 'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation',
+           'RedirectionReasonEnum', 'RejectActionEnum']
 
 
 class CallPersonalityEnum(str, Enum):

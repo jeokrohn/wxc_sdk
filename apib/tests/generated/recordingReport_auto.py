@@ -11,13 +11,13 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['MeetingRecordingArchiveChat', 'MeetingRecordingArchiveParticipant', 'MeetingRecordingArchivePoll',
-            'MeetingRecordingArchivePollAnswerSummary', 'MeetingRecordingArchivePollContent',
-            'MeetingRecordingArchivePollQuestion', 'MeetingRecordingArchivePollQuestionQuestion',
-            'MeetingRecordingArchivePollRespondent', 'MeetingRecordingArchiveQA', 'MeetingRecordingArchiveQAAnswer',
-            'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser', 'RecordingAchriveSummaryObject',
-            'RecordingAchriveSummaryObjectServiceType', 'RecordingArchiveReportObject', 'RecordingReportApi',
-            'RecordingReportObject', 'RecordingReportSummaryObject', 'SystemInfoCatalog']
+__all__ = ['MeetingRecordingArchiveChat', 'MeetingRecordingArchiveParticipant', 'MeetingRecordingArchivePoll',
+           'MeetingRecordingArchivePollAnswerSummary', 'MeetingRecordingArchivePollContent',
+           'MeetingRecordingArchivePollQuestion', 'MeetingRecordingArchivePollQuestionQuestion',
+           'MeetingRecordingArchivePollRespondent', 'MeetingRecordingArchiveQA', 'MeetingRecordingArchiveQAAnswer',
+           'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser', 'RecordingAchriveSummaryObject',
+           'RecordingAchriveSummaryObjectServiceType', 'RecordingArchiveReportObject', 'RecordingReportApi',
+           'RecordingReportObject', 'RecordingReportSummaryObject', 'SystemInfoCatalog']
 
 
 class RecordingReportSummaryObject(ApiModel):

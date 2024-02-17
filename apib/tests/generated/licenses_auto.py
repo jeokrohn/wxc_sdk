@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetLicenseDetailsIncludeAssignedTo', 'License', 'LicenseProperties', 'LicenseRequest',
-            'LicenseRequestOperation', 'LicenseSiteType', 'LicensesApi', 'LicensewithUsers', 'SiteResponse',
-            'SiteResponseAccountType', 'SiteUrlsRequest', 'SiteUrlsRequestAccountType', 'UserLicensesResponse',
-            'Users', 'UsersType']
+__all__ = ['GetLicenseDetailsIncludeAssignedTo', 'License', 'LicenseProperties', 'LicenseRequest',
+           'LicenseRequestOperation', 'LicenseSiteType', 'LicensesApi', 'LicensewithUsers', 'SiteResponse',
+           'SiteResponseAccountType', 'SiteUrlsRequest', 'SiteUrlsRequestAccountType', 'UserLicensesResponse',
+           'Users', 'UsersType']
 
 
 class LicenseSiteType(str, Enum):

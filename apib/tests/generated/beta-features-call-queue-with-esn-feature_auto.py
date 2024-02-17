@@ -11,17 +11,17 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'BetaFeaturesCallQueueWithESNFeatureApi', 'CallQueueQueueSettingsObject',
-            'CallQueueQueueSettingsObjectComfortMessage', 'CallQueueQueueSettingsObjectComfortMessageBypass',
-            'CallQueueQueueSettingsObjectMohMessage', 'CallQueueQueueSettingsObjectMohMessageNormalSource',
-            'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction',
-            'CallQueueQueueSettingsObjectOverflowGreeting', 'CallQueueQueueSettingsObjectWaitMessage',
-            'CallQueueQueueSettingsObjectWaitMessageWaitMode', 'CallQueueQueueSettingsObjectWelcomeMessage',
-            'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
-            'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
-            'GetCallQueueObjectAlternateNumberSettings', 'GetPersonPlaceVirtualLineCallQueueObject',
-            'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection',
-            'ListCallQueueObject', 'RingPatternObject']
+__all__ = ['AlternateNumbersWithPattern', 'BetaFeaturesCallQueueWithESNFeatureApi', 'CallQueueQueueSettingsObject',
+           'CallQueueQueueSettingsObjectComfortMessage', 'CallQueueQueueSettingsObjectComfortMessageBypass',
+           'CallQueueQueueSettingsObjectMohMessage', 'CallQueueQueueSettingsObjectMohMessageNormalSource',
+           'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction',
+           'CallQueueQueueSettingsObjectOverflowGreeting', 'CallQueueQueueSettingsObjectWaitMessage',
+           'CallQueueQueueSettingsObjectWaitMessageWaitMode', 'CallQueueQueueSettingsObjectWelcomeMessage',
+           'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
+           'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
+           'GetCallQueueObjectAlternateNumberSettings', 'GetPersonPlaceVirtualLineCallQueueObject',
+           'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection',
+           'ListCallQueueObject', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):

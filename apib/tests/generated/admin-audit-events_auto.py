@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdminAuditEventsApi', 'AuditEvent', 'AuditEventData']
+__all__ = ['AdminAuditEventsApi', 'AuditEvent', 'AuditEventData']
 
 
 class AuditEventData(ApiModel):

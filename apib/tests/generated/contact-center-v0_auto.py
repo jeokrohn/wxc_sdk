@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn',
-            'AgentChannelType', 'AgentCurrentState', 'AgentSession', 'AnalyzeEntitiesDocument', 'ContactCenterApi',
-            'Customer', 'CustomerActivity', 'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession',
-            'CustomerSessionTerminatingEnd', 'CustomerSessionTerminationType', 'Entity', 'EntityRecognition']
+__all__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentChannelType',
+           'AgentCurrentState', 'AgentSession', 'AnalyzeEntitiesDocument', 'ContactCenterApi', 'Customer',
+           'CustomerActivity', 'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession',
+           'CustomerSessionTerminatingEnd', 'CustomerSessionTerminationType', 'Entity', 'EntityRecognition']
 
 
 class AgentAgentDn(str, Enum):

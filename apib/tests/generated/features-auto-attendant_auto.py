@@ -11,18 +11,18 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject',
-            'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileObjectMediaFileType',
-            'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject',
-            'CallForwardRulesModifyObject', 'CallForwardRulesObject',
-            'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject',
-            'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject',
-            'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject',
-            'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection',
-            'FeaturesAutoAttendantApi', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantObject',
-            'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject',
-            'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction',
-            'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject']
+__all__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject',
+           'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileObjectMediaFileType',
+           'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject',
+           'CallForwardRulesModifyObject', 'CallForwardRulesObject',
+           'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject',
+           'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject',
+           'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject',
+           'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection',
+           'FeaturesAutoAttendantApi', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantObject',
+           'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject',
+           'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction',
+           'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -516,7 +516,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type last_name: str
         :param alternate_numbers: Alternate numbers defined for the auto attendant.
         :type alternate_numbers: list[AlternateNumbersObject]
-        :param language_code: Language code for the auto attendant.
+        :param language_code: Announcement language code for the auto attendant.
         :type language_code: str
         :param holiday_schedule: Holiday defined for the auto attendant.
         :type holiday_schedule: str
@@ -600,7 +600,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type last_name: str
         :param alternate_numbers: Alternate numbers defined for the auto attendant.
         :type alternate_numbers: list[AlternateNumbersObject]
-        :param language_code: Language code for the auto attendant.
+        :param language_code: Announcement language code for the auto attendant.
         :type language_code: str
         :param business_schedule: Business hours defined for the auto attendant.
         :type business_schedule: str

@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['FeaturesCallPickupApi', 'GetCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject',
-            'GetPersonPlaceVirtualLineCallPickupObjectType', 'GetUserNumberItemObject', 'ListCallPickupObject']
+__all__ = ['FeaturesCallPickupApi', 'GetCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject',
+           'GetPersonPlaceVirtualLineCallPickupObjectType', 'GetUserNumberItemObject', 'ListCallPickupObject']
 
 
 class GetPersonPlaceVirtualLineCallPickupObjectType(str, Enum):

@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnnouncementResponse', 'AnnouncementUsageResponse', 'AnnouncementsListResponse',
-            'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FeaturesAnnouncementRepositoryApi',
-            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'LocationObject']
+__all__ = ['AnnouncementResponse', 'AnnouncementUsageResponse', 'AnnouncementsListResponse',
+           'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FeaturesAnnouncementRepositoryApi',
+           'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'LocationObject']
 
 
 class FeatureReferenceObject(ApiModel):

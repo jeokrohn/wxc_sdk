@@ -11,12 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'BetaFeaturesHuntGroupWithDepartmentFeaturesApi',
-            'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
-            'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetHuntGroupObjectDepartment',
-            'GetPersonPlaceObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyHuntGroupObjectDepartment',
-            'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceObject',
-            'RingPatternObject']
+__all__ = ['AlternateNumbersWithPattern', 'BetaFeaturesHuntGroupWithDepartmentFeaturesApi',
+           'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
+           'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetHuntGroupObjectDepartment',
+           'GetPersonPlaceObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyHuntGroupObjectDepartment',
+           'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceObject',
+           'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):

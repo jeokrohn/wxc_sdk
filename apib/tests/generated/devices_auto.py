@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActivationCode', 'Device', 'DeviceCapabilities', 'DeviceConnectionStatus', 'DevicesApi',
-            'ListDevicesProduct', 'ListDevicesType', 'ManagedBy', 'ModifyDeviceTagsOp', 'NetworkConnectivityType']
+__all__ = ['ActivationCode', 'Device', 'DeviceCapabilities', 'DeviceConnectionStatus', 'DevicesApi',
+           'ListDevicesProduct', 'ListDevicesType', 'ManagedBy', 'ModifyDeviceTagsOp', 'NetworkConnectivityType']
 
 
 class ActivationCode(ApiModel):

@@ -11,15 +11,15 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse',
-            'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedGroupObject',
-            'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUserOperations',
-            'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType',
-            'PostUserUrnietfparamsscimschemasextensionenterprise20User',
-            'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager',
-            'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUserAddresses', 'PutUserPhoneNumbers',
-            'PutUserPhoneNumbersType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
-            'SipAddressObjectType', 'UserTypeObject']
+__all__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse',
+           'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedGroupObject',
+           'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUserOperations',
+           'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType',
+           'PostUserUrnietfparamsscimschemasextensionenterprise20User',
+           'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager',
+           'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUserAddresses', 'PutUserPhoneNumbers',
+           'PutUserPhoneNumbersType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
+           'SipAddressObjectType', 'UserTypeObject']
 
 
 class PatchUserOperationsOp(str, Enum):

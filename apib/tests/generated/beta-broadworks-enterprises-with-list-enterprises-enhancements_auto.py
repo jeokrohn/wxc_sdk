@@ -11,11 +11,11 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi', 'Enterprise',
-            'EnterpriseBroadworksDirectorySync', 'EnterpriseBroadworksDirectorySyncDirectorySyncStatus',
-            'EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors', 'TriggerDirectorySyncResponse',
-            'TriggerDirectorySyncResponseDirectorySyncStatus', 'TriggerUserDirectorySyncResponse',
-            'TriggerUserDirectorySyncResponseStatus', 'TriggerUserDirectorySyncResponseUserResponse']
+__all__ = ['BetaBroadWorksEnterprisesWithListEnterprisesEnhancementsApi', 'Enterprise',
+           'EnterpriseBroadworksDirectorySync', 'EnterpriseBroadworksDirectorySyncDirectorySyncStatus',
+           'EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors', 'TriggerDirectorySyncResponse',
+           'TriggerDirectorySyncResponseDirectorySyncStatus', 'TriggerUserDirectorySyncResponse',
+           'TriggerUserDirectorySyncResponseStatus', 'TriggerUserDirectorySyncResponseUserResponse']
 
 
 class EnterpriseBroadworksDirectorySyncDirectorySyncStatusErrors(ApiModel):

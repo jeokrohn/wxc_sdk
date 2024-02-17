@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi', 'Error', 'Subscriber',
-            'SubscriberPackage', 'SubscriberStatus']
+__all__ = ['BetaBroadWorksSubscribersWithEnterpriseGroupContactSupportApi', 'Error', 'Subscriber', 'SubscriberPackage',
+           'SubscriberStatus']
 
 
 class Error(ApiModel):

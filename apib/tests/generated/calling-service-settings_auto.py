@@ -11,12 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallingServiceSettingsApi', 'GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes',
-            'GetVoicemailRulesObjectDefaultVoicemailPinRules',
-            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences',
-            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits',
-            'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode',
-            'GetVoicemailSettingsObject', 'Language']
+__all__ = ['CallingServiceSettingsApi', 'GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes',
+           'GetVoicemailRulesObjectDefaultVoicemailPinRules',
+           'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences',
+           'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits',
+           'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode',
+           'GetVoicemailSettingsObject', 'Language']
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiModel):

@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListReport', 'ListReportStatus', 'ListReportType', 'ListWholesaleBillingReportsSortBy', 'Report',
-            'ReportError', 'ReportId', 'WholesaleBillingReportsApi']
+__all__ = ['ListReport', 'ListReportStatus', 'ListReportType', 'ListWholesaleBillingReportsSortBy', 'Report',
+           'ReportError', 'ReportId', 'WholesaleBillingReportsApi']
 
 
 class ListReportStatus(str, Enum):
@@ -118,7 +118,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
     Wholesale Billing Reports
     
     The Wholesale Billing Report APIs are targeted at Service Providers who sign up for the Webex for Wholesale
-    solution. These APIs provides customer and user breakdown reports to the service providers or partners. Service
+    solution. These APIs provide customer and user breakdown reports to the service providers or partners. Service
     providers can use these reports to reconcile their monthly invoices.
     
     Viewing Webex for Wholesale billing reports information requires a partner administrator auth token with the
@@ -131,8 +131,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
     remove users in excess of 10 account users, or terminate the Webex Developer
     Sandbox environment for any Developer resource misuse. To learn more about the
     error codes used in Wholesale billing reports API, see the [API Error
-    codes](/docs/api/guides/webex-for-broadworks-and-wholesale-common-guide#api-
-    error-codes) guides.
+    codes](/docs/api/guides/webex-for-wholesale#api-error-codes) guides.
     
     """
 

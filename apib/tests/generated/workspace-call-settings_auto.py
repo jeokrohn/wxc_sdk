@@ -11,19 +11,19 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
-            'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'CLIDPolicySelection',
-            'CallForwardingAlwaysGet', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet',
-            'CallForwardingPlaceSettingGet', 'CallingPermission', 'CallingPermissionAction',
-            'CallingPermissionCallType', 'ExternalCallerIdNamePolicy', 'GetMusicOnHoldObject',
-            'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch',
-            'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch',
-            'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType',
-            'ListNumbersAssociatedWithASpecificWorkspaceResponse', 'Location', 'ModifyPlaceCallForwardSettings',
-            'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
-            'MonitoredElementUserType', 'PhoneNumbers', 'PlaceCallerIdGet', 'TransferNumberGet',
-            'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet',
-            'UserNumberItem', 'UserOutgoingPermissionGet', 'Workspace', 'WorkspaceCallSettingsApi']
+__all__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
+           'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'CLIDPolicySelection',
+           'CallForwardingAlwaysGet', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet',
+           'CallForwardingPlaceSettingGet', 'CallingPermission', 'CallingPermissionAction',
+           'CallingPermissionCallType', 'ExternalCallerIdNamePolicy', 'GetMusicOnHoldObject',
+           'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch',
+           'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch',
+           'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType',
+           'ListNumbersAssociatedWithASpecificWorkspaceResponse', 'Location', 'ModifyPlaceCallForwardSettings',
+           'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
+           'MonitoredElementUserType', 'PhoneNumbers', 'PlaceCallerIdGet', 'TransferNumberGet',
+           'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet',
+           'UserNumberItem', 'UserOutgoingPermissionGet', 'Workspace', 'WorkspaceCallSettingsApi']
 
 
 class AuthorizationCode(ApiModel):

@@ -11,11 +11,11 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaLocationCallSettingsVoicemailWithESNFeatureApi', 'GetLocationVoicemailGroupObject',
-            'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage',
-            'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage',
-            'GetLocationVoicemailGroupObjectMessageStorageStorageType',
-            'GetLocationVoicemailGroupObjectNotifications', 'GetVoicemailGroupObject']
+__all__ = ['BetaLocationCallSettingsVoicemailWithESNFeatureApi', 'GetLocationVoicemailGroupObject',
+           'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage',
+           'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage',
+           'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications',
+           'GetVoicemailGroupObject']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):

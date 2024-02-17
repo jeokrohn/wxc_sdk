@@ -11,16 +11,16 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActionOnRouteList', 'CallRoutingApi', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType',
-            'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate',
-            'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'Emergency',
-            'FeatureAccessCode', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount',
-            'LocalGateways', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PstnNumber',
-            'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup',
-            'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
-            'RouteListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ServiceType',
-            'TestCallRoutingPostResponse', 'Trunk', 'TrunkGet', 'TrunkType', 'TrunkTypeWithDeviceType',
-            'VirtualExtension', 'VirtualExtensionRange']
+__all__ = ['ActionOnRouteList', 'CallRoutingApi', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType',
+           'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate',
+           'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'Emergency',
+           'FeatureAccessCode', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount',
+           'LocalGateways', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PstnNumber',
+           'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup',
+           'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
+           'RouteListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ServiceType',
+           'TestCallRoutingPostResponse', 'Trunk', 'TrunkGet', 'TrunkType', 'TrunkTypeWithDeviceType',
+           'VirtualExtension', 'VirtualExtensionRange']
 
 
 class ActionOnRouteList(str, Enum):

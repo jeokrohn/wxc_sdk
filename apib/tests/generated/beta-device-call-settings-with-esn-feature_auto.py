@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaDeviceCallSettingsWithESNFeatureApi', 'GetMemberResponse', 'LineType', 'Location', 'MemberObject',
-            'MemberType', 'SearchMemberObject']
+__all__ = ['BetaDeviceCallSettingsWithESNFeatureApi', 'GetMemberResponse', 'LineType', 'Location', 'MemberObject',
+           'MemberType', 'SearchMemberObject']
 
 
 class LineType(str, Enum):

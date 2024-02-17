@@ -11,12 +11,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType',
-            'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
-            'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
-            'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus',
-            'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices',
-            'WorkspaceType1', 'WorkspaceUpdateRequestType', 'WorkspacesApi']
+__all__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType',
+           'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
+           'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
+           'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus',
+           'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices',
+           'WorkspaceType1', 'WorkspaceUpdateRequestType', 'WorkspacesApi']
 
 
 class WorkspaceType1(str, Enum):

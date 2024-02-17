@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaConferenceControlsApi', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceStateEnum',
-            'ConferenceTypeEnum']
+__all__ = ['BetaConferenceControlsApi', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceStateEnum',
+           'ConferenceTypeEnum']
 
 
 class ConferenceStateEnum(str, Enum):

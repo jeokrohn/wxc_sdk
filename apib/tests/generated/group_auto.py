@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GroupResponse', 'GroupsApi', 'GroupsCollectionResponse', 'Member', 'PatchMemberWithOperation',
-            'PostMember']
+__all__ = ['GroupResponse', 'GroupsApi', 'GroupsCollectionResponse', 'Member', 'PatchMemberWithOperation',
+           'PostMember']
 
 
 class Member(ApiModel):

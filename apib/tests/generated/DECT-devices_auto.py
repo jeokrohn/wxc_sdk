@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AvailableMember', 'BaseStationPostResult', 'BaseStationResponse', 'CreateDECTNetworkModel',
-            'DECTDevicesSettingsApi', 'LineType', 'Location', 'MemberType']
+__all__ = ['AvailableMember', 'BaseStationPostResult', 'BaseStationResponse', 'CreateDECTNetworkModel',
+           'DECTDevicesSettingsApi', 'LineType', 'Location', 'MemberType']
 
 
 class CreateDECTNetworkModel(str, Enum):

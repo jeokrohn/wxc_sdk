@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaFeaturesPagingGroupWithDepartmentFeaturesApi', 'GetPagingGroupAgentObject',
-            'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'GetPagingGroupObjectDepartment',
-            'ListPagingGroupObject', 'UpdatePagingGroupObjectDepartment']
+__all__ = ['BetaFeaturesPagingGroupWithDepartmentFeaturesApi', 'GetPagingGroupAgentObject',
+           'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'GetPagingGroupObjectDepartment',
+           'ListPagingGroupObject', 'UpdatePagingGroupObjectDepartment']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):

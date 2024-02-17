@@ -11,14 +11,14 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'BetaFeaturesCallQueueWithDepartmentFeaturesApi',
-            'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow',
-            'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting',
-            'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
-            'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
-            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueObjectDepartment', 'GetPersonPlaceObject',
-            'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObjectDepartment', 'PostPersonPlaceObject',
-            'RingPatternObject']
+__all__ = ['AlternateNumbersWithPattern', 'BetaFeaturesCallQueueWithDepartmentFeaturesApi',
+           'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow',
+           'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting',
+           'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
+           'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
+           'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueObjectDepartment', 'GetPersonPlaceObject',
+           'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObjectDepartment', 'PostPersonPlaceObject',
+           'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):

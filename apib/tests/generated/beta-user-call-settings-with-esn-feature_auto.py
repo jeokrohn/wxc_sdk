@@ -11,13 +11,13 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AgentCallQueueId', 'AvailableSharedLineMemberItem', 'BetaUserCallSettingsWithESNFeatureApi',
-            'CallQueueObject', 'GetMonitoredElementsObject', 'GetMonitoredElementsObjectCallparkextension',
-            'GetMonitoredElementsObjectMember', 'GetNumbers', 'GetNumbersPhoneNumbers',
-            'GetNumbersPhoneNumbersRingPattern', 'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'LineType',
-            'Location', 'MonitoredMemberObject', 'MonitoredNumberObject', 'MonitoringSettings',
-            'PeopleOrPlaceOrVirtualLineType', 'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType',
-            'PushToTalkInfo', 'ReceptionInfo', 'UserType']
+__all__ = ['AgentCallQueueId', 'AvailableSharedLineMemberItem', 'BetaUserCallSettingsWithESNFeatureApi',
+           'CallQueueObject', 'GetMonitoredElementsObject', 'GetMonitoredElementsObjectCallparkextension',
+           'GetMonitoredElementsObjectMember', 'GetNumbers', 'GetNumbersPhoneNumbers',
+           'GetNumbersPhoneNumbersRingPattern', 'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'LineType',
+           'Location', 'MonitoredMemberObject', 'MonitoredNumberObject', 'MonitoringSettings',
+           'PeopleOrPlaceOrVirtualLineType', 'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType',
+           'PushToTalkInfo', 'ReceptionInfo', 'UserType']
 
 
 class CallQueueObject(ApiModel):

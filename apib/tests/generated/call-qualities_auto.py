@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AudioIn', 'AudioInType', 'CallQualitiesApi', 'MediaSessionQuality', 'VideoIn']
+__all__ = ['AudioIn', 'AudioInType', 'CallQualitiesApi', 'MediaSessionQuality', 'VideoIn']
 
 
 class VideoIn(ApiModel):

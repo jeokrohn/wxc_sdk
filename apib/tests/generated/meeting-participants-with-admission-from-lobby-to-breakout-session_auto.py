@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdmitParticipant', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice',
-            'InProgressParticipant', 'InProgressParticipantState',
-            'MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi', 'Participant', 'ParticipantState',
-            'ParticipantVideo']
+__all__ = ['AdmitParticipant', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice',
+           'InProgressParticipant', 'InProgressParticipantState',
+           'MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi', 'Participant', 'ParticipantState',
+           'ParticipantVideo']
 
 
 class ParticipantVideo(str, Enum):

@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'Attachment', 'DirectMessage', 'ListMessage',
-            'Message', 'MessageRoomType', 'MessagesApi']
+__all__ = ['AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'Attachment', 'DirectMessage', 'ListMessage',
+           'Message', 'MessageRoomType', 'MessagesApi']
 
 
 class MessageRoomType(str, Enum):

@@ -116,9 +116,9 @@ class CodeGenerator:
                 referenced_classes.add(python_class.name)
                 class_sources.append(class_source)
 
-        # __auto__ with all class names
-        auto_src = f"""__auto__ = [{", ".join(f"'{c}'" for c in sorted(referenced_classes))}]"""
-        auto_src = '\n'.join(break_line(auto_src, width=120, prefix=' ' * 12, prefix_first_line=''))
+        # __all__ with all class names
+        auto_src = f"""__all__ = [{", ".join(f"'{c}'" for c in sorted(referenced_classes))}]"""
+        auto_src = '\n'.join(break_line(auto_src, width=120, prefix=' ' * 11, prefix_first_line=''))
 
         source = '\n\n\n'.join(chain.from_iterable(((PREAMBLE, auto_src), class_sources)))
         source = source.strip()

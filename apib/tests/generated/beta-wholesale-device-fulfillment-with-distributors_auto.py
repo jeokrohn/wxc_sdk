@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaWholesaleDeviceFulfillmentWithDistributorsApi', 'CatalogResponse', 'CatalogResponseAvailability',
-            'DistributorDetailsResponse', 'DistributorDetailsResponseCapabilities', 'DistributorResponse',
-            'OrderRequestLineItem', 'OrderResponse', 'OrderResponseLineItem', 'OrderShippingDetails', 'Person']
+__all__ = ['BetaWholesaleDeviceFulfillmentWithDistributorsApi', 'CatalogResponse', 'CatalogResponseAvailability',
+           'DistributorDetailsResponse', 'DistributorDetailsResponseCapabilities', 'DistributorResponse',
+           'OrderRequestLineItem', 'OrderResponse', 'OrderResponseLineItem', 'OrderShippingDetails', 'Person']
 
 
 class CatalogResponseAvailability(str, Enum):

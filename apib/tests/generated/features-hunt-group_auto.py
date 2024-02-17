@@ -11,17 +11,17 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRulesSet',
-            'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
-            'CallForwardingNumbers', 'CallForwardingNumbersType', 'CreateForwardingRuleObjectCallsFrom',
-            'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
-            'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-            'CreateForwardingRuleObjectForwardToSelection', 'FeaturesHuntGroupApi', 'GetForwardingRuleObject',
-            'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
-            'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
-            'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyCallForwardingObjectCallForwarding',
-            'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer',
-            'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject']
+__all__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRulesSet',
+           'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
+           'CallForwardingNumbers', 'CallForwardingNumbersType', 'CreateForwardingRuleObjectCallsFrom',
+           'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
+           'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
+           'CreateForwardingRuleObjectForwardToSelection', 'FeaturesHuntGroupApi', 'GetForwardingRuleObject',
+           'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
+           'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
+           'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyCallForwardingObjectCallForwarding',
+           'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer',
+           'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
