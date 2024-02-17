@@ -100,6 +100,8 @@ class HuntGroup(HGandCQ):
     call_policies: Optional[HGCallPolicies] = None
     # TODO: undocumented
     address_agents: Optional[Any] = None
+    #: Whether or not the hunt group can be used as the caller ID when the agent places outgoing calls.
+    hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
 
     @staticmethod
     def exclude_update_or_create() -> dict:
