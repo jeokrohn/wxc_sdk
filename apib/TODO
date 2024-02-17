@@ -1,7 +1,7 @@
-# TODO: class generation: only generate sources for classes actually used
-# TODO: methods: check overlap of parameters with return types from other endpoints under same API and instead of listing all parameters create and interface that accepts an object instance.
-# TODO: methods: check for datastucture differences between get details (GET) and updates (POST, PUT) and try to create interface for updates that accepts details and ignores unused attributes in updates. This has to be hierarchical
-# TODO: read customizations from config file (or files, one per APIB file?)
-#   * methods names
-#   * file name for source creation
-#   * .. others
+TODO: class generation: only generate sources for classes actually used
+TODO: methods: check overlap of parameters with return types from other endpoints under same API and instead of listing all parameters create and interface that accepts an object instance.
+TODO: methods: check for datastructure differences between get details (GET) and updates (POST, PUT) and try to create interface for updates that accepts details and ignores unused attributes in updates. This has to be hierarchical
+TODO: read customizations from config file (or files, one per APIB file?)
+  * methods names
+  * file name for source creation
+  * .. others
