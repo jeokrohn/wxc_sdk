@@ -1,5 +1,6 @@
 """
 Workspaces
+
 Workspaces represent where people work, such as conference rooms, meeting spaces, lobbies, and lunch rooms. Devices may
 be associated with workspaces.
 
@@ -298,12 +299,12 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
-        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
+          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
         * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
-        required.
+          required.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -347,18 +348,18 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         `calendar` and `calling` fields do not change when omitted from the update request.
 
         * Information for Webex Calling fields may be found here: `locations
-        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
+          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
 
         * Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`,
-        `thirdPartySipCalling` or `webexCalling`.
+          `thirdPartySipCalling` or `webexCalling`.
 
         * Updating the `calling` parameter to `none`, `thirdPartySipCalling` or `webexCalling` is not supported if the
-        workspace contains any devices.
+          workspace contains any devices.
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
         * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
-        required.
+          required.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str

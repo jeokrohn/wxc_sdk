@@ -294,15 +294,15 @@ class DevicesApi(ApiChild, base='devices'):
         `spark-admin:devices_write` scopes.
 
         * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
-        calling type to `freeCalling`.
+          calling type to `freeCalling`.
 
         * Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.
 
         * If no `model` is supplied, the `code` returned will only be accepted on RoomOS devices.
 
         * If your device is a phone, you must provide the `model` as a field. You can get the `model` from the
-        `supported devices
-        <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
+          `supported devices
+          <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
 
 
         :param workspace_id: The ID of the workspace where the device will be activated.
