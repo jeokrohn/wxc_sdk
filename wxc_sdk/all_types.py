@@ -27,6 +27,7 @@ from wxc_sdk.device_configurations import DeviceConfiguration, DeviceConfigurati
 from wxc_sdk.devices import ActivationCodeResponse, ConnectionStatus, Device, ProductType, TagOp
 from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType
 from wxc_sdk.groups import Group, GroupMember
+from wxc_sdk.guests import Guest
 from wxc_sdk.licenses import License, LicenseProperties, LicenseRequest, LicenseRequestOperation, LicenseUser,\
     LicenseUserType, SiteAccountType, SiteResponse, SiteType, SiteUrlsRequest, UserLicensesResponse
 from wxc_sdk.locations import Floor, Location, LocationAddress
@@ -197,7 +198,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts',
            'FeatureAccessCodeDestination', 'FeatureReference', 'FeatureSelector', 'Floor', 'ForcedForward',
            'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
-           'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
+           'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember', 'Guest',
            'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
            'HostedUserDestination', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup', 'IdAndName', 'IdOnly',
            'InProgressDevice', 'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode',

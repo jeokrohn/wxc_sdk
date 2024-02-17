@@ -155,3 +155,7 @@ cython_debug/
 /apib/apib_yml
 /examples/room_devices.txt
 /script/apib2py.env
+/examples/logout_users.py
+/examples/wsnames
+/tests/guest_service_token.yml
+/tests/guests.yml

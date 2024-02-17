@@ -57,10 +57,10 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsAnn
            'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
            'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi',
-           'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi',
-           'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi',
-           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi',
+           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
            'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
            'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
@@ -777,15 +777,15 @@ class AsDevicesApi(AsApiChild, base='devices'):
         `spark-admin:devices_write` scopes.
 
         * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
-        calling type to `freeCalling`.
+          calling type to `freeCalling`.
 
         * Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.
 
         * If no `model` is supplied, the `code` returned will only be accepted on RoomOS devices.
 
         * If your device is a phone, you must provide the `model` as a field. You can get the `model` from the
-        `supported devices
-        <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
+          `supported devices
+          <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
 
 
         :param workspace_id: The ID of the workspace where the device will be activated.
@@ -1100,6 +1100,76 @@ class AsGroupsApi(AsApiChild, base='groups'):
         """
         url = self.ep(group_id)
         await self.delete(url)
+
+
+class AsGuestManagementApi(AsApiChild, base='guests'):
+    """
+    Guest Management
+
+    Guests in Webex are users with only a temporary identity and are often used for single-transaction collaborations.
+    Examples include click-to-call and click-to-chat applications where the guest interacts with the agent only for
+    the duration of the call or chat session.
+    Guests in Webex are created and managed via a Service App with the scope guest-issuer:write and guest-issuer:read
+    and are represented by a token with a fixed and predefined set of scopes.
+
+    Since the Service App manages its own pool of guests, you need to insert the Service App token into the developer
+    portal's Try-It mode rather than your default personal token.
+
+    The `guests/token` endpoint is used to create and retrieve guest tokens, and the `guests/count` is used to assess
+    the number of current guests.
+
+    Creating guests via the guest-issuer application type is deprecated and will
+    be removed in the future.
+
+    """
+
+    async def create(self, subject: str, display_name: str) -> Guest:
+        """
+        Create a Guest
+
+        Create a new token for a single guest user. The Service App that creates the guest must have the scope
+        `guest-issuer:write`.
+
+        Guests are implicitly created by retrieving the guest access token.
+
+        Repeated calls to this API with the same `subject` will create additional tokens without invalidating previous
+        ones. Tokens are valid until the `expiresIn`.
+
+        Guests can be renamed by supplying the same `subject` and changing the `displayName.`
+
+        To retrieve a new token for an existing guest, please provide the existing guest's `subject`. Tokens are valid
+        until `expiresIn`.
+
+        :param subject: The unique and external identifier of the guest.
+        :type subject: str
+        :param display_name: The display name shown in the Webex application.
+        :type display_name: str
+        :rtype: :class:`Guest`
+        """
+        body = dict()
+        body['subject'] = subject
+        body['displayName'] = display_name
+        url = self.ep('token')
+        data = await super().post(url, json=body)
+        guest = Guest.model_validate(data)
+        now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
+        if not guest.expires_at and guest.expires_in:
+            delta = datetime.timedelta(seconds=guest.expires_in)
+            guest.expires_at = now + delta
+
+        return guest
+
+    async def guest_count(self) -> int:
+        """
+        Get Guest Count
+
+        To retrieve the number of guests, the scopes `guest-issuer:read` or `guest-issuer:write` are needed.
+
+        :rtype: int
+        """
+        url = self.ep('count')
+        data = await super().get(url)
+        return data
 
 
 class AsLicensesApi(AsApiChild, base='licenses'):
@@ -16551,12 +16621,12 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
-        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
+          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
         * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
-        required.
+          required.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -16600,18 +16670,18 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         `calendar` and `calling` fields do not change when omitted from the update request.
 
         * Information for Webex Calling fields may be found here: `locations
-        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
+          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
 
         * Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`,
-        `thirdPartySipCalling` or `webexCalling`.
+          `thirdPartySipCalling` or `webexCalling`.
 
         * Updating the `calling` parameter to `none`, `thirdPartySipCalling` or `webexCalling` is not supported if the
-        workspace contains any devices.
+          workspace contains any devices.
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
         * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
-        required.
+          required.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -16676,6 +16746,8 @@ class AsWebexSimpleApi:
     events: AsEventsApi
     #: groups API :class:`AsGroupsApi`
     groups: AsGroupsApi
+    #: guests API :class:`AsGuestManagementApi`
+    guests: AsGuestManagementApi
     #: Licenses API :class:`AsLicensesApi`
     licenses: AsLicensesApi
     #: Location API :class:`AsLocationsApi`
@@ -16742,6 +16814,7 @@ class AsWebexSimpleApi:
         self.devices = AsDevicesApi(session=session)
         self.events = AsEventsApi(session=session)
         self.groups = AsGroupsApi(session=session)
+        self.guests = AsGuestManagementApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)
         self.meetings = AsMeetingsApi(session=session)

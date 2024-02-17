@@ -86,6 +86,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.groups.update
         update group information
      - :meth:`~wxc_sdk.groups.GroupsApi.update`
+   * - api.guests.create
+        Create a Guest
+     - :meth:`~wxc_sdk.guests.GuestManagementApi.create`
+   * - api.guests.guest_count
+        Get Guest Count
+     - :meth:`~wxc_sdk.guests.GuestManagementApi.guest_count`
    * - api.licenses.assign_licenses_to_users
         Assign Licenses to Users
      - :meth:`~wxc_sdk.licenses.LicensesApi.assign_licenses_to_users`

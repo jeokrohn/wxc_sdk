@@ -12,6 +12,7 @@ from .device_configurations import DeviceConfigurationsApi
 from .devices import DevicesApi
 from .events import EventsApi
 from .groups import GroupsApi
+from .guests import GuestManagementApi
 from .licenses import LicensesApi
 from .locations import LocationsApi
 from .meetings import MeetingsApi
@@ -62,6 +63,8 @@ class WebexSimpleApi:
     events: EventsApi
     #: groups API :class:`groups.GroupsApi`
     groups: GroupsApi
+    #: guests API :class:`guests.GuestManagementApi`
+    guests: GuestManagementApi
     #: Licenses API :class:`licenses.LicensesApi`
     licenses: LicensesApi
     #: Location API :class:`locations.LocationsApi`
@@ -128,6 +131,7 @@ class WebexSimpleApi:
         self.devices = DevicesApi(session=session)
         self.events = EventsApi(session=session)
         self.groups = GroupsApi(session=session)
+        self.guests = GuestManagementApi(session=session)
         self.licenses = LicensesApi(session=session)
         self.locations = LocationsApi(session=session)
         self.meetings = MeetingsApi(session=session)

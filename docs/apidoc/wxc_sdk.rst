@@ -20,6 +20,7 @@ Subpackages
    wxc_sdk.devices
    wxc_sdk.events
    wxc_sdk.groups
+   wxc_sdk.guests
    wxc_sdk.integration
    wxc_sdk.licenses
    wxc_sdk.locations
