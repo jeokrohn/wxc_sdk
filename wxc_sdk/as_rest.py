@@ -163,16 +163,15 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
     # dump response body
     if response_data:
         print('  --- response body ---', file=output)
-        try:
-            body = response_data
+        body = response_data
+        if isinstance(body, dict):
+            # mask access and refresh tokens
             if 'access_token' in body:
                 # mask access token
                 body['access_token'] = '***'
             if 'refresh_token' in body:
                 body['refresh_token'] = '***'
-            body = json_mod.dumps(body, indent=2)
-        except json_mod.JSONDecodeError:
-            pass
+        body = json_mod.dumps(body, indent=2)
         for line in body.splitlines():
             print(f'  {line}', file=output)
     print(' --- end ---', file=output)
