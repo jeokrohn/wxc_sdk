@@ -8,6 +8,7 @@ from typing import ClassVar, Optional
 from wxc_sdk.all_types import *
 from tests.base import TestCaseWithLog
 from tests.testutil import LocationInfo, us_location_info, available_tns
+from wxc_sdk.telephony import TelephonyType
 
 
 class TestNumbers(TestCaseWithLog):
@@ -34,6 +35,14 @@ class TestNumbers(TestCaseWithLog):
     def test_005_details(self):
         details = self.api.telephony.phone_number_details()
         print(f'Number details: {details}')
+
+    def test_006_included_pstn(self):
+        numbers = list(self.api.telephony.phone_numbers(included_telephony_type=TelephonyType.pstn_number))
+        print(f'Got {len(numbers)} PSTN numbers')
+
+    def test_006_included_mobile(self):
+        numbers = list(self.api.telephony.phone_numbers(included_telephony_type=TelephonyType.mobile_number))
+        print(f'Got {len(numbers)} mobile numbers')
 
 
 class TestValidateExtensions(TestCaseWithLog):
