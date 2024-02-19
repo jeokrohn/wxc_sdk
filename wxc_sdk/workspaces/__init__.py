@@ -23,7 +23,7 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, enum_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar',
+__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'HotdeskingStatus',
            'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling', 'WorkspaceSupportedDevices',
            'WorkspacesApi']
 
@@ -89,6 +89,12 @@ class WorkspaceSupportedDevices(str, Enum):
     phones = 'phones'
 
 
+class WorkspaceCallingHybridCalling(ApiModel):
+    #: End user email address in Cisco Unified CM.
+    #: example: workspace@example.com
+    email_address: Optional[str] = None
+
+
 class WorkspaceWebexCalling(ApiModel):
     #: End user phone number in Cisco Unified CM.
     phone_number: Optional[str] = None
@@ -96,10 +102,14 @@ class WorkspaceWebexCalling(ApiModel):
     extension: Optional[str] = None
     #: Calling location ID.
     location_id: Optional[str] = None
+    #: The Webex Calling license associated with this workspace.
+    licenses: Optional[list[str]] = None
 
 
 class WorkspaceCalling(ApiModel):
     type: Optional[CallingType] = None
+    #: The `hybridCalling` object only applies when calling type is `hybridCalling`.
+    hybrid_calling: Optional[WorkspaceCallingHybridCalling] = None
     #: The webexCalling object only applies when calling type is webexCalling.
     #: due to a backend limitation this information is never returned by the workspace API and only has to be used when
     #: creating a workspace
@@ -108,6 +118,14 @@ class WorkspaceCalling(ApiModel):
 
 class DeviceHostedMeetings(ApiModel):
     enabled: bool
+
+
+class HotdeskingStatus(str, Enum):
+    #: Workspace supports hotdesking.
+    on = 'on'
+    #: Workspace does not support hotdesking.
+    off = 'off'
+    none_ = 'none'
 
 
 class Workspace(ApiModel):
@@ -144,32 +162,10 @@ class Workspace(ApiModel):
     #: Notes associated to the workspace.
     notes: Optional[str] = None
     #: Hot desking status of the workspace.
-    hotdesking_status: Optional[bool] = None
+    hotdesking_status: Optional[HotdeskingStatus] = None
     device_hosted_meetings: Optional[DeviceHostedMeetings] = None
     #: The supported devices for the workspace.
     supported_devices: Optional[WorkspaceSupportedDevices] = None
-
-    @field_validator('hotdesking_status', mode='before')
-    def validate_hotdesking_status(cls, value):
-        """
-        hotdesking_status actually is a string: 'on'/'off'
-
-        :meta private:
-        """
-        if isinstance(value, bool):
-            return value
-        return value == 'on'
-
-    def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
-        """
-        restore hotdesking status
-
-        :meta private:
-        """
-        j_data = json.loads(super().model_dump_json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs))
-        if self.hotdesking_status is not None:
-            j_data['hotdeskingStatus'] = 'on' if self.hotdesking_status else 'off'
-        return json.dumps(j_data)
 
     def update_or_create(self, for_update: bool = False) -> str:
         """
@@ -305,6 +301,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
           required.
+          Furthermore, it is possible to set the licenses field with a list of Webex Calling license IDs, if desired.
+          If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are supplied,
+          the oldest suitable one from the active subscriptions will be automatically applied.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -342,7 +341,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
-        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
+        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional
+        `capacity`, `type` or
         `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
         provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.
@@ -360,6 +360,10 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
           required.
+          Furthermore, the licenses field can be set with a list of Webex Calling license IDs, if desired. If
+          multiple license IDs are provided, the oldest suitable one will be applied. If a previously applied license
+          ID is omitted, it will be replaced with one from the list provided. If the licenses field is omitted,
+          the current calling license will be retained.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
