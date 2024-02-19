@@ -15679,6 +15679,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
                       phone_number_type: NumberListPhoneNumberType = None,
                       state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
                       restricted_non_geo_numbers: bool = None,
+                      included_telephony_type: TelephonyType = None,
                       org_id: str = None, **params) -> AsyncGenerator[NumberListPhoneNumber, None, None]:
         """
         Get Phone Numbers for an Organization with given criteria.
@@ -15723,12 +15724,19 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
+        :param included_telephony_type: Returns the list of phone numbers that are of given `includedTelephonyType`.
+            By default if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
+            input values are PSTN_NUMBER, MOBILE_NUMBER.
+        :type included_telephony_type: TelephonyType
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
                       if i and v is not None and p != 'params')
+        # parameter is actually called included_telephony_types
+        if itp := params.pop('includedTelephonyType', None):
+            params['includedTelephonyTypes'] = itp
         for param, value in params.items():
             if isinstance(value, bool):
                 value = 'true' if value else 'false'
@@ -15748,6 +15756,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
                       phone_number_type: NumberListPhoneNumberType = None,
                       state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
                       restricted_non_geo_numbers: bool = None,
+                      included_telephony_type: TelephonyType = None,
                       org_id: str = None, **params) -> List[NumberListPhoneNumber]:
         """
         Get Phone Numbers for an Organization with given criteria.
@@ -15792,12 +15801,19 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
+        :param included_telephony_type: Returns the list of phone numbers that are of given `includedTelephonyType`.
+            By default if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
+            input values are PSTN_NUMBER, MOBILE_NUMBER.
+        :type included_telephony_type: TelephonyType
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
                       if i and v is not None and p != 'params')
+        # parameter is actually called included_telephony_types
+        if itp := params.pop('includedTelephonyType', None):
+            params['includedTelephonyTypes'] = itp
         for param, value in params.items():
             if isinstance(value, bool):
                 value = 'true' if value else 'false'

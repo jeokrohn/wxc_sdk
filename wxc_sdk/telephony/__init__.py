@@ -40,7 +40,7 @@ from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
 
-__all__ = ['NumberListPhoneNumberType',
+__all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'NumberListPhoneNumber',
            'NumberType', 'NumberDetails', 'UCMProfile',
            'TestCallRoutingResult', 'OriginatorType', 'CallSourceType', 'CallSourceInfo', 'DestinationType',
@@ -58,6 +58,13 @@ class NumberListPhoneNumberType(str, Enum):
     dnis = 'DNIS'
 
 
+class TelephonyType(str, Enum):
+    #: Object is a PSTN number.
+    pstn_number = 'PSTN_NUMBER'
+    #: Object is a mobile number.
+    mobile_number = 'MOBILE_NUMBER'
+
+
 class NumberListPhoneNumber(ApiModel):
     """
     Phone Number
@@ -67,7 +74,7 @@ class NumberListPhoneNumber(ApiModel):
     #: Extension for a PSTN phone number.
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     esn: Optional[str] = None
     #: Phone number's state.
@@ -78,6 +85,15 @@ class NumberListPhoneNumber(ApiModel):
     main_number: bool
     #: Indicates if a phone number is a toll free number.
     toll_free_number: bool
+    #: Indicates Telephony type for the number.
+    #: example: MOBILE_NUMBER
+    included_telephony_types: Optional[TelephonyType] = None
+    #: Mobile Network for the number if number is MOBILE_NUMBER.
+    #: example: mobileNetwork
+    mobile_network: Optional[str] = None
+    #: Routing Profile for the number if number is MOBILE_NUMBER.
+    #: example: AttRtPf
+    routing_profile: Optional[str] = None
     location: IdAndName
     owner: Optional[NumberOwner] = None
 
@@ -323,6 +339,12 @@ class TestCallRoutingResult(ApiModel):
     outside_access_code: Optional[str] = None
     #: true if the call would be rejected.
     is_rejected: bool
+    #: Calling line ID (CLID) configured for the calling user.
+    #: example: +12036680442
+    calling_line_id: Optional[str] = Field(alias='callingLineID', default=None)
+    #: Routing profile that is used to route network calls.
+    #: example: AttRtPf
+    routing_profile: Optional[str] = None
     #: This data object is returned when destinationType is HOSTED_USER.
     hosted_user: Optional[HostedUserDestination] = Field(alias='hostedAgent', default=None)
     #: This data object is returned when destinationType is HOSTED_FEATURE.
@@ -501,6 +523,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
                       phone_number_type: NumberListPhoneNumberType = None,
                       state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
                       restricted_non_geo_numbers: bool = None,
+                      included_telephony_type: TelephonyType = None,
                       org_id: str = None, **params) -> Generator[NumberListPhoneNumber, None, None]:
         """
         Get Phone Numbers for an Organization with given criteria.
@@ -545,12 +568,19 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
+        :param included_telephony_type: Returns the list of phone numbers that are of given `includedTelephonyType`.
+            By default if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
+            input values are PSTN_NUMBER, MOBILE_NUMBER.
+        :type included_telephony_type: TelephonyType
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
                       if i and v is not None and p != 'params')
+        # parameter is actually called included_telephony_types
+        if itp := params.pop('includedTelephonyType', None):
+            params['includedTelephonyTypes'] = itp
         for param, value in params.items():
             if isinstance(value, bool):
                 value = 'true' if value else 'false'

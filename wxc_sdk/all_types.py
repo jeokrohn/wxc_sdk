@@ -98,8 +98,8 @@ from wxc_sdk.telephony import AnnouncementLanguage, CallSourceInfo, CallSourceTy
     DeviceManagedBy, DeviceManufacturer, DeviceType, EmergencyDestination, FeatureAccessCodeDestination,\
     HostedFeatureDestination, HostedUserDestination, LocationAndNumbers, NumberDetails, NumberListPhoneNumber,\
     NumberListPhoneNumberType, NumberType, OnboardingMethod, OriginatorType, PbxUserDestination,\
-    PstnNumberDestination, RouteListDestination, ServiceType, SupportedDevice, TestCallRoutingResult,\
-    TrunkDestination, UCMProfile, VirtualExtensionDestination
+    PstnNumberDestination, RouteListDestination, ServiceType, SupportedDevice, TelephonyType,\
+    TestCallRoutingResult, TrunkDestination, UCMProfile, VirtualExtensionDestination
 from wxc_sdk.telephony.announcements_repo import FeatureReference, RepoAnnouncement, RepositoryUsage
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, AutoAttendantKeyConfiguration,\
     AutoAttendantMenu, Dialing, MenuKey
@@ -247,7 +247,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'StartStopAnnouncement', 'StepExecutionStatus', 'StorageType', 'StrOrDict', 'StrandedCalls',
            'StrandedCallsAction', 'SupportedDevice', 'SurveyResult', 'TagOp', 'Team', 'TeamMembership', 'Telephony',
            'TelephonyCall', 'TelephonyDevice', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation',
-           'TelephonyParty', 'TestCallRoutingResult', 'Tokens', 'TrackingCode', 'TrackingCodeItem',
+           'TelephonyParty', 'TelephonyType', 'TestCallRoutingResult', 'Tokens', 'TrackingCode', 'TrackingCodeItem',
            'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet', 'TranscriptStatus',
            'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType', 'TrunkType',
            'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',

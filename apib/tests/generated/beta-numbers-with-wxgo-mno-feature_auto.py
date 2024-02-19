@@ -11,9 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BetaFeaturesNumbersWithMNOWebexEnabledMobilePlansFeatureApi',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'NumberObject', 'NumberObjectLocation',
-            'NumberObjectOwner', 'TelephonyType']
+__all__ = ['BetaFeaturesNumbersWithWxGoMNOFeatureApi', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
+           'NumberObject', 'NumberObjectLocation', 'NumberObjectOwner', 'TelephonyType']
 
 
 class TelephonyType(str, Enum):
@@ -93,9 +92,9 @@ class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):
     voicemail_group = 'VOICEMAIL_GROUP'
 
 
-class BetaFeaturesNumbersWithMNOWebexEnabledMobilePlansFeatureApi(ApiChild, base='telephony/config/numbers'):
+class BetaFeaturesNumbersWithWxGoMNOFeatureApi(ApiChild, base='telephony/config/numbers'):
     """
-    Beta Features: Numbers with MNO Webex Enabled Mobile Plans Feature
+    Beta Features: Numbers with WxGo-MNO Feature
     
     Numbers supports reading and writing of Webex Calling phone numbers for a
     specific organization.
