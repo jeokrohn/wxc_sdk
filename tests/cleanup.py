@@ -23,7 +23,7 @@ from wxc_sdk.common import NumberState
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.callqueue import CallQueue
 
-TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE )\d{3})|National Holidays$')
+TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE |cpe_|cp)\d{3})|National Holidays$')
 DRY_RUN = False
 
 
