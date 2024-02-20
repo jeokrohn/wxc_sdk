@@ -5,9 +5,24 @@ from pydantic import Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
+from ..base import SafeEnum as Enum
 from ..common import PersonPlaceAgent
 
-__all__ = ['CallPickup', 'CallPickupApi']
+__all__ = ['CallPickup', 'PickupNotificationType', 'CallPickupApi']
+
+
+class PickupNotificationType(str, Enum):
+    #: Notification is not sent to any member of the call pickup group.
+    none = 'NONE'
+    #: When the notificationDelayTimerSeconds number of seconds has elapsed, play an audio notification for each call
+    #: pickup group member.
+    audio_only = 'AUDIO_ONLY'
+    #: When the notificationDelayTimerSeconds number of seconds has elapsed, provide a visual notification to every
+    #: call pickup group member.
+    visual_only = 'VISUAL_ONLY'
+    #: When the notificationDelayTimerSeconds number of seconds has elapsed, provide a audio and visual notification to
+    #: every call pickup group member.
+    audio_and_visual = 'AUDIO_AND_VISUAL'
 
 
 class CallPickup(ApiModel):
@@ -19,22 +34,33 @@ class CallPickup(ApiModel):
     location_name: Optional[str] = None
     #: ID of location for call pickup.
     location_id: Optional[str] = None
-    #: An Array of ID strings of people, workspaces and virtual lines that are eligible to receive calls.
+    #: Type of the notification when an incoming call is unanswered, the call pickup group notifies all of its members.
+    notification_type: Optional[PickupNotificationType] = None
+    #: After the number of seconds given by the notificationDelayTimerSeconds has elapsed, notify every member of the
+    #: call pickup group when an incoming call goes unanswered. The notificationType field specifies the notification
+    #: method.
+    notification_delay_timer_seconds: Optional[int] = None
+    #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[PersonPlaceAgent]] = None
 
-    def create_or_update(self) -> str:
+    def create_or_update(self) -> dict:
         """
         Get JSON for create or update call
 
         :return: JSON
         :rtype: str
+        :meta private:
         """
-        return self.model_dump_json(exclude={'pickup_id': True,
-                                             'location_name': True,
-                                             'location_id': True,
-                                             'agents': {'__all__': {'display_name': True,
-                                                                    'email': True,
-                                                                    'numbers': True}}})
+        data = self.model_dump(mode='json',
+                               by_alias=True,
+                               exclude_none=True,
+                               exclude={'pickup_id': True,
+                                        'location_name': True,
+                                        'location_id': True})
+        # for create or update 'agents' is just a list of agent IDs
+        if agents := data.pop('agents', None):
+            data['agents'] = [a.pop('id', None) for a in agents]
+        return data
 
 
 class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
@@ -116,7 +142,7 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         body = settings.create_or_update()
-        data = self.post(url, data=body, params=params)
+        data = self.post(url, json=body, params=params)
         return data['id']
 
     def delete_pickup(self, location_id: str, pickup_id: str, org_id: str = None):
@@ -194,7 +220,7 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, pickup_id=pickup_id)
         body = settings.create_or_update()
-        data = self.put(url, data=body, params=params)
+        data = self.put(url, json=body, params=params)
         return data['id']
 
     def available_agents(self, location_id: str, call_pickup_name: str = None, name: str = None,

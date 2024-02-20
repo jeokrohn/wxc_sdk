@@ -107,7 +107,7 @@ from wxc_sdk.telephony.call_recording import CallRecordingInfo, CallRecordingTer
     LocationComplianceAnnouncement, OrgComplianceAnnouncement
 from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallParkRecall, CallParkSettings,\
     LocationCallParkSettings, RecallHuntGroup
-from wxc_sdk.telephony.callpickup import CallPickup
+from wxc_sdk.telephony.callpickup import CallPickup, PickupNotificationType
 from wxc_sdk.telephony.callqueue import AudioSource, CQRoutingType, CallBounce, CallQueue, CallQueueCallPolicies,\
     ComfortMessageBypass, ComfortMessageSetting, DistinctiveRing, MohMessageSetting, OverflowAction,\
     OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, WelcomeMessageSetting
@@ -155,8 +155,8 @@ from wxc_sdk.webhook import Webhook, WebhookCreate, WebhookEvent, WebhookEventDa
     WebhookResource, WebhookStatus
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
-from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, WorkSpaceType, Workspace,\
-    WorkspaceCalling, WorkspaceEmail, WorkspaceSupportedDevices, WorkspaceWebexCalling
+from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, HotdeskingStatus,\
+    WorkSpaceType, Workspace, WorkspaceCalling, WorkspaceEmail, WorkspaceSupportedDevices, WorkspaceWebexCalling
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard', 'AdaptiveCardAction',
            'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentQueue', 'AlternateNumber',
@@ -200,9 +200,9 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
            'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember', 'Guest',
            'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
-           'HostedUserDestination', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup', 'IdAndName', 'IdOnly',
-           'InProgressDevice', 'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode',
-           'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
+           'HostedUserDestination', 'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
+           'IdAndName', 'IdOnly', 'InProgressDevice', 'IncomingPermissions', 'InitiateMoveNumberJobsBody',
+           'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
            'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
            'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
            'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
@@ -229,9 +229,9 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'PersonDevicesResponse', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
            'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalMeetingRoom',
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType',
-           'PinLength', 'Policy', 'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse',
-           'PrimaryOrShared', 'Privacy', 'ProductType', 'ProgrammableLineKey', 'PskObject', 'PstnNumberDestination',
-           'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
+           'PickupNotificationType', 'PinLength', 'Policy', 'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType',
+           'PreferredAnswerResponse', 'PrimaryOrShared', 'Privacy', 'ProductType', 'ProgrammableLineKey', 'PskObject',
+           'PstnNumberDestination', 'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
            'QueryMeetingParticipantsWithEmailBody', 'Question', 'QuestionAnswer', 'QuestionOption', 'QuestionType',
            'QuestionWithAnswers', 'QueueCallerId', 'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk', 'Recall',
            'RecallHuntGroup', 'ReceptionistSettings', 'Record', 'Recording', 'RecordingFormat',

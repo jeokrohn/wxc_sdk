@@ -7,6 +7,8 @@ Release history
 - feat: :class:`wxc_sdk.licenses.License` attributes: consumed_by_users, consumed_by_workspaces
 - feat: :meth:`wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode` to set voicemail passcode for users
 - feat: guests API :attr:`wxc_sdk.WebexSimpleApi.guests`
+- feat: call pickup notifications
+- fix: errors when creating call pickups w/ agents
 
 1.17.1
 ------

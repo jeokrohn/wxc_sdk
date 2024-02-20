@@ -9628,7 +9628,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         body = settings.create_or_update()
-        data = await self.post(url, data=body, params=params)
+        data = await self.post(url, json=body, params=params)
         return data['id']
 
     async def delete_pickup(self, location_id: str, pickup_id: str, org_id: str = None):
@@ -9706,7 +9706,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, pickup_id=pickup_id)
         body = settings.create_or_update()
-        data = await self.put(url, data=body, params=params)
+        data = await self.put(url, json=body, params=params)
         return data['id']
 
     def available_agents_gen(self, location_id: str, call_pickup_name: str = None, name: str = None,
@@ -16643,6 +16643,9 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
         * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
           required.
+          Furthermore, it is possible to set the licenses field with a list of Webex Calling license IDs, if desired.
+          If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are supplied,
+          the oldest suitable one from the active subscriptions will be automatically applied.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -16680,7 +16683,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
-        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
+        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional
+        `capacity`, `type` or
         `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
         provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.
@@ -16698,6 +16702,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
         * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
           required.
+          Furthermore, the licenses field can be set with a list of Webex Calling license IDs, if desired. If
+          multiple license IDs are provided, the oldest suitable one will be applied. If a previously applied license
+          ID is omitted, it will be replaced with one from the list provided. If the licenses field is omitted,
+          the current calling license will be retained.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
