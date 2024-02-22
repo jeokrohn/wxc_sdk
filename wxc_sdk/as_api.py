@@ -68,11 +68,12 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsAnn
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
            'AsPushToTalkApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi',
-           'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsScheduleApi', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi',
+           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi',
+           'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -8377,6 +8378,114 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         url = self.ep(f'{room_id}')
         await super().delete(url=url)
         return
+
+
+class AsStatusAPI(AsApiChild, base='status'):
+    """
+    Webex Status API as described at https://status.webex.com/api
+    """
+
+    # noinspection PyMethodOverriding
+    def ep(self, path: str):
+        return f'https://status.webex.com/{path}.json'
+
+    async def summary(self) -> StatusSummary:
+        """
+        Get a summary of the status page, including a status indicator, component statuses, unresolved incidents,
+        and any upcoming or in-progress scheduled maintenances.
+        :return: Status summary
+        :rtype: StatusSummary
+        """
+        url = self.ep('index')
+        data = await self.session.rest_get(url=url)
+        return StatusSummary.model_validate(data)
+
+    async def status(self) -> str:
+        """
+        Get the status rollup for the whole page. This response includes an indicator - one of green (operational),
+        yellow (under_maintenance/degraded_performance/partial_outage), red (major_outage).
+        :return: Webex status
+        :rtype: str
+        """
+        url = self.ep('status')
+        data = await self.session.rest_get(url=url)
+        return data['status']['indicator']
+
+    async def components(self) -> list[Component]:
+        """
+        Get the components for the status page. Each component is listed along with its status - one of operational,
+        under_maintenance,degraded_performance, partial_outage, or major_outage.
+        :return: list of components
+        :rtype: list[Component]
+        """
+        url = self.ep('components')
+        data = await self.session.rest_get(url=url)
+        return TypeAdapter(list[Component]).validate_python(data['components'])
+
+    async def unresolved_incidents(self) -> list[Incident]:
+        """
+        Get a list of any unresolved incidents. This response will only return incidents in the Investigating,
+        Identified, or Monitoring state.
+        :return: list of incidents
+        :rtype: list[Incident]
+        """
+        url = self.ep('unresolved-incidents')
+        data = await self.session.rest_get(url=url)
+        return TypeAdapter(list[Incident]).validate_python(data['incidents'])
+
+    async def all_incidents(self) -> list[Incident]:
+        """
+        Get a list of the 50 most recent incidents. This includes all unresolved incidents as described above,
+        as well as those in the Resolved state.
+
+        :return: list of incidents
+        :rtype: list[Incident]
+        """
+        url = self.ep('all-incidents')
+        data = await self.session.rest_get(url=url)
+        return TypeAdapter(list[Incident]).validate_python(data['incidents'])
+
+    async def upcoming_scheduled_maintenances(self) -> list[Incident]:
+        """
+        Scheduled maintenances are planned outages, upgrades, or general notices that you're working on
+        infrastructure and disruptions may occurr. A close sibling of Incidents, each usually goes through a
+        progression of statuses listed below, with an impact calculated from a blend of component statuses (or an
+        optional override).
+
+        Status: Scheduled, In Progress, or Completed
+
+        Impact: Maintenance
+
+        :return: list of incidents
+        :rtype: list[Incident]
+        """
+        url = self.ep('upcoming-scheduled-maintenances')
+        data = await self.session.rest_get(url=url)
+        return TypeAdapter(list[Incident]).validate_python(data['scheduled_maintenances'])
+
+    async def active_scheduled_maintenances(self) -> list[Incident]:
+        """
+        Get a list of any active maintenances. This response will only return scheduled maintenances in the In
+        Progress state.
+
+        :return: list of incidents
+        :rtype: list[Incident]
+        """
+        url = self.ep('active-scheduled-maintenances')
+        data = await self.session.rest_get(url=url)
+        return TypeAdapter(list[Incident]).validate_python(data['scheduled_maintenances'])
+
+    async def all_scheduled_maintenances(self) -> list[Incident]:
+        """
+        Get a list of the 50 most recent scheduled maintenances. This includes scheduled maintenances in Scheduled ,
+        In Progress or Completed state.
+
+        :return: list of incidents
+        :rtype: list[Incident]
+        """
+        url = self.ep('all-scheduled-maintenances')
+        data = await self.session.rest_get(url=url)
+        return TypeAdapter(list[Incident]).validate_python(data['scheduled_maintenances'])
 
 
 class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
@@ -16794,6 +16903,8 @@ class AsWebexSimpleApi:
     rooms: AsRoomsApi
     #: Room tabs API :class:`AsRoomTabsApi`
     room_tabs: AsRoomTabsApi
+    #: Webex Status API :class:`AsStatusAPI`
+    status: AsStatusAPI
     #: Teams API :class:`AsTeamsApi`
     teams: AsTeamsApi
     #: Team memberships API :class:`AsTeamMembershipsApi`
@@ -16850,6 +16961,7 @@ class AsWebexSimpleApi:
         self.reports = AsReportsApi(session=session)
         self.rooms = AsRoomsApi(session=session)
         self.room_tabs = AsRoomTabsApi(session=session)
+        self.status = AsStatusAPI(session=session)
         self.teams = AsTeamsApi(session=session)
         self.team_memberships = AsTeamMembershipsApi(session=session)
         self.telephony = AsTelephonyApi(session=session)

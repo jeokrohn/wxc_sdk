@@ -92,6 +92,7 @@ from wxc_sdk.person_settings.voicemail import UnansweredCalls, VoicemailEnabledW
 from wxc_sdk.reports import CallingCDR, Report, ReportTemplate, ValidationRules
 from wxc_sdk.room_tabs import RoomTab
 from wxc_sdk.rooms import GetRoomMeetingDetailsResponse, Room
+from wxc_sdk.status import Component, Incident, IncidentUpdate, StatusAPI, StatusSummary, WebexStatus
 from wxc_sdk.team_memberships import TeamMembership
 from wxc_sdk.teams import Team
 from wxc_sdk.telephony import AnnouncementLanguage, CallSourceInfo, CallSourceType, DestinationType,\
@@ -183,7 +184,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingPermissions',
            'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost',
            'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization',
-           'ComplianceEvent', 'ConnectionStatus', 'CreateInviteesItem', 'CreateMeetingBody',
+           'ComplianceEvent', 'Component', 'ConnectionStatus', 'CreateInviteesItem', 'CreateMeetingBody',
            'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
            'CustomizedQuestionForCreateMeeting', 'DECTNetworkModel', 'DND', 'DectCustomization', 'DectDevice',
            'DefaultAudioType', 'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType', 'Device',
@@ -201,13 +202,13 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember', 'Guest',
            'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
            'HostedUserDestination', 'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
-           'IdAndName', 'IdOnly', 'InProgressDevice', 'IncomingPermissions', 'InitiateMoveNumberJobsBody',
-           'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
-           'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
-           'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
-           'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
-           'License', 'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation', 'LicenseUser',
-           'LicenseUserType', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LineKeyTemplate',
+           'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate', 'IncomingPermissions',
+           'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting',
+           'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing',
+           'InternalDialing', 'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting',
+           'JobError', 'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody',
+           'JoinMeetingResponse', 'License', 'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation',
+           'LicenseUser', 'LicenseUserType', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LineKeyTemplate',
            'LineKeyTemplateAdvisoryTypes', 'LineKeyType', 'LinkRelation', 'Location', 'LocationAddress',
            'LocationAndNumbers', 'LocationCallParkSettings', 'LocationComplianceAnnouncement',
            'LocationMoHGreetingType', 'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState',
@@ -244,13 +245,13 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions', 'Sender', 'ServiceType',
            'SimultaneousInterpretation', 'SipAddress', 'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType',
            'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse',
-           'StartStopAnnouncement', 'StepExecutionStatus', 'StorageType', 'StrOrDict', 'StrandedCalls',
-           'StrandedCallsAction', 'SupportedDevice', 'SurveyResult', 'TagOp', 'Team', 'TeamMembership', 'Telephony',
-           'TelephonyCall', 'TelephonyDevice', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation',
-           'TelephonyParty', 'TelephonyType', 'TestCallRoutingResult', 'Tokens', 'TrackingCode', 'TrackingCodeItem',
-           'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet', 'TranscriptStatus',
-           'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType', 'TrunkType',
-           'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',
+           'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
+           'StrandedCalls', 'StrandedCallsAction', 'SupportedDevice', 'SurveyResult', 'TagOp', 'Team',
+           'TeamMembership', 'Telephony', 'TelephonyCall', 'TelephonyDevice', 'TelephonyEvent', 'TelephonyEventData',
+           'TelephonyLocation', 'TelephonyParty', 'TelephonyType', 'TestCallRoutingResult', 'Tokens', 'TrackingCode',
+           'TrackingCodeItem', 'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet',
+           'TranscriptStatus', 'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType',
+           'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',
            'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
            'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers',
            'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody',
@@ -264,8 +265,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
            'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
            'VoicemailSettings', 'VoicemailTransferToNumber', 'VolumeSettings', 'WaitMessageSetting', 'WaitMode',
-           'Webhook', 'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource',
-           'WebhookStatus', 'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork',
-           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceEmail', 'WorkspaceLocation',
-           'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling',
-           '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'WebexStatus', 'Webhook', 'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType',
+           'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting', 'WifiAuthenticationMethod',
+           'WifiCustomization', 'WifiNetwork', 'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceEmail',
+           'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspaceSupportedDevices',
+           'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

@@ -33,6 +33,7 @@ Subpackages
    wxc_sdk.reports
    wxc_sdk.room_tabs
    wxc_sdk.rooms
+   wxc_sdk.status
    wxc_sdk.team_memberships
    wxc_sdk.teams
    wxc_sdk.telephony

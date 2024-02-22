@@ -9,6 +9,8 @@ Release history
 - feat: guests API :attr:`wxc_sdk.WebexSimpleApi.guests`
 - feat: call pickup notifications
 - fix: errors when creating call pickups w/ agents
+- feat: status API :attr:`wxc_sdk.WebexSimpleApi.status`
+
 
 1.17.1
 ------

@@ -596,6 +596,33 @@ The second column of the table has a link to the documentation of the method.
    * - api.rooms.update
         Updates details for a room, by ID
      - :meth:`~wxc_sdk.rooms.RoomsApi.update`
+   * - api.status.active_scheduled_maintenances
+        Get a list of any active maintenances
+     - :meth:`~wxc_sdk.status.StatusAPI.active_scheduled_maintenances`
+   * - api.status.all_incidents
+        Get a list of the 50 most recent incidents
+     - :meth:`~wxc_sdk.status.StatusAPI.all_incidents`
+   * - api.status.all_scheduled_maintenances
+        Get a list of the 50 most recent scheduled maintenances
+     - :meth:`~wxc_sdk.status.StatusAPI.all_scheduled_maintenances`
+   * - api.status.components
+        Get the components for the status page
+     - :meth:`~wxc_sdk.status.StatusAPI.components`
+   * - api.status.ep
+        
+     - :meth:`~wxc_sdk.status.StatusAPI.ep`
+   * - api.status.status
+        Get the status rollup for the whole page
+     - :meth:`~wxc_sdk.status.StatusAPI.status`
+   * - api.status.summary
+        Get a summary of the status page, including a status indicator, component statuses, unresolved incidents,
+     - :meth:`~wxc_sdk.status.StatusAPI.summary`
+   * - api.status.unresolved_incidents
+        Get a list of any unresolved incidents
+     - :meth:`~wxc_sdk.status.StatusAPI.unresolved_incidents`
+   * - api.status.upcoming_scheduled_maintenances
+        Scheduled maintenances are planned outages, upgrades, or general notices that you're working on
+     - :meth:`~wxc_sdk.status.StatusAPI.upcoming_scheduled_maintenances`
    * - api.team_memberships.create
         Add someone to a team by Person ID or email address, optionally making them a moderator
      - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.create`
