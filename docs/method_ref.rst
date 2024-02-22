@@ -371,9 +371,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.agent_caller_id.available_queues
         Retrieve the list of the person's available call queues and the associated Caller ID information
      - :meth:`~wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_queues`
-   * - api.person_settings.agent_caller_id.ep
-        :meta private:
-     - :meth:`~wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.ep`
    * - api.person_settings.agent_caller_id.read
         Retrieve a call queue agent's Caller ID information
      - :meth:`~wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read`
@@ -476,9 +473,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.permissions_out.read
         Retrieve a Person's Outgoing Calling Permissions Settings
      - :meth:`~wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read`
-   * - api.person_settings.preferred_answer.ep
-        :meta private:
-     - :meth:`~wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.ep`
    * - api.person_settings.preferred_answer.modify
         Modify Preferred Answer Endpoint
      - :meth:`~wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.modify`
@@ -608,9 +602,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.status.components
         Get the components for the status page
      - :meth:`~wxc_sdk.status.StatusAPI.components`
-   * - api.status.ep
-        
-     - :meth:`~wxc_sdk.status.StatusAPI.ep`
    * - api.status.status
         Get the status rollup for the whole page
      - :meth:`~wxc_sdk.status.StatusAPI.status`
@@ -1430,9 +1421,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.voicemail_groups.details
         Retrieve voicemail group details for a location
      - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.details`
-   * - api.telephony.voicemail_groups.ep
-        :param location_id:
-     - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.ep`
    * - api.telephony.voicemail_groups.list
         List the voicemail group information for the organization
      - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.list`
@@ -1478,9 +1466,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_locations.details
         Get a Workspace Location Details
      - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.details`
-   * - api.workspace_locations.ep
-        
-     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.ep`
    * - api.workspace_locations.list
         List workspace locations
      - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.list`
@@ -1496,9 +1481,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_locations.floors.details
         Get a Workspace Location Floor Details
      - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.details`
-   * - api.workspace_locations.floors.ep
-        
-     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.ep`
    * - api.workspace_locations.floors.list
         :param location_id:
      - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.list`
@@ -1547,9 +1529,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_settings.monitoring.read
         Retrieve a Person's Monitoring Settings
      - :meth:`~wxc_sdk.person_settings.monitoring.MonitoringApi.read`
-   * - api.workspace_settings.numbers.ep
-        :meta private:
-     - :meth:`~wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.ep`
    * - api.workspace_settings.numbers.read
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization
      - :meth:`~wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read`

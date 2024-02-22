@@ -8387,12 +8387,17 @@ class AsStatusAPI(AsApiChild, base='status'):
 
     # noinspection PyMethodOverriding
     def ep(self, path: str):
+        """
+
+        :meta private:
+        """
         return f'https://status.webex.com/{path}.json'
 
     async def summary(self) -> StatusSummary:
         """
         Get a summary of the status page, including a status indicator, component statuses, unresolved incidents,
         and any upcoming or in-progress scheduled maintenances.
+
         :return: Status summary
         :rtype: StatusSummary
         """
@@ -8404,6 +8409,7 @@ class AsStatusAPI(AsApiChild, base='status'):
         """
         Get the status rollup for the whole page. This response includes an indicator - one of green (operational),
         yellow (under_maintenance/degraded_performance/partial_outage), red (major_outage).
+
         :return: Webex status
         :rtype: str
         """
@@ -8415,6 +8421,7 @@ class AsStatusAPI(AsApiChild, base='status'):
         """
         Get the components for the status page. Each component is listed along with its status - one of operational,
         under_maintenance,degraded_performance, partial_outage, or major_outage.
+
         :return: list of components
         :rtype: list[Component]
         """
@@ -8426,6 +8433,7 @@ class AsStatusAPI(AsApiChild, base='status'):
         """
         Get a list of any unresolved incidents. This response will only return incidents in the Investigating,
         Identified, or Monitoring state.
+
         :return: list of incidents
         :rtype: list[Incident]
         """

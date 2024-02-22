@@ -30,6 +30,8 @@ ROW_TEMPLATE = """
         {doc}
      - :meth:`~{class_path}`"""
 
+IGNORE_METHODS = {'ep'}
+
 
 def is_base_attr(*, base, name, attr):
     """
@@ -56,6 +58,9 @@ def obj_methods(obj):
     for name in dir(obj_class):
         # ignore all private and dunder methods
         if name.startswith('_'):
+            continue
+        # ignore some special names
+        if name in IGNORE_METHODS:
             continue
         # ignore all non-callables
         attr = getattr(obj_class, name)
