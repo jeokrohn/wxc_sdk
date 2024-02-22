@@ -10,6 +10,7 @@ Release history
 - feat: call pickup notifications
 - fix: errors when creating call pickups w/ agents
 - feat: status API :attr:`wxc_sdk.WebexSimpleApi.status`
+- feat: improved format for :doc:`method reference <method_ref>`
 
 
 1.17.1
