@@ -16,19 +16,16 @@ Reference of all available methods
 ==================================
 
 The following table contains a reference of all methods defined in the SDK with a short description of the operation.
-The second column of the table has a link to the documentation of the method.
+The method name is a link to the method documentation.
 
 .. list-table::
-   :widths: 70 30
    :header-rows: 1
 
-   * - Method
-     - Documentation"""
+   * - Method"""
 
 ROW_TEMPLATE = """
-   * - {method}
-        {doc}
-     - :meth:`~{class_path}`"""
+   * - :meth:`{method} <{class_path}>`
+        {doc}"""
 
 IGNORE_METHODS = {'ep'}
 
