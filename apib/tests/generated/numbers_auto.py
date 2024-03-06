@@ -11,14 +11,15 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType',
-            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasState', 'ItemObject', 'JobExecutionStatusObject',
-            'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
-            'NumberObjectLocation', 'NumberObjectOwner', 'NumberState', 'NumbersApi', 'StartJobResponse', 'State',
-            'Status', 'StepExecutionStatusesObject', 'ValidateNumbersResponse']
+__all__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject',
+           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType',
+           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
+           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType',
+           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasState', 'ItemObject', 'JobExecutionStatusObject',
+           'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
+           'NumberObjectLocation', 'NumberObjectOwner', 'NumberOwnerType', 'NumberState', 'NumbersApi',
+           'StartJobResponse', 'State', 'Status', 'StepExecutionStatusesObject', 'TelephonyType',
+           'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -175,35 +176,73 @@ class Number(ApiModel):
     detail: Optional[list[str]] = None
 
 
+class TelephonyType(str, Enum):
+    #: Object is a PSTN number.
+    pstn_number = 'PSTN_NUMBER'
+    #: Object is a mobile number.
+    mobile_number = 'MOBILE_NUMBER'
+
+
 class NumberObjectLocation(ApiModel):
     #: ID of location for phone number.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
     id: Optional[str] = None
-    #: Name of the location for phone number
+    #: Name of the location for phone number.
     #: example: Banglore
     name: Optional[str] = None
 
 
+class NumberOwnerType(str, Enum):
+    #: PSTN phone number's owner is a workspace.
+    place = 'PLACE'
+    #: Phone number's owner is a person.
+    people = 'PEOPLE'
+    #: PSTN phone number's owner is a virtual line.
+    virtual_line = 'VIRTUAL_LINE'
+    #: PSTN phone number's owner is an auto-attendant.
+    auto_attendant = 'AUTO_ATTENDANT'
+    #: PSTN phone number's owner is a call queue.
+    call_queue = 'CALL_QUEUE'
+    #: PSTN phone number's owner is a group paging.
+    group_paging = 'GROUP_PAGING'
+    #: PSTN phone number's owner is a hunt group.
+    hunt_group = 'HUNT_GROUP'
+    #: PSTN phone number's owner is a voice messaging.
+    voice_messaging = 'VOICE_MESSAGING'
+    #: PSTN phone number's owner is a Single Number Reach.
+    office_anywhere = 'OFFICE_ANYWHERE'
+    #: PSTN phone number's owner is a Contact Center link.
+    contact_center_link = 'CONTACT_CENTER_LINK'
+    #: PSTN phone number's owner is a Contact Center adapter.
+    contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
+    #: PSTN phone number's owner is a route list.
+    route_list = 'ROUTE_LIST'
+    #: PSTN phone number's owner is a voicemail group.
+    voicemail_group = 'VOICEMAIL_GROUP'
+    #: PSTN phone number's owner is a collaborate bridge.
+    collaborate_bridge = 'COLLABORATE_BRIDGE'
+
+
 class NumberObjectOwner(ApiModel):
-    #: ID of the owner to which PSTN Phone number is assigned.
+    #: ID of the owner to which Phone number is assigned.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
-    #: Type of the PSTN phone number's owner
+    #: Type of the phone number's owner.
     #: example: PEOPLE
-    type: Optional[str] = None
-    #: First name of the PSTN phone number's owner
+    type: Optional[NumberOwnerType] = None
+    #: First name of the phone number's owner.
     #: example: Mark
     first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner
+    #: Last name of the phone number's owner.
     #: example: Zand
     last_name: Optional[str] = None
 
 
 class NumberObject(ApiModel):
-    #: A unique identifier for the PSTN phone number.
+    #: A unique identifier for the phone number.
     #: example: +12056350001
     phone_number: Optional[str] = None
-    #: Extension for a PSTN phone number.
+    #: Extension for a phone number.
     #: example: 000
     extension: Optional[str] = None
     #: Phone number's state.
@@ -212,9 +251,18 @@ class NumberObject(ApiModel):
     #: Type of phone number.
     #: example: PRIMARY
     phone_number_type: Optional[str] = None
-    #: Indicates if the phone number is used as location clid.
+    #: Indicates if the phone number is used as location CLID.
     #: example: True
     main_number: Optional[bool] = None
+    #: Indicates Telephony type for the number.
+    #: example: MOBILE_NUMBER
+    included_telephony_types: Optional[TelephonyType] = None
+    #: Mobile Network for the number if the number is MOBILE_NUMBER.
+    #: example: mobileNetwork
+    mobile_network: Optional[str] = None
+    #: Routing Profile for the number if the number is MOBILE_NUMBER.
+    #: example: AttRtPf
+    routing_profile: Optional[str] = None
     #: Indicates if a phone number is a toll free number.
     #: example: True
     toll_free_number: Optional[bool] = None
@@ -423,7 +471,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         :param location_id: `LocationId` to which numbers should be added.
         :type location_id: str
-        :param phone_numbers: List of phone numbers that need to be deleted.
+        :param phone_numbers: List of phone numbers that need to be deleted. The maximum limit is 5.
         :type phone_numbers: list[str]
         :param org_id: Organization of the Route Group.
         :type org_id: str
@@ -479,6 +527,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
                                                                    details: bool = None,
                                                                    toll_free_numbers: bool = None,
                                                                    restricted_non_geo_numbers: bool = None,
+                                                                   included_telephony_types: list[TelephonyType] = None,
                                                                    org_id: str = None,
                                                                    **params) -> Generator[NumberObject, None, None]:
         """
@@ -486,8 +535,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         List all the phone numbers for the given organization along with the status and owner (if any).
 
-        PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
-        The owner is the person, workspace, or feature to which the number is assigned.
+        Numbers can be either PSTN numbers or mobile numbers.
+        Phone numbers can be associated with a specific location, active/inactive and assigned/unassigned.
+        The owner of a PSTN Number is the person, workspace, or feature to which the number is assigned.
+        Only a person can own a mobile number.
 
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
@@ -500,33 +551,38 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :param available: Search among the available phone numbers. This parameter cannot be used along with
             `ownerType` parameter when set to `true`.
         :type available: bool
-        :param order: Sort the list of phone numbers based on the following:`lastName`,`dn`,`extension`. Default sort
-            will be based on number and extension in an ascending order
+        :param order: Sort the list of phone numbers based on the following:`lastName`,`dn`,`extension`. Sorted by
+            number and extension in ascending order.
         :type order: str
-        :param owner_name: Return the list of phone numbers that is owned by given `ownerName`. Maximum length is 255.
+        :param owner_name: Return the list of phone numbers that are owned by given `ownerName`. Maximum length is 255.
         :type owner_name: str
-        :param owner_id: Returns only the matched number/extension entries assigned to the feature with specified
-            uuid/broadsoftId.
+        :param owner_id: Returns only the matched number/extension entries assigned to the feature with the specified
+            UUID or `broadsoftId`.
         :type owner_id: str
-        :param owner_type: Returns the list of phone numbers that are of given `ownerType`. Possible input values
+        :param owner_type: Returns the list of phone numbers that are of given `ownerType`. Possible input values:
         :type owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType
-        :param extension: Returns the list of PSTN phone numbers with the given extension.
+        :param extension: Returns the list of phone numbers with the given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers. This
-            parameter cannot be used along with `available` or `state`.Possible input values
+        :param number_type: Returns the filtered list of phone numbers that contains given type of numbers.
+            `numberType` cannot be used along with the `available` or `state` query parameters. Possible input values:
         :type number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType
-        :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given
-            `phoneNumberType`.Possible input values
+        :param phone_number_type: Returns the filtered list of phone numbers of the given `phoneNumberType`. Response
+            excludes any extensions without numbers. Possible input values:
         :type phone_number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType
-        :param state: Returns the list of PSTN phone numbers with matching state.Possible input values
+        :param state: Returns the list of phone numbers with matching state. Response excludes any extensions without
+            numbers. Possible input values:
         :type state: GetPhoneNumbersForAnOrganizationWithGivenCriteriasState
-        :param details: Returns the overall count of the PSTN phone numbers along with other details for a given
+        :param details: Returns the overall count of the phone numbers along with other details for a given
             organization.
         :type details: bool
         :param toll_free_numbers: Returns the list of toll free phone numbers.
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non-geographical numbers.
         :type restricted_non_geo_numbers: bool
+        :param included_telephony_types: Returns the list of phone numbers that are of given `includedTelephonyTypes`.
+            By default, if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
+            input values are PSTN_NUMBER or MOBILE_NUMBER.
+        :type included_telephony_types: list[TelephonyType]
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: Generator yielding :class:`NumberObject` instances
@@ -561,6 +617,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
             params['tollFreeNumbers'] = str(toll_free_numbers).lower()
         if restricted_non_geo_numbers is not None:
             params['restrictedNonGeoNumbers'] = str(restricted_non_geo_numbers).lower()
+        if included_telephony_types is not None:
+            params['includedTelephonyTypes'] = included_telephony_types
         url = self.ep('numbers')
         return self.session.follow_pagination(url=url, model=NumberObject, item_key='phoneNumbers', params=params)
 
