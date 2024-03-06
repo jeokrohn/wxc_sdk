@@ -374,6 +374,9 @@ class GetHuntGroupObject(ApiModel):
     #: Whether or not the hunt group is enabled.
     #: example: True
     enabled: Optional[bool] = None
+    #: Whether or not the hunt group can be used as the caller ID when the agent places outgoing calls.
+    #: example: True
+    hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
 
 
 class ListHuntGroupObject(ApiModel):
@@ -468,7 +471,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
                             agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
                             phone_number: str = None, extension: str = None, language_code: str = None,
                             first_name: str = None, last_name: str = None, time_zone: str = None,
-                            org_id: str = None) -> str:
+                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None, org_id: str = None) -> str:
         """
         Create a Hunt Group
 
@@ -503,6 +506,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
+        :param hunt_group_caller_id_for_outgoing_calls_enabled: Enable the hunt group to be used as the caller ID when
+            the agent places outgoing calls. When set to true the hunt group's caller ID will be used.
+        :type hunt_group_caller_id_for_outgoing_calls_enabled: bool
         :param org_id: Create the hunt group for this organization.
         :type org_id: str
         :rtype: str
@@ -527,6 +533,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         body['enabled'] = enabled
+        if hunt_group_caller_id_for_outgoing_calls_enabled is not None:
+            body['huntGroupCallerIdForOutgoingCallsEnabled'] = hunt_group_caller_id_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/huntGroups')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -593,7 +601,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
                             first_name: str = None, last_name: str = None, time_zone: str = None,
                             call_policies: PostHuntGroupCallPolicyObject = None,
                             agents: list[PostPersonPlaceVirtualLineHuntGroupObject] = None, enabled: bool = None,
-                            org_id: str = None):
+                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None, org_id: str = None):
         """
         Update a Hunt Group
 
@@ -637,6 +645,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type agents: list[PostPersonPlaceVirtualLineHuntGroupObject]
         :param enabled: Whether or not the hunt group is enabled.
         :type enabled: bool
+        :param hunt_group_caller_id_for_outgoing_calls_enabled: Enable the hunt group to be used as the caller ID when
+            the agent places outgoing calls. When set to true the hunt group's caller ID will be used.
+        :type hunt_group_caller_id_for_outgoing_calls_enabled: bool
         :param org_id: Update hunt group settings from this organization.
         :type org_id: str
         :rtype: None
@@ -669,6 +680,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
         if enabled is not None:
             body['enabled'] = enabled
+        if hunt_group_caller_id_for_outgoing_calls_enabled is not None:
+            body['huntGroupCallerIdForOutgoingCallsEnabled'] = hunt_group_caller_id_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)
 
