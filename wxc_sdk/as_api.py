@@ -5586,11 +5586,23 @@ class AsPeopleApi(AsApiChild, base='people'):
         array, which accepts multiple values to allow for future expansion, but currently only one email address will
         be used for the new user.
 
-        Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData
-        parameter as true.
+        Admin users can include `Webex calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as true. It may happen that the POST request with calling data returns a 400 status, but the person
+        was created still. One way to get into this state is if an invalid phone number is assigned to a user. The
+        people API aggregates calls to several other microservices, and one may have failed. A best practice is to
+        check if the user exists before retrying. This can be done with the user's email address and a GET /people.
 
         When doing attendee management, to make the new user an attendee for a site: append #attendee to the siteUrl
         parameter (eg: mysite.webex.com#attendee).
+
+        **NOTES**:
+
+        * For creating a `Webex Calling` user, you must provide `phoneNumbers` or `extension`, `locationId`, and
+          `licenses` string in the same request.
+
+        * `SipAddresses` are assigned via an asynchronous process. This means that the POST response may not show the
+          SIPAddresses immediately. Instead, you can verify them with a separate GET to /people, after they were newly
+          configured.
 
         :param settings: settings for new user
         :type settings: Person
