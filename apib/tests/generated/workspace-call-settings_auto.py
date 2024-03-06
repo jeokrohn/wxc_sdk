@@ -36,11 +36,11 @@ class AuthorizationCode(ApiModel):
 
 
 class CLIDPolicySelection(str, Enum):
-    #: Outgoing caller ID will show the caller's direct line number and/or extension.
+    #: Outgoing caller ID will show the caller's direct line number
     direct_line = 'DIRECT_LINE'
     #: Outgoing caller ID will show the main number for the location.
     location_number = 'LOCATION_NUMBER'
-    #: Outgoing caller ID will show the value from the `customNumber` field.
+    #: Outgoing caller ID will show the value from the customNumber field.
     custom = 'CUSTOM'
 
 
@@ -151,7 +151,7 @@ class CallingPermission(ApiModel):
 class ExternalCallerIdNamePolicy(str, Enum):
     #: Outgoing caller ID will show the caller's direct line name.
     direct_line = 'DIRECT_LINE'
-    #: Outgoing caller ID will show the Site Name for the location.
+    #: Outgoing caller ID will show the external caller ID name for the location.
     location = 'LOCATION'
     #: Outgoing caller ID will show the value from the `locationExternalCallerIdName` field.
     other = 'OTHER'
@@ -352,9 +352,9 @@ class PhoneNumbers(ApiModel):
 
 
 class PlaceCallerIdGet(ApiModel):
-    #: Allowed types for the `selected` field.
+    #: Allowed types for the `selected` field. This field is read-only and cannot be modified.
     types: Optional[list[CLIDPolicySelection]] = None
-    #: Which type of outgoing Caller ID will be used.
+    #: Which type of outgoing Caller ID will be used. This setting is for the number portion.
     #: example: DIRECT_LINE
     selected: Optional[CLIDPolicySelection] = None
     #: Direct number which will be shown if `DIRECT_LINE` is selected.
@@ -363,9 +363,11 @@ class PlaceCallerIdGet(ApiModel):
     #: Location number which will be shown if `LOCATION_NUMBER` is selected
     #: example: +12815550002
     location_number: Optional[str] = None
-    #: Flag for specifying a toll-free number.
+    #: Flag to indicate if the location number is toll-free number.
     toll_free_location_number: Optional[bool] = None
-    #: This value must be an assigned number from the person's location.
+    #: Custom number which will be shown if CUSTOM is selected. This value must be a number from the workspace's
+    #: location or from another location with the same country, PSTN provider, and zone (only applicable for India
+    #: locations) as the workspace's location.
     #: example: +12815550003
     custom_number: Optional[str] = None
     #: Workspace's caller ID display name.
@@ -374,16 +376,16 @@ class PlaceCallerIdGet(ApiModel):
     #: Workspace's caller ID display details. Default is `.`.
     #: example: .
     display_detail: Optional[str] = None
-    #: Flag to block call forwarding.
+    #: Block this workspace's identity when receiving a call.
     #: example: True
     block_in_forward_calls_enabled: Optional[bool] = None
     #: Designates which type of External Caller ID Name policy is used. Default is `DIRECT_LINE`.
     #: example: DIRECT_LINE
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
-    #: Custom External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
+    #: Custom external caller ID name which will be shown if external caller ID name policy is `OTHER`.
     #: example: Custom external caller name
     custom_external_caller_id_name: Optional[str] = None
-    #: External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
+    #: Location's external caller ID name which will be shown if external caller ID name policy is `CUSTOM`.
     #: example: Anna
     location_external_caller_id_name: Optional[str] = None
 
@@ -674,9 +676,11 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         super().put(url, params=params, json=body)
 
-    def retrieve_caller_id_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> PlaceCallerIdGet:
+    def read_caller_id_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> PlaceCallerIdGet:
         """
-        Retrieve Caller ID Settings for a Workspace.
+        Read Caller ID Settings for a Workspace
+
+        Retrieve a workspace's Caller ID settings.
 
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
 
@@ -700,15 +704,18 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = PlaceCallerIdGet.model_validate(data)
         return r
 
-    def modify_caller_id_settings_for_a_workspace(self, workspace_id: str, selected: CLIDPolicySelection,
-                                                  custom_number: str = None, display_name: str = None,
-                                                  display_detail: str = None,
-                                                  block_in_forward_calls_enabled: bool = None,
-                                                  external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
-                                                  custom_external_caller_id_name: str = None,
-                                                  location_external_caller_id_name: str = None, org_id: str = None):
+    def configure_caller_id_settings_for_a_workspace(self, workspace_id: str, selected: CLIDPolicySelection,
+                                                     custom_number: str = None, display_name: str = None,
+                                                     display_detail: str = None,
+                                                     block_in_forward_calls_enabled: bool = None,
+                                                     external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
+                                                     custom_external_caller_id_name: str = None,
+                                                     location_external_caller_id_name: str = None,
+                                                     org_id: str = None):
         """
-        Modify Caller ID settings for a Workspace.
+        Configure Caller ID Settings for a Workspace
+
+        Configure workspace's Caller ID settings.
 
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
 
@@ -718,24 +725,26 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param selected: Which type of outgoing Caller ID will be used.
+        :param selected: Which type of outgoing Caller ID will be used. This setting is for the number portion.
         :type selected: CLIDPolicySelection
-        :param custom_number: This value must be an assigned number from the workspace's location.
+        :param custom_number: Custom number which will be shown if CUSTOM is selected. This value must be a number from
+            the workspace's location or from another location with the same country, PSTN provider, and zone (only
+            applicable for India locations) as the workspace's location.
         :type custom_number: str
         :param display_name: Workspace's caller ID display name.
         :type display_name: str
         :param display_detail: Workspace's caller ID display details.
         :type display_detail: str
-        :param block_in_forward_calls_enabled: Flag to block call forwarding.
+        :param block_in_forward_calls_enabled: Block this workspace's identity when receiving a call.
         :type block_in_forward_calls_enabled: bool
         :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used. Default
             is `DIRECT_LINE`.
         :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID
-            Name is `OTHER`.
+        :param custom_external_caller_id_name: Custom external caller ID name which will be shown if external caller ID
+            name policy is `OTHER`.
         :type custom_external_caller_id_name: str
-        :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name
-            is `OTHER`.
+        :param location_external_caller_id_name: Location's external caller ID name which will be shown if external
+            caller ID name policy is `CUSTOM`.
         :type location_external_caller_id_name: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
