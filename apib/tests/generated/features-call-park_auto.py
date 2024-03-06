@@ -259,7 +259,8 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=ListCallParkObject, item_key='callParks', params=params)
 
     def create_a_call_park(self, location_id: str, name: str, recall: PutRecallHuntGroupObject,
-                           agents: list[str] = None, org_id: str = None) -> str:
+                           agents: list[str] = None, park_on_agents_enabled: bool = None,
+                           call_park_extensions: list[str] = None, org_id: str = None) -> str:
         """
         Create a Call Park
 
@@ -280,6 +281,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type recall: PutRecallHuntGroupObject
         :param agents: Array of ID strings of people, workspaces and virtual lines that are added to the call park.
         :type agents: list[str]
+        :param park_on_agents_enabled: Whether or not the calls will be parked on agents as a destination.
+        :type park_on_agents_enabled: bool
+        :param call_park_extensions: Array of ID strings of call park extensions assigned to a call park.
+        :type call_park_extensions: list[str]
         :param org_id: Create the call park for this organization.
         :type org_id: str
         :rtype: str
@@ -292,6 +297,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         body['recall'] = loads(recall.model_dump_json())
         if agents is not None:
             body['agents'] = agents
+        if park_on_agents_enabled is not None:
+            body['parkOnAgentsEnabled'] = park_on_agents_enabled
+        if call_park_extensions is not None:
+            body['callParkExtensions'] = call_park_extensions
         url = self.ep(f'locations/{location_id}/callParks')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -356,6 +365,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
 
     def update_a_call_park(self, location_id: str, call_park_id: str, name: str = None,
                            recall: PutRecallHuntGroupObject = None, agents: list[str] = None,
+                           park_on_agents_enabled: bool = None, call_park_extensions: list[str] = None,
                            org_id: str = None) -> str:
         """
         Update a Call Park
@@ -380,6 +390,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :param agents: Array of ID strings of people, workspaces and virtual lines that are added to call park. The new
             list of `agents` will replace any existing call park agents list.
         :type agents: list[str]
+        :param park_on_agents_enabled: Whether or not the calls will be parked on agents as a destination.
+        :type park_on_agents_enabled: bool
+        :param call_park_extensions: Array of ID strings of call park extensions assigned to a call park.
+        :type call_park_extensions: list[str]
         :param org_id: Update call park settings from this organization.
         :type org_id: str
         :rtype: str
@@ -394,6 +408,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
             body['recall'] = loads(recall.model_dump_json())
         if agents is not None:
             body['agents'] = agents
+        if park_on_agents_enabled is not None:
+            body['parkOnAgentsEnabled'] = park_on_agents_enabled
+        if call_park_extensions is not None:
+            body['callParkExtensions'] = call_park_extensions
         url = self.ep(f'locations/{location_id}/callParks/{call_park_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
