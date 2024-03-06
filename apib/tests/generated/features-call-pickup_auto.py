@@ -11,8 +11,23 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['FeaturesCallPickupApi', 'GetCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject',
-           'GetPersonPlaceVirtualLineCallPickupObjectType', 'GetUserNumberItemObject', 'ListCallPickupObject']
+__all__ = ['FeaturesCallPickupApi', 'GetCallPickupObject', 'GetCallPickupObjectNotificationType',
+           'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObjectType',
+           'GetUserNumberItemObject', 'ListCallPickupObject']
+
+
+class GetCallPickupObjectNotificationType(str, Enum):
+    #: Notification is not sent to any member of the call pickup group.
+    none_ = 'NONE'
+    #: When the `notificationDelayTimerSeconds` number of seconds has elapsed, play an audio notification for each call
+    #: pickup group member.
+    audio_only = 'AUDIO_ONLY'
+    #: When the `notificationDelayTimerSeconds` number of seconds has elapsed, provide a visual notification to every
+    #: call pickup group member.
+    visual_only = 'VISUAL_ONLY'
+    #: When the `notificationDelayTimerSeconds` number of seconds has elapsed, provide an audio and visual notification
+    #: to every call pickup group member.
+    audio_and_visual = 'AUDIO_AND_VISUAL'
 
 
 class GetPersonPlaceVirtualLineCallPickupObjectType(str, Enum):
@@ -66,6 +81,15 @@ class GetCallPickupObject(ApiModel):
     #: Unique name for the call pickup. The maximum length is 80.
     #: example: North Alaska-Group
     name: Optional[str] = None
+    #: Type of the notification when an incoming call is unanswered. The call pickup group notifies all of its members.
+    #: Default: NONE.
+    #: example: NONE
+    notification_type: Optional[GetCallPickupObjectNotificationType] = None
+    #: After the number of seconds given by the `notificationDelayTimerSeconds` has elapsed, notify every member of the
+    #: call pickup group when an incoming call goes unanswered. The `notificationType` field specifies the
+    #: notification method. Default: 6.
+    #: example: 6
+    notification_delay_timer_seconds: Optional[int] = None
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject]] = None
 
@@ -139,7 +163,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/callPickups')
         return self.session.follow_pagination(url=url, model=ListCallPickupObject, item_key='callPickups', params=params)
 
-    def create_a_call_pickup(self, location_id: str, name: str, agents: list[str] = None, org_id: str = None) -> str:
+    def create_a_call_pickup(self, location_id: str, name: str,
+                             notification_type: GetCallPickupObjectNotificationType = None,
+                             notification_delay_timer_seconds: int = None, agents: list[str] = None,
+                             org_id: str = None) -> str:
         """
         Create a Call Pickup
 
@@ -156,6 +183,13 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         :type location_id: str
         :param name: Unique name for the call pickup. The maximum length is 80.
         :type name: str
+        :param notification_type: Type of the notification when an incoming call is unanswered. The call pickup group
+            notifies all of its members. Default: NONE.
+        :type notification_type: GetCallPickupObjectNotificationType
+        :param notification_delay_timer_seconds: After the number of seconds given by the
+            `notificationDelayTimerSeconds` has elapsed, notify every member of the call pickup group when an incoming
+            call goes unanswered. The `notificationType` field specifies the notification method. Default: 6.
+        :type notification_delay_timer_seconds: int
         :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: list[str]
         :param org_id: Create the call pickup for this organization.
@@ -167,6 +201,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
+        if notification_type is not None:
+            body['notificationType'] = enum_str(notification_type)
+        if notification_delay_timer_seconds is not None:
+            body['notificationDelayTimerSeconds'] = notification_delay_timer_seconds
         if agents is not None:
             body['agents'] = agents
         url = self.ep(f'{location_id}/callPickups')
@@ -206,7 +244,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         """
         Get Details for a Call Pickup
 
-        Retrieve Call Pickup details.
+        Retrieve the designated Call Pickup details.
 
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
 
@@ -231,7 +269,9 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         r = GetCallPickupObject.model_validate(data)
         return r
 
-    def update_a_call_pickup(self, location_id: str, call_pickup_id: str, name: str = None, agents: list[str] = None,
+    def update_a_call_pickup(self, location_id: str, call_pickup_id: str, name: str = None,
+                             notification_type: GetCallPickupObjectNotificationType = None,
+                             notification_delay_timer_seconds: int = None, agents: list[str] = None,
                              org_id: str = None) -> str:
         """
         Update a Call Pickup
@@ -251,6 +291,13 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         :type call_pickup_id: str
         :param name: Unique name for the call pickup. The maximum length is 80.
         :type name: str
+        :param notification_type: Type of the notification when an incoming call is unanswered. The call pickup group
+            notifies all of its members. Default: NONE.
+        :type notification_type: GetCallPickupObjectNotificationType
+        :param notification_delay_timer_seconds: After the number of seconds given by the
+            `notificationDelayTimerSeconds` has elapsed, notify every member of the call pickup group when an incoming
+            call goes unanswered. The `notificationType` field specifies the notification method. Default: 6.
+        :type notification_delay_timer_seconds: int
         :param agents: An array of people, workspace, and virtual lines IDs, that are added to call pickup.
         :type agents: list[str]
         :param org_id: Update call pickup settings from this organization.
@@ -263,6 +310,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         body = dict()
         if name is not None:
             body['name'] = name
+        if notification_type is not None:
+            body['notificationType'] = enum_str(notification_type)
+        if notification_delay_timer_seconds is not None:
+            body['notificationDelayTimerSeconds'] = notification_delay_timer_seconds
         if agents is not None:
             body['agents'] = agents
         url = self.ep(f'{location_id}/callPickups/{call_pickup_id}')
