@@ -714,22 +714,26 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         """
         Validates that an incoming call can be routed.
 
-        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
-        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
-        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
-        can be defined as part of your dial plan.
+        Dial plans route calls to on-premises destinations by use of trunks or route groups.
+        They are configured globally for an enterprise and apply to all users, regardless of location.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
+        Specific dial patterns can be defined as part of your dial plan.
 
-        Test call routing requires a full or write-only administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Test call routing requires a full administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
-        :param originator_id: This element is used to identify the originating party. It can be user UUID or trunk UUID.
+
+        :param originator_id: This element is used to identify the originating party. It can be a person ID or a trunk
+            ID.
         :type originator_id: str
-        :param originator_type:
+        :param originator_type: This element is used to identify if the `originatorId` is of type `PEOPLE` or `TRUNK`.
         :type originator_type: :class:`OriginatorType`
         :param destination: This element specifies called party. It can be any dialable string, for example, an
             ESN number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
         :type destination: str
-        :param originator_number: Only used when originatorType is TRUNK. This element could be a phone number or URI.
+        :param originator_number: Only used when `originatorType` is `TRUNK`. The `originatorNumber` can be a phone
+            number or URI.
         :type originator_number: str
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str

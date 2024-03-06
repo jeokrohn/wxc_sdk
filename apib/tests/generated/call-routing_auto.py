@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['ActionOnRouteList', 'CallRoutingApi', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType',
-           'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate',
+__all__ = ['ActionOnRouteList', 'CallDestinationType', 'CallRoutingApi', 'CallSourceInfo', 'CallSourceType',
+           'Customer', 'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate',
            'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'Emergency',
            'FeatureAccessCode', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount',
            'LocalGateways', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PstnNumber',
@@ -42,30 +42,33 @@ class CallSourceType(str, Enum):
 
 
 class CallSourceInfo(ApiModel):
-    #: The type of call source.
+    #: Indicates the type of call source.
+    #: example: DIAL_PATTERN
     call_source_type: Optional[CallSourceType] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk, this trunk belongs to a route group which is
-    #: assigned to a route list with the name routeListA and `originatorNumber` is a number assigned to routeListA.
-    #: routeListA is returned here. This element is returned when `callSourceType` is `ROUTE_LIST`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk and the trunk belongs to a route group which
+    #: is assigned to a route list with the name `routeListA` and also `originatorNumber` is a number assigned to
+    #: `routeListA`, then `routeListA` is returned here. This element is returned when `callSourceType` is
+    #: `ROUTE_LIST`.
     #: example: routeList1
     route_list_name: Optional[str] = None
-    #: Foute list ID.
-    #: example: NTJiZmUxNDAtYjIwMS00NTUzLWI1OGQtMmVkNDU1NTFmYTUy
+    #: Unique identifier for the route list.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0xJU1QvZDA2YWQ5M2QtY2NkOC00MzI1LTg0YzUtMDA2NThhYTdhMDBj
     route_list_id: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name trunkA, trunkA belongs to a route
-    #: group which is assigned to a route list with name routeListA,  trunkA is also assigned to dialPlanA as routing
-    #: choice, dialPlanA has dialPattern xxxx assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`,
-    #: dialPlanA is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name `trunkA`, `trunkA` belongs to a
+    #: route group which is assigned to a route list with name `routeListA`, `trunkA` is also assigned to `dialPlanA`
+    #: as routing choice, `dialPlanA` has `dialPattern` xxxx assigned. If the `originatorNumber` matches the
+    #: `dialPattern` `xxxx`, `dialPlanA` is returned. This element is returned when `callSourceType` is
+    #: `DIAL_PATTERN`.
     #: example: dialPlan1
     dial_plan_name: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name trunkA, trunkA belongs to a
-    #: route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA
-    #: as routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the
-    #: `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name `trunkA`, `trunkA` belongs to a
+    #: route group which is assigned to a route list with the name `routeListA`, `trunkA` is also assigned to
+    #: `dialPlanA` as routing choice, `dialPlanA` has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches
+    #: the `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is
     #: `DIAL_PATTERN`.
     #: example: *888
     dial_pattern: Optional[str] = None
-    #: Dial plan ID.
+    #: Unique identifier for dial plan.
     #: example: Y2lzY29zcGFyazovL3VzL0RJQUxfUExBTi8wNTlhMjczZS1iYmIwLTExZWMtODQyMi0wMjQyYWMxMjAwMDI
     dial_plan_id: Optional[str] = None
 
@@ -79,25 +82,24 @@ class Customer(ApiModel):
     name: Optional[str] = None
 
 
-class DestinationType(str, Enum):
-    #: Matching destination is a person or workspace with details in the `hostedAgent` field.
+class CallDestinationType(str, Enum):
+    #: Destination is a person or workspace with details in the `hostedAgent` field.
     hosted_agent = 'HOSTED_AGENT'
-    #: Matching destination is a calling feature like auto-attendant or hunt group with details in the `hostedFeature`
-    #: field.
+    #: Destination is a calling feature like auto-attendant or hunt group with details in the `hostedFeature` field.
     hosted_feature = 'HOSTED_FEATURE'
-    #: Matching destination routes into a separate PBX with details in the `pbxUser` field.
+    #: Destination routes into a separate PBX with details in the `pbxUser` field.
     pbx_user = 'PBX_USER'
-    #: Matching destination routes into a PSTN phone number with details in the `pstnNumber` field.
+    #: Destination routes into a PSTN phone number with details in the `pstnNumber` field.
     pstn_number = 'PSTN_NUMBER'
-    #: Matching destination routes into a virtual extension with details in the `virtualExtension` field.
+    #: Destination routes into a virtual extension with details in the `virtualExtension` field.
     virtual_extension = 'VIRTUAL_EXTENSION'
-    #: Matching destination routes into a virtual extension range with details in the `virtualExtensionRange` field.
+    #: Destination routes into a virtual extension range with details in the `virtualExtensionRange` field.
     virtual_extension_range = 'VIRTUAL_EXTENSION_RANGE'
-    #: Matching destination routes into a route list with details in the `routeList` field.
+    #: Destination routes into a route list with details in the `routeList` field.
     route_list = 'ROUTE_LIST'
-    #: Matching destination routes into a feature access code (FAC) with details in the `featureAccessCode` field.
+    #: Destination routes into a feature access code (FAC) with details in the `featureAccessCode` field.
     fac = 'FAC'
-    #: Matching destination routes into an emergency service like Red Sky, with details in the `emergency` field.
+    #: Destination routes into an emergency service like Red Sky, with details in the `emergency` field.
     emergency = 'EMERGENCY'
     #: The route is in a repair state with routing choice details in the `repair` field.
     repair = 'REPAIR'
@@ -214,33 +216,34 @@ class DialPlanGet(ApiModel):
 
 
 class Emergency(ApiModel):
-    #: Indicates if RedSky is in use.
+    #: Indicates if `RedSky` is in use.
+    #: example: True
     is_red_sky: Optional[bool] = None
-    #: Trunk name.
+    #: Name of the trunk.
     #: example: trunkName1
     trunk_name: Optional[str] = None
-    #: Trunk id.
-    #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
+    #: Unique identifier of the trunk.
+    #: example: Y2lzY29zcGFyazovL3VzL1RSVU5LLzA4Yjc2MmZlLWJmYWItNGFmYi04ODQ1LTNhNzJjNGQ0NjZiOQ
     trunk_id: Optional[str] = None
-    #: Route group name.
+    #: Name of the route group that is associated with trunk specified by `trunkId`.
     #: example: routeGroupName1
     route_group_name: Optional[str] = None
-    #: Route group ID.
-    #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
+    #: Unique identifier of the route group.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2YyODkyMTc0LWYxM2YtNDhjYy1iMmJhLWQ4ZmM4Yzg4MzJhYg
     route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
     trunk_location_name: Optional[str] = None
-    #: Location ID of the trunk; required if `trunkName` is returned.
-    #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
+    #: Unique identifier of the location of the trunk; required if `trunkName` is returned.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     trunk_location_id: Optional[str] = None
 
 
 class FeatureAccessCode(ApiModel):
-    #: FAC code.
+    #: Feature access code to which the call is directed.
     #: example: *70
     code: Optional[str] = None
-    #: FAC name.
+    #: Name of the feature associated with `code`.
     #: example: Cancel Call Waiting
     name: Optional[str] = None
 
@@ -253,33 +256,34 @@ class HostedAgentType(str, Enum):
 
 
 class HostedAgent(ApiModel):
-    #: Person or workspace's ID.
+    #: Unique identifier for the person or workspace agent identified as call destination.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mMjU4YjhmZi1lODIxLTQ3MDktYTI2My1mMmI4OWZjN2FlYmQ
     id: Optional[str] = None
     #: Type of agent for call destination.
+    #: example: PEOPLE
     type: Optional[HostedAgentType] = None
-    #: Person or workspace's first name.
+    #: First name for the hosted agent specified by `id`.
     #: example: firstName
     first_name: Optional[str] = None
-    #: Person or workspace's last name.
+    #: Last name for the hosted agent specified by `id`.
     #: example: lastName
     last_name: Optional[str] = None
-    #: Name of location for a person or workspace.
+    #: Name of hosted agent's location.
     #: example: locationName
     location_name: Optional[str] = None
-    #: Location ID for a person or workspace.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL1dLQVBRMjQ4NDczTDI0ODQ3NA
+    #: Unique identifier for hosted agent's location.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     location_id: Optional[str] = None
-    #: Person or workspace's phone number.
+    #: Phone number for the hosted agent.
     #: example: 9874531287
     phone_number: Optional[str] = None
-    #: Person or workspace's extension.
+    #: Extension for the hosted agent.
     #: example: 111
     extension: Optional[str] = None
 
 
 class ServiceType(str, Enum):
-    #: Destination is an auto attendant.
+    #: Indicates that this destination is an auto attendant.
     auto_attendant = 'AUTO_ATTENDANT'
     #: Indicates that this destination is the Office (Broadworks) Anywhere feature.
     broadworks_anywhere = 'BROADWORKS_ANYWHERE'
@@ -298,24 +302,25 @@ class ServiceType(str, Enum):
 
 
 class HostedFeature(ApiModel):
-    #: Service instance type.
+    #: Type of the service identified as call destination.
+    #: example: AUTO_ATTENDANT
     type: Optional[ServiceType] = None
-    #: Service instance name.
+    #: Name of the service identified as call destination.
     #: example: name1
     name: Optional[str] = None
-    #: Service instance ID.
-    #: example: Y2lzY29zcGFyazovL3VzL0RJQUxfUExBTi8wNTlhMjczZS1iYmIwLTExZWMtODQyMi0wMjQyYWMxMjAwMDI
+    #: Unique identifier of the service identified as call destination.
+    #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QyRXdhV2R5TVRCamIwQTJORGswTVRJNU55NXBiblF4TUM1aVkyeGtMbmRsWW1WNExtTnZiUT09
     id: Optional[str] = None
-    #: Location of the service instance.
+    #: Name of the location with which the service is associated.
     #: example: locationName1
     location_name: Optional[str] = None
-    #: Location ID of the service instance.
-    #: example: Y2lzY29zcGFyazovL3VzL0RJQUxfUExBTi8wNTlhMjczZS1iYmIwLTExZWMtODQyMi0wMjQyYWMxMjAwMDI
+    #: Unique identifier for the location of the service.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     location_id: Optional[str] = None
-    #: User or place's phone number.
+    #: Phone number of the service.
     #: example: 9874531287
     phone_number: Optional[str] = None
-    #: User or place's extension.
+    #: Extension of the service.
     #: example: 111
     extension: Optional[str] = None
 
@@ -358,9 +363,9 @@ class NumberStatus(str, Enum):
 
 
 class OriginatorType(str, Enum):
-    #: User
-    user = 'USER'
-    #: Connection between Webex Calling and the premises
+    #: Indicates that this object is a person.
+    people = 'PEOPLE'
+    #: Connection between Webex Calling and the premises.
     trunk = 'TRUNK'
 
 
@@ -368,50 +373,50 @@ class PbxUser(ApiModel):
     #: Dial plan name that the called string matches.
     #: example: dialPlan1
     dial_plan_name: Optional[str] = None
-    #: Dial plan ID.
-    #: example: NTZhMmQzZDktZDVhMC00NWQzLWE3NWYtNjY4NDA4Yzc0OWRk
+    #: Unique identifier for the dial plan.
+    #: example: Y2lzY29zcGFyazovL3VzL0RJQUxfUExBTi8wNTlhMjczZS1iYmIwLTExZWMtODQyMi0wMjQyYWMxMjAwMDI
     dial_plan_id: Optional[str] = None
     #: Dial pattern that the called string matches.
     #: example: 442xxx
     dial_pattern: Optional[str] = None
-    #: Trunk name.
+    #: Name of the trunk.
     #: example: trunkName1
     trunk_name: Optional[str] = None
-    #: Trunk ID.
-    #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
+    #: Unique identifier of the trunk.
+    #: example: Y2lzY29zcGFyazovL3VzL1RSVU5LLzA4Yjc2MmZlLWJmYWItNGFmYi04ODQ1LTNhNzJjNGQ0NjZiOQ
     trunk_id: Optional[str] = None
-    #: Route group name.
+    #: Name of the route group.
     #: example: routeGroupName1
     route_group_name: Optional[str] = None
-    #: Route group ID.
-    #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
+    #: Unique identifier of the route group.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2YyODkyMTc0LWYxM2YtNDhjYy1iMmJhLWQ4ZmM4Yzg4MzJhYg
     route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
     trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
-    #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     trunk_location_id: Optional[str] = None
 
 
 class PstnNumber(ApiModel):
-    #: Trunk name.
+    #: Name of the trunk.
     #: example: trunkName1
     trunk_name: Optional[str] = None
-    #: Trunk ID.
-    #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
+    #: Unique identifier of the trunk.
+    #: example: Y2lzY29zcGFyazovL3VzL1RSVU5LLzA4Yjc2MmZlLWJmYWItNGFmYi04ODQ1LTNhNzJjNGQ0NjZiOQ
     trunk_id: Optional[str] = None
-    #: Route group name.
+    #: Name of the route group.
     #: example: routeGroupName1
     route_group_name: Optional[str] = None
-    #: Route group ID.
-    #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
+    #: Unique identifier of the route group.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2YyODkyMTc0LWYxM2YtNDhjYy1iMmJhLWQ4ZmM4Yzg4MzJhYg
     route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
     trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
-    #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     trunk_location_id: Optional[str] = None
 
 
@@ -482,23 +487,23 @@ class RouteGroupUsageRouteListGet(ApiModel):
 
 
 class RouteList(ApiModel):
-    #: Route list ID.
-    #: example: ODRkYmVmMjItYTEwNC00YWZhLTg4ODMtY2QzNjhiMTAxOWZl
+    #: Unique identifier of the route list.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0xJU1QvZDA2YWQ5M2QtY2NkOC00MzI1LTg0YzUtMDA2NThhYTdhMDBj
     id: Optional[str] = None
-    #: Route list name.
+    #: Name of the route list.
     #: example: routeListName1
     name: Optional[str] = None
     #: Name of the route group the route list is associated with.
     #: example: routeGroupName1
     route_group_name: Optional[str] = None
-    #: ID of the route group the route list is associated with.
-    #: example: MjRlNDQwYTUtNzQ5NC00ODg2LWIyNTktMmFiM2I2M2ZiMGY0
+    #: Unique identifier of the route group the route list is associated with.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2YyODkyMTc0LWYxM2YtNDhjYy1iMmJhLWQ4ZmM4Yzg4MzJhYg
     route_group_id: Optional[str] = None
     #: Location name of the route list.
     #: example: locationName1
     location_name: Optional[str] = None
     #: Location ID of the route list.
-    #: example: NjY5YmY3ODQtNjMyZS00MTA2LWFmMWItMzYxYWNkY2M1OTFh
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     location_id: Optional[str] = None
 
 
@@ -534,16 +539,16 @@ class RouteListNumberPatchResponse(ApiModel):
 
 
 class VirtualExtension(ApiModel):
-    #: Virtual extension ID.
-    #: example: OTI0NzM1OTQtZGU1Mi00ZjViLTk0YjItN2Y5MzRmY2Y2NDk3
+    #: Unique identifier for the virtual extension.
+    #: example: Y2lzY29zcGFyazovL3VzL1ZJUlRVQUxfRVhURU5TSU9OL2U4NTU0MGJjLWFiNDMtNGZjOS05ZThlLTkxZjRkN2E3ZjU5Ng
     id: Optional[str] = None
-    #: Virtual extension display first name.
+    #: First name of the virtual extension.
     #: example: firstName1
     first_name: Optional[str] = None
-    #: Virtual extension display last name.
+    #: Last name of the virtual extension.
     #: example: lastName1
     last_name: Optional[str] = None
-    #: Virtual extension display name.
+    #: Full name of the virtual extension.
     #: example: displayName1
     display_name: Optional[str] = None
     #: Extension that the virtual extension is associated with.
@@ -552,37 +557,37 @@ class VirtualExtension(ApiModel):
     #: Phone number that the virtual extension is associated with.
     #: example: 8701278963
     phone_number: Optional[str] = None
-    #: Location name if the virtual extension is at the location level, empty if it is at customer level.
+    #: Location name if the virtual extension is at the location level, empty if it is at the customer level.
     #: example: locationName1
     location_name: Optional[str] = None
     #: Location ID if the virtual extension is at the location level, empty if it is at customer level.
-    #: example: MWU5ZmEzZmEtYTQ0ZS00MDJhLWExNDItMjJmODQxMjhkOTY4
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     location_id: Optional[str] = None
-    #: Trunk name.
+    #: Name of the trunk.
     #: example: trunkName1
     trunk_name: Optional[str] = None
-    #: Trunk ID.
-    #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
+    #: Unique identifier of the trunk.
+    #: example: Y2lzY29zcGFyazovL3VzL1RSVU5LLzA4Yjc2MmZlLWJmYWItNGFmYi04ODQ1LTNhNzJjNGQ0NjZiOQ
     trunk_id: Optional[str] = None
-    #: Route group name.
+    #: Name of the route group.
     #: example: routeGroupName1
     route_group_name: Optional[str] = None
-    #: Route group ID.
-    #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
+    #: Unique identifier of the route group.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2YyODkyMTc0LWYxM2YtNDhjYy1iMmJhLWQ4ZmM4Yzg4MzJhYg
     route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
     trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
-    #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     trunk_location_id: Optional[str] = None
 
 
 class VirtualExtensionRange(ApiModel):
-    #: Virtual extension range ID.
+    #: Unique identifier for virtual extension range.
     #: example: OTI0NzM1OTQtZGU1Mi00ZjViLTk0YjItN2Y5MzRmY2Y2NDk3
     id: Optional[str] = None
-    #: Virtual extension range name.
+    #: Name of the virtual extension range.
     #: example: firstName1
     name: Optional[str] = None
     #: Prefix that the virtual extension range is associated with (Note: Standard mode must have leading '+' in prefix;
@@ -592,37 +597,38 @@ class VirtualExtensionRange(ApiModel):
     #: Pattern associated with the virtual extension range.
     #: example: 2XXX
     pattern: Optional[str] = None
-    #: Location name if the virtual extension range is at the location level, empty if it is at customer level.
+    #: Location name if the virtual extension range is at the location level, empty if it is at the customer level.
     #: example: locationName1
     location_name: Optional[str] = None
     #: Location ID if the virtual extension range is at the location level, empty if it is at customer level.
-    #: example: MWU5ZmEzZmEtYTQ0ZS00MDJhLWExNDItMjJmODQxMjhkOTY4
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     location_id: Optional[str] = None
-    #: Trunk name.
+    #: Name of the trunk.
     #: example: trunkName1
     trunk_name: Optional[str] = None
-    #: Trunk ID.
-    #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
+    #: Unique identifier of the trunk.
+    #: example: Y2lzY29zcGFyazovL3VzL1RSVU5LLzA4Yjc2MmZlLWJmYWItNGFmYi04ODQ1LTNhNzJjNGQ0NjZiOQ
     trunk_id: Optional[str] = None
-    #: Route group name.
+    #: Name of the route group.
     #: example: routeGroupName1
     route_group_name: Optional[str] = None
-    #: Route group ID.
-    #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
+    #: Unique identifier of the route group.
+    #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2YyODkyMTc0LWYxM2YtNDhjYy1iMmJhLWQ4ZmM4Yzg4MzJhYg
     route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
     trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
-    #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     trunk_location_id: Optional[str] = None
 
 
 class TestCallRoutingPostResponse(ApiModel):
     #: Only returned when `originatorNumber` is specified in the request.
     call_source_info: Optional[CallSourceInfo] = None
-    #: Matching destination type for the call.
-    destination_type: Optional[DestinationType] = None
+    #: Destination type for the call.
+    #: example: HOSTED_AGENT
+    destination_type: Optional[CallDestinationType] = None
     #: FAC code if `destinationType` is FAC. The routing address will be returned for all other destination types.
     #: example: 7
     routing_address: Optional[str] = None
@@ -631,6 +637,12 @@ class TestCallRoutingPostResponse(ApiModel):
     outside_access_code: Optional[str] = None
     #: `true` if the call would be rejected.
     is_rejected: Optional[bool] = None
+    #: Calling line ID (CLID) configured for the calling user.
+    #: example: +12036680442
+    calling_line_id: Optional[str] = Field(alias='callingLineID', default=None)
+    #: Routing profile that is used to route network calls.
+    #: example: AttRtPf
+    routing_profile: Optional[str] = None
     #: Returned when `destinationType` is `HOSTED_AGENT`.
     hosted_agent: Optional[HostedAgent] = None
     #: Returned when `destinationType` is `HOSTED_FEATURE`.
@@ -791,19 +803,19 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
 
-        Test call routing requires a full or write-only administrator auth token with a scope of
+        Test call routing requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
-        :param originator_id: This element is used to identify the originating party.  It can be user UUID or trunk
-            UUID.
+        :param originator_id: This element is used to identify the originating party. It can be a person ID or a trunk
+            ID.
         :type originator_id: str
-        :param originator_type: `USER` or `TRUNK`.
+        :param originator_type: This element is used to identify if the `originatorId` is of type `PEOPLE` or `TRUNK`.
         :type originator_type: OriginatorType
-        :param destination: This element specifies called party.  It can be any dialable string, for example, an ESN
-            number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+        :param destination: This element specifies the called party. It can be any dialable string, for example, an ESN
+            number, E.164 number, hosted user DN, extension, extension with location code, URL, or FAC code.
         :type destination: str
-        :param originator_number: Only used when originatorType is `TRUNK`. This element could be a phone number or
-            URI.
+        :param originator_number: Only used when `originatorType` is `TRUNK`. The `originatorNumber` can be a phone
+            number or URI.
         :type originator_number: str
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
