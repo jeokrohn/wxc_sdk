@@ -104,12 +104,20 @@ class NumberType(str, Enum):
 
 
 class NumberDetails(ApiModel):
-    assigned: int
-    un_assigned: int
-    in_active: int
-    extension_only: int
+    #: Count of phone numbers that are in the assigned state.
+    assigned: Optional[int] = None
+    #: Count of phone numbers which are in the un-assigned state.
+    un_assigned: Optional[int] = None
+    #: Count of phone numbers which are inactive.
+    in_active: Optional[int] = None
+    #: Count of extensions only without phone number.
+    extension_only: Optional[int] = None
+    #: Count of the toll free numbers.
     toll_free_numbers: Optional[int] = None
-    total: int
+    #: Total phone numbers and extensions available.
+    total: Optional[int] = None
+    #: Count of phone numbers of type `MOBILE_NUMBER` only without `PSTN_NUMBER` and extension.
+    mobile_number: Optional[int] = None
 
 
 class UCMProfile(ApiModel):
