@@ -11,6 +11,10 @@ The method name is a link to the method documentation.
    * - Method
    * - :meth:`api.close <wxc_sdk.WebexSimpleApi.close>`
         
+   * - :meth:`api.admin_audit.list_event_categories <wxc_sdk.admin_audit.AdminAuditEventsApi.list_event_categories>`
+        List Admin Audit Event Categories
+   * - :meth:`api.admin_audit.list_events <wxc_sdk.admin_audit.AdminAuditEventsApi.list_events>`
+        List Admin Audit Events
    * - :meth:`api.attachment_actions.details <wxc_sdk.attachment_actions.AttachmentActionsApi.details>`
         Shows details for a attachment action, by ID
    * - :meth:`api.authorizations.delete <wxc_sdk.authorizations.AuthorizationsApi.delete>`

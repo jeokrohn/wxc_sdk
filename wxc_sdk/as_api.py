@@ -50,17 +50,18 @@ MAX_USERS_WITH_CALLING_DATA = 10
 CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
-__all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsAnnouncementsRepositoryApi',
-           'AsApiChild', 'AsAppServicesApi', 'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi',
-           'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi',
-           'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallRecordingSettingsApi',
-           'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
-           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
-           'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi',
-           'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+__all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi',
+           'AsAnnouncementsRepositoryApi', 'AsApiChild', 'AsAppServicesApi', 'AsApplyLineKeyTemplatesJobsApi',
+           'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
+           'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi',
+           'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
+           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
+           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi',
+           'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi',
+           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
+           'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi',
+           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
            'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
            'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
@@ -161,6 +162,116 @@ class AsApiChild:
         :param kwargs:
         """
         return await self.session.rest_patch(*args, **kwargs)
+
+
+class AsAdminAuditEventsApi(AsApiChild, base='adminAudit'):
+    """
+    Admin Audit Events
+
+    Admin Audit Events are available to full administrators for `certain events
+    <https://help.webex.com/en-us/article/nqzomav/Control-Hub-audit-events-reference>`_ performed in Webex Control Hub.
+
+    Administrators with accounts created before 2019 who have never logged into `Webex Control Hub
+    <https://admin.webex.com>`_ will need to log into
+    Webex Control Hub at least once to enable access to this API.
+
+    An administrator account with the `audit:events_read` scope is required to use this API.
+    """
+
+    def list_events_gen(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
+                    actor_id: str = None, event_categories: list[str] = None,
+                    **params) -> AsyncGenerator[AuditEvent, None, None]:
+        """
+        List Admin Audit Events
+
+        List admin audit events in your organization. Several query parameters are available to filter the response.
+
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        **NOTE**: A maximum of one year of audit events can be returned per request.
+
+        :param org_id: List events in this organization, by ID.
+        :type org_id: str
+        :param from_: List events which occurred after a specific date and time.
+        :type from_: Union[str, datetime]
+        :param to_: List events which occurred before a specific date and time.
+        :type to_: Union[str, datetime]
+        :param actor_id: List events performed by this person, by ID.
+        :type actor_id: str
+        :param event_categories: List events, by event categories.
+        :type event_categories: list[str]
+        :return: Generator yielding :class:`AuditEvent` instances
+        """
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        if actor_id is not None:
+            params['actorId'] = actor_id
+        if event_categories is not None:
+            params['eventCategories'] = ','.join(event_categories)
+        url = self.ep('events')
+        return self.session.follow_pagination(url=url, model=AuditEvent, item_key='items', params=params)
+
+    async def list_events(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
+                    actor_id: str = None, event_categories: list[str] = None,
+                    **params) -> List[AuditEvent]:
+        """
+        List Admin Audit Events
+
+        List admin audit events in your organization. Several query parameters are available to filter the response.
+
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        **NOTE**: A maximum of one year of audit events can be returned per request.
+
+        :param org_id: List events in this organization, by ID.
+        :type org_id: str
+        :param from_: List events which occurred after a specific date and time.
+        :type from_: Union[str, datetime]
+        :param to_: List events which occurred before a specific date and time.
+        :type to_: Union[str, datetime]
+        :param actor_id: List events performed by this person, by ID.
+        :type actor_id: str
+        :param event_categories: List events, by event categories.
+        :type event_categories: list[str]
+        :return: Generator yielding :class:`AuditEvent` instances
+        """
+        params['orgId'] = org_id
+        if isinstance(from_, str):
+            from_ = isoparse(from_)
+        from_ = dt_iso_str(from_)
+        params['from'] = from_
+        if isinstance(to_, str):
+            to_ = isoparse(to_)
+        to_ = dt_iso_str(to_)
+        params['to'] = to_
+        if actor_id is not None:
+            params['actorId'] = actor_id
+        if event_categories is not None:
+            params['eventCategories'] = ','.join(event_categories)
+        url = self.ep('events')
+        return [o async for o in self.session.follow_pagination(url=url, model=AuditEvent, item_key='items', params=params)]
+
+    async def list_event_categories(self) -> list[str]:
+        """
+        List Admin Audit Event Categories
+
+        Get the list of all admin event categories.
+
+        :rtype: list[str]
+        """
+        url = self.ep('eventCategories')
+        data = await super().get(url)
+        r = data['eventCategories']
+        return r
 
 
 class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
@@ -16877,6 +16988,8 @@ class AsWebexSimpleApi:
     The main API object
     """
 
+    #: Admin Audit Events API :class:`AsAdminAuditEventsApi`
+    admin_audit: AsAdminAuditEventsApi
     #: Attachment actions API :class:`AsAttachmentActionsApi`
     attachment_actions: AsAttachmentActionsApi
     #: Authorizations API :class:`AsAuthorizationsApi`
@@ -16954,6 +17067,7 @@ class AsWebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429)
+        self.admin_audit = AsAdminAuditEventsApi(session=session)
         self.attachment_actions = AsAttachmentActionsApi(session=session)
         self.authorizations = AsAuthorizationsApi(session=session)
         self.cdr = AsDetailedCDRApi(session=session)

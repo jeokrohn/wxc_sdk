@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.admin_audit
    wxc_sdk.attachment_actions
    wxc_sdk.authorizations
    wxc_sdk.cdr

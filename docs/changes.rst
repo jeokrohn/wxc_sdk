@@ -11,7 +11,7 @@ Release history
 - fix: errors when creating call pickups w/ agents
 - feat: status API :attr:`wxc_sdk.WebexSimpleApi.status`
 - feat: improved format for :doc:`method reference <method_ref>`
-
+- feat: admin audit events API :attr:`wxc_sdk.WebexSimpleApi.admin_audit`
 
 1.17.1
 ------

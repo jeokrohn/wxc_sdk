@@ -5,6 +5,7 @@ import logging
 import os
 from typing import Union
 
+from .admin_audit import AdminAuditEventsApi
 from .attachment_actions import AttachmentActionsApi
 from .authorizations import AuthorizationsApi
 from .cdr import DetailedCDRApi
@@ -50,6 +51,8 @@ class WebexSimpleApi:
     The main API object
     """
 
+    #: Admin Audit Events API :class:`admin_audit.AdminAuditEventsApi`
+    admin_audit: AdminAuditEventsApi
     #: Attachment actions API :class:`attachment_actions.AttachmentActionsApi`
     attachment_actions: AttachmentActionsApi
     #: Authorizations API :class:`authorizations.AuthorizationsApi`
@@ -127,6 +130,7 @@ class WebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429)
+        self.admin_audit = AdminAuditEventsApi(session=session)
         self.attachment_actions = AttachmentActionsApi(session=session)
         self.authorizations = AuthorizationsApi(session=session)
         self.cdr = DetailedCDRApi(session=session)

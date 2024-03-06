@@ -1,20 +1,19 @@
 from collections.abc import Generator
 from datetime import datetime
-from json import loads
 from typing import Optional, Union, Any
 
 from dateutil.parser import isoparse
-from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
-from wxc_sdk.base import SafeEnum as Enum
-
+from wxc_sdk.base import ApiModel, dt_iso_str
 
 __all__ = ['AdminAuditEventsApi', 'AuditEvent', 'AuditEventData']
 
 
 class AuditEventData(ApiModel):
+    class Config:
+        extra = 'allow'
+
     #: The display name of the organization.
     #: example: Acme Inc.
     actor_org_name: Optional[str] = None
@@ -46,7 +45,8 @@ class AuditEventData(ApiModel):
     #: example: EventCategory.LOGINS
     event_category: Optional[str] = None
     #: The browser user agent of the person who performed the action.
-    #: example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36
+    #: example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko)
+    # Chrome/71.0.3578.98 Safari/537.36
     actor_user_agent: Optional[str] = None
     #: The IP address of the person who performed the action.
     #: example: 128.107.241.191
@@ -60,6 +60,63 @@ class AuditEventData(ApiModel):
     #: The name of the organization being acted upon.
     #: example: Acme Inc.
     target_org_name: Optional[str] = None
+
+    action_client_id: Optional[Any] = None
+    action_client_name: Optional[Any] = None
+    actor_client_id: Optional[Any] = None
+    actor_client_name: Optional[Any] = None
+    attributes: Optional[Any] = None
+    authorized_status: Optional[Any] = None
+    capacity: Optional[Any] = None
+    change_detail_id: Optional[Any] = None
+    changed_attributes: Optional[Any] = None
+    changed_group_members: Optional[Any] = None
+    client_id: Optional[Any] = None
+    config_key: Optional[Any] = None
+    config_value: Optional[Any] = None
+    dect_network_name: Optional[Any] = None
+    email_type: Optional[Any] = None
+    enrollment_status: Optional[Any] = None
+    entitlements: Optional[Any] = None
+    entity_type: Optional[Any] = None
+    event_status: Optional[Any] = None
+    external_admin_email: Optional[Any] = None
+    external_admin_org_name: Optional[Any] = None
+    failed_reason: Optional[Any] = None
+    job_name: Optional[Any] = None
+    locale: Optional[Any] = None
+    location: Optional[Any] = None
+    location_id: Optional[Any] = None
+    location_name: Optional[Any] = None
+    mac_address: Optional[Any] = None
+    name: Optional[Any] = None
+    numbers: Optional[Any] = None
+    offer_map: Optional[Any] = None
+    operation: Optional[Any] = None
+    operation_type: Optional[Any] = None
+    org_id: Optional[Any] = None
+    owner_id: Optional[Any] = None
+    owner_type: Optional[Any] = None
+    previous_value: Optional[Any] = None
+    role_added: Optional[Any] = None
+    role_removed: Optional[Any] = None
+    rule_name: Optional[Any] = None
+    service_app_scopes: Optional[Any] = None
+    services: Optional[Any] = None
+    setting_key: Optional[Any] = None
+    setting_name: Optional[Any] = None
+    setting_value: Optional[Any] = None
+    tags: Optional[Any] = None
+    target_email: Optional[Any] = None
+    token_id: Optional[Any] = None
+    trial_expiration_dtm: Optional[Any] = None
+    trial_id: Optional[Any] = None
+    trial_period_days: Optional[Any] = None
+    trial_start_dtm: Optional[Any] = None
+    type: Optional[Any] = None
+    updated_fields: Optional[Any] = None
+    updated_settings: Optional[Any] = None
+    user_name: Optional[Any] = None
 
 
 class AuditEvent(ApiModel):
@@ -81,20 +138,20 @@ class AuditEvent(ApiModel):
 class AdminAuditEventsApi(ApiChild, base='adminAudit'):
     """
     Admin Audit Events
-    
+
     Admin Audit Events are available to full administrators for `certain events
     <https://help.webex.com/en-us/article/nqzomav/Control-Hub-audit-events-reference>`_ performed in Webex Control Hub.
-    
+
     Administrators with accounts created before 2019 who have never logged into `Webex Control Hub
     <https://admin.webex.com>`_ will need to log into
     Webex Control Hub at least once to enable access to this API.
-    
+
     An administrator account with the `audit:events_read` scope is required to use this API.
     """
 
-    def list_admin_audit_events(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
-                                actor_id: str = None, event_categories: list[str] = None,
-                                **params) -> Generator[AuditEvent, None, None]:
+    def list_events(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
+                    actor_id: str = None, event_categories: list[str] = None,
+                    **params) -> Generator[AuditEvent, None, None]:
         """
         List Admin Audit Events
 
@@ -133,7 +190,7 @@ class AdminAuditEventsApi(ApiChild, base='adminAudit'):
         url = self.ep('events')
         return self.session.follow_pagination(url=url, model=AuditEvent, item_key='items', params=params)
 
-    def list_admin_audit_event_categories(self) -> list[str]:
+    def list_event_categories(self) -> list[str]:
         """
         List Admin Audit Event Categories
 
