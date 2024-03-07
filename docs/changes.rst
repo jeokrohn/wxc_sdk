@@ -12,6 +12,7 @@ Release history
 - feat: status API :attr:`wxc_sdk.WebexSimpleApi.status`
 - feat: improved format for :doc:`method reference <method_ref>`
 - feat: admin audit events API :attr:`wxc_sdk.WebexSimpleApi.admin_audit`
+- fix: unresolved references in as_api.py
 
 1.17.1
 ------

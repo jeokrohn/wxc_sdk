@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import pytz
@@ -29,7 +29,7 @@ class Guest(ApiModel):
     #: example: 64799
     expires_in: Optional[int] = None
     #: absolute time of guest access token expiration
-    expires_at: Optional[datetime.datetime] = None  #: expiration, calculated at time of guest creation
+    expires_at: Optional[datetime] = None  #: expiration, calculated at time of guest creation
 
 
 class GuestManagementApi(ApiChild, base='guests'):
@@ -82,9 +82,9 @@ class GuestManagementApi(ApiChild, base='guests'):
         url = self.ep('token')
         data = super().post(url, json=body)
         guest = Guest.model_validate(data)
-        now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
+        now = datetime.utcnow().replace(tzinfo=pytz.UTC)
         if not guest.expires_at and guest.expires_in:
-            delta = datetime.timedelta(seconds=guest.expires_in)
+            delta = timedelta(seconds=guest.expires_in)
             guest.expires_at = now + delta
 
         return guest

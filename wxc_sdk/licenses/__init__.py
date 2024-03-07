@@ -5,8 +5,8 @@ An allowance for features and services that are provided to users on a Webex ser
 partners manage the amount of licenses provided to administrators and users. This license resource can be accessed
 only by an admin.
 """
+import json
 from collections.abc import Generator
-from json import loads
 from typing import Optional, List
 
 from pydantic import Field, TypeAdapter
@@ -308,10 +308,10 @@ class LicensesApi(ApiChild, base='licenses'):
         if org_id is not None:
             body['orgId'] = org_id
         if licenses is not None:
-            body['licenses'] = loads(
+            body['licenses'] = json.loads(
                 TypeAdapter(list[LicenseRequest]).dump_json(licenses, by_alias=True, exclude_none=True))
         if site_urls is not None:
-            body['siteUrls'] = loads(
+            body['siteUrls'] = json.loads(
                 TypeAdapter(list[SiteUrlsRequest]).dump_json(site_urls, by_alias=True, exclude_none=True))
         url = self.ep('users')
         data = super().patch(url, json=body)
