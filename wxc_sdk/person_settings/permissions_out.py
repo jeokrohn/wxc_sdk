@@ -2,12 +2,10 @@
 Outgoing permissions API and datatypes
 
 API is used in:
-
     * person settings
-
-* location settings
-
-* workspace settings
+    * location settings
+    * workspace settings
+    * virtual line settings
 """
 import json
 from dataclasses import dataclass
@@ -15,15 +13,15 @@ from typing import Optional, Union
 
 from pydantic import field_validator, TypeAdapter, model_validator
 
-from .common import PersonSettingsApiChild
+from .common import PersonSettingsApiChild, ApiSelector
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..common import AuthCode
 from ..rest import RestSession
 
 __all__ = ['OutgoingPermissionCallType', 'Action', 'CallTypePermission', 'CallingPermissions',
-           'OutgoingPermissions', 'AutoTransferNumbers', 'TransferNumbersApi',
-           'AccessCodesApi', 'OutgoingPermissionsApi']
+           'OutgoingPermissions', 'AutoTransferNumbers', 'DigitPattern', 'DigitPatterns', 'DigitPatternsApi',
+           'TransferNumbersApi', 'AccessCodesApi', 'OutgoingPermissionsApi']
 
 
 class OutgoingPermissionCallType(str, Enum):
@@ -277,6 +275,34 @@ class AutoTransferNumbers(ApiModel):
         return AutoTransferNumbers.model_validate(data)
 
 
+class DigitPattern(ApiModel):
+    #: A unique identifier for the digit pattern.
+    id: Optional[str] = None
+    #: A unique name for the digit pattern.
+    name: Optional[str] = None
+    #: The digit pattern to be matched with the input number.
+    pattern: Optional[str] = None
+    #: Action to be performed on the input number that matches with the digit pattern.
+    action: Optional[Action] = None
+    #: Option to allow or disallow transfer of calls.
+    transfer_enabled: Optional[bool] = None
+
+    def create_or_update(self) -> dict:
+        """
+        data for create or update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, exclude={'id'}, by_alias=True)
+
+
+class DigitPatterns(ApiModel):
+    #: When `true`, use custom settings for the digit patterns category of outgoing call permissions.
+    use_custom_digit_patterns: Optional[bool] = None
+    #: List of digit patterns.
+    digit_patterns: Optional[list[DigitPattern]] = None
+
+
 class TransferNumbersApi(PersonSettingsApiChild):
     """
     API for outgoing permission auto transfer numbers
@@ -334,7 +360,7 @@ class TransferNumbersApi(PersonSettingsApiChild):
 
 class AccessCodesApi(PersonSettingsApiChild):
     """
-    API for workspace's outgoing permission access codes
+    API for outgoing permission access codes: locations, persons, workspaces, virtual lines
     """
     feature = 'outgoingPermission/accessCodes'
 
@@ -412,6 +438,193 @@ class AccessCodesApi(PersonSettingsApiChild):
         self.post(url, params=params, json=body)
 
 
+class DigitPatternsApi(PersonSettingsApiChild):
+    feature = 'outgoingPermission/digitPatterns'
+
+    def get_digit_patterns(self, entity_id: str,
+                           org_id: str = None) -> DigitPatterns:
+        """
+        Retrieve Digit Patterns
+
+        Retrieve the person's digit patterns.
+
+        Digit patterns are used to bypass permissions.
+
+        Retrieving digit patterns requires a full or user or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: :class:`UserOutgoingPermissionDigitPatternGetListObject`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id)
+        data = super().get(url, params=params)
+        r = DigitPatterns.model_validate(data)
+        return r
+
+    def details(self, entity_id: str, digit_pattern_id: str,
+                org_id: str = None) -> DigitPattern:
+        """
+        Retrieve Digit Pattern Details for a Person
+
+        Retrieve the digit pattern details for a person.
+
+        Digit patterns are used to bypass permissions.
+
+        Retrieving the digit pattern details requires a full or user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param digit_pattern_id: Unique identifier for the digit pattern.
+        :type digit_pattern_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: :class:`UserDigitPatternObject`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id, path=digit_pattern_id)
+        data = super().get(url, params=params)
+        r = DigitPattern.model_validate(data)
+        return r
+
+    def create(self, entity_id: str, pattern: DigitPattern, org_id: str = None) -> str:
+        """
+        Create Digit Patterns for a Person
+
+        Create new digit pattern for the given person.
+
+        Digit patterns are used to bypass permissions.
+
+        Creating the digit pattern requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param pattern: new digit pattern
+        :type pattern: :class:`DigitPattern`
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = pattern.create_or_update()
+        url = self.f_ep(person_id=entity_id)
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def update_category_control_settings(self, entity_id: str,
+                                         use_custom_digit_patterns: bool = None,
+                                         org_id: str = None):
+        """
+        Modify the Digit Pattern Category Control Settings for the Entity
+
+        Modifies whether this user uses the specified digit patterns when placing outbound calls or not.
+
+        Updating the digit pattern category control settings requires a full or user or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param use_custom_digit_patterns: When `true`, use custom settings for the digit patterns category of outgoing
+            call permissions.
+        :type use_custom_digit_patterns: bool
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = dict()
+        if use_custom_digit_patterns is not None:
+            body['useCustomDigitPatterns'] = use_custom_digit_patterns
+        url = self.f_ep(person_id=entity_id)
+        super().put(url, params=params, json=body)
+
+    def update(self, entity_id: str, settings: DigitPattern, org_id: str = None):
+        """
+        Modify a Digit Pattern for the Entity
+
+        Modify Digit Patterns for a Entity.
+
+        Digit patterns are used to bypass permissions.
+
+        Updating the digit pattern requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param settings: new digit pattern settings
+        :type settings: :class:`DigitPattern`
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = settings.create_or_update()
+        url = self.f_ep(person_id=entity_id, path=settings.id)
+        super().put(url, params=params, json=body)
+
+    def delete(self, entity_id: str, digit_pattern_id: str, org_id: str = None):
+        """
+        Delete a Digit Pattern for the Entity
+
+        Delete Digit Pattern for a Entity.
+
+        Digit patterns are used to bypass permissions.
+
+        Deleting the digit pattern requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param digit_pattern_id: Unique identifier for the digit pattern.
+        :type digit_pattern_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id, path=digit_pattern_id)
+        super().delete(url, params=params)
+
+    def delete_all(self, entity_id: str, org_id: str = None):
+        """
+        Delete all Digit Patterns for a Entity.
+
+        Digit patterns are used to bypass permissions.
+
+        Deleting the digit patterns requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id)
+        super().delete(url, params=params)
+
+
 @dataclass(init=False)
 class OutgoingPermissionsApi(PersonSettingsApiChild):
     """
@@ -419,29 +632,21 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
     Also used for workspace, location, and virtual line outgoing permissions
     """
-    #: Only available for workspaces and locations
     transfer_numbers: TransferNumbersApi
-    #: Only available for workspaces
     access_codes: AccessCodesApi
+    digit_patterns: DigitPatternsApi
 
     feature = 'outgoingPermission'
 
     def __init__(self, *, session: RestSession,
-                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
-        super().__init__(session=session, workspaces=workspaces, locations=locations, virtual_lines=virtual_lines)
-        if workspaces:
-            # auto transfer numbers API seems to only exist for workspaces
-            self.transfer_numbers = TransferNumbersApi(session=session,
-                                                       workspaces=True)
-            self.access_codes = AccessCodesApi(session=session, workspaces=True)
-        elif locations:
-            self.transfer_numbers = TransferNumbersApi(session=session,
-                                                       locations=True)
-            self.access_codes = None
-        else:
-            # users and virtual lines don't have transfer numbers nor access codes
-            self.transfer_numbers = None
-            self.access_codes = None
+                 selector: ApiSelector = 'person'):
+        super().__init__(session=session, selector=selector)
+        if selector == ApiSelector.virtual_line:
+            # Virtual Lines for now don't have any of the additional features
+            return
+        self.transfer_numbers = TransferNumbersApi(session=session, selector=selector)
+        self.access_codes = AccessCodesApi(session=session, selector=selector)
+        self.digit_patterns = DigitPatternsApi(session=session, selector=selector)
 
     def read(self, person_id: str, org_id: str = None) -> OutgoingPermissions:
         """
@@ -452,7 +657,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
+        :param person_id: Unique identifier for the entity.
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
@@ -475,7 +680,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their own settings.
 
-        :param person_id: Unique identifier for the person.
+        :param person_id: Unique identifier for the entity.
         :type person_id: str
         :param settings: new setting to be applied
         :type settings: :class:`OutgoingPermissions`
