@@ -7,6 +7,7 @@ import os
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from datetime import datetime, date, timedelta
+import pytz
 from dateutil import tz
 from dateutil.parser import isoparse
 from enum import Enum
@@ -56,12 +57,12 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi',
            'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
            'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
-           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi',
-           'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi',
-           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
+           'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
+           'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi',
+           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
            'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
            'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
@@ -1264,9 +1265,9 @@ class AsGuestManagementApi(AsApiChild, base='guests'):
         url = self.ep('token')
         data = await super().post(url, json=body)
         guest = Guest.model_validate(data)
-        now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
+        now = datetime.utcnow().replace(tzinfo=pytz.UTC)
         if not guest.expires_at and guest.expires_in:
-            delta = datetime.timedelta(seconds=guest.expires_in)
+            delta = timedelta(seconds=guest.expires_in)
             guest.expires_at = now + delta
 
         return guest
@@ -1418,10 +1419,10 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         if org_id is not None:
             body['orgId'] = org_id
         if licenses is not None:
-            body['licenses'] = loads(
+            body['licenses'] = json.loads(
                 TypeAdapter(list[LicenseRequest]).dump_json(licenses, by_alias=True, exclude_none=True))
         if site_urls is not None:
-            body['siteUrls'] = loads(
+            body['siteUrls'] = json.loads(
                 TypeAdapter(list[SiteUrlsRequest]).dump_json(site_urls, by_alias=True, exclude_none=True))
         url = self.ep('users')
         data = await super().patch(url, json=body)
@@ -5855,8 +5856,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
 
     feature = None
 
-    def __init__(self, *, session: AsRestSession,
-                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
+    def __init__(self, *, session: AsRestSession, selector: ApiSelector = ApiSelector.person):
         # set parameters to get the correct URL templates
         #
         #               selector                    feature_prefix  url template
@@ -5865,16 +5865,18 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # person        people                          /features       people/{person_id}/features/{feature}{path}
         # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         self.feature_prefix = '/features/'
-        if workspaces:
+        if selector == ApiSelector.workspace:
             self.selector = 'workspaces'
-        elif locations:
+        elif selector == ApiSelector.location:
             self.selector = 'telephony/config/locations'
             self.feature_prefix = '/'
-        elif virtual_lines:
+        elif selector == ApiSelector.virtual_line:
             self.selector = 'telephony/config/virtualLines'
             self.feature_prefix = '/'
-        else:
+        elif selector == ApiSelector.person:
             self.selector = 'people'
+        else:
+            raise ValueError(f'Invalid selector: {selector}')
         super().__init__(session=session, base=self.selector)
 
     def __init_subclass__(cls, **kwargs):
@@ -5886,6 +5888,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         """
         person specific feature endpoint like v1/people/{uid}/features/....
 
+        :meta private:
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param path: path in the endpoint after the feature base URL
@@ -5901,7 +5904,11 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
         # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
-        return self.session.ep(f'{self.selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
+        selector = self.selector
+        if selector == 'workspaces' and self.feature == 'outgoingPermission/digitPatterns':
+            # these endpoints live here: telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns
+            selector = 'telephony/config/workspaces'
+        return self.session.ep(f'{selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
 
 
 class AsAppServicesApi(AsPersonSettingsApiChild):
@@ -6761,7 +6768,7 @@ class AsNumbersApi(AsPersonSettingsApiChild):
 
 class AsAccessCodesApi(AsPersonSettingsApiChild):
     """
-    API for workspace's outgoing permission access codes
+    API for outgoing permission access codes: locations, persons, workspaces, virtual lines
     """
     feature = 'outgoingPermission/accessCodes'
 
@@ -6839,6 +6846,193 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
         await self.post(url, params=params, json=body)
 
 
+class AsDigitPatternsApi(AsPersonSettingsApiChild):
+    feature = 'outgoingPermission/digitPatterns'
+
+    async def get_digit_patterns(self, entity_id: str,
+                           org_id: str = None) -> DigitPatterns:
+        """
+        Retrieve Digit Patterns
+
+        Retrieve the person's digit patterns.
+
+        Digit patterns are used to bypass permissions.
+
+        Retrieving digit patterns requires a full or user or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: :class:`UserOutgoingPermissionDigitPatternGetListObject`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id)
+        data = await super().get(url, params=params)
+        r = DigitPatterns.model_validate(data)
+        return r
+
+    async def details(self, entity_id: str, digit_pattern_id: str,
+                org_id: str = None) -> DigitPattern:
+        """
+        Retrieve Digit Pattern Details for a Person
+
+        Retrieve the digit pattern details for a person.
+
+        Digit patterns are used to bypass permissions.
+
+        Retrieving the digit pattern details requires a full or user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param digit_pattern_id: Unique identifier for the digit pattern.
+        :type digit_pattern_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: :class:`UserDigitPatternObject`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id, path=digit_pattern_id)
+        data = await super().get(url, params=params)
+        r = DigitPattern.model_validate(data)
+        return r
+
+    async def create(self, entity_id: str, pattern: DigitPattern, org_id: str = None) -> str:
+        """
+        Create Digit Patterns for a Person
+
+        Create new digit pattern for the given person.
+
+        Digit patterns are used to bypass permissions.
+
+        Creating the digit pattern requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param pattern: new digit pattern
+        :type pattern: :class:`DigitPattern`
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = pattern.create_or_update()
+        url = self.f_ep(person_id=entity_id)
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def update_category_control_settings(self, entity_id: str,
+                                         use_custom_digit_patterns: bool = None,
+                                         org_id: str = None):
+        """
+        Modify the Digit Pattern Category Control Settings for the Entity
+
+        Modifies whether this user uses the specified digit patterns when placing outbound calls or not.
+
+        Updating the digit pattern category control settings requires a full or user or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param use_custom_digit_patterns: When `true`, use custom settings for the digit patterns category of outgoing
+            call permissions.
+        :type use_custom_digit_patterns: bool
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = dict()
+        if use_custom_digit_patterns is not None:
+            body['useCustomDigitPatterns'] = use_custom_digit_patterns
+        url = self.f_ep(person_id=entity_id)
+        await super().put(url, params=params, json=body)
+
+    async def update(self, entity_id: str, settings: DigitPattern, org_id: str = None):
+        """
+        Modify a Digit Pattern for the Entity
+
+        Modify Digit Patterns for a Entity.
+
+        Digit patterns are used to bypass permissions.
+
+        Updating the digit pattern requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param settings: new digit pattern settings
+        :type settings: :class:`DigitPattern`
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = settings.create_or_update()
+        url = self.f_ep(person_id=entity_id, path=settings.id)
+        await super().put(url, params=params, json=body)
+
+    async def delete(self, entity_id: str, digit_pattern_id: str, org_id: str = None):
+        """
+        Delete a Digit Pattern for the Entity
+
+        Delete Digit Pattern for a Entity.
+
+        Digit patterns are used to bypass permissions.
+
+        Deleting the digit pattern requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param digit_pattern_id: Unique identifier for the digit pattern.
+        :type digit_pattern_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id, path=digit_pattern_id)
+        await super().delete(url, params=params)
+
+    async def delete_all(self, entity_id: str, org_id: str = None):
+        """
+        Delete all Digit Patterns for a Entity.
+
+        Digit patterns are used to bypass permissions.
+
+        Deleting the digit patterns requires a full or user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for location, person, workspace, or virtual line.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(person_id=entity_id)
+        await super().delete(url, params=params)
+
+
 class AsTransferNumbersApi(AsPersonSettingsApiChild):
     """
     API for outgoing permission auto transfer numbers
@@ -6900,29 +7094,21 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
 
     Also used for workspace, location, and virtual line outgoing permissions
     """
-    #: Only available for workspaces and locations
     transfer_numbers: AsTransferNumbersApi
-    #: Only available for workspaces
     access_codes: AsAccessCodesApi
+    digit_patterns: AsDigitPatternsApi
 
     feature = 'outgoingPermission'
 
     def __init__(self, *, session: AsRestSession,
-                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
-        super().__init__(session=session, workspaces=workspaces, locations=locations, virtual_lines=virtual_lines)
-        if workspaces:
-            # auto transfer numbers API seems to only exist for workspaces
-            self.transfer_numbers = AsTransferNumbersApi(session=session,
-                                                       workspaces=True)
-            self.access_codes = AsAccessCodesApi(session=session, workspaces=True)
-        elif locations:
-            self.transfer_numbers = AsTransferNumbersApi(session=session,
-                                                       locations=True)
-            self.access_codes = None
-        else:
-            # users and virtual lines don't have transfer numbers nor access codes
-            self.transfer_numbers = None
-            self.access_codes = None
+                 selector: ApiSelector = 'person'):
+        super().__init__(session=session, selector=selector)
+        if selector == ApiSelector.virtual_line:
+            # Virtual Lines for now don't have any of the additional features
+            return
+        self.transfer_numbers = AsTransferNumbersApi(session=session, selector=selector)
+        self.access_codes = AsAccessCodesApi(session=session, selector=selector)
+        self.digit_patterns = AsDigitPatternsApi(session=session, selector=selector)
 
     async def read(self, person_id: str, org_id: str = None) -> OutgoingPermissions:
         """
@@ -6933,7 +7119,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
+        :param person_id: Unique identifier for the entity.
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
@@ -6956,7 +7142,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their own settings.
 
-        :param person_id: Unique identifier for the person.
+        :param person_id: Unique identifier for the entity.
         :type person_id: str
         :param settings: new setting to be applied
         :type settings: :class:`OutgoingPermissions`
@@ -15037,13 +15223,13 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
 
     def __init__(self, session):
         super().__init__(session=session)
-        self.caller_id = AsCallerIdApi(session=session, virtual_lines=True)
-        self.call_waiting = AsCallWaitingApi(session=session, virtual_lines=True)
-        self.forwarding = AsPersonForwardingApi(session=session, virtual_lines=True)
-        self.permissions_in = AsIncomingPermissionsApi(session=session, virtual_lines=True)
-        self.permissions_out = AsOutgoingPermissionsApi(session=session, virtual_lines=True)
-        self.call_intercept = AsCallInterceptApi(session=session, virtual_lines=True)
-        self.call_recording = AsCallRecordingApi(session=session, virtual_lines=True)
+        self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.virtual_line)
+        self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
+        self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)
 
     async def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
                phone_number: str = None, extension: str = None, caller_id_last_name: str = None,
@@ -15901,7 +16087,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.locations = self.location
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
-        self.permissions_out = AsOutgoingPermissionsApi(session=session, locations=True)
+        self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.location)
         self.pickup = AsCallPickupApi(session=session)
         self.pnc = AsPrivateNetworkConnectApi(session=session)
         self.prem_pstn = AsPremisePstnApi(session=session)
@@ -16739,15 +16925,15 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
-        self.forwarding = AsPersonForwardingApi(session=session, workspaces=True)
-        self.call_waiting = AsCallWaitingApi(session=session, workspaces=True)
-        self.caller_id = AsCallerIdApi(session=session, workspaces=True)
-        self.monitoring = AsMonitoringApi(session=session, workspaces=True)
+        self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.workspace)
+        self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.workspace)
+        self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.workspace)
+        self.monitoring = AsMonitoringApi(session=session, selector=ApiSelector.workspace)
         self.numbers = AsWorkspaceNumbersApi(session=session)
-        self.permissions_in = AsIncomingPermissionsApi(session=session, workspaces=True)
-        self.permissions_out = AsOutgoingPermissionsApi(session=session, workspaces=True)
+        self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
+        self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.devices = AsWorkspaceDevicesApi(session=session)
-        self.call_intercept = AsCallInterceptApi(session=session, workspaces=True)
+        self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.workspace)
 
 
 class AsWorkspacesApi(AsApiChild, base='workspaces'):

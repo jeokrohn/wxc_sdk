@@ -37,6 +37,7 @@ from ..base import SafeEnum as Enum
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
     DeviceCustomization, IdAndName, OwnerType, NumberOwner
 from ..common.schedules import ScheduleApi, ScheduleApiBase
+from ..person_settings.common import ApiSelector
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
 
@@ -513,7 +514,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.locations = self.location
         self.organisation_voicemail = OrganisationVoicemailSettingsAPI(session=session)
         self.paging = PagingApi(session=session)
-        self.permissions_out = OutgoingPermissionsApi(session=session, locations=True)
+        self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.location)
         self.pickup = CallPickupApi(session=session)
         self.pnc = PrivateNetworkConnectApi(session=session)
         self.prem_pstn = PremisePstnApi(session=session)

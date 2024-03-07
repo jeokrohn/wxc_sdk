@@ -30,7 +30,7 @@ class TestCallRecording(TestWithLocations):
         for location, result in zip(self.locations, results):
             location: Location
             if isinstance(result, Exception):
-                err = err or e
+                err = err or result
                 print(f'failed to get location compliance announcement for "{location.name}": {e}')
         if err:
             raise err

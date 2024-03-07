@@ -73,7 +73,7 @@ from wxc_sdk.person_settings.call_recording import CallRecordingSetting, Notific
     NotificationType, Record, StartStopAnnouncement
 from wxc_sdk.person_settings.caller_id import CallerId, CallerIdSelectedType, ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.calling_behavior import BehaviorType, CallingBehavior
-from wxc_sdk.person_settings.common import PersonSettingsApiChild
+from wxc_sdk.person_settings.common import ApiSelector, PersonSettingsApiChild
 from wxc_sdk.person_settings.dnd import DND
 from wxc_sdk.person_settings.exec_assistant import ExecAssistantType, _Helper
 from wxc_sdk.person_settings.forwarding import CallForwardingAlways, CallForwardingCommon, CallForwardingNoAnswer,\
@@ -83,7 +83,7 @@ from wxc_sdk.person_settings.numbers import PersonNumbers, PersonPhoneNumber, Up
     UpdatePersonPhoneNumber
 from wxc_sdk.person_settings.permissions_in import ExternalTransfer, IncomingPermissions
 from wxc_sdk.person_settings.permissions_out import Action, AutoTransferNumbers, CallTypePermission,\
-    CallingPermissions, OutgoingPermissionCallType, OutgoingPermissions
+    CallingPermissions, DigitPattern, DigitPatterns, OutgoingPermissionCallType, OutgoingPermissions
 from wxc_sdk.person_settings.preferred_answer import PreferredAnswerEndpoint, PreferredAnswerEndpointType,\
     PreferredAnswerResponse
 from wxc_sdk.person_settings.privacy import Privacy
@@ -164,8 +164,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentQueue', 'AlternateNumber',
            'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementLanguage', 'AnnouncementLevel',
            'AnnouncementMode', 'AnswerCondition', 'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors',
-           'AppServicesSettings', 'ApplyLineKeyTemplateAction', 'ApplyLineKeyTemplateJobDetails', 'ApprovalQuestion',
-           'ApprovalRule', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction',
+           'ApiSelector', 'AppServicesSettings', 'ApplyLineKeyTemplateAction', 'ApplyLineKeyTemplateJobDetails',
+           'ApprovalQuestion', 'ApprovalRule', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction',
            'AttachmentActionData', 'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions',
            'AudioConnectionType', 'AudioSource', 'AudioType', 'AuditEvent', 'AuditEventData', 'AuthCode',
            'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
@@ -194,23 +194,23 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'DeviceConfigurationSourceEditability', 'DeviceConfigurationSources', 'DeviceCustomization',
            'DeviceCustomizations', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse',
            'DeviceOwner', 'DeviceStatus', 'DeviceType', 'DialPatternStatus', 'DialPatternValidate',
-           'DialPatternValidationResult', 'DialPlan', 'DialResponse', 'Dialing', 'DirectoryMethod',
-           'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing', 'EmergencyDestination',
-           'EnabledAndNumberOfDays', 'EnabledAndValue', 'EntryAndExitTone', 'ErrorMessageObject', 'ErrorObject',
-           'Event', 'EventData', 'EventResource', 'EventType', 'ExecAssistantType', 'ExpirePasscode',
-           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FeatureAccessCodeDestination',
-           'FeatureReference', 'FeatureSelector', 'Floor', 'ForcedForward', 'ForwardCallsTo', 'ForwardToSelection',
-           'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting', 'GetMeetingSurveyResponse',
-           'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember', 'Guest', 'HGCallPolicies', 'HGandCQ',
-           'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination', 'HotdeskingStatus',
-           'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup', 'IdAndName', 'IdOnly', 'InProgressDevice',
-           'Incident', 'IncidentUpdate', 'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode',
-           'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
-           'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
-           'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
-           'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
-           'License', 'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation', 'LicenseUser',
-           'LicenseUserType', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LineKeyTemplate',
+           'DialPatternValidationResult', 'DialPlan', 'DialResponse', 'Dialing', 'DigitPattern', 'DigitPatterns',
+           'DirectoryMethod', 'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing',
+           'EmergencyDestination', 'EnabledAndNumberOfDays', 'EnabledAndValue', 'EntryAndExitTone',
+           'ErrorMessageObject', 'ErrorObject', 'Event', 'EventData', 'EventResource', 'EventType',
+           'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts',
+           'FeatureAccessCodeDestination', 'FeatureReference', 'FeatureSelector', 'Floor', 'ForcedForward',
+           'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
+           'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember', 'Guest',
+           'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
+           'HostedUserDestination', 'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
+           'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate', 'IncomingPermissions',
+           'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting',
+           'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing',
+           'InternalDialing', 'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting',
+           'JobError', 'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody',
+           'JoinMeetingResponse', 'License', 'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation',
+           'LicenseUser', 'LicenseUserType', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LineKeyTemplate',
            'LineKeyTemplateAdvisoryTypes', 'LineKeyType', 'LinkRelation', 'Location', 'LocationAddress',
            'LocationAndNumbers', 'LocationCallParkSettings', 'LocationComplianceAnnouncement',
            'LocationMoHGreetingType', 'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState',

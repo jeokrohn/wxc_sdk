@@ -13,6 +13,9 @@ Release history
 - feat: improved format for :doc:`method reference <method_ref>`
 - feat: admin audit events API :attr:`wxc_sdk.WebexSimpleApi.admin_audit`
 - fix: unresolved references in as_api.py
+- feat: consistent implementation of outgoing calling permissions for locations, users, workspaces, and virtual lines
+- feat: digit patterns APi in outgoing calling permissions for locations, users, workspaces, and virtual lines, :attr:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.digit_patterns`.
+
 
 1.17.1
 ------

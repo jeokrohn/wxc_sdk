@@ -321,6 +321,30 @@ The method name is a link to the method documentation.
         Configure a Person's Outgoing Calling Permissions Settings
    * - :meth:`api.person_settings.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
         Retrieve a Person's Outgoing Calling Permissions Settings
+   * - :meth:`api.person_settings.permissions_out.access_codes.create <wxc_sdk.person_settings.permissions_out.AccessCodesApi.create>`
+        Create new Access codes for the given workspace
+   * - :meth:`api.person_settings.permissions_out.access_codes.delete_codes <wxc_sdk.person_settings.permissions_out.AccessCodesApi.delete_codes>`
+        Modify Access codes for a workspace
+   * - :meth:`api.person_settings.permissions_out.access_codes.read <wxc_sdk.person_settings.permissions_out.AccessCodesApi.read>`
+        Retrieve Access codes for a Workspace
+   * - :meth:`api.person_settings.permissions_out.digit_patterns.create <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.create>`
+        Create Digit Patterns for a Person
+   * - :meth:`api.person_settings.permissions_out.digit_patterns.delete <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete>`
+        Delete a Digit Pattern for the Entity
+   * - :meth:`api.person_settings.permissions_out.digit_patterns.delete_all <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete_all>`
+        Delete all Digit Patterns for a Entity
+   * - :meth:`api.person_settings.permissions_out.digit_patterns.details <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.details>`
+        Retrieve Digit Pattern Details for a Person
+   * - :meth:`api.person_settings.permissions_out.digit_patterns.get_digit_patterns <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.get_digit_patterns>`
+        Retrieve Digit Patterns
+   * - :meth:`api.person_settings.permissions_out.digit_patterns.update <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update>`
+        Modify a Digit Pattern for the Entity
+   * - :meth:`api.person_settings.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
+        Modify the Digit Pattern Category Control Settings for the Entity
+   * - :meth:`api.person_settings.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
+        Modify Transfer Numbers Settings for a Place
+   * - :meth:`api.person_settings.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
+        Retrieve Transfer Numbers Settings for a Workspace
    * - :meth:`api.person_settings.preferred_answer.modify <wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.modify>`
         Modify Preferred Answer Endpoint
    * - :meth:`api.person_settings.preferred_answer.read <wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.read>`
@@ -771,6 +795,26 @@ The method name is a link to the method documentation.
         Configure a Person's Outgoing Calling Permissions Settings
    * - :meth:`api.telephony.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
         Retrieve a Person's Outgoing Calling Permissions Settings
+   * - :meth:`api.telephony.permissions_out.access_codes.create <wxc_sdk.person_settings.permissions_out.AccessCodesApi.create>`
+        Create new Access codes for the given workspace
+   * - :meth:`api.telephony.permissions_out.access_codes.delete_codes <wxc_sdk.person_settings.permissions_out.AccessCodesApi.delete_codes>`
+        Modify Access codes for a workspace
+   * - :meth:`api.telephony.permissions_out.access_codes.read <wxc_sdk.person_settings.permissions_out.AccessCodesApi.read>`
+        Retrieve Access codes for a Workspace
+   * - :meth:`api.telephony.permissions_out.digit_patterns.create <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.create>`
+        Create Digit Patterns for a Person
+   * - :meth:`api.telephony.permissions_out.digit_patterns.delete <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete>`
+        Delete a Digit Pattern for the Entity
+   * - :meth:`api.telephony.permissions_out.digit_patterns.delete_all <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete_all>`
+        Delete all Digit Patterns for a Entity
+   * - :meth:`api.telephony.permissions_out.digit_patterns.details <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.details>`
+        Retrieve Digit Pattern Details for a Person
+   * - :meth:`api.telephony.permissions_out.digit_patterns.get_digit_patterns <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.get_digit_patterns>`
+        Retrieve Digit Patterns
+   * - :meth:`api.telephony.permissions_out.digit_patterns.update <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update>`
+        Modify a Digit Pattern for the Entity
+   * - :meth:`api.telephony.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
+        Modify the Digit Pattern Category Control Settings for the Entity
    * - :meth:`api.telephony.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.telephony.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
@@ -1041,6 +1085,20 @@ The method name is a link to the method documentation.
         Modify Access codes for a workspace
    * - :meth:`api.workspace_settings.permissions_out.access_codes.read <wxc_sdk.person_settings.permissions_out.AccessCodesApi.read>`
         Retrieve Access codes for a Workspace
+   * - :meth:`api.workspace_settings.permissions_out.digit_patterns.create <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.create>`
+        Create Digit Patterns for a Person
+   * - :meth:`api.workspace_settings.permissions_out.digit_patterns.delete <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete>`
+        Delete a Digit Pattern for the Entity
+   * - :meth:`api.workspace_settings.permissions_out.digit_patterns.delete_all <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete_all>`
+        Delete all Digit Patterns for a Entity
+   * - :meth:`api.workspace_settings.permissions_out.digit_patterns.details <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.details>`
+        Retrieve Digit Pattern Details for a Person
+   * - :meth:`api.workspace_settings.permissions_out.digit_patterns.get_digit_patterns <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.get_digit_patterns>`
+        Retrieve Digit Patterns
+   * - :meth:`api.workspace_settings.permissions_out.digit_patterns.update <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update>`
+        Modify a Digit Pattern for the Entity
+   * - :meth:`api.workspace_settings.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
+        Modify the Digit Pattern Category Control Settings for the Entity
    * - :meth:`api.workspace_settings.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.workspace_settings.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`

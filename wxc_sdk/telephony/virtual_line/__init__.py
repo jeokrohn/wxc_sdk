@@ -13,6 +13,7 @@ from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.call_recording import CallRecordingApi
 from ...person_settings.call_waiting import CallWaitingApi
+from ...person_settings.common import ApiSelector
 from ...person_settings.forwarding import PersonForwardingApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
@@ -159,13 +160,13 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
 
     def __init__(self, session):
         super().__init__(session=session)
-        self.caller_id = CallerIdApi(session=session, virtual_lines=True)
-        self.call_waiting = CallWaitingApi(session=session, virtual_lines=True)
-        self.forwarding = PersonForwardingApi(session=session, virtual_lines=True)
-        self.permissions_in = IncomingPermissionsApi(session=session, virtual_lines=True)
-        self.permissions_out = OutgoingPermissionsApi(session=session, virtual_lines=True)
-        self.call_intercept = CallInterceptApi(session=session, virtual_lines=True)
-        self.call_recording = CallRecordingApi(session=session, virtual_lines=True)
+        self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.virtual_line)
+        self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
+        self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)
 
     def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
                phone_number: str = None, extension: str = None, caller_id_last_name: str = None,

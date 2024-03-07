@@ -1,7 +1,16 @@
+from enum import Enum
+
 from ..api_child import ApiChild
 from ..rest import RestSession
 
-__all__ = ['PersonSettingsApiChild']
+__all__ = ['PersonSettingsApiChild', 'ApiSelector']
+
+
+class ApiSelector(str, Enum):
+    location = 'location'
+    person = 'person'
+    workspace = 'workspace'
+    virtual_line = 'virtual_line'
 
 
 class PersonSettingsApiChild(ApiChild, base=''):
@@ -11,8 +20,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
 
     feature = None
 
-    def __init__(self, *, session: RestSession,
-                 workspaces: bool = False, locations: bool = False, virtual_lines: bool = False):
+    def __init__(self, *, session: RestSession, selector: ApiSelector = ApiSelector.person):
         # set parameters to get the correct URL templates
         #
         #               selector                    feature_prefix  url template
@@ -21,16 +29,18 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # person        people                          /features       people/{person_id}/features/{feature}{path}
         # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         self.feature_prefix = '/features/'
-        if workspaces:
+        if selector == ApiSelector.workspace:
             self.selector = 'workspaces'
-        elif locations:
+        elif selector == ApiSelector.location:
             self.selector = 'telephony/config/locations'
             self.feature_prefix = '/'
-        elif virtual_lines:
+        elif selector == ApiSelector.virtual_line:
             self.selector = 'telephony/config/virtualLines'
             self.feature_prefix = '/'
-        else:
+        elif selector == ApiSelector.person:
             self.selector = 'people'
+        else:
+            raise ValueError(f'Invalid selector: {selector}')
         super().__init__(session=session, base=self.selector)
 
     def __init_subclass__(cls, **kwargs):
@@ -42,6 +52,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
         """
         person specific feature endpoint like v1/people/{uid}/features/....
 
+        :meta private:
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param path: path in the endpoint after the feature base URL
@@ -57,4 +68,8 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
         # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
-        return self.session.ep(f'{self.selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
+        selector = self.selector
+        if selector == 'workspaces' and self.feature == 'outgoingPermission/digitPatterns':
+            # these endpoints live here: telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns
+            selector = 'telephony/config/workspaces'
+        return self.session.ep(f'{selector}/{person_id}{self.feature_prefix}{self.feature}{path}')

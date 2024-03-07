@@ -10,6 +10,7 @@ from ..api_child import ApiChild
 from ..person_settings.call_intercept import CallInterceptApi
 from ..person_settings.call_waiting import CallWaitingApi
 from ..person_settings.caller_id import CallerIdApi
+from ..person_settings.common import ApiSelector
 from ..person_settings.forwarding import PersonForwardingApi
 from ..person_settings.monitoring import MonitoringApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
@@ -40,12 +41,12 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
-        self.forwarding = PersonForwardingApi(session=session, workspaces=True)
-        self.call_waiting = CallWaitingApi(session=session, workspaces=True)
-        self.caller_id = CallerIdApi(session=session, workspaces=True)
-        self.monitoring = MonitoringApi(session=session, workspaces=True)
+        self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.workspace)
+        self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.workspace)
+        self.caller_id = CallerIdApi(session=session, selector=ApiSelector.workspace)
+        self.monitoring = MonitoringApi(session=session, selector=ApiSelector.workspace)
         self.numbers = WorkspaceNumbersApi(session=session)
-        self.permissions_in = IncomingPermissionsApi(session=session, workspaces=True)
-        self.permissions_out = OutgoingPermissionsApi(session=session, workspaces=True)
+        self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
+        self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.devices = WorkspaceDevicesApi(session=session)
-        self.call_intercept = CallInterceptApi(session=session, workspaces=True)
+        self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.workspace)
