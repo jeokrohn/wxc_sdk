@@ -8,6 +8,7 @@ import uuid
 from collections.abc import Generator
 from functools import wraps
 from io import TextIOBase, StringIO
+from json import JSONDecodeError
 from threading import Semaphore
 from typing import Tuple, Type, Optional
 from urllib.parse import parse_qsl
@@ -318,7 +319,10 @@ class RestSession(Session):
             if not ct:
                 data = ''
             elif ct.startswith('application/json') and response.text:
-                data = response.json()
+                try:
+                    data = response.json()
+                except JSONDecodeError:
+                    data = response.text
             else:
                 data = response.text
         finally:

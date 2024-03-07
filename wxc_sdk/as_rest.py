@@ -10,6 +10,7 @@ from asyncio import Semaphore
 from collections.abc import AsyncGenerator
 from functools import wraps
 from io import TextIOBase, StringIO
+from json import JSONDecodeError
 from time import perf_counter_ns
 from typing import Tuple, Type, Optional, Any
 
@@ -296,7 +297,10 @@ class AsRestSession(ClientSession):
             if not ct:
                 response_data = ''
             elif ct.startswith('application/json'):
-                response_data = await response.json()
+                try:
+                    response_data = await response.json()
+                except JSONDecodeError:
+                    response_data = await response.text()
             else:
                 response_data = await response.text()
             diff_ns = perf_counter_ns() - start
