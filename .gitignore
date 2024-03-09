@@ -159,3 +159,5 @@ cython_debug/
 /examples/wsnames
 /tests/guest_service_token.yml
 /tests/guests.yml
+/tests/scim_service_app.env
+/tests/scim_service_app.yml

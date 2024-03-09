@@ -15,7 +15,7 @@ Release history
 - fix: unresolved references in as_api.py
 - feat: consistent implementation of outgoing calling permissions for locations, users, workspaces, and virtual lines
 - feat: digit patterns APi in outgoing calling permissions for locations, users, workspaces, and virtual lines, :attr:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.digit_patterns`.
-
+- feat: first (experimental, rudimentary) shot at SCIMv2 users API :attr:`wxc_sdk.scim.users.SCIM2UsersApi`, only implemented :meth:`wxc_sdk.scim.users.SCIM2UsersApi.details` and :meth:`wxc_sdk.scim.users.SCIM2UsersApi.search`
 
 1.17.1
 ------

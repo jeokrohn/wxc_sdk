@@ -26,6 +26,7 @@ from .reports import ReportsApi
 from .rest import RestSession
 from .room_tabs import RoomTabsApi
 from .rooms import RoomsApi
+from .scim import ScimV2Api
 from .status import StatusAPI
 from .team_memberships import TeamMembershipsApi
 from .teams import TeamsApi
@@ -93,6 +94,8 @@ class WebexSimpleApi:
     room_tabs: RoomTabsApi
     #: Webex Status API :class:`status.StatusAPI`
     status: StatusAPI
+    #: ScimV2 API: :class:`scimv2.ScimV2Api`
+    scimv2: ScimV2Api
     #: Teams API :class:`teams.TeamsApi`
     teams: TeamsApi
     #: Team memberships API :class:`TeamMembershipsApi`
@@ -150,6 +153,7 @@ class WebexSimpleApi:
         self.reports = ReportsApi(session=session)
         self.rooms = RoomsApi(session=session)
         self.room_tabs = RoomTabsApi(session=session)
+        self.scim = ScimV2Api(session=session)
         self.status = StatusAPI(session=session)
         self.teams = TeamsApi(session=session)
         self.team_memberships = TeamMembershipsApi(session=session)

@@ -1,107 +1,84 @@
-from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional
 
-from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
+from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-
-__all__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse',
-           'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedOrgsObject',
-           'ManagerResponseObject', 'NameObject', 'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject',
+__all__ = ['EmailObject', 'EmailObjectType', 'ScimUser',
+           'EnterpriseUser', 'ManagedOrg',
+           'ManagerResponseObject', 'NameObject', 'PatchUserOperation', 'PatchUserOperationOp', 'PhotoObject',
            'PhotoObjectType', 'PostUserUrnietfparamsscimschemasextensionenterprise20User',
            'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager',
-           'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUserAddresses', 'PutUserPhoneNumbers',
-           'PutUserPhoneNumbersType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
-           'SipAddressObjectType', 'UserTypeObject']
+           'WebexUser', 'PutUserAddresses', 'UserPhoneNumber',
+           'ScimPhoneNumberType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
+           'UserTypeObject']
 
 
-class PatchUserOperationsOp(str, Enum):
+class PatchUserOperationOp(str, Enum):
     add = 'add'
     replace = 'replace'
     remove = 'remove'
 
 
-class PatchUserOperations(ApiModel):
+class PatchUserOperation(ApiModel):
     #: The operation to perform.
-    #: example: add
-    op: Optional[PatchUserOperationsOp] = None
+    op: Optional[PatchUserOperationOp] = None
     #: A string containing an attribute path describing the target of the operation.
-    #: example: displayName
     path: Optional[str] = None
     #: New value.
-    #: example: new displayName value
     value: Optional[str] = None
 
 
 class PostUserUrnietfparamsscimschemasextensionenterprise20UserManager(ApiModel):
     #: Webex Identity assigned user identifier of the user's manager. The manager must be in the same org as the user.
-    #: example: b5717a4a-0169-43b2-ac3c-db20ba4e72cd
     value: Optional[str] = None
 
 
 class PostUserUrnietfparamsscimschemasextensionenterprise20User(ApiModel):
     #: Identifies the name of a cost center.
-    #: example: costCenter 123
     cost_center: Optional[str] = None
     #: Identifies the name of an organization.
-    #: example: Cisco webexidentity
     organization: Optional[str] = None
     #: Identifies the name of a division.
-    #: example: division 456
     division: Optional[str] = None
     #: Identifies the name of a department.
-    #: example: department 789
     department: Optional[str] = None
     #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an
     #: organization.
-    #: example: 518-8888-888
     employee_number: Optional[str] = None
     #: The user's manager.
     manager: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20UserManager] = None
 
 
-class SipAddressObjectType(str, Enum):
-    enterprise = 'enterprise'
-
-
 class SipAddressObject(ApiModel):
     #: The sip address value.
-    #: example: sipAddress value1
     value: Optional[str] = None
     #: The type of the sipAddress.
-    #: example: enterprise
-    type: Optional[SipAddressObjectType] = None
+    type: Optional[str] = None
     #: A human-readable description, primarily used for display purposes.
-    #: example: sipAddress1 description
     display: Optional[str] = None
     #: Designate the primary sipAddress.
-    #: example: True
     primary: Optional[bool] = None
 
 
-class ManagedOrgsObject(ApiModel):
+class ManagedOrg(ApiModel):
     #: Webex Identity assigned organization identifier.
-    #: example: 75fe2995-24f5-4831-8d2c-1c2f8255912e
     org_id: Optional[str] = None
     #: Role in the target organization for the user.
-    #: example: id_full_admin
     role: Optional[str] = None
 
 
-class PostUserUrnscimschemasextensionciscowebexidentity20User(ApiModel):
+class WebexUser(ApiModel):
     #: Account status of the user.
-    #: example: ['element='string' content='active' attributes={'typeAttributes': ApibArray(element='array', content=[ApibString(element='string', content='fixed', attributes=None, meta=None)], attributes=None, meta=None)} meta=None']
     account_status: Optional[list[str]] = None
     #: sipAddress values for the user.
     sip_addresses: Optional[list[SipAddressObject]] = None
     #: Organizations that the user can manage.
-    managed_orgs: Optional[list[ManagedOrgsObject]] = None
+    managed_orgs: Optional[list[ManagedOrg]] = None
 
 
 class UserTypeObject(str, Enum):
@@ -114,26 +91,21 @@ class UserTypeObject(str, Enum):
 class NameObject(ApiModel):
     #: The given name of the user, or first name in most Western languages (e.g., "Sarah" given the full name "Ms.
     #: Sarah J Henderson, III").
-    #: example: Sarah
     given_name: Optional[str] = None
     #: The family name of the user, or last name in most Western languages (e.g., "Henderson" given the full name "Ms.
     #: Sarah J Henderson, III").
-    #: example: Henderson
     family_name: Optional[str] = None
     #: The middle name(s) of the user (e.g., "Jane" given the full name "Ms. Sarah J Henderson, III").
-    #: example: Jane
     middle_name: Optional[str] = None
     #: The honorific prefix(es) of the user, or title in most Western languages (e.g., "Ms." given the full name "Ms.
     #: Sarah J Henderson, III").
-    #: example: Mr.
     honorific_prefix: Optional[str] = None
     #: The honorific suffix(es) of the user, or suffix in most Western languages (e.g., "III" given the full name "Ms.
     #: Sarah J Henderson, III").
-    #: example: III
     honorific_suffix: Optional[str] = None
 
 
-class PutUserPhoneNumbersType(str, Enum):
+class ScimPhoneNumberType(str, Enum):
     work = 'work'
     home = 'home'
     mobile = 'mobile'
@@ -143,19 +115,15 @@ class PutUserPhoneNumbersType(str, Enum):
     other = 'other'
 
 
-class PutUserPhoneNumbers(ApiModel):
+class UserPhoneNumber(ApiModel):
     #: phone number.
-    #: example: 400 123 1234
     value: Optional[str] = None
     #: We support the following types of phone numbers: 'mobile', 'work', 'fax', 'work_extension', 'alternate1',
     #: 'alternate2'.  Alternate 1 and Alternate 2 are types inherited from Webex meeting sites.
-    #: example: work
-    type: Optional[PutUserPhoneNumbersType] = None
+    type: Optional[ScimPhoneNumberType] = None
     #: A human-readable name, primarily used for display purposes.
-    #: example: work phone number
     display: Optional[str] = None
     #: A Boolean value indicating the phone number premary status.
-    #: example: True
     primary: Optional[bool] = None
 
 
@@ -167,38 +135,28 @@ class PhotoObjectType(str, Enum):
 
 class PhotoObject(ApiModel):
     #: photo link.
-    #: example: https://photos.example.com/profilephoto/72930000000Ccne/F
     value: Optional[str] = None
     #: The type of the photo
-    #: example: photo
     type: Optional[PhotoObjectType] = None
     #: A human-readable description, primarily used for display purposes.
-    #: example: photo description
     display: Optional[str] = None
     #: A Boolean value indicating the photo usage status.
-    #: example: True
     primary: Optional[bool] = None
 
 
 class PutUserAddresses(ApiModel):
     #: address type
-    #: example: work
     type: Optional[str] = None
     #: The full street address component, which may include house number, street name, P.O. box, and multi-line
     #: extended street address information. This attribute MAY contain newlines.
-    #: example: 100 Universal City Plaza
     street_address: Optional[str] = None
     #: The city or locality component.
-    #: example: Hollywood
     locality: Optional[str] = None
     #: The state or region component.
-    #: example: CA
     region: Optional[str] = None
     #: The zip code or postal code component.
-    #: example: 91608
     postal_code: Optional[str] = None
     #: The country name component.
-    #: example: US
     country: Optional[str] = None
 
 
@@ -211,13 +169,10 @@ class EmailObjectType(str, Enum):
 
 class EmailObject(ApiModel):
     #: The email address.
-    #: example: user1@example.home.com
     value: Optional[str] = None
     #: The type of the email.
-    #: example: home
     type: Optional[EmailObjectType] = None
     #: A human-readable description, primarily used for display purposes.
-    #: example: home email description
     display: Optional[str] = None
     #: A Boolean value indicating the email status. If the type is work and primary is true, the value must equal
     #: "userName".
@@ -226,149 +181,151 @@ class EmailObject(ApiModel):
 
 class ManagerResponseObject(ApiModel):
     #: Webex Identity assigned user identifier of the user's manager. The manager must be in the same org as the user.
-    #: example: b5717a4a-0169-43b2-ac3c-db20ba4e72cd
     value: Optional[str] = None
     #: The value to display or show the manager's name in Webex.
-    #: example: Identity Administrator
     display_name: Optional[str] = None
     #: The URI corresponding to a SCIM user that is the manager.
-    #: example: http://integration.webexapis.com/identity/scim/0ae87ade-8c8a-4952-af08-318798958d0c/v2/Users/b5717a4a-0169-43b2-ac3c-db20ba4e72cd
-    _ref: Optional[str] = Field(alias='$ref', default=None)
+    ref: Optional[str] = Field(alias='$ref', default=None)
 
 
-class GetUserResponseUrnietfparamsscimschemasextensionenterprise20User(ApiModel):
+class EnterpriseUser(ApiModel):
     #: Identifies the name of a cost center.
-    #: example: costCenter 123
     cost_center: Optional[str] = None
     #: Identifies the name of an organization.
-    #: example: Cisco webexidentity
     organization: Optional[str] = None
     #: Identifies the name of a division.
-    #: example: division 456
     division: Optional[str] = None
     #: Identifies the name of a department.
-    #: example: department 789
     department: Optional[str] = None
     #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an
     #: organization.
-    #: example: 518-8888-888
     employee_number: Optional[str] = None
     #: The user's manager.
     manager: Optional[ManagerResponseObject] = None
 
 
-class GetUserResponse(ApiModel):
+class ScimMeta(ApiModel):
+    resource_type: Optional[str] = None
+    location: Optional[str] = None
+    version: Optional[str] = None
+    created: Optional[datetime] = None
+    last_modified: Optional[datetime] = None
+
+
+class ScimUser(ApiModel):
     #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
     schemas: Optional[list[str]] = None
     #: Webex Identity assigned user identifier.
-    #: example: 3426a8e3-d414-4bf0-a493-4f6787632a13
     id: Optional[str] = None
     #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
     #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
     #: is required to be unique within Webex.
-    #: example: user1@example.com
     user_name: Optional[str] = None
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
-    #: example: True
     active: Optional[bool] = None
     #: The components of the user's real name.
     name: Optional[NameObject] = None
     #: The value to display or show the user's name in Webex.
-    #: example: Mr. Jonathan Jane Joestar, III
     display_name: Optional[str] = None
     #: A casual name of the user.  The value Bob when the user's formal name is Robert.
-    #: example: JoJo
     nick_name: Optional[str] = None
     #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
     #: address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
     #: The type of the user.
-    #: example: user
     user_type: Optional[UserTypeObject] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
-    #: example: https://jojowiki.com/Jonathan_Joestar
     profile_url: Optional[str] = None
     #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
-    #: example: Sales manager
     title: Optional[str] = None
     #: Indicates the user's preferred language.  Acceptable values for this field are based on the `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
-    #: 
+    #:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
-    #: example: en_US
     preferred_language: Optional[str] = None
     #: The user's locale which is used to represent the user's currency, time format, and numerical representations.
     #: Acceptable values for this field are based on the `ISO-696
     #: <http://www.loc.gov/standards/iso639-2/php/code_list.php>`_ and `ISO-3166
     #: followed by an _ and then the 2 letter country code.  Examples are:
-    #: 
+    #:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
-    #: example: en_US
     locale: Optional[str] = None
     #: External identity.
-    #: example: externalIdValue
     external_id: Optional[str] = None
     #: The user's time zone specified in the `IANA timezone
     #: <https://nodatime.org/timezones>`_ timezone format, for example, "America/Los_Angeles".
-    #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phone_numbers: Optional[list[PutUserPhoneNumbers]] = None
+    phone_numbers: Optional[list[UserPhoneNumber]] = None
     #: A list of photos for the user that represent a thing the user has.
     photos: Optional[list[PhotoObject]] = None
     #: User's physical mailing address.
     addresses: Optional[list[PutUserAddresses]] = None
     #: SCIM2 enterprise extension
-    urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[GetUserResponseUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
+    enterprise_user: Optional[EnterpriseUser] = Field(
+        alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
-    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+    webex_user: Optional[WebexUser] = Field(
+        alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+    meta: Optional[ScimMeta] = None
 
 
 class SearchUserResponse(ApiModel):
     #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:api:messages:2.0:ListResponse']
     schemas: Optional[list[str]] = None
     #: Total number of users in search results.
-    #: example: 2
     total_results: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching users.
-    #: example: 1
     start_index: Optional[int] = None
     #: A list of users with details.
-    resources: Optional[list[GetUserResponse]] = Field(alias='Resources', default=None)
+    resources: Optional[list[ScimUser]] = Field(alias='Resources', default=None)
 
 
 class SCIM2UsersApi(ApiChild, base='identity/scim'):
     """
     SCIM 2 Users
-    
+
     Implementation of the SCIM 2.0 user part for user management in a standards based manner. Please also see the
     `SCIM Specification
-    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with detailed in
+    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with
+    detailed in
     `SCIM 2.0 schema
     <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
     """
 
+    def ep(self, path: str = None):
+        """
+        endpoint URL for given path
+
+        :meta private:
+        :param path: path after APIChild subclass specific endpoint URI prefix
+        :type path: str
+        :return: endpoint URL
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        return f'https://webexapis.com/{self.base}{path}'
+
     def create_a_user(self, org_id: str, schemas: list[str], user_name: str, user_type: UserTypeObject, title: str,
                       active: bool, preferred_language: str, locale: str, timezone: str, profile_url: str,
                       external_id: str, display_name: str, nick_name: str, name: NameObject,
-                      phone_numbers: list[PutUserPhoneNumbers], photos: list[PhotoObject],
+                      phone_numbers: list[UserPhoneNumber], photos: list[PhotoObject],
                       addresses: list[PutUserAddresses], emails: list[EmailObject],
-                      urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User,
-                      urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User) -> GetUserResponse:
+                      urn_ietf_params_scim_schemas_extension_enterprise_2_0_user:
+                      PostUserUrnietfparamsscimschemasextensionenterprise20User,
+                      urn_scim_schemas_extension_cisco_webexidentity_2_0_user: WebexUser) -> ScimUser:
         """
         Create a user
 
         The SCIM 2 /Users API provides a programmatic way to manage users in Webex Identity using The Internet
-        Engineering Task Force standard SCIM 2.0 standard as specified by `RFC 7643 SCIM 2.0 Core Schema 
+        Engineering Task Force standard SCIM 2.0 standard as specified by `RFC 7643 SCIM 2.0 Core Schema
         <https://datatracker.ietf.org/doc/html/rfc7643>`_ and
         `RFC 7644 SCIM 2.0 Core Protocol
-        <https://datatracker.ietf.org/doc/html/rfc7644>`_.  The WebEx SCIM 2.0  APIs allow clients supporting the SCIM 2.0 standard to
+        <https://datatracker.ietf.org/doc/html/rfc7644>`_.  The WebEx SCIM 2.0  APIs allow clients supporting the
+        SCIM 2.0 standard to
         manage users, and groups within Webex.  Webex supports the following SCIM 2.0 Schemas:
 
         • urn:ietf:params:scim:schemas:core:2.0:User
@@ -459,7 +416,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         :type name: NameObject
         :param phone_numbers: A list of user's phone numbers with an indicator of primary to specify the user's main
             number.
-        :type phone_numbers: list[PutUserPhoneNumbers]
+        :type phone_numbers: list[UserPhoneNumber]
         :param photos: A list of photos for the user that represent a thing the user has.
         :type photos: list[PhotoObject]
         :param addresses: User's physical mailing address.
@@ -468,11 +425,13 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
             primary email address must be the same value as the user's userName.
         :type emails: list[EmailObject]
         :param urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: SCIM2 enterprise extension
-        :type urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User
+        :type urn_ietf_params_scim_schemas_extension_enterprise_2_0_user:
+        PostUserUrnietfparamsscimschemasextensionenterprise20User
         :param urn_scim_schemas_extension_cisco_webexidentity_2_0_user: The Cisco extension of SCIM 2.
-        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
-        :rtype: :class:`GetUserResponse`
+        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: WebexUser
+        :rtype: :class:`ScimUser`
         """
+        raise NotImplementedError('SCIM2UsersApi.create_a_user')
         body = dict()
         body['schemas'] = schemas
         body['userName'] = user_name
@@ -487,18 +446,22 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         body['displayName'] = display_name
         body['nickName'] = nick_name
         body['name'] = loads(name.model_dump_json())
-        body['phoneNumbers'] = loads(TypeAdapter(list[PutUserPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+        body['phoneNumbers'] = loads(
+            TypeAdapter(list[UserPhoneNumber]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
         body['photos'] = loads(TypeAdapter(list[PhotoObject]).dump_json(photos, by_alias=True, exclude_none=True))
-        body['addresses'] = loads(TypeAdapter(list[PutUserAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
+        body['addresses'] = loads(
+            TypeAdapter(list[PutUserAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
         body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails, by_alias=True, exclude_none=True))
-        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
+        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(
+            urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(
+            urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
         url = self.ep(f'{org_id}/v2/Users')
         data = super().post(url, json=body)
-        r = GetUserResponse.model_validate(data)
+        r = ScimUser.model_validate(data)
         return r
 
-    def get_a_user(self, org_id: str, user_id: str) -> GetUserResponse:
+    def details(self, org_id: str, user_id: str) -> ScimUser:
         """
         Get a user
 
@@ -538,17 +501,17 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         :type org_id: str
         :param user_id: Webex Identity assigned user identifier.
         :type user_id: str
-        :rtype: :class:`GetUserResponse`
+        :rtype: :class:`ScimUser`
         """
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().get(url)
-        r = GetUserResponse.model_validate(data)
+        r = ScimUser.model_validate(data)
         return r
 
-    def search_users(self, org_id: str, filter: str = None, attributes: str = None, excluded_attributes: str = None,
-                     sort_by: str = None, sort_order: str = None, start_index: str = None, count: str = None,
-                     return_groups: str = None, include_group_details: str = None,
-                     group_usage_types: str = None) -> SearchUserResponse:
+    def search(self, org_id: str, filter: str = None, attributes: str = None, excluded_attributes: str = None,
+               sort_by: str = None, sort_order: str = None, start_index: str = None, count: str = None,
+               return_groups: str = None, include_group_details: str = None,
+               group_usage_types: str = None) -> SearchUserResponse:
         """
         Search users
 
@@ -662,10 +625,11 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
     def update_a_user_with_put(self, org_id: str, user_id: str, schemas: list[str], user_name: str,
                                user_type: UserTypeObject, title: str, active: bool, preferred_language: str,
                                locale: str, timezone: str, profile_url: str, external_id: str, display_name: str,
-                               nick_name: str, phone_numbers: list[PutUserPhoneNumbers], photos: list[PhotoObject],
+                               nick_name: str, phone_numbers: list[UserPhoneNumber], photos: list[PhotoObject],
                                addresses: list[PutUserAddresses], emails: list[EmailObject],
-                               urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User,
-                               urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User) -> GetUserResponse:
+                               urn_ietf_params_scim_schemas_extension_enterprise_2_0_user:
+                               PostUserUrnietfparamsscimschemasextensionenterprise20User,
+                               urn_scim_schemas_extension_cisco_webexidentity_2_0_user: WebexUser) -> ScimUser:
         """
         Update a user with PUT
 
@@ -760,7 +724,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         :type nick_name: str
         :param phone_numbers: A list of user's phone numbers with an indicator of primary to specify the users main
             number.
-        :type phone_numbers: list[PutUserPhoneNumbers]
+        :type phone_numbers: list[UserPhoneNumber]
         :param photos: A list of photos for the user that represent a thing the user has.
         :type photos: list[PhotoObject]
         :param addresses: A physical mailing address of user.
@@ -769,11 +733,13 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
             primary email address must be the same value as the user's userName.
         :type emails: list[EmailObject]
         :param urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: SCIM2 enterprise extention
-        :type urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: PostUserUrnietfparamsscimschemasextensionenterprise20User
+        :type urn_ietf_params_scim_schemas_extension_enterprise_2_0_user:
+        PostUserUrnietfparamsscimschemasextensionenterprise20User
         :param urn_scim_schemas_extension_cisco_webexidentity_2_0_user: cisco extention of SCIM 2
-        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: PostUserUrnscimschemasextensionciscowebexidentity20User
-        :rtype: :class:`GetUserResponse`
+        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_user: WebexUser
+        :rtype: :class:`ScimUser`
         """
+        raise NotImplementedError('SCIM2UsersApi.update_a_user_with_put')
         body = dict()
         body['schemas'] = schemas
         body['userName'] = user_name
@@ -787,19 +753,23 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         body['externalId'] = external_id
         body['displayName'] = display_name
         body['nickName'] = nick_name
-        body['phoneNumbers'] = loads(TypeAdapter(list[PutUserPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+        body['phoneNumbers'] = loads(
+            TypeAdapter(list[UserPhoneNumber]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
         body['photos'] = loads(TypeAdapter(list[PhotoObject]).dump_json(photos, by_alias=True, exclude_none=True))
-        body['addresses'] = loads(TypeAdapter(list[PutUserAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
+        body['addresses'] = loads(
+            TypeAdapter(list[PutUserAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
         body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails, by_alias=True, exclude_none=True))
-        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
+        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(
+            urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(
+            urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().put(url, json=body)
-        r = GetUserResponse.model_validate(data)
+        r = ScimUser.model_validate(data)
         return r
 
     def update_a_user_with_patch(self, org_id: str, user_id: str, schemas: list[str],
-                                 operations: list[PatchUserOperations]) -> GetUserResponse:
+                                 operations: list[PatchUserOperation]) -> ScimUser:
         """
         Update a user with PATCH
 
@@ -944,15 +914,17 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         :param schemas: Input JSON schemas.
         :type schemas: list[str]
         :param operations: A list of patch operations.
-        :type operations: list[PatchUserOperations]
-        :rtype: :class:`GetUserResponse`
+        :type operations: list[PatchUserOperation]
+        :rtype: :class:`ScimUser`
         """
+        raise NotImplementedError('SCIM2UsersApi.update_a_user_with_patch')
         body = dict()
         body['schemas'] = schemas
-        body['Operations'] = loads(TypeAdapter(list[PatchUserOperations]).dump_json(operations, by_alias=True, exclude_none=True))
+        body['Operations'] = loads(
+            TypeAdapter(list[PatchUserOperation]).dump_json(operations, by_alias=True, exclude_none=True))
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().patch(url, json=body)
-        r = GetUserResponse.model_validate(data)
+        r = ScimUser.model_validate(data)
         return r
 
     def delete_a_user(self, org_id: str, user_id: str):
@@ -989,5 +961,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         :type user_id: str
         :rtype: None
         """
+        raise NotImplementedError('SCIM2UsersApi.delete_a_user')
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         super().delete(url)
