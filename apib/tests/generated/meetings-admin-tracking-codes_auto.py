@@ -269,10 +269,10 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         body = dict()
         body['name'] = name
         body['siteUrl'] = site_url
-        body['options'] = loads(TypeAdapter(list[OptionsForTrackingCodeObject]).dump_json(options, by_alias=True, exclude_none=True))
+        body['options'] = TypeAdapter(list[OptionsForTrackingCodeObject]).dump_python(options, mode='json', by_alias=True, exclude_none=True)
         body['inputMode'] = enum_str(input_mode)
         body['hostProfileCode'] = enum_str(host_profile_code)
-        body['scheduleStartCodes'] = loads(TypeAdapter(list[ScheduleStartCodeObject]).dump_json(schedule_start_codes, by_alias=True, exclude_none=True))
+        body['scheduleStartCodes'] = TypeAdapter(list[ScheduleStartCodeObject]).dump_python(schedule_start_codes, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('config/trackingCodes')
         data = super().post(url, json=body)
         r = GetTrackingCodeObject.model_validate(data)
@@ -336,10 +336,10 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
         body = dict()
         body['name'] = name
         body['siteUrl'] = site_url
-        body['options'] = loads(TypeAdapter(list[OptionsForTrackingCodeObject]).dump_json(options, by_alias=True, exclude_none=True))
+        body['options'] = TypeAdapter(list[OptionsForTrackingCodeObject]).dump_python(options, mode='json', by_alias=True, exclude_none=True)
         body['inputMode'] = enum_str(input_mode)
         body['hostProfileCode'] = enum_str(host_profile_code)
-        body['scheduleStartCodes'] = loads(TypeAdapter(list[ScheduleStartCodeObject]).dump_json(schedule_start_codes, by_alias=True, exclude_none=True))
+        body['scheduleStartCodes'] = TypeAdapter(list[ScheduleStartCodeObject]).dump_python(schedule_start_codes, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('config/trackingCodes/{trackingCodeId}')
         data = super().put(url, json=body)
         r = GetTrackingCodeObject.model_validate(data)
@@ -463,7 +463,7 @@ class TrackingCodesApi(ApiChild, base='admin/meeting'):
             body['personId'] = person_id
         if email is not None:
             body['email'] = email
-        body['trackingCodes'] = loads(TypeAdapter(list[UpdateTrackingCodeItemForUserObject]).dump_json(tracking_codes, by_alias=True, exclude_none=True))
+        body['trackingCodes'] = TypeAdapter(list[UpdateTrackingCodeItemForUserObject]).dump_python(tracking_codes, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('userconfig/trackingCodes')
         data = super().put(url, json=body)
         r = GetTrackingCodeForUserObject.model_validate(data)

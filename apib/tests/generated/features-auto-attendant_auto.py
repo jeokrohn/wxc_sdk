@@ -545,7 +545,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if last_name is not None:
             body['lastName'] = last_name
         if alternate_numbers is not None:
-            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+            body['alternateNumbers'] = TypeAdapter(list[AlternateNumbersObject]).dump_python(alternate_numbers, mode='json', by_alias=True, exclude_none=True)
         if language_code is not None:
             body['languageCode'] = language_code
         body['businessSchedule'] = business_schedule
@@ -636,7 +636,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if last_name is not None:
             body['lastName'] = last_name
         if alternate_numbers is not None:
-            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersObject]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+            body['alternateNumbers'] = TypeAdapter(list[AlternateNumbersObject]).dump_python(alternate_numbers, mode='json', by_alias=True, exclude_none=True)
         if language_code is not None:
             body['languageCode'] = language_code
         if business_schedule is not None:

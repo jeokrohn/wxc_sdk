@@ -688,7 +688,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         body = dict()
         body['operation'] = operation
         body['targetLocationId'] = target_location_id
-        body['numberList'] = loads(TypeAdapter(list[NumberItem]).dump_json(number_list, by_alias=True, exclude_none=True))
+        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('jobs/numbers/manageNumbers')
         data = super().post(url, json=body)
         r = StartJobResponse.model_validate(data)

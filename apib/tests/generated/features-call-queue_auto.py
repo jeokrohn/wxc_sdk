@@ -986,7 +986,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if allow_agent_join_enabled is not None:
             body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
@@ -1157,7 +1157,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if allow_call_waiting_for_agents_enabled is not None:
             body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
         if agents is not None:
-            body['agents'] = loads(TypeAdapter(list[ModifyPersonPlaceVirtualLineCallQueueObject]).dump_json(agents, by_alias=True, exclude_none=True))
+            body['agents'] = TypeAdapter(list[ModifyPersonPlaceVirtualLineCallQueueObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if allow_agent_join_enabled is not None:
             body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
@@ -1577,7 +1577,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
         super().put(url, params=params, json=body)
 
@@ -1685,7 +1685,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['announcementMode'] = enum_str(announcement_mode)
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         if business_hours_name is not None:
             body['businessHoursName'] = business_hours_name
         if business_hours_level is not None:
@@ -1693,7 +1693,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['forceNightServiceEnabled'] = force_night_service_enabled
         body['manualAudioMessageSelection'] = enum_str(manual_audio_message_selection)
         if manual_audio_files is not None:
-            body['manualAudioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(manual_audio_files, by_alias=True, exclude_none=True))
+            body['manualAudioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(manual_audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
         super().put(url, params=params, json=body)
 
@@ -1773,7 +1773,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
         super().put(url, params=params, json=body)
 
@@ -1850,6 +1850,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['transferPhoneNumber'] = transfer_phone_number
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = loads(TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_json(audio_files, by_alias=True, exclude_none=True))
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         super().put(url, params=params, json=body)

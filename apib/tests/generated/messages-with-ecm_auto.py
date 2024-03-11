@@ -257,7 +257,7 @@ class MessagesWithECMApi(ApiChild, base='messages'):
         if files is not None:
             body['files'] = files
         if attachments is not None:
-            body['attachments'] = loads(TypeAdapter(list[Attachment]).dump_json(attachments, by_alias=True, exclude_none=True))
+            body['attachments'] = TypeAdapter(list[Attachment]).dump_python(attachments, mode='json', by_alias=True, exclude_none=True)
         url = self.ep()
         data = super().post(url, json=body)
         r = Message.model_validate(data)

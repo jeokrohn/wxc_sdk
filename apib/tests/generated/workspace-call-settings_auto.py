@@ -1068,7 +1068,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if use_custom_enabled is not None:
             body['useCustomEnabled'] = use_custom_enabled
         if calling_permissions is not None:
-            body['callingPermissions'] = loads(TypeAdapter(list[CallingPermission]).dump_json(calling_permissions, by_alias=True, exclude_none=True))
+            body['callingPermissions'] = TypeAdapter(list[CallingPermission]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         super().put(url, params=params, json=body)
 

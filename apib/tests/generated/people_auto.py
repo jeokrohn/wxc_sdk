@@ -397,7 +397,7 @@ class PeopleApi(ApiChild, base='people'):
         body = dict()
         body['emails'] = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+            body['phoneNumbers'] = TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
         if extension is not None:
             body['extension'] = extension
         if location_id is not None:
@@ -425,7 +425,7 @@ class PeopleApi(ApiChild, base='people'):
         if title is not None:
             body['title'] = title
         if addresses is not None:
-            body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
+            body['addresses'] = TypeAdapter(list[PersonAddresses]).dump_python(addresses, mode='json', by_alias=True, exclude_none=True)
         if site_urls is not None:
             body['siteUrls'] = site_urls
         url = self.ep()
@@ -569,7 +569,7 @@ class PeopleApi(ApiChild, base='people'):
         if emails is not None:
             body['emails'] = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = loads(TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
+            body['phoneNumbers'] = TypeAdapter(list[CreateAPersonPhoneNumbers]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
         if extension is not None:
             body['extension'] = extension
         if location_id is not None:
@@ -598,7 +598,7 @@ class PeopleApi(ApiChild, base='people'):
         if title is not None:
             body['title'] = title
         if addresses is not None:
-            body['addresses'] = loads(TypeAdapter(list[PersonAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
+            body['addresses'] = TypeAdapter(list[PersonAddresses]).dump_python(addresses, mode='json', by_alias=True, exclude_none=True)
         if site_urls is not None:
             body['siteUrls'] = site_urls
         if login_enabled is not None:

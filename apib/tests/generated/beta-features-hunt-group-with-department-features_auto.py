@@ -424,7 +424,7 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if distinctive_ring is not None:
             body['distinctiveRing'] = distinctive_ring
         if alternate_numbers is not None:
-            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+            body['alternateNumbers'] = TypeAdapter(list[AlternateNumbersWithPattern]).dump_python(alternate_numbers, mode='json', by_alias=True, exclude_none=True)
         if language_code is not None:
             body['languageCode'] = language_code
         if first_name is not None:
@@ -436,7 +436,7 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if call_policies is not None:
             body['callPolicies'] = loads(call_policies.model_dump_json())
         if agents is not None:
-            body['agents'] = loads(TypeAdapter(list[PostPersonPlaceObject]).dump_json(agents, by_alias=True, exclude_none=True))
+            body['agents'] = TypeAdapter(list[PostPersonPlaceObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if enabled is not None:
             body['enabled'] = enabled
         if department is not None:

@@ -156,8 +156,8 @@ class Parameter:
         if self.python_type == self.referenced_class:
             yield f"{indent}body['{self.name}'] = loads({self.python_name}.model_dump_json())"
             return
-        yield f"{indent}body['{self.name}'] = loads(TypeAdapter({self.python_type}).dump_json({self.python_name}, " \
-              f"by_alias=True, exclude_none=True))"
+        yield f"{indent}body['{self.name}'] = TypeAdapter({self.python_type}).dump_python({self.python_name}, " \
+              f"mode='json', by_alias=True, exclude_none=True)"
 
 
 class SourceIO(StringIO):

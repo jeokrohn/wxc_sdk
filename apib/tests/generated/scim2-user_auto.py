@@ -487,10 +487,10 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         body['displayName'] = display_name
         body['nickName'] = nick_name
         body['name'] = loads(name.model_dump_json())
-        body['phoneNumbers'] = loads(TypeAdapter(list[PutUserPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
-        body['photos'] = loads(TypeAdapter(list[PhotoObject]).dump_json(photos, by_alias=True, exclude_none=True))
-        body['addresses'] = loads(TypeAdapter(list[PutUserAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
-        body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails, by_alias=True, exclude_none=True))
+        body['phoneNumbers'] = TypeAdapter(list[PutUserPhoneNumbers]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
+        body['photos'] = TypeAdapter(list[PhotoObject]).dump_python(photos, mode='json', by_alias=True, exclude_none=True)
+        body['addresses'] = TypeAdapter(list[PutUserAddresses]).dump_python(addresses, mode='json', by_alias=True, exclude_none=True)
+        body['emails'] = TypeAdapter(list[EmailObject]).dump_python(emails, mode='json', by_alias=True, exclude_none=True)
         body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
         url = self.ep(f'{org_id}/v2/Users')
@@ -787,10 +787,10 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         body['externalId'] = external_id
         body['displayName'] = display_name
         body['nickName'] = nick_name
-        body['phoneNumbers'] = loads(TypeAdapter(list[PutUserPhoneNumbers]).dump_json(phone_numbers, by_alias=True, exclude_none=True))
-        body['photos'] = loads(TypeAdapter(list[PhotoObject]).dump_json(photos, by_alias=True, exclude_none=True))
-        body['addresses'] = loads(TypeAdapter(list[PutUserAddresses]).dump_json(addresses, by_alias=True, exclude_none=True))
-        body['emails'] = loads(TypeAdapter(list[EmailObject]).dump_json(emails, by_alias=True, exclude_none=True))
+        body['phoneNumbers'] = TypeAdapter(list[PutUserPhoneNumbers]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
+        body['photos'] = TypeAdapter(list[PhotoObject]).dump_python(photos, mode='json', by_alias=True, exclude_none=True)
+        body['addresses'] = TypeAdapter(list[PutUserAddresses]).dump_python(addresses, mode='json', by_alias=True, exclude_none=True)
+        body['emails'] = TypeAdapter(list[EmailObject]).dump_python(emails, mode='json', by_alias=True, exclude_none=True)
         body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
         body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
@@ -949,7 +949,7 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         """
         body = dict()
         body['schemas'] = schemas
-        body['Operations'] = loads(TypeAdapter(list[PatchUserOperations]).dump_json(operations, by_alias=True, exclude_none=True))
+        body['Operations'] = TypeAdapter(list[PatchUserOperations]).dump_python(operations, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().patch(url, json=body)
         r = GetUserResponse.model_validate(data)

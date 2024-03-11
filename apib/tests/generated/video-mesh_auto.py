@@ -1984,7 +1984,7 @@ class VideoMeshApi(ApiChild, base='videoMesh'):
         :rtype: :class:`BulkUpdateEventThresholdResponse`
         """
         body = dict()
-        body['eventThresholds'] = loads(TypeAdapter(list[UpdateEventThresholdConfigurationEventThresholds]).dump_json(event_thresholds, by_alias=True, exclude_none=True))
+        body['eventThresholds'] = TypeAdapter(list[UpdateEventThresholdConfigurationEventThresholds]).dump_python(event_thresholds, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('eventThresholds')
         data = super().patch(url, json=body)
         r = BulkUpdateEventThresholdResponse.model_validate(data)

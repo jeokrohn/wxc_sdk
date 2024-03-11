@@ -528,6 +528,6 @@ class MeetingParticipantsWithAdmissionFromLobbyToBreakoutSessionApi(ApiChild, ba
         :rtype: None
         """
         body = dict()
-        body['items'] = loads(TypeAdapter(list[AdmitParticipant]).dump_json(items, by_alias=True, exclude_none=True))
+        body['items'] = TypeAdapter(list[AdmitParticipant]).dump_python(items, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('admit')
         super().post(url, json=body)

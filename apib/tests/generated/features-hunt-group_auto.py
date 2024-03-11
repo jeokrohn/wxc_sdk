@@ -531,7 +531,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if time_zone is not None:
             body['timeZone'] = time_zone
         body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
+        body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         body['enabled'] = enabled
         if hunt_group_caller_id_for_outgoing_calls_enabled is not None:
             body['huntGroupCallerIdForOutgoingCallsEnabled'] = hunt_group_caller_id_for_outgoing_calls_enabled
@@ -665,7 +665,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if distinctive_ring is not None:
             body['distinctiveRing'] = distinctive_ring
         if alternate_numbers is not None:
-            body['alternateNumbers'] = loads(TypeAdapter(list[AlternateNumbersWithPattern]).dump_json(alternate_numbers, by_alias=True, exclude_none=True))
+            body['alternateNumbers'] = TypeAdapter(list[AlternateNumbersWithPattern]).dump_python(alternate_numbers, mode='json', by_alias=True, exclude_none=True)
         if language_code is not None:
             body['languageCode'] = language_code
         if first_name is not None:
@@ -677,7 +677,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if call_policies is not None:
             body['callPolicies'] = loads(call_policies.model_dump_json())
         if agents is not None:
-            body['agents'] = loads(TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_json(agents, by_alias=True, exclude_none=True))
+            body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if enabled is not None:
             body['enabled'] = enabled
         if hunt_group_caller_id_for_outgoing_calls_enabled is not None:
