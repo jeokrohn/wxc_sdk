@@ -8,6 +8,7 @@ from pydantic import Field, TypeAdapter
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.scim.child import ScimApiChild
 
 __all__ = ['EmailObject', 'EmailObjectType', 'ScimUser',
            'EnterpriseUser', 'ManagedOrg',
@@ -17,6 +18,7 @@ __all__ = ['EmailObject', 'EmailObjectType', 'ScimUser',
            'WebexUser', 'UserAddress', 'UserPhoneNumber',
            'ScimPhoneNumberType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
            'UserTypeObject']
+
 
 SCHEMAS = [
     "urn:ietf:params:scim:schemas:core:2.0:User",
@@ -300,7 +302,7 @@ class SearchUserResponse(ApiModel):
     resources: Optional[list[ScimUser]] = Field(alias='Resources', default=None)
 
 
-class SCIM2UsersApi(ApiChild, base='identity/scim'):
+class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
     """
     SCIM 2 Users
 
@@ -309,19 +311,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
     SCIM 2.0 definition with detailed in
     `SCIM 2.0 schema <https://datatracker.ietf.org/doc/html/rfc7643>`_ and SCIM 2.0 Protocol
     """
-
-    def ep(self, path: str = None):
-        """
-        endpoint URL for given path
-
-        :meta private:
-        :param path: path after APIChild subclass specific endpoint URI prefix
-        :type path: str
-        :return: endpoint URL
-        :rtype: str
-        """
-        path = path and f'/{path}' or ''
-        return f'https://webexapis.com/{self.base}{path}'
 
     def create(self, org_id: str, user: ScimUser) -> ScimUser:
         """
@@ -729,8 +718,8 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         """
         body = dict()
         body['schemas'] = ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
-        body['Operations'] = loads(
-            TypeAdapter(list[PatchUserOperation]).dump_json(operations, by_alias=True, exclude_none=True))
+        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(operations, mode='json', by_alias=True,
+                                                                               exclude_none=True)
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().patch(url, json=body)
         r = ScimUser.model_validate(data)

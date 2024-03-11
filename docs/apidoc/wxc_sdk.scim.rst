@@ -12,4 +12,13 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.scim.bulk
    wxc_sdk.scim.users
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   wxc_sdk.scim.child

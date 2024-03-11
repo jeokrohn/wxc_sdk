@@ -70,12 +70,12 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
            'AsPushToTalkApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi',
-           'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimV2Api', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi',
-           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
-           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
-           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi',
-           'AsWorkspacesApi']
+           'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI',
+           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
+           'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
+           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -1419,11 +1419,11 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         if org_id is not None:
             body['orgId'] = org_id
         if licenses is not None:
-            body['licenses'] = json.loads(
-                TypeAdapter(list[LicenseRequest]).dump_json(licenses, by_alias=True, exclude_none=True))
+            body['licenses'] = TypeAdapter(list[LicenseRequest]).dump_python(licenses, mode='json', by_alias=True,
+                                                                             exclude_none=True)
         if site_urls is not None:
-            body['siteUrls'] = json.loads(
-                TypeAdapter(list[SiteUrlsRequest]).dump_json(site_urls, by_alias=True, exclude_none=True))
+            body['siteUrls'] = TypeAdapter(list[SiteUrlsRequest]).dump_python(site_urls, mode='json', by_alias=True,
+                                                                              exclude_none=True)
         url = self.ep('users')
         data = await super().patch(url, json=body)
         r = UserLicensesResponse.model_validate(data)
@@ -8689,15 +8689,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         return
 
 
-class AsSCIM2UsersApi(AsApiChild, base='identity/scim'):
-    """
-    SCIM 2 Users
-
-    Implementation of the SCIM 2.0 user part for user management in a standards based manner. Please also
-    see the `SCIM Specification <http://www.simplecloud.info/>`_. The schema and API design follows the standard
-    SCIM 2.0 definition with detailed in
-    `SCIM 2.0 schema <https://datatracker.ietf.org/doc/html/rfc7643>`_ and SCIM 2.0 Protocol
-    """
+class AsScimApiChild(AsApiChild, base='identity/scim'):
 
     def ep(self, path: str = None):
         """
@@ -8711,6 +8703,104 @@ class AsSCIM2UsersApi(AsApiChild, base='identity/scim'):
         """
         path = path and f'/{path}' or ''
         return f'https://webexapis.com/{self.base}{path}'
+
+
+class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
+    """
+    Bulk Manage SCIM 2 Users and Groups
+
+    The bulk API allows you to create, update, and remove multiple users and groups in Webex.  The number of Bulk
+    operations in a single request is limited to 100.
+
+    Bulk deletion of Users is irreversible. Please test in a test org or sandbox
+    before running the command in your production system.
+
+    """
+
+    async def bulk_request(self, org_id: str, fail_on_errors: int,
+                     operations: list[BulkOperation]) -> BulkResponse:
+        """
+        User bulk API
+
+        **Authorization**
+
+        OAuth token rendered by Identity Broker.
+
+        One of the following OAuth scopes is required:
+
+        - `identity:people_rw`
+        - `Identity:SCIM`
+
+        **Usage**:
+
+        1. The input JSON must conform to the following schema: 'urn:ietf:params:scim:api:messages:2.0:BulkRequest'.
+
+        2. The request must be accompanied with a body in JSON format according to the standard SCIM schema definition.
+           The maximum number of operations in a request is 100; an error is thrown if the limit is exceeded.
+
+        3. `failOnErrors` parameter
+
+           An integer specifies the number of errors that the service provider will accept before the operation is
+           terminated and an error response is returned.
+           It is OPTIONAL in a request.
+           Maximum number of operations allowed to fail before the server stops processing the request. The value must 
+           be between 1 and 100.
+
+        4. `operations` parameter
+
+           Contains a list of bulk operations for POST/PATCH/DELETE operations. (REQUIRED)
+
+           + `operations.method`
+
+             The HTTP method of the current operation. Possible values are POST, PATCH or DELETE.
+           + `operations.path`
+
+             The Resource's relative path. If the method is POST the value must specify a Resource type endpoint;
+             e.g., /Users or /Groups whereas all other method values must specify the path to a specific Resource;
+             e.g., /Users/2819c223-7f76-453a-919d-413861904646.
+           + `operations.data`
+
+             The Resource data as it would appear for a single POST or PATCH Resource operation.
+             It is REQUIRED in a request when method is POST and PATCH.
+             Refer to corresponding wiki for SCIM 2.0 POST, PATCH and DELETE API.
+           + `operations.bulkId`
+
+             The transient identifier of a newly created resource, unique within a bulk request and created by the
+             client.
+             The bulkId serves as a surrogate resource id enabling clients to uniquely identify newly created
+             resources in
+             the response and cross-reference new resources in and across operations within a bulk request.
+             It is REQUIRED when "method" is "POST".
+   
+        :param org_id: Webex Identity assigned organization identifier for user's organization.
+        :type org_id: str
+        :param fail_on_errors: An integer specifying the maximum number of errors that the service provider will accept
+            before the operation is terminated and an error response is returned.
+        :type fail_on_errors: int
+        :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
+        :type operations: list[BulkOperation]
+        :rtype: :class:`BulkResponse`
+        """
+        body = dict()
+        body['schemas'] = ['urn:ietf:params:scim:api:messages:2.0:BulkRequest']
+        body['failOnErrors'] = fail_on_errors
+        body['operations'] = TypeAdapter(list[BulkOperation]).dump_python(
+            operations, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'{org_id}/v2/Bulk')
+        data = await super().post(url, json=body)
+        r = BulkResponse.model_validate(data)
+        return r
+
+
+class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
+    """
+    SCIM 2 Users
+
+    Implementation of the SCIM 2.0 user part for user management in a standards based manner. Please also
+    see the `SCIM Specification <http://www.simplecloud.info/>`_. The schema and API design follows the standard
+    SCIM 2.0 definition with detailed in
+    `SCIM 2.0 schema <https://datatracker.ietf.org/doc/html/rfc7643>`_ and SCIM 2.0 Protocol
+    """
 
     async def create(self, org_id: str, user: ScimUser) -> ScimUser:
         """
@@ -9085,8 +9175,8 @@ class AsSCIM2UsersApi(AsApiChild, base='identity/scim'):
         """
         body = dict()
         body['schemas'] = ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
-        body['Operations'] = loads(
-            TypeAdapter(list[PatchUserOperation]).dump_json(operations, by_alias=True, exclude_none=True))
+        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(operations, mode='json', by_alias=True,
+                                                                               exclude_none=True)
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = await super().patch(url, json=body)
         r = ScimUser.model_validate(data)
@@ -9123,10 +9213,12 @@ class AsSCIM2UsersApi(AsApiChild, base='identity/scim'):
 @dataclass(init=False)
 class AsScimV2Api(AsApiChild, base=''):
     users: AsSCIM2UsersApi
+    bulk: AsSCIM2BulkApi
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
         self.users = AsSCIM2UsersApi(session=session)
+        self.bulk = AsSCIM2BulkApi(session=session)
 
 
 class AsStatusAPI(AsApiChild, base='status'):

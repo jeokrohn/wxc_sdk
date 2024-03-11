@@ -17,6 +17,7 @@ from tests.testutil import random_users
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.integration import Integration
 from wxc_sdk.people import Person
+from wxc_sdk.scim.bulk import BulkOperation, BulkMethod
 from wxc_sdk.scim.users import ScimUser, NameObject, EmailObject, EmailObjectType, UserTypeObject, UserPhoneNumber, \
     ScimPhoneNumberType, UserAddress, PatchUserOperation, PatchUserOperationOp
 from wxc_sdk.tokens import Tokens
@@ -273,6 +274,29 @@ class TestScimCreate(TestWithScimToken):
         self.assertTrue(len(users_after) == users_to_create + len(users_before),
                         f'User count doesn\'t reflect {users_to_create} new users')
 
+    @async_test
+    async def test_create_bulk(self):
+        """
+        Create a bunch of users using bulk operations
+        """
+        users_to_create = 10
+        org_id = webex_id_to_uuid(self.me.org_id)
+        api = self.api.scim
+        users_before = list(api.users.search_all(org_id=org_id))
+        new_users = await random_users(api=self.async_api, user_count=users_to_create,
+                                       inc=['name', 'location', 'phone', 'cell'])
+        new_scim_users = list(map(self.scim_user_from_random_user, new_users))
+        operations = [BulkOperation(method=BulkMethod.post, path='/Users', bulk_id=str(uuid.uuid4()),
+                                    data=scim_user.create_update())
+                      for scim_user in new_scim_users]
+        print(f'Creatting {len(new_scim_users)} users')
+        bulk_response = api.bulk.bulk_request(org_id=org_id, fail_on_errors=1, operations=operations)
+        users_after = list(api.users.search_all(org_id=org_id))
+        self.assertTrue(all(o.status == 201 for o in bulk_response.operations))
+        self.assertTrue(all(o.user_id is not None for o in bulk_response.operations))
+        self.assertTrue(len(users_after) == users_to_create + len(users_before),
+                        f'before: {len(users_before)}, after: {len(users_after)}')
+
 
 @dataclass(init=False)
 class TestScimUpdate(TestWithScimToken):
@@ -326,7 +350,7 @@ class TestScimUpdate(TestWithScimToken):
         org_id = webex_id_to_uuid(self.me.org_id)
         api = self.api.scim.users
         target_details = self.target_user
-        patched = api.patch(org_id=org_id,user_id=self.target_user.id,
+        patched = api.patch(org_id=org_id, user_id=self.target_user.id,
                             operations=[PatchUserOperation(op=PatchUserOperationOp.replace,
                                                            path='title',
                                                            value='Dr.')])
@@ -346,6 +370,7 @@ class TestScimUpdate(TestWithScimToken):
             restored_details = api.details(org_id=org_id, user_id=self.target_user.id)
             restored_details.meta = target_details.meta
             self.assertEqual(target_details, restored_details)
+
 
 @skip('skipping to keep test users .. for now')
 class TestScimDelete(TestWithScimToken):

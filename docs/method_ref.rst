@@ -423,6 +423,8 @@ The method name is a link to the method documentation.
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers
    * - :meth:`api.rooms.update <wxc_sdk.rooms.RoomsApi.update>`
         Updates details for a room, by ID
+   * - :meth:`api.scim.bulk.bulk_request <wxc_sdk.scim.bulk.SCIM2BulkApi.bulk_request>`
+        User bulk API
    * - :meth:`api.scim.users.create <wxc_sdk.scim.users.SCIM2UsersApi.create>`
         Create a user
    * - :meth:`api.scim.users.delete <wxc_sdk.scim.users.SCIM2UsersApi.delete>`
