@@ -12,7 +12,7 @@ from functools import reduce
 from itertools import zip_longest, chain
 from operator import attrgetter
 from random import randint
-from typing import Generator, Optional
+from typing import Generator, Optional, Union, Literal
 
 from test_helper.digittree import DigitTree
 from test_helper.randomlocation import RandomLocation, Address
@@ -272,18 +272,22 @@ def get_or_create_business_schedule(*, api: WebexSimpleApi, location_id: str) ->
                                            schedule_id=schedule_id)
 
 
-async def random_users(api: AsWebexSimpleApi, user_count: int = 1) -> list[User]:
+Inc = Literal['gender', 'name', 'location', 'email', 'login', 'registered', 'dob', 'phone', 'cell', 'id', 'picture', 'nat']
+
+
+async def random_users(api: AsWebexSimpleApi, user_count: int = 1, inc: Union[Inc, list[Inc]] = 'name') -> list[User]:
     """
     Get a bunch of random new users
     :param api:
     :param user_count:
+    :param inc:
     :return:
     """
     email = os.getenv('BASE_EMAIL')
     if email is None:
         raise KeyError('BASE_EMAIL needs to be defined')
     util = RandomUserUtil(api=api, gmail_address=email)
-    new_users = await util.get_new_users(number_of_users=user_count)
+    new_users = await util.get_new_users(number_of_users=user_count, inc=inc)
     return new_users
 
 

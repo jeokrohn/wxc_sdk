@@ -423,17 +423,19 @@ The method name is a link to the method documentation.
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers
    * - :meth:`api.rooms.update <wxc_sdk.rooms.RoomsApi.update>`
         Updates details for a room, by ID
-   * - :meth:`api.scim.users.create_a_user <wxc_sdk.scim.users.SCIM2UsersApi.create_a_user>`
+   * - :meth:`api.scim.users.create <wxc_sdk.scim.users.SCIM2UsersApi.create>`
         Create a user
-   * - :meth:`api.scim.users.delete_a_user <wxc_sdk.scim.users.SCIM2UsersApi.delete_a_user>`
+   * - :meth:`api.scim.users.delete <wxc_sdk.scim.users.SCIM2UsersApi.delete>`
         Delete a user
    * - :meth:`api.scim.users.details <wxc_sdk.scim.users.SCIM2UsersApi.details>`
         Get a user
+   * - :meth:`api.scim.users.patch <wxc_sdk.scim.users.SCIM2UsersApi.patch>`
+        Update a user with PATCH
    * - :meth:`api.scim.users.search <wxc_sdk.scim.users.SCIM2UsersApi.search>`
         Search users
-   * - :meth:`api.scim.users.update_a_user_with_patch <wxc_sdk.scim.users.SCIM2UsersApi.update_a_user_with_patch>`
-        Update a user with PATCH
-   * - :meth:`api.scim.users.update_a_user_with_put <wxc_sdk.scim.users.SCIM2UsersApi.update_a_user_with_put>`
+   * - :meth:`api.scim.users.search_all <wxc_sdk.scim.users.SCIM2UsersApi.search_all>`
+        Same operation as search but returns a generator of ScimUsers instead of paginated resources
+   * - :meth:`api.scim.users.update <wxc_sdk.scim.users.SCIM2UsersApi.update>`
         Update a user with PUT
    * - :meth:`api.status.active_scheduled_maintenances <wxc_sdk.status.StatusAPI.active_scheduled_maintenances>`
         Get a list of any active maintenances

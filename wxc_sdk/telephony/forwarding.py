@@ -116,9 +116,6 @@ class CallForwardingNumber(ApiModel):
     def model_dump(self, *args, **kwargs):
         """
         When serializing remove the +1- again
-        :param args:
-        :param kwargs:
-        :return:
         """
         number = self.phone_number
         self.phone_number = strip_plus1(number)

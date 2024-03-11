@@ -95,7 +95,7 @@ class WebexSimpleApi:
     #: Webex Status API :class:`status.StatusAPI`
     status: StatusAPI
     #: ScimV2 API: :class:`scimv2.ScimV2Api`
-    scimv2: ScimV2Api
+    scim: ScimV2Api
     #: Teams API :class:`teams.TeamsApi`
     teams: TeamsApi
     #: Team memberships API :class:`TeamMembershipsApi`
