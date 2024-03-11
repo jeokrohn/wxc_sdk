@@ -434,7 +434,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.scim.users.search <wxc_sdk.scim.users.SCIM2UsersApi.search>`
         Search users
    * - :meth:`api.scim.users.search_all <wxc_sdk.scim.users.SCIM2UsersApi.search_all>`
-        Same operation as search but returns a generator of ScimUsers instead of paginated resources
+        Same operation as search() but returns a generator of ScimUsers instead of paginated resources
    * - :meth:`api.scim.users.update <wxc_sdk.scim.users.SCIM2UsersApi.update>`
         Update a user with PUT
    * - :meth:`api.status.active_scheduled_maintenances <wxc_sdk.status.StatusAPI.active_scheduled_maintenances>`

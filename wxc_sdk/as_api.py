@@ -8771,37 +8771,23 @@ class AsSCIM2UsersApi(AsApiChild, base='identity/scim'):
         """
         Get a user
 
-        <br/>
-
         **Authorization**
 
         OAuth token rendered by Identity Broker.
 
-        <br/>
-
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
         - `identity:people_read`
-
         - `Identity:SCIM`
-
         - `Identity:SCIM_read`
-
-        <br/>
 
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_user_admin`
-
         - `id_readonly_admin`
-
         - `id_device_admin`
-
-        <br/>
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
@@ -8844,15 +8830,15 @@ class AsSCIM2UsersApi(AsApiChild, base='identity/scim'):
         :param filter: The url encoded filter. If the value is empty, the API will return all users under the
             organization.
 
-        The examples below show some search filters:
+            The examples below show some search filters:
 
-        - userName eq "user1@example.com"
-        - userName sw "user1@example"
-        - userName ew "example"
-        - phoneNumbers [ type eq "mobile" and value eq "14170120"]
-        - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
-        "0ae87ade-8c8a-4952-af08-318798958d0c"
-        - More filter patterns, please check https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2"
+            - userName eq "user1@example.com"
+            - userName sw "user1@example"
+            - userName ew "example"
+            - phoneNumbers [ type eq "mobile" and value eq "14170120"]
+            - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
+              "0ae87ade-8c8a-4952-af08-318798958d0c"
+            - More filter patterns, please check https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2"
 
         :type filter: str
         :param attributes: A multi-valued list of strings indicating the names of resource attributes to return in the

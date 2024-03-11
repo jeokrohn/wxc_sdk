@@ -382,37 +382,23 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         """
         Get a user
 
-        <br/>
-
         **Authorization**
 
         OAuth token rendered by Identity Broker.
 
-        <br/>
-
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
         - `identity:people_read`
-
         - `Identity:SCIM`
-
         - `Identity:SCIM_read`
-
-        <br/>
 
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_user_admin`
-
         - `id_readonly_admin`
-
         - `id_device_admin`
-
-        <br/>
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
@@ -455,15 +441,15 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         :param filter: The url encoded filter. If the value is empty, the API will return all users under the
             organization.
 
-        The examples below show some search filters:
+            The examples below show some search filters:
 
-        - userName eq "user1@example.com"
-        - userName sw "user1@example"
-        - userName ew "example"
-        - phoneNumbers [ type eq "mobile" and value eq "14170120"]
-        - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
-        "0ae87ade-8c8a-4952-af08-318798958d0c"
-        - More filter patterns, please check https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2"
+            - userName eq "user1@example.com"
+            - userName sw "user1@example"
+            - userName ew "example"
+            - phoneNumbers [ type eq "mobile" and value eq "14170120"]
+            - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
+              "0ae87ade-8c8a-4952-af08-318798958d0c"
+            - More filter patterns, please check https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2"
 
         :type filter: str
         :param attributes: A multi-valued list of strings indicating the names of resource attributes to return in the
@@ -524,7 +510,9 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
                    sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
                    include_group_details: str = None, group_usage_types: str = None) -> Generator[ScimUser, None, None]:
         """
-        Same operation as search but returns a generator of ScimUsers instead of paginated resources
+        Same operation as search() but returns a generator of ScimUsers instead of paginated resources
+
+        See :meth:`SCIM2UsersApi.search` for parameter documentation
 
         :param org_id:
         :param filter:
