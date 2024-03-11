@@ -6,7 +6,8 @@ from pydantic import TypeAdapter, Field
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['BulkMethod', 'BulkOperation', 'BulkResponseOperation', 'BulkResponse', 'SCIM2BulkApi']
+__all__ = ['BulkMethod', 'BulkOperation', 'ResponseError', 'BulkErrorResponse', 'BulkResponseOperation',
+           'BulkResponse', 'SCIM2BulkApi']
 
 from wxc_sdk.scim.child import ScimApiChild
 
