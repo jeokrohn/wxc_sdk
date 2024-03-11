@@ -5459,7 +5459,29 @@ class AsOrganizationApi(AsApiChild, base='organizations'):
 
 class AsPeopleApi(AsApiChild, base='people'):
     """
-    People API
+    People
+
+        **As of January 2024, the Webex APIs have been fully upgraded to support the
+        industry-standard** :class:`SCIM2.0 <wxc_sdk.scim.ScimV2Api>`
+        **protocol, which is
+        used for user and group management, provisioning, and maintenance. Developers
+        are advised to use this API instead of the people API, due to its higher
+        performance and readily available connectors. Users created via SCIM can be
+        licensed using the /licenses API, even in large quantities, using
+        the new** :meth:`PATCH method <wxc_sdk.licenses.AsLicensesApi.assign_licenses_to_users>`.
+
+    People are registered users of Webex. Searching and viewing People requires an auth token with a
+    `scope <https://developer.webex.com/docs/integrations#scopes>`_
+    of `spark:people_read`. Viewing the list of all People in your organization requires an administrator auth token
+    with `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token
+    with the `spark-admin:people_write` and `spark-admin:people_read` scope.
+
+    A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
+
+    To learn more about managing people in a room see the :class:`Memberships API
+    <wxc_sdk.memberships.AsMembershipApi>`. For information about how to allocate Hybrid
+    Services licenses to people, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
 
     def list_gen(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
@@ -8780,6 +8802,19 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
         :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
         :type operations: list[BulkOperation]
         :rtype: :class:`BulkResponse`
+
+        Example:
+
+            .. code-block:: python
+
+                # bulk operations to create a bunch of users from a list of ScimUser instances
+                new_scim_users: list[ScimUser]
+                operations = [BulkOperation(method=BulkMethod.post, path='/Users',
+                                            bulk_id=str(uuid.uuid4()),
+                                            data=scim_user.create_update())
+                              for scim_user in new_scim_users]
+                bulk_response = self.api.scim.bulk.bulk_request(org_id=org_id, fail_on_errors=1,
+                                                                operations=operations)
         """
         body = dict()
         body['schemas'] = ['urn:ietf:params:scim:api:messages:2.0:BulkRequest']

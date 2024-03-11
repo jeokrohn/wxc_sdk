@@ -238,9 +238,32 @@ class TestScimCreate(TestWithScimToken):
         """
         new_user = (await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell']))[0]
         scim_user = self.scim_user_from_random_user(new_user)
-        created_user = self.api.scim.users.create(org_id=webex_id_to_uuid(self.me.org_id),
-                                                  user=scim_user)
+        api = self.api.scim.users
+        org_id = webex_id_to_uuid(self.me.org_id)
+        created_user = api.create(org_id=org_id,
+                                  user=scim_user)
         print(f'Created user: {created_user.display_name}({created_user.emails[0].value})')
+        details = api.details(org_id=org_id, user_id=created_user.id)
+        # when creating a user we get webex.meta while this seems to be missing from details
+
+        def print_meta(user):
+            if user is None:
+                print('  No webex user')
+            elif user.meta:
+                print('\n'.join(l for l in json.dumps(user.meta.model_dump(mode='json', by_alias=True,
+                                                                                              exclude_none=True),
+                                                      indent=2).splitlines()))
+            else:
+                print('  None')
+
+        print('webex.meta of created user:')
+        print_meta(created_user.webex_user)
+        print('webex.meta of details:')
+        print_meta(details.webex_user)
+
+        self.assertTrue(created_user.webex_user and details.webex_user, 'webex_user missing')
+        self.assertEqual(created_user.webex_user.meta, details.webex_user.meta)
+
 
     @skip('Creating multiple users seems to be broken')
     @async_test
@@ -279,23 +302,33 @@ class TestScimCreate(TestWithScimToken):
         """
         Create a bunch of users using bulk operations
         """
-        users_to_create = 10
+        users_to_create = 20
         org_id = webex_id_to_uuid(self.me.org_id)
         api = self.api.scim
         users_before = list(api.users.search_all(org_id=org_id))
         new_users = await random_users(api=self.async_api, user_count=users_to_create,
                                        inc=['name', 'location', 'phone', 'cell'])
         new_scim_users = list(map(self.scim_user_from_random_user, new_users))
+
+        # bulk operations to create a bunch of ScimUser instances
         operations = [BulkOperation(method=BulkMethod.post, path='/Users', bulk_id=str(uuid.uuid4()),
                                     data=scim_user.create_update())
                       for scim_user in new_scim_users]
-        print(f'Creatting {len(new_scim_users)} users')
-        bulk_response = api.bulk.bulk_request(org_id=org_id, fail_on_errors=1, operations=operations)
+        print(f'Creating {len(new_scim_users)} users')
+        bulk_response = self.api.scim.bulk.bulk_request(org_id=org_id, fail_on_errors=1, operations=operations)
         users_after = list(api.users.search_all(org_id=org_id))
-        self.assertTrue(all(o.status == 201 for o in bulk_response.operations))
-        self.assertTrue(all(o.user_id is not None for o in bulk_response.operations))
-        self.assertTrue(len(users_after) == users_to_create + len(users_before),
-                        f'before: {len(users_before)}, after: {len(users_after)}')
+        err = False
+        if not all(o.status == 201 for o in bulk_response.operations):
+            err = True
+            print(f'Some users not created. {sum(1 for o in bulk_response.operations if o.status != 201)} failed')
+        if not all(o.user_id is not None for o in bulk_response.operations if o.status==201):
+            err = True
+            print(f'Some user ids missing. '
+                  f'{sum(1 for o in bulk_response.operations if o.status==201 and not o.user_id)} missing')
+        if len(users_after) != users_to_create + len(users_before):
+            err = True
+            print(f'before: {len(users_before)}, after: {len(users_after)}')
+        self.assertFalse(err, 'Something went wrong; check output')
 
 
 @dataclass(init=False)

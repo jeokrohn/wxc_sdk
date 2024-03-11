@@ -143,6 +143,19 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
         :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
         :type operations: list[BulkOperation]
         :rtype: :class:`BulkResponse`
+
+        Example:
+
+            .. code-block:: python
+
+                # bulk operations to create a bunch of users from a list of ScimUser instances
+                new_scim_users: list[ScimUser]
+                operations = [BulkOperation(method=BulkMethod.post, path='/Users',
+                                            bulk_id=str(uuid.uuid4()),
+                                            data=scim_user.create_update())
+                              for scim_user in new_scim_users]
+                bulk_response = self.api.scim.bulk.bulk_request(org_id=org_id, fail_on_errors=1,
+                                                                operations=operations)
         """
         body = dict()
         body['schemas'] = ['urn:ietf:params:scim:api:messages:2.0:BulkRequest']
