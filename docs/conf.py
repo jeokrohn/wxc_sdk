@@ -95,7 +95,7 @@ html_static_path = ['_static']
 
 def skip_member(app, what, name, obj, skip, options):
     # skip doc creation for model_config and model_fields members; part of pydantic.BaseModel
-    if name in {'model_config', 'model_fields'}:
+    if name in {'model_config', 'model_fields', 'model_computed_fields'}:
         return True
     return None
 
