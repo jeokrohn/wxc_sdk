@@ -87,15 +87,25 @@ class CallerId(ApiModel):
     #: Location's caller ID. This field is read-only and cannot be modified.
     #: example: Hakim location
     location_external_caller_id_name: Optional[str] = None
+    #: To set the user's main number as additional external caller ID.
+    additional_external_caller_id_direct_line_enabled: Optional[bool] = None
+    #: To set the Location main number as additional external caller ID for the user.
+    additional_external_caller_id_location_number_enabled: Optional[bool] = None
+    #: To set any phone number across location as additional external caller ID for the user.
+    additional_external_caller_id_custom_number: Optional[str] = None
 
     fields_for_update: ClassVar[set[str]] = {
-            'selected',
-            'custom_number',
-            'first_name',
-            'last_name',
-            'external_caller_id_name_policy',
-            'block_in_forward_calls_enabled',
-            'custom_external_caller_id_name'}
+        'selected',
+        'custom_number',
+        'first_name',
+        'last_name',
+        'external_caller_id_name_policy',
+        'block_in_forward_calls_enabled',
+        'custom_external_caller_id_name',
+        'location_external_caller_id_name',
+        'additional_external_caller_id_direct_line_enabled',
+        'additional_external_caller_id_custom_number'
+    }
 
     def configure_params(self) -> dict:
         """

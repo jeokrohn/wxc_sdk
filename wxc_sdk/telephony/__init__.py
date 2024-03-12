@@ -7,7 +7,6 @@ from typing import Optional
 
 from pydantic import Field, TypeAdapter, field_validator
 
-from .access_codes import AccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
 from .call_recording import CallRecordingSettingsApi
@@ -443,6 +442,8 @@ class SupportedDevice(ApiModel):
     allow_configure_ports_enabled: Optional[bool] = None
     #: Enables / disables customizable line label.
     customizable_line_label_enabled: Optional[bool] = None
+    #: Supports touch screen on device.
+    touch_screen_phone: Optional[bool] = None
     supports_line_port_reordering_enabled: Optional[bool] = None
     port_number_support_enabled: Optional[bool] = None
     t38_enabled: Optional[bool] = None
@@ -461,8 +462,6 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
     """
-    #: access or authentication codes
-    access_codes: AccessCodesApi
     announcements_repo: AnnouncementsRepositoryApi
     auto_attendant: AutoAttendantApi
     #: location call intercept settings
@@ -497,7 +496,6 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
-        self.access_codes = AccessCodesApi(session=session)
         self.announcements_repo = AnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.call_intercept = LocationInterceptApi(session=session)

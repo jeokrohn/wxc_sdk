@@ -2,32 +2,338 @@
 Tests for outgoing permissions for locations, persons, workspaces, and virtual lines
 """
 import asyncio
+import json
 import random
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from functools import reduce
 from itertools import chain
+from operator import attrgetter
 from typing import ClassVar
+from unittest import skip
 
-from tests.base import TestCaseWithLog, TestWithLocations, async_test
+from tests.base import TestCaseWithLog, TestWithLocations, async_test, TestCaseWithUsers
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.common import OwnerType, IdAndName
+from wxc_sdk.as_api import AsDigitPatternsApi, AsWebexSimpleApi, AsOutgoingPermissionsApi
+from wxc_sdk.as_rest import AsRestError
+from wxc_sdk.common import OwnerType, IdAndName, AuthCodeLevel
+from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
-from wxc_sdk.person_settings.permissions_out import DigitPattern, Action
+from wxc_sdk.person_settings.permissions_out import DigitPattern, Action, OutgoingPermissionsApi
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OriginatorType, DestinationType
+from wxc_sdk.telephony.virtual_line import VirtualLine
+from wxc_sdk.workspaces import Workspace, CallingType
 
 
-class TestOutgoingPermissions(TestWithLocations):
+@dataclass(init=False)
+class PermissionsTest(TestWithLocations, TestCaseWithUsers):
+    """
+    Base class for test cases related to outgoing permissions
+    make sure we have calling locations, persons, calling workspaces, and virtual lines ready to test
+    """
+
+    workspaces: ClassVar[list[Workspace]]
+    virtual_lines: ClassVar[list[VirtualLine]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        async def setup():
+            async with AsWebexSimpleApi(tokens=cls.api.session.access_token) as api:
+                cls.workspaces, cls.virtual_lines = await asyncio.gather(api.workspaces.list(),
+                                                                         api.telephony.virtual_lines.list())
+            # find calling workspaces
+            cls.workspaces = [ws for ws in cls.workspaces
+                              if ws.calling and ws.calling.type == CallingType.webex]
+
+        asyncio.run(setup())
+
+    def setUp(self) -> None:
+        if not all((self.workspaces, self.virtual_lines)):
+            self.skipTest('No workspaces or virtual lines')
+        super().setUp()
+
+
+class TestOutgoingPermissions(PermissionsTest):
+    """
+    Test reading/writing outgoing permission settings for locations, users, workspaces, virtual lines
+    """
+
+    @staticmethod
+    def read(entity: str, entity_id: str, api: OutgoingPermissionsApi):
+        permissions = api.read(entity_id=entity_id)
+        print(f'Outgoing permissions for {entity}/{entity_id}:')
+        print(json.dumps(permissions.model_dump(), indent=2))
 
     def test_location_read(self):
-        target_location = random.choice(self.locations)
-        self.api.telephony.permissions_out.read(person_id=target_location.location_id)
+        """
+        Read outgoing permissions for random location
+        """
+        target = random.choice(self.locations)
+        target: Location
+        self.read(entity=f'location "{target.name}"/{target.location_id}',
+                  entity_id=target.location_id,
+                  api=self.api.telephony.permissions_out)
+
+    def test_user_read(self):
+        """
+        Read outgoing permissions for random user
+        """
+        target = random.choice(self.users)
+        target: Person
+        self.read(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+                  entity_id=target.person_id,
+                  api=self.api.person_settings.permissions_out)
+
+    def test_workspace_read(self):
+        """
+        Read outgoing permissions for random workspace
+        """
+        target = random.choice(self.workspaces)
+        target: Workspace
+        self.read(entity=f'Workspace {target.display_name}/{target.workspace_id}',
+                  entity_id=target.workspace_id,
+                  api=self.api.workspace_settings.permissions_out)
+
+    def test_virtual_line_read(self):
+        """
+        Read outgoing permissions for random virtual line
+        """
+        target = random.choice(self.virtual_lines)
+        target: VirtualLine
+        self.read(entity=f'Virtual Line {target.display_name}/{target.id}',
+                  entity_id=target.id,
+                  api=self.api.telephony.virtual_lines.permissions_out)
 
     def test_location_update(self):
         ...
 
 
-class TestDigitPatterns(TestWithLocations):
+class TestAccessCodes(PermissionsTest):
+    """
+    Tests for outgoing permissions access codes
+    + read access codes
+    + create access codes
+    * create duplicate access codes
+    * check maximum number of access codes
+    * modify access codes
+    * delete access codes
+    * clear all test access codes
+    """
+
+    @staticmethod
+    def read(entity: str, entity_id: str, api: OutgoingPermissionsApi):
+        codes = api.access_codes.read(entity_id=entity_id)
+        print(f'Access codes for {entity}/{entity_id}:')
+        print(json.dumps(codes.model_dump(mode='json'), indent=2))
+
+    def test_location_read(self):
+        """
+        Read access codes for random location
+        """
+        target = random.choice(self.locations)
+        target: Location
+        self.read(entity=f'location "{target.name}"/{target.location_id}',
+                  entity_id=target.location_id,
+                  api=self.api.telephony.permissions_out)
+
+    def test_user_read(self):
+        """
+        Read access codes for random user
+        """
+        target = random.choice(self.users)
+        target: Person
+        self.read(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+                  entity_id=target.person_id,
+                  api=self.api.person_settings.permissions_out)
+
+    def test_workspace_read(self):
+        """
+        Read access codes for random workspace
+        """
+        target = random.choice(self.workspaces)
+        target: Workspace
+        self.read(entity=f'Workspace {target.display_name}/{target.workspace_id}',
+                  entity_id=target.workspace_id,
+                  api=self.api.workspace_settings.permissions_out)
+
+    def test_virtual_line_read(self):
+        """
+        Read access codes for random virtual line
+        """
+        target = random.choice(self.virtual_lines)
+        target: VirtualLine
+        self.read(entity=f'Virtual Line {target.display_name}/{target.id}',
+                  entity_id=target.id,
+                  api=self.api.telephony.virtual_lines.permissions_out)
+
+    def create(self, entity: str, entity_id: str, api: OutgoingPermissionsApi):
+        codes = api.access_codes.read(entity_id=entity_id)
+        existing = set(ac.code for ac in codes.access_codes)
+        new_codes = (code for i in range(9000, 10000)
+                     if (code := f'{i}') not in existing)
+
+        # create new code
+        new_code = next(new_codes)
+        print(f'{entity}/{entity_id}: creating access code {new_code}')
+        api.access_codes.create(entity_id=entity_id, code=new_code,
+                                description=f'test_{new_code}')
+
+        # verify that the code exists
+        codes_after = api.access_codes.read(entity_id=entity_id)
+        created_code = next((ac for ac in codes_after.access_codes if ac.code == new_code), None)
+        self.assertIsNotNone(created_code, 'access code not created')
+        if 'location' in entity.lower():
+            self.assertIsNone(created_code.level)
+        else:
+            self.assertEqual(AuthCodeLevel.custom, created_code.level)
+
+        # try to remove access code again
+        api.access_codes.modify(entity_id=entity_id, delete_codes=[created_code])
+        codes_after = api.access_codes.read(entity_id=entity_id)
+        created_code = next((ac for ac in codes_after.access_codes if ac.code == new_code), None)
+        self.assertIsNone(created_code, 'access code still there')
+
+    def test_location_create(self):
+        """
+        create access code for random location
+        """
+        target = random.choice(self.locations)
+        target: Location
+        self.create(entity=f'location "{target.name}"/{target.location_id}',
+                    entity_id=target.location_id,
+                    api=self.api.telephony.permissions_out)
+
+    def test_user_create(self):
+        """
+        create access code for random user
+        """
+        target = random.choice(self.users)
+        target: Person
+        self.create(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+                    entity_id=target.person_id,
+                    api=self.api.person_settings.permissions_out)
+
+    def test_workspace_create(self):
+        """
+        create access code for random workspace
+        """
+        target = random.choice(self.workspaces)
+        target: Workspace
+        self.create(entity=f'Workspace {target.display_name}/{target.workspace_id}',
+                    entity_id=target.workspace_id,
+                    api=self.api.workspace_settings.permissions_out)
+
+    def test_virtual_line_create(self):
+        """
+        create access code for random virtual line
+        """
+        target = random.choice(self.virtual_lines)
+        target: VirtualLine
+        self.create(entity=f'Virtual Line {target.display_name}/{target.id}',
+                    entity_id=target.id,
+                    api=self.api.telephony.virtual_lines.permissions_out)
+
+    async def create_check_1000(self, entity: str, entity_id: str, api: AsOutgoingPermissionsApi):
+        """
+        Try to create 1001 access codes and check that we get a proper error
+        """
+        self.skipTest('Skip to protect the backend')
+        print(f'target for access code creation: {entity}')
+
+        access_codes = await api.access_codes.read(entity_id=entity_id)
+        existing = set(c.code for c in access_codes.access_codes)
+        new_codes = (p for i in range(8000, 10000) if (p := str(i)) not in existing)
+
+        # we want to check that we can create 500 patterns and get an error on the 501st
+        codes_to_create = [next(new_codes) for _ in range(1001 - len(existing))]
+        tasks = [api.access_codes.create(entity_id=entity_id, code=code, description=f'test_{code}')
+                 for code in codes_to_create]
+        print(f'Creating {len(codes_to_create)} access codes')
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        failed = [(code, result)
+                  for code, result in zip(codes_to_create, results)
+                  if isinstance(result, Exception)]
+        try:
+            self.assertEqual(1, len(failed), f'Failed to create {len(failed)} access codes')
+            # try to add the failed pattern again
+            code = failed[0][0]
+            with self.assertRaises(AsRestError) as exc:
+                await api.access_codes.create(entity_id=entity_id, code=code, description=f'test_{code}')
+            rest_error: AsRestError = exc.exception
+            self.assertEqual(502, rest_error.status, 'Invalid status code')
+        finally:
+            # delete access codes again
+            if True:
+                await api.access_codes.modify(entity_id=entity_id, delete_codes=[code for code in codes_to_create])
+
+        # find the error response
+        failed_request = next((request
+                               for request in self.requests(method='POST',
+                                                            url_filter='.+/accessCodes')
+                               if request.status != 201),
+                              None)
+        self.assertIsNotNone(failed_request, 'No failed request found')
+
+        print(failed_request.record.message)
+
+        # error detail should be proper JSON
+        error = failed[0][1]
+        # noinspection PyUnresolvedReferences
+        self.assertTrue(not isinstance(error.detail, str), 'invalid JSON in 502')
+
+        # finally, the number of patterns should be the same as before
+        after = await api.access_codes.read(entity_id=entity_id)
+        self.assertEqual(len(access_codes.access_codes), len(after.access_codes),
+                         'Number of access codes changed')
+
+    @async_test
+    async def test_location_create_1000(self):
+        """
+        create access code for random location
+        """
+        target = random.choice(self.locations)
+        target: Location
+        await self.create_check_1000(entity=f'location "{target.name}"/{target.location_id}',
+                                     entity_id=target.location_id,
+                                     api=self.async_api.telephony.permissions_out)
+
+    @async_test
+    async def test_user_create_1000(self):
+        """
+        create access code for random user
+        """
+        target = random.choice(self.users)
+        target: Person
+        await self.create_check_1000(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+                                     entity_id=target.person_id,
+                                     api=self.async_api.person_settings.permissions_out)
+
+    @async_test
+    async def test_workspace_create_1000(self):
+        """
+        create access code for random workspace
+        """
+        target = random.choice(self.workspaces)
+        target: Workspace
+        await self.create_check_1000(entity=f'Workspace {target.display_name}/{target.workspace_id}',
+                                     entity_id=target.workspace_id,
+                                     api=self.async_api.workspace_settings.permissions_out)
+
+    @async_test
+    async def test_virtual_line_create_1000(self):
+        """
+        create access code for random virtual line
+        """
+        target = random.choice(self.virtual_lines)
+        target: VirtualLine
+        await self.create_check_1000(entity=f'Virtual Line {target.display_name}/{target.id}',
+                                     entity_id=target.id,
+                                     api=self.async_api.telephony.virtual_lines.permissions_out)
+
+
+class TestDigitPatterns(PermissionsTest):
     @async_test
     async def test_location_list(self):
         """
@@ -68,22 +374,19 @@ class TestDigitPatterns(TestWithLocations):
         print(f'Tried to create {new_pattern} in {target_location.name}')
         self.assertIn(new_pattern, (p.pattern for p in after.digit_patterns))
 
-    @async_test
-    async def test_location_create_check_500(self):
+    async def create_check_500(self, entity: str, entity_id: str, api: AsDigitPatternsApi):
         """
         Try to create 501 patterns and check that we get a proper error
         """
-        target_location = random.choice(self.locations)
-        print(f'Location: {target_location.name}')
+        print(f'target for pattern creation: {entity}')
 
-        api = self.async_api.telephony.permissions_out.digit_patterns
-        patterns = await api.get_digit_patterns(entity_id=target_location.location_id)
+        patterns = await api.get_digit_patterns(entity_id=entity_id)
         existing = set(p.pattern for p in patterns.digit_patterns)
         new_patterns = (p for i in range(1000) if (p := f'9{i:03}') not in existing)
 
         # we want to check that we can create 500 patterns and get an error on the 501st
         patterns_to_create = [next(new_patterns) for _ in range(501 - len(existing))]
-        tasks = [api.create(entity_id=target_location.location_id,
+        tasks = [api.create(entity_id=entity_id,
                             pattern=DigitPattern(name=f'test_{pattern}', pattern=pattern, action=Action.block,
                                                  transfer_enabled=False))
                  for pattern in patterns_to_create]
@@ -94,11 +397,20 @@ class TestDigitPatterns(TestWithLocations):
                   if isinstance(result, Exception)]
         try:
             self.assertEqual(1, len(failed), f'Failed to create {len(failed)} patterns')
+            # try to add the failed pattern again
+            pattern = failed[0][0]
+            with self.assertRaises(AsRestError) as exc:
+                await api.create(entity_id=entity_id,
+                                 pattern=DigitPattern(name=f'test_{pattern}', pattern=pattern, action=Action.block,
+                                                      transfer_enabled=False))
+            rest_error: AsRestError = exc.exception
+            self.assertEqual(502, rest_error.status, 'Invalid status code')
         finally:
             # delete patterns again
-            await asyncio.gather(*[api.delete(entity_id=target_location.location_id, digit_pattern_id=dp_id)
-                                   for dp_id in results
-                                   if not isinstance(dp_id, Exception)])
+            if False:
+                await asyncio.gather(*[api.delete(entity_id=target_location.location_id, digit_pattern_id=dp_id)
+                                       for dp_id in results
+                                       if not isinstance(dp_id, Exception)])
 
         # find the error response
         failed_request = next((request
@@ -116,8 +428,59 @@ class TestDigitPatterns(TestWithLocations):
         self.assertTrue(not isinstance(error.detail, str), 'invalid JSON in 502')
 
         # finally, the number of patterns should be the same as before
-        after = await api.get_digit_patterns(entity_id=target_location.location_id)
+        after = await api.get_digit_patterns(entity_id=entity_id)
         self.assertEqual(len(patterns.digit_patterns), len(after.digit_patterns), 'Number of patterns changed')
+
+    @async_test
+    async def test_location_create_check_500(self):
+        """
+        Try to create 501 patterns in location and check that we get a proper error
+        """
+        target_location = random.choice(self.locations)
+        entity = f'Location: {target_location.name}'
+        await self.create_check_500(entity=entity, entity_id=target_location.location_id,
+                                    api=self.async_api.telephony.permissions_out.digit_patterns)
+
+    @async_test
+    async def test_user_create_check_500(self):
+        """
+        Try to create 501 patterns for random user and check that we get a proper error
+        """
+        target_user = random.choice(self.users)
+        target_user: Person
+        entity = f'User: {target_user.display_name} ({target_user.emails[0]})'
+        await self.create_check_500(entity=entity, entity_id=target_user.person_id,
+                                    api=self.async_api.person_settings.permissions_out.digit_patterns)
+
+    # @skip('Virtual lines don\'t have outgoing permissions yet')
+    @async_test
+    async def test_virtual_line_create_check_500(self):
+        """
+        Try to create 501 patterns for random virtual line and check that we get a proper error
+        """
+        virtual_lines = list(self.api.telephony.virtual_lines.list())
+        if not virtual_lines:
+            self.skipTest('No virtual lines found')
+        target_vl = random.choice(virtual_lines)
+        target_vl: VirtualLine
+        entity = f'Virtual Line: {target_vl.display_name} in location "{target_vl.location.name}"'
+        await self.create_check_500(entity=entity, entity_id=target_vl.id,
+                                    api=self.async_api.telephony.virtual_lines.permissions_out.digit_patterns)
+
+    @async_test
+    async def test_workspace_create_check_500(self):
+        """
+        Try to create 501 patterns for random workspace and check that we get a proper error
+        """
+        workspaces = [ws for ws in self.api.workspaces.list()
+                      if ws.calling and ws.calling.type == CallingType.webex]
+        if not workspaces:
+            self.skipTest('No calling workspaces found')
+        target_ws = random.choice(workspaces)
+        target_ws: Workspace
+        entity = f'Workspace: {target_ws.display_name}"'
+        await self.create_check_500(entity=entity, entity_id=target_ws.workspace_id,
+                                    api=self.async_api.workspace_settings.permissions_out.digit_patterns)
 
     @async_test
     async def test_location_delete_all(self):
@@ -160,30 +523,29 @@ class TestDigitPatterns(TestWithLocations):
             self.assertEqual(len(patterns.digit_patterns), len(after_restore.digit_patterns),
                              'Number of patterns after restore')
 
+    @skip('Keep test patterns for now')
     @async_test
-    async def test_location_delete_all_test_patterns(self):
-        """
-        Delete all test_ patterns in all locations
-        """
-        # get digit patterns of all locations
-        api = self.async_api.telephony.permissions_out.digit_patterns
-        location_patterns = await asyncio.gather(*[api.get_digit_patterns(entity_id=loc.location_id)
-                                                   for loc in self.locations],
-                                                 return_exceptions=True)
+    async def test_delete_all_patterns(self):
+        async def delete_all_xx(*, id_list: list[str], api: AsOutgoingPermissionsApi):
+            patterns_list = await asyncio.gather(*[api.digit_patterns.get_digit_patterns(id) for id in id_list])
+            id_and_pattern = list(chain.from_iterable(((id, pattern.id)
+                                                       for pattern in patterns.digit_patterns
+                                                       if pattern.name.startswith('test_'))
+                                                      for id, patterns in zip(id_list, patterns_list)))
+            print(f'Delete {len(id_and_pattern)} patterns')
+            await asyncio.gather(*[api.digit_patterns.delete(id, pattern_id)
+                                   for id, pattern_id in id_and_pattern],
+                                 return_exceptions=True)
+            ...
 
-        # get location id and pattern id for all patterns that start with 'test_'
-        location_and_pattern = list(chain.from_iterable(
-            ((location.location_id, p.id) for p in patterns.digit_patterns if p.name.startswith('test_'))
-            for location, patterns in zip(self.locations, location_patterns)))
-        print(f'deleting {len(location_and_pattern)} patterns')
-
-        # delete all test patterns
-        results = await asyncio.gather(*[api.delete(entity_id=loc_id, digit_pattern_id=pattern_id)
-                                         for loc_id, pattern_id in location_and_pattern],
-                                       return_exceptions=True)
-        err = next((r for r in results if isinstance(r, Exception)), None)
-        if err:
-            raise err
+        location_ids = list(map(attrgetter('location_id'), self.locations))
+        user_ids = list(map(attrgetter('person_id'), self.users))
+        vl_ids = list(map(attrgetter('id'), self.virtual_lines))
+        ws_ids = list(map(attrgetter('workspace_id'), self.workspaces))
+        await asyncio.gather(delete_all_xx(id_list=location_ids, api=self.async_api.telephony.permissions_out),
+                             delete_all_xx(id_list=user_ids, api=self.async_api.person_settings.permissions_out),
+                             delete_all_xx(id_list=vl_ids, api=self.async_api.telephony.virtual_lines.permissions_out),
+                             delete_all_xx(id_list=ws_ids, api=self.async_api.workspace_settings.permissions_out))
 
 
 @dataclass
@@ -199,7 +561,7 @@ class TestUser:
         self.user = api.people.details(person_id=self.id)
 
 
-@dataclass
+@dataclass(init=False)
 class TestBetweenUsers(TestCaseWithLog):
     location: ClassVar[IdAndName]
     user_a: ClassVar[TestUser]
@@ -288,7 +650,7 @@ class TestBetweenUsers(TestCaseWithLog):
     def block_b_at_user_a(self, block: bool = True):
         # block B's extension at user A
         print(f'Blocking B\'s extension ({self.user_b.extension}) at user A')
-        pattern_id = self.api.telephony.permissions_out.digit_patterns.create(
+        pattern_id = self.api.person_settings.permissions_out.digit_patterns.create(
             entity_id=self.user_a.id,
             pattern=DigitPattern(name=f'test_b_{self.user_b.extension}',
                                  pattern=self.user_b.extension,
@@ -299,8 +661,8 @@ class TestBetweenUsers(TestCaseWithLog):
         finally:
             # unblock B's extension at the user level
             print(f'Unblocking B\'s extension ({self.user_b.extension}) at user A')
-            self.api.telephony.permissions_out.digit_patterns.delete(entity_id=self.user_a.id,
-                                                                     digit_pattern_id=pattern_id)
+            self.api.person_settings.permissions_out.digit_patterns.delete(entity_id=self.user_a.id,
+                                                                           digit_pattern_id=pattern_id)
 
 
 class TestCallRouting(TestBetweenUsers):

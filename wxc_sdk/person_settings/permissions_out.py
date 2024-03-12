@@ -21,7 +21,7 @@ from ..rest import RestSession
 
 __all__ = ['OutgoingPermissionCallType', 'Action', 'CallTypePermission', 'CallingPermissions',
            'OutgoingPermissions', 'AutoTransferNumbers', 'DigitPattern', 'DigitPatterns', 'DigitPatternsApi',
-           'TransferNumbersApi', 'AccessCodesApi', 'OutgoingPermissionsApi']
+           'TransferNumbersApi', 'AuthCodes', 'AccessCodesApi', 'OutgoingPermissionsApi']
 
 
 class OutgoingPermissionCallType(str, Enum):
@@ -60,7 +60,7 @@ class CallTypePermission(ApiModel):
     """
     #: Action on the given call_type.
     action: Action
-    #: Allow the person to transfer or forward a call of the specified call type.
+    #: Allow to transfer or forward a call of the specified call type.
     transfer_enabled: bool
 
     @staticmethod
@@ -165,10 +165,13 @@ class CallingPermissions(ApiModel):
 
 class OutgoingPermissions(ApiModel):
     """
-    Person's Outgoing Permission Settings
+    Outgoing Permission Settings
     """
-    #: When true, indicates that this user uses the specified calling permissions when placing outbound calls.
+    #: When true, indicates that this user uses the shared control that applies to all outgoing call settings
+    #: categories when placing outbound calls.
     use_custom_enabled: Optional[bool] = None
+    #: When true, indicates that this user uses the specified outgoing calling permissions when placing outbound calls.
+    use_custom_permissions: Optional[bool] = None
     #: Specifies the outbound calling permissions settings.
     calling_permissions: Optional[CallingPermissions] = None
 
@@ -309,53 +312,60 @@ class TransferNumbersApi(PersonSettingsApiChild):
     """
     feature = 'outgoingPermission/autoTransferNumbers'
 
-    def read(self, person_id: str, org_id: str = None) -> AutoTransferNumbers:
+    def read(self, entity_id: str, org_id: str = None) -> AutoTransferNumbers:
         """
-        Retrieve Transfer Numbers Settings for a Workspace.
+        Retrieve Transfer Numbers Settings .
 
-        When calling a specific call type, this workspace will be automatically transferred to another number. The
+        When calling a specific call type, this entity will be automatically transferred to another number. The
         person assigned the Auto Transfer Number can then approve the call and send it through or reject the call
         type. You can add up to 3 numbers.
 
         This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
-        a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        a user auth token with spark:workspaces_read scope can be used to read entity settings.
 
-        :param person_id: Unique identifier for the workspace.
-        :type person_id: str
-        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: auto transfer numbers
         :rtype: :class:`AutoTransferNumbers`
         """
-        url = self.f_ep(person_id=person_id)
+        url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url, params=params)
         return AutoTransferNumbers.model_validate(data)
 
-    def configure(self, person_id: str, settings: AutoTransferNumbers, org_id: str = None):
+    def configure(self, entity_id: str, settings: AutoTransferNumbers, org_id: str = None):
         """
         Modify Transfer Numbers Settings for a Place.
 
-        When calling a specific call type, this workspace will be automatically transferred to another number.
+        When calling a specific call type, this entity will be automatically transferred to another number.
         The person assigned the Auto Transfer Number can then approve the call and send it through or reject the
         call type. You can add up to 3 numbers.
 
         This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
-        user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        user auth token with spark:workspaces_write scope can be used to update entity settings.
 
-        :param person_id: Unique identifier for the workspace.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: new auto transfer numbers
         :type settings: :class:`AutoTransferNumbers`
-        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        url = self.f_ep(person_id=person_id)
+        url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         body = settings.model_dump_json()
         self.put(url, params=params, data=body)
+
+
+class AuthCodes(ApiModel):
+    #: When `true`, use custom settings for the access codes category of outgoing call permissions.
+    use_custom_access_codes: Optional[bool] = None
+    #: Indicates the set of activation codes and description.
+    access_codes: Optional[list[AuthCode]] = None
 
 
 class AccessCodesApi(PersonSettingsApiChild):
@@ -364,78 +374,115 @@ class AccessCodesApi(PersonSettingsApiChild):
     """
     feature = 'outgoingPermission/accessCodes'
 
-    def read(self, workspace_id: str, org_id: str = None) -> list[AuthCode]:
+    def read(self, entity_id: str, org_id: str = None) -> AuthCodes:
         """
-        Retrieve Access codes for a Workspace.
+        Retrieve Access codes.
 
         Access codes are used to bypass permissions.
 
         This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
-        a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        a user auth token with spark:workspaces_read scope can be used to read entity settings.
 
-        :param workspace_id: Unique identifier for the workspace.
-        :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
-        :return: list of access codes
-        :rtype: list of :class:`AuthCode`
+        :return: authorization codes
+        :rtype: :class:`AuthCodes`
         """
-        url = self.f_ep(person_id=workspace_id)
+        url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url, params=params)
-        return TypeAdapter(list[AuthCode]).validate_python(data['accessCodes'])
+        return AuthCodes.model_validate(data)
 
-    def delete_codes(self, workspace_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
+    def modify(self, entity_id: str, use_custom_access_codes: bool = None,
+               delete_codes: list[Union[str, AuthCode]] = None, org_id: str = None):
         """
-        Modify Access codes for a workspace.
+        Modify Access Codes
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
-        user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator or location administrator auth token with
+        the `spark-admin:telephony_config_write` scope.
 
-        :param workspace_id: Unique identifier for the workspace.
-        :type workspace_id: str
-        :param access_codes: authorization codes to remove
-        :type access_codes: list[str]
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the token
-            used to access API.
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param use_custom_access_codes: When `true`, use custom settings for the access codes category of outgoing call
+            permissions.
+        :type use_custom_access_codes: bool
+        :param delete_codes: Indicates access codes to delete.
+        :type delete_codes: list[str]
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
         :type org_id: str
+        :rtype: None
         """
-        url = self.f_ep(person_id=workspace_id)
+        url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
-        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
-                                for ac in access_codes]}
-        self.put(url, params=params, json=body)
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if use_custom_access_codes is not None:
+            body['useCustomAccessCodes'] = use_custom_access_codes
+        if delete_codes is not None:
+            body['deleteCodes'] = [ac.code if isinstance(ac, AuthCode) else ac
+                                   for ac in delete_codes]
+        super().put(url, params=params, json=body)
 
-    def create(self, workspace_id: str, code: str, description: str, org_id: str = None):
+    def create(self, entity_id: str, code: str, description: str, org_id: str = None):
         """
-        Create new Access codes for the given workspace.
+        Create new Access codes.
 
         Access codes are used to bypass permissions.
 
         This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
         user auth token with spark:workspaces_write scope can be used to update workspace settings.
 
-        :param workspace_id: Unique identifier for the workspace.
-        :type workspace_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param code: Indicates an access code.
         :type code: str
         :param description: Indicates the description of the access code.
         :type description: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
         """
-        url = self.f_ep(person_id=workspace_id)
+        url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         body = {'code': code,
                 'description': description}
         self.post(url, params=params, json=body)
+
+    def delete(self, entity_id: str, org_id: str = None):
+        """
+        Delete Access Code
+
+        Deletes all Access codes for the given entity.
+
+        Access codes are used to bypass permissions.
+
+        This API requires a full or user administrator or location administrator auth token with the
+        `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
+        update entity settings.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        super().delete(url, params=params)
 
 
 class DigitPatternsApi(PersonSettingsApiChild):
@@ -446,7 +493,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
         """
         Retrieve Digit Patterns
 
-        Retrieve the person's digit patterns.
+        Retrieve digit patterns.
 
         Digit patterns are used to bypass permissions.
 
@@ -462,7 +509,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
         :rtype: :class:`UserOutgoingPermissionDigitPatternGetListObject`
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.f_ep(person_id=entity_id)
+        url = self.f_ep(entity_id)
         data = super().get(url, params=params)
         r = DigitPatterns.model_validate(data)
         return r
@@ -470,9 +517,9 @@ class DigitPatternsApi(PersonSettingsApiChild):
     def details(self, entity_id: str, digit_pattern_id: str,
                 org_id: str = None) -> DigitPattern:
         """
-        Retrieve Digit Pattern Details for a Person
+        Retrieve Digit Pattern Details
 
-        Retrieve the digit pattern details for a person.
+        Retrieve the digit pattern details.
 
         Digit patterns are used to bypass permissions.
 
@@ -490,16 +537,16 @@ class DigitPatternsApi(PersonSettingsApiChild):
         :rtype: :class:`UserDigitPatternObject`
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.f_ep(person_id=entity_id, path=digit_pattern_id)
+        url = self.f_ep(entity_id, path=digit_pattern_id)
         data = super().get(url, params=params)
         r = DigitPattern.model_validate(data)
         return r
 
     def create(self, entity_id: str, pattern: DigitPattern, org_id: str = None) -> str:
         """
-        Create Digit Patterns for a Person
+        Create Digit Patterns
 
-        Create new digit pattern for the given person.
+        Create new digit pattern.
 
         Digit patterns are used to bypass permissions.
 
@@ -518,7 +565,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
         """
         params = org_id and {'orgId': org_id} or None
         body = pattern.create_or_update()
-        url = self.f_ep(person_id=entity_id)
+        url = self.f_ep(entity_id)
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -527,7 +574,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
                                          use_custom_digit_patterns: bool = None,
                                          org_id: str = None):
         """
-        Modify the Digit Pattern Category Control Settings for the Entity
+        Modify the Digit Pattern Category Control Settings for the entity
 
         Modifies whether this user uses the specified digit patterns when placing outbound calls or not.
 
@@ -549,14 +596,14 @@ class DigitPatternsApi(PersonSettingsApiChild):
         body = dict()
         if use_custom_digit_patterns is not None:
             body['useCustomDigitPatterns'] = use_custom_digit_patterns
-        url = self.f_ep(person_id=entity_id)
+        url = self.f_ep(entity_id)
         super().put(url, params=params, json=body)
 
     def update(self, entity_id: str, settings: DigitPattern, org_id: str = None):
         """
-        Modify a Digit Pattern for the Entity
+        Modify Digit Patterns
 
-        Modify Digit Patterns for a Entity.
+        Modify Digit Patterns
 
         Digit patterns are used to bypass permissions.
 
@@ -575,14 +622,14 @@ class DigitPatternsApi(PersonSettingsApiChild):
         """
         params = org_id and {'orgId': org_id} or None
         body = settings.create_or_update()
-        url = self.f_ep(person_id=entity_id, path=settings.id)
+        url = self.f_ep(entity_id, path=settings.id)
         super().put(url, params=params, json=body)
 
     def delete(self, entity_id: str, digit_pattern_id: str, org_id: str = None):
         """
-        Delete a Digit Pattern for the Entity
+        Delete a Digit Pattern
 
-        Delete Digit Pattern for a Entity.
+        Delete Digit Pattern.
 
         Digit patterns are used to bypass permissions.
 
@@ -600,12 +647,12 @@ class DigitPatternsApi(PersonSettingsApiChild):
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.f_ep(person_id=entity_id, path=digit_pattern_id)
+        url = self.f_ep(entity_id, path=digit_pattern_id)
         super().delete(url, params=params)
 
     def delete_all(self, entity_id: str, org_id: str = None):
         """
-        Delete all Digit Patterns for a Entity.
+        Delete all Digit Patterns.
 
         Digit patterns are used to bypass permissions.
 
@@ -621,16 +668,16 @@ class DigitPatternsApi(PersonSettingsApiChild):
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.f_ep(person_id=entity_id)
+        url = self.f_ep(entity_id)
         super().delete(url, params=params)
 
 
 @dataclass(init=False)
 class OutgoingPermissionsApi(PersonSettingsApiChild):
     """
-    API for person's outgoing permissions settings
+    API for outgoing permissions settings
 
-    Also used for workspace, location, and virtual line outgoing permissions
+    Also used for user, workspace, location, and virtual line outgoing permissions
     """
     transfer_numbers: TransferNumbersApi
     access_codes: AccessCodesApi
@@ -641,55 +688,52 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
     def __init__(self, *, session: RestSession,
                  selector: ApiSelector = 'person'):
         super().__init__(session=session, selector=selector)
-        if selector == ApiSelector.virtual_line:
-            # Virtual Lines for now don't have any of the additional features
-            return
         self.transfer_numbers = TransferNumbersApi(session=session, selector=selector)
         self.access_codes = AccessCodesApi(session=session, selector=selector)
         self.digit_patterns = DigitPatternsApi(session=session, selector=selector)
 
-    def read(self, person_id: str, org_id: str = None) -> OutgoingPermissions:
+    def read(self, entity_id: str, org_id: str = None) -> OutgoingPermissions:
         """
-        Retrieve a Person's Outgoing Calling Permissions Settings
+        Retrieve Outgoing Calling Permissions Settings
 
         You can change the outgoing calling permissions for a person if you want them to be different from your
         organization's default.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the entity.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: outgoing permission settings for specific user
         :rtype: :class:`OutgoingPermissions`
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         return OutgoingPermissions.model_validate(self.get(ep, params=params))
 
-    def configure(self, person_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None,
+    def configure(self, entity_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None,
                   org_id: str = None):
         """
-        Configure a Person's Outgoing Calling Permissions Settings
+        Configure Outgoing Calling Permissions Settings
 
-        Turn on outgoing call settings for this person to override the calling settings from the location that are
+        Turn on outgoing call settings for this entity to override the calling settings from the location that are
         used by default.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their own settings.
 
-        :param person_id: Unique identifier for the entity.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: new setting to be applied
         :type settings: :class:`OutgoingPermissions`
         :param drop_call_types: set of call type names to be excluded from updates. Default is the set of call_types
             known to be not supported for updates
         :type drop_call_types: set[str]
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         self.put(ep, params=params, data=settings.model_dump_json(drop_call_types=drop_call_types))

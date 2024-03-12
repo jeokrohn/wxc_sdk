@@ -76,10 +76,13 @@ class WebexUser(ApiModel):
     sip_addresses: Optional[list[SipAddressObject]] = None
     #: Organizations that the user can manage.
     managed_orgs: Optional[list[ManagedOrg]] = None
+
     # TODO: missing doc
     provision_source: Optional[str] = None
     is_teams_on_jabber_enabled: Optional[bool] = None
     is_uc_call_on_jabber_enabled: Optional[bool] = Field(alias='isUCCallOnJabberEnabled', default=None)
+    user_settings: Optional[str] = None
+
     # TODO: only returned as result of create() but not even in details() ?
     meta: Optional[WebexUserMeta] = None
 
@@ -271,7 +274,10 @@ class ScimUser(ApiModel):
     #: The Cisco extension of SCIM 2.
     webex_user: Optional[WebexUser] = Field(
         alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+
+    # TODO: undocumented
     meta: Optional[ScimMeta] = None
+    entitlements: Optional[list[dict]] = None
 
     def create_update(self) -> dict:
         """

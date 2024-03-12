@@ -2,7 +2,6 @@ import asyncio
 import json
 import time
 from collections.abc import Generator
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from itertools import chain
@@ -305,7 +304,7 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         outgoing_calling_permissions_list = await asyncio.gather(
-            *[api.permissions_out.read(person_id=vl.id) for vl in virtual_lines],
+            *[api.permissions_out.read(entity_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
         for vl, outgoing_calling_permissions in zip(virtual_lines, outgoing_calling_permissions_list):
@@ -594,7 +593,7 @@ class TestUpdate(TestWithTemporaryVirtualLine):
 
     def test_read_outgoing_permissions_and_check_allow_extra_permission(self):
         api = self.api.telephony.virtual_lines.permissions_out
-        api.read(person_id=self.target.id)
+        api.read(entity_id=self.target.id)
 
         # get the request
         request = next(self.requests(method='GET', url_filter=r'.+/outgoingPermission$'))

@@ -65,6 +65,7 @@ class AuditEventData(ApiModel):
     action_client_name: Optional[Any] = None
     actor_client_id: Optional[Any] = None
     actor_client_name: Optional[Any] = None
+    added_pattern: Optional[Any] = None
     attributes: Optional[Any] = None
     authorized_status: Optional[Any] = None
     capacity: Optional[Any] = None
@@ -74,6 +75,8 @@ class AuditEventData(ApiModel):
     client_id: Optional[Any] = None
     config_key: Optional[Any] = None
     config_value: Optional[Any] = None
+    deleted_auth_code: Optional[Any] = None
+    deleted_pattern_name: Optional[Any] = None
     dect_network_name: Optional[Any] = None
     email_type: Optional[Any] = None
     enrollment_status: Optional[Any] = None

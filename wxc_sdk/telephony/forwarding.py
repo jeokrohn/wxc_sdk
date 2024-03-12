@@ -44,10 +44,19 @@ class ForwardingRule(ApiModel):
 
 
 class ForwardingSetting(ApiModel):
-    enabled: bool
-    ring_reminder_enabled: bool
-    send_to_voicemail_enabled: bool
+    #: `Always` call forwarding is enabled or disabled.
+    enabled: Optional[bool] = None
+    #: Destination for "Always" call forwarding.
+    #: example: 2225551212
     destination: Optional[str] = None
+    #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
+    ring_reminder_enabled: Optional[bool] = None
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
+    destination_voice_mail_enabled: Optional[bool] = None
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
+    send_to_voicemail_enabled: Optional[bool] = None
 
     @staticmethod
     def default() -> 'ForwardingSetting':

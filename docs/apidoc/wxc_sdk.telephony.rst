@@ -28,7 +28,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   wxc_sdk.telephony.access_codes
    wxc_sdk.telephony.autoattendant
    wxc_sdk.telephony.callpark
    wxc_sdk.telephony.callpark_extension

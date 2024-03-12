@@ -54,6 +54,10 @@ class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim'):
     
     The bulk API allows you to create, update, and remove multiple users and groups in Webex.  The number of Bulk
     operations in a single request is limited to 100.
+    
+    Bulk deletion of Users is irreversible. Please test in a test org or sandbox
+    before running the command in your production system.
+    
     """
 
     def user_bulk_api(self, org_id: str, schemas: list[str], fail_on_errors: int,
@@ -129,7 +133,7 @@ class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim'):
         body = dict()
         body['schemas'] = schemas
         body['failOnErrors'] = fail_on_errors
-        body['operations'] = loads(TypeAdapter(list[BulkUserOperations]).dump_json(operations, by_alias=True, exclude_none=True))
+        body['operations'] = TypeAdapter(list[BulkUserOperations]).dump_python(operations, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{org_id}/v2/Bulk')
         data = super().post(url, json=body)
         r = BulkUser.model_validate(data)

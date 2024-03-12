@@ -43,11 +43,11 @@ __all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'Hotelin
 
 class DeviceOwner(ApiModel):
     #: unique identifier for user or workspace the device is owned by
-    owner_id: str = Field(alias='id')
+    owner_id: str = Field(alias='id', default=None)
     #: last name of device owner.
-    last_name: str
+    last_name: Optional[str] = None
     #: First name of device owner.
-    first_name: str
+    first_name: Optional[str] = None
     #: user or workspace?
     owner_type: UserType = Field(alias='type')
     #: user location

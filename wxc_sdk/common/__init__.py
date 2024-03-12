@@ -10,7 +10,8 @@ from ..base import ApiModel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
 __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
-           'MonitoredMember', 'CallParkExtension', 'AuthCode', 'RouteType', 'DialPatternValidate', 'DialPatternStatus',
+           'MonitoredMember', 'CallParkExtension', 'AuthCodeLevel', 'AuthCode', 'RouteType', 'DialPatternValidate',
+           'DialPatternStatus',
            'RouteIdentity', 'Customer', 'IdOnly', 'IdAndName', 'PatternAction', 'NumberState', 'ValidationStatus',
            'ValidateExtensionStatusState', 'ValidateExtensionStatus', 'ValidateExtensionsResponse',
            'ValidatePhoneNumberStatusState', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumbersResponse', 'StorageType',
@@ -202,6 +203,13 @@ class CallParkExtension(ApiModel):
         return self.cpe_id and webex_id_to_uuid(self.cpe_id)
 
 
+class AuthCodeLevel(str, Enum):
+    #: Indicates the location level access code.
+    location = 'LOCATION'
+    #: Indicates the workspace level access code.
+    custom = 'CUSTOM'
+
+
 class AuthCode(ApiModel):
     """
     authorization code and description.
@@ -210,6 +218,8 @@ class AuthCode(ApiModel):
     code: str
     #: Indicates the description of the authorization code.
     description: str
+    #: Indicates the level of each access code.
+    level: Optional[AuthCodeLevel] = None
 
 
 class RouteType(str, Enum):
@@ -927,6 +937,8 @@ class MppCustomization(CommonDeviceCustomization):
     background_image8875: Optional[BackgroundImageColor] = None
     #: Specify the use of the backlight feature on 6800 nad 7800 series devices.
     backlight_timer_68xx78xx: Optional[BacklightTimer68XX78XX] = Field(alias='backlightTimer68XX78XX', default=None)
+    #: Enable/disable SIP media streams to go directly between phones on the same local network.
+    ice_enabled: Optional[bool] = None
     #: TODO undocumented
     allow_monitor_lines_enabled: Optional[bool] = None
 

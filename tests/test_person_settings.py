@@ -489,8 +489,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
                                 selected=CallerIdSelectedType.custom, custom_number=second_number.phone_number)
             after = await api.read(person_id=target_number.owner.owner_id)
         finally:
-            await api.configure(person_id=target_number.owner.owner_id,
-                                **(before.configure_params()))
+            await api.configure_settings(person_id=target_number.owner.owner_id, settings=before)
         self.assertEqual(CallerIdSelectedType.custom, after.selected)
         self.assertEqual(second_number.phone_number, after.custom_number)
         self.assert_number_format_e164()

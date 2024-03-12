@@ -7,19 +7,19 @@ from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROrigin
     CDRRelatedReason, CDRUserType
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AnnouncementLevel,\
     ApplyLineKeyTemplateAction, AtaCustomization, AtaDtmfMethod, AtaDtmfMode, AudioCodecPriority, AuthCode,\
-    Background, BackgroundImageColor, BackgroundSelection, BacklightTimer, BacklightTimer68XX78XX, BluetoothMode,\
-    BluetoothSetting, CallForwardExpandedSoftKey, CallHistoryMethod, CallParkExtension, CommonDeviceCustomization,\
-    Customer, DectCustomization, DeviceCustomization, DeviceCustomizations, DialPatternStatus,\
-    DialPatternValidate, DirectoryMethod, DisplayCallqueueAgentSoftkey, DisplayNameSelection, EnabledAndValue,\
-    Greeting, HttpProxy, HttpProxyMode, IdAndName, IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation,\
-    LoggingLevel, MediaFileType, MonitoredMember, MppCustomization, MppVlanDevice, NoiseCancellation, NumberOwner,\
-    NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrShared, PskObject,\
-    RingPattern, RoomType, RouteIdentity, RouteType, SoftKeyLayout, SoftKeyMenu, StorageType, UsbPortsObject,\
-    UserBase, UserNumber, UserType, ValidateExtensionStatus, ValidateExtensionStatusState,\
-    ValidateExtensionsResponse, ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState,\
-    ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, VoicemailCopyOfMessage, VoicemailEnabled,\
-    VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, VoicemailTransferToNumber, VolumeSettings,\
-    WifiAuthenticationMethod, WifiCustomization, WifiNetwork
+    AuthCodeLevel, Background, BackgroundImageColor, BackgroundSelection, BacklightTimer, BacklightTimer68XX78XX,\
+    BluetoothMode, BluetoothSetting, CallForwardExpandedSoftKey, CallHistoryMethod, CallParkExtension,\
+    CommonDeviceCustomization, Customer, DectCustomization, DeviceCustomization, DeviceCustomizations,\
+    DialPatternStatus, DialPatternValidate, DirectoryMethod, DisplayCallqueueAgentSoftkey, DisplayNameSelection,\
+    EnabledAndValue, Greeting, HttpProxy, HttpProxyMode, IdAndName, IdOnly, LineKeyLabelSelection,\
+    LineKeyLedPattern, LinkRelation, LoggingLevel, MediaFileType, MonitoredMember, MppCustomization,\
+    MppVlanDevice, NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent,\
+    PhoneLanguage, PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SoftKeyLayout,\
+    SoftKeyMenu, StorageType, UsbPortsObject, UserBase, UserNumber, UserType, ValidateExtensionStatus,\
+    ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus,\
+    ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting,\
+    VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications,\
+    VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence,\
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, ScheduleWeek
 from wxc_sdk.device_configurations import DeviceConfiguration, DeviceConfigurationOperation,\
@@ -82,7 +82,7 @@ from wxc_sdk.person_settings.monitoring import MonitoredElement, MonitoredElemen
 from wxc_sdk.person_settings.numbers import PersonNumbers, PersonPhoneNumber, UpdatePersonNumbers,\
     UpdatePersonPhoneNumber
 from wxc_sdk.person_settings.permissions_in import ExternalTransfer, IncomingPermissions
-from wxc_sdk.person_settings.permissions_out import Action, AutoTransferNumbers, CallTypePermission,\
+from wxc_sdk.person_settings.permissions_out import Action, AuthCodes, AutoTransferNumbers, CallTypePermission,\
     CallingPermissions, DigitPattern, DigitPatterns, OutgoingPermissionCallType, OutgoingPermissions
 from wxc_sdk.person_settings.preferred_answer import PreferredAnswerEndpoint, PreferredAnswerEndpointType,\
     PreferredAnswerResponse
@@ -174,7 +174,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'ApprovalQuestion', 'ApprovalRule', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction',
            'AttachmentActionData', 'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions',
            'AudioConnectionType', 'AudioSource', 'AudioType', 'AuditEvent', 'AuditEventData', 'AuthCode',
-           'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
+           'AuthCodeLevel', 'AuthCodes', 'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
            'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers',
            'AvailableMember', 'AvailableRecallHuntGroup', 'Background', 'BackgroundImageColor', 'BackgroundSelection',
            'BacklightTimer', 'BacklightTimer68XX78XX', 'BargeSettings', 'BaseStationResponse', 'BaseStationResult',

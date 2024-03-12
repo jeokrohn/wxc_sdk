@@ -69,7 +69,13 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # person        people                          /features       people/{person_id}/features/{feature}{path}
         # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         selector = self.selector
-        if selector == 'workspaces' and self.feature == 'outgoingPermission/digitPatterns':
-            # these endpoints live here: telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns
-            selector = 'telephony/config/workspaces'
-        return self.session.ep(f'{selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
+        feature_prefix = self.feature_prefix
+        # some paths need to be remapped
+        alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
+                      ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
+                      ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
+                      ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
+                      ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
+                      }
+        selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
+        return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')
