@@ -6,14 +6,16 @@ import re
 import uuid
 from dataclasses import dataclass
 from typing import Optional, ClassVar
-from unittest import skip, TestCase
+from unittest import skip
 
 import yaml
 from dotenv import load_dotenv
+from pydantic import TypeAdapter
 from test_helper.randomuser import User
 
 from tests.base import TestCaseWithLog, async_test
 from tests.testutil import random_users
+from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.integration import Integration
 from wxc_sdk.people import Person
@@ -120,16 +122,29 @@ class TestScimRead(TestWithScimToken):
             print(f'  total results: {r.response_body["totalResults"]}')
             print(f'  items per page: {r.response_body["itemsPerPage"]}')
 
-    def test_search_attrs(self):
+    def test_search_emails(self):
         """
-        Searching with attributes list -> apparently when passing a list of attributes then no attributes
-        are returned?!
+        Apparently no emails are returned?
         """
         org_id = webex_id_to_uuid(self.me.org_id)
         api = self.api.scim.users
         users = list(api.search_all(org_id=org_id))
-        users_attrs = list(api.search_all(org_id=org_id, attributes='addresses,emails,preferredLanguage'))
-        self.assertTrue(all(u.emails for u in users_attrs), 'No email addresses found')
+        with_emails = [user for user in users if user.emails]
+        self.assertFalse(not with_emails, 'No users with email addresses returned')
+
+    def test_search_attrs(self):
+        """
+        Searching with attributes list
+        """
+        org_id = webex_id_to_uuid(self.me.org_id)
+        api = self.api.scim.users
+        users_attrs = list(api.search_all(org_id=org_id, attributes='id,userName,displayName'))
+        # we exp that all returned users have exactly these three attributes
+        issues = [user for user in users_attrs
+                  if set(user.model_dump(exclude_none=True)) != {'schemas', 'id', 'user_name', 'display_name'}]
+        if issues:
+            print(json.dumps(TypeAdapter(list[ScimUser]).dump_python(issues, mode='json', exclude_none=True), indent=2))
+        self.assertTrue(not issues)
 
     def test_search_external_id(self):
         """
@@ -235,6 +250,7 @@ class TestScimCreate(TestWithScimToken):
     async def test_create_user(self):
         """
         Create a random user using SCIMv2
+        - apparently meta is returned for created user, but not as part of user details
         """
         new_user = (await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell']))[0]
         scim_user = self.scim_user_from_random_user(new_user)
@@ -243,7 +259,12 @@ class TestScimCreate(TestWithScimToken):
         created_user = api.create(org_id=org_id,
                                   user=scim_user)
         print(f'Created user: {created_user.display_name}({created_user.emails[0].value})')
+        print('\n'.join(f'  {line}' for line in json.dumps(created_user.model_dump(mode='json',
+                                                                                   exclude_none=True,
+                                                                                   by_alias=True),
+                                                           indent=2).splitlines()))
         details = api.details(org_id=org_id, user_id=created_user.id)
+
         # when creating a user we get webex.meta while this seems to be missing from details
 
         def print_meta(user):
@@ -251,7 +272,7 @@ class TestScimCreate(TestWithScimToken):
                 print('  No webex user')
             elif user.meta:
                 print('\n'.join(l for l in json.dumps(user.meta.model_dump(mode='json', by_alias=True,
-                                                                                              exclude_none=True),
+                                                                           exclude_none=True),
                                                       indent=2).splitlines()))
             else:
                 print('  None')
@@ -262,8 +283,7 @@ class TestScimCreate(TestWithScimToken):
         print_meta(details.webex_user)
 
         self.assertTrue(created_user.webex_user and details.webex_user, 'webex_user missing')
-        self.assertEqual(created_user.webex_user.meta, details.webex_user.meta)
-
+        self.assertEqual(created_user.webex_user.meta, details.webex_user.meta, 'meta not matching')
 
     @skip('Creating multiple users seems to be broken')
     @async_test
@@ -287,6 +307,7 @@ class TestScimCreate(TestWithScimToken):
         for i, (scim_user, created_user) in enumerate(zip(new_scim_users, created_users)):
             scim_user: ScimUser
             if isinstance(created_user, Exception):
+                created_user: AsRestError
                 err = err or created_user
                 print(f'failed to create: {i}, {scim_user.display_name}({scim_user.emails[0].value}), {created_user}')
                 print('\n'.join(f'  {l}' for l in json.dumps(created_user.detail, indent=2).splitlines()))
@@ -321,10 +342,10 @@ class TestScimCreate(TestWithScimToken):
         if not all(o.status == 201 for o in bulk_response.operations):
             err = True
             print(f'Some users not created. {sum(1 for o in bulk_response.operations if o.status != 201)} failed')
-        if not all(o.user_id is not None for o in bulk_response.operations if o.status==201):
+        if not all(o.user_id is not None for o in bulk_response.operations if o.status == 201):
             err = True
             print(f'Some user ids missing. '
-                  f'{sum(1 for o in bulk_response.operations if o.status==201 and not o.user_id)} missing')
+                  f'{sum(1 for o in bulk_response.operations if o.status == 201 and not o.user_id)} missing')
         if len(users_after) != users_to_create + len(users_before):
             err = True
             print(f'before: {len(users_before)}, after: {len(users_after)}')
@@ -382,7 +403,7 @@ class TestScimUpdate(TestWithScimToken):
     def test_patch(self):
         org_id = webex_id_to_uuid(self.me.org_id)
         api = self.api.scim.users
-        target_details = self.target_user
+        target_details = api.details(org_id=org_id, user_id=self.target_user.id)
         patched = api.patch(org_id=org_id, user_id=self.target_user.id,
                             operations=[PatchUserOperation(op=PatchUserOperationOp.replace,
                                                            path='title',
@@ -405,8 +426,9 @@ class TestScimUpdate(TestWithScimToken):
             self.assertEqual(target_details, restored_details)
 
 
-@skip('skipping to keep test users .. for now')
 class TestScimDelete(TestWithScimToken):
+
+    @skip('skipping to keep test users .. for now')
     @async_test
     async def test_delete_users_with_external_id(self):
         """
@@ -420,3 +442,22 @@ class TestScimDelete(TestWithScimToken):
         print(f'Deleting {len(with_external_id)} users with external id')
         await asyncio.gather(*[self.async_api.scim.users.delete(org_id=org_id, user_id=u.id)
                                for u in with_external_id])
+
+    def test_bulk_delete(self):
+        """
+        try to bulk delete some users
+        """
+        org_id = webex_id_to_uuid(self.me.org_id)
+        api = self.api.scim
+        targets = list(user
+                       for user, _ in zip((user for user in api.users.search_all(org_id=org_id)
+                                           if user.external_id),
+                                          range(10))
+                       if user)
+        if not targets:
+            self.skipTest('No users with external id to delete')
+        operations = [BulkOperation(method=BulkMethod.delete, path=f'/Users/{user.id}', bulk_id=str(uuid.uuid4()))
+                      for user in targets]
+        response = api.bulk.bulk_request(org_id=org_id, fail_on_errors=1, operations=operations)
+        self.assertTrue(all(o.status == 204 for o in response.operations), 'Some users not deleted')
+
