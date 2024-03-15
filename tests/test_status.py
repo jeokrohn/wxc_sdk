@@ -1,5 +1,3 @@
-from operator import attrgetter
-
 from tests.base import TestCaseWithLog
 
 

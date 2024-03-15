@@ -18,7 +18,7 @@ class TestRead(TestCaseWithUsers):
         pi = self.api.person_settings.permissions_in
 
         with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda user: pi.read(person_id=user.person_id),
+            settings = list(pool.map(lambda user: pi.read(entity_id=user.person_id),
                                      self.users))
         print(f'Got incoming permissions for {len(self.users)} users')
         print('\n'.join(f'{user.display_name}: {s.model_dump_json()}' for user, s in zip(self.users, settings)))
@@ -32,14 +32,14 @@ class TestUpdate(TestCaseWithUsers):
         Get target user
         """
         user = random.choice(self.users)
-        settings = self.api.person_settings.permissions_in.read(person_id=user.person_id)
+        settings = self.api.person_settings.permissions_in.read(entity_id=user.person_id)
         try:
             yield user
         finally:
             # restore old settings
             # makes sure to clear list of monitored elements
-            self.api.person_settings.permissions_in.configure(person_id=user.person_id, settings=settings)
-            restored = self.api.person_settings.permissions_in.read(person_id=user.person_id)
+            self.api.person_settings.permissions_in.configure(entity_id=user.person_id, settings=settings)
+            restored = self.api.person_settings.permissions_in.read(entity_id=user.person_id)
             self.assertEqual(settings, restored)
 
     def test_001_toggle_enabled(self):
@@ -49,11 +49,11 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             pi = self.api.person_settings.permissions_in
             user: Person
-            before = pi.read(person_id=user.person_id)
+            before = pi.read(entity_id=user.person_id)
             settings: IncomingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = not settings.use_custom_enabled
-            pi.configure(person_id=user.person_id, settings=settings)
-            after = pi.read(person_id=user.person_id)
+            pi.configure(entity_id=user.person_id, settings=settings)
+            after = pi.read(entity_id=user.person_id)
         self.assertEqual(settings, after)
 
     def test_002_external_transfer(self):
@@ -63,7 +63,7 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             pi = self.api.person_settings.permissions_in
             user: Person
-            before = pi.read(person_id=user.person_id)
+            before = pi.read(entity_id=user.person_id)
             settings: IncomingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = True
             et = before.external_transfer
@@ -71,6 +71,6 @@ class TestUpdate(TestCaseWithUsers):
                 if v == et:
                     continue
                 settings.external_transfer = v
-                pi.configure(person_id=user.person_id, settings=settings)
-                after = pi.read(person_id=user.person_id)
+                pi.configure(entity_id=user.person_id, settings=settings)
+                after = pi.read(entity_id=user.person_id)
                 self.assertEqual(settings, after)

@@ -26,7 +26,7 @@ from tests.base import TestCaseWithUsers, gather, async_test
 class TestRead(TestCaseWithUsers):
     def execute_read_test(self, f: Callable):
         with ThreadPoolExecutor() as pool:
-            result_map = pool.map(lambda user: f(person_id=user.person_id), self.users)
+            result_map = pool.map(lambda user: f(user.person_id), self.users)
             results = list(gather(result_map, return_exceptions=True))
         return results
 
@@ -123,7 +123,7 @@ class TestConfigure(TestCaseWithUsers):
             pick a random user, save barge setting and restore setting after end of test
             """
             target_user = random.choice(self.users)
-            barge_settings = self.api.person_settings.barge.read(person_id=target_user.person_id)
+            barge_settings = self.api.person_settings.barge.read(entity_id=target_user.person_id)
             print(f'target user: {target_user.display_name}: enabled: {barge_settings.enabled}, tone enabled: '
                   f'{barge_settings.tone_enabled}')
             try:
@@ -131,7 +131,7 @@ class TestConfigure(TestCaseWithUsers):
             finally:
                 # restore barge settings
                 print(f'restore enabled: {barge_settings.enabled}, tone enabled: {barge_settings.tone_enabled}')
-                self.api.person_settings.barge.configure(person_id=target_user.person_id,
+                self.api.person_settings.barge.configure(entity_id=target_user.person_id,
                                                          barge_settings=barge_settings)
 
         def update_and_check(barge_settings: BargeSettings):
@@ -139,8 +139,8 @@ class TestConfigure(TestCaseWithUsers):
             Update and verify barge settings
             """
             print(f'Setting enabled: {barge_settings.enabled}, tone enabled: {barge_settings.tone_enabled}')
-            self.api.person_settings.barge.configure(person_id=user.person_id, barge_settings=barge_settings)
-            after = self.api.person_settings.barge.read(person_id=user.person_id)
+            self.api.person_settings.barge.configure(entity_id=user.person_id, barge_settings=barge_settings)
+            after = self.api.person_settings.barge.read(entity_id=user.person_id)
             self.assertEqual(barge_settings, after)
             return
 
@@ -162,22 +162,22 @@ class TestConfigure(TestCaseWithUsers):
         pick a random user, save call intercept setting and restore setting after end of test
         """
         target_user = random.choice(self.users)
-        settings = self.api.person_settings.call_intercept.read(person_id=target_user.person_id)
+        settings = self.api.person_settings.call_intercept.read(entity_id=target_user.person_id)
         print(f'target user: {target_user.display_name}: {settings} ')
         try:
             yield target_user
         finally:
             # restore settings
             print(f'restore {settings}')
-            self.api.person_settings.call_intercept.configure(person_id=target_user.person_id, intercept=settings)
+            self.api.person_settings.call_intercept.configure(entity_id=target_user.person_id, intercept=settings)
 
     def call_intercept_update_and_check(self, user: Person, settings: InterceptSetting):
         """
         Update and verify call intercept settings
         """
         print(f'setting: {settings}')
-        self.api.person_settings.call_intercept.configure(person_id=user.person_id, intercept=settings)
-        after = self.api.person_settings.call_intercept.read(person_id=user.person_id)
+        self.api.person_settings.call_intercept.configure(entity_id=user.person_id, intercept=settings)
+        after = self.api.person_settings.call_intercept.read(entity_id=user.person_id)
         self.assertEqual(settings, after)
         return
 
@@ -188,7 +188,7 @@ class TestConfigure(TestCaseWithUsers):
 
         with self.call_intercept_user_context() as user:
             user: Person
-            intercept = self.api.person_settings.call_intercept.read(person_id=user.person_id)
+            intercept = self.api.person_settings.call_intercept.read(entity_id=user.person_id)
             intercept.enabled = not intercept.enabled
             self.call_intercept_update_and_check(user=user, settings=intercept)
 
@@ -198,8 +198,8 @@ class TestConfigure(TestCaseWithUsers):
         """
         with self.call_intercept_user_context() as user:
             ps = self.api.person_settings
-            ps.call_intercept.greeting(person_id=user.person_id, content=self.wav_path)
-            intercept = ps.call_intercept.read(person_id=user.person_id)
+            ps.call_intercept.greeting(entity_id=user.person_id, content=self.wav_path)
+            intercept = ps.call_intercept.read(entity_id=user.person_id)
         self.assertEqual(os.path.basename(self.wav_path), intercept.incoming.announcements.file_name)
 
     @async_test
@@ -209,8 +209,8 @@ class TestConfigure(TestCaseWithUsers):
         """
         with self.call_intercept_user_context() as user:
             ps = self.async_api.person_settings
-            await ps.call_intercept.greeting(person_id=user.person_id, content=self.wav_path)
-            intercept = await ps.call_intercept.read(person_id=user.person_id)
+            await ps.call_intercept.greeting(entity_id=user.person_id, content=self.wav_path)
+            intercept = await ps.call_intercept.read(entity_id=user.person_id)
         self.assertEqual(os.path.basename(self.wav_path), intercept.incoming.announcements.file_name)
 
     def test_007_upload_intercept_greeting_from_open_file(self):
@@ -221,9 +221,9 @@ class TestConfigure(TestCaseWithUsers):
             with open(self.wav_path, mode='rb') as wav_file:
                 upload_as = f'w{uuid.uuid4()}.wav'
                 ps = self.api.person_settings
-                ps.call_intercept.greeting(person_id=user.person_id, content=wav_file,
+                ps.call_intercept.greeting(entity_id=user.person_id, content=wav_file,
                                            upload_as=upload_as)
-                intercept = ps.call_intercept.read(person_id=user.person_id)
+                intercept = ps.call_intercept.read(entity_id=user.person_id)
         self.assertEqual(upload_as, intercept.incoming.announcements.file_name)
 
     def test_008_incoming_intercept_with_custom_greeting(self):
@@ -232,19 +232,19 @@ class TestConfigure(TestCaseWithUsers):
         """
         with self.call_intercept_user_context() as user:
             ps = self.api.person_settings
-            intercept = ps.call_intercept.read(person_id=user.person_id)
+            intercept = ps.call_intercept.read(entity_id=user.person_id)
             intercept.incoming.intercept_type = InterceptTypeIncoming.intercept_all
             intercept.incoming.announcements.greeting = Greeting.custom
 
             # first upload custom greeting
             with open(self.wav_path, mode='rb') as file:
                 upload_as = f'w{uuid.uuid4()}.wav'
-                ps.call_intercept.greeting(person_id=user.person_id, content=file,
+                ps.call_intercept.greeting(entity_id=user.person_id, content=file,
                                            upload_as=upload_as)
-            intermediate = ps.call_intercept.read(person_id=user.person_id)
+            intermediate = ps.call_intercept.read(entity_id=user.person_id)
             # .. and then set the greeting to custom
-            ps.call_intercept.configure(person_id=user.person_id, intercept=intercept)
-            updated = ps.call_intercept.read(person_id=user.person_id)
+            ps.call_intercept.configure(entity_id=user.person_id, intercept=intercept)
+            updated = ps.call_intercept.read(entity_id=user.person_id)
 
         # validation
         self.assertEqual(upload_as, intermediate.incoming.announcements.file_name)
@@ -393,13 +393,13 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         # get caller id settings
         ps = self.api.person_settings
         with self.no_log():
-            caller_id = ps.caller_id.read(person_id=target_user.person_id)
+            caller_id = ps.caller_id.read(entity_id=target_user.person_id)
         try:
             yield target_user
         finally:
             # restore caller id settings
             with self.no_log():
-                ps.caller_id.configure_settings(person_id=target_user.person_id, settings=caller_id)
+                ps.caller_id.configure_settings(entity_id=target_user.person_id, settings=caller_id)
         return
 
     def test_001_set_direct_line(self):
@@ -408,8 +408,8 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         """
         with self.user_context(users_with_tn=True) as user:
             ps = self.api.person_settings
-            ps.caller_id.configure(person_id=user.person_id, selected=CallerIdSelectedType.direct_line)
-            after = ps.caller_id.read(person_id=user.person_id)
+            ps.caller_id.configure(entity_id=user.person_id, selected=CallerIdSelectedType.direct_line)
+            after = ps.caller_id.read(entity_id=user.person_id)
             self.assertEqual(CallerIdSelectedType.direct_line, after.selected)
 
     def test_002_set_location_number(self):
@@ -418,8 +418,8 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         """
         with self.user_context(users_with_tn=True) as user:
             ps = self.api.person_settings
-            ps.caller_id.configure(person_id=user.person_id, selected=CallerIdSelectedType.location_number)
-            after = ps.caller_id.read(person_id=user.person_id)
+            ps.caller_id.configure(entity_id=user.person_id, selected=CallerIdSelectedType.location_number)
+            after = ps.caller_id.read(entity_id=user.person_id)
             self.assertEqual(CallerIdSelectedType.location_number, after.selected)
 
     @staticmethod
@@ -453,8 +453,8 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         """
         with self.user_context(users_with_tn=True) as user:
             ps = self.api.person_settings
-            ps.caller_id.configure(person_id=user.person_id, selected=CallerIdSelectedType.location_number)
-            after = ps.caller_id.read(person_id=user.person_id)
+            ps.caller_id.configure(entity_id=user.person_id, selected=CallerIdSelectedType.location_number)
+            after = ps.caller_id.read(entity_id=user.person_id)
 
         self.assertEqual(CallerIdSelectedType.location_number, after.selected)
         self.assert_number_format_e164()
@@ -483,13 +483,13 @@ class TestCallerIdConfigure(TestCaseWithUsers):
              if n.owner.owner_id != target_number.owner.owner_id])
         # try to set the caller id of owner of 1st number
         api = self.async_api.person_settings.caller_id
-        before = await api.read(person_id=target_number.owner.owner_id)
+        before = await api.read(entity_id=target_number.owner.owner_id)
         try:
-            await api.configure(person_id=target_number.owner.owner_id,
+            await api.configure(entity_id=target_number.owner.owner_id,
                                 selected=CallerIdSelectedType.custom, custom_number=second_number.phone_number)
-            after = await api.read(person_id=target_number.owner.owner_id)
+            after = await api.read(entity_id=target_number.owner.owner_id)
         finally:
-            await api.configure_settings(person_id=target_number.owner.owner_id, settings=before)
+            await api.configure_settings(entity_id=target_number.owner.owner_id, settings=before)
         self.assertEqual(CallerIdSelectedType.custom, after.selected)
         self.assertEqual(second_number.phone_number, after.custom_number)
         self.assert_number_format_e164()
@@ -501,10 +501,10 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         with self.user_context(users_with_tn=True) as user:
             user: Person
             api = self.api.person_settings.caller_id
-            before = api.read(person_id=user.person_id)
+            before = api.read(entity_id=user.person_id)
             update = CallerId(selected=before.selected, first_name='foo')
-            api.configure_settings(person_id=user.person_id, settings=update)
-            after = api.read(person_id=user.person_id)
+            api.configure_settings(entity_id=user.person_id, settings=update)
+            after = api.read(entity_id=user.person_id)
         expected = before.model_copy(deep=True)
         expected.first_name = update.first_name
         self.assertEqual(expected, after)
@@ -516,11 +516,11 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         with self.user_context(users_with_tn=True) as user:
             user: Person
             api = self.api.person_settings.caller_id
-            before = api.read(person_id=user.person_id)
+            before = api.read(entity_id=user.person_id)
             update = CallerId(selected=before.selected,
                               block_in_forward_calls_enabled=not before.block_in_forward_calls_enabled)
-            api.configure_settings(person_id=user.person_id, settings=update)
-            after = api.read(person_id=user.person_id)
+            api.configure_settings(entity_id=user.person_id, settings=update)
+            after = api.read(entity_id=user.person_id)
         expected = before.model_copy(deep=True)
         expected.block_in_forward_calls_enabled = update.block_in_forward_calls_enabled
         self.assertEqual(expected, after)
@@ -532,12 +532,12 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         with self.user_context(users_with_tn=True) as user:
             user: Person
             api = self.api.person_settings.caller_id
-            before = api.read(person_id=user.person_id)
+            before = api.read(entity_id=user.person_id)
             update = CallerId(selected=before.selected,
                               external_caller_id_name_policy=ExternalCallerIdNamePolicy.other,
                               custom_external_caller_id_name='foo custom')
-            api.configure_settings(person_id=user.person_id, settings=update)
-            after = api.read(person_id=user.person_id)
+            api.configure_settings(entity_id=user.person_id, settings=update)
+            after = api.read(entity_id=user.person_id)
         expected = before.model_copy(deep=True)
         expected.external_caller_id_name_policy = update.external_caller_id_name_policy
         expected.custom_external_caller_id_name = update.custom_external_caller_id_name

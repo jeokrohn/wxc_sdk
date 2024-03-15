@@ -9,7 +9,7 @@ from pydantic import Field
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_mac_address, calling_users, create_workspace_with_webex_calling
-from wxc_sdk.devices import TagOp, Device, ProductType
+from wxc_sdk.devices import TagOp, Device
 from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
 

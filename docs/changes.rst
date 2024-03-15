@@ -20,6 +20,13 @@ Release history
 - feat: SCIMv2 bulk API :attr:`wxc_sdk.scim.bulk.SCIM2BulkApi`
 - break: removing AccessCodesApi from TelephonyApi. Lives now under permissions_out
 - break: consistently use entity_id instead of person_id/workspace_id in outgoing permissions API
+- break: consistently use entity_id instead of person_id/workspace_id in forwarding API
+- break: consistently use entity_id instead of person_id/workspace_id in caller id API
+- break: consistently use entity_id instead of person_id/workspace_id in call waiting API
+- break: consistently use entity_id instead of person_id/workspace_id in incoming permissions API
+- break: consistently use entity_id instead of person_id/workspace_id in call intercept API
+- break: consistently use entity_id instead of person_id/workspace_id in call recording API
+- fix: need to bring back access codes API for locations under TelephonyAPI due to different signatures of create() method
 
 1.17.1
 ------

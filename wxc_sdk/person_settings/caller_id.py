@@ -137,33 +137,33 @@ class CallerId(ApiModel):
 
 class CallerIdApi(PersonSettingsApiChild):
     """
-    API for person's caller id settings
+    API for caller id settings
 
     Also used for: virtual lines, workspaces
     """
 
     feature = 'callerId'
 
-    def read(self, person_id: str, org_id: str = None) -> CallerId:
+    def read(self, entity_id: str, org_id: str = None) -> CallerId:
         """
-        Retrieve a Person's Caller ID Settings
+        Retrieve Caller ID Settings
 
-        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a person to read their settings.
+        or a user auth token with spark:people_read scope can be used by a entity to read their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return CallerId.model_validate(self.get(ep, params=params))
 
-    def configure(self, person_id: str, org_id: str = None,
+    def configure(self, entity_id: str, org_id: str = None,
                   selected: CallerIdSelectedType = None,
                   custom_number: str = None,
                   first_name: str = None,
@@ -171,27 +171,27 @@ class CallerIdApi(PersonSettingsApiChild):
                   external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
                   custom_external_caller_id_name: str = None):
         """
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
 
-        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        auth token with spark:people_write scope can be used by a entity to update their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :param selected: Which type of outgoing Caller ID will be used.
         :type selected: CallerIdSelectedType
-        :param custom_number: This value must be an assigned number from the person\'s location.
+        :param custom_number: This value must be an assigned number from the entity\'s location.
         :type custom_number: str
-        :param first_name: Person\'s Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not
+        :param first_name: entity\'s Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not
             allowed.
 
         :type first_name: str
-        :param last_name: Person\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
+        :param last_name: entity\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
             allowed.
         :type last_name: str
         :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used.
@@ -205,23 +205,23 @@ class CallerIdApi(PersonSettingsApiChild):
         data = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
                 if i > 2 and v is not None}
         params = org_id and {'orgId': org_id} or None
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         self.put(ep, params=params, json=data)
 
-    def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
+    def configure_settings(self, entity_id: str, settings: CallerId, org_id: str = None):
         """
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
 
-        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        auth token with spark:people_write scope can be used by a entity to update their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: new settings
         :type settings: CallerId
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
 
@@ -230,12 +230,12 @@ class CallerIdApi(PersonSettingsApiChild):
             .. code-block:: python
 
                 api = self.api.telephony.virtual_lines.caller_id
-                caller_id_settings = api.read(person_id=self.target.id)
+                caller_id_settings = api.read(entity_id=self.target.id)
                 caller_id_settings.block_in_forward_calls_enabled = True
-                api.configure_settings(person_id=self.target.id, settings=caller_id_settings)
+                api.configure_settings(entity_id=self.target.id, settings=caller_id_settings)
 
         """
         params = org_id and {'orgId': org_id} or None
         data = settings.update()
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         self.put(ep, params=params, json=data)

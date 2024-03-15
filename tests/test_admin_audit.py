@@ -1,6 +1,4 @@
-import json
 from datetime import datetime, timedelta
-from itertools import chain
 
 from inflection import underscore
 
@@ -28,7 +26,9 @@ class TestAdminAudit(TestCaseWithLog):
                 continue
             for k, v in extra.items():
                 extras[k] = v.__class__.__name__
-        for k in sorted(extras):
-            print(f'{underscore(k)}: Optional[Any] = None')
+        if extras:
+            print('add these attributes to class AuditEventData ')
+            for k in sorted(extras):
+                print(f'{underscore(k)}: Optional[Any] = None')
         self.assertTrue(not extras)
 

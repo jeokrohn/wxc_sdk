@@ -21,7 +21,6 @@ class Test(TestWithLocations):
     def test_002_create_delete(self):
         """
         create some codes and clean up after
-        :return:
         """
         target_location = random.choice(self.locations)
         ac = self.api.telephony.access_codes

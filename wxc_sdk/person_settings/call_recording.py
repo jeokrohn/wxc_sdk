@@ -1,7 +1,6 @@
 """
 Call recording API
 """
-import json
 from typing import Optional
 
 from pydantic import Field
@@ -119,54 +118,54 @@ class CallRecordingSetting(ApiModel):
 
 class CallRecordingApi(PersonSettingsApiChild):
     """
-    API for person's call recording settings
+    API for recording settings
 
-    Also used for virtual lines
+    Also used for virtual lines, workspaces
     """
 
     feature = 'callRecording'
 
-    def read(self, person_id: str, org_id: str = None) -> CallRecordingSetting:
+    def read(self, entity_id: str, org_id: str = None) -> CallRecordingSetting:
         """
-        Read Call Recording Settings for a Person
+        Read Call Recording Settings
 
-        Retrieve a Person's Call Recording Settings
+        Retrieve Call Recording Settings
 
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return CallRecordingSetting.model_validate(self.get(ep, params=params))
 
-    def configure(self, person_id: str, recording: CallRecordingSetting, org_id: str = None):
+    def configure(self, entity_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
-        Configure Call Recording Settings for a Person
+        Configure Call Recording Settings for a entity
 
-        Configure a Person's Call Recording Settings
+        Configure Call Recording Settings
 
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param recording: the new recording settings
         :type recording: CallRecordingSetting
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = recording.update()
         self.put(ep, params=params, json=data)

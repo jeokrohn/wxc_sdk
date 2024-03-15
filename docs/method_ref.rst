@@ -262,29 +262,29 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.appservices.read <wxc_sdk.person_settings.appservices.AppServicesApi.read>`
         Retrieve a Person's Application Services Settings
    * - :meth:`api.person_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
-        Configure a Person's Barge In Settings
+        Configure Barge In Settings
    * - :meth:`api.person_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
-        Retrieve a Person's Barge In Settings
+        Retrieve Barge In Settings
    * - :meth:`api.person_settings.call_intercept.configure <wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure>`
-        Configure Call Intercept Settings for a Person
+        Configure Call Intercept Settings
    * - :meth:`api.person_settings.call_intercept.greeting <wxc_sdk.person_settings.call_intercept.CallInterceptApi.greeting>`
-        Configure Call Intercept Greeting for a Person
+        Configure Call Intercept Greeting
    * - :meth:`api.person_settings.call_intercept.read <wxc_sdk.person_settings.call_intercept.CallInterceptApi.read>`
-        Read Call Intercept Settings for a Person
+        Read Call Intercept Settings
    * - :meth:`api.person_settings.call_recording.configure <wxc_sdk.person_settings.call_recording.CallRecordingApi.configure>`
-        Configure Call Recording Settings for a Person
+        Configure Call Recording Settings for a entity
    * - :meth:`api.person_settings.call_recording.read <wxc_sdk.person_settings.call_recording.CallRecordingApi.read>`
-        Read Call Recording Settings for a Person
+        Read Call Recording Settings
    * - :meth:`api.person_settings.call_waiting.configure <wxc_sdk.person_settings.call_waiting.CallWaitingApi.configure>`
-        Configure Call Waiting Settings for a Person
+        Configure Call Waiting Settings
    * - :meth:`api.person_settings.call_waiting.read <wxc_sdk.person_settings.call_waiting.CallWaitingApi.read>`
-        Read Call Waiting Settings for a Person
+        Read Call Waiting Settings for
    * - :meth:`api.person_settings.caller_id.configure <wxc_sdk.person_settings.caller_id.CallerIdApi.configure>`
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
    * - :meth:`api.person_settings.caller_id.configure_settings <wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings>`
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
    * - :meth:`api.person_settings.caller_id.read <wxc_sdk.person_settings.caller_id.CallerIdApi.read>`
-        Retrieve a Person's Caller ID Settings
+        Retrieve Caller ID Settings
    * - :meth:`api.person_settings.calling_behavior.configure <wxc_sdk.person_settings.calling_behavior.CallingBehaviorApi.configure>`
         Configure a Person's Calling Behavior
    * - :meth:`api.person_settings.calling_behavior.read <wxc_sdk.person_settings.calling_behavior.CallingBehaviorApi.read>`
@@ -298,9 +298,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.exec_assistant.read <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.read>`
         Retrieve Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
-        Configure a Person's Call Forwarding Settings
+        Configure an Entity's Call Forwarding Settings
    * - :meth:`api.person_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
-        Retrieve a Person's Call Forwarding Settings
+        Retrieve an entity's Call Forwarding Settings
    * - :meth:`api.person_settings.hoteling.configure <wxc_sdk.person_settings.hoteling.HotelingApi.configure>`
         Configure Hoteling Settings for a Person
    * - :meth:`api.person_settings.hoteling.read <wxc_sdk.person_settings.hoteling.HotelingApi.read>`
@@ -314,9 +314,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.numbers.update <wxc_sdk.person_settings.numbers.NumbersApi.update>`
         Assign or unassign alternate phone numbers to a person
    * - :meth:`api.person_settings.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
-        Configure a Person's Barge In Settings
+        Configure incoming permissions settings
    * - :meth:`api.person_settings.permissions_in.read <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.read>`
-        Read Incoming Permission Settings for a Person
+        Read Incoming Permission Settings
    * - :meth:`api.person_settings.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
         Configure Outgoing Calling Permissions Settings
    * - :meth:`api.person_settings.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
@@ -497,6 +497,14 @@ The method name is a link to the method documentation.
         Validate the List of Extensions
    * - :meth:`api.telephony.validate_phone_numbers <wxc_sdk.telephony.TelephonyApi.validate_phone_numbers>`
         Validate the list of phone numbers in an organization
+   * - :meth:`api.telephony.access_codes.create <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.create>`
+        Create access code in location
+   * - :meth:`api.telephony.access_codes.delete_all <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.delete_all>`
+        Delete Outgoing Permission Location Access Codes
+   * - :meth:`api.telephony.access_codes.delete_codes <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.delete_codes>`
+        Delete Access Code Location
+   * - :meth:`api.telephony.access_codes.read <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.read>`
+        Get Location Access Code
    * - :meth:`api.telephony.announcements_repo.delete <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.delete>`
         Delete an announcement greeting
    * - :meth:`api.telephony.announcements_repo.details <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.details>`
@@ -807,14 +815,6 @@ The method name is a link to the method documentation.
         Configure Outgoing Calling Permissions Settings
    * - :meth:`api.telephony.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
         Retrieve Outgoing Calling Permissions Settings
-   * - :meth:`api.telephony.permissions_out.access_codes.create <wxc_sdk.person_settings.permissions_out.AccessCodesApi.create>`
-        Create new Access codes
-   * - :meth:`api.telephony.permissions_out.access_codes.delete <wxc_sdk.person_settings.permissions_out.AccessCodesApi.delete>`
-        Delete Access Code
-   * - :meth:`api.telephony.permissions_out.access_codes.modify <wxc_sdk.person_settings.permissions_out.AccessCodesApi.modify>`
-        Modify Access Codes
-   * - :meth:`api.telephony.permissions_out.access_codes.read <wxc_sdk.person_settings.permissions_out.AccessCodesApi.read>`
-        Retrieve Access codes
    * - :meth:`api.telephony.permissions_out.digit_patterns.create <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.create>`
         Create Digit Patterns
    * - :meth:`api.telephony.permissions_out.digit_patterns.delete <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete>`
@@ -964,33 +964,33 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.virtual_lines.update_directory_search <wxc_sdk.telephony.virtual_line.VirtualLinesApi.update_directory_search>`
         Update Directory search for a Virtual Line
    * - :meth:`api.telephony.virtual_lines.call_intercept.configure <wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure>`
-        Configure Call Intercept Settings for a Person
+        Configure Call Intercept Settings
    * - :meth:`api.telephony.virtual_lines.call_intercept.greeting <wxc_sdk.person_settings.call_intercept.CallInterceptApi.greeting>`
-        Configure Call Intercept Greeting for a Person
+        Configure Call Intercept Greeting
    * - :meth:`api.telephony.virtual_lines.call_intercept.read <wxc_sdk.person_settings.call_intercept.CallInterceptApi.read>`
-        Read Call Intercept Settings for a Person
+        Read Call Intercept Settings
    * - :meth:`api.telephony.virtual_lines.call_recording.configure <wxc_sdk.person_settings.call_recording.CallRecordingApi.configure>`
-        Configure Call Recording Settings for a Person
+        Configure Call Recording Settings for a entity
    * - :meth:`api.telephony.virtual_lines.call_recording.read <wxc_sdk.person_settings.call_recording.CallRecordingApi.read>`
-        Read Call Recording Settings for a Person
+        Read Call Recording Settings
    * - :meth:`api.telephony.virtual_lines.call_waiting.configure <wxc_sdk.person_settings.call_waiting.CallWaitingApi.configure>`
-        Configure Call Waiting Settings for a Person
+        Configure Call Waiting Settings
    * - :meth:`api.telephony.virtual_lines.call_waiting.read <wxc_sdk.person_settings.call_waiting.CallWaitingApi.read>`
-        Read Call Waiting Settings for a Person
+        Read Call Waiting Settings for
    * - :meth:`api.telephony.virtual_lines.caller_id.configure <wxc_sdk.person_settings.caller_id.CallerIdApi.configure>`
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
    * - :meth:`api.telephony.virtual_lines.caller_id.configure_settings <wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings>`
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
    * - :meth:`api.telephony.virtual_lines.caller_id.read <wxc_sdk.person_settings.caller_id.CallerIdApi.read>`
-        Retrieve a Person's Caller ID Settings
+        Retrieve Caller ID Settings
    * - :meth:`api.telephony.virtual_lines.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
-        Configure a Person's Call Forwarding Settings
+        Configure an Entity's Call Forwarding Settings
    * - :meth:`api.telephony.virtual_lines.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
-        Retrieve a Person's Call Forwarding Settings
+        Retrieve an entity's Call Forwarding Settings
    * - :meth:`api.telephony.virtual_lines.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
-        Configure a Person's Barge In Settings
+        Configure incoming permissions settings
    * - :meth:`api.telephony.virtual_lines.permissions_in.read <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.read>`
-        Read Incoming Permission Settings for a Person
+        Read Incoming Permission Settings
    * - :meth:`api.telephony.virtual_lines.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
         Configure Outgoing Calling Permissions Settings
    * - :meth:`api.telephony.virtual_lines.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
@@ -1082,29 +1082,29 @@ The method name is a link to the method documentation.
    * - :meth:`api.workspace_locations.floors.update <wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.update>`
         Updates details for a floor, by ID
    * - :meth:`api.workspace_settings.call_intercept.configure <wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure>`
-        Configure Call Intercept Settings for a Person
+        Configure Call Intercept Settings
    * - :meth:`api.workspace_settings.call_intercept.greeting <wxc_sdk.person_settings.call_intercept.CallInterceptApi.greeting>`
-        Configure Call Intercept Greeting for a Person
+        Configure Call Intercept Greeting
    * - :meth:`api.workspace_settings.call_intercept.read <wxc_sdk.person_settings.call_intercept.CallInterceptApi.read>`
-        Read Call Intercept Settings for a Person
+        Read Call Intercept Settings
    * - :meth:`api.workspace_settings.call_waiting.configure <wxc_sdk.person_settings.call_waiting.CallWaitingApi.configure>`
-        Configure Call Waiting Settings for a Person
+        Configure Call Waiting Settings
    * - :meth:`api.workspace_settings.call_waiting.read <wxc_sdk.person_settings.call_waiting.CallWaitingApi.read>`
-        Read Call Waiting Settings for a Person
+        Read Call Waiting Settings for
    * - :meth:`api.workspace_settings.caller_id.configure <wxc_sdk.person_settings.caller_id.CallerIdApi.configure>`
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
    * - :meth:`api.workspace_settings.caller_id.configure_settings <wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings>`
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
    * - :meth:`api.workspace_settings.caller_id.read <wxc_sdk.person_settings.caller_id.CallerIdApi.read>`
-        Retrieve a Person's Caller ID Settings
+        Retrieve Caller ID Settings
    * - :meth:`api.workspace_settings.devices.list <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list>`
         Get all devices for a workspace
    * - :meth:`api.workspace_settings.devices.modify_hoteling <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.modify_hoteling>`
         Modify devices for a workspace
    * - :meth:`api.workspace_settings.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
-        Configure a Person's Call Forwarding Settings
+        Configure an Entity's Call Forwarding Settings
    * - :meth:`api.workspace_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
-        Retrieve a Person's Call Forwarding Settings
+        Retrieve an entity's Call Forwarding Settings
    * - :meth:`api.workspace_settings.monitoring.configure <wxc_sdk.person_settings.monitoring.MonitoringApi.configure>`
         Configure Call Waiting Settings for a Person
    * - :meth:`api.workspace_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
@@ -1112,9 +1112,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.workspace_settings.numbers.read <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read>`
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization
    * - :meth:`api.workspace_settings.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
-        Configure a Person's Barge In Settings
+        Configure incoming permissions settings
    * - :meth:`api.workspace_settings.permissions_in.read <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.read>`
-        Read Incoming Permission Settings for a Person
+        Read Incoming Permission Settings
    * - :meth:`api.workspace_settings.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
         Configure Outgoing Calling Permissions Settings
    * - :meth:`api.workspace_settings.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`

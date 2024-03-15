@@ -8,7 +8,7 @@ from unittest import TestCase
 
 from pydantic import BaseModel, ValidationError, model_validator, parse_obj_as, TypeAdapter, validator, \
     field_validator, \
-    Field, root_validator, Extra
+    Field, Extra
 
 from wxc_sdk.person_settings.permissions_out import OutgoingPermissions
 

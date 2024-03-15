@@ -148,7 +148,7 @@ def main():
 
         # display call intercept status
         try:
-            intercept = api.person_settings.call_intercept.read(person_id=user.person_id)
+            intercept = api.person_settings.call_intercept.read(user.person_id)
         except RestError as e:
             print(f'Failed to read call intercept settings: {e.response.status_code}, {e.description}')
             exit(1)
@@ -159,7 +159,7 @@ def main():
             intercept = InterceptSetting.default()
             intercept.enabled = args.on_off == 'on'
             try:
-                api.person_settings.call_intercept.configure(person_id=user.person_id,
+                api.person_settings.call_intercept.configure(user.person_id,
                                                              intercept=intercept)
             except RestError as e:
                 print(f'Failed to update call intercept settings: {e.response.status_code}, {e.description}')
@@ -167,7 +167,7 @@ def main():
 
             # read call intercept again
             try:
-                intercept = api.person_settings.call_intercept.read(person_id=user.person_id)
+                intercept = api.person_settings.call_intercept.read(user.person_id)
             except RestError as e:
                 print(f'Failed to read call intercept settings: {e.response.status_code}, {e.description}')
                 exit(1)

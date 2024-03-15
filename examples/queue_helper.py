@@ -175,7 +175,7 @@ async def main():
             new_agents.append(agent)
 
         # add new agents
-        new_agents.extend(Agent(agent_id=user.person_id, user_type=UserType.people)
+        new_agents.extend(Agent(agent_id=user.person_id)
                           for user in to_add)
 
         # update the queue

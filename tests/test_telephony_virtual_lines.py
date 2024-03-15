@@ -236,7 +236,7 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         caller_id_settings_list = await asyncio.gather(
-            *[api.caller_id.read(person_id=vl.id) for vl in virtual_lines],
+            *[api.caller_id.read(entity_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
         for vl, caller_id_settings in zip(virtual_lines, caller_id_settings_list):
@@ -253,7 +253,7 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         caller_waiting_list = await asyncio.gather(
-            *[api.call_waiting.read(person_id=vl.id) for vl in virtual_lines],
+            *[api.call_waiting.read(entity_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
         for vl, call_waiting in zip(virtual_lines, caller_waiting_list):
@@ -270,7 +270,7 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         call_forwarding_list = await asyncio.gather(
-            *[api.forwarding.read(person_id=vl.id) for vl in virtual_lines],
+            *[api.forwarding.read(entity_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
         for vl, call_forwarding in zip(virtual_lines, call_forwarding_list):
@@ -287,7 +287,7 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         incoming_permission_list = await asyncio.gather(
-            *[api.permissions_in.read(person_id=vl.id) for vl in virtual_lines],
+            *[api.permissions_in.read(entity_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
         for vl, incoming_permission in zip(virtual_lines, incoming_permission_list):
@@ -321,7 +321,7 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         call_intercept_list = await asyncio.gather(
-            *[api.call_intercept.read(person_id=vl.id) for vl in virtual_lines],
+            *[api.call_intercept.read(entity_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
         for vl, call_intercept in zip(virtual_lines, call_intercept_list):
@@ -338,7 +338,7 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         call_recording_list = await asyncio.gather(
-            *[api.call_recording.read(person_id=vl.id) for vl in virtual_lines],
+            *[api.call_recording.read(entity_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
         for vl, call_recording in zip(virtual_lines, call_recording_list):
@@ -494,14 +494,14 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         """
         api = self.api.telephony.virtual_lines.caller_id
 
-        caller_id_settings = api.read(person_id=self.target.id)
+        caller_id_settings = api.read(entity_id=self.target.id)
 
         block_in_forward_calls_enabled = not caller_id_settings.block_in_forward_calls_enabled
         update = caller_id_settings.model_copy(deep=True)
         update.block_in_forward_calls_enabled = block_in_forward_calls_enabled
 
-        api.configure_settings(person_id=self.target.id, settings=update)
-        after = api.read(person_id=self.target.id)
+        api.configure_settings(entity_id=self.target.id, settings=update)
+        after = api.read(entity_id=self.target.id)
 
         self.assertEqual(block_in_forward_calls_enabled, after.block_in_forward_calls_enabled)
         after.block_in_forward_calls_enabled = caller_id_settings.block_in_forward_calls_enabled
@@ -513,15 +513,15 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         """
         api = self.api.telephony.virtual_lines.caller_id
 
-        caller_id_settings = api.read(person_id=self.target.id)
+        caller_id_settings = api.read(entity_id=self.target.id)
         custom_external_caller_id_name = 'Joe Doe'
 
         update = caller_id_settings.model_copy(deep=True)
         update.custom_external_caller_id_name = custom_external_caller_id_name
         update.external_caller_id_name_policy = ExternalCallerIdNamePolicy.other
 
-        api.configure_settings(person_id=self.target.id, settings=update)
-        after = api.read(person_id=self.target.id)
+        api.configure_settings(entity_id=self.target.id, settings=update)
+        after = api.read(entity_id=self.target.id)
 
         self.assertEqual(custom_external_caller_id_name, after.custom_external_caller_id_name)
         self.assertEqual(ExternalCallerIdNamePolicy.other, after.external_caller_id_name_policy)
@@ -532,7 +532,7 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         """
         api = self.api.telephony.virtual_lines.forwarding
 
-        forwarding = api.read(person_id=self.target.id)
+        forwarding = api.read(entity_id=self.target.id)
         always = CallForwardingAlways(
             enabled=True,
             destination='9999',
@@ -540,8 +540,8 @@ class TestUpdate(TestWithTemporaryVirtualLine):
             ring_reminder_enabled=True)
         update = forwarding.model_copy(deep=True)
         update.call_forwarding.always = always
-        api.configure(person_id=self.target.id, forwarding=update)
-        after = api.read(person_id=self.target.id)
+        api.configure(entity_id=self.target.id, forwarding=update)
+        after = api.read(entity_id=self.target.id)
 
         self.assertEqual(always, after.call_forwarding.always)
 
@@ -551,17 +551,17 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         """
         api = self.api.telephony.virtual_lines.call_intercept
 
-        call_intercept = api.read(person_id=self.target.id)
+        call_intercept = api.read(entity_id=self.target.id)
 
         # upload greeting
-        api.greeting(person_id=self.target.id, content='sample.wav')
+        api.greeting(entity_id=self.target.id, content='sample.wav')
 
         # update call intercept settings
         update = call_intercept.model_copy(deep=True)
         update.incoming.announcements.greeting = Greeting.custom
-        api.configure(person_id=self.target.id,
+        api.configure(entity_id=self.target.id,
                       intercept=update)
-        after = api.read(person_id=self.target.id)
+        after = api.read(entity_id=self.target.id)
 
         self.assertEqual('sample.wav', after.incoming.announcements.file_name)
         self.assertEqual(Greeting.custom, after.incoming.announcements.greeting)
@@ -575,16 +575,16 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         """
         api = self.api.telephony.virtual_lines.call_recording
 
-        call_recording = api.read(person_id=self.target.id)
+        call_recording = api.read(entity_id=self.target.id)
 
         # update call recording settings
         update = call_recording.model_copy(deep=True)
         update: CallRecordingSetting
         update.enabled = True
         update.record_voicemail_enabled = True
-        api.configure(person_id=self.target.id,
+        api.configure(entity_id=self.target.id,
                       recording=update)
-        after = api.read(person_id=self.target.id)
+        after = api.read(entity_id=self.target.id)
         self.assertEqual(True, after.enabled)
         self.assertEqual(True, after.record_voicemail_enabled)
         call_recording.enabled = True

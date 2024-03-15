@@ -105,9 +105,9 @@ class PersonForwardingApi(PersonSettingsApiChild):
 
     feature = 'callForwarding'
 
-    def read(self, person_id: str, org_id: str = None) -> PersonForwardingSetting:
+    def read(self, entity_id: str, org_id: str = None) -> PersonForwardingSetting:
         """
-        Retrieve a Person's Call Forwarding Settings
+        Retrieve an entity's Call Forwarding Settings
 
         Three types of call forwarding are supported:
 
@@ -124,27 +124,27 @@ class PersonForwardingApi(PersonSettingsApiChild):
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: user's forwarding settings
         :rtype: PersonForwardingSetting
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return PersonForwardingSetting.model_validate(self.get(ep, params=params))
 
-    def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
+    def configure(self, entity_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
-        Configure a Person's Call Forwarding Settings
+        Configure an Entity's Call Forwarding Settings
 
         Three types of call forwarding are supported:
 
         * Always – forwards all incoming calls to the destination you choose.
 
-        * When busy – forwards all incoming calls to the destination you chose while the phone is in use or the person
+        * When busy – forwards all incoming calls to the destination you chose while the phone is in use or the entity
           is busy.
 
         * When no answer – forwarding only occurs when you are away or not answering your phone.
@@ -155,8 +155,8 @@ class PersonForwardingApi(PersonSettingsApiChild):
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param forwarding: new forwarding settings
         :type forwarding: PersonForwardingSetting
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
@@ -169,17 +169,17 @@ class PersonForwardingApi(PersonSettingsApiChild):
 
                 api = self.api.telephony.virtual_lines.forwarding
 
-                forwarding = api.read(person_id=self.target.id)
+                forwarding = api.read(entity_id=self.target.id)
                 always = CallForwardingAlways(
                     enabled=True,
                     destination='9999',
                     destination_voicemail_enabled=True,
                     ring_reminder_enabled=True)
                 forwarding.call_forwarding.always = always
-                api.configure(person_id=self.target.id, forwarding=update)
+                api.configure(entity_id=self.target.id, forwarding=update)
 
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = forwarding.update()
         self.put(ep, params=params, json=data)

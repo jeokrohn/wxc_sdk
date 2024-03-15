@@ -31,6 +31,6 @@ class TestCallRecording(TestWithLocations):
             location: Location
             if isinstance(result, Exception):
                 err = err or result
-                print(f'failed to get location compliance announcement for "{location.name}": {e}')
+                print(f'failed to get location compliance announcement for "{location.name}": {err}')
         if err:
             raise err

@@ -7,6 +7,7 @@ from typing import Optional
 
 from pydantic import Field, TypeAdapter, field_validator
 
+from .access_codes import LocationAccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
 from .call_recording import CallRecordingSettingsApi
@@ -462,6 +463,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
     """
+    #: access or authentication codes at location level
+    access_codes: LocationAccessCodesApi
     announcements_repo: AnnouncementsRepositoryApi
     auto_attendant: AutoAttendantApi
     #: location call intercept settings
@@ -496,6 +499,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
+        self.access_codes = LocationAccessCodesApi(session=session)
         self.announcements_repo = AnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.call_intercept = LocationInterceptApi(session=session)

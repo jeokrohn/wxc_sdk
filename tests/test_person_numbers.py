@@ -9,7 +9,7 @@ from random import choice
 from time import sleep
 from typing import ClassVar
 
-from tests.base import TestCaseWithUsers, async_test, TestWithLocations, TestCaseWithLog
+from tests.base import TestCaseWithUsers, async_test, TestWithLocations
 from tests.testutil import LocationInfo, us_location_info, available_tns, random_users, as_available_tns, \
     get_calling_license, available_extensions
 from wxc_sdk.as_api import AsWebexSimpleApi

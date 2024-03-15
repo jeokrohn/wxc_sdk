@@ -127,7 +127,7 @@ class TestAccessCodes(PermissionsTest):
         codes = api.access_codes.read(entity_id=entity_id)
         print(f'Access codes for {entity}/{entity_id}:')
         print(json.dumps(codes.model_dump(mode='json'), indent=2))
-
+    @skip('Different access codes API for locations')
     def test_location_read(self):
         """
         Read access codes for random location
@@ -195,6 +195,7 @@ class TestAccessCodes(PermissionsTest):
         created_code = next((ac for ac in codes_after.access_codes if ac.code == new_code), None)
         self.assertIsNone(created_code, 'access code still there')
 
+    @skip('Different access codes API for locations')
     def test_location_create(self):
         """
         create access code for random location

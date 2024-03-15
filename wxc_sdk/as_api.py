@@ -60,13 +60,13 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
            'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
            'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
+           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
+           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
            'AsPushToTalkApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi',
@@ -5999,137 +5999,137 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
 
 class AsBargeApi(AsPersonSettingsApiChild):
     """
-    API for person's barge settings
+    API for barge settings; also used for virtual lines
     """
 
     feature = 'bargeIn'
 
-    async def read(self, person_id: str, org_id: str = None) -> BargeSettings:
+    async def read(self, entity_id: str, org_id: str = None) -> BargeSettings:
         """
-        Retrieve a Person's Barge In Settings
+        Retrieve Barge In Settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a person to read their own settings.
+        or a user auth token with spark:people_read scope can be used by an entity to read their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: barge settings for specific user
         :rtype: BargeSettings
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return BargeSettings.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, barge_settings: BargeSettings, org_id: str = None):
+    async def configure(self, entity_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
-        Configure a Person's Barge In Settings
+        Configure Barge In Settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        auth token with spark:people_write scope can be used by an entity to update their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param barge_settings: new setting to be applied
         :type barge_settings: BargeSettings
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         await self.put(ep, params=params, data=barge_settings.model_dump_json())
 
 
 class AsCallInterceptApi(AsPersonSettingsApiChild):
     """
-    API for person's call intercept settings
+    API for call intercept settings
 
     Also used for virtual lines and workspaces
     """
 
     feature = 'intercept'
 
-    async def read(self, person_id: str, org_id: str = None) -> InterceptSetting:
+    async def read(self, entity_id: str, org_id: str = None) -> InterceptSetting:
         """
-        Read Call Intercept Settings for a Person
+        Read Call Intercept Settings
 
-        Retrieves Person's Call Intercept Settings
+        Retrieves Call Intercept Settings
 
-        The intercept feature gracefully takes a person’s phone out of service, while providing callers with
+        The intercept feature gracefully takes an entity’s phone out of service, while providing callers with
         informative announcements and alternative routing options. Depending on the service configuration, none,
-        some, or all incoming calls to the specified person are intercepted. Also depending on the service
+        some, or all incoming calls to the specified entity are intercepted. Also depending on the service
         configuration, outgoing calls are intercepted or rerouted to another location.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: user's call intercept settings
         :rtype: InterceptSetting
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return InterceptSetting.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, intercept: InterceptSetting, org_id: str = None):
+    async def configure(self, entity_id: str, intercept: InterceptSetting, org_id: str = None):
         """
-        Configure Call Intercept Settings for a Person
+        Configure Call Intercept Settings
 
-        Configures a Person's Call Intercept Settings
+        Configures Call Intercept Settings
 
-        The intercept feature gracefully takes a person’s phone out of service, while providing callers with
+        The intercept feature gracefully takes an entity’s phone out of service, while providing callers with
         informative announcements and alternative routing options. Depending on the service configuration, none, some,
-        or all incoming calls to the specified person are intercepted. Also depending on the service configuration,
+        or all incoming calls to the specified entity are intercepted. Also depending on the service configuration,
         outgoing calls are intercepted or rerouted to another location.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param intercept: new intercept settings
         :type intercept: InterceptSetting
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = intercept.update()
         await self.put(ep, params=params, json=data)
 
-    async def greeting(self, person_id: str, content: Union[BufferedReader, str],
+    async def greeting(self, entity_id: str, content: Union[BufferedReader, str],
                  upload_as: str = None, org_id: str = None):
         """
-        Configure Call Intercept Greeting for a Person
+        Configure Call Intercept Greeting
 
-        Configure a Person's Call Intercept Greeting by uploading a Waveform Audio File Format, .wav, encoded audio
+        ConfigureCall Intercept Greeting by uploading a Waveform Audio File Format, .wav, encoded audio
         file.
 
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        auth token with spark:people_write scope can be used by an entity to update their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param content: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
             reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
             content length might be calculated wrong
         :type content: Union[BufferedReader, str]
         :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
         :type upload_as: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
@@ -6143,7 +6143,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
             if not upload_as:
                 raise ValueError('upload_as is required')
         encoder = MultipartEncoder({'file': (upload_as, content, 'audio/wav')})
-        ep = self.f_ep(person_id=person_id, path='actions/announcementUpload/invoke')
+        ep = self.f_ep(person_id=entity_id, path='actions/announcementUpload/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
             await self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type},
@@ -6156,54 +6156,54 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
 
 class AsCallRecordingApi(AsPersonSettingsApiChild):
     """
-    API for person's call recording settings
+    API for recording settings
 
-    Also used for virtual lines
+    Also used for virtual lines, workspaces
     """
 
     feature = 'callRecording'
 
-    async def read(self, person_id: str, org_id: str = None) -> CallRecordingSetting:
+    async def read(self, entity_id: str, org_id: str = None) -> CallRecordingSetting:
         """
-        Read Call Recording Settings for a Person
+        Read Call Recording Settings
 
-        Retrieve a Person's Call Recording Settings
+        Retrieve Call Recording Settings
 
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return CallRecordingSetting.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, recording: CallRecordingSetting, org_id: str = None):
+    async def configure(self, entity_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
-        Configure Call Recording Settings for a Person
+        Configure Call Recording Settings for a entity
 
-        Configure a Person's Call Recording Settings
+        Configure Call Recording Settings
 
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param recording: the new recording settings
         :type recording: CallRecordingSetting
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = recording.update()
         await self.put(ep, params=params, json=data)
@@ -6218,52 +6218,52 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
 
     feature = 'callWaiting'
 
-    async def read(self, person_id: str, org_id: str = None) -> bool:
+    async def read(self, entity_id: str, org_id: str = None) -> bool:
         """
-        Read Call Waiting Settings for a Person
+        Read Call Waiting Settings for
 
-        Retrieve a Person's Call Waiting Settings
+        Retrieve Call Waiting Settings
 
-        With this feature, a person can place an active call on hold and answer an incoming call. When enabled,
+        With this feature, an entity can place an active call on hold and answer an incoming call. When enabled,
         while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or
         ignore the call.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: call waiting setting
         :rtype: bool
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
         return data['enabled']
 
-    async def configure(self, person_id: str, enabled: bool, org_id: str = None):
+    async def configure(self, entity_id: str, enabled: bool, org_id: str = None):
         """
-        Configure Call Waiting Settings for a Person
+        Configure Call Waiting Settings
 
-        Configure a Person's Call Waiting Settings
+        Configure an entity's Call Waiting Settings
 
-        With this feature, a person can place an active call on hold and answer an incoming call. When enabled,
+        With this feature, a entity can place an active call on hold and answer an incoming call. When enabled,
         while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore
         the call.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param enabled: true if the Call Waiting feature is enabled.
         :type enabled: bool
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = json.dumps({'enabled': enabled})
         await self.put(ep, params=params, json=data)
@@ -6271,33 +6271,33 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
 
 class AsCallerIdApi(AsPersonSettingsApiChild):
     """
-    API for person's caller id settings
+    API for caller id settings
 
     Also used for: virtual lines, workspaces
     """
 
     feature = 'callerId'
 
-    async def read(self, person_id: str, org_id: str = None) -> CallerId:
+    async def read(self, entity_id: str, org_id: str = None) -> CallerId:
         """
-        Retrieve a Person's Caller ID Settings
+        Retrieve Caller ID Settings
 
-        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a person to read their settings.
+        or a user auth token with spark:people_read scope can be used by a entity to read their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return CallerId.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, org_id: str = None,
+    async def configure(self, entity_id: str, org_id: str = None,
                   selected: CallerIdSelectedType = None,
                   custom_number: str = None,
                   first_name: str = None,
@@ -6305,27 +6305,27 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
                   external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
                   custom_external_caller_id_name: str = None):
         """
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
 
-        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        auth token with spark:people_write scope can be used by a entity to update their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :param selected: Which type of outgoing Caller ID will be used.
         :type selected: CallerIdSelectedType
-        :param custom_number: This value must be an assigned number from the person\'s location.
+        :param custom_number: This value must be an assigned number from the entity\'s location.
         :type custom_number: str
-        :param first_name: Person\'s Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not
+        :param first_name: entity\'s Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not
             allowed.
 
         :type first_name: str
-        :param last_name: Person\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
+        :param last_name: entity\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
             allowed.
         :type last_name: str
         :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used.
@@ -6339,23 +6339,23 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         data = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
                 if i > 2 and v is not None}
         params = org_id and {'orgId': org_id} or None
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         await self.put(ep, params=params, json=data)
 
-    async def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
+    async def configure_settings(self, entity_id: str, settings: CallerId, org_id: str = None):
         """
-        Configure a Person's Caller ID Settings
+        Configure a Caller ID Settings
 
-        Caller ID settings control how a person’s information is displayed when making outgoing calls.
+        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        auth token with spark:people_write scope can be used by a entity to update their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: new settings
         :type settings: CallerId
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
 
@@ -6364,14 +6364,14 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
             .. code-block:: python
 
                 api = self.api.telephony.virtual_lines.caller_id
-                caller_id_settings = api.read(person_id=self.target.id)
+                caller_id_settings = api.read(entity_id=self.target.id)
                 caller_id_settings.block_in_forward_calls_enabled = True
-                api.configure_settings(person_id=self.target.id, settings=caller_id_settings)
+                api.configure_settings(entity_id=self.target.id, settings=caller_id_settings)
 
         """
         params = org_id and {'orgId': org_id} or None
         data = settings.update()
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         await self.put(ep, params=params, json=data)
 
 
@@ -6617,55 +6617,55 @@ class AsHotelingApi(AsPersonSettingsApiChild):
 
 class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
     """
-    API for person's incoming permissions settings
+    API for incoming permissions settings
 
-    Also user for virtual lines, workspaces
+    Also used for virtual lines, workspaces
     """
 
     feature = 'incomingPermission'
 
-    async def read(self, person_id: str, org_id: str = None) -> IncomingPermissions:
+    async def read(self, entity_id: str, org_id: str = None) -> IncomingPermissions:
         """
-        Read Incoming Permission Settings for a Person
+        Read Incoming Permission Settings
 
-        Retrieve a Person's Incoming Permission Settings
+        Retrieve Incoming Permission Settings
 
-        You can change the incoming calling permissions for a person if you want them to be different from your
+        You can change the incoming calling permissions for an entity if you want them to be different from your
         organization's default.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: incoming permission settings for specific user
         :rtype: :class:`IncomingPermissions`
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return IncomingPermissions.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, settings: IncomingPermissions, org_id: str = None):
+    async def configure(self, entity_id: str, settings: IncomingPermissions, org_id: str = None):
         """
-        Configure a Person's Barge In Settings
+        Configure incoming permissions settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        auth token with spark:people_write scope can be used by an entity to update their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: new setting to be applied
         :type settings: :class:`IncomingPermissions`
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         await self.put(ep, params=params, data=settings.model_dump_json())
 
@@ -7169,7 +7169,13 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
                  selector: ApiSelector = 'person'):
         super().__init__(session=session, selector=selector)
         self.transfer_numbers = AsTransferNumbersApi(session=session, selector=selector)
-        self.access_codes = AsAccessCodesApi(session=session, selector=selector)
+        if selector == ApiSelector.location:
+            # Apparently there is a difference between access code API for locations on one hand and users,
+            # workspaces, and virtual lines one the other.
+            # For locations, we can create multiple access codes at once.
+            self.access_codes = None    # instead use the access_codes API at the telephony level
+        else:
+            self.access_codes = AsAccessCodesApi(session=session, selector=selector)
         self.digit_patterns = AsDigitPatternsApi(session=session, selector=selector)
 
     async def read(self, entity_id: str, org_id: str = None) -> OutgoingPermissions:
@@ -7228,9 +7234,9 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
 
     feature = 'callForwarding'
 
-    async def read(self, person_id: str, org_id: str = None) -> PersonForwardingSetting:
+    async def read(self, entity_id: str, org_id: str = None) -> PersonForwardingSetting:
         """
-        Retrieve a Person's Call Forwarding Settings
+        Retrieve an entity's Call Forwarding Settings
 
         Three types of call forwarding are supported:
 
@@ -7247,27 +7253,27 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: user's forwarding settings
         :rtype: PersonForwardingSetting
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return PersonForwardingSetting.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
+    async def configure(self, entity_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
-        Configure a Person's Call Forwarding Settings
+        Configure an Entity's Call Forwarding Settings
 
         Three types of call forwarding are supported:
 
         * Always – forwards all incoming calls to the destination you choose.
 
-        * When busy – forwards all incoming calls to the destination you chose while the phone is in use or the person
+        * When busy – forwards all incoming calls to the destination you chose while the phone is in use or the entity
           is busy.
 
         * When no answer – forwarding only occurs when you are away or not answering your phone.
@@ -7278,8 +7284,8 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param forwarding: new forwarding settings
         :type forwarding: PersonForwardingSetting
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
@@ -7292,17 +7298,17 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
 
                 api = self.api.telephony.virtual_lines.forwarding
 
-                forwarding = api.read(person_id=self.target.id)
+                forwarding = api.read(entity_id=self.target.id)
                 always = CallForwardingAlways(
                     enabled=True,
                     destination='9999',
                     destination_voicemail_enabled=True,
                     ring_reminder_enabled=True)
                 forwarding.call_forwarding.always = always
-                api.configure(person_id=self.target.id, forwarding=update)
+                api.configure(entity_id=self.target.id, forwarding=update)
 
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = forwarding.update()
         await self.put(ep, params=params, json=data)
@@ -12955,6 +12961,116 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
         self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
 
 
+class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Access codes API
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific feature endpoint like
+        /v1/telephony/config/locations/{locationId}/outgoingPermission/accessCodes}
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/outgoingPermission/accessCodes{path}')
+        return ep
+
+    async def read(self, location_id: str, org_id: str = None) -> list[AuthCode]:
+        """
+        Get Location Access Code
+
+        Retrieve access codes details for a customer location.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Retrieving access codes details requires a full, user or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: list of :class:`wxc_sdk.common.CallPark`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        data = await self.get(url, params=params)
+        return TypeAdapter(list[AuthCode]).validate_python(data['accessCodes'])
+
+    async def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+        """
+        Create access code in location
+
+        :param location_id: Add new access code for this location.
+        :type location_id: str
+        :param access_codes: Access code details
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode`
+        :param org_id: Add new access code for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'accessCodes': [json.loads(ac.model_dump_json()) for ac in access_codes]}
+        await self.post(url, json=body, params=params)
+
+    async def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],
+                     org_id: str = None) -> list[AuthCode]:
+        """
+        Delete Access Code Location
+
+        Deletes the access code details for a particular location for a customer.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Modifying the access code location details requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Deletes the access code details for this location.
+        :type location_id: str
+        :param access_codes: access codes to delete
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode` or str
+        :param org_id: Delete access codes from this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
+                                for ac in access_codes]}
+        await self.put(url, json=body, params=params)
+
+    async def delete_all(self, location_id: str, org_id: str = None):
+        """
+        Delete Outgoing Permission Location Access Codes
+
+        Deletes all the access codes for a particular location for a customer.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Deleting the access codes requires a full or user administrator or location administrator auth token with
+        the `spark-admin:telephony_config_write` scope.
+
+        :param location_id: Deletes all the access codes for this location.
+        :type location_id: str
+        :param org_id: Deletes the access codes for a customer location.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self._endpoint(location_id=location_id)
+        await super().delete(url, params=params)
+
+
 class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
     """
     API for location's call intercept settings
@@ -16641,6 +16757,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
     """
+    #: access or authentication codes at location level
+    access_codes: AsLocationAccessCodesApi
     announcements_repo: AsAnnouncementsRepositoryApi
     auto_attendant: AsAutoAttendantApi
     #: location call intercept settings
@@ -16675,6 +16793,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.access_codes = AsLocationAccessCodesApi(session=session)
         self.announcements_repo = AsAnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AsAutoAttendantApi(session=session)
         self.call_intercept = AsLocationInterceptApi(session=session)
