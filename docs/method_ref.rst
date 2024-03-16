@@ -265,6 +265,10 @@ The method name is a link to the method documentation.
         Configure Barge In Settings
    * - :meth:`api.person_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
         Retrieve Barge In Settings
+   * - :meth:`api.person_settings.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
+        Configure Call Bridge Settings
+   * - :meth:`api.person_settings.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`
+        Read Call Bridge Settings
    * - :meth:`api.person_settings.call_intercept.configure <wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure>`
         Configure Call Intercept Settings
    * - :meth:`api.person_settings.call_intercept.greeting <wxc_sdk.person_settings.call_intercept.CallInterceptApi.greeting>`
@@ -963,6 +967,10 @@ The method name is a link to the method documentation.
         Update a Virtual Line
    * - :meth:`api.telephony.virtual_lines.update_directory_search <wxc_sdk.telephony.virtual_line.VirtualLinesApi.update_directory_search>`
         Update Directory search for a Virtual Line
+   * - :meth:`api.telephony.virtual_lines.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
+        Configure Call Bridge Settings
+   * - :meth:`api.telephony.virtual_lines.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`
+        Read Call Bridge Settings
    * - :meth:`api.telephony.virtual_lines.call_intercept.configure <wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure>`
         Configure Call Intercept Settings
    * - :meth:`api.telephony.virtual_lines.call_intercept.greeting <wxc_sdk.person_settings.call_intercept.CallInterceptApi.greeting>`
@@ -1081,6 +1089,10 @@ The method name is a link to the method documentation.
         :param location_id:
    * - :meth:`api.workspace_locations.floors.update <wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.update>`
         Updates details for a floor, by ID
+   * - :meth:`api.workspace_settings.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
+        Configure Call Bridge Settings
+   * - :meth:`api.workspace_settings.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`
+        Read Call Bridge Settings
    * - :meth:`api.workspace_settings.call_intercept.configure <wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure>`
         Configure Call Intercept Settings
    * - :meth:`api.workspace_settings.call_intercept.greeting <wxc_sdk.person_settings.call_intercept.CallInterceptApi.greeting>`

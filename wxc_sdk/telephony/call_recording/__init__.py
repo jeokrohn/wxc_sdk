@@ -49,14 +49,12 @@ class CallRecordingTermsOfService(ApiModel):
 
 class OrgComplianceAnnouncement(ApiModel):
     #: Flag to indicate whether the Call Recording START/STOP announcement is played to an inbound caller.
-    #: example: True
     inbound_pstncalls_enabled: Optional[bool] = Field(alias='inboundPSTNCallsEnabled', default=None)
     #: Flag to indicate whether the Call Recording START/STOP announcement is played to an outbound caller.
     outbound_pstncalls_enabled: Optional[bool] = Field(alias='outboundPSTNCallsEnabled', default=None)
     #: Flag to indicate whether compliance announcement is played after a specified delay in seconds.
     outbound_pstncalls_delay_enabled: Optional[bool] = Field(alias='outboundPSTNCallsDelayEnabled', default=None)
     #: Number of seconds to wait before playing the compliance announcement.
-    #: example: 10
     delay_in_seconds: Optional[int] = None
 
 

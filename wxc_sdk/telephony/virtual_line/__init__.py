@@ -8,7 +8,7 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import IdAndName, PrimaryOrShared
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice
+from ...person_settings import TelephonyDevice, CallBridgeApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.call_recording import CallRecordingApi
@@ -143,30 +143,33 @@ class VirtualLineDectNetwork(ApiModel):
 
 @dataclass(init=False)
 class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
-    #: caller id settings
-    caller_id: CallerIdApi
+    #: Call bridge settings
+    call_bridge: CallBridgeApi
+    #: call intercept settings
+    call_intercept: CallInterceptApi
+    #: call recording settings
+    call_recording: CallRecordingApi
     #: call waiting settings
     call_waiting: CallWaitingApi
+    #: caller id settings
+    caller_id: CallerIdApi
     #: forwarding settings
     forwarding: PersonForwardingApi
     #: incoming permissions
     permissions_in: IncomingPermissionsApi
     #: outgoing permissions
     permissions_out: OutgoingPermissionsApi
-    #: call intercept settings
-    call_intercept: CallInterceptApi
-    #: call recording settings
-    call_recording: CallRecordingApi
 
     def __init__(self, session):
         super().__init__(session=session)
-        self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.virtual_line)
+        self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
-        self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.virtual_line)
-        self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)
 
     def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
                phone_number: str = None, extension: str = None, caller_id_last_name: str = None,

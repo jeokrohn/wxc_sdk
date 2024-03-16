@@ -12,9 +12,9 @@ from operator import attrgetter
 from typing import ClassVar
 from unittest import skip
 
-from tests.base import TestCaseWithLog, TestWithLocations, async_test, TestCaseWithUsers
+from tests.base import TestCaseWithLog, async_test, TestLocationsUsersWorkspacesVirtualLines
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.as_api import AsDigitPatternsApi, AsWebexSimpleApi, AsOutgoingPermissionsApi
+from wxc_sdk.as_api import AsDigitPatternsApi, AsOutgoingPermissionsApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.common import OwnerType, IdAndName, AuthCodeLevel
 from wxc_sdk.locations import Location
@@ -25,37 +25,7 @@ from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.workspaces import Workspace, CallingType
 
 
-@dataclass(init=False)
-class PermissionsTest(TestWithLocations, TestCaseWithUsers):
-    """
-    Base class for test cases related to outgoing permissions
-    make sure we have calling locations, persons, calling workspaces, and virtual lines ready to test
-    """
-
-    workspaces: ClassVar[list[Workspace]]
-    virtual_lines: ClassVar[list[VirtualLine]]
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-
-        async def setup():
-            async with AsWebexSimpleApi(tokens=cls.api.session.access_token) as api:
-                cls.workspaces, cls.virtual_lines = await asyncio.gather(api.workspaces.list(),
-                                                                         api.telephony.virtual_lines.list())
-            # find calling workspaces
-            cls.workspaces = [ws for ws in cls.workspaces
-                              if ws.calling and ws.calling.type == CallingType.webex]
-
-        asyncio.run(setup())
-
-    def setUp(self) -> None:
-        if not all((self.workspaces, self.virtual_lines)):
-            self.skipTest('No workspaces or virtual lines')
-        super().setUp()
-
-
-class TestOutgoingPermissions(PermissionsTest):
+class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLines):
     """
     Test reading/writing outgoing permission settings for locations, users, workspaces, virtual lines
     """
@@ -110,7 +80,7 @@ class TestOutgoingPermissions(PermissionsTest):
         ...
 
 
-class TestAccessCodes(PermissionsTest):
+class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLines):
     """
     Tests for outgoing permissions access codes
     + read access codes
@@ -334,7 +304,7 @@ class TestAccessCodes(PermissionsTest):
                                      api=self.async_api.telephony.virtual_lines.permissions_out)
 
 
-class TestDigitPatterns(PermissionsTest):
+class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLines):
     @async_test
     async def test_location_list(self):
         """

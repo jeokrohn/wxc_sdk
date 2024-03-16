@@ -73,9 +73,11 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # some paths need to be remapped
         alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
                       ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
+                      ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
                       ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
+                      ('people', 'callBridge'): ('telephony/config/people', '/features/'),
                       }
         selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
         return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')

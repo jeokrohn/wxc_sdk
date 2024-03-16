@@ -161,3 +161,4 @@ cython_debug/
 /tests/guests.yml
 /tests/scim_service_app.env
 /tests/scim_service_app.yml
+/beta tracker.md

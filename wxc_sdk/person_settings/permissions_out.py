@@ -11,7 +11,7 @@ import json
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from pydantic import field_validator, TypeAdapter, model_validator
+from pydantic import field_validator, model_validator
 
 from .common import PersonSettingsApiChild, ApiSelector
 from ..base import ApiModel
@@ -689,7 +689,13 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
                  selector: ApiSelector = 'person'):
         super().__init__(session=session, selector=selector)
         self.transfer_numbers = TransferNumbersApi(session=session, selector=selector)
-        self.access_codes = AccessCodesApi(session=session, selector=selector)
+        if selector == ApiSelector.location:
+            # Apparently there is a difference between access code API for locations on one hand and users,
+            # workspaces, and virtual lines one the other.
+            # For locations, we can create multiple access codes at once.
+            self.access_codes = None    # instead use the access_codes API at the telephony level
+        else:
+            self.access_codes = AccessCodesApi(session=session, selector=selector)
         self.digit_patterns = DigitPatternsApi(session=session, selector=selector)
 
     def read(self, entity_id: str, org_id: str = None) -> OutgoingPermissions:

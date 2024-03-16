@@ -54,9 +54,9 @@ CALLING_DATA_TIMEOUT_PROTECTION = False
 __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi',
            'AsAnnouncementsRepositoryApi', 'AsApiChild', 'AsAppServicesApi', 'AsApplyLineKeyTemplatesJobsApi',
            'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
-           'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi',
-           'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
-           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
+           'AsCallBridgeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
+           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi',
+           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
            'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
            'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
            'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
@@ -5931,9 +5931,11 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # some paths need to be remapped
         alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
                       ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
+                      ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
                       ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
+                      ('people', 'callBridge'): ('telephony/config/people', '/features/'),
                       }
         selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
         return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')
@@ -6046,6 +6048,81 @@ class AsBargeApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         await self.put(ep, params=params, data=barge_settings.model_dump_json())
+
+
+class AsCallBridgeApi(AsPersonSettingsApiChild):
+    """
+    User Call Settings with Call Bridge Feature
+
+    Not supported for Webex for Government (FedRAMP)
+
+     Person Call Settings supports modifying Webex Calling settings for a specific person.
+
+    Viewing People requires a full, user, or read-only administrator auth token with a scope
+    of `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
+    person to read their own settings.
+
+    Configuring People settings requires a full or user administrator auth token with the `spark-admin:people_write`
+    scope or, for select APIs, a user auth token with `spark:people_write` scope can be used by a person to update
+    their own settings.
+    """
+
+    feature = 'callBridge'
+
+    async def read(self, entity_id: str, org_id: str = None) -> bool:
+        """
+        Read Call Bridge Settings
+
+        Retrieve Bridge settings.
+
+        This API requires a full, user or read-only administrator or location administrator auth token with a scope
+        of `spark-admin:people_read`.
+
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: bool
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = data['warningToneEnabled']
+        return r
+
+    async def configure(self, entity_id: str, warning_tone_enabled: bool = None,
+                  org_id: str = None):
+        """
+        Configure Call Bridge Settings
+
+        Configure Call Bridge settings.
+
+        This API requires a full or user administrator or location administrator auth token with
+        the `spark-admin:people_write` scope.
+
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
+        :param warning_tone_enabled: Set to enable or disable a stutter dial tone being played to all the participants
+            when a person is bridged on the active shared line call.
+        :type warning_tone_enabled: bool
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if warning_tone_enabled is not None:
+            body['warningToneEnabled'] = warning_tone_enabled
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
 
 
 class AsCallInterceptApi(AsPersonSettingsApiChild):
@@ -8128,6 +8205,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     barge: AsBargeApi
     #: Do Not Disturb Settings for a Person
     dnd: AsDndApi
+    #: Call bridge settings for a person
+    call_bridge: AsCallBridgeApi
     #: Call Intercept Settings for a Person
     call_intercept: AsCallInterceptApi
     #: Call Recording Settings for a Person
@@ -8171,6 +8250,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.appservices = AsAppServicesApi(session=session)
         self.barge = AsBargeApi(session=session)
         self.dnd = AsDndApi(session=session)
+        self.call_bridge = AsCallBridgeApi(session=session)
         self.call_intercept = AsCallInterceptApi(session=session)
         self.call_recording = AsCallRecordingApi(session=session)
         self.call_waiting = AsCallWaitingApi(session=session)
@@ -15929,30 +16009,33 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
 
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
-    #: caller id settings
-    caller_id: AsCallerIdApi
+    #: Call bridge settings
+    call_bridge: AsCallBridgeApi
+    #: call intercept settings
+    call_intercept: AsCallInterceptApi
+    #: call recording settings
+    call_recording: AsCallRecordingApi
     #: call waiting settings
     call_waiting: AsCallWaitingApi
+    #: caller id settings
+    caller_id: AsCallerIdApi
     #: forwarding settings
     forwarding: AsPersonForwardingApi
     #: incoming permissions
     permissions_in: AsIncomingPermissionsApi
     #: outgoing permissions
     permissions_out: AsOutgoingPermissionsApi
-    #: call intercept settings
-    call_intercept: AsCallInterceptApi
-    #: call recording settings
-    call_recording: AsCallRecordingApi
 
     def __init__(self, session):
         super().__init__(session=session)
-        self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.virtual_line)
+        self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.virtual_line)
+        self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
-        self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.virtual_line)
-        self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)
 
     async def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
                phone_number: str = None, extension: str = None, caller_id_last_name: str = None,
@@ -17636,27 +17719,29 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     this class are instances of the respective user settings APIs. When calling endpoints of these APIs workspace IDs
     need to be passed to the ``person_id`` parameter of the called function.
     """
-    forwarding: AsPersonForwardingApi
+    call_bridge: AsCallBridgeApi
+    call_intercept: AsCallInterceptApi
     call_waiting: AsCallWaitingApi
     caller_id: AsCallerIdApi
+    devices: AsWorkspaceDevicesApi
+    forwarding: AsPersonForwardingApi
     monitoring: AsMonitoringApi
     numbers: AsWorkspaceNumbersApi
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
-    devices: AsWorkspaceDevicesApi
-    call_intercept: AsCallInterceptApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
-        self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.workspace)
+        self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.workspace)
+        self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.workspace)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.workspace)
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.workspace)
+        self.devices = AsWorkspaceDevicesApi(session=session)
+        self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.workspace)
         self.monitoring = AsMonitoringApi(session=session, selector=ApiSelector.workspace)
         self.numbers = AsWorkspaceNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
-        self.devices = AsWorkspaceDevicesApi(session=session)
-        self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.workspace)
 
 
 class AsWorkspacesApi(AsApiChild, base='workspaces'):

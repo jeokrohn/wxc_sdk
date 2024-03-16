@@ -18,6 +18,7 @@ Submodules
    wxc_sdk.person_settings.call_intercept
    wxc_sdk.person_settings.call_recording
    wxc_sdk.person_settings.call_waiting
+   wxc_sdk.person_settings.callbridge
    wxc_sdk.person_settings.caller_id
    wxc_sdk.person_settings.calling_behavior
    wxc_sdk.person_settings.common

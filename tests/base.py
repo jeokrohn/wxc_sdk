@@ -35,7 +35,9 @@ from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
 from wxc_sdk.rooms import Room
 from wxc_sdk.scopes import parse_scopes
+from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.tokens import Tokens
+from wxc_sdk.workspaces import Workspace, CallingType
 
 log = logging.getLogger(__name__)
 
@@ -631,3 +633,33 @@ class TestCaseWithUsersAndSpaces(TestCaseWithLog):
             yield target
         finally:
             ...
+
+
+@dataclass(init=False)
+class TestLocationsUsersWorkspacesVirtualLines(TestWithLocations, TestCaseWithUsers):
+    """
+    Base class for test cases related to outgoing permissions
+    make sure we have calling locations, persons, calling workspaces, and virtual lines ready to test
+    """
+
+    workspaces: ClassVar[list[Workspace]]
+    virtual_lines: ClassVar[list[VirtualLine]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        async def setup():
+            async with AsWebexSimpleApi(tokens=cls.api.session.access_token) as api:
+                cls.workspaces, cls.virtual_lines = await asyncio.gather(api.workspaces.list(),
+                                                                         api.telephony.virtual_lines.list())
+            # find calling workspaces
+            cls.workspaces = [ws for ws in cls.workspaces
+                              if ws.calling and ws.calling.type == CallingType.webex]
+
+        asyncio.run(setup())
+
+    def setUp(self) -> None:
+        if not all((self.workspaces, self.virtual_lines)):
+            self.skipTest('No workspaces or virtual lines')
+        super().setUp()

@@ -12,6 +12,7 @@ from .barge import BargeApi
 from .call_intercept import CallInterceptApi
 from .call_recording import CallRecordingApi
 from .call_waiting import CallWaitingApi
+from .callbridge import CallBridgeApi
 from .caller_id import CallerIdApi
 from .calling_behavior import CallingBehaviorApi
 from .dnd import DndApi
@@ -119,6 +120,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     barge: BargeApi
     #: Do Not Disturb Settings for a Person
     dnd: DndApi
+    #: Call bridge settings for a person
+    call_bridge: CallBridgeApi
     #: Call Intercept Settings for a Person
     call_intercept: CallInterceptApi
     #: Call Recording Settings for a Person
@@ -162,6 +165,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.appservices = AppServicesApi(session=session)
         self.barge = BargeApi(session=session)
         self.dnd = DndApi(session=session)
+        self.call_bridge = CallBridgeApi(session=session)
         self.call_intercept = CallInterceptApi(session=session)
         self.call_recording = CallRecordingApi(session=session)
         self.call_waiting = CallWaitingApi(session=session)

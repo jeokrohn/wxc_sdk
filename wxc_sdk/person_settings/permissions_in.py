@@ -60,54 +60,54 @@ class IncomingPermissions(ApiModel):
 
 class IncomingPermissionsApi(PersonSettingsApiChild):
     """
-    API for person's incoming permissions settings
+    API for incoming permissions settings
 
-    Also user for virtual lines, workspaces
+    Also used for virtual lines, workspaces
     """
 
     feature = 'incomingPermission'
 
-    def read(self, person_id: str, org_id: str = None) -> IncomingPermissions:
+    def read(self, entity_id: str, org_id: str = None) -> IncomingPermissions:
         """
-        Read Incoming Permission Settings for a Person
+        Read Incoming Permission Settings
 
-        Retrieve a Person's Incoming Permission Settings
+        Retrieve Incoming Permission Settings
 
-        You can change the incoming calling permissions for a person if you want them to be different from your
+        You can change the incoming calling permissions for an entity if you want them to be different from your
         organization's default.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: incoming permission settings for specific user
         :rtype: :class:`IncomingPermissions`
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return IncomingPermissions.model_validate(self.get(ep, params=params))
 
-    def configure(self, person_id: str, settings: IncomingPermissions, org_id: str = None):
+    def configure(self, entity_id: str, settings: IncomingPermissions, org_id: str = None):
         """
-        Configure a Person's Barge In Settings
+        Configure incoming permissions settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        auth token with spark:people_write scope can be used by an entity to update their own settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: new setting to be applied
         :type settings: :class:`IncomingPermissions`
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         self.put(ep, params=params, data=settings.model_dump_json())

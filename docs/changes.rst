@@ -27,6 +27,7 @@ Release history
 - break: consistently use entity_id instead of person_id/workspace_id in call intercept API
 - break: consistently use entity_id instead of person_id/workspace_id in call recording API
 - fix: need to bring back access codes API for locations under TelephonyAPI due to different signatures of create() method
+- feat: call bridge settings for users, workspaces, virtual lines
 
 1.17.1
 ------
