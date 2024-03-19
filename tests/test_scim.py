@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import json
 import os
 import random
@@ -425,6 +426,32 @@ class TestScimUpdate(TestWithScimToken):
             restored_details.meta = target_details.meta
             self.assertEqual(target_details, restored_details)
 
+    def test_patch_phone_number(self):
+        """
+        Try to update a phone number of a user
+        """
+        me = self.api.people.me()
+        print(f'org: id {me.org_id}, base64 decoded {base64.b64decode(me.org_id+"==")}')
+        org_id = webex_id_to_uuid(me.org_id)
+        api = self.api.scim.users
+        target_details = api.details(org_id=org_id, user_id=self.target_user.id)
+        new_phone_number = '+14085550123'
+        patched = api.patch(org_id=org_id, user_id=self.target_user.id,
+                            operations=[PatchUserOperation(op=PatchUserOperationOp.replace,
+                                                           path='phoneNumbers[type eq "work"].value',
+                                                           value=new_phone_number)])
+        try:
+            details_after_update = api.details(org_id=org_id, user_id=target_details.id)
+            work_phone = next(pn for pn in details_after_update.phone_numbers if pn.type=='work')
+            self.assertEqual(new_phone_number, work_phone.value)
+            # last_modified has to be changed
+            self.assertTrue(details_after_update.meta.last_modified != target_details.meta.last_modified)
+
+        finally:
+            api.update(org_id=org_id, user=target_details)
+            restored_details = api.details(org_id=org_id, user_id=self.target_user.id)
+            restored_details.meta = target_details.meta
+            self.assertEqual(target_details, restored_details)
 
 class TestScimDelete(TestWithScimToken):
 

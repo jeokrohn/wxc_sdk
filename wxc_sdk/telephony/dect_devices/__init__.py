@@ -133,7 +133,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         return r
 
     def add_a_handset(self, location_id: str, dect_network_id: str, line1_member_id: str,
-                      line2_member_id: str, custom_display_name: str, org_id: str = None):
+                      line2_member_id: str = None, custom_display_name: str = None, org_id: str = None):
         """
         Add a Handset to a DECT Network
 
@@ -152,7 +152,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
             VIRTUAL_LINE.
         :type line2_member_id: str
         :param custom_display_name: Custom display name on the handset. Min and max length supported for the custom
-            display name is 1 and 16 respectively
+            display name is 1 and 16 respectively. Mandatory parameter.
         :type custom_display_name: str
         :param org_id: Add handset in this organization.
         :type org_id: str
@@ -163,7 +163,10 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['line1MemberId'] = line1_member_id
-        body['line2MemberId'] = line2_member_id
+        if line2_member_id is not None:
+            body['line2MemberId'] = line2_member_id
+        if custom_display_name is None:
+            raise ValueError('custom_display_name cannot be None')
         body['customDisplayName'] = custom_display_name
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         super().post(url, params=params, json=body)

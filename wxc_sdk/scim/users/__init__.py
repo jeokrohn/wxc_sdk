@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import Field, TypeAdapter
 
@@ -81,7 +81,7 @@ class WebexUser(ApiModel):
     provision_source: Optional[str] = None
     is_teams_on_jabber_enabled: Optional[bool] = None
     is_uc_call_on_jabber_enabled: Optional[bool] = Field(alias='isUCCallOnJabberEnabled', default=None)
-    user_settings: Optional[str] = None
+    user_settings: Optional[list[str]] = None
 
     # TODO: only returned as result of create() but not even in details() ?
     meta: Optional[WebexUserMeta] = None

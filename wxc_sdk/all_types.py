@@ -71,6 +71,7 @@ from wxc_sdk.person_settings.call_intercept import InterceptAnnouncements, Inter
     InterceptSettingIncoming, InterceptSettingOutgoing, InterceptTypeIncoming, InterceptTypeOutgoing
 from wxc_sdk.person_settings.call_recording import CallRecordingSetting, Notification, NotificationRepeat,\
     NotificationType, Record, StartStopAnnouncement
+from wxc_sdk.person_settings.callbridge import CallBridgeSetting
 from wxc_sdk.person_settings.caller_id import CallerId, CallerIdSelectedType, ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.calling_behavior import BehaviorType, CallingBehavior
 from wxc_sdk.person_settings.common import ApiSelector, PersonSettingsApiChild
@@ -183,7 +184,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'BulkResponse', 'BulkResponseOperation', 'BusinessContinuity', 'CCSnippet', 'CDR', 'CDRCallType',
            'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason',
            'CDRUserType', 'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType',
-           'CallBounce', 'CallForwardExpandedSoftKey', 'CallForwarding', 'CallForwardingAlways',
+           'CallBounce', 'CallBridgeSetting', 'CallForwardExpandedSoftKey', 'CallForwarding', 'CallForwardingAlways',
            'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType',
            'CallForwardingPerson', 'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers',
            'CallInfo', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup',

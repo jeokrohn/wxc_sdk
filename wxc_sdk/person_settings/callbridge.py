@@ -1,6 +1,13 @@
+from wxc_sdk.base import ApiModel
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
-__all__ = ['CallBridgeApi']
+__all__ = ['CallBridgeApi', 'CallBridgeSetting']
+
+
+class CallBridgeSetting(ApiModel):
+    #: Set to enable or disable a stutter dial tone being played to all the participants
+    #: when a person is bridged on the active shared line call.
+    warning_tone_enabled: bool
 
 
 class CallBridgeApi(PersonSettingsApiChild):
@@ -22,7 +29,7 @@ class CallBridgeApi(PersonSettingsApiChild):
 
     feature = 'callBridge'
 
-    def read(self, entity_id: str, org_id: str = None) -> bool:
+    def read(self, entity_id: str, org_id: str = None) -> CallBridgeSetting:
         """
         Read Call Bridge Settings
 
@@ -37,17 +44,16 @@ class CallBridgeApi(PersonSettingsApiChild):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
-        :rtype: bool
+        :rtype: :class:'CallBridgeSetting'
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.f_ep(entity_id)
         data = super().get(url, params=params)
-        r = data['warningToneEnabled']
-        return r
+        return CallBridgeSetting.model_validate(data)
 
-    def configure(self, entity_id: str, warning_tone_enabled: bool = None,
+    def configure(self, entity_id: str, setting: CallBridgeSetting,
                   org_id: str = None):
         """
         Configure Call Bridge Settings
@@ -59,9 +65,8 @@ class CallBridgeApi(PersonSettingsApiChild):
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str
-        :param warning_tone_enabled: Set to enable or disable a stutter dial tone being played to all the participants
-            when a person is bridged on the active shared line call.
-        :type warning_tone_enabled: bool
+        :param setting: new call bridge settings
+        :type setting: :class:'CallBridgeSetting'
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -71,8 +76,7 @@ class CallBridgeApi(PersonSettingsApiChild):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
-        if warning_tone_enabled is not None:
-            body['warningToneEnabled'] = warning_tone_enabled
+        body = setting.model_dump(mode='json', exclude_none=True, by_alias=True)
         url = self.f_ep(entity_id)
         super().put(url, params=params, json=body)
+

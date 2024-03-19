@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from .devices import WorkspaceDevicesApi
 from .numbers import WorkspaceNumbersApi
 from ..api_child import ApiChild
-from ..person_settings import CallBridgeApi
+from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.call_intercept import CallInterceptApi
 from ..person_settings.call_waiting import CallWaitingApi
 from ..person_settings.caller_id import CallerIdApi

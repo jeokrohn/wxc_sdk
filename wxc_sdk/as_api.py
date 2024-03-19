@@ -6069,7 +6069,7 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
 
     feature = 'callBridge'
 
-    async def read(self, entity_id: str, org_id: str = None) -> bool:
+    async def read(self, entity_id: str, org_id: str = None) -> CallBridgeSetting:
         """
         Read Call Bridge Settings
 
@@ -6084,17 +6084,16 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
-        :rtype: bool
+        :rtype: :class:'CallBridgeSetting'
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.f_ep(entity_id)
         data = await super().get(url, params=params)
-        r = data['warningToneEnabled']
-        return r
+        return CallBridgeSetting.model_validate(data)
 
-    async def configure(self, entity_id: str, warning_tone_enabled: bool = None,
+    async def configure(self, entity_id: str, setting: CallBridgeSetting,
                   org_id: str = None):
         """
         Configure Call Bridge Settings
@@ -6106,9 +6105,8 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str
-        :param warning_tone_enabled: Set to enable or disable a stutter dial tone being played to all the participants
-            when a person is bridged on the active shared line call.
-        :type warning_tone_enabled: bool
+        :param setting: new call bridge settings
+        :type setting: :class:'CallBridgeSetting'
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -6118,9 +6116,7 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
-        if warning_tone_enabled is not None:
-            body['warningToneEnabled'] = warning_tone_enabled
+        body = setting.model_dump(mode='json', exclude_none=True, by_alias=True)
         url = self.f_ep(entity_id)
         await super().put(url, params=params, json=body)
 
@@ -12377,7 +12373,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         return r
 
     async def add_a_handset(self, location_id: str, dect_network_id: str, line1_member_id: str,
-                      line2_member_id: str, custom_display_name: str, org_id: str = None):
+                      line2_member_id: str = None, custom_display_name: str = None, org_id: str = None):
         """
         Add a Handset to a DECT Network
 
@@ -12396,7 +12392,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
             VIRTUAL_LINE.
         :type line2_member_id: str
         :param custom_display_name: Custom display name on the handset. Min and max length supported for the custom
-            display name is 1 and 16 respectively
+            display name is 1 and 16 respectively. Mandatory parameter.
         :type custom_display_name: str
         :param org_id: Add handset in this organization.
         :type org_id: str
@@ -12407,7 +12403,10 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['line1MemberId'] = line1_member_id
-        body['line2MemberId'] = line2_member_id
+        if line2_member_id is not None:
+            body['line2MemberId'] = line2_member_id
+        if custom_display_name is None:
+            raise ValueError('custom_display_name cannot be None')
         body['customDisplayName'] = custom_display_name
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         await super().post(url, params=params, json=body)

@@ -28,6 +28,10 @@ Release history
 - break: consistently use entity_id instead of person_id/workspace_id in call recording API
 - fix: need to bring back access codes API for locations under TelephonyAPI due to different signatures of create() method
 - feat: call bridge settings for users, workspaces, virtual lines
+- fix: parameter line2_member_id in :meth:`wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_a_handset` has to be
+  optional. To not break existing parameter order parameter custom_display_name had to be made optional as well although it actually is mandatory
+- fix: :meth:`wxc_sdk.person_settings.callbridge.CallBridgeApi.read` now returns :class:`wxc_sdk.person_settings.callbridge.CallBridgeSetting` instead of bool
+- fix: wrong type for :attr:`wxc_sdk.scim.users.WebexUser.user_settings`
 
 1.17.1
 ------
