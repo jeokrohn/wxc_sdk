@@ -21,8 +21,8 @@
                                         authorized for an org>
 
     This information is used to obtain an access token required to authorize API access
-                                        
-    This is a super-set of the scopes the service app needs: 
+
+    This is a super-set of the scopes the service app needs:
         * spark-admin:workspaces_write
         * Identity:one_time_password
         * identity:placeonetimepassword_create

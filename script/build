@@ -52,7 +52,6 @@ for i in ${@}; do
         ;;
 
         apib)
-        all=
         apib=true
         ;;
 
@@ -69,7 +68,7 @@ if [ ${all} ]; then
   script/clean
 fi
 
-if [ ${all} ] || [ ${apib} ]; then
+if [ ${apib} ]; then
     echo "==> Creating Python sources from APIB files"
     script/apib2py.py "*.apib" --exclude "device\-configurations|convergedRecordings|applications\.|attachment-actions|location-call-settings|meeting-preferences"
 fi

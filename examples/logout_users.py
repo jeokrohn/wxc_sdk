@@ -212,7 +212,7 @@ async def main() -> int:
             for user, error in zip(users, auth_lists):
                 user: Person
                 if isinstance(error, Exception):
-                    print(f'{user.emails}: failed to get authorizations: {e}')
+                    print(f'{user.emails}: failed to get authorizations: {error}')
                     err = True
             if err:
                 return 1

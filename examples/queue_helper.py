@@ -36,7 +36,6 @@ from dotenv import load_dotenv
 
 from wxc_sdk import Tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import UserType
 from wxc_sdk.integration import Integration
 from wxc_sdk.people import Person
 from wxc_sdk.scopes import parse_scopes

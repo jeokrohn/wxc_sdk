@@ -1,8 +1,6 @@
 import os
-from collections import defaultdict
 from collections.abc import Generator
 from dataclasses import dataclass
-from functools import reduce
 from itertools import chain
 from typing import NamedTuple
 
