@@ -1,6 +1,9 @@
 Release history
 ===============
 
+- fix: :meth:`create_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_base_stations>`, wrong endpoint
+  and result attribute
+
 1.18.0
 ------
 - feat: virtual line settings: call intercept, call recording, call waiting, forwarding, incoming/outgoing call permissions, directory search, DECT networks, :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`

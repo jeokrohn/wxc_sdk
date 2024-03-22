@@ -22,16 +22,13 @@ class DECTNetworkModel(str, Enum):
 class BaseStationResult(ApiModel):
     #: HTTP status code indicating the creation of base station. 201 status code indicates the successful creation of
     #: base stations
-    #: example: 201
     status: Optional[int] = None
     #: Unique identifier of the base station.
-    #: example: Y2lzY29zcGFyazovL3VzL0RFQ1RfREVWX1NUQVRJT04vYzRhMTQxN2ItZGNiYi00MGMzLWE3YWQtNTY1MGZkZGRkNTNj
     id: Optional[str] = None
 
 
 class BaseStationResponse(ApiModel):
     #: MAC Address added to the base station.
-    #: example: 6DDE9EBDE1C9
     mac: Optional[str] = None
     #: Object with base station POST Result.
     result: Optional[BaseStationResult] = None
@@ -47,11 +44,11 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
     places and virtual lines member types are supported on handset lines in the DECT network. Currently, APIs support
     Cisco DECT device models only.
 
-    Viewing and searching  DECT settings requires a full or read-only administrator auth token with a scope of
-    `spark-admin:telephony_config_read`.
+    Viewing and searching  DECT settings requires a full or read-only administrator auth token with a scope
+    of `spark-admin:telephony_config_read`.
 
-    Adding and modifying these DECT settings requires a full administrator auth token with a scope of
-    `spark-admin:telephony_config_write`.
+    Adding and modifying these DECT settings requires a full administrator auth token with a scope
+    of `spark-admin:telephony_config_write`.
     """
 
     def create_dect_network(self, location_id: str, name: str, display_name: str, model: DECTNetworkModel,
@@ -109,8 +106,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
         This API is used to create multiple base stations in a DECT network in an organization.
 
-        Creating base stations in a DECT network requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Creating base stations in a DECT network requires a full administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Create a base station in this location.
         :type location_id: str
@@ -127,9 +124,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['baseStationMacs'] = base_station_macs
-        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_id}/basestations')
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_id}/baseStations')
         data = super().post(url, params=params, json=body)
-        r = TypeAdapter(list[BaseStationResponse]).validate_python(data['baseStationMacs'])
+        r = TypeAdapter(list[BaseStationResponse]).validate_python(data['baseStations'])
         return r
 
     def add_a_handset(self, location_id: str, dect_network_id: str, line1_member_id: str,
@@ -139,8 +136,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
         Add a handset to a DECT network in a location in an organization.
 
-        Adding a handset to a DECT network requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`
+        Adding a handset to a DECT network requires a full administrator auth token with a scope
+        of `spark-admin:telephony_config_write`
 
         :param location_id: Add handset in this location.
         :type location_id: str
