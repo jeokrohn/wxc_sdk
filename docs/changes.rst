@@ -1,6 +1,26 @@
 Release history
 ===============
 
+- feat: DECT devices with additional operations: :class:`wxc_sdk.telephony.dect_devices.DECTDevicesApi`
+
+  * :meth:`list_dect_networks <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_dect_networks>`
+  * :meth:`dect_network_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_network_details>`
+  * :meth:`update_dect_network <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network>`
+  * :meth:`update_dect_network_settings <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network_settings>`
+  * :meth:`delete_dect_network <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_dect_network>`
+  * :meth:`list_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_base_stations>`
+  * :meth:`base_station_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.base_station_details>`
+  * :meth:`delete_bulk_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_bulk_base_stations>`
+  * :meth:`delete_base_station <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_base_station>`
+  * :meth:`list_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_handsets>`
+  * :meth:`handset_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.handset_details>`
+  * :meth:`update_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_handset>`
+  * :meth:`delete_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handset>`
+  * :meth:`delete_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handsets>`
+  * :meth:`dect_networks_associated_with_person <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_person>`
+  * :meth:`dect_networks_associated_with_workspace <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_workspace>`
+  * :meth:`dect_networks_associated_with_virtual_line <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_virtual_line>`
+
 - fix: :meth:`create_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_base_stations>`, wrong endpoint
   and result attribute
 
