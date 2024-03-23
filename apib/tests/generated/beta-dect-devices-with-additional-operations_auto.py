@@ -35,6 +35,36 @@ class MemberType(str, Enum):
     virtual_line = 'VIRTUAL_LINE'
 
 
+class Lines(ApiModel):
+    #: ID of the member on line1 of the handset. Members can be PEOPLE or PLACE.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
+    member_id: Optional[str] = None
+    #: Line members's first name.
+    #: example: John
+    first_name: Optional[str] = None
+    #: Line members's last name.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Line members primary number.
+    #: example: +14088571272
+    external: Optional[str] = None
+    #: Line members extension.
+    #: example: 3459
+    extension: Optional[str] = None
+    #: Last registration timestamp.
+    #: example: 1611229671234
+    last_registration_time: Optional[str] = None
+    #: Registration host IP address for the line port.
+    #: example: 10.0.0.45
+    host_ip: Optional[str] = Field(alias='hostIP', default=None)
+    #: Registration remote IP address for the line port.
+    #: example: 76.102.12.84
+    remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[Location] = None
+    #: Indicates member type.
+    #: example: PEOPLE
+    member_type: Optional[MemberType] = None
 
 
 class DECTHandsetGet(ApiModel):

@@ -19,6 +19,7 @@ Release history
   * :meth:`delete_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handsets>`
   * :meth:`dect_networks_associated_with_person <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_person>`
   * :meth:`dect_networks_associated_with_workspace <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_workspace>`
+  * :meth:`dect_networks_associated_with_virtual_line <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_virtual_line>`
 
 1.18.0
 ------

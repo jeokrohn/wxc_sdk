@@ -6,7 +6,7 @@ from pydantic import TypeAdapter, Field
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import IdAndName, UserType
+from wxc_sdk.common import IdAndName, UserType, AssignedDectNetwork
 from wxc_sdk.telephony.devices import AvailableMember
 
 __all__ = ['DECTNetworkModel', 'DECTNetworkDetail', 'BaseStationResult', 'BaseStationResponse', 'BaseStationsResponse',
@@ -751,7 +751,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         super().delete(url, params=params, json=body)
 
     def dect_networks_associated_with_person(self, person_id: str,
-                                             org_id: str = None) -> list[DECTNetworkDetail]:
+                                             org_id: str = None) -> list[AssignedDectNetwork]:
         """
         GET List of DECT networks associated with a Person
 
@@ -767,18 +767,18 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :type person_id: str
         :param org_id: List of DECT networks associated with a person in this organization.
         :type org_id: str
-        :rtype: list[DECTNetworkItem]
+        :rtype: list[AssignedDectNetwork]
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/dectNetworks')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[DECTNetworkDetail]).validate_python(data['dectNetworks'])
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
     def dect_networks_associated_with_workspace(self, workspace_id: str,
-                                                org_id: str = None) -> list[DECTNetworkDetail]:
+                                                org_id: str = None) -> list[AssignedDectNetwork]:
         """
         GET List of DECT networks associated with a workspace
 
@@ -794,14 +794,42 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :type workspace_id: str
         :param org_id: List of DECT networks associated with a workspace in this organization.
         :type org_id: str
-        :rtype: list[DECTNetworkItem]
+        :rtype: list[AssignedDectNetwork]
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/dectNetworks')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[DECTNetworkDetail]).validate_python(data['dectNetworks'])
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
+        return r
+
+    def dect_networks_associated_with_virtual_line(self, virtual_line_id: str,
+                                                   org_id: str = None) -> list[AssignedDectNetwork]:
+        """
+        Get List of Dect Networks Handsets for a Virtual Line
+
+        Retrieve DECT Network details assigned for a virtual line.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param org_id: Retrieve virtual line settings from this organization.
+        :type org_id: str
+        :rtype: list[AssignedDectNetwork]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+
+        url = self.ep(f'virtualLines/{virtual_line_id}/dectNetworks')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
     def available_members(self, member_name: str = None, phone_number: str = None, order: str = None,

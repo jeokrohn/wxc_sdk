@@ -4,19 +4,20 @@ Testing DECT devices
 import asyncio
 import json
 import random
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-from random import choice
+from itertools import chain
+from operator import attrgetter
 from typing import NamedTuple
 
-from tests.base import TestCaseWithLog, TestWithLocations, async_test
-from wxc_sdk.as_api import AsWebexSimpleApi
+from tests.base import TestWithLocations, async_test
 from wxc_sdk.common import UserType
 from wxc_sdk.locations import Location
-from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.dect_devices import DECTNetworkModel, DECTNetworkDetail, BaseStationResponse, \
     BaseStationsResponse, DECTHandsetItem
 from wxc_sdk.telephony.devices import AvailableMember
+from wxc_sdk.telephony.virtual_line import VirtualLine
 
 
 class TestDECTNetwork(NamedTuple):
@@ -399,30 +400,27 @@ class TestDectDevices(TestWithLocations):
             hs_details = api.handset_details(**dect, handset_id=handset.id)
             self.assertEqual(1, len(hs_details.lines))
 
-    def create_handsets(self, ctx: TestDECTNetwork, hs_count: int) -> list[DECTHandsetItem]:
+    def create_handsets(self, ctx: TestDECTNetwork, hs_count: int,
+                        member_type: UserType = UserType.people) -> list[DECTHandsetItem]:
         """
         Create a bunch of hansets and return the list of handsets
         """
         api = self.api.telephony.dect_devices
         members = api.available_members()
-        users = [m for m in members if m.member_type == UserType.people]
-        if hs_count > len(users):
-            self.skipTest("Not enough users")
-        random.shuffle(users)
+        target_members = [m for m in members if m.member_type == member_type]
+        if hs_count > len(target_members):
+            self.skipTest(f"Not enough {member_type} targets")
+        random.shuffle(target_members)
 
         dect = {'location_id': ctx.target_location.location_id,
                 'dect_network_id': ctx.dect_network_id}
 
-        async def hs_create():
-            async with AsWebexSimpleApi(tokens=self.api.access_token) as as_api:
-                await asyncio.gather(
-                    *[as_api.telephony.dect_devices.add_a_handset(**dect,
-                                                                  line1_member_id=m.member_id,
-                                                                  custom_display_name=m.last_name)
-                      for m in users[:hs_count]])
-            return
+        def create_hs(m:AvailableMember):
+            api.add_a_handset(**dect, line1_member_id=m.member_id,
+                              custom_display_name=m.last_name)
 
-        asyncio.run(hs_create())
+        with ThreadPoolExecutor() as pool:
+            list(pool.map(create_hs, target_members[:hs_count]))
         handsets = api.list_handsets(**dect)
         return handsets.handsets
 
@@ -433,25 +431,120 @@ class TestDectDevices(TestWithLocations):
         api = self.api.telephony.dect_devices
         with self.create_test_dect_network() as ctx:
             ctx: TestDECTNetwork
+
+            # create some handsets
             handsets = self.create_handsets(ctx=ctx, hs_count=5)
+
+            # pick one and delete it
             target_handset = random.choice(handsets)
             target_handset: DECTHandsetItem
             dect = {'location_id': ctx.target_location.location_id,
                     'dect_network_id': ctx.dect_network_id}
-
             api.delete_handset(**dect, handset_id=target_handset.id)
+
+            # verify that the handset is gone
             handsets_after = api.list_handsets(**dect)
-            self.assertEqual(len(handsets)-1, len(handsets_after.handsets))
+            self.assertEqual(len(handsets) - 1, len(handsets_after.handsets))
             self.assertIsNone(next((hs
                                     for hs in handsets_after.handsets
-                                    if hs.id==target_handset.id),
+                                    if hs.id == target_handset.id),
                                    None))
 
     def test_delete_handsets(self):
-        ...
+        """
+        Create some handsets and delete a subset
+        """
+        api = self.api.telephony.dect_devices
+        with self.create_test_dect_network() as ctx:
+            ctx: TestDECTNetwork
+
+            # create some handsets
+            handsets = self.create_handsets(ctx=ctx, hs_count=5)
+            random.shuffle(handsets)
+
+            # pick three handsets to delete
+            handsets_to_delete = handsets[:3]
+            dect = {'location_id': ctx.target_location.location_id,
+                    'dect_network_id': ctx.dect_network_id}
+
+            ids_to_delete = list(map(attrgetter('id'), handsets_to_delete))
+            api.delete_handsets(**dect, items=ids_to_delete, delete_all=False)
+
+            # verify that the handsets are gone
+            handsets_after = api.list_handsets(**dect)
+            self.assertEqual(len(handsets) - 3, len(handsets_after.handsets))
+            self.assertFalse(set(ids_to_delete) & set(map(attrgetter('id'), handsets_after)),
+                             'Not all handsets are gone')
+
+    def test_delete_handsets_all(self):
+        """
+        Create some handsets and delete aall
+        """
+        api = self.api.telephony.dect_devices
+        with self.create_test_dect_network() as ctx:
+            ctx: TestDECTNetwork
+
+            # create some handsets
+            handsets = self.create_handsets(ctx=ctx, hs_count=5)
+            random.shuffle(handsets)
+
+            dect = {'location_id': ctx.target_location.location_id,
+                    'dect_network_id': ctx.dect_network_id}
+            api.delete_handsets(**dect, items=[], delete_all=True)
+
+            # verify that the handsets are gone
+            handsets_after = api.list_handsets(**dect)
+            self.assertEqual(0, len(handsets_after.handsets))
 
     def test_networks_associated_with_person(self):
-        ...
+        """
+        Create some handsets and see if we can find the associated nwtwork for persons assigned to lines on the handsets
+        """
+        api = self.api.telephony.dect_devices
+        with self.create_test_dect_network() as ctx:
+            ctx: TestDECTNetwork
+
+            # create some handsets
+            handsets = self.create_handsets(ctx=ctx, hs_count=5)
+            random.shuffle(handsets)
+
+            person_ids = list(chain.from_iterable((l.member_id for l in hs.lines) for hs in handsets))
+            with ThreadPoolExecutor() as pool:
+                networks = list(pool.map(api.dect_networks_associated_with_person, person_ids))
+            networks: list[list[DECTNetworkDetail]]
+            # for each user "our" network needs to be in the list of networks
+            self.assertTrue(all(ctx.dect_network_id in set(nw.id for nw in network_list)
+                                for network_list in networks))
 
     def test_networks_associated_with_workspace(self):
-        ...
+        raise NotImplementedError()
+
+    def test_networks_associated_with_virtual_line(self):
+        """
+        Create one handset with virtual line and see if we can find the associated network for virtual_line assigned
+        to line on the handset
+        """
+        # verify DECT network list for virtual line
+        api = self.api.telephony.dect_devices
+        with self.create_test_dect_network() as ctx:
+            ctx: TestDECTNetwork
+
+            # create handset with user as primary line
+            handsets = self.create_handsets(ctx=ctx, hs_count=1)
+
+            handset = handsets[0]
+            vl_list = list(self.api.telephony.virtual_lines.list())
+            target_vl: VirtualLine = random.choice(vl_list)
+
+            # assign virtual line as secondary line
+            dect = {'location_id': ctx.target_location.location_id,
+                    'dect_network_id': ctx.dect_network_id}
+            api.update_handset(**dect, handset_id=handset.id, line1_member_id=handset.lines[0].member_id,
+                               custom_display_name=handset.custom_display_name,
+                               line2_member_id=target_vl.id)
+            details_after = api.handset_details(**dect, handset_id=handset.id)
+            self.assertEqual(2, len(details_after.lines))
+            self.assertEqual(target_vl.id, details_after.lines[1].member_id)
+
+            vl_network_list = api.dect_networks_associated_with_virtual_line(virtual_line_id=target_vl.id)
+            self.assertTrue(ctx.dect_network_id in set(n.id for n in vl_network_list))

@@ -26,7 +26,8 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'UsbPortsObject', 'WifiAuthenticationMethod', 'DirectoryMethod', 'CallHistoryMethod', 'MppVlanDevice',
            'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
-           'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction']
+           'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
+           'AssignedDectNetwork']
 
 
 class IdOnly(ApiModel):
@@ -1104,3 +1105,16 @@ class ApplyLineKeyTemplateAction(str, Enum):
     apply_template = 'APPLY_TEMPLATE'
     #: Used to reset devices to its default Linekey Template configurations.
     apply_default_templates = 'APPLY_DEFAULT_TEMPLATES'
+
+
+class AssignedDectNetwork(ApiModel):
+    #: Unique identifier for a dect network.
+    id: Optional[str] = None
+    #: Identifier for device DECT network.
+    name: Optional[str] = None
+    #: Indicates whether the virtual profile is the primary line.
+    primary_enabled: Optional[bool] = None
+    #: Number of dect handsets assigned to the virtual profile.
+    number_of_handsets_assigned: Optional[int] = None
+    #: Location details of virtual line.
+    location: Optional[IdAndName] = None

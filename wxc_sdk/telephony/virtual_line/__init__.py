@@ -6,20 +6,21 @@ from pydantic import TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel
-from ...common import IdAndName, PrimaryOrShared
+from ...common import PrimaryOrShared, AssignedDectNetwork
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice, CallBridgeApi
+from ...person_settings import TelephonyDevice
+from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.call_intercept import CallInterceptApi
-from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.call_recording import CallRecordingApi
 from ...person_settings.call_waiting import CallWaitingApi
+from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.common import ApiSelector
 from ...person_settings.forwarding import PersonForwardingApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
 
 __all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineNumber', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber',
-           'VirtualLineDevices', 'VirtualLineDectNetwork']
+           'VirtualLineDevices']
 
 
 class VirtualLineNumber(ApiModel):
@@ -123,22 +124,6 @@ class VirtualLineDevices(ApiModel):
     #: Maximum number of devices a virtual line can be assigned to.
     #: example: 35
     max_device_count: Optional[int] = None
-
-
-class VirtualLineDectNetwork(ApiModel):
-    #: Unique identifier for a dect network.
-    #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0RFVklDRS9hNmYwYjhkMi01ZjdkLTQzZDItODAyNi0zM2JkNDg3NjYzMTg=
-    id: Optional[str] = None
-    #: Identifier for device DECT network.
-    #: example: Dect Network1
-    name: Optional[str] = None
-    #: Indicates whether the virtual profile is the primary line.
-    primary_enabled: Optional[bool] = None
-    #: Number of dect handsets assigned to the virtual profile.
-    #: example: 1
-    number_of_handsets_assigned: Optional[int] = None
-    #: Location details of virtual line.
-    location: Optional[IdAndName] = None
 
 
 @dataclass(init=False)
@@ -440,7 +425,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         r = VirtualLineDevices.model_validate(data)
         return r
 
-    def dect_networks(self, virtual_line_id: str, org_id: str = None) -> list[VirtualLineDectNetwork]:
+    def dect_networks(self, virtual_line_id: str, org_id: str = None) -> list[AssignedDectNetwork]:
         """
         Get List of Dect Networks Handsets for a Virtual Line
 
@@ -456,14 +441,14 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         :type virtual_line_id: str
         :param org_id: Retrieve virtual line settings from this organization.
         :type org_id: str
-        :rtype: list[VirtualLineDectNetwork]
+        :rtype: list[AssignedDectNetwork]
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{virtual_line_id}/dects')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[VirtualLineDectNetwork]).validate_python(data['dectNetworks'])
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
     def list(self, org_id: str = None, location_id: list[str] = None,
