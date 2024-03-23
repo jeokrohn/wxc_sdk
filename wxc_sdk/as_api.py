@@ -12342,6 +12342,163 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         r = data['dectNetworkId']
         return r
 
+    async def list_dect_networks(self, name: str = None, location_id: str = None,
+                           org_id: str = None) -> list[DECTNetworkDetail]:
+        """
+        Get the List of DECT Networks for an organization
+
+        Retrieves the list of DECT networks for an organization.
+
+        DECT Networks provide roaming voice services via base stations and wireless handsets. A DECT network can be
+        provisioned up to 1000 lines across up to 254 base stations.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param name: List of DECT networks with this name.
+        :type name: str
+        :param location_id: List of DECT networks at this location.
+        :type location_id: str
+        :param org_id: List of DECT networks in this organization.
+        :type org_id: str
+        :rtype: list[DECTNetworkDetail]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if location_id is not None:
+            params['locationId'] = location_id
+        url = self.ep('dectNetworks')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[DECTNetworkDetail]).validate_python(data['dectNetworks'])
+        return r
+
+    async def dect_network_details(self, location_id: str, dect_network_id: str,
+                             org_id: str = None) -> DECTNetworkDetail:
+        """
+        Get DECT Network Details
+
+        Retrieves the details of a DECT network.
+
+        DECT Networks provide roaming voice services via base stations and wireless handsets. A DECT network can be
+        provisioned up to 1000 lines across up to 254 base stations.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param location_id: Details of the DECT network at this location.
+        :type location_id: str
+        :param dect_network_id: Details of the specified DECT network.
+        :type dect_network_id: str
+        :param org_id: Details of the DECT network in this organization.
+        :type org_id: str
+        :rtype: :class:`DECTNetworkDetail`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
+        data = await super().get(url, params=params)
+        r = DECTNetworkDetail.model_validate(data)
+        return r
+
+    async def update_dect_network(self, location_id: str, dect_network_id: str, name: str, default_access_code_enabled: bool,
+                            default_access_code: str = None, display_name: str = None, org_id: str = None):
+        """
+        Update DECT Network
+
+        Update the details of a DECT network.
+
+        DECT Networks provide roaming voice services via base stations and wireless handsets. A DECT network can be
+        provisioned up to 1000 lines across up to 254 base stations.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: Update DECT network details in the specified location.
+        :type location_id: str
+        :param dect_network_id: Update DECT network details in the specified DECT network.
+        :type dect_network_id: str
+        :param name: Name of the DECT network. This should be unique across the location.
+        :type name: str
+        :param default_access_code_enabled: Default access code is enabled. If true, the default access code is
+            mandatory. If false, an auto-generated access code is used.
+        :type default_access_code_enabled: bool
+        :param default_access_code: Default access code for the DECT network. The default access code should be unique
+            within the same location to avoid the handset accidentally registering with base stations from different
+            DECT networks in range. This is mandatory when `defaultAccessCodeEnabled` is true.
+        :type default_access_code: str
+        :param display_name: DECT network name that will be displayed on the handset.
+        :type display_name: str
+        :param org_id: Update DECT network details in the specified organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = dict()
+        body['name'] = name
+        if display_name is not None:
+            body['displayName'] = display_name
+        body['defaultAccessCodeEnabled'] = default_access_code_enabled
+        if default_access_code is not None:
+            body['defaultAccessCode'] = default_access_code or None
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
+        await super().put(url, params=params, json=body)
+
+    async def update_dect_network_settings(self, settings: DECTNetworkDetail, org_id: str = None):
+        """
+        Update DECT Network from settings
+
+        Update the details of a DECT network from settings.
+
+        DECT Networks provide roaming voice services via base stations and wireless handsets. A DECT network can be
+        provisioned up to 1000 lines across up to 254 base stations.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param settings: DECT Network to update. location.id and id are used to address the DECT network to be
+            updated. Only name, display_name, default_access_code_enabled, default_access_code are considered for the update
+
+        :param org_id: Update DECT network details in the specified organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = settings.model_dump(mode='json', by_alias=True,
+                                   include={'name', 'display_name', 'default_access_code_enabled',
+                                            'default_access_code'})
+        url = self.ep(f'locations/{settings.location.id}/dectNetworks/{settings.id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_dect_network(self, location_id: str, dect_network_id: str, org_id: str = None):
+        """
+        Delete DECT Network
+
+        Delete a DECT network.
+
+        DECT Networks provide roaming voice services via base stations and wireless handsets. A DECT network can be
+        provisioned up to 1000 lines across up to 254 base stations.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: Delete the DECT network in the specified location.
+        :type location_id: str
+        :param dect_network_id: Delete the specified DECT network.
+        :type dect_network_id: str
+        :param org_id: Delete the DECT network in the specified organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
+        await super().delete(url, params=params)
+
     async def create_base_stations(self, location_id: str, dect_id: str, base_station_macs: list[str],
                              org_id: str = None) -> list[BaseStationResponse]:
         """
@@ -12371,6 +12528,124 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         data = await super().post(url, params=params, json=body)
         r = TypeAdapter(list[BaseStationResponse]).validate_python(data['baseStations'])
         return r
+
+    async def list_base_stations(self, location_id: str, dect_network_id: str,
+                           org_id: str = None) -> list[BaseStationsResponse]:
+        """
+        Get a list of DECT Network Base Stations
+
+        Retrieve a list of base stations in a DECT Network.
+
+        A DECT network supports 2 types of base stations, DECT DBS-110 Single-Cell and DECT DBS-210 Multi-Cell.
+        A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
+        up to 254 base stations and supports up to 1000 lines of registration.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Retrieve the list of base stations in the specified DECT network ID.
+        :type dect_network_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: list[BaseStationsResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[BaseStationsResponse]).validate_python(data['baseStations'])
+        return r
+
+    async def base_station_details(self, location_id: str, dect_network_id: str,
+                             base_station_id: str,
+                             org_id: str = None) -> BaseStationDetail:
+        """
+        Get the details of a specific DECT Network Base Station
+
+        Retrieve details of a specific base station in the DECT Network.
+
+        A DECT network supports 2 types of base stations, DECT DBS-110 Single-Cell and DECT DBS-210 Multi-Cell.
+        A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
+        up to 254 base stations and supports up to 1000 lines of registration.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Retrieve details of a specific base station in the specified DECT network ID.
+        :type dect_network_id: str
+        :param base_station_id: Retrieve details of the specific DECT base station ID.
+        :type base_station_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: :class:`BaseStationDetail`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations/{base_station_id}')
+        data = await super().get(url, params=params)
+        r = BaseStationDetail.model_validate(data)
+        return r
+
+    async def delete_bulk_base_stations(self, location_id: str, dect_network_id: str, org_id: str = None):
+        """
+        Delete bulk DECT Network Base Stations
+
+        Delete all the base stations in the DECT Network.
+
+        A DECT network supports 2 types of base stations, DECT DBS-110 Single-Cell and DECT DBS-210 Multi-Cell.
+        A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
+        up to 254 base stations and supports up to 1000 lines of registration.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Delete all the base stations in the specified DECT network ID.
+        :type dect_network_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations')
+        await super().delete(url, params=params)
+
+    async def delete_base_station(self, location_id: str, dect_network_id: str, base_station_id: str,
+                            org_id: str = None):
+        """
+        Delete a specific DECT Network Base Station
+
+        Delete a specific base station in the DECT Network.
+
+        A DECT network supports 2 types of base stations, DECT DBS-110 Single-Cell and DECT DBS-210 Multi-Cell.
+        A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
+        up to 254 base stations and supports up to 1000 lines of registration.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Delete a specific base station in the specified DECT network ID.
+        :type dect_network_id: str
+        :param base_station_id: Delete the specific DECT base station ID.
+        :type base_station_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations/{base_station_id}')
+        await super().delete(url, params=params)
 
     async def add_a_handset(self, location_id: str, dect_network_id: str, line1_member_id: str,
                       line2_member_id: str = None, custom_display_name: str = None, org_id: str = None):
@@ -12410,6 +12685,265 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         body['customDisplayName'] = custom_display_name
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         await super().post(url, params=params, json=body)
+
+    async def list_handsets(self, location_id: str, dect_network_id: str,
+                      basestation_id: str = None, member_id: str = None,
+                      org_id: str = None) -> DECTHandsetList:
+        """
+        Get List of Handsets for a DECT Network ID
+
+        List all the handsets associated with a DECT Network ID.
+
+        A handset can have up to two lines, and a DECT network supports a total of 120 lines across all handsets.
+        A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
+        can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Search handset details in the specified DECT network ID.
+        :type dect_network_id: str
+        :param basestation_id: Search handset details in the specified DECT base station ID.
+        :type basestation_id: str
+        :param member_id: ID of the member of the handset. Members can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
+        :type member_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: :class:`DECTHandsetList`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if basestation_id is not None:
+            params['basestationId'] = basestation_id
+        if member_id is not None:
+            params['memberId'] = member_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
+        data = await super().get(url, params=params)
+        r = DECTHandsetList.model_validate(data)
+        return r
+
+    async def handset_details(self, location_id: str, dect_network_id: str, handset_id: str,
+                        org_id: str = None) -> DECTHandsetItem:
+        """
+        Get Specific DECT Network Handset Details
+
+        List the specific DECT Network handset details.
+
+        A handset can have up to two lines, and a DECT network supports a total of 120 lines across all handsets.
+        A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
+        can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Search handset details in the specified DECT network ID.
+        :type dect_network_id: str
+        :param handset_id: A unique identifier for the handset.
+        :type handset_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: :class:`DECTHandsetGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
+        data = await super().get(url, params=params)
+        r = DECTHandsetItem.model_validate(data)
+        return r
+
+    async def update_handset(self, location_id: str, dect_network_id: str, handset_id: str,
+                       line1_member_id: str, custom_display_name: str, line2_member_id: str = None,
+                       org_id: str = None):
+        """
+        Update DECT Network Handset
+
+        Update the line assignment on a handset.
+
+        A handset can have up to two lines, and a DECT network supports a total of 120 lines across all handsets.
+        A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
+        can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
+
+        Updating a DECT Network handset requires a full administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Update handset details in the specified DECT network.
+        :type dect_network_id: str
+        :param handset_id: A unique identifier for the handset.
+        :type handset_id: str
+        :param line1_member_id: ID of the member on line1 of the handset. Members can be PEOPLE or PLACE.
+        :type line1_member_id: str
+        :param custom_display_name: Custom display name on the handset.
+        :type custom_display_name: str
+        :param line2_member_id: ID of the member on line2 of the handset. Members can be PEOPLE, PLACE, or
+            VIRTUAL_LINE.
+        :type line2_member_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['line1MemberId'] = line1_member_id
+        body['line2MemberId'] = line2_member_id
+        body['customDisplayName'] = custom_display_name
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_handset(self, location_id: str, dect_network_id: str, handset_id: str,
+                       org_id: str = None):
+        """
+        Delete specific DECT Network Handset Details
+
+        Delete a specific DECT Network handset.
+
+        A handset can have up to two lines, and a DECT network supports a total of 120 lines across all handsets.
+        A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
+        can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Delete handset details in the specified DECT network ID.
+        :type dect_network_id: str
+        :param handset_id: A unique identifier for the handset.
+        :type handset_id: str
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
+        await super().delete(url, params=params)
+
+    async def delete_handsets(self, location_id: str, dect_network_id: str, items: list[str],
+                        delete_all: bool = None, org_id: str = None):
+        """
+        Delete multiple handsets
+
+        Delete multiple handsets or all of them.
+
+        A handset can have up to two lines, and a DECT network supports a total of 120 lines across all handsets.
+        A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
+        can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Delete handset details in the specified DECT network ID.
+        :type dect_network_id: str
+        :param items: Array of the handset IDs to be deleted.
+        :type items: list[str]
+        :param delete_all: If present the items array is ignored and all items in the context are deleted.
+        :type delete_all: bool
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['items'] = items
+        if delete_all is not None:
+            body['deleteAll'] = delete_all
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
+        await super().delete(url, params=params, json=body)
+
+    async def dect_networks_associated_with_person(self, person_id: str,
+                                             org_id: str = None) -> list[AssignedDectNetwork]:
+        """
+        GET List of DECT networks associated with a Person
+
+        Retrieves the list of DECT networks for a person in an organization.
+
+        DECT Network provides roaming voice services via base stations and wireless handsets. DECT network can be
+        provisioned up to 1000 lines across up to 254 base stations.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param person_id: List of DECT networks associated with this person.
+        :type person_id: str
+        :param org_id: List of DECT networks associated with a person in this organization.
+        :type org_id: str
+        :rtype: list[AssignedDectNetwork]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/dectNetworks')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
+        return r
+
+    async def dect_networks_associated_with_workspace(self, workspace_id: str,
+                                                org_id: str = None) -> list[AssignedDectNetwork]:
+        """
+        GET List of DECT networks associated with a workspace
+
+        Retrieves the list of DECT networks for a workspace in an organization.
+
+        DECT Network provides roaming voice services via base stations and wireless handsets. DECT network can be
+        provisioned up to 1000 lines across up to 254 base stations.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param workspace_id: List of DECT networks associated with this workspace.
+        :type workspace_id: str
+        :param org_id: List of DECT networks associated with a workspace in this organization.
+        :type org_id: str
+        :rtype: list[AssignedDectNetwork]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'workspaces/{workspace_id}/dectNetworks')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
+        return r
+
+    async def dect_networks_associated_with_virtual_line(self, virtual_line_id: str,
+                                                   org_id: str = None) -> list[AssignedDectNetwork]:
+        """
+        Get List of Dect Networks Handsets for a Virtual Line
+
+        Retrieve DECT Network details assigned for a virtual line.
+
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+
+        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
+        :type virtual_line_id: str
+        :param org_id: Retrieve virtual line settings from this organization.
+        :type org_id: str
+        :rtype: list[AssignedDectNetwork]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+
+        url = self.ep(f'virtualLines/{virtual_line_id}/dectNetworks')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
+        return r
 
     def available_members_gen(self, member_name: str = None, phone_number: str = None, order: str = None,
                           exclude_virtual_profile: bool = None, org_id: str = None,
@@ -16305,7 +16839,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         r = VirtualLineDevices.model_validate(data)
         return r
 
-    async def dect_networks(self, virtual_line_id: str, org_id: str = None) -> list[VirtualLineDectNetwork]:
+    async def dect_networks(self, virtual_line_id: str, org_id: str = None) -> list[AssignedDectNetwork]:
         """
         Get List of Dect Networks Handsets for a Virtual Line
 
@@ -16321,14 +16855,14 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         :type virtual_line_id: str
         :param org_id: Retrieve virtual line settings from this organization.
         :type org_id: str
-        :rtype: list[VirtualLineDectNetwork]
+        :rtype: list[AssignedDectNetwork]
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{virtual_line_id}/dects')
         data = await super().get(url, params=params)
-        r = TypeAdapter(list[VirtualLineDectNetwork]).validate_python(data['dectNetworks'])
+        r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
     def list_gen(self, org_id: str = None, location_id: list[str] = None,

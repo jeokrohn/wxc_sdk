@@ -627,10 +627,44 @@ The method name is a link to the method documentation.
         Add a Handset to a DECT Network
    * - :meth:`api.telephony.dect_devices.available_members <wxc_sdk.telephony.dect_devices.DECTDevicesApi.available_members>`
         Search Available Members
+   * - :meth:`api.telephony.dect_devices.base_station_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.base_station_details>`
+        Get the details of a specific DECT Network Base Station
    * - :meth:`api.telephony.dect_devices.create_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_base_stations>`
         Create Multiple Base Stations
    * - :meth:`api.telephony.dect_devices.create_dect_network <wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_dect_network>`
         Create a DECT Network
+   * - :meth:`api.telephony.dect_devices.dect_network_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_network_details>`
+        Get DECT Network Details
+   * - :meth:`api.telephony.dect_devices.dect_networks_associated_with_person <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_person>`
+        GET List of DECT networks associated with a Person
+   * - :meth:`api.telephony.dect_devices.dect_networks_associated_with_virtual_line <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_virtual_line>`
+        Get List of Dect Networks Handsets for a Virtual Line
+   * - :meth:`api.telephony.dect_devices.dect_networks_associated_with_workspace <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_workspace>`
+        GET List of DECT networks associated with a workspace
+   * - :meth:`api.telephony.dect_devices.delete_base_station <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_base_station>`
+        Delete a specific DECT Network Base Station
+   * - :meth:`api.telephony.dect_devices.delete_bulk_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_bulk_base_stations>`
+        Delete bulk DECT Network Base Stations
+   * - :meth:`api.telephony.dect_devices.delete_dect_network <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_dect_network>`
+        Delete DECT Network
+   * - :meth:`api.telephony.dect_devices.delete_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handset>`
+        Delete specific DECT Network Handset Details
+   * - :meth:`api.telephony.dect_devices.delete_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handsets>`
+        Delete multiple handsets
+   * - :meth:`api.telephony.dect_devices.handset_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.handset_details>`
+        Get Specific DECT Network Handset Details
+   * - :meth:`api.telephony.dect_devices.list_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_base_stations>`
+        Get a list of DECT Network Base Stations
+   * - :meth:`api.telephony.dect_devices.list_dect_networks <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_dect_networks>`
+        Get the List of DECT Networks for an organization
+   * - :meth:`api.telephony.dect_devices.list_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_handsets>`
+        Get List of Handsets for a DECT Network ID
+   * - :meth:`api.telephony.dect_devices.update_dect_network <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network>`
+        Update DECT Network
+   * - :meth:`api.telephony.dect_devices.update_dect_network_settings <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network_settings>`
+        Update DECT Network from settings
+   * - :meth:`api.telephony.dect_devices.update_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_handset>`
+        Update DECT Network Handset
    * - :meth:`api.telephony.devices.apply_changes <wxc_sdk.telephony.devices.TelephonyDevicesApi.apply_changes>`
         Apply Changes for a specific device
    * - :meth:`api.telephony.devices.available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.available_members>`
