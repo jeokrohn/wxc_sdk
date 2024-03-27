@@ -52,6 +52,7 @@ for i in ${@}; do
         ;;
 
         apib)
+        all=
         apib=true
         ;;
 
