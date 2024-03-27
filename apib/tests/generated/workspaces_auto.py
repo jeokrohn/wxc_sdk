@@ -13,7 +13,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType',
            'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
-           'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
+           'WorkspaceCallingWebexCalling', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
            'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus',
            'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices',
            'WorkspaceType1', 'WorkspaceUpdateRequestType', 'WorkspacesApi']
@@ -58,12 +58,20 @@ class WorkspaceCallingHybridCalling(ApiModel):
     email_address: Optional[str] = None
 
 
+class WorkspaceCallingWebexCalling(ApiModel):
+    #: The Webex Calling license associated with this workspace.
+    #: example: ['Y2lzY29g4...']
+    licenses: Optional[list[str]] = None
+
+
 class WorkspaceCalling(ApiModel):
     #: Calling.
     #: example: hybridCalling
     type: Optional[WorkspaceCallingType] = None
     #: The `hybridCalling` object only applies when calling type is `hybridCalling`.
     hybrid_calling: Optional[WorkspaceCallingHybridCalling] = None
+    #: The `webexCalling` object only applies when calling type is `webexCalling`.
+    webex_calling: Optional[WorkspaceCallingWebexCalling] = None
 
 
 class WorkspaceHotdeskingStatus(str, Enum):
@@ -164,12 +172,16 @@ class WorkspaceCreationRequestCallingWebexCalling(ApiModel):
     #: Calling location ID.
     #: example: Y2lzY29g4...
     location_id: Optional[str] = None
+    #: A list of Webex Calling License IDs. If multiple license IDs are provided, the oldest suitable one will be
+    #: applied.
+    #: example: ['Y2lzY29g4...1', 'Y2lzY29g4...2', 'Y2lzY29g4...n']
+    licenses: Optional[list[str]] = None
 
 
 class WorkspaceCreationRequestCalling(ApiModel):
-    #: Calling.
+    #: The calling type that is supported on the workspace.
     #: example: webexCalling
-    type: Optional[str] = None
+    type: Optional[WorkspaceCallingType] = None
     #: The `webexCalling` object only applies when calling type is `webexCalling`.
     webex_calling: Optional[WorkspaceCreationRequestCallingWebexCalling] = None
 
@@ -334,12 +346,14 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
-        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
+        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_, `available numbers
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
         * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
-        required.
+        required. Furthermore, it is possible to set the `licenses` field with a list of Webex Calling license IDs, if
+        desired. If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are
+        supplied, the oldest suitable one from the active subscriptions will be automaticaly applied.
 
         :param display_name: A friendly name for the workspace.
         :type display_name: str
@@ -353,10 +367,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type capacity: int
         :param type: The type that best describes the workspace.
         :type type: WorkspaceType1
-        :param sip_address: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
+        :param sip_address: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`.
         :type sip_address: str
-        :param calling: Calling types supported on create are `freeCalling`, `webexEdgeForDevices`,
-            `thirdPartySipCalling`, `webexCalling` and `none`. Default is `freeCalling`.
+        :param calling: Calling.
         :type calling: WorkspaceCreationRequestCalling
         :param calendar: Workspace calendar configuration. Provide a type (`microsoft`, `google` or `none`) and an
             `emailAddress`. Default is `none`.
@@ -456,7 +469,10 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
         * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
-        required.
+        required. Furthermore, the `licenses` field can be set with a list of Webex Calling license IDs, if desired.
+        If multiple license IDs are provided, the oldest suitable one will be applied. If a previously applied license
+        ID is omitted, it will be replaced with one from the list provided. If the `licenses` field is omitted, the
+        current calling license will be retained.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -476,7 +492,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             or `none`) and an `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none`
             type does not require an `emailAddress`.
         :type calendar: WorkspaceCreationRequestCalendar
-        :param sip_address: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
+        :param sip_address: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`.
         :type sip_address: str
         :param calling: Calling types supported on update are `freeCalling`, `thirdPartySipCalling`, `webexCalling` and
             `none`.
