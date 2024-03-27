@@ -342,10 +342,28 @@ class TestDectDevices(TestWithLocations):
             user_for_2nd_line: AvailableMember
             dect = {'location_id': ctx.target_location.location_id,
                     'dect_network_id': ctx.dect_network_id}
-            api.add_a_handset(**dect,
-                              line1_member_id=user_for_1st_line.member_id,
-                              line2_member_id=user_for_2nd_line.member_id,
-                              custom_display_name=user_for_1st_line.last_name)
+            with self.assertRaises(RestError) as exc:
+                api.add_a_handset(**dect,
+                                  line1_member_id=user_for_1st_line.member_id,
+                                  line2_member_id=user_for_2nd_line.member_id,
+                                  custom_display_name=user_for_1st_line.last_name)
+            err: RestError = exc.exception
+            if err.response.status_code == 400 and err.code == 5302:
+                # com.broadsoft.components.nssynch.NSSynchronizationException
+                # --> Try to create with one member and add 2nd member later
+                api.add_a_handset(**dect,
+                                  line1_member_id=user_for_1st_line.member_id,
+                                  custom_display_name=user_for_1st_line.last_name)
+                new_handset = next(hs
+                                   for hs in api.list_handsets(**dect,
+                                                               member_id=user_for_1st_line.member_id).handsets
+                                   if hs.lines[0].member_id == user_for_1st_line.member_id)
+                api.update_handset(**dect, handset_id=new_handset.id,
+                                   line1_member_id=user_for_1st_line.member_id,
+                                   line2_member_id=user_for_2nd_line.member_id,
+                                   custom_display_name=user_for_1st_line.last_name)
+                print('Creating handset with two members failed but creating handset with one member and then '
+                      'adding 2nd member worked')
             handsets = api.list_handsets(**dect)
             self.assertEqual(1, len(handsets.handsets))
             self.assertEqual(1, handsets.number_of_handsets_assigned)
@@ -353,6 +371,9 @@ class TestDectDevices(TestWithLocations):
             handset = handsets.handsets[0]
             self.assertEqual(2, len(handset.lines))
             hs_details = api.handset_details(**dect, handset_id=handset.id)
+            # raise error for now; can be removed if we don't run in to an exception anymore when creating handset
+            # with two members
+            raise err
 
     def test_handset_details(self):
         ...
@@ -415,7 +436,7 @@ class TestDectDevices(TestWithLocations):
         dect = {'location_id': ctx.target_location.location_id,
                 'dect_network_id': ctx.dect_network_id}
 
-        def create_hs(m:AvailableMember):
+        def create_hs(m: AvailableMember):
             api.add_a_handset(**dect, line1_member_id=m.member_id,
                               custom_display_name=m.last_name)
 
