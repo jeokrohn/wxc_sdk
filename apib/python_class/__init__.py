@@ -16,7 +16,7 @@ from urllib.parse import urljoin
 import dateutil.parser
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember
-from apib.apib.classes import ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray, ApibApi
+from apib.apib.classes import ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray, ApibApi, ApibOption
 from apib.tools import break_line, sanitize_class_name, snake_case, words_to_camel, \
     remove_html_comments, remove_div, lines_for_docstring
 from wxc_sdk.base import to_camel
@@ -863,122 +863,132 @@ class PythonClassRegistry:
         """
         derive Attribute from APIB member. Create and register classes on the fly as needed
         """
-        if member.element != 'member':
+        if member.element == 'select':
+            sample = None
+            options: list[ApibOption] = [option for option in member.content]
+            python_types = [simple_python_type(option.content.value.element, option.content.value.content) for option in options]
+            python_type = f'Union[{", ".join(python_types)}]'
+            docstring = None
+            referenced_class = None
+            optional = False
+            name = options[0].content.key
+        elif member.element != 'member':
             log.warning(f'Not implemented, member element: {member.element}')
             # TODO: implement this case
             raise NotImplementedError
-        name = member.key
-        value = member.value
-        docstring = member.meta and member.meta.description
-        referenced_class = None
-        optional = 'optional' in member.type_attributes
-        if value.element == 'string':
-            sample = value.content
-            # could be a datetime
-            sample, python_type = guess_datetime_or_int(sample, 'string')
-        elif value.element == 'array':
-            sample = None
-            if not isinstance(value.content, list):
-                raise ValueError('unexpected content for list')
-            if not value.content:
-                array_element_type = 'string'
-            else:
-                array_element_type = value.content[0].element
-            if array_element_type == 'string':
-                python_type = 'list[str]'
-                sample = ", ".join(f"'{c.content}'" for c in value.content if c.content is not None)
-                sample = sample and f'[{sample}]'
-            elif array_element_type == 'number':
-                content = value.content[0]
-                python_type = f'list[{content.content.__class__.__name__}]'
-                sample = f'[{", ".join(f"{c.content}" for c in value.content)}]'
-            elif array_element_type == 'object':
-                # array of some object
-                if not isinstance(value.content, list) or len(value.content) != 1:
-                    raise ValueError(f'Well, this is unexpected: {value.content}')
-                content: ApibObject = value.content[0]
-                referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
-                class_attributes = self._python_class_attributes(basename=referenced_class,
-                                                                 members=content.content)
-                new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                        description=value.description, is_enum=False, baseclass=None)
+        else:
+            name = member.key
+            value = member.value
+            docstring = member.meta and member.meta.description
+            referenced_class = None
+            optional = 'optional' in member.type_attributes
+            if value.element == 'string':
+                sample = value.content
+                # could be a datetime
+                sample, python_type = guess_datetime_or_int(sample, 'string')
+            elif value.element == 'array':
+                sample = None
+                if not isinstance(value.content, list):
+                    raise ValueError('unexpected content for list')
+                if not value.content:
+                    array_element_type = 'string'
+                else:
+                    array_element_type = value.content[0].element
+                if array_element_type == 'string':
+                    python_type = 'list[str]'
+                    sample = ", ".join(f"'{c.content}'" for c in value.content if c.content is not None)
+                    sample = sample and f'[{sample}]'
+                elif array_element_type == 'number':
+                    content = value.content[0]
+                    python_type = f'list[{content.content.__class__.__name__}]'
+                    sample = f'[{", ".join(f"{c.content}" for c in value.content)}]'
+                elif array_element_type == 'object':
+                    # array of some object
+                    if not isinstance(value.content, list) or len(value.content) != 1:
+                        raise ValueError(f'Well, this is unexpected: {value.content}')
+                    content: ApibObject = value.content[0]
+                    referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
+                    class_attributes = self._python_class_attributes(basename=referenced_class,
+                                                                     members=content.content)
+                    new_class = PythonClass(name=referenced_class, attributes=class_attributes,
+                                            description=value.description, is_enum=False, baseclass=None)
 
-                self._add_class(new_class)
-                python_type = f'list[{new_class.name}]'
-            elif array_element_type == 'enum':
-                # array of enum
-                if not isinstance(value.content, list) or len(value.content) != 1:
-                    raise ValueError(f'Well, this is unexpected: {value.content}')
-                # create enum on the fly
-                content: ApibEnum = value.content[0]
-                referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
-                class_attributes = list(Attribute.from_enum(content))
+                    self._add_class(new_class)
+                    python_type = f'list[{new_class.name}]'
+                elif array_element_type == 'enum':
+                    # array of enum
+                    if not isinstance(value.content, list) or len(value.content) != 1:
+                        raise ValueError(f'Well, this is unexpected: {value.content}')
+                    # create enum on the fly
+                    content: ApibEnum = value.content[0]
+                    referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
+                    class_attributes = list(Attribute.from_enum(content))
+                    new_class = PythonClass(name=referenced_class, attributes=class_attributes,
+                                            description=value.description, is_enum=True, baseclass=None)
+                    self._add_class(new_class)
+                    python_type = f'list[{new_class.name}]'
+                else:
+                    # array of some type
+                    # references class is that type
+                    referenced_class = array_element_type
+                    referenced_class = self.qualified_class_name(sanitize_class_name(referenced_class))
+                    # .. and the Python type is a list of that type
+                    python_type = f'list[{referenced_class}]'
+            elif value.element == 'object':
+                # we need a class with these attributes
+                python_type = f'{class_name}{name[0].upper()}{name[1:]}'
+                python_type, _ = re.subn(r'[^\w_]', '', python_type)
+                sample = None
+                python_type = sanitize_class_name(python_type)
+                referenced_class = python_type
+                class_attributes = self._python_class_attributes(basename=referenced_class, members=value.content)
+                if class_attributes:
+                    new_class = PythonClass(name=referenced_class, attributes=class_attributes,
+                                            description=value.description, is_enum=False, baseclass=None)
+                    self._add_class(new_class)
+                    python_type = new_class.name
+                else:
+                    # attribute type is a generic "object"
+                    python_type = 'Any'
+                    referenced_class = None
+            elif value.element == 'number':
+                sample = value.content
+                # can be int or float
+                if value.content is None:
+                    python_type = 'int'
+                else:
+                    try:
+                        sample = int(value.content)
+                        python_type = 'int'
+                    except ValueError:
+                        python_type = 'float'
+            elif value.element == 'enum':
+                value: ApibEnum
+                # we need an implicit enum class
+                python_type = f'{class_name}{name[0].upper()}{name[1:]}'
+                python_type = sanitize_class_name(python_type)
+                sample = value.content and value.content.content
+                referenced_class = python_type
+                class_attributes = list(Attribute.from_enum(value))
                 new_class = PythonClass(name=referenced_class, attributes=class_attributes,
                                         description=value.description, is_enum=True, baseclass=None)
                 self._add_class(new_class)
-                python_type = f'list[{new_class.name}]'
-            else:
-                # array of some type
-                # references class is that type
-                referenced_class = array_element_type
-                referenced_class = self.qualified_class_name(sanitize_class_name(referenced_class))
-                # .. and the Python type is a list of that type
-                python_type = f'list[{referenced_class}]'
-        elif value.element == 'object':
-            # we need a class with these attributes
-            python_type = f'{class_name}{name[0].upper()}{name[1:]}'
-            python_type, _ = re.subn(r'[^\w_]', '', python_type)
-            sample = None
-            python_type = sanitize_class_name(python_type)
-            referenced_class = python_type
-            class_attributes = self._python_class_attributes(basename=referenced_class, members=value.content)
-            if class_attributes:
-                new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                        description=value.description, is_enum=False, baseclass=None)
-                self._add_class(new_class)
                 python_type = new_class.name
+                referenced_class = new_class.name
+            elif value.element == 'boolean':
+                python_type = 'bool'
+                sample = value.content
             else:
-                # attribute type is a generic "object"
-                python_type = 'Any'
-                referenced_class = None
-        elif value.element == 'number':
-            sample = value.content
-            # can be int or float
-            if value.content is None:
-                python_type = 'int'
-            else:
+                # this might be a reference to a class
+                python_type = value.element
+                python_type = self.qualified_class_name(sanitize_class_name(python_type))
+                referenced_class = python_type
                 try:
-                    sample = int(value.content)
-                    python_type = 'int'
-                except ValueError:
-                    python_type = 'float'
-        elif value.element == 'enum':
-            value: ApibEnum
-            # we need an implicit enum class
-            python_type = f'{class_name}{name[0].upper()}{name[1:]}'
-            python_type = sanitize_class_name(python_type)
-            sample = value.content and value.content.content
-            referenced_class = python_type
-            class_attributes = list(Attribute.from_enum(value))
-            new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                    description=value.description, is_enum=True, baseclass=None)
-            self._add_class(new_class)
-            python_type = new_class.name
-            referenced_class = new_class.name
-        elif value.element == 'boolean':
-            python_type = 'bool'
-            sample = value.content
-        else:
-            # this might be a reference to a class
-            python_type = value.element
-            python_type = self.qualified_class_name(sanitize_class_name(python_type))
-            referenced_class = python_type
-            try:
-                sample = value.content and value.content.content
-            except AttributeError:
-                sample = None
-        if referenced_class:
-            referenced_class = self.qualified_class_name(referenced_class)
+                    sample = value.content and value.content.content
+                except AttributeError:
+                    sample = None
+            if referenced_class:
+                referenced_class = self.qualified_class_name(referenced_class)
         return Attribute(name=name, python_type=python_type, docstring=docstring, sample=sample,
                          referenced_class=referenced_class, optional=optional)
 

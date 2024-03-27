@@ -377,6 +377,8 @@ class WithTypeAttributes(ApibElement):
 
     @model_validator(mode='before')
     def val_root_type_attributes(cls, values):
+        if values is None:
+            return None
         values = values.copy()
         # try to pull typeAttributes
         if (attributes := values.get('attributes')) and (typeAttributes := attributes.pop('typeAttributes', None)):
@@ -897,7 +899,55 @@ class ApibEnum(ApibElement):
                     raise ValueError(f'Did not get "string" element for default: {default}')
                 data['default'] = parsed_default.content
             if enumerations:
-                parsed_list = TypeAdapter(list[ApibEnumElement]).validate_python(enumerations['content'])
+                """ drafter seems to sometimes create a superfluous empty element at the end of an enumeration
+                    "element": "enum",
+                    "attributes": {
+                      "enumerations": {
+                        "element": "array",
+                        "content": [
+                          {
+                            "element": "string",
+                            "attributes": {
+                              "typeAttributes": {
+                                "element": "array",
+                                "content": [
+                                  {
+                                    "element": "string",
+                                    "content": "fixed"
+                                  }
+                                ]
+                              }
+                            },
+                            "content": "none"
+                          },
+                          {
+                            "element": "string",
+                            "attributes": {
+                              "typeAttributes": {
+                                "element": "array",
+                                "content": [
+                                  {
+                                    "element": "string",
+                                    "content": "fixed"
+                                  }
+                                ]
+                              }
+                            },
+                            "content": "submitted"
+                          },
+                          ...
+                          {
+                            "element": "string"
+                          }
+                        ]
+                      }
+                    }
+                In that case we throw away the last element
+                """
+                enumerations_content = enumerations['content']
+                if enumerations_content[-1] == {'element': 'string'}:
+                    enumerations_content = enumerations_content[:-1]
+                parsed_list = TypeAdapter(list[ApibEnumElement]).validate_python(enumerations_content)
                 if parsed_list and not (le := parsed_list[-1]).content:
                     if le.attributes or le.meta:
                         raise ValueError()

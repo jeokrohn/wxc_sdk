@@ -38,7 +38,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('apib', type=str,
-                        help='name of API file. If name is given w/o oath then default path from environment '
+                        help='name of API file. If name is given w/o path then default path from environment '
                              'APIB_PATH (if present) is used to determine the absolute path of the APIB source. '
                              'Parameter value is interpreted as glob wildcard.')
     parser.add_argument('--pypath', type=str,
