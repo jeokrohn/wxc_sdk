@@ -113,10 +113,6 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
     """
     Features:  Call Pickup
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Call Pickup supports reading and writing of Webex Calling Call Pickup settings for a specific
     organization.
     

@@ -34,10 +34,6 @@ class BetaUserCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telephony/co
     """
     Beta User Call Settings with Department Features
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Person Call Settings supports modifying Webex Calling settings for a specific person.
     
     Viewing People requires a full, user, or read-only administrator auth token with a scope of

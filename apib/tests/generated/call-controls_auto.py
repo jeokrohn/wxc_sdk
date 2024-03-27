@@ -226,10 +226,6 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
     """
     Call Controls
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Call Control APIs in support of Webex Calling.
     
     All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`

@@ -290,11 +290,7 @@ class PostPersonPlaceObject(ApiModel):
 
 class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/config'):
     """
-    Beta Features:  Call Queue with Department Features
-    
-    Not supported for Webex for Government (FedRAMP)
-    
-    
+    Beta Features: Call Queue with Department Features
     
     Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
     

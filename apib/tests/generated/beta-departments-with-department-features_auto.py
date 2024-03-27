@@ -35,10 +35,6 @@ class BetaDepartmentsWithDepartmentFeaturesApi(ApiChild, base='telephony/config/
     """
     Beta Departments with Department Features
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Webex Calling Organization Settings support reading and writing of Webex Calling settings for a specific
     organization.
     

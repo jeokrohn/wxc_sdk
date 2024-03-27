@@ -209,10 +209,6 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
     """
     Features:  Call Park
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Call Park supports reading and writing of Webex Calling Call Park settings for a specific organization.
     
     Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of

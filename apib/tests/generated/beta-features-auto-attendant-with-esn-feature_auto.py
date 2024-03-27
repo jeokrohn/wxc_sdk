@@ -212,10 +212,6 @@ class BetaFeaturesAutoAttendantWithESNFeatureApi(ApiChild, base='telephony/confi
     """
     Beta Features:  Auto Attendant with ESN Feature
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
     organization.
     

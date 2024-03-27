@@ -28,20 +28,20 @@ class GetPagingGroupAgentObject(ApiModel):
     #: Agents ID.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80YTc2ZmVmNC1mZjlmLTExZWItYWYwZC00M2YwZjY1NTdjYWI
     id: Optional[str] = None
-    #: Agents first name. Minimum length is 1. Maximum length is 30.
+    #: Agent's first name. Minimum length is 1. Maximum length is 64.
     #: example: John
     first_name: Optional[str] = None
-    #: Agents last name. Minimum length is 1. Maximum length is 30.
+    #: Agent's last name. Minimum length is 1. Maximum length is 64.
     #: example: Doe
     last_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
     type: Optional[GetPagingGroupAgentObjectType] = None
-    #: Agents phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: Agent's phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Agents extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
+    #: Agent's extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 7781
     extension: Optional[str] = None
     #: Routing prefix of location.
@@ -84,10 +84,10 @@ class GetPagingGroupObject(ApiModel):
     #: Language code.
     #: example: en_us
     language_code: Optional[str] = None
-    #: First name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+    #: First name that displays when a group page is performed. Minimum length is 1. Maximum length is 64.
     #: example: Paging
     first_name: Optional[str] = None
-    #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+    #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 64.
     #: example: Group
     last_name: Optional[str] = None
     #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
@@ -134,10 +134,6 @@ class ListPagingGroupObject(ApiModel):
 class BetaFeaturesPagingGroupWithESNFeatureApi(ApiChild, base='telephony/config'):
     """
     Beta Features:  Paging Group with ESN Feature
-    
-    Not supported for Webex for Government (FedRAMP)
-    
-    
     
     Features: Paging Group supports reading and writing of Webex Calling Paging Group settings for a specific
     organization.

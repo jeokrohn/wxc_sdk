@@ -199,10 +199,6 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
     """
     Beta Features:  Auto Attendant with Department Features
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
     organization.
     

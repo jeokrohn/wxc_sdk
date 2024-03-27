@@ -227,10 +227,6 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
     """
     Beta Call Controls with Mute and Unmute Feature
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Call Control APIs in support of Webex Calling.
     
     All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`

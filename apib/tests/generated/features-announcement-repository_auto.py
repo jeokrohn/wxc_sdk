@@ -125,10 +125,6 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
     """
     Features:  Announcement Repository
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Announcement Repository support reading and writing of Webex Calling Announcement Repository settings for
     a specific organization.
     

@@ -857,10 +857,6 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     """
     Features:  Call Queue
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
     
     Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of

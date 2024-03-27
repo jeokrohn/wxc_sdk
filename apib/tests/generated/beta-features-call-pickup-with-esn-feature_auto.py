@@ -79,11 +79,7 @@ class GetCallPickupObject(ApiModel):
 
 class BetaFeaturesCallPickupWithESNFeatureApi(ApiChild, base='telephony/config/locations'):
     """
-    Beta Features:  Call Pickup with ESN Feature
-    
-    Not supported for Webex for Government (FedRAMP)
-    
-    
+    Beta Features: Call Pickup with ESN Feature
     
     Features: Call Pickup supports reading and writing of Webex Calling Call Pickup settings for a specific
     organization.

@@ -93,11 +93,7 @@ class BetaVirtualLineCallSettingsWithESNFeatureApi(ApiChild, base='telephony/con
     """
     Beta Virtual Line Call Settings with ESN Feature
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
-    Viutual Line Settings supports listing Webex Calling virtual lines.
+    Virtual Line Settings supports listing Webex Calling virtual lines.
     
     Viewing Virtual Lines requires a full, user, or read-only administrator auth token with a scope of
     `spark-admin:telephony_config_read.

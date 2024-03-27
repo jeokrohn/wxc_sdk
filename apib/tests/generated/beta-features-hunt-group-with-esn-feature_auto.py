@@ -220,10 +220,6 @@ class BetaFeaturesHuntGroupWithESNFeatureApi(ApiChild, base='telephony/config'):
     """
     Beta Features:  Hunt Group with ESN Feature
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
     
     Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
