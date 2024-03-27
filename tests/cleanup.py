@@ -20,10 +20,12 @@ from tests.base import get_tokens
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
+from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.callqueue import CallQueue
 
-TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE |cpe_|cp)\d{3})|National Holidays$')
+TO_DELETE = re.compile(
+    r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE |cpe_|cp)\d{3})|National Holidays$')
 DRY_RUN = False
 
 
@@ -42,6 +44,21 @@ def filtered(targets, name_getter=None, alternate_matches: Union[Pattern, str] =
             yield t
         else:
             print(f'Keeping {t.__class__.__name__}({name})')
+
+
+def delete_inactive_users(pool: ThreadPoolExecutor, api: WebexSimpleApi):
+    def is_calling_user(user: Person) -> bool:
+        return any((lic := licenses_by_id.get(lic_id)) and lic.webex_calling
+                   for lic_id in user.licenses)
+
+    users = list(api.people.list())
+    licenses = list(api.licenses.list())
+    licenses_by_id = {lic.license_id: lic for lic in licenses}
+    to_delete = [u for u in users if u.invite_pending and not is_calling_user(u)]
+    print(f'deleting {len(to_delete)} users')
+    list(pool.map(lambda u: api.people.delete_person(person_id=u.person_id),
+                  to_delete))
+    return
 
 
 async def main():
@@ -76,6 +93,8 @@ async def main():
     rest_logger.setLevel(logging.DEBUG)
 
     with ThreadPoolExecutor() as pool:
+
+        delete_inactive_users(pool=pool, api=api)
 
         # MPPs with mac DEADEAD mac or stll in "activating"
         mpp_devices = [device for device in api.devices.list(product_type='phone')
