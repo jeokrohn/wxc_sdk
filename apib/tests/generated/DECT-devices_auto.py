@@ -12,7 +12,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['AvailableMember', 'BaseStationPostResult', 'BaseStationResponse', 'CreateDECTNetworkModel',
-           'DECTDevicesSettingsApi', 'LineType', 'Location', 'MemberType']
+           'DECTDevicesSettingsApi', 'LineType', 'Location', 'MemberType', 'SearchAvailableMembersUsageType']
 
 
 class CreateDECTNetworkModel(str, Enum):
@@ -87,6 +87,11 @@ class AvailableMember(ApiModel):
     member_type: Optional[MemberType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
+
+
+class SearchAvailableMembersUsageType(str, Enum):
+    device_owner = 'DEVICE_OWNER'
+    shared_line = 'SHARED_LINE'
 
 
 class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
@@ -222,7 +227,8 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
 
     def search_available_members(self, member_name: str = None, phone_number: str = None, extension: str = None,
                                  location_id: str = None, order: str = None, exclude_virtual_line: bool = None,
-                                 org_id: str = None, **params) -> Generator[AvailableMember, None, None]:
+                                 usage_type: SearchAvailableMembersUsageType = None, org_id: str = None,
+                                 **params) -> Generator[AvailableMember, None, None]:
         """
         Search Available Members
 
@@ -244,6 +250,8 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :param exclude_virtual_line: If true, search results will exclude virtual lines in the member list. NOTE:
             Virtual lines cannot be assigned as the primary line.
         :type exclude_virtual_line: bool
+        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
+        :type usage_type: SearchAvailableMembersUsageType
         :param org_id: Search members in this organization.
         :type org_id: str
         :return: Generator yielding :class:`AvailableMember` instances
@@ -262,5 +270,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
             params['order'] = order
         if exclude_virtual_line is not None:
             params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
+        if usage_type is not None:
+            params['usageType'] = usage_type
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)

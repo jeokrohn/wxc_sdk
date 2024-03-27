@@ -129,7 +129,7 @@ from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, Call
     TelephonyEvent, TelephonyEventData, TelephonyParty
 from wxc_sdk.telephony.dect_devices import BaseStationDetail, BaseStationResponse, BaseStationResult,\
     BaseStationsResponse, DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel,\
-    Handset
+    Handset, UsageType
 from wxc_sdk.telephony.devices import AvailableMember, DectDevice, DeviceMember, DeviceMembersResponse,\
     LineKeyTemplate, LineKeyType, MACState, MACStatus, MACValidationResponse, MemberCommon, ProgrammableLineKey
 from wxc_sdk.telephony.forwarding import CallForwarding, CallForwardingNumber, CallForwardingNumberType,\
@@ -273,8 +273,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
            'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers',
            'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody',
-           'UsageRouteLists', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserLicensesResponse', 'UserManager',
-           'UserNumber', 'UserPhoneNumber', 'UserType', 'UserTypeObject', 'ValidateExtensionStatus',
+           'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserLicensesResponse',
+           'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType', 'UserTypeObject', 'ValidateExtensionStatus',
            'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'ValidatePhoneNumberStatus',
            'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidationRules', 'ValidationStatus',
            'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState', 'VirtualExtensionDestination',

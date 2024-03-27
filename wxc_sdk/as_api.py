@@ -12945,26 +12945,33 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
-    def available_members_gen(self, member_name: str = None, phone_number: str = None, order: str = None,
-                          exclude_virtual_profile: bool = None, org_id: str = None,
+    def available_members_gen(self, member_name: str = None, phone_number: str = None, extension: str = None,
+                          location_id: str = None, order: str = None, exclude_virtual_line: bool = None,
+                          usage_type: UsageType = None, org_id: str = None,
                           **params) -> AsyncGenerator[AvailableMember, None, None]:
         """
         Search Available Members
 
         List the members that are available to be assigned to DECT handset lines.
 
-        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`
+        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
         :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param location_id: List members for the location ID.
+        :type location_id: str
         :param order: Sort the list of available members on the device in ascending order by name, using either last
             name `lname` or first name `fname`. Default sort is the last name in ascending order.
         :type order: str
-        :param exclude_virtual_profile: If true, search results will exclude virtual lines in the member list. NOTE:
+        :param exclude_virtual_line: If true, search results will exclude virtual lines in the member list. NOTE:
             Virtual lines cannot be assigned as the primary line.
-        :type exclude_virtual_profile: bool
+        :type exclude_virtual_line: bool
+        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
+        :type usage_type: UsageType
         :param org_id: Search members in this organization.
         :type org_id: str
         :return: Generator yielding :class:`AvailableMember` instances
@@ -12975,33 +12982,46 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
             params['memberName'] = member_name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if location_id is not None:
+            params['locationId'] = location_id
         if order is not None:
             params['order'] = order
-        if exclude_virtual_profile is not None:
-            params['excludeVirtualProfile'] = str(exclude_virtual_profile).lower()
+        if exclude_virtual_line is not None:
+            params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
+        if usage_type is not None:
+            params['usageType'] = usage_type
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)
 
-    async def available_members(self, member_name: str = None, phone_number: str = None, order: str = None,
-                          exclude_virtual_profile: bool = None, org_id: str = None,
+    async def available_members(self, member_name: str = None, phone_number: str = None, extension: str = None,
+                          location_id: str = None, order: str = None, exclude_virtual_line: bool = None,
+                          usage_type: UsageType = None, org_id: str = None,
                           **params) -> List[AvailableMember]:
         """
         Search Available Members
 
         List the members that are available to be assigned to DECT handset lines.
 
-        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`
+        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
         :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param location_id: List members for the location ID.
+        :type location_id: str
         :param order: Sort the list of available members on the device in ascending order by name, using either last
             name `lname` or first name `fname`. Default sort is the last name in ascending order.
         :type order: str
-        :param exclude_virtual_profile: If true, search results will exclude virtual lines in the member list. NOTE:
+        :param exclude_virtual_line: If true, search results will exclude virtual lines in the member list. NOTE:
             Virtual lines cannot be assigned as the primary line.
-        :type exclude_virtual_profile: bool
+        :type exclude_virtual_line: bool
+        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
+        :type usage_type: UsageType
         :param org_id: Search members in this organization.
         :type org_id: str
         :return: Generator yielding :class:`AvailableMember` instances
@@ -13012,10 +13032,16 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
             params['memberName'] = member_name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if location_id is not None:
+            params['locationId'] = location_id
         if order is not None:
             params['order'] = order
-        if exclude_virtual_profile is not None:
-            params['excludeVirtualProfile'] = str(exclude_virtual_profile).lower()
+        if exclude_virtual_line is not None:
+            params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
+        if usage_type is not None:
+            params['usageType'] = usage_type
         url = self.ep('devices/availableMembers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)]
 
