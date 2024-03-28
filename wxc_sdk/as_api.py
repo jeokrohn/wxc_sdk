@@ -12828,7 +12828,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
         await super().delete(url, params=params)
 
-    async def delete_handsets(self, location_id: str, dect_network_id: str, items: list[str],
+    async def delete_handsets(self, location_id: str, dect_network_id: str, handset_ids: list[str],
                         delete_all: bool = None, org_id: str = None):
         """
         Delete multiple handsets
@@ -12845,8 +12845,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         :type location_id: str
         :param dect_network_id: Delete handset details in the specified DECT network ID.
         :type dect_network_id: str
-        :param items: Array of the handset IDs to be deleted.
-        :type items: list[str]
+        :param handset_ids: Array of the handset IDs to be deleted.
+        :type handset_ids: list[str]
         :param delete_all: If present the items array is ignored and all items in the context are deleted.
         :type delete_all: bool
         :param org_id: Organization containing the DECT network.
@@ -12857,7 +12857,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['items'] = items
+        body['handsetIds'] = handset_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')

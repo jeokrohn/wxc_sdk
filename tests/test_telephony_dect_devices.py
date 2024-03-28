@@ -489,12 +489,12 @@ class TestDectDevices(TestWithLocations):
                     'dect_network_id': ctx.dect_network_id}
 
             ids_to_delete = list(map(attrgetter('id'), handsets_to_delete))
-            api.delete_handsets(**dect, items=ids_to_delete, delete_all=False)
+            api.delete_handsets(**dect, handset_ids=ids_to_delete, delete_all=False)
 
             # verify that the handsets are gone
             handsets_after = api.list_handsets(**dect)
             self.assertEqual(len(handsets) - 3, len(handsets_after.handsets))
-            self.assertFalse(set(ids_to_delete) & set(map(attrgetter('id'), handsets_after)),
+            self.assertFalse(set(ids_to_delete) & set(map(attrgetter('id'), handsets_after.handsets)),
                              'Not all handsets are gone')
 
     def test_delete_handsets_all(self):
@@ -511,7 +511,7 @@ class TestDectDevices(TestWithLocations):
 
             dect = {'location_id': ctx.target_location.location_id,
                     'dect_network_id': ctx.dect_network_id}
-            api.delete_handsets(**dect, items=[], delete_all=True)
+            api.delete_handsets(**dect, handset_ids=[], delete_all=True)
 
             # verify that the handsets are gone
             handsets_after = api.list_handsets(**dect)
