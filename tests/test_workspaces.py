@@ -60,7 +60,7 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
         if not targets:
             self.skipTest('Need some WxC enabled workspaces to run this test')
         with ThreadPoolExecutor() as pool:
-            _ = list(pool.map(lambda ws: tna.read(person_id=ws.workspace_id),
+            _ = list(pool.map(lambda ws: tna.read(entity_id=ws.workspace_id),
                               targets))
         print(f'outgoing permissions auto transfer numbers for {len(targets)} workspaces')
 
@@ -82,23 +82,23 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
         po_settings = None
         target_ws = next((ws for ws in targets
                           if use_custom_enabled or
-                          not (po_settings := po.read(person_id=ws.workspace_id)).use_custom_enabled),
+                          not (po_settings := po.read(entity_id=ws.workspace_id)).use_custom_enabled),
                          None)
         if target_ws is None:
             self.skipTest('No WxC enabled workspace with use_custom_enabled==False')
         if po_settings is None:
-            po_settings = po.read(person_id=target_ws.workspace_id)
+            po_settings = po.read(entity_id=target_ws.workspace_id)
         try:
             if use_custom_enabled:
                 # enable custom settings: else auto transfer numbers can't be set
-                po.configure(person_id=target_ws.workspace_id,
+                po.configure(entity_id=target_ws.workspace_id,
                              settings=OutgoingPermissions(use_custom_enabled=use_custom_enabled))
             yield target_ws
         finally:
             # restore old settings
             if use_custom_enabled:
-                po.configure(person_id=target_ws.workspace_id, settings=po_settings)
-            po_restored = po.read(person_id=target_ws.workspace_id)
+                po.configure(entity_id=target_ws.workspace_id, settings=po_settings)
+            po_restored = po.read(entity_id=target_ws.workspace_id)
             self.assertEqual(po_settings, po_restored)
 
     def test_002_update_wo_custom_enabled(self):
@@ -109,22 +109,22 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
         tna = self.api.workspace_settings.permissions_out.transfer_numbers
         with self.target_ws_context(use_custom_enabled=False) as target_ws:
             target_ws: Workspace
-            numbers = tna.read(person_id=target_ws.workspace_id)
+            numbers = tna.read(entity_id=target_ws.workspace_id)
             try:
                 # change auto transfer number 1
                 update = numbers.model_copy(deep=True)
                 transfer = f'+4961007739{random.randint(0, 999):03}'
                 update.auto_transfer_number1 = transfer
-                tna.configure(person_id=target_ws.workspace_id, settings=update)
+                tna.configure(entity_id=target_ws.workspace_id, settings=update)
 
                 # verify update
-                updated = tna.read(person_id=target_ws.workspace_id)
+                updated = tna.read(entity_id=target_ws.workspace_id)
                 # update should not work with use_custom_enabled == False
                 self.assertEqual(numbers, updated)
             finally:
                 # restore old settings
-                tna.configure(person_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
-                restored = tna.read(person_id=target_ws.workspace_id)
+                tna.configure(entity_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
+                restored = tna.read(entity_id=target_ws.workspace_id)
                 self.assertEqual(numbers, restored)
             # try
         # with
@@ -136,16 +136,16 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
         tna = self.api.workspace_settings.permissions_out.transfer_numbers
         with self.target_ws_context() as target_ws:
             target_ws: Workspace
-            numbers = tna.read(person_id=target_ws.workspace_id)
+            numbers = tna.read(entity_id=target_ws.workspace_id)
             try:
                 # change auto transfer number 1
                 update = numbers.model_copy(deep=True)
                 transfer = f'+496100773{random.randint(0, 9999):03}'
                 update.auto_transfer_number1 = transfer
-                tna.configure(person_id=target_ws.workspace_id, settings=update)
+                tna.configure(entity_id=target_ws.workspace_id, settings=update)
 
                 # verify update
-                updated = tna.read(person_id=target_ws.workspace_id)
+                updated = tna.read(entity_id=target_ws.workspace_id)
                 # number should be equal; ignore hyphens in number returned by API
                 self.assertEqual(transfer, updated.auto_transfer_number1.replace('-', ''))
                 # other than that the updated numbers should be identical to the numbers before
@@ -153,8 +153,8 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
                 self.assertEqual(numbers, updated)
             finally:
                 # restore old settings
-                tna.configure(person_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
-                restored = tna.read(person_id=target_ws.workspace_id)
+                tna.configure(entity_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
+                restored = tna.read(entity_id=target_ws.workspace_id)
                 self.assertEqual(numbers, restored)
             # try
         # with
@@ -167,21 +167,21 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
         tna = self.api.workspace_settings.permissions_out.transfer_numbers
         with self.target_ws_context() as target_ws:
             target_ws: Workspace
-            numbers = tna.read(person_id=target_ws.workspace_id)
+            numbers = tna.read(entity_id=target_ws.workspace_id)
             try:
                 all_numbers_set = AutoTransferNumbers(auto_transfer_number1='+4961007738001',
                                                       auto_transfer_number2='+4961007738002',
                                                       auto_transfer_number3='+4961007738003')
-                tna.configure(person_id=target_ws.workspace_id, settings=all_numbers_set)
-                all_numbers_set = tna.read(person_id=target_ws.workspace_id)
+                tna.configure(entity_id=target_ws.workspace_id, settings=all_numbers_set)
+                all_numbers_set = tna.read(entity_id=target_ws.workspace_id)
 
                 # change auto transfer number 1
                 transfer = f'+496100773{random.randint(0, 9999):03}'
                 update = AutoTransferNumbers(auto_transfer_number1=transfer)
-                tna.configure(person_id=target_ws.workspace_id, settings=update)
+                tna.configure(entity_id=target_ws.workspace_id, settings=update)
 
                 # verify update
-                updated = tna.read(person_id=target_ws.workspace_id)
+                updated = tna.read(entity_id=target_ws.workspace_id)
                 # number should be equal; ignore hyphens in number returned by API
                 self.assertEqual(transfer, updated.auto_transfer_number1.replace('-', ''))
                 # other than that the updated numbers should be identical to the numbers before
@@ -189,8 +189,8 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
                 self.assertEqual(all_numbers_set, updated)
             finally:
                 # restore old settings
-                tna.configure(person_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
-                restored = tna.read(person_id=target_ws.workspace_id)
+                tna.configure(entity_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
+                restored = tna.read(entity_id=target_ws.workspace_id)
                 self.assertEqual(numbers, restored)
             # try
         # with
@@ -267,6 +267,54 @@ class TestCreate(TestWithLocations):
         # ... location id and workspace location id are related
         self.assertEqual(webex_id_to_uuid(target_location.location_id), webex_id_to_uuid(workspace.workspace_location_id).split('#')[-1])
 
+    def test_create_calling_upgrade_to_professional(self):
+        """
+        Create a calling workspace and upgrade to professional
+        """
+        # get a calling location
+        target_location = random.choice(self.locations)
+        target_location: Location
+        with self.no_log():
+            wsl = workspace_location_for_location(api=self.api, location_id=target_location.location_id)
+            self.assertIsNotNone(wsl)
+
+        workspace = create_workspace_with_webex_calling(api=self.api,
+                                                        target_location=target_location,
+                                                        # workspace_location_id=wsl.id,
+                                                        supported_devices=WorkspaceSupportedDevices.phones,
+                                                        notes=f'test_create_calling_upgrade_to_professional: phones, '
+                                                              f'location "{target_location.name}"')
+        print(f'Created workspace "{workspace.display_name}" in location "{target_location.name}" ')
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
+        try:
+            # get details of current calling license
+            calling_license_id = workspace.calling.webex_calling.licenses[0]
+            calling_license = self.api.licenses.details(license_id=calling_license_id)
+            print(f'Workspace license: {calling_license.name}')
+            with self.no_log():
+                pro_license = next(lic for lic in self.api.licenses.list()
+                                   if lic.webex_calling_professional and lic.consumed_units<lic.total_units)
+            pro_license = self.api.licenses.details(license_id=pro_license.license_id)
+            # prepare the update
+            update = workspace.model_copy(deep=True)
+            update.calling.webex_calling.licenses[0] = pro_license.license_id
+            update.calling.webex_calling.location_id = target_location.location_id
+            # for the update we need to know the extension of the workspace
+            with self.no_log():
+                extension = next(self.api.telephony.phone_numbers(owner_id=workspace.workspace_id)).extension
+            update.calling.webex_calling.extension = extension
+            self.api.workspaces.update(workspace_id=workspace.workspace_id, settings=update)
+
+            # verify
+            after = self.api.workspaces.details(workspace_id=workspace.workspace_id)
+            pro_license_after = self.api.licenses.details(license_id=pro_license.license_id)
+            self.assertEqual(after.calling.webex_calling.licenses[0], pro_license.license_id)
+            self.assertEqual(pro_license.consumed_by_workspaces+1, pro_license_after.consumed_by_workspaces)
+        finally:
+            # remove workspace again
+            self.api.workspaces.delete_workspace(workspace_id=workspace.workspace_id)
+
+
     def test_004_create_workspace_wo_calling_and_upgrade_to_webex_calling(self):
         """
         create a workspace w/o calling for room devices and upgrade to WxC later
@@ -294,31 +342,33 @@ class TestCreate(TestWithLocations):
             notes=f'test_004_create_workspace_wo_calling_and_upgrade_to_webex_calling: room devices, created w/o '
                   f'calling, tried to upgrade to calling in location "{target_location.name}"')
         workspace = self.api.workspaces.create(settings=new_workspace)
-        print(f'new workspace:')
-        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
+        try:
+            print(f'new workspace:')
+            print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
 
-        # get details and try to upgrade to calling
-        details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
-        update = details.model_copy(deep=True)
-        # update.workspace_location_id = wsl.id
-        update.calling = WorkspaceCalling(
-            type=CallingType.webex,
-            webex_calling=WorkspaceWebexCalling(
-                extension=extension,
-                location_id=target_location.location_id))
-        print(f'Updating workspace "{name}" in location "{target_location.name}" to WxC w/ extension {extension}')
-        after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
-                                                   settings=update)
-        print(f'after update:')
-        print(json.dumps(json.loads(after.model_dump_json()), indent=2))
+            # get details and try to upgrade to calling
+            details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
+            update = details.model_copy(deep=True)
+            # update.workspace_location_id = wsl.id
+            update.calling = WorkspaceCalling(
+                type=CallingType.webex,
+                webex_calling=WorkspaceWebexCalling(
+                    extension=extension,
+                    location_id=target_location.location_id))
+            print(f'Updating workspace "{name}" in location "{target_location.name}" to WxC w/ extension {extension}')
+            after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
+                                               settings=update)
+            print(f'after update:')
+            print(json.dumps(json.loads(after.model_dump_json()), indent=2))
 
-        # also as a side effect the workspace location id should get set
-        self.assertIsNotNone(after.workspace_location_id)
-        # ... location id and workspace location id are related
-        self.assertEqual(webex_id_to_uuid(target_location.location_id),
-                         webex_id_to_uuid(after.workspace_location_id).split('#')[-1])
-
-
+            # also as a side effect the workspace location id should get set
+            self.assertIsNotNone(after.workspace_location_id)
+            # ... location id and workspace location id are related
+            self.assertEqual(webex_id_to_uuid(target_location.location_id),
+                             webex_id_to_uuid(after.workspace_location_id).split('#')[-1])
+        finally:
+            # delete workspace again
+            self.api.workspaces.delete_workspace(workspace_id=workspace.workspace_id)
 
     def test_005_no_calling_phones(self):
         """
