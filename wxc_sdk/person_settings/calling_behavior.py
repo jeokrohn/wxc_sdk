@@ -23,7 +23,7 @@ class BehaviorType(str, Enum):
     #: Webex Calling app
     webex_calling = 'CALL_WITH_APP_REGISTERED_FOR_WEBEXCALLTEL'
     #: Calling in Webex Teams (Unified CM)
-    native_sip_call_zo_ucm = 'NATIVE_SIP_CALL_TO_UCM'
+    native_sip_call_to_ucm = 'NATIVE_SIP_CALL_TO_UCM'
 
 
 class CallingBehavior(ApiModel):

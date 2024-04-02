@@ -23,6 +23,7 @@ Release history
 
 - fix: :meth:`create_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_base_stations>`, wrong endpoint
   and result attribute
+- fix: typo in :class:`wxc_sdk.person_settings.calling_behavior.BehaviorType`. native_sip_call_zo_ucm instead of native_sip_call_to_ucm
 
 1.18.0
 ------
