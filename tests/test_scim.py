@@ -6,6 +6,7 @@ import random
 import re
 import uuid
 from dataclasses import dataclass
+from time import sleep
 from typing import Optional, ClassVar
 from unittest import skip
 
@@ -14,12 +15,14 @@ from dotenv import load_dotenv
 from pydantic import TypeAdapter
 from test_helper.randomuser import User
 
-from tests.base import TestCaseWithLog, async_test
-from tests.testutil import random_users
+from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.testutil import random_users, available_extensions_gen
+from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.integration import Integration
-from wxc_sdk.people import Person
+from wxc_sdk.licenses import LicenseRequest, LicenseRequestOperation, LicenseProperties
+from wxc_sdk.people import Person, PhoneNumberType
 from wxc_sdk.scim.bulk import BulkOperation, BulkMethod
 from wxc_sdk.scim.users import ScimUser, NameObject, EmailObject, EmailObjectType, UserTypeObject, UserPhoneNumber, \
     ScimPhoneNumberType, UserAddress, PatchUserOperation, PatchUserOperationOp
@@ -89,12 +92,19 @@ def get_tokens() -> Optional[Tokens]:
     return tokens
 
 
+@dataclass(init=False)
 class TestWithScimToken(TestCaseWithLog):
+
+    test_api: ClassVar[WebexSimpleApi]
+
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
         # get service app tokens
         tokens = get_tokens()
+
+        # create API with standard token
+        cls.test_api = WebexSimpleApi(tokens=cls.api.access_token)
         # replace session access token with service app access token
         cls.api.session._tokens.access_token = tokens.access_token
 
@@ -453,6 +463,7 @@ class TestScimUpdate(TestWithScimToken):
             restored_details.meta = target_details.meta
             self.assertEqual(target_details, restored_details)
 
+
 class TestScimDelete(TestWithScimToken):
 
     @skip('skipping to keep test users .. for now')
@@ -488,3 +499,84 @@ class TestScimDelete(TestWithScimToken):
         response = api.bulk.bulk_request(org_id=org_id, fail_on_errors=1, operations=operations)
         self.assertTrue(all(o.status == 204 for o in response.operations), 'Some users not deleted')
 
+
+class TestScimAndPeople(TestScimCreate, TestWithLocations):
+    """
+    Tests combining SCIMv2 with people API calls
+    """
+
+    @async_test
+    async def test_create_scim_calling_delete(self):
+        """
+        * create a user using SCIM
+        * enable user for calling
+        * delete user using SCIM
+        * are calling licenses counted properly
+        """
+        with self.no_log():
+            # create a user using SCIM
+            new_user = (await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell']))[0]
+            scim_user = self.scim_user_from_random_user(new_user)
+            standard_license = next(lic for lic in self.test_api.licenses.list() if lic.webex_calling_basic)
+            standard_license = self.test_api.licenses.details(license_id=standard_license.license_id)
+            # pick a calling location
+            target_location = random.choice(self.locations)
+            # get extension in location
+            extension = next(available_extensions_gen(api=self.api,
+                                                      location_id=target_location.location_id))
+
+        api = self.api.scim.users
+        org_id = webex_id_to_uuid(self.me.org_id)
+        scim_user = api.create(org_id=org_id,
+                               user=scim_user)
+        with self.no_log():
+            webex_user = next(user for user in self.test_api.people.list(email=new_user.email))
+        webex_user = self.test_api.people.details(person_id=webex_user.person_id, calling_data=True)
+        try:
+            # enable user for calling (standard license)
+            # try to add standard license to user
+            self.test_api.licenses.assign_licenses_to_users(
+                person_id=webex_user.person_id,
+                licenses=[LicenseRequest(
+                    operation=LicenseRequestOperation.add,
+                    id=standard_license.license_id,
+                    properties=LicenseProperties(
+                        location_id=target_location.location_id,
+                        extension=extension))])
+            license_after = self.test_api.licenses.details(license_id=standard_license.license_id)
+            scim_user_after = api.details(org_id=org_id, user_id=scim_user.id)
+            webex_user_after = self.test_api.people.details(person_id=webex_user.person_id, calling_data=True)
+            self.assertEqual(standard_license.consumed_by_users+1, license_after.consumed_by_users)
+
+            # work phone number should be gone
+            scim_work_phone = next((pn for pn in scim_user_after.phone_numbers
+                                    if pn.type == ScimPhoneNumberType.work), None)
+            self.assertIsNone(scim_work_phone)
+            webex_work_phone = next((pn for pn in webex_user_after.phone_numbers
+                                     if pn.number_type == PhoneNumberType.work), None)
+            self.assertIsNone(webex_work_phone)
+
+            # work extension should exist
+            scim_work_phone = next((pn for pn in scim_user_after.phone_numbers
+                                    if pn.type == ScimPhoneNumberType.work_extension),
+                                   None)
+            self.assertIsNotNone(scim_work_phone)
+            self.assertTrue(scim_work_phone.value.endswith(extension))
+            webex_work_phone = next((pn for pn in webex_user_after.phone_numbers
+                                     if pn.number_type == PhoneNumberType.work_extension), None)
+            self.assertIsNotNone(webex_work_phone)
+            self.assertTrue(webex_work_phone.value.endswith(extension))
+        finally:
+            self.api.scim.users.delete(org_id=org_id, user_id=scim_user.id)
+            # self.test_api.people.delete_person(person_id=webex_user.person_id)
+            for i in range(3):
+                license_after = self.test_api.licenses.details(license_id=standard_license.license_id)
+                try:
+                    self.assertEqual(standard_license.consumed_by_users, license_after.consumed_by_users)
+                except AssertionError:
+                    if i == 2:
+                        raise
+                    print('License not updated. Retry, waiting for 5 seconds')
+                    sleep(3)
+                else:
+                    break
