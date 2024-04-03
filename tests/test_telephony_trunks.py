@@ -118,6 +118,14 @@ class TestUsage(TestCaseWithLog):
                                   trunks))
         print(f'Got route group usage for {len(trunks)} trunks')
 
+    def test_004_get_usage_call_to_extension(self):
+        api = self.api.telephony.prem_pstn.trunk
+        trunks = list(api.list())
+        with ThreadPoolExecutor() as pool:
+            usage = list(pool.map(lambda t: list(api.usage_call_to_extension(trunk_id=t.trunk_id)),
+                                  trunks))
+        print(f'Got call to extension usage for {len(trunks)} trunks')
+
 
 class TestTrunkTypes(TestCaseWithLog):
     def test_001_trunk_types(self):
