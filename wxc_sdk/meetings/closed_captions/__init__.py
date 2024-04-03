@@ -104,7 +104,7 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         :type format: str
         """
         # TODO: verify return and adapt
-        params = {}
+        params = dict()
         params['meetingId'] = meeting_id
         if format is not None:
             params['format'] = format

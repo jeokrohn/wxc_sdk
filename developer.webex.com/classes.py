@@ -159,9 +159,11 @@ class APIMethod:
                     if p_type == 'bool':
                         p_value = f"str({p_name}).lower()"
                     if param.required:
-                        param_code.append(self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_value=p_value, p_name_camel=param.name))
+                        param_code.append(self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_value=p_value,
+                                                                          p_name_camel=param.name))
                     else:
-                        param_code.append(self.PARAM_INIT.format(p_name=p_name, p_value=p_value, p_name_camel=param.name))
+                        param_code.append(self.PARAM_INIT.format(p_name=p_name, p_value=p_value,
+                                                                 p_name_camel=param.name))
             if is_body:
                 body_params.append(self.BODY_INIT.format(p_name=p_name))
 

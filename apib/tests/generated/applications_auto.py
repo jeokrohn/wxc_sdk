@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Application', 'ApplicationOrgSubmissionStatus', 'ApplicationSubmissionStatus', 'ApplicationType',
-            'ApplicationsApi', 'ListApplicationsOrderBy', 'ListApplicationsType']
+__all__ = ['Application', 'ApplicationSubmissionStatus', 'ApplicationType', 'ApplicationsApi',
+           'ListApplicationsOrderBy', 'ListApplicationsType']
 
 
 class ApplicationType(str, Enum):
@@ -25,15 +25,6 @@ class ApplicationSubmissionStatus(str, Enum):
     in_review = 'in_review'
     pending_approval = 'pending_approval'
     approved = 'approved'
-
-
-class ApplicationOrgSubmissionStatus(str, Enum):
-    none_ = 'none'
-    submitted = 'submitted'
-    in_review = 'in_review'
-    pending_approval = 'pending_approval'
-    approved = 'approved'
-    none_ = 'none'
 
 
 class Application(ApiModel):
@@ -129,7 +120,7 @@ class Application(ApiModel):
     #: The Webex App Hub submission status of the application.
     #: example: in_review
     submission_status: Optional[ApplicationSubmissionStatus] = None
-    org_submission_status: Optional[ApplicationOrgSubmissionStatus] = None
+    org_submission_status: Optional[ApplicationSubmissionStatus] = None
     #: The ID of the person who created the application.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
     created_by: Optional[str] = Field(alias='created_by', default=None)

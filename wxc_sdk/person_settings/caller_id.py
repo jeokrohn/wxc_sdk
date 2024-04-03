@@ -187,11 +187,11 @@ class CallerIdApi(PersonSettingsApiChild):
         :type selected: CallerIdSelectedType
         :param custom_number: This value must be an assigned number from the entity\'s location.
         :type custom_number: str
-        :param first_name: entity\'s Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not
+        :param first_name: entity's Caller ID first name. Characters of %, +, `, " and Unicode characters are not
             allowed.
 
         :type first_name: str
-        :param last_name: entity\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
+        :param last_name: entity's Caller ID last name. Characters of %, +, `, " and Unicode characters are not
             allowed.
         :type last_name: str
         :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used.

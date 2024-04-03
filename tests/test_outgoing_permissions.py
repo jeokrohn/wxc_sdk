@@ -97,6 +97,7 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLines):
         codes = api.access_codes.read(entity_id=entity_id)
         print(f'Access codes for {entity}/{entity_id}:')
         print(json.dumps(codes.model_dump(mode='json'), indent=2))
+
     @skip('Different access codes API for locations')
     def test_location_read(self):
         """

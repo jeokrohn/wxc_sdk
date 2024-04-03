@@ -2,9 +2,9 @@
 Webex Status API as described at https://status.webex.com/api
 """
 from datetime import datetime
-from typing import Optional, Any
+from typing import Optional
 
-from pydantic import Field, parse_obj_as, TypeAdapter
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel

@@ -258,7 +258,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         devices, an outbound call is placed from that device to the destination.
 
         :param destination: The destination to be dialed. The destination can be digits or a URI. Some examples for
-            destination include: 1234, 2223334444, +12223334444, \*73, tel:+12223334444, user@company.domain,
+            destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain,
             sip:user@company.domain
         :type destination: str
         :return: Call id and call session id
@@ -341,7 +341,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :param destination: The destination to divert the call to. If toVoicemail is false, destination is required.
             The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444,
-            +12223334444, \*73, tel:+12223334444, user@company.domain, sip:user@company.domain
+            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
         :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
@@ -375,7 +375,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         :type call_id1: str
         :param destination: The destination to be transferred to. The destination can be digits or a URI. Some
             examples for destination include: 1234, 2223334444,
-            +12223334444, \*73, tel:+12223334444, user@company.domain, sip:user@company.domain.
+            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain.
             This parameter is mandatory if call_id1 is provided and call_id2 is not provided.
         :type destination: str
         """
@@ -394,7 +394,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         :param destination: Identifies where the call is to be parked. If not provided, the call is parked against the
             parking user.
             The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444,
-            +12223334444, \*73, tel:+12223334444, user@company.domain, sip:user@company.domain
+            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
         :param is_group_park: If set to true, the call is parked against an automatically selected member of the
             user's call park group and the destination parameter is ignored.
@@ -413,7 +413,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         :param destination: Identifies where the call is parked. The number field from the park command response can
             be used as the destination for the retrieve command. If not provided, the call parked against the
             retrieving user is retrieved. The destination can be digits or a URI. Some examples for destination
-            include: 1234, 2223334444, +12223334444, \*73, tel:+12223334444, user@company.domain,
+            include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain,
             sip:user@company.domain
         :return: call id and call session id of retreived call
         :rtype: :class:`CallInfo`
@@ -482,7 +482,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to hold.
         :type call_id: str
         :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6,
-            7, 8, 9, \*, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value
+            7, 8, 9, *, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value
             “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
             successively.
         """

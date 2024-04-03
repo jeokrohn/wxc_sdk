@@ -46,13 +46,13 @@ class TestDeviceConfigurations(TestCaseWithLog):
                                                                                        key=key,
                                                                                        value='new_name')])
         config_after = self.api.device_configurations.list(device_id=target_device.device_id,
-                                                            key=key)
+                                                           key=key)
         name_after = config_after.items[key].value
         self.assertEqual('new_name', name_after)
         self.api.device_configurations.update(device_id=target_device.device_id,
                                               operations=[DeviceConfigurationOperation(op='remove',
                                                                                        key=key)])
         config_removed = self.api.device_configurations.list(device_id=target_device.device_id,
-                                                           key=key)
+                                                             key=key)
         name_removed = config_removed.items[key].value
         self.assertEqual('', name_removed)

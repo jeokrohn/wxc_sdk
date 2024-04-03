@@ -115,7 +115,6 @@ class Device(ApiModel):
         return values
 
     @field_validator('mac')
-    @classmethod
     def mac_no_colon(cls, v: str) -> str:
         """
         :meta private:

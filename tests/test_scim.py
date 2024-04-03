@@ -452,7 +452,7 @@ class TestScimUpdate(TestWithScimToken):
                                                            value=new_phone_number)])
         try:
             details_after_update = api.details(org_id=org_id, user_id=target_details.id)
-            work_phone = next(pn for pn in details_after_update.phone_numbers if pn.type=='work')
+            work_phone = next(pn for pn in details_after_update.phone_numbers if pn.type == 'work')
             self.assertEqual(new_phone_number, work_phone.value)
             # last_modified has to be changed
             self.assertTrue(details_after_update.meta.last_modified != target_details.meta.last_modified)
@@ -515,7 +515,8 @@ class TestScimAndPeople(TestScimCreate, TestWithLocations):
         """
         with self.no_log():
             # create a user using SCIM
-            new_user = (await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell']))[0]
+            new_user = (await random_users(api=self.async_api, user_count=1,
+                                           inc=['name', 'location', 'phone', 'cell']))[0]
             scim_user = self.scim_user_from_random_user(new_user)
             standard_license = next(lic for lic in self.test_api.licenses.list() if lic.webex_calling_basic)
             standard_license = self.test_api.licenses.details(license_id=standard_license.license_id)

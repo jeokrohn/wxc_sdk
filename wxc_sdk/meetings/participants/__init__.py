@@ -236,7 +236,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         :param emails: Participants email list Possible values: a@example.com
         :type emails: List[str]
         """
-        params = {}
+        params = dict()
         params['meetingId'] = meeting_id
         if max is not None:
             params['max'] = max

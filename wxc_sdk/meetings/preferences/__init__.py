@@ -57,11 +57,6 @@ class PersonalMeetingRoom(ApiModel):
     #: predefined length for host PIN can be viewed in user's My Personal Room page. This attribute can be modified
     #: with the Update Personal Meeting Room Options API.
     host_pin: Optional[str] = None
-    #: PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It cannot
-    #: contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as 1111. The
-    #: predefined length for host PIN can be viewed in user's My Personal Room page. This attribute can be modified
-    #: with the Update Personal Meeting Room Options API.
-    host_pin: Optional[str] = None
     #: Personal Meeting Room link. It cannot be empty. Note: This is a read-only attribute.
     personal_meeting_room_link: Optional[str] = None
     #: Option to automatically lock the Personal Room a number of minutes after a meeting starts. When a room is
@@ -675,7 +670,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             and the API will update default site for that user.
         :type user_email: str
         """
-        params = {}
+        params = dict()
         params['defaultSite'] = str(default_site).lower()
         if user_email is not None:
             params['userEmail'] = user_email

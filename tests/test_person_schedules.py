@@ -52,7 +52,7 @@ def debug_schedule_id(schedule_id: str) -> str:
     return f'{schedule_id}, {decoded}, {decoded_id}'
 
 
-async def all_user_schedules(api: AsWebexSimpleApi, users: list[Person])->list[list[Schedule]]:
+async def all_user_schedules(api: AsWebexSimpleApi, users: list[Person]) -> list[list[Schedule]]:
     """
     Get schedules for all users
     """
@@ -94,7 +94,8 @@ class TestScheduleList(TestCaseWithUsers):
         if schedule_ids:
             name_len = max((len(s.name) for s in schedule_ids))
             type_len = max((len(s.type) for s in schedule_ids))
-            decoded_ids = map(lambda s: f'{s.name:{name_len}}({s.type:{type_len}})({s.level:5}): {debug_schedule_id(s.id)}',
+            decoded_ids = map(lambda s: f'{s.name:{name_len}}({s.type:{type_len}})({s.level:5}): '
+                                        f'{debug_schedule_id(s.id)}',
                               schedule_ids)
             print('\n'.join(sorted(decoded_ids)))
 

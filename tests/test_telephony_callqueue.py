@@ -565,7 +565,8 @@ class TestUpdate(TestWithQueues):
 
                 # create the new rules
                 tasks = [as_fapi.create_call_forwarding_rule(**queue_sel,
-                                                             forwarding_rule=ForwardingRuleDetails.default(name=rule_name))
+                                                             forwarding_rule=ForwardingRuleDetails.default(
+                                                                 name=rule_name))
                          for rule_name in new_names]
                 await asyncio.gather(*tasks)
                 before = fapi.settings(**queue_sel)
@@ -573,7 +574,7 @@ class TestUpdate(TestWithQueues):
             # .. try to enable/disable some of them
 
             # pick three
-            target_rules:list[ForwardingRule] = random.sample(before.rules, 3)
+            target_rules: list[ForwardingRule] = random.sample(before.rules, 3)
             target_rules = sorted(target_rules, key=attrgetter('name'))
 
             # track enable state of target rules
@@ -585,7 +586,7 @@ class TestUpdate(TestWithQueues):
                                                              rule_id=rule.id)
                 details.enabled = not details.enabled
                 await as_fapi.update_call_forwarding_rule(**queue_sel,
-                                                          rule_id=rule.id,forwarding_rule=details)
+                                                          rule_id=rule.id, forwarding_rule=details)
                 # track the enabled state of updated rule
                 rule_states[rule.id] = details.enabled
 
@@ -595,14 +596,14 @@ class TestUpdate(TestWithQueues):
             await asyncio.gather(*tasks)
 
             # print state we (tried to) set enabled to
-            name_len=max(len(rule.name) for rule in target_rules)
+            name_len = max(len(rule.name) for rule in target_rules)
             for rule in target_rules:
                 print(f'rule "{rule.name:{name_len}}" desired state: '
                       f'{"enabled" if rule_states[rule.id] else "disabled"}')
 
             # now verify that all rules have been properly updated
             after = fapi.settings(**queue_sel)
-            self.assertTrue(all(rule_states[rule.id]==rule.enabled
+            self.assertTrue(all(rule_states[rule.id] == rule.enabled
                                 for rule in after.rules
                                 if rule.id in rule_states))
 

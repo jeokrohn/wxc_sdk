@@ -282,7 +282,7 @@ class ToUserWithTN(TestCallRouting):
                 # get locations with premises PSTN configured in the US
                 locations = await api.locations.list()
                 locations = [loc for loc in locations
-                             if loc.address and loc.address.country and loc.address.country=='US']
+                             if loc.address and loc.address.country and loc.address.country == 'US']
 
                 # get telephony location details for all locations
                 telephony_locations = await asyncio.gather(

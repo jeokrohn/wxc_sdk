@@ -69,7 +69,8 @@ class TestCDR(TestCaseWithLog):
             cdr1 = list(self.api.cdr.get_cdr_history(start_time=start_time,
                                                      end_time=end_time))
         except RestError as rest_error:
-            if rest_error.detail.error_code == 404 and rest_error.detail.message == 'No CDRs for requested time range and filters':
+            if (rest_error.detail.error_code == 404
+                    and rest_error.detail.message == 'No CDRs for requested time range and filters'):
                 self.skipTest('No CDRs')
             else:
                 raise

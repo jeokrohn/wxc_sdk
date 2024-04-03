@@ -353,7 +353,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         of `spark-admin:telephony_config_write`.
 
         :param settings: DECT Network to update. location.id and id are used to address the DECT network to be
-            updated. Only name, display_name, default_access_code_enabled, default_access_code are considered for the update
+            updated. Only name, display_name, default_access_code_enabled, default_access_code are considered for the
+            update
 
         :param org_id: Update DECT network details in the specified organization.
         :type org_id: str

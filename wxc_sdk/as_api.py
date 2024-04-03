@@ -1699,17 +1699,32 @@ class AsLocationsApi(AsApiChild, base='locations'):
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
     """
-    Chats are content captured in a meeting when chat messages are sent between the participants within a meeting. This feature allows a Compliance Officer to access the in-meeting chat content.
-    The Compliance Officer can use the Meeting Chats API to retrieve the chats of a meeting and to delete all chats associated with a meeting. private chats are text messages between two people. group chats are for larger breakout spaces. Meeting chats are different from room messages in that there is no catch-up propagation. For example, if a user joins a meeting late only, chat messages that are created from then on, will be propagated to this user. To understand which user saw which message if they joined late, you have to query the meetingParticipants REST resource for the joined/left times and compare to the meetingsChat chatTime field.
-    The Webex meetings chat functionality and API endpoint described here is "upon-request" and not enabled by default. If you need it enabled for your org, or if you need help, please contact the Webex Developer Support team at devsupport@webex.com.
+    Chats are content captured in a meeting when chat messages are sent between the participants within a meeting.
+    This feature allows a Compliance Officer to access the in-meeting chat content.
+
+    The Compliance Officer can use the Meeting Chats API to retrieve the chats of a meeting and to delete all chats
+    associated with a meeting. private chats are text messages between two people. group chats are for larger
+    breakout spaces. Meeting chats are different from room messages in that there is no catch-up propagation. For
+    example, if a user joins a meeting late only, chat messages that are created from then on, will be propagated to
+    this user. To understand which user saw which message if they joined late, you have to query the
+    meetingParticipants REST resource for the joined/left times and compare to the meetingsChat chatTime field.
+
+    The Webex meetings chat functionality and API endpoint described here is "upon-request" and not enabled
+    by default. If you need it enabled for your org, or if you need help, please contact the Webex Developer Support
+    team at devsupport@webex.com.
     """
 
     def list_gen(self, meeting_id: str, offset: int = None, **params) -> AsyncGenerator[ChatObject, None, None]:
         """
-        Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number of chats to return.
-        Use this operation to list the chats of a finished meeting instance when they are ready. Please note that only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and in-progress meeting instances are not supported.
+        Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number
+        of chats to return.
 
-        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. The meeting ID of a scheduled personal room meeting is not supported.
+        Use this operation to list the chats of a finished meeting instance when they are ready. Please note that
+        only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and
+        in-progress meeting instances are not supported.
+
+        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. The meeting ID of
+            a scheduled personal room meeting is not supported.
         :type meeting_id: str
         :param offset: Offset from the first result that you want to fetch.
         :type offset: int
@@ -1722,10 +1737,15 @@ class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
 
     async def list(self, meeting_id: str, offset: int = None, **params) -> List[ChatObject]:
         """
-        Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number of chats to return.
-        Use this operation to list the chats of a finished meeting instance when they are ready. Please note that only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and in-progress meeting instances are not supported.
+        Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number
+        of chats to return.
 
-        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. The meeting ID of a scheduled personal room meeting is not supported.
+        Use this operation to list the chats of a finished meeting instance when they are ready. Please note that
+        only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and
+        in-progress meeting instances are not supported.
+
+        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. The meeting ID of
+            a scheduled personal room meeting is not supported.
         :type meeting_id: str
         :param offset: Offset from the first result that you want to fetch.
         :type offset: int
@@ -1739,12 +1759,16 @@ class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
     async def delete(self, meeting_id: str):
         """
         Deletes the meeting chats of a finished meeting instance specified by meetingId.
-        Use this operation to delete the chats of a finished meeting instance when they are ready. Please note that only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and in-progress meeting instances are not supported.
 
-        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. Meeting IDs of a scheduled personal room meeting are not supported.
+        Use this operation to delete the chats of a finished meeting instance when they are ready. Please note that
+        only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and
+        in-progress meeting instances are not supported.
+
+        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. Meeting IDs of a
+            scheduled personal room meeting are not supported.
         :type meeting_id: str
         """
-        params = {}
+        params = dict()
         params['meetingId'] = meeting_id
         url = self.ep()
         await super().delete(url=url, params=params)
@@ -1840,7 +1864,7 @@ class AsMeetingClosedCaptionsApi(AsApiChild, base='meetingClosedCaptions'):
         :type format: str
         """
         # TODO: verify return and adapt
-        params = {}
+        params = dict()
         params['meetingId'] = meeting_id
         if format is not None:
             params['format'] = format
@@ -2205,7 +2229,7 @@ class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
         :param emails: Participants email list Possible values: a@example.com
         :type emails: List[str]
         """
-        params = {}
+        params = dict()
         params['meetingId'] = meeting_id
         if max is not None:
             params['max'] = max
@@ -2696,7 +2720,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
             and the API will update default site for that user.
         :type user_email: str
         """
-        params = {}
+        params = dict()
         params['defaultSite'] = str(default_site).lower()
         if user_email is not None:
             params['userEmail'] = user_email
@@ -3137,12 +3161,12 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**:
-                when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
+              **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
             * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
-                recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved
-                by `Get Site List
+              recordings of all the user's sites. All available Webex sites and preferred site of the user can be
+              retrieved by `Get Site List
                 <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
@@ -3233,12 +3257,12 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. **NOTE**:
-                when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
+              **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
             * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
-                recordings of all the user's sites. All available Webex sites and preferred site of the user can be retrieved
-                by `Get Site List
+              recordings of all the user's sites. All available Webex sites and preferred site of the user can be
+              retrieved by `Get Site List
                 <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
@@ -3335,9 +3359,10 @@ class AsRecordingsApi(AsApiChild, base=''):
             * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
                 note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings
-                on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the
-                admin user's or compliance officer's preferred site can be retrieved by the `Get Site List
+            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
+                recordings on the admin user's or compliance officer's preferred site are listed. All the available
+                Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
+                `Get Site List
                 <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         #### Request Header
@@ -3427,9 +3452,10 @@ class AsRecordingsApi(AsApiChild, base=''):
             * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
                 note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the recordings
-                on the admin user's or compliance officer's preferred site are listed. All the available Webex sites and the
-                admin user's or compliance officer's preferred site can be retrieved by the `Get Site List
+            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
+                recordings on the admin user's or compliance officer's preferred site are listed. All the available
+                Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
+                `Get Site List
                 <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         #### Request Header
@@ -4969,7 +4995,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
         documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes
         """
-        params = {}
+        params = dict()
         params['service'] = service
         if site_url is not None:
             params['siteUrl'] = site_url
@@ -4997,7 +5023,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
         documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes
         """
-        params = {}
+        params = dict()
         params['service'] = service
         if site_url is not None:
             params['siteUrl'] = site_url
@@ -6394,11 +6420,11 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         :type selected: CallerIdSelectedType
         :param custom_number: This value must be an assigned number from the entity\'s location.
         :type custom_number: str
-        :param first_name: entity\'s Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not
+        :param first_name: entity's Caller ID first name. Characters of %, +, `, " and Unicode characters are not
             allowed.
 
         :type first_name: str
-        :param last_name: entity\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
+        :param last_name: entity's Caller ID last name. Characters of %, +, `, " and Unicode characters are not
             allowed.
         :type last_name: str
         :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used.
@@ -11927,7 +11953,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         devices, an outbound call is placed from that device to the destination.
 
         :param destination: The destination to be dialed. The destination can be digits or a URI. Some examples for
-            destination include: 1234, 2223334444, +12223334444, \*73, tel:+12223334444, user@company.domain,
+            destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain,
             sip:user@company.domain
         :type destination: str
         :return: Call id and call session id
@@ -12010,7 +12036,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         :type call_id: str
         :param destination: The destination to divert the call to. If toVoicemail is false, destination is required.
             The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444,
-            +12223334444, \*73, tel:+12223334444, user@company.domain, sip:user@company.domain
+            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
         :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
@@ -12044,7 +12070,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         :type call_id1: str
         :param destination: The destination to be transferred to. The destination can be digits or a URI. Some
             examples for destination include: 1234, 2223334444,
-            +12223334444, \*73, tel:+12223334444, user@company.domain, sip:user@company.domain.
+            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain.
             This parameter is mandatory if call_id1 is provided and call_id2 is not provided.
         :type destination: str
         """
@@ -12063,7 +12089,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         :param destination: Identifies where the call is to be parked. If not provided, the call is parked against the
             parking user.
             The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444,
-            +12223334444, \*73, tel:+12223334444, user@company.domain, sip:user@company.domain
+            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
         :param is_group_park: If set to true, the call is parked against an automatically selected member of the
             user's call park group and the destination parameter is ignored.
@@ -12082,7 +12108,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         :param destination: Identifies where the call is parked. The number field from the park command response can
             be used as the destination for the retrieve command. If not provided, the call parked against the
             retrieving user is retrieved. The destination can be digits or a URI. Some examples for destination
-            include: 1234, 2223334444, +12223334444, \*73, tel:+12223334444, user@company.domain,
+            include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain,
             sip:user@company.domain
         :return: call id and call session id of retreived call
         :rtype: :class:`CallInfo`
@@ -12151,7 +12177,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to hold.
         :type call_id: str
         :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6,
-            7, 8, 9, \*, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value
+            7, 8, 9, *, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value
             “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
             successively.
         """
@@ -12460,7 +12486,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         of `spark-admin:telephony_config_write`.
 
         :param settings: DECT Network to update. location.id and id are used to address the DECT network to be
-            updated. Only name, display_name, default_access_code_enabled, default_access_code are considered for the update
+            updated. Only name, display_name, default_access_code_enabled, default_access_code are considered for the
+            update
 
         :param org_id: Update DECT network details in the specified organization.
         :type org_id: str

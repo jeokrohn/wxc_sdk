@@ -84,17 +84,17 @@ def main():
                 entry = f"{name}, "
                 if len(line) + len(entry) >= max_line:
                     if pending_line:
-                        print(f'{pending_line.rstrip()}\\', file=source)
+                        print(f'{pending_line.rstrip()} \\', file=source)
                     pending_line = line.rstrip()
                     # next line is indented by 4 spaces
                     line = ' ' * 4
                 line = f'{line}{entry}'
             if pending_line:
                 if line.strip():
-                    print(f'{pending_line.rstrip()}\\', file=source)
+                    print(f'{pending_line.rstrip()} \\', file=source)
                     print(f'{line.rstrip(" ,")}', file=source)
                 else:
-                    print(f'{pending_line.rstrip(" ,")}\\', file=source)
+                    print(f'{pending_line.rstrip(" ,")} \\', file=source)
             else:
                 print(f'{line.rstrip(" ,")}', file=source)
     if err:

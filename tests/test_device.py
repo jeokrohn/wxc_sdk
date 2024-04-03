@@ -113,12 +113,12 @@ class TestDevice(TestCaseWithLog):
         # now look at the raw response (before the field_validator)
         requests = self.requests(method='GET')
         items = list(chain.from_iterable(r.response_body.get('items', []) for r in requests))
-        room_desk_items = [d for d in items if d['type']=='roomdesk']
+        room_desk_items = [d for d in items if d['type'] == 'roomdesk']
         for device in items:
             try:
                 if not device.get('mac'):
                     continue
-                if device['type']=='roomdesk':
+                if device['type'] == 'roomdesk':
                     self.assertTrue(':' in device['mac'], 'No colon in roomdesk device mac')
                 else:
                     self.assertTrue(':' not in device['mac'], 'Colon in MPP device mac')

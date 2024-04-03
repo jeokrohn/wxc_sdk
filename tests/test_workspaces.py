@@ -265,7 +265,8 @@ class TestCreate(TestWithLocations):
         # also as a side effect the workspace location id gets set
         self.assertIsNotNone(workspace.workspace_location_id)
         # ... location id and workspace location id are related
-        self.assertEqual(webex_id_to_uuid(target_location.location_id), webex_id_to_uuid(workspace.workspace_location_id).split('#')[-1])
+        self.assertEqual(webex_id_to_uuid(target_location.location_id),
+                         webex_id_to_uuid(workspace.workspace_location_id).split('#')[-1])
 
     def test_create_calling_upgrade_to_professional(self):
         """
@@ -293,7 +294,7 @@ class TestCreate(TestWithLocations):
             print(f'Workspace license: {calling_license.name}')
             with self.no_log():
                 pro_license = next(lic for lic in self.api.licenses.list()
-                                   if lic.webex_calling_professional and lic.consumed_units<lic.total_units)
+                                   if lic.webex_calling_professional and lic.consumed_units < lic.total_units)
             pro_license = self.api.licenses.details(license_id=pro_license.license_id)
             # prepare the update
             update = workspace.model_copy(deep=True)
@@ -313,7 +314,6 @@ class TestCreate(TestWithLocations):
         finally:
             # remove workspace again
             self.api.workspaces.delete_workspace(workspace_id=workspace.workspace_id)
-
 
     def test_004_create_workspace_wo_calling_and_upgrade_to_webex_calling(self):
         """
@@ -534,9 +534,8 @@ class TestCreate(TestWithLocations):
         # * supportedDevices cannot be changed after creation
         with self.assertRaises(RestError) as ctx:
             _ = self.api.workspaces.update(workspace_id=workspace.workspace_id,
-                                                       settings=update)
+                                           settings=update)
         self.assertEqual(400, ctx.exception.response.status_code)
-
 
 
 class TestUpdate(TestCaseWithLog):

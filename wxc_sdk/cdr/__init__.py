@@ -313,8 +313,6 @@ class CDR(ApiModel):
     #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share
     #: this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
     transfer_related_call_id: Optional[str] = None
-    #: The user who made or received the call.
-    user: Optional[str] = None
     #: The authorization code admin created for a location or site for users to use. Collected by the
     #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     authorization_code: Optional[str] = None

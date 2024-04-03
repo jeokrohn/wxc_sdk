@@ -2159,7 +2159,7 @@ class MeetingsApi(ApiChild, base='meetings'):
 
         documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes
         """
-        params = {}
+        params = dict()
         params['service'] = service
         if site_url is not None:
             params['siteUrl'] = site_url

@@ -625,7 +625,7 @@ class DocMethodDetails(BaseModel):
             for md in method_details.methods:
                 yield from md.attributes(path=f'{method_details_key}')
 
-    def mode_dump(self, exclude=None, **kwargs):
+    def model_dump(self, exclude=None, **kwargs):
         return super().model_dump(exclude={'info'}, by_alias=True, **kwargs)
 
 
@@ -1053,6 +1053,7 @@ class DevWebexComScraper:
         Parse parameters from divs
         :param divs:
         :param level:
+        :param path:
         :return:
         """
 

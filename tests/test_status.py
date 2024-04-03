@@ -6,7 +6,6 @@ class TestStatus(TestCaseWithLog):
         api = self.api.status
         summary = api.summary()
 
-
     def test_002_test_status(self):
         api = self.api.status
         status = api.status()

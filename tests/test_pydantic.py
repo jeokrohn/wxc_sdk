@@ -221,7 +221,7 @@ class TestOptional(TestCase):
   }
 """
         data = loads(json_txt)
-        op:OutgoingPermissions = OutgoingPermissions.model_validate(data)
+        op: OutgoingPermissions = OutgoingPermissions.model_validate(data)
         cp = op.calling_permissions
         cp_fields = cp.__dict__
         cp_dump = cp.model_dump()

@@ -14,7 +14,7 @@ from wxc_sdk.locations import Location
 from wxc_sdk.telephony.callpickup import CallPickup, PickupNotificationType
 
 
-async def get_available_agents(api: AsWebexSimpleApi, locations:list[Location]) -> list[list[PersonPlaceAgent]]:
+async def get_available_agents(api: AsWebexSimpleApi, locations : list[Location]) -> list[list[PersonPlaceAgent]]:
     """
     Get available agents for each location
     """
@@ -64,6 +64,7 @@ class TestDetails(TestWithLocations):
             for agent in agents:
                 print(f'{location.name:{location_len}}: {agent.user_type:{user_type_len}} - {agent.display_name}')
 
+
 @dataclass(init=False)
 class TestCreateAndUpdate(TestWithLocations):
     available_agents: ClassVar[list[list[PersonPlaceAgent]]]
@@ -74,7 +75,7 @@ class TestCreateAndUpdate(TestWithLocations):
 
         async def set_available_agents():
             async with AsWebexSimpleApi(tokens=cls.tokens) as api:
-                cls.available_agents = await get_available_agents(api=api,locations=cls.locations)
+                cls.available_agents = await get_available_agents(api=api, locations=cls.locations)
         asyncio.run(set_available_agents())
 
     def test_001_create(self):
@@ -92,10 +93,10 @@ class TestCreateAndUpdate(TestWithLocations):
         api = self.api.telephony.pickup
         cp_names = set(cp.name for cp in api.list(location_id=location.location_id))
         new_cp_name = next(cp_name for i in range(1000)
-                           if (cp_name:=f'cp_{i:03}') not in cp_names)
+                           if (cp_name := f'cp_{i:03}') not in cp_names)
         agent = random.choice(agents)
         agent: PersonPlaceAgent
-        new_cp = CallPickup(name=new_cp_name,agents=[PersonPlaceAgent(id=agent.agent_id)])
+        new_cp = CallPickup(name=new_cp_name, agents=[PersonPlaceAgent(id=agent.agent_id)])
         # create new call pickup
         new_cp_id = api.create(location_id=location.location_id, settings=new_cp)
         try:

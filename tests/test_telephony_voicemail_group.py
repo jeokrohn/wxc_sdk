@@ -137,7 +137,7 @@ class TestVmGroup(TestWithLocations):
                     err = True
                 # check that created voicemail group is in list
                 elif next((vmg for vmg in vmg_list
-                         if vmg.group_id == vmg_id), None) is None:
+                           if vmg.group_id == vmg_id), None) is None:
                     print(f'  failed to find created voicemail group in list of voicemail groups of location')
                     err = True
                 # verify that only voicemail groups of the requested location are in the list

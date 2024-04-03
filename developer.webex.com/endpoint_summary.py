@@ -76,7 +76,8 @@ def main():
         summary = reduce(lambda s, el: s[el.section].append(el.method_details) or s,
                          doc_details.methods(), defaultdict(list))
     else:
-        summary = reduce(lambda s, el: s[epg.key(el.method_details.documentation.endpoint)].append(el.method_details) or s,
+        summary = reduce(lambda s, el: (s[epg.key(el.method_details.documentation.endpoint)].append(el.method_details)
+                                        or s),
                          doc_details.methods(),
                          defaultdict(list))
 
