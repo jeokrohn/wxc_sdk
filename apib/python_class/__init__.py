@@ -532,6 +532,10 @@ class Attribute:
                 self.python_type != 'bool'):
             log.warning(f'attribute "{self.name}" has sample value `{self.sample}` but is a {self.python_type} '
                         f'instead of a bool')
+            self.sample = self.sample == 'true'
+            self.python_type = 'bool'
+            self.referenced_class = None
+            log.warning(f'attribute "{self.name}" has been converted to a bool')
 
     @classmethod
     def from_enum(cls, enum_element: ApibEnum) -> Generator['Attribute', None, None]:
