@@ -773,10 +773,6 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     """
     Call Routing
     
-    Not supported for Webex for Government (FedRAMP)
-    
-    
-    
     Features: Call Routing supports reading and writing of Webex Calling On-premises, also known as Local Gateway, Call
     Routing PSTN settings for a specific organization.
     
@@ -979,7 +975,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['dialPatterns'] = loads(TypeAdapter(list[DialPattern]).dump_json(dial_patterns, by_alias=True, exclude_none=True))
+        body['dialPatterns'] = TypeAdapter(list[DialPattern]).dump_python(dial_patterns, mode='json', by_alias=True, exclude_none=True)
         body['deleteAllDialPatterns'] = delete_all_dial_patterns
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
         super().put(url, params=params, json=body)
@@ -1511,7 +1507,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways, by_alias=True, exclude_none=True))
+        body['localGateways'] = TypeAdapter(list[LocalGateways]).dump_python(local_gateways, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('premisePstn/routeGroups')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1571,7 +1567,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['localGateways'] = loads(TypeAdapter(list[LocalGateways]).dump_json(local_gateways, by_alias=True, exclude_none=True))
+        body['localGateways'] = TypeAdapter(list[LocalGateways]).dump_python(local_gateways, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
         super().put(url, params=params, json=body)
 
@@ -1942,7 +1938,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         if numbers is not None:
-            body['numbers'] = loads(TypeAdapter(list[RouteListNumberPatch]).dump_json(numbers, by_alias=True, exclude_none=True))
+            body['numbers'] = TypeAdapter(list[RouteListNumberPatch]).dump_python(numbers, mode='json', by_alias=True, exclude_none=True)
         if delete_all_numbers is not None:
             body['deleteAllNumbers'] = delete_all_numbers
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')

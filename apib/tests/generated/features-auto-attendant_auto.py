@@ -282,8 +282,6 @@ class KeyConfigurationsGetObjectAction(str, Enum):
     repeat_menu = 'REPEAT_MENU'
     #: Terminates the call.
     exit = 'EXIT'
-    #: Return back to the previous menu.
-    return_to_previous_menu = 'RETURN_TO_PREVIOUS_MENU'
 
 
 class KeyConfigurationsGetObject(ApiModel):
@@ -395,10 +393,6 @@ class ListAutoAttendantObject(ApiModel):
 class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
     """
     Features:  Auto Attendant
-    
-    Not supported for Webex for Government (FedRAMP)
-    
-    
     
     Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
     organization.

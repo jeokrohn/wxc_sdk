@@ -14,9 +14,8 @@ from wxc_sdk.base import SafeEnum as Enum
 __all__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType',
            'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
            'WorkspaceCallingWebexCalling', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
-           'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus',
-           'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices',
-           'WorkspaceType1', 'WorkspaceUpdateRequestType', 'WorkspacesApi']
+           'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceDeviceHostedMeetings',
+           'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices', 'WorkspaceType1', 'WorkspacesApi']
 
 
 class WorkspaceType1(str, Enum):
@@ -34,7 +33,6 @@ class WorkspaceType1(str, Enum):
     desk = 'desk'
     #: Unspecified.
     other = 'other'
-    none_ = 'none'
 
 
 class WorkspaceCallingType(str, Enum):
@@ -79,7 +77,6 @@ class WorkspaceHotdeskingStatus(str, Enum):
     on = 'on'
     #: Workspace does not support hotdesking.
     off = 'off'
-    none_ = 'none'
 
 
 class WorkspaceSupportedDevices(str, Enum):
@@ -194,30 +191,6 @@ class WorkspaceCreationRequestCalendar(ApiModel):
     email_address: Optional[str] = None
 
 
-class WorkspaceCreationRequestHotdeskingStatus(str, Enum):
-    #: Workspace supports hotdesking.
-    on = 'on'
-    #: Workspace does not support hotdesking.
-    off = 'off'
-
-
-class WorkspaceUpdateRequestType(str, Enum):
-    #: No workspace type set.
-    not_set = 'notSet'
-    #: High concentration.
-    focus = 'focus'
-    #: Brainstorm/collaboration.
-    huddle = 'huddle'
-    #: Dedicated meeting space.
-    meeting_room = 'meetingRoom'
-    #: Unstructured agile.
-    open = 'open'
-    #: Individual.
-    desk = 'desk'
-    #: Unspecified.
-    other = 'other'
-
-
 class SupportAndConfiguredInfo(ApiModel):
     #: Is the workspace capability supported or not.
     #: example: True
@@ -262,7 +235,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     """
 
     def list_workspaces(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
-                        display_name: str = None, capacity: int = None, type: WorkspaceUpdateRequestType = None,
+                        display_name: str = None, capacity: int = None, type: WorkspaceType1 = None,
                         calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
                         org_id: str = None, **params) -> Generator[Workspace, None, None]:
@@ -290,7 +263,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             with no capacity set.
         :type capacity: int
         :param type: List workspaces by type.
-        :type type: WorkspaceUpdateRequestType
+        :type type: WorkspaceType1
         :param calling: List workspaces by calling type.
         :type calling: WorkspaceCallingType
         :param supported_devices: List workspaces by supported devices.
@@ -333,7 +306,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                            floor_id: str = None, capacity: int = None, type: WorkspaceType1 = None,
                            sip_address: str = None, calling: WorkspaceCreationRequestCalling = None,
                            calendar: WorkspaceCreationRequestCalendar = None, notes: str = None,
-                           hotdesking_status: WorkspaceCreationRequestHotdeskingStatus = None,
+                           hotdesking_status: WorkspaceHotdeskingStatus = None,
                            device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
                            supported_devices: WorkspaceSupportedDevices = None, org_id: str = None) -> Workspace:
         """
@@ -377,7 +350,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param notes: Notes associated to the workspace.
         :type notes: str
         :param hotdesking_status: Hot desking status of the workspace.
-        :type hotdesking_status: WorkspaceCreationRequestHotdeskingStatus
+        :type hotdesking_status: WorkspaceHotdeskingStatus
         :param device_hosted_meetings: To enable device hosted meetings, set a Webex `siteUrl` and the `enabled` flag
             to `true`.
         :type device_hosted_meetings: WorkspaceDeviceHostedMeetings
@@ -441,9 +414,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
     def update_a_workspace(self, workspace_id: str, display_name: str = None, location_id: str = None,
                            workspace_location_id: str = None, floor_id: str = None, capacity: int = None,
-                           type: WorkspaceUpdateRequestType = None, calendar: WorkspaceCreationRequestCalendar = None,
+                           type: WorkspaceType1 = None, calendar: WorkspaceCreationRequestCalendar = None,
                            sip_address: str = None, calling: WorkspaceCreationRequestCalling = None,
-                           notes: str = None, hotdesking_status: WorkspaceCreationRequestHotdeskingStatus = None,
+                           notes: str = None, hotdesking_status: WorkspaceHotdeskingStatus = None,
                            device_hosted_meetings: WorkspaceDeviceHostedMeetings = None) -> Workspace:
         """
         Update a Workspace
@@ -487,7 +460,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param capacity: How many people the workspace is suitable for. If set, must be 0 or higher.
         :type capacity: int
         :param type: The type that best describes the workspace.
-        :type type: WorkspaceUpdateRequestType
+        :type type: WorkspaceType1
         :param calendar: An empty/null calendar field will not cause any changes. Provide a type (`microsoft`, `google`
             or `none`) and an `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none`
             type does not require an `emailAddress`.
@@ -500,7 +473,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param notes: Notes associated to the workspace.
         :type notes: str
         :param hotdesking_status: Hot desking status of the workspace.
-        :type hotdesking_status: WorkspaceCreationRequestHotdeskingStatus
+        :type hotdesking_status: WorkspaceHotdeskingStatus
         :param device_hosted_meetings: To enable device hosted meetings, set a Webex `siteUrl` and the `enabled` flag
             to `true`.
         :type device_hosted_meetings: WorkspaceDeviceHostedMeetings

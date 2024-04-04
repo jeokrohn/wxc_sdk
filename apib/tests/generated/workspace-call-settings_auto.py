@@ -385,7 +385,7 @@ class PlaceCallerIdGet(ApiModel):
     #: Custom external caller ID name which will be shown if external caller ID name policy is `OTHER`.
     #: example: Custom external caller name
     custom_external_caller_id_name: Optional[str] = None
-    #: Location's external caller ID name which will be shown if external caller ID name policy is `CUSTOM`.
+    #: Location's external caller ID name which will be shown if external caller ID name policy is `LOCATION`.
     #: example: Anna
     location_external_caller_id_name: Optional[str] = None
 
@@ -744,7 +744,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
             name policy is `OTHER`.
         :type custom_external_caller_id_name: str
         :param location_external_caller_id_name: Location's external caller ID name which will be shown if external
-            caller ID name policy is `CUSTOM`.
+            caller ID name policy is `LOCATION`.
         :type location_external_caller_id_name: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the

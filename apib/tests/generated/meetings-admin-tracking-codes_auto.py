@@ -33,7 +33,6 @@ class GetTrackingCodeObjectInputMode(str, Enum):
     editable_select = 'editableSelect'
     #: An input method is only available for the host profile and sign-up pages.
     host_profile_select = 'hostProfileSelect'
-    none_ = 'none'
 
 
 class GetTrackingCodeObjectHostProfileCode(str, Enum):
@@ -45,7 +44,6 @@ class GetTrackingCodeObjectHostProfileCode(str, Enum):
     admin_set = 'adminSet'
     #: The value cannot be used.
     not_used = 'notUsed'
-    none_ = 'none'
 
 
 class ScheduleStartCodeObjectService(str, Enum):
@@ -59,7 +57,6 @@ class ScheduleStartCodeObjectService(str, Enum):
     training_center = 'TrainingCenter'
     #: Users can set tracking codes when scheduling a support meeting.
     support_center = 'SupportCenter'
-    none_ = 'none'
 
 
 class ScheduleStartCodeObjectType(str, Enum):
@@ -75,7 +72,6 @@ class ScheduleStartCodeObjectType(str, Enum):
     #: there are different types for different services. For example, `required` for `MeetingCenter`, `optional` for
     #: `EventCenter` and `notUsed` for others.
     not_applicable = 'notApplicable'
-    none_ = 'none'
 
 
 class ScheduleStartCodeObject(ApiModel):

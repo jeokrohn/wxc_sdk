@@ -20,7 +20,6 @@ class TranscriptObjectStatus(str, Enum):
     available = 'available'
     #: Transcript has been deleted.
     deleted = 'deleted'
-    none_ = 'none'
 
 
 class TranscriptObject(ApiModel):

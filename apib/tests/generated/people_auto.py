@@ -12,7 +12,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'PeopleApi', 'Person', 'PersonAddresses',
-           'PersonInvitePending', 'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonStatus', 'PersonType']
+           'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonStatus', 'PersonType']
 
 
 class PersonPhoneNumbersType(str, Enum):
@@ -76,13 +76,6 @@ class PersonStatus(str, Enum):
     presenting = 'presenting'
     #: The user’s status could not be determined.
     unknown = 'unknown'
-
-
-class PersonInvitePending(str, Enum):
-    #: The person has been invited to Webex but has not created an account.
-    true = 'true'
-    #: An invite is not pending for this person.
-    false = 'false'
 
 
 class PersonType(str, Enum):
@@ -186,12 +179,11 @@ class Person(ApiModel):
     status: Optional[PersonStatus] = None
     #: Whether or not an invite is pending for the user to complete account activation. This property is only returned
     #: if the authenticated user is an admin user for the person's organization.
-    #: example: false
-    invite_pending: Optional[PersonInvitePending] = None
+    invite_pending: Optional[bool] = None
     #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an
     #: admin user for the person's organization.
-    #: example: true
-    login_enabled: Optional[PersonInvitePending] = None
+    #: example: True
+    login_enabled: Optional[bool] = None
     #: The type of person account, such as person or bot.
     #: example: person
     type: Optional[PersonType] = None
