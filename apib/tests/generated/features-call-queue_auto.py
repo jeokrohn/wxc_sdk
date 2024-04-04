@@ -21,14 +21,14 @@ __all__ = ['AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'Announcem
            'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
            'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting',
            'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode',
-           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateForwardingRuleObjectCallsFrom',
-           'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
-           'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-           'CreateForwardingRuleObjectForwardToSelection', 'FeaturesCallQueueApi', 'GetAnnouncementFileInfo',
-           'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
-           'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueForcedForwardObject',
-           'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject',
-           'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
+           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateCallQueueObjectCallingLineIdPolicy',
+           'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers',
+           'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo',
+           'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection',
+           'FeaturesCallQueueApi', 'GetAnnouncementFileInfo', 'GetCallQueueCallPolicyObject',
+           'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
+           'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
+           'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
            'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject',
            'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType',
@@ -388,6 +388,15 @@ class CallQueueQueueSettingsGetObject(ApiModel):
     whisper_message: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
 
 
+class CreateCallQueueObjectCallingLineIdPolicy(str, Enum):
+    #: Calling Line ID Policy will show the caller's direct line number.
+    direct_line = 'DIRECT_LINE'
+    #: Calling Line ID Policy will show the main number for the location.
+    location_number = 'LOCATION_NUMBER'
+    #: Calling Line ID Policy will show the value from the `callingLineIdPhoneNumber` field.
+    custom = 'CUSTOM'
+
+
 class HuntRoutingTypeSelection(str, Enum):
     #: Default routing type which directly uses the routing policy to dispatch calls to the agents.
     priority_based = 'PRIORITY_BASED'
@@ -731,6 +740,12 @@ class GetCallQueueObject(ApiModel):
     #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
     #: example: True
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
+    #: Which type of Calling Line ID Policy Selected for Call Queue.
+    #: example: DIRECT_LINE
+    calling_line_id_policy: Optional[CreateCallQueueObjectCallingLineIdPolicy] = None
+    #: Calling line ID Phone number which will be shown if CUSTOM is selected.
+    #: example: +12072342368
+    calling_line_id_phone_number: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
@@ -912,7 +927,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                             queue_settings: CallQueueQueueSettingsGetObject,
                             agents: list[PostPersonPlaceVirtualLineCallQueueObject], phone_number: str = None,
                             extension: str = None, language_code: str = None, first_name: str = None,
-                            last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None,
+                            last_name: str = None, time_zone: str = None,
+                            calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
+                            calling_line_id_phone_number: str = None, allow_agent_join_enabled: bool = None,
                             phone_number_for_outgoing_calls_enabled: bool = None, org_id: str = None) -> str:
         """
         Create a Call Queue
@@ -954,6 +971,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type last_name: str
         :param time_zone: Time zone for the call queue.
         :type time_zone: str
+        :param calling_line_id_policy: Which type of Calling Line ID Policy Selected for Call Queue.
+        :type calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy
+        :param calling_line_id_phone_number: Calling line ID Phone number which will be shown if CUSTOM is selected.
+        :type calling_line_id_phone_number: str
         :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
         :type allow_agent_join_enabled: bool
         :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
@@ -983,6 +1004,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['callPolicies'] = loads(call_policies.model_dump_json())
         body['queueSettings'] = loads(queue_settings.model_dump_json())
         body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
+        if calling_line_id_policy is not None:
+            body['callingLineIdPolicy'] = enum_str(calling_line_id_policy)
+        if calling_line_id_phone_number is not None:
+            body['callingLineIdPhoneNumber'] = calling_line_id_phone_number
         if allow_agent_join_enabled is not None:
             body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
@@ -1062,6 +1087,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                             extension: str = None,
                             alternate_number_settings: GetCallQueueObjectAlternateNumberSettings = None,
                             call_policies: GetCallQueueCallPolicyObject = None,
+                            calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
+                            calling_line_id_phone_number: str = None,
                             allow_call_waiting_for_agents_enabled: bool = None,
                             agents: list[ModifyPersonPlaceVirtualLineCallQueueObject] = None,
                             allow_agent_join_enabled: bool = None,
@@ -1112,6 +1139,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type alternate_number_settings: GetCallQueueObjectAlternateNumberSettings
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: GetCallQueueCallPolicyObject
+        :param calling_line_id_policy: Which type of Calling Line ID Policy Selected for Call Queue.
+        :type calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy
+        :param calling_line_id_phone_number: Calling line ID Phone number which will be shown if CUSTOM is selected.
+        :type calling_line_id_phone_number: str
         :param allow_call_waiting_for_agents_enabled: Flag to indicate whether call waiting is enabled for agents.
         :type allow_call_waiting_for_agents_enabled: bool
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
@@ -1149,6 +1180,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['alternateNumberSettings'] = loads(alternate_number_settings.model_dump_json())
         if call_policies is not None:
             body['callPolicies'] = loads(call_policies.model_dump_json())
+        if calling_line_id_policy is not None:
+            body['callingLineIdPolicy'] = enum_str(calling_line_id_policy)
+        if calling_line_id_phone_number is not None:
+            body['callingLineIdPhoneNumber'] = calling_line_id_phone_number
         body['queueSettings'] = loads(queue_settings.model_dump_json())
         if allow_call_waiting_for_agents_enabled is not None:
             body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
