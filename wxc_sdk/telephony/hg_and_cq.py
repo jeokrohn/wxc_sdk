@@ -77,7 +77,9 @@ class HGandCQ(ApiModel):
     routingPrefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     esn: Optional[str] = None
+    #: Which type of Calling LineID Policy Selected for Call Queue.
     calling_line_id_policy: Optional[CallingLineIdPolicy] = None
+    #: Calling line Id Phone number which will be shown if CUSTOM is selected.
     calling_line_id_phone_number: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
