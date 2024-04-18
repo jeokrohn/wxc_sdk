@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import json
 import time
 from collections.abc import Generator
@@ -17,12 +18,13 @@ from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import Greeting
 from wxc_sdk.locations import Location
+from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 from wxc_sdk.person_settings.caller_id import ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.forwarding import CallForwardingAlways
 from wxc_sdk.person_settings.permissions_out import OutgoingPermissions, Action, CallTypePermission
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony.virtual_line import VirtualLine
+from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices
 
 
 class VirtualLineTest(TestWithLocations):
@@ -197,6 +199,9 @@ class TestVirtualLines(VirtualLineTest):
 
     @async_test
     async def test_get_assigned_devices(self):
+        """
+        Get assigned devices for all virtual lines and check if all devices have an owner
+        """
         api = self.async_api.telephony.virtual_lines
         virtual_lines = await api.list()
         if not virtual_lines:
@@ -205,10 +210,43 @@ class TestVirtualLines(VirtualLineTest):
             *[api.assigned_devices(virtual_line_id=vl.id) for vl in virtual_lines],
             return_exceptions=True)
         err = None
+
+        def vl_str(vl: VirtualLine)->str:
+            return (f'{vl.first_name=} {vl.last_name=} {vl.custom_external_caller_id_name=} {vl.location.name=} '
+                    f'{vl.number.esn=} {vl.number.external=}')
+
+        def device_str(device: TelephonyDevice)->str:
+            r = f'{device.model}'
+            if device.owner:
+                r = f'{r} {device.owner.owner_type}/{device.owner.last_name}, {device.owner.first_name}'
+            else:
+                r = f'{r} - no owner! {device.device_id=} {base64.b64decode(device.device_id).decode()}'
+            return r
+        owner_err = False
         for vl, assigned_devices in zip(virtual_lines, assigned_devices_list):
+            vl: VirtualLine
+            assigned_devices: VirtualLineDevices
             if isinstance(assigned_devices, Exception):
                 err = err or assigned_devices
-                print(f'Failed to get numbers for {vl}: {assigned_devices}')
+                print(f'Failed to get assigned for {vl_str(vl)}: {assigned_devices}')
+                continue
+            print(f'{vl_str(vl)} has {len(assigned_devices.devices)} devices')
+            for device in assigned_devices.devices:
+                d_str = device_str(device)
+                print(f'  {d_str}')
+                if 'no owner' in d_str:
+                    # this devices doesn't exist
+                    try:
+                        with self.assertRaises(RestError) as exc:
+                            details = self.api.devices.details(device_id=device.device_id)
+                        rest_error: RestError = exc.exception
+                        self.assertEqual(404, rest_error.response.status_code)
+                        print('    Device doesn\'t exist')
+                    except AssertionError as ae:
+                        print(f'  Assertion error: {ae}')
+                        err = err or ae
+
+        self.assertFalse(owner_err, 'devices w/o owner!')
         if err:
             raise err
 
