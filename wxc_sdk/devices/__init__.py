@@ -7,9 +7,6 @@ an organization requires an administrator auth token with the spark-admin:device
 or deleting all devices in an organization requires an administrator auth token with the spark-admin:devices_write
 scope. Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
 """
-
-__all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse', 'ProductType', 'ConnectionStatus']
-
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
@@ -20,9 +17,12 @@ from pydantic import Field, model_validator, field_validator
 from ..api_child import ApiChild
 from ..base import SafeEnum as Enum, enum_str
 from ..base import to_camel, ApiModel
+from ..common import DevicePlatform
 from ..rest import RestSession
 from ..telephony import DeviceManagedBy
 from ..telephony.jobs import DeviceSettingsJobsApi
+
+__all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse', 'ProductType', 'ConnectionStatus']
 
 
 class ProductType(str, Enum):
@@ -105,6 +105,8 @@ class Device(ApiModel):
     #: SIP authentication user ame for the owner of the device
     #: only for 3rd party devices
     sip_user_name: Optional[str] = None
+    #: The device platform.
+    device_platform: Optional[DevicePlatform] = None
 
     @model_validator(mode='before')
     def pop_place_id(cls, values):
@@ -167,8 +169,8 @@ class DevicesApi(ApiChild, base='devices'):
              workspace_location_id: str = None, display_name: str = None, product: str = None,
              product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
              serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
-             capability: str = None, permission: str = None, mac: str = None, org_id: str = None,
-             **params) -> Generator[Device, None, None]:
+             capability: str = None, permission: str = None, mac: str = None, device_platform: DevicePlatform = None,
+             org_id: str = None, **params) -> Generator[Device, None, None]:
         """
         List Devices
 
@@ -208,6 +210,8 @@ class DevicesApi(ApiChild, base='devices'):
         :type permission: str
         :param mac: List devices with this MAC address.
         :type mac: str
+        :param device_platform: List devices with this device platform.
+        :type device_platform: DevicePlatform
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str

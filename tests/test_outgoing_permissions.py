@@ -376,13 +376,12 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLines):
                                  pattern=DigitPattern(name=f'test_{pattern}', pattern=pattern, action=Action.block,
                                                       transfer_enabled=False))
             rest_error: AsRestError = exc.exception
-            self.assertEqual(502, rest_error.status, 'Invalid status code')
+            self.assertEqual(400, rest_error.status, 'Invalid status code')
         finally:
             # delete patterns again
-            if False:
-                await asyncio.gather(*[api.delete(entity_id=target_location.location_id, digit_pattern_id=dp_id)
-                                       for dp_id in results
-                                       if not isinstance(dp_id, Exception)])
+            await asyncio.gather(*[api.delete(entity_id=entity_id, digit_pattern_id=dp_id)
+                                   for dp_id in results
+                                   if not isinstance(dp_id, Exception)])
 
         # find the error response
         failed_request = next((request
@@ -397,7 +396,7 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLines):
         # error detail should be proper JSON
         error = failed[0][1]
         # noinspection PyUnresolvedReferences
-        self.assertTrue(not isinstance(error.detail, str), 'invalid JSON in 502')
+        self.assertTrue(not isinstance(error.detail, str), 'invalid JSON in 400')
 
         # finally, the number of patterns should be the same as before
         after = await api.get_digit_patterns(entity_id=entity_id)

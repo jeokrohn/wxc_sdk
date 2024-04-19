@@ -4,25 +4,29 @@ All tests around telephony devices
 import asyncio
 import json
 import random
+import time
 from collections import defaultdict
 from collections.abc import Iterable
+from contextlib import contextmanager
 from dataclasses import dataclass
 from itertools import chain, zip_longest
 from json import dumps, loads
-from time import sleep
 from typing import ClassVar
 from unittest import skip
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
-from tests.testutil import calling_users
+from tests.testutil import calling_users, available_mac_address
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import UserType, ValidationStatus, DeviceCustomization, DisplayNameSelection, PrimaryOrShared
+from wxc_sdk.devices import Device, ProductType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings import PersonDevicesResponse, TelephonyDevice
+from wxc_sdk.telephony import DeviceManagedBy
 from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember, \
-    MACValidationResponse
+    MACValidationResponse, DeviceLayout, LayoutMode, ProgrammableLineKey, LineKeyType
 from wxc_sdk.telephony.jobs import StartJobResponse
+from wxc_sdk.workspaces import Workspace, CallingType
 
 
 class TestSupportedDevices(TestCaseWithLog):
@@ -31,8 +35,8 @@ class TestSupportedDevices(TestCaseWithLog):
         list of supported devices
         """
         supported_devices = self.api.telephony.supported_devices()
-        print(f'Got {len(supported_devices)} supported devices')
-        print('\n'.join(f'{sd}' for sd in supported_devices))
+        print(f'Got {len(supported_devices.devices)} supported devices')
+        print('\n'.join(f'{sd}' for sd in supported_devices.devices))
 
     def test_002_dect_device_types(self):
         """
@@ -171,6 +175,209 @@ class ValidateMac(TestCaseWithLog):
         nok = [result for result in results if
                isinstance(result, MACValidationResponse) and result.status != ValidationStatus.ok]
         foo = 1
+
+
+class Details(TestCaseWithLog):
+
+    @async_test
+    async def test_details(self):
+        """
+        Get details for all devices
+        """
+        devices = [d for d in self.api.devices.list()
+                   if d.product_type != ProductType.roomdesk]
+        # get all details
+        details_list = await asyncio.gather(*[self.async_api.telephony.devices.details(device_id=d.device_id)
+                                              for d in devices],
+                                            return_exceptions=True)
+        err = None
+        for device, details in zip(devices, details_list):
+            device: Device
+            if isinstance(details, Exception):
+                err = err or details
+        if err:
+            raise err
+
+
+class UserAndWorkspaceDeviceSettings(TestCaseWithLog):
+
+    @async_test
+    async def test_get_person_settings(self):
+        """
+        Get device settings for all calling users
+        """
+        with self.no_log():
+            users = calling_users(api=self.api)
+        settings_list = await asyncio.gather(
+            *[self.async_api.telephony.devices.get_person_device_settings(person_id=user.person_id)
+              for user in users],
+            return_exceptions=True)
+        err = None
+        for user, settings in zip(users, settings_list):
+            user: Person
+            if isinstance(settings, Exception):
+                err = err or settings
+                print(f'Getting device settings for "{user.display_name}" failed: {settings}')
+        if err:
+            raise err
+
+    def test_update_person_setting(self):
+        """
+        Update device settings for a random user
+        """
+        with self.no_log():
+            users = calling_users(api=self.api)
+        target_user = random.choice(users)
+        api = self.api.telephony.devices
+        sel = {'person_id': target_user.person_id}
+        before = api.get_person_device_settings(**sel)
+        try:
+            update = before.model_copy(deep=True)
+            update.compression = not update.compression
+            api.update_person_device_settings(**sel, settings=update)
+            after = api.get_person_device_settings(**sel)
+            self.assertEqual(update, after)
+        finally:
+            api.update_person_device_settings(**sel, settings=before)
+
+    @async_test
+    async def test_get_workspace_settings(self):
+        """
+        Get device settings for all calling workspoces
+        """
+        with self.no_log():
+            workspaces = [ws for ws in self.api.workspaces.list()
+                          if ws.calling and ws.calling.type and ws.calling.type == CallingType.webex]
+        if not workspaces:
+            self.skipTest('No calling workspaces to test with')
+        settings_list = await asyncio.gather(
+            *[self.async_api.telephony.devices.get_workspace_device_settings(workspace_id=ws.workspace_id)
+              for ws in workspaces],
+            return_exceptions=True)
+        err = None
+        for workspace, settings in zip(workspaces, settings_list):
+            workspace: Workspace
+            if isinstance(settings, Exception):
+                err = err or settings
+                print(f'Getting device settings for "{workspace.display_name}" failed: {settings}')
+        if err:
+            raise err
+
+    def test_update_workspace_setting(self):
+        """
+        Update device settings for a random workspace
+        """
+        with self.no_log():
+            workspaces = [ws for ws in self.api.workspaces.list()
+                          if ws.calling and ws.calling.type and ws.calling.type == CallingType.webex]
+        if not workspaces:
+            self.skipTest('No calling workspaces to test with')
+
+        target_workspace: Workspace = random.choice(workspaces)
+        api = self.api.telephony.devices
+        sel = {'workspace_id': target_workspace.workspace_id}
+        before = api.get_workspace_device_settings(**sel)
+        try:
+            update = before.model_copy(deep=True)
+            update.compression = not update.compression
+            api.update_workspace_device_settings(**sel, settings=update)
+            after = api.get_workspace_device_settings(**sel)
+            self.assertEqual(update, after)
+        finally:
+            api.update_workspace_device_settings(**sel, settings=before)
+
+
+class TestDeviceLayout(TestCaseWithLog):
+
+    @async_test
+    async def test_get_device_layouts(self):
+        """
+        Get device layouts for all devices
+        """
+        with self.no_log():
+            devices = [d for d in self.api.devices.list()
+                       if d.product_type != ProductType.roomdesk and d.managed_by == DeviceManagedBy.cisco]
+        if not devices:
+            self.skipTest('No devices')
+        # get all layouts
+        layout_list = await asyncio.gather(*[self.async_api.telephony.devices.get_device_layout(device_id=d.device_id)
+                                             for d in devices],
+                                           return_exceptions=True)
+        err = None
+        for device, layout in zip(devices, layout_list):
+            device: Device
+            if isinstance(layout, Exception):
+                err = err or layout
+                print(f'Failed to get layout for {device.display_name}: {layout}')
+                continue
+            layout: DeviceLayout
+            if layout.layout_mode == LayoutMode.custom:
+                print(f'Layout for {device.display_name}')
+                print('\n'.join(f'  {line}'
+                                for line in json.dumps(layout.model_dump(mode='json',
+                                                                         by_alias=True,
+                                                                         exclude_none=True),
+                                                       indent=2).splitlines()))
+        if err:
+            raise err
+
+    def test_set_speed_dial(self):
+        """
+        Try to set a speed dial foa given phone
+        """
+        @contextmanager
+        def temp_phone():
+            with self.no_log():
+                # get an available MAC address
+                mac = next(available_mac_address(api=self.api))
+
+                # pick a random user
+                users = calling_users(api=self.api)
+                target_user = random.choice(users)
+                print(f'creating temp MPP with mac {mac} for "{target_user.display_name}"')
+
+            # add device by MAC
+            result = self.api.devices.create_by_mac_address(mac=mac,
+                                                            person_id=target_user.person_id,
+                                                            model='DMS Cisco 8851')
+            try:
+                yield result
+            finally:
+                self.api.devices.delete(device_id=result.device_id)
+            return
+
+        with temp_phone() as device:
+            device: Device
+            api = self.api.telephony.devices
+            line_keys = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open)
+                         for i in range(1, 11)]
+            line_keys[0].line_key_type = LineKeyType.primary_line
+            line_keys[1] = ProgrammableLineKey(line_key_index=2, line_key_type=LineKeyType.speed_dial,
+                                               line_key_label='6000', line_key_value='6000')
+            new_layout = DeviceLayout(layout_mode=LayoutMode.custom, line_keys=line_keys)
+            api.modify_device_layout(device_id=device.device_id,
+                                     layout=new_layout)
+            after = api.get_device_layout(device_id=device.device_id)
+            self.assertEqual(new_layout.layout_mode, after.layout_mode)
+            self.assertEqual(new_layout.line_keys, after.line_keys)
+
+    def test_set_to_default(self):
+        """
+        Try to set device layout to default
+        """
+
+        device = next(self.api.devices.list(display_name='Jamie Long CP-8865'), None)
+        self.assertIsNotNone(device, 'Device not found')
+        api = self.api.telephony.devices
+        layout = api.get_device_layout(device_id=device.device_id)
+        new_layout = DeviceLayout(layout_mode=LayoutMode.default)
+        api.modify_device_layout(device_id=device.device_id,
+                                 layout=new_layout)
+        after = api.get_device_layout(device_id=device.device_id)
+        self.assertEqual(new_layout.layout_mode, after.layout_mode)
+        self.assertIsNone(after.line_keys)
+        self.assertIsNone(after.kem_module_type)
+        self.assertIsNone(after.kem_keys)
 
 
 class Members(TestCaseWithLog):
@@ -517,8 +724,8 @@ class Jobs(TestCaseWithLog):
             if job.latest_execution_status in {'COMPLETED', 'FAILED'}:
                 break
             print('not ready; sleep for 2 seconds...')
-            sleep(2)
-            job = self.api.telephony.jobs.device_settings.get_status(job_id=job.id)
+            time.sleep(2)
+            job = self.api.telephony.jobs.device_settings.status(job_id=job.id)
         print(json.dumps(json.loads(job.model_dump_json()), indent=2))
         self.assertEqual('COMPLETED', job.latest_execution_status)
 
@@ -546,7 +753,7 @@ class Jobs(TestCaseWithLog):
         jobs = list(self.api.devices.settings_jobs.list())
         if not jobs:
             self.skipTest('No existing jobs')
-        status = await asyncio.gather(*[self.async_api.telephony.jobs.device_settings.get_status(job_id=job.id)
+        status = await asyncio.gather(*[self.async_api.telephony.jobs.device_settings.status(job_id=job.id)
                                         for job in jobs])
         print(f'Got status for {len(status)} jobs')
 
@@ -559,7 +766,7 @@ class Jobs(TestCaseWithLog):
         jobs = list(self.api.devices.settings_jobs.list())
         if not jobs:
             self.skipTest('No existing jobs')
-        status = await asyncio.gather(*[self.async_api.devices.settings_jobs.job_errors(job_id=job.id)
+        status = await asyncio.gather(*[self.async_api.devices.settings_jobs.errors(job_id=job.id)
                                         for job in jobs])
         print(f'Got status for {len(status)} jobs')
 

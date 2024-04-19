@@ -5,7 +5,7 @@ import json
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import Field, TypeAdapter
 
@@ -18,11 +18,10 @@ __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'Job
            'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'NumberJob',
            'ErrorMessageObject', 'ErrorObject', 'ManageNumberErrorItem', 'ManageNumbersJobsApi',
            'InitiateMoveNumberJobsBody', 'ApplyLineKeyTemplatesJobsApi', 'LineKeyTemplateAdvisoryTypes',
-           'ApplyLineKeyTemplateJobDetails']
+           'ApplyLineKeyTemplateJobDetails', 'RebuildPhonesJobsApi']
 
 
 class StepExecutionStatus(ApiModel):
-    #: Unique identifier that identifies each step in a job.
     #: Unique identifier that identifies each step in a job.
     id: int
     #: Step execution start time.
@@ -85,7 +84,7 @@ class StartJobResponse(ApiModel):
     #: indicates if all the devices within this location will be customized with new requested customizations(if set to
     #: true) or will be overridden with the one at organization level (if set to false or any other value). This field
     #: has no effect when the job is being triggered at organization level.
-    location_customizations_enabled: bool
+    location_customizations_enabled: Optional[bool] = None
     #: Indicates if the job was run at organization level ('CUSTOMER') or location ('LOCATION') level.
     target: str
     #: Unique location identifier for which the job was run.
@@ -94,6 +93,7 @@ class StartJobResponse(ApiModel):
     location_name: Optional[str] = None
     #: Displays job completion percentage
     percentage_complete: int
+    #: Count of number of devices rebuilt.
     device_count: Optional[int] = None
 
 
@@ -190,7 +190,7 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=StartJobResponse, params=params)
 
-    def get_status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+    def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
         """
         Get change device settings job status.
 
@@ -211,7 +211,7 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
         data = self.get(url=url, params=params)
         return StartJobResponse.model_validate(data)
 
-    def job_errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
+    def errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
         """
         List change device settings job errors.
 
@@ -322,7 +322,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
     API for jobs to manage numbers
     """
 
-    def list_jobs(self, org_id: str = None, **params) -> Generator[NumberJob, None, None]:
+    def list(self, org_id: str = None, **params) -> Generator[NumberJob, None, None]:
         """
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
         irrespective of its status.
@@ -340,7 +340,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         return self.session.follow_pagination(url=url, model=NumberJob, params=params)
 
     def initiate_job(self, operation: str, target_location_id: str,
-                     number_list: list[NumberItem]) -> NumberJob:
+                     number_list: List[NumberItem]) -> NumberJob:
         """
         Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
         actions internally, only MOVE is supported publicly.
@@ -364,7 +364,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         data = super().post(url=url, data=body.model_dump_json())
         return NumberJob.model_validate(data)
 
-    def job_status(self, job_id: str = None) -> NumberJob:
+    def status(self, job_id: str = None) -> NumberJob:
         """
         Returns the status and other details of the job.
         This API requires a full or read-only administrator auth token with a scope of
@@ -377,7 +377,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         data = super().get(url=url)
         return NumberJob.model_validate(data)
 
-    def pause_job(self, job_id: str = None, org_id: str = None):
+    def pause(self, job_id: str = None, org_id: str = None):
         """
         Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -394,7 +394,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         super().post(url=url, params=params)
         return
 
-    def resume_job(self, job_id: str = None, org_id: str = None):
+    def resume(self, job_id: str = None, org_id: str = None):
         """
         Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -411,7 +411,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         super().post(url=url, params=params)
         return
 
-    def abandon_job(self, job_id: str = None, org_id: str = None):
+    def abandon(self, job_id: str = None, org_id: str = None):
         """
         Abandon the Manage Numbers Job.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -428,8 +428,8 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         super().post(url=url, params=params)
         return
 
-    def list_job_errors(self, job_id: str = None, org_id: str = None,
-                        **params) -> Generator[ManageNumberErrorItem, None, None]:
+    def errors(self, job_id: str = None, org_id: str = None,
+               **params) -> Generator[ManageNumberErrorItem, None, None]:
         """
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
@@ -550,7 +550,7 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
         return r
 
-    def list_jobs(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
+    def list(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
         """
         Get List of Apply Line Key Template jobs
 
@@ -577,7 +577,7 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
         r = TypeAdapter(list[ApplyLineKeyTemplateJobDetails]).validate_python(data['items'])
         return r
 
-    def job_status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+    def status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
         """
         Get the job status of an Apply Line Key Template job
 
@@ -606,7 +606,7 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
         return r
 
-    def job_errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
+    def errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
         """
         Get job errors for an Apply Line Key Template job
 
@@ -634,6 +634,106 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
 
+class RebuildPhonesJobsApi(ApiChild, base='telephony/config/jobs/devices/rebuildPhones'):
+    def rebuild_phones_configuration(self, location_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Rebuild Phones Configuration
+
+        Rebuild all phone configurations for the specified location.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier of the location.
+        :type location_id: str
+        :param org_id: Rebuild phones for this organization.
+        :type org_id: str
+        :rtype: :class:`RebuildPhonesJob`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['locationId'] = location_id
+        url = self.ep()
+        data = super().post(url, params=params, json=body)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def list(self, org_id: str = None) -> list[StartJobResponse]:
+        """
+        List Rebuild Phones Jobs
+
+        Get the list of all Rebuild Phones jobs in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List of rebuild phones jobs in this organization.
+        :type org_id: str
+        :rtype: list[RebuildPhonesJob]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[StartJobResponse]).validate_python(data['items'])
+        return r
+
+    def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Get the Job Status of a Rebuild Phones Job
+
+        Get the details of a rebuild phones job by its job ID.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check a rebuild phones job status in this organization.
+        :type org_id: str
+        :rtype: :class:`RebuildPhonesJob`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}')
+        data = super().get(url, params=params)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
+        """
+        Get Job Errors for a Rebuild Phones Job
+
+        Get errors for a rebuild phones job in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for a rebuild phones job in this organization.
+        :type org_id: str
+        :rtype: list[ItemObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+
 @dataclass(init=False)
 class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
@@ -645,9 +745,12 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     manage_numbers: ManageNumbersJobsApi
     #: API for apply line key template jobs
     apply_line_key_templates: ApplyLineKeyTemplatesJobsApi
+    #: API for rebuild phone jobs
+    rebuild_phones: RebuildPhonesJobsApi
 
     def __init__(self, *, session: RestSession):
         super().__init__(session=session)
         self.device_settings = DeviceSettingsJobsApi(session=session)
         self.manage_numbers = ManageNumbersJobsApi(session=session)
         self.apply_line_key_templates = ApplyLineKeyTemplatesJobsApi(session=session)
+        self.rebuild_phones = RebuildPhonesJobsApi(session=session)

@@ -26,6 +26,8 @@ __all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Ca
            'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling', 'WorkspaceSupportedDevices',
            'WorkspacesApi']
 
+from ..common import DevicePlatform
+
 
 class WorkSpaceType(str, Enum):
     """
@@ -165,6 +167,8 @@ class Workspace(ApiModel):
     device_hosted_meetings: Optional[DeviceHostedMeetings] = None
     #: The supported devices for the workspace.
     supported_devices: Optional[WorkspaceSupportedDevices] = None
+    #: The device platform.
+    device_platform: Optional[DevicePlatform] = None
 
     def update_or_create(self, for_update: bool = False) -> str:
         """

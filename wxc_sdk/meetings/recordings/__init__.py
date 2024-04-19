@@ -149,7 +149,7 @@ class RecordingsApi(ApiChild, base=''):
 
     When the recording function is paused in the meeting the recording will not contain the pause. If the recording
     function is stopped and restarted in the meeting, several recordings will be created. These recordings will be
-    consolidate and available all at once.
+    consolidated and available all at once.
 
     Refer to the `Meetings API Scopes
     <https://developer.webex.com/docs/meetings#user-level-authentication-and-scopes>`_ for the specific scopes
@@ -171,13 +171,13 @@ class RecordingsApi(ApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
-              **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
+          NOTE: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
-              recordings of all the user's sites. All available Webex sites and preferred site of the user can be
-              retrieved by `Get Site List
-                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
+          recordings of all the user's sites. All available Webex sites and preferred site of the user can be
+          retrieved by
+          `Get Site List <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -267,19 +267,15 @@ class RecordingsApi(ApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+        Long result sets are split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
-                note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
+          note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
-                recordings on the admin user's or compliance officer's preferred site are listed. All the available
-                Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
-                `Get Site List
-                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-
-        #### Request Header
+        * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
+          recordings on the admin user's or compliance officer's preferred site are listed. All the available
+          Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
+          `Get Site List <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.

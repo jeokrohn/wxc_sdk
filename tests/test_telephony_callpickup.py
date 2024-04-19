@@ -14,7 +14,7 @@ from wxc_sdk.locations import Location
 from wxc_sdk.telephony.callpickup import CallPickup, PickupNotificationType
 
 
-async def get_available_agents(api: AsWebexSimpleApi, locations : list[Location]) -> list[list[PersonPlaceAgent]]:
+async def get_available_agents(api: AsWebexSimpleApi, locations: list[Location]) -> list[list[PersonPlaceAgent]]:
     """
     Get available agents for each location
     """

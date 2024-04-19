@@ -16,7 +16,7 @@ class DeviceConfigurationSourceEditability(ApiModel):
     #: The reason the value is not editable on this source.
     #: * NOT_AUTHORIZED - User is not authorized to edit any values.
     #: * CONFIG_MANAGED_BY_DIFFERENT_AUTHORITY - The configuration is managed by a different authority. For example
-    #:   CUCM.
+    #: CUCM.
     reason: Optional[str] = None
 
 
@@ -84,6 +84,7 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         for all devices within an organization.
 
         :param device_id: List device configurations by device ID.
+        :type device_id: str
         :param key: This can optionally be used to filter configurations. Keys are composed of segments. It's
             possible to use absolute paths, wildcards or ranges.
 
@@ -97,6 +98,7 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
             only shows the first FacilityService Service Name configuration, FacilityService.Service[*].Name shows all,
             FacilityService.Service[1..3].Name shows the first three and FacilityService.Service[2..n].Name shows all
             starting at 2.
+        :type key: str
 
         :return: device configurations
         """

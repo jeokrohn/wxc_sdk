@@ -24,7 +24,7 @@ from wxc_sdk.telephony.location import TelephonyLocation
 
 class TestList(TestCaseWithLog):
     def test_001_list_jobs(self):
-        jobs = list(self.api.telephony.jobs.manage_numbers.list_jobs())
+        jobs = list(self.api.telephony.jobs.manage_numbers.list())
         print(f'Got {len(jobs)} jobs')
 
 
@@ -177,7 +177,7 @@ class TestMoveNumbers(TestWithLocations):
         while (perf_counter() < (start + max_wait)) and job.latest_execution_status not in {'COMPLETED', 'FAILED'}:
             print(f'{datetime.datetime.utcnow().isoformat()}: job status: {job.latest_execution_status}')
             sleep(2)
-            job = self.api.telephony.jobs.manage_numbers.job_status(job_id=job.id)
+            job = self.api.telephony.jobs.manage_numbers.status(job_id=job.id)
         return job
 
     def job_completed(self, job: NumberJob) -> bool:
@@ -191,7 +191,7 @@ class TestMoveNumbers(TestWithLocations):
         if not completed:
             print('Job not completed successfully:')
             print(dumps(loads(job.model_dump_json()), indent=2))
-            job_errors = list(self.api.telephony.jobs.manage_numbers.list_job_errors(job_id=job.id))
+            job_errors = list(self.api.telephony.jobs.manage_numbers.errors(job_id=job.id))
             for error in job_errors:
                 print(f'{error.item}: {error.error.message[0].code} ({error.error.message[0].description})')
         return completed

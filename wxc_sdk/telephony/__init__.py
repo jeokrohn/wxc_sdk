@@ -49,7 +49,7 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'TrunkDestination', 'PbxUserDestination', 'PstnNumberDestination', 'VirtualExtensionDestination',
            'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination',
            'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'SupportedDevice',
-           'AnnouncementLanguage', 'TelephonyApi']
+           'AnnouncementLanguage', 'TelephonyApi', 'DeviceSettingsConfiguration', 'SupportedDevices']
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -385,6 +385,7 @@ class DeviceType(str, Enum):
     ata = 'ATA'
     generic_sip = 'GENERIC_SIP'
     esim = 'ESIM'
+    desk_phone = 'DESK_PHONE'
 
 
 class DeviceManufacturer(str, Enum):
@@ -402,6 +403,15 @@ class OnboardingMethod(str, Enum):
     mac_address = 'MAC_ADDRESS'
     activation_code = 'ACTIVATION_CODE'
     no_method = 'NONE'
+
+
+class DeviceSettingsConfiguration(str, Enum):
+    #: Devices which supports Webex Calling Device Settings Configuration.
+    webex_calling_device_configuration = 'WEBEX_CALLING_DEVICE_CONFIGURATION'
+    #: Devices which supports Webex Device Settings Configuration.
+    webex_device_configuration = 'WEBEX_DEVICE_CONFIGURATION'
+    #: Devices does not support any configuration.
+    none_ = 'NONE'
 
 
 class SupportedDevice(ApiModel):
@@ -449,6 +459,8 @@ class SupportedDevice(ApiModel):
     port_number_support_enabled: Optional[bool] = None
     t38_enabled: Optional[bool] = None
     call_declined_enabled: Optional[bool] = None
+    #: Device settings configuration.
+    device_settings_configuration: Optional[DeviceSettingsConfiguration] = None
 
 
 class AnnouncementLanguage(ApiModel):
@@ -456,6 +468,11 @@ class AnnouncementLanguage(ApiModel):
     name: Optional[str] = None
     #: Language Code
     code: Optional[str] = None
+
+
+class SupportedDevices(ApiModel):
+    upgrade_channel_list: Optional[list[str]] = None
+    devices: Optional[list[SupportedDevice]] = None
 
 
 @dataclass(init=False)
@@ -750,7 +767,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         data = self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)
 
-    def supported_devices(self, org_id: str = None) -> list[SupportedDevice]:
+    def supported_devices(self, org_id: str = None) -> SupportedDevices:
         """
         Gets the list of supported devices for an organization location.
 
@@ -763,7 +780,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('supportedDevices')
         data = self.get(url=url, params=params)
-        return TypeAdapter(list[SupportedDevice]).validate_python(data['devices'])
+        return SupportedDevices.model_validate(data)
 
     def device_settings(self, org_id: str = None) -> DeviceCustomization:
         """
@@ -788,7 +805,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
+        -announcement-languages
         """
         url = self.ep('announcementLanguages')
         data = super().get(url=url)

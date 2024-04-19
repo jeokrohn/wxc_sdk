@@ -25,6 +25,19 @@ Release history
   and result attribute
 - fix: typo in :class:`wxc_sdk.person_settings.calling_behavior.BehaviorType`. native_sip_call_zo_ucm instead of native_sip_call_to_ucm
 
+- feat: new attribute :attr:`wxc_sdk.devices.Device.device_platform`
+- feat: new :meth:`api.telephony.devices.details <wxc_sdk.telephony.devices.TelephonyDevicesApi.details>`
+- feat: new :meth:`api.telephony.devices.get_device_layout <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_device_layout>`
+- feat: new :meth:`api.telephony.devices.get_person_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_person_device_settings>`
+- feat: new :meth:`api.telephony.devices.get_workspace_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_workspace_device_settings>`
+- feat: new :meth:`api.telephony.devices.modify_device_layout <wxc_sdk.telephony.devices.TelephonyDevicesApi.modify_device_layout>`
+- feat: new :meth:`api.telephony.devices.update_person_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_person_device_settings>`
+- feat: new :meth:`api.telephony.devices.update_workspace_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_workspace_device_settings>`
+- feat: new API :attr:`api.telephony.jobs.rebuild_phones <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi>`
+- break: unify methods of job APIs to list(), status(), errors()
+- break: different return type for :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
+
+
 1.18.0
 ------
 - feat: virtual line settings: call intercept, call recording, call waiting, forwarding, incoming/outgoing call permissions, directory search, DECT networks, :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`

@@ -94,7 +94,7 @@ class TestJobs(TestCaseWithLog):
         """
         list apply line key template jobs
         """
-        jobs = await self.async_api.telephony.jobs.apply_line_key_templates.list_jobs()
+        jobs = await self.async_api.telephony.jobs.apply_line_key_templates.list()
         print(f'got {len(jobs)} jobs')
 
     @async_test
@@ -102,9 +102,9 @@ class TestJobs(TestCaseWithLog):
         """
         get status of all jobs
         """
-        jobs = await self.async_api.telephony.jobs.apply_line_key_templates.list_jobs()
+        jobs = await self.async_api.telephony.jobs.apply_line_key_templates.list()
         details = await asyncio.gather(
-            *[self.async_api.telephony.jobs.apply_line_key_templates.job_status(job_id=job.id) for job in jobs],
+            *[self.async_api.telephony.jobs.apply_line_key_templates.status(job_id=job.id) for job in jobs],
             return_exceptions=True)
         err = next((d for d in details if isinstance(d, Exception)), None)
         if err:
@@ -116,9 +116,9 @@ class TestJobs(TestCaseWithLog):
         """
         get errors of all jobs
         """
-        jobs = await self.async_api.telephony.jobs.apply_line_key_templates.list_jobs()
+        jobs = await self.async_api.telephony.jobs.apply_line_key_templates.list()
         errors = await asyncio.gather(
-            *[self.async_api.telephony.jobs.apply_line_key_templates.job_errors(job_id=job.id) for job in jobs],
+            *[self.async_api.telephony.jobs.apply_line_key_templates.errors(job_id=job.id) for job in jobs],
             return_exceptions=True)
         err = next((d for d in errors if isinstance(d, Exception)), None)
         if err:
@@ -139,7 +139,7 @@ class TestJobs(TestCaseWithLog):
         print(json.dumps(job.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
         # wait for job to complete
         while True:
-            status = api.job_status(job_id=job.id)
+            status = api.status(job_id=job.id)
             print(json.dumps(status.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
             print()
             if status.latest_execution_status == 'COMPLETED':

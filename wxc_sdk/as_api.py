@@ -68,14 +68,14 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
            'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
-           'AsPushToTalkApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
-           'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi',
-           'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI',
-           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
-           'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
-           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
-           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
+           'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
+           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
+           'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
+           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
+           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
+           'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -492,6 +492,7 @@ class AsDeviceConfigurationsApi(AsApiChild, base='deviceConfigurations'):
         for all devices within an organization.
 
         :param device_id: List device configurations by device ID.
+        :type device_id: str
         :param key: This can optionally be used to filter configurations. Keys are composed of segments. It's
             possible to use absolute paths, wildcards or ranges.
 
@@ -505,6 +506,7 @@ class AsDeviceConfigurationsApi(AsApiChild, base='deviceConfigurations'):
             only shows the first FacilityService Service Name configuration, FacilityService.Service[*].Name shows all,
             FacilityService.Service[1..3].Name shows the first three and FacilityService.Service[2..n].Name shows all
             starting at 2.
+        :type key: str
 
         :return: device configurations
         """
@@ -616,7 +618,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, params=params)]
 
-    async def get_status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
         """
         Get change device settings job status.
 
@@ -637,7 +639,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         data = await self.get(url=url, params=params)
         return StartJobResponse.model_validate(data)
 
-    def job_errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         List change device settings job errors.
 
@@ -655,7 +657,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def job_errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
         """
         List change device settings job errors.
 
@@ -705,8 +707,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
              workspace_location_id: str = None, display_name: str = None, product: str = None,
              product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
              serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
-             capability: str = None, permission: str = None, mac: str = None, org_id: str = None,
-             **params) -> AsyncGenerator[Device, None, None]:
+             capability: str = None, permission: str = None, mac: str = None, device_platform: DevicePlatform = None,
+             org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
         """
         List Devices
 
@@ -746,6 +748,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type permission: str
         :param mac: List devices with this MAC address.
         :type mac: str
+        :param device_platform: List devices with this device platform.
+        :type device_platform: DevicePlatform
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
@@ -764,8 +768,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
              workspace_location_id: str = None, display_name: str = None, product: str = None,
              product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
              serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
-             capability: str = None, permission: str = None, mac: str = None, org_id: str = None,
-             **params) -> List[Device]:
+             capability: str = None, permission: str = None, mac: str = None, device_platform: DevicePlatform = None,
+             org_id: str = None, **params) -> List[Device]:
         """
         List Devices
 
@@ -805,6 +809,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type permission: str
         :param mac: List devices with this MAC address.
         :type mac: str
+        :param device_platform: List devices with this device platform.
+        :type device_platform: DevicePlatform
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
@@ -3139,7 +3145,7 @@ class AsRecordingsApi(AsApiChild, base=''):
 
     When the recording function is paused in the meeting the recording will not contain the pause. If the recording
     function is stopped and restarted in the meeting, several recordings will be created. These recordings will be
-    consolidate and available all at once.
+    consolidated and available all at once.
 
     Refer to the `Meetings API Scopes
     <https://developer.webex.com/docs/meetings#user-level-authentication-and-scopes>`_ for the specific scopes
@@ -3161,13 +3167,13 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
-              **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
+          NOTE: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
-              recordings of all the user's sites. All available Webex sites and preferred site of the user can be
-              retrieved by `Get Site List
-                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
+          recordings of all the user's sites. All available Webex sites and preferred site of the user can be
+          retrieved by
+          `Get Site List <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -3257,13 +3263,13 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
-              **NOTE**: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed.
+          NOTE: when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
-              recordings of all the user's sites. All available Webex sites and preferred site of the user can be
-              retrieved by `Get Site List
-                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
+        * If `siteUrl` is specified, recordings of the specified site will be listed; otherwise, the API lists
+          recordings of all the user's sites. All available Webex sites and preferred site of the user can be
+          retrieved by
+          `Get Site List <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -3353,19 +3359,15 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+        Long result sets are split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
-                note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
+          note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
-                recordings on the admin user's or compliance officer's preferred site are listed. All the available
-                Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
-                `Get Site List
-                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-
-        #### Request Header
+        * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
+          recordings on the admin user's or compliance officer's preferred site are listed. All the available
+          Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
+          `Get Site List <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -3446,19 +3448,15 @@ class AsRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+        Long result sets are split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
 
-            * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
-                note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
+        * If `meetingId` is specified, only recordings associated with the specified meeting will be listed. Please
+          note that when `meetingId` is specified, parameter of `siteUrl` will be ignored.
 
-            * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
-                recordings on the admin user's or compliance officer's preferred site are listed. All the available
-                Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
-                `Get Site List
-                <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
-
-        #### Request Header
+        * If `siteUrl` is specified, all the recordings on the specified site are listed; otherwise, all the
+          recordings on the admin user's or compliance officer's preferred site are listed. All the available
+          Webex sites and the admin user's or compliance officer's preferred site can be retrieved by the
+          `Get Site List <https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list>`_ API.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -13331,7 +13329,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
         return r
 
-    async def list_jobs(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
+    async def list(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
         """
         Get List of Apply Line Key Template jobs
 
@@ -13358,7 +13356,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         r = TypeAdapter(list[ApplyLineKeyTemplateJobDetails]).validate_python(data['items'])
         return r
 
-    async def job_status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+    async def status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
         """
         Get the job status of an Apply Line Key Template job
 
@@ -13387,7 +13385,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
         return r
 
-    def job_errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         Get job errors for an Apply Line Key Template job
 
@@ -13414,7 +13412,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         url = self.ep(f'{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def job_errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
         """
         Get job errors for an Apply Line Key Template job
 
@@ -13447,7 +13445,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
     API for jobs to manage numbers
     """
 
-    def list_jobs_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None, None]:
         """
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
         irrespective of its status.
@@ -13464,7 +13462,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         url = self.ep('manageNumbers')
         return self.session.follow_pagination(url=url, model=NumberJob, params=params)
 
-    async def list_jobs(self, org_id: str = None, **params) -> List[NumberJob]:
+    async def list(self, org_id: str = None, **params) -> List[NumberJob]:
         """
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
         irrespective of its status.
@@ -13482,7 +13480,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         return [o async for o in self.session.follow_pagination(url=url, model=NumberJob, params=params)]
 
     async def initiate_job(self, operation: str, target_location_id: str,
-                     number_list: list[NumberItem]) -> NumberJob:
+                     number_list: List[NumberItem]) -> NumberJob:
         """
         Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
         actions internally, only MOVE is supported publicly.
@@ -13506,7 +13504,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         data = await super().post(url=url, data=body.model_dump_json())
         return NumberJob.model_validate(data)
 
-    async def job_status(self, job_id: str = None) -> NumberJob:
+    async def status(self, job_id: str = None) -> NumberJob:
         """
         Returns the status and other details of the job.
         This API requires a full or read-only administrator auth token with a scope of
@@ -13519,7 +13517,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         data = await super().get(url=url)
         return NumberJob.model_validate(data)
 
-    async def pause_job(self, job_id: str = None, org_id: str = None):
+    async def pause(self, job_id: str = None, org_id: str = None):
         """
         Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -13536,7 +13534,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         await super().post(url=url, params=params)
         return
 
-    async def resume_job(self, job_id: str = None, org_id: str = None):
+    async def resume(self, job_id: str = None, org_id: str = None):
         """
         Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -13553,7 +13551,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         await super().post(url=url, params=params)
         return
 
-    async def abandon_job(self, job_id: str = None, org_id: str = None):
+    async def abandon(self, job_id: str = None, org_id: str = None):
         """
         Abandon the Manage Numbers Job.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -13570,8 +13568,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         await super().post(url=url, params=params)
         return
 
-    def list_job_errors_gen(self, job_id: str = None, org_id: str = None,
-                        **params) -> AsyncGenerator[ManageNumberErrorItem, None, None]:
+    def errors_gen(self, job_id: str = None, org_id: str = None,
+               **params) -> AsyncGenerator[ManageNumberErrorItem, None, None]:
         """
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
@@ -13589,8 +13587,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         url = self.ep(f'manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)
 
-    async def list_job_errors(self, job_id: str = None, org_id: str = None,
-                        **params) -> List[ManageNumberErrorItem]:
+    async def errors(self, job_id: str = None, org_id: str = None,
+               **params) -> List[ManageNumberErrorItem]:
         """
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
@@ -13609,6 +13607,129 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         return [o async for o in self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)]
 
 
+class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/rebuildPhones'):
+    async def rebuild_phones_configuration(self, location_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Rebuild Phones Configuration
+
+        Rebuild all phone configurations for the specified location.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier of the location.
+        :type location_id: str
+        :param org_id: Rebuild phones for this organization.
+        :type org_id: str
+        :rtype: :class:`RebuildPhonesJob`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['locationId'] = location_id
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    async def list(self, org_id: str = None) -> list[StartJobResponse]:
+        """
+        List Rebuild Phones Jobs
+
+        Get the list of all Rebuild Phones jobs in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List of rebuild phones jobs in this organization.
+        :type org_id: str
+        :rtype: list[RebuildPhonesJob]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[StartJobResponse]).validate_python(data['items'])
+        return r
+
+    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Get the Job Status of a Rebuild Phones Job
+
+        Get the details of a rebuild phones job by its job ID.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check a rebuild phones job status in this organization.
+        :type org_id: str
+        :rtype: :class:`RebuildPhonesJob`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}')
+        data = await super().get(url, params=params)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get Job Errors for a Rebuild Phones Job
+
+        Get errors for a rebuild phones job in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for a rebuild phones job in this organization.
+        :type org_id: str
+        :rtype: list[ItemObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        Get Job Errors for a Rebuild Phones Job
+
+        Get errors for a rebuild phones job in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for a rebuild phones job in this organization.
+        :type org_id: str
+        :rtype: list[ItemObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
 class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     """
     Jobs API
@@ -13619,12 +13740,15 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     manage_numbers: AsManageNumbersJobsApi
     #: API for apply line key template jobs
     apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
+    #: API for rebuild phone jobs
+    rebuild_phones: AsRebuildPhonesJobsApi
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
         self.device_settings = AsDeviceSettingsJobsApi(session=session)
         self.manage_numbers = AsManageNumbersJobsApi(session=session)
         self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
+        self.rebuild_phones = AsRebuildPhonesJobsApi(session=session)
 
 
 class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
@@ -15454,10 +15578,37 @@ class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
         await self.put(url, json=body, params=params)
 
 
-class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
+class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
     """
     Telephony devices API
     """
+
+    async def details(self, device_id: str, org_id: str = None) -> TelephonyDeviceDetails:
+        """
+        Get Webex Calling Device Details
+
+        Retrieves Webex Calling device details that include information needed for third-party device management.
+
+        Webex calling devices are associated with a specific user Workspace or Virtual Line.
+
+        Webex Calling devices share the location with the entity that owns them.
+
+        This API requires a full, location, user, or read-only admin auth token with the scope of
+        `spark-admin:telephony_config_read`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: ID of the organization in which the device resides.
+        :type org_id: str
+        :rtype: :class:`TelephonyDeviceDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'devices/{device_id}')
+        data = await super().get(url, params=params)
+        r = TelephonyDeviceDetails.model_validate(data)
+        return r
 
     async def members(self, device_id: str, org_id: str = None) -> DeviceMembersResponse:
         """
@@ -15479,7 +15630,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         :rtype: DeviceMembersResponse
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(f'{device_id}/members')
+        url = self.ep(f'devices/{device_id}/members')
         data = await self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
@@ -15528,7 +15679,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         else:
             body = None
 
-        url = self.ep(f'{device_id}/members')
+        url = self.ep(f'devices/{device_id}/members')
         params = org_id and {'orgId': org_id} or None
         await self.put(url=url, data=body, params=params)
 
@@ -15559,7 +15710,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         """
         params.update((to_camel(p), v) for p, v in locals().items()
                       if p not in {'self', 'params', 'device_id'} and v is not None)
-        url = self.ep(f'{device_id}/availableMembers')
+        url = self.ep(f'devices/{device_id}/availableMembers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')
 
@@ -15590,7 +15741,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         """
         params.update((to_camel(p), v) for p, v in locals().items()
                       if p not in {'self', 'params', 'device_id'} and v is not None)
-        url = self.ep(f'{device_id}/availableMembers')
+        url = self.ep(f'devices/{device_id}/availableMembers')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')]
 
@@ -15608,7 +15759,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(f'{device_id}/actions/applyChanges/invoke')
+        url = self.ep(f'devices/{device_id}/actions/applyChanges/invoke')
         await self.post(url=url, params=params)
 
     async def device_settings(self, device_id: str, device_model: str, org_id: str = None) -> DeviceCustomization:
@@ -15632,7 +15783,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = {'model': device_model}
         if org_id:
             params['orgId'] = org_id
-        url = self.ep(f'{device_id}/settings')
+        url = self.ep(f'devices/{device_id}/settings')
         data = await self.get(url=url, params=params)
         return DeviceCustomization.model_validate(data)
 
@@ -15683,7 +15834,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = {'model': device_model}
         if org_id:
             params['orgId'] = org_id
-        url = self.ep(f'{device_id}/settings')
+        url = self.ep(f'devices/{device_id}/settings')
         body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
         await self.put(url=url, params=params, data=body)
 
@@ -15700,7 +15851,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         :return:
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep('dects/supportedDevices')
+        url = self.ep('devices/dects/supportedDevices')
         data = await self.get(url=url, params=params)
         return TypeAdapter(list[DectDevice]).validate_python(data['devices'])
 
@@ -15719,7 +15870,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         :rtype: :class:`MACValidationResponse`
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep('actions/validateMacs/invoke')
+        url = self.ep('devices/actions/validateMacs/invoke')
         data = await self.post(url=url, params=params, json={'macs': macs})
         return MACValidationResponse.model_validate(data)
 
@@ -15750,7 +15901,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         if org_id is not None:
             params['orgId'] = org_id
         body = template.create_or_update()
-        url = self.ep('lineKeyTemplates')
+        url = self.ep('devices/lineKeyTemplates')
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -15777,7 +15928,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep('lineKeyTemplates')
+        url = self.ep('devices/lineKeyTemplates')
         data = await super().get(url, params=params)
         r = TypeAdapter(list[LineKeyTemplate]).validate_python(data['lineKeyTemplates'])
         return r
@@ -15806,7 +15957,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'lineKeyTemplates/{template_id}')
+        url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         data = await super().get(url, params=params)
         r = LineKeyTemplate.model_validate(data)
         return r
@@ -15834,7 +15985,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'lineKeyTemplates/{template.id}')
+        url = self.ep(f'devices/lineKeyTemplates/{template.id}')
         await super().put(url, params=params, json=template.create_or_update())
 
     async def delete_line_key_template(self, template_id: str, org_id: str = None):
@@ -15861,7 +16012,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'lineKeyTemplates/{template_id}')
+        url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         await super().delete(url, params=params)
 
     async def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
@@ -15931,10 +16082,169 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
             body['fewSharedAppearancesEnabled'] = few_shared_appearances_enabled
         if more_monitor_appearances_enabled is not None:
             body['moreMonitorAppearancesEnabled'] = more_monitor_appearances_enabled
-        url = self.ep('actions/previewApplyLineKeyTemplate/invoke')
+        url = self.ep('devices/actions/previewApplyLineKeyTemplate/invoke')
         data = await super().post(url, params=params, json=body)
         r = data['deviceCount']
         return r
+
+    async def get_device_layout(self, device_id: str, org_id: str = None) -> DeviceLayout:
+        """
+        Get Device Layout by Device ID
+
+        Get layout information of a device by device ID in an organization.
+
+        Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
+        Modules (KEM) with the existing configured line members and the user’s monitoring list.
+
+        This API requires a full or location administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param device_id: Get device layout for this device ID.
+        :type device_id: str
+        :param org_id: Retrieve a device layout for the device in this organization.
+        :type org_id: str
+        :rtype: :class:`DeviceLayout`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'devices/{device_id}/layout')
+        data = await super().get(url, params=params)
+        r = DeviceLayout.model_validate(data)
+        return r
+
+    async def modify_device_layout(self, device_id: str, layout: DeviceLayout,
+                             org_id: str = None):
+        """
+        Modify Device Layout by Device ID
+
+        Modify the layout of a device by device ID in an organization.
+
+        Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
+        Modules (KEM) with the existing configured line members and the user’s monitoring list.
+
+        This API requires a full or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param device_id: Modify device layout for this device ID.
+        :type device_id: str
+        :param layout: New layout
+        :param org_id: Modify a device layout for the device in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = layout.update()
+        url = self.ep(f'devices/{device_id}/layout')
+        await super().put(url, params=params, json=body)
+
+    async def get_person_device_settings(self, person_id: str, org_id: str = None) -> DeviceSettings:
+        """
+        Get Device Settings for a Person
+
+        Device settings list the compression settings for a person.
+
+        Device settings customize a device's behavior and performance. The compression field optimizes call quality for
+        inbound and outbound calls.
+
+        This API requires a full, location, user, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: ID of the person to retrieve device settings.
+        :type person_id: str
+        :param org_id: Retrieves the device settings for a person in this organization.
+        :type org_id: str
+        :rtype: Compression
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/devices/settings')
+        data = await super().get(url, params=params)
+        r = DeviceSettings.model_validate(data)
+        return r
+
+    async def update_person_device_settings(self, person_id: str, settings: DeviceSettings, org_id: str = None):
+        """
+        Update Device Settings for a Person
+
+        Update device settings modifies the compression settings for a person.
+
+        Device settings customize a device's behavior and performance. The compression field optimizes call quality for
+        inbound and outbound calls.
+
+        This API requires a full, location, or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: ID of the person to update device settings.
+        :type person_id: str
+        :param settings: New device settings
+        :type settings: DeviceSettings
+        :param org_id: Modify device settings for a person in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', exclude_none=True, by_alias=True)
+        url = self.ep(f'people/{person_id}/devices/settings')
+        await super().put(url, params=params, json=body)
+
+    async def get_workspace_device_settings(self, workspace_id: str, org_id: str = None) -> DeviceSettings:
+        """
+        Get Device Settings for a Workspace
+
+        Device settings list the compression settings for a workspace.
+
+        Device settings customize a device's behavior and performance. The compression field optimizes call quality for
+        inbound and outbound calls.
+
+        This API requires a full, location, user, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param workspace_id: ID of the workspace for which to retrieve device settings.
+        :type workspace_id: str
+        :param org_id: Retrieves the device settings for a workspace in this organization.
+        :type org_id: str
+        :rtype: Compression
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'workspaces/{workspace_id}/devices/settings')
+        data = await super().get(url, params=params)
+        r = DeviceSettings.model_validate(data)
+        return r
+
+    async def update_workspace_device_settings(self, workspace_id: str, settings: DeviceSettings, org_id: str = None):
+        """
+        Update Device Settings for a Workspace
+
+        Update device settings modifies the compression settings for a workspace.
+
+        Device settings customize a device's behavior and performance. The compression field optimizes call quality for
+        inbound and outbound calls.
+
+        This API requires a full, location, or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param workspace_id: ID of the workspace for which to update device settings.
+        :type workspace_id: str
+        :param settings: New device settings
+        :type settings: DeviceSettings
+        :param org_id: Modify the device settings for a workspace in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', exclude_none=True, by_alias=True)
+        url = self.ep(f'workspaces/{workspace_id}/devices/settings')
+        await super().put(url, params=params, json=body)
 
 
 class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
@@ -17815,7 +18125,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         data = await self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)
 
-    async def supported_devices(self, org_id: str = None) -> list[SupportedDevice]:
+    async def supported_devices(self, org_id: str = None) -> SupportedDevices:
         """
         Gets the list of supported devices for an organization location.
 
@@ -17828,7 +18138,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('supportedDevices')
         data = await self.get(url=url, params=params)
-        return TypeAdapter(list[SupportedDevice]).validate_python(data['devices'])
+        return SupportedDevices.model_validate(data)
 
     async def device_settings(self, org_id: str = None) -> DeviceCustomization:
         """
@@ -17853,7 +18163,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
+        -announcement-languages
         """
         url = self.ep('announcementLanguages')
         data = await super().get(url=url)

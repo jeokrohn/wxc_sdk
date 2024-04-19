@@ -41,12 +41,12 @@ The method name is a link to the method documentation.
         Modify Device Tags
    * - :meth:`api.devices.settings_jobs.change <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change>`
         Change device settings across organization or locations jobs
-   * - :meth:`api.devices.settings_jobs.get_status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.get_status>`
-        Get change device settings job status
-   * - :meth:`api.devices.settings_jobs.job_errors <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.job_errors>`
+   * - :meth:`api.devices.settings_jobs.errors <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.errors>`
         List change device settings job errors
    * - :meth:`api.devices.settings_jobs.list <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.list>`
         List change device settings jobs
+   * - :meth:`api.devices.settings_jobs.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
+        Get change device settings job status
    * - :meth:`api.events.details <wxc_sdk.events.EventsApi.details>`
         Shows details for an event, by event ID
    * - :meth:`api.events.list <wxc_sdk.events.EventsApi.list>`
@@ -675,14 +675,24 @@ The method name is a link to the method documentation.
         Read the DECT device type list
    * - :meth:`api.telephony.devices.delete_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_line_key_template>`
         Delete a Line Key Template
+   * - :meth:`api.telephony.devices.details <wxc_sdk.telephony.devices.TelephonyDevicesApi.details>`
+        Get Webex Calling Device Details
    * - :meth:`api.telephony.devices.device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.device_settings>`
         Get override settings for a device
+   * - :meth:`api.telephony.devices.get_device_layout <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_device_layout>`
+        Get Device Layout by Device ID
+   * - :meth:`api.telephony.devices.get_person_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_person_device_settings>`
+        Get Device Settings for a Person
+   * - :meth:`api.telephony.devices.get_workspace_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_workspace_device_settings>`
+        Get Device Settings for a Workspace
    * - :meth:`api.telephony.devices.line_key_template_details <wxc_sdk.telephony.devices.TelephonyDevicesApi.line_key_template_details>`
         Get details of a Line Key Template
    * - :meth:`api.telephony.devices.list_line_key_templates <wxc_sdk.telephony.devices.TelephonyDevicesApi.list_line_key_templates>`
         Read the list of Line Key Templates
    * - :meth:`api.telephony.devices.members <wxc_sdk.telephony.devices.TelephonyDevicesApi.members>`
         Get Device Members
+   * - :meth:`api.telephony.devices.modify_device_layout <wxc_sdk.telephony.devices.TelephonyDevicesApi.modify_device_layout>`
+        Modify Device Layout by Device ID
    * - :meth:`api.telephony.devices.modify_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.modify_line_key_template>`
         Modify a Line Key Template
    * - :meth:`api.telephony.devices.preview_apply_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.preview_apply_line_key_template>`
@@ -691,6 +701,10 @@ The method name is a link to the method documentation.
         Modify override settings for a device
    * - :meth:`api.telephony.devices.update_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_members>`
         Modify member details on the device
+   * - :meth:`api.telephony.devices.update_person_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_person_device_settings>`
+        Update Device Settings for a Person
+   * - :meth:`api.telephony.devices.update_workspace_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_workspace_device_settings>`
+        Update Device Settings for a Workspace
    * - :meth:`api.telephony.devices.validate_macs <wxc_sdk.telephony.devices.TelephonyDevicesApi.validate_macs>`
         Validate a list of MAC addresses
    * - :meth:`api.telephony.huntgroup.by_name <wxc_sdk.telephony.huntgroup.HuntGroupApi.by_name>`
@@ -707,34 +721,42 @@ The method name is a link to the method documentation.
         Update a Hunt Group
    * - :meth:`api.telephony.jobs.apply_line_key_templates.apply <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.apply>`
         Apply a Line key Template
-   * - :meth:`api.telephony.jobs.apply_line_key_templates.job_errors <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.job_errors>`
+   * - :meth:`api.telephony.jobs.apply_line_key_templates.errors <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.errors>`
         Get job errors for an Apply Line Key Template job
-   * - :meth:`api.telephony.jobs.apply_line_key_templates.job_status <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.job_status>`
-        Get the job status of an Apply Line Key Template job
-   * - :meth:`api.telephony.jobs.apply_line_key_templates.list_jobs <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.list_jobs>`
+   * - :meth:`api.telephony.jobs.apply_line_key_templates.list <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.list>`
         Get List of Apply Line Key Template jobs
+   * - :meth:`api.telephony.jobs.apply_line_key_templates.status <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.status>`
+        Get the job status of an Apply Line Key Template job
    * - :meth:`api.telephony.jobs.device_settings.change <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change>`
         Change device settings across organization or locations jobs
-   * - :meth:`api.telephony.jobs.device_settings.get_status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.get_status>`
-        Get change device settings job status
-   * - :meth:`api.telephony.jobs.device_settings.job_errors <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.job_errors>`
+   * - :meth:`api.telephony.jobs.device_settings.errors <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.errors>`
         List change device settings job errors
    * - :meth:`api.telephony.jobs.device_settings.list <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.list>`
         List change device settings jobs
-   * - :meth:`api.telephony.jobs.manage_numbers.abandon_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.abandon_job>`
+   * - :meth:`api.telephony.jobs.device_settings.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
+        Get change device settings job status
+   * - :meth:`api.telephony.jobs.manage_numbers.abandon <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.abandon>`
         Abandon the Manage Numbers Job
+   * - :meth:`api.telephony.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`
+        Lists all error details of Manage Numbers job
    * - :meth:`api.telephony.jobs.manage_numbers.initiate_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.initiate_job>`
         Starts the numbers move from one location to another location
-   * - :meth:`api.telephony.jobs.manage_numbers.job_status <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.job_status>`
-        Returns the status and other details of the job
-   * - :meth:`api.telephony.jobs.manage_numbers.list_job_errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list_job_errors>`
-        Lists all error details of Manage Numbers job
-   * - :meth:`api.telephony.jobs.manage_numbers.list_jobs <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list_jobs>`
+   * - :meth:`api.telephony.jobs.manage_numbers.list <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list>`
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
-   * - :meth:`api.telephony.jobs.manage_numbers.pause_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.pause_job>`
+   * - :meth:`api.telephony.jobs.manage_numbers.pause <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.pause>`
         Pause the running Manage Numbers Job
-   * - :meth:`api.telephony.jobs.manage_numbers.resume_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.resume_job>`
+   * - :meth:`api.telephony.jobs.manage_numbers.resume <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.resume>`
         Resume the paused Manage Numbers Job
+   * - :meth:`api.telephony.jobs.manage_numbers.status <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.status>`
+        Returns the status and other details of the job
+   * - :meth:`api.telephony.jobs.rebuild_phones.errors <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.errors>`
+        Get Job Errors for a Rebuild Phones Job
+   * - :meth:`api.telephony.jobs.rebuild_phones.list <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.list>`
+        List Rebuild Phones Jobs
+   * - :meth:`api.telephony.jobs.rebuild_phones.rebuild_phones_configuration <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.rebuild_phones_configuration>`
+        Rebuild Phones Configuration
+   * - :meth:`api.telephony.jobs.rebuild_phones.status <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.status>`
+        Get the Job Status of a Rebuild Phones Job
    * - :meth:`api.telephony.location.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
    * - :meth:`api.telephony.location.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`

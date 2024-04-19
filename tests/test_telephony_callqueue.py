@@ -7,14 +7,13 @@ from dataclasses import dataclass
 from operator import attrgetter
 from re import match
 from typing import ClassVar
-from unittest import skip
 
+from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
+from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
 from wxc_sdk.all_types import *
 from wxc_sdk.telephony.callqueue import CQRoutingType
 from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, ScheduleLevel, NightService, \
     StrandedCalls, StrandedCallsAction, ForcedForward
-from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
-from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
 from wxc_sdk.telephony.hg_and_cq import CallingLineIdPolicy
 
 # number of call queues to create by create many test

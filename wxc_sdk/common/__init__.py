@@ -27,7 +27,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
-           'AssignedDectNetwork']
+           'AssignedDectNetwork', 'DevicePlatform']
 
 
 class IdOnly(ApiModel):
@@ -1118,3 +1118,9 @@ class AssignedDectNetwork(ApiModel):
     number_of_handsets_assigned: Optional[int] = None
     #: Location details of virtual line.
     location: Optional[IdAndName] = None
+
+
+class DevicePlatform(str, Enum):
+    cisco = 'cisco'
+    microsoft_teams_room = 'microsoftTeamsRoom'
+

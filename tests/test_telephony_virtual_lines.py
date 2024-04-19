@@ -211,11 +211,11 @@ class TestVirtualLines(VirtualLineTest):
             return_exceptions=True)
         err = None
 
-        def vl_str(vl: VirtualLine)->str:
+        def vl_str(vl: VirtualLine) -> str:
             return (f'{vl.first_name=} {vl.last_name=} {vl.custom_external_caller_id_name=} {vl.location.name=} '
                     f'{vl.number.esn=} {vl.number.external=}')
 
-        def device_str(device: TelephonyDevice)->str:
+        def device_str(device: TelephonyDevice) -> str:
             r = f'{device.model}'
             if device.owner:
                 r = f'{r} {device.owner.owner_type}/{device.owner.last_name}, {device.owner.first_name}'
