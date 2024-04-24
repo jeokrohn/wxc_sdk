@@ -235,15 +235,22 @@ class HostedUserDestination(LocationAndNumbers):
 
 
 class ServiceType(str, Enum):
+    #: Indicates that this destination is an auto attendant.
     auto_attendant = 'AUTO_ATTENDANT'
+    #: Indicates that this destination is the Office (Broadworks) Anywhere feature.
     broadworks_anywhere = 'BROADWORKS_ANYWHERE'
-    call_center = 'CALL_CENTER'
+    #: Indicates that this destination is the Call Queue feature.
+    call_queue = 'CALL_QUEUE'
+    #: Indicates that this destination is the Contact Center Link feature.
     contact_center_link = 'CONTACT_CENTER_LINK'
+    #: Indicates that this destination is the Group Paging feature.
     group_paging = 'GROUP_PAGING'
-    paging_group = 'PAGING_GROUP'
+    #: Indicates that this destination is the Hunt Group feature.
     hunt_group = 'HUNT_GROUP'
+    #: Indicates that this destination is the Voice Messaging feature.
     voice_messaging = 'VOICE_MESSAGING'
-    voicemail_group = 'VOICEMAIL_GROUP'
+    #: Indicates that this destination is the Voice Mail Group feature.
+    voice_mail_group = 'VOICE_MAIL_GROUP'
 
 
 class HostedFeatureDestination(LocationAndNumbers):

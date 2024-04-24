@@ -36,7 +36,7 @@ Release history
 - feat: new API :attr:`api.telephony.jobs.rebuild_phones <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi>`
 - break: unify methods of job APIs to list(), status(), errors()
 - break: different return type for :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
-
+- fix: corrected enum values in :class:`wxc_sdk.telephony.ServiceType`
 
 1.18.0
 ------

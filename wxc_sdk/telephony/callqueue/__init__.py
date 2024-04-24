@@ -366,11 +366,13 @@ class CallQueue(HGandCQ):
             raise ValueError('One of phone_number and extension has to be given')
         if queue_size:
             queue_settings = QueueSettings(queue_size=queue_size)
+        call_policies = call_policies or CallQueueCallPolicies.default()
         params = {k: v for k, v in locals().items()
                   if v is not None and k != 'queue_size'}
         if department_id:
-            params.pop('departmentId')
+            params.pop('department_id')
             params['department'] = {'id': department_id}
+
         return CallQueue(**params)
 
 

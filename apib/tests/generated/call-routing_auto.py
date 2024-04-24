@@ -287,8 +287,8 @@ class ServiceType(str, Enum):
     auto_attendant = 'AUTO_ATTENDANT'
     #: Indicates that this destination is the Office (Broadworks) Anywhere feature.
     broadworks_anywhere = 'BROADWORKS_ANYWHERE'
-    #: Indicates that this destination is the Call Center feature.
-    call_center = 'CALL_CENTER'
+    #: Indicates that this destination is the Call Queue feature.
+    call_queue = 'CALL_QUEUE'
     #: Indicates that this destination is the Contact Center Link feature.
     contact_center_link = 'CONTACT_CENTER_LINK'
     #: Indicates that this destination is the Group Paging feature.

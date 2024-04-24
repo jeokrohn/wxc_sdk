@@ -23,6 +23,7 @@ from wxc_sdk.telephony import OriginatorType, DestinationType, NumberType, CallS
     HostedFeatureDestination, ServiceType, HostedUserDestination, CallSourceInfo, PbxUserDestination, \
     NumberListPhoneNumber
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantMenu
+from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
@@ -970,6 +971,75 @@ class HGContext:
                                                                phone_numbers=[self.hg_tn])
 
 
+@dataclass
+class CQContext:
+    """
+    A call queue context to be used for call routing tests with CQ as destination
+    """
+    test: 'TestHostedFeature'
+    location: Location
+    cq_name: str = field(init=False, default=None)
+    cq_tn: str = field(init=False, default=None)
+    cq_id: str = field(init=False, default=None)
+    cq: CallQueue = field(init=False, default=None)
+
+    # noinspection DuplicatedCode
+    def __post_init__(self):
+        # create a call queue
+        with self.test.no_log():
+            cq_list = list(self.test.api.telephony.callqueue.list(location_id=self.location.location_id))
+            cq_names = set(cq.name for cq in cq_list)
+            cq_name = next(name for i in range(1, 99)
+                           if (name := f'{self.location.name} {i:02}') not in cq_names)
+            self.cq_name = cq_name
+
+            # phone number for CQ
+            cq_extension = available_extensions(api=self.test.api, location_id=self.location.location_id)[0]
+            loc_info = next(li for li in self.test.location_infos
+                            if li.location.location_id == self.location.location_id)
+            cq_tn = available_tns(api=self.test.api,
+                                  tn_prefix=loc_info.main_number[:9])[0]
+
+            # add number to location
+            print(f'adding TN "{cq_tn}" to location "{self.location.name}')
+            # noinspection PyBroadException
+            try:
+                self.test.api.telephony.location.number.add(location_id=self.location.location_id,
+                                                            phone_numbers=[cq_tn],
+                                                            state=NumberState.active)
+                self.cq_tn = cq_tn
+
+                # create CallQueu
+                cq = CallQueue.create(name=cq_name, phone_number=cq_tn, extension=cq_extension, agents=list(),
+                                      queue_size=5)
+                print(f'Creating call queue "{cq_name}" in location "{self.location.name}"')
+                hg_id = self.test.api.telephony.callqueue.create(
+                    location_id=self.location.location_id,
+                    settings=cq)
+                cq.id = hg_id
+                cq.location_id = self.location.location_id
+                self.cq = cq
+            except Exception as e:
+                print(f'Failed to create call queue: {e}')
+                self.clean_up()
+
+    def clean_up(self):
+        """
+        Try to remove all stuff again
+        :return:
+        """
+        try:
+            if self.cq:
+                print(f'Deleting call queue "{self.cq_name}" in location "{self.location.name}"')
+                self.test.api.telephony.callqueue.delete_queue(location_id=self.location.location_id,
+                                                               queue_id=self.cq.id)
+        finally:
+            if self.cq_tn:
+                print(f'removing TN "{self.cq_tn}" from location "{self.location.name}')
+                self.test.api.telephony.location.number.remove(location_id=self.location.location_id,
+                                                               phone_numbers=[self.cq_tn])
+
+
 @dataclass(init=False)
 class TestHostedFeature(TestCallRouting):
     """
@@ -977,6 +1047,7 @@ class TestHostedFeature(TestCallRouting):
     """
     aa_context: ClassVar[AAContext] = field(default=None)
     hg_context: ClassVar[HGContext] = field(default=None)
+    cq_context: ClassVar[CQContext] = field(default=None)
     _target_user: ClassVar[Person] = field(default=None)
 
     @classmethod
@@ -990,6 +1061,11 @@ class TestHostedFeature(TestCallRouting):
         if cls.hg_context:
             try:
                 cls.hg_context.clean_up()
+            except Exception as e:
+                error = error or e
+        if cls.cq_context:
+            try:
+                cls.cq_context.clean_up()
             except Exception as e:
                 error = error or e
         if error:
@@ -1025,6 +1101,18 @@ class TestHostedFeature(TestCallRouting):
         self.api.telephony.huntgroup.details(location_id=hg.location_id, huntgroup_id=hg.id)
         return self.hg_context.hg
 
+    def get_call_queue(self, *, location: Location) -> CallQueue:
+        """
+        Get a call queue for CQ tests. CQ gets created if needed.
+        Clean-up happens during test Clean-Up
+        """
+        if not self.cq_context:
+            self.__class__.cq_context = CQContext(test=self, location=location)
+        # get CQ details to have the details in the log
+        cq = self.cq_context.cq
+        self.api.telephony.callqueue.details(location_id=cq.location_id, queue_id=cq.id)
+        return self.cq_context.cq
+
     def assert_result_wrong_service_instance_id_format(self, *, expected: TestCallRoutingResult,
                                                        result: TestCallRoutingResult):
         try:
@@ -1033,15 +1121,24 @@ class TestHostedFeature(TestCallRouting):
             self.assertEqual(ignore_oac, result)
         except AssertionError:
             if result.hosted_feature.service_instance_id != expected.hosted_feature.service_instance_id:
+                def print_service_instance_id(instance_id: str):
+                    print(f'  service instance id: {instance_id}')
+                    decoded = base64.b64decode(instance_id+'==').decode()
+                    print(f'  b64decoded: {decoded}')
+                    last_part = decoded.split('/')[-1]
+                    try:
+                        decoded_last_part = base64.b64decode(last_part+'==').decode()
+                        print(f'  last part b64decoded: {decoded_last_part}')
+                    except UnicodeDecodeError:
+                        pass
+                    ...
+
                 print('=' * 80)
-                print('Wrong service instance id format (Broadsoft id)')
-                expected_id = base64.b64decode(expected.hosted_feature.service_instance_id + "==").decode()
-                print(f'Expected service instance id:'
-                      f' {expected_id}')
-                print(f'Trailing end of expected service instance id: '
-                      f'{base64.b64decode(expected_id.split("/")[-1] + "==").decode()}')
-                print(f'Actual service instance id:'
-                      f' {base64.b64decode(result.hosted_feature.service_instance_id + "==").decode()}')
+                print('Service instance id mismatch')
+                print(f'Expected service instance id:')
+                print_service_instance_id(expected.hosted_feature.service_instance_id)
+                print(f'Actual service instance id:')
+                print_service_instance_id(result.hosted_feature.service_instance_id)
 
             # check whether there is anything else wrong (other than the service instance id)
             # wrong service instance id format tracked in WXCAPIBULK-88
@@ -1063,6 +1160,9 @@ class TestHostedFeature(TestCallRouting):
             service_instance_id = service.auto_attendant_id
         elif isinstance(service, HuntGroup):
             service_type = ServiceType.hunt_group
+            service_instance_id = service.id
+        elif isinstance(service, CallQueue):
+            service_type = ServiceType.call_queue
             service_instance_id = service.id
         else:
             raise ValueError(f"Wrong service type: {service.__class__.__name__}")
@@ -1220,4 +1320,22 @@ class TestHostedFeature(TestCallRouting):
                                                       destination=hg.phone_number)
         self.print_result(result=result)
         expected = self.result_service_by_phone_numer(service=hg, location=location)
+        self.assert_result_wrong_service_instance_id_format(expected=expected, result=result)
+
+    def test_006_user_to_cq_same_location_by_tn(self):
+        """
+        user calls CQ in same location by +E.164 TN
+        """
+        user = self.target_user
+
+        # get location
+        location = next(loc for loc in self.locations
+                        if loc.location_id == user.location_id)
+        # get CQ in location
+        cq = self.get_call_queue(location=location)
+        result = self.api.telephony.test_call_routing(originator_id=user.person_id,
+                                                      originator_type=OriginatorType.user,
+                                                      destination=cq.phone_number)
+        self.print_result(result=result)
+        expected = self.result_service_by_phone_numer(service=cq, location=location)
         self.assert_result_wrong_service_instance_id_format(expected=expected, result=result)
