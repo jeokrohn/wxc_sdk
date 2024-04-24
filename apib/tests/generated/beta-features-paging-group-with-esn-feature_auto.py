@@ -41,7 +41,7 @@ class GetPagingGroupAgentObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Agent's extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
+    #: Agent's extension. Minimum length is 2. Maximum length is 10.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 7781
     extension: Optional[str] = None
     #: Routing prefix of location.
@@ -66,7 +66,7 @@ class GetPagingGroupObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: Paging group extension. Minimum length is 2. Maximum length is 10. Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
     extension: Optional[str] = None
@@ -111,7 +111,7 @@ class ListPagingGroupObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: Paging group extension. Minimum length is 2. Maximum length is 10. Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
     extension: Optional[str] = None

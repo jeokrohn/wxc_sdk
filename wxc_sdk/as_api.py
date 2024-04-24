@@ -11867,7 +11867,7 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
         :param name: Name for the call park extension. The maximum length is 30.
         :type name: str
         :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
-            maximum length is 6.
+            maximum length is 10.
         :type extension: str
         :param org_id: Create the call park extension for this organization.
         :type org_id: str
@@ -11924,7 +11924,7 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
         :param name: Name for the call park extension. The maximum length is 30.
         :type name: str
         :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
-            maximum length is 6.
+            maximum length is 10.
         :type extension: str
         :param org_id: Update a call park extension from this organization.
         :type org_id: str
@@ -16959,7 +16959,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         :param phone_number: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either
             `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
-        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 6. Either `phoneNumber`
+        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 10. Either `phoneNumber`
             or `extension` is mandatory.
         :type extension: str
         :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
@@ -17076,7 +17076,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         :param phone_number: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either
             `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
-        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 6. Either `phoneNumber`
+        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 10. Either `phoneNumber`
             or `extension` is mandatory.
         :type extension: str
         :param announcement_language: Virtual Line's announcement language.

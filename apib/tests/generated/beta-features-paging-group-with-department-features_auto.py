@@ -39,7 +39,7 @@ class GetPagingGroupAgentObject(ApiModel):
     #: Agent's phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Agent's extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
+    #: Agent's extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or extension is mandatory.
     #: example: 7781
     extension: Optional[str] = None
 
@@ -67,7 +67,7 @@ class GetPagingGroupObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or extension is mandatory.
     #: example: 7781
     extension: Optional[str] = None
     #: Paging language. Minimum length is 1. Maximum length is 40.
@@ -105,7 +105,7 @@ class ListPagingGroupObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or extension is mandatory.
     #: example: 7781
     extension: Optional[str] = None
     #: Name of location for paging group.
@@ -244,7 +244,7 @@ class BetaFeaturesPagingGroupWithDepartmentFeaturesApi(ApiChild, base='telephony
         :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber
             or extension is mandatory.
         :type phone_number: str
-        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or
+        :param extension: Paging group extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or
             extension is mandatory.
         :type extension: str
         :param language_code: Language code.

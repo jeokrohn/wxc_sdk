@@ -26,7 +26,7 @@ class PagingAgent(ApiModel):
     agent_type: Optional[UserType] = Field(alias='type', default=None)
     #: Agents phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
     phone_number: Optional[str] = None
-    #: Agents extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
+    #: Agents extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
     #: Routing prefix of location.
     routingPrefix: Optional[str] = None
@@ -59,7 +59,7 @@ class Paging(ApiModel):
     #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
     #: mandatory.
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
     #: is the phone numer a toll free number?
     #: Routing prefix of location.
@@ -126,7 +126,7 @@ class Paging(ApiModel):
         :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23.
             Either phone_number or extension is mandatory.
         :type phone_number: str
-        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6.
+        :param extension: Paging group extension. Minimum length is 2. Maximum length is 10.
             Either phone_number or extension is mandatory.
         :type extension: str
         :return: settings for :meth:`PagingApi.create` call

@@ -182,7 +182,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         :param phone_number: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either
             `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
-        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 6. Either `phoneNumber`
+        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 10. Either `phoneNumber`
             or `extension` is mandatory.
         :type extension: str
         :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
@@ -299,7 +299,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         :param phone_number: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either
             `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
-        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 6. Either `phoneNumber`
+        :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 10. Either `phoneNumber`
             or `extension` is mandatory.
         :type extension: str
         :param announcement_language: Virtual Line's announcement language.
