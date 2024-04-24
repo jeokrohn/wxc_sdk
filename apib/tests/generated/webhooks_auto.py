@@ -39,6 +39,8 @@ class WebhookResource(str, Enum):
     #: The `Meeting Transcripts
     #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_ resource.
     meeting_transcripts = 'meetingTranscripts'
+    #: Service App authorization notification.
+    service_app = 'serviceApp'
 
 
 class WebhookEvent(str, Enum):
@@ -58,6 +60,10 @@ class WebhookEvent(str, Enum):
     left = 'left'
     #: A room was migrated to a different geography. The roomId has changed.
     migrated = 'migrated'
+    #: A Service App was authorized.
+    authorized = 'authorized'
+    #: A Service App was deauthorized.
+    deauthorized = 'deauthorized'
 
 
 class WebhookStatus(str, Enum):

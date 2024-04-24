@@ -36,6 +36,11 @@ class WebhookEventType(str, Enum):
     left = 'left'
     #: A room was migrated to a different geography. The roomId has changed.
     migrated = 'migrated'
+    #: A Service App was authorized.
+    authorized = 'authorized'
+    #: A Service App was deauthorized.
+    deauthorized = 'deauthorized'
+
     all = 'all'
 
 
@@ -43,16 +48,34 @@ class WebhookResource(str, Enum):
     """
     The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     """
+    #: The `Attachment Actions
+    #: <https://developer.webex.com/docs/api/v1/attachment-actions>`_ resource.
     attachment_actions = 'attachmentActions'
+    #: The `Memberships
+    #: <https://developer.webex.com/docs/api/v1/memberships>`_ resource.
     memberships = 'memberships'
+    #: The `Messages
+    #: <https://developer.webex.com/docs/api/v1/messages>`_ resource.
     messages = 'messages'
+    #: The `Rooms
+    #: <https://developer.webex.com/docs/api/v1/rooms>`_ resource.
     rooms = 'rooms'
+    #: The `Meetings
+    #: <https://developer.webex.com/docs/api/v1/meetings>`_ resource.
+    meetings = 'meetings'
+    #: The `Recordings
+    #: <https://developer.webex.com/docs/api/v1/recordings>`_ resource.
+    recordings = 'recordings'
+    #: The `Meeting Participants
+    #: <https://developer.webex.com/docs/api/v1/meeting-participants>`_ resource.
+    meeting_participants = 'meetingParticipants'
+    #: The `Meeting Transcripts
+    #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_ resource.
+    meeting_transcripts = 'meetingTranscripts'
+    #: Service App authorization notification.
+    service_app = 'serviceApp'
     telephony_calls = 'telephony_calls'
     telephony_mwi = 'telephony_mwi'
-    meetings = 'meetings'
-    recordings = 'recordings'
-    meeting_participants = 'meetingParticipants'
-    meeting_transcripts = 'meetingTranscripts'
     all = 'all'
 
 
