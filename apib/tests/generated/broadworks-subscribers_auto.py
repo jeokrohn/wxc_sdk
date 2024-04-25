@@ -135,7 +135,7 @@ class SubscriberProvisioningPrecheckResponse(ApiModel):
 
 
 class PrecheckABroadworksSubscriberProvisioningCustomerInfo(ApiModel):
-    #: Email address of the customer org user to be provisioned.
+    #: The Customer's primary email address.
     #: example: "john.anderson@example.com"
     primary_email: Optional[str] = None
 
@@ -437,6 +437,8 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
             section of the `Webex for BroadWorks
             <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide>`_ guide for more information.
         :type timezone: str
+        :param customer_info: The information of the customer into which the subscriber is provisioned. If you are
+            including this parameter, you must include the `primaryEmail` of the customer.
         :type customer_info: PrecheckABroadworksSubscriberProvisioningCustomerInfo
         :rtype: :class:`SubscriberProvisioningPrecheckResponse`
         """

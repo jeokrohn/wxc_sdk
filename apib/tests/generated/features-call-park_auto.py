@@ -640,7 +640,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :param name: Name for the call park extension. The maximum length is 30.
         :type name: str
         :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
-            maximum length is 6.
+            maximum length is 10.
         :type extension: str
         :param org_id: Create the call park extension for this organization.
         :type org_id: str
@@ -707,7 +707,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :param name: Name for the call park extension. The maximum length is 30.
         :type name: str
         :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
-            maximum length is 6.
+            maximum length is 10.
         :type extension: str
         :param org_id: Update a call park extension from this organization.
         :type org_id: str
