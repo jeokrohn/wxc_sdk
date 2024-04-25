@@ -8332,15 +8332,20 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
 
 class AsReportsApi(AsApiChild, base='devices'):
     """
-    Report templates are available for use with the Reports API.
+    Reports
 
-    To access this endpoint, you must use an administrator token with the analytics:read_all scope. The authenticated
-    user must be a read-only or full administrator of the organization to which the report belongs.
+    To access these endpoints, you must use an administrator token with the `analytics:read_all` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. The
+    authenticated user must be a read-only or full administrator of the organization to which the report belongs.
 
-    To use this endpoint the organization needs to be licensed for Pro Pack for Control Hub.
+    To use this endpoint the org needs to be licensed for the Pro Pack.
 
-    Reports available via Webex Control Hub may be generated and downloaded via the Reports API. To access this API,
+    Reports available via `Webex Control Hub
+    <https://admin.webex.com>`_ may be generated and downloaded via the Reports API. To access this API,
     the authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+
+    For more information about Reports, see the `Admin API
+    <https://developer.webex.com/docs/admin#reports-api>`_ guide.
 
     """
 
@@ -8370,11 +8375,14 @@ class AsReportsApi(AsApiChild, base='devices'):
     def list_gen(self, report_id: str = None, service: str = None, template_id: str = None, from_date: date = None,
              to_date: date = None) -> AsyncGenerator[Report, None, None]:
         """
-        Lists all reports. Use query parameters to filter the response. The parameters are optional. However,
-        from and to parameters should be provided together.
+        Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
+        and `to` parameters should be provided together.
 
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        Reports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream`
+        does indicate the zip format. There is usually no .zip file extension.
 
         :param report_id: List reports by ID.
         :param service: List reports which use this service.
@@ -8405,11 +8413,14 @@ class AsReportsApi(AsApiChild, base='devices'):
     async def list(self, report_id: str = None, service: str = None, template_id: str = None, from_date: date = None,
              to_date: date = None) -> List[Report]:
         """
-        Lists all reports. Use query parameters to filter the response. The parameters are optional. However,
-        from and to parameters should be provided together.
+        Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
+        and `to` parameters should be provided together.
 
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        Reports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream`
+        does indicate the zip format. There is usually no .zip file extension.
 
         :param report_id: List reports by ID.
         :param service: List reports which use this service.

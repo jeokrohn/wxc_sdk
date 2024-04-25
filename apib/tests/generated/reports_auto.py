@@ -76,8 +76,12 @@ class ReportsApi(ApiChild, base='reports'):
         Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
         and `to` parameters should be provided together.
 
+        **Notes**:
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        Reports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream`
+        does indicate the zip format. There is usually no .zip file extension.
 
         :param report_id: List reports by ID.
         :type report_id: str
@@ -160,8 +164,12 @@ class ReportsApi(ApiChild, base='reports'):
 
         Specify the report ID in the `reportId` parameter in the URI.
 
+        **Notes**:
         CSV reports for Teams services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        Reports are usually provided in zip format. A Content-header `application/zip` or `application/octet-stream`
+        does indicate the zip     format. There is usually no .zip file extension.
 
         :param report_id: The unique identifier for the report.
         :type report_id: str
