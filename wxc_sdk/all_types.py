@@ -172,7 +172,8 @@ from wxc_sdk.webhook import Webhook, WebhookCreate, WebhookEvent, WebhookEventDa
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, HotdeskingStatus, \
-    WorkSpaceType, Workspace, WorkspaceCalling, WorkspaceEmail, WorkspaceSupportedDevices, WorkspaceWebexCalling
+    WorkSpaceType, Workspace, WorkspaceCalling, WorkspaceCallingHybridCalling, WorkspaceEmail, \
+    WorkspaceIndoorNavigation, WorkspaceSupportedDevices, WorkspaceWebexCalling
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationState', 'AdaptiveCard',
            'AdaptiveCardAction', 'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentQueue',
@@ -293,6 +294,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'WebexStatus', 'WebexUser', 'Webhook', 'WebhookCreate',
            'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus',
            'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceType',
-           'Workspace', 'WorkspaceCalling', 'WorkspaceEmail', 'WorkspaceLocation', 'WorkspaceLocationFloor',
-           'WorkspaceNumbers', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper', 'dt_iso_str',
-           'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail',
+           'WorkspaceIndoorNavigation', 'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers',
+           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1',
+           'to_camel', 'webex_id_to_uuid']

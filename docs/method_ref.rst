@@ -794,7 +794,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.number.activate <wxc_sdk.telephony.location.numbers.LocationNumbersApi.activate>`
         Activate the specified set of phone numbers in a location for an organization
    * - :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
-        Adds specified set of phone numbers to a location for an organization
+        Adds a specified set of phone numbers to a location for an organization
    * - :meth:`api.telephony.location.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
         Remove the specified set of phone numbers from a location for an organization
    * - :meth:`api.telephony.location.receptionist_contacts_directory.create <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create>`
@@ -844,7 +844,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.number.activate <wxc_sdk.telephony.location.numbers.LocationNumbersApi.activate>`
         Activate the specified set of phone numbers in a location for an organization
    * - :meth:`api.telephony.locations.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
-        Adds specified set of phone numbers to a location for an organization
+        Adds a specified set of phone numbers to a location for an organization
    * - :meth:`api.telephony.locations.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
         Remove the specified set of phone numbers from a location for an organization
    * - :meth:`api.telephony.locations.receptionist_contacts_directory.create <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create>`

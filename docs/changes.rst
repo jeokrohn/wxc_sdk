@@ -39,6 +39,8 @@ Release history
 - fix: corrected enum values in :class:`wxc_sdk.telephony.ServiceType`
 - feat: new event types in :class:`wxc_sdk.webhook.WebhookEventType`
 - feat: new parameter number_type for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
+- feat: new attribute :attr:`wxc_sdk.workspaces.Workspace.indoor_navigation`
+
 
 1.18.0
 ------

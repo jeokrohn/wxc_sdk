@@ -14,8 +14,9 @@ from wxc_sdk.base import SafeEnum as Enum
 __all__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType',
            'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
            'WorkspaceCallingWebexCalling', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
-           'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceDeviceHostedMeetings',
-           'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices', 'WorkspaceType1', 'WorkspacesApi']
+           'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceDeviceHostedMeetings', 'WorkspaceDevicePlatform',
+           'WorkspaceHotdeskingStatus', 'WorkspaceIndoorNavigation', 'WorkspaceSupportedDevices', 'WorkspaceType1',
+           'WorkspacesApi']
 
 
 class WorkspaceType1(str, Enum):
@@ -112,6 +113,18 @@ class WorkspaceDeviceHostedMeetings(ApiModel):
     site_url: Optional[str] = None
 
 
+class WorkspaceDevicePlatform(str, Enum):
+    #: Cisco.
+    cisco = 'cisco'
+    #: Microsoft Teams Room.
+    microsoft_teams_room = 'microsoftTeamsRoom'
+
+
+class WorkspaceIndoorNavigation(ApiModel):
+    #: URL of a map locating the workspace.
+    url: Optional[str] = None
+
+
 class Workspace(ApiModel):
     #: Unique identifier for the Workspace.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFUy81MTAxQjA3Qi00RjhGLTRFRjctQjU2NS1EQjE5QzdCNzIzRjc
@@ -157,6 +170,11 @@ class Workspace(ApiModel):
     calendar: Optional[WorkspaceCalendar] = None
     #: Device hosted meetings configuration.
     device_hosted_meetings: Optional[WorkspaceDeviceHostedMeetings] = None
+    #: The device platform.
+    #: example: cisco
+    device_platform: Optional[WorkspaceDevicePlatform] = None
+    #: Indoor navigation configuration.
+    indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
 
 
 class WorkspaceCreationRequestCallingWebexCalling(ApiModel):
@@ -238,15 +256,16 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                         display_name: str = None, capacity: int = None, type: WorkspaceType1 = None,
                         calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
-                        org_id: str = None, **params) -> Generator[Workspace, None, None]:
+                        device_platform: WorkspaceDevicePlatform = None, org_id: str = None,
+                        **params) -> Generator[Workspace, None, None]:
         """
         List workspaces.
 
         Use query parameters to filter the response. The `orgId` parameter can only be used by admin users of another
-        organization (such as partners). The `locationId`, `workspaceLocationId`, `floorId`, `capacity` and `type`
-        fields will only be present for workspaces that have a value set for them. The special values `notSet` (for
-        filtering on category) and `-1` (for filtering on capacity) can be used to filter for workspaces without a
-        type and/or capacity.
+        organization (such as partners). The `locationId`, `workspaceLocationId`, `indoorNavigation`, `floorId`,
+        `capacity` and `type` fields will only be present for workspaces that have a value set for them. The special
+        values `notSet` (for filtering on category) and `-1` (for filtering on capacity) can be used to filter for
+        workspaces without a type and/or capacity.
 
         :param location_id: Location associated with the workspace. Values must originate from the /locations API and
             not the legacy /workspaceLocations API.
@@ -272,6 +291,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type calendar: WorkspaceCalendarType
         :param device_hosted_meetings_enabled: List workspaces enabled for device hosted meetings.
         :type device_hosted_meetings_enabled: bool
+        :param device_platform: List workspaces by device platform.
+        :type device_platform: WorkspaceDevicePlatform
         :param org_id: List workspaces in this organization. Only admin users of another organization (such as
             partners) may use this parameter.
         :type org_id: str
@@ -290,15 +311,17 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         if capacity is not None:
             params['capacity'] = capacity
         if type is not None:
-            params['type'] = type
+            params['type'] = enum_str(type)
         if calling is not None:
-            params['calling'] = calling
+            params['calling'] = enum_str(calling)
         if supported_devices is not None:
-            params['supportedDevices'] = supported_devices
+            params['supportedDevices'] = enum_str(supported_devices)
         if calendar is not None:
-            params['calendar'] = calendar
+            params['calendar'] = enum_str(calendar)
         if device_hosted_meetings_enabled is not None:
             params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
+        if device_platform is not None:
+            params['devicePlatform'] = enum_str(device_platform)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
@@ -308,15 +331,16 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                            calendar: WorkspaceCreationRequestCalendar = None, notes: str = None,
                            hotdesking_status: WorkspaceHotdeskingStatus = None,
                            device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
-                           supported_devices: WorkspaceSupportedDevices = None, org_id: str = None) -> Workspace:
+                           supported_devices: WorkspaceSupportedDevices = None,
+                           indoor_navigation: WorkspaceIndoorNavigation = None, org_id: str = None) -> Workspace:
         """
         Create a workspace.
 
-        The `locationId`, `workspaceLocationId`, `floorId`, `capacity`, `type`, `notes` and `hotdeskingStatus`
-        parameters are optional, and omitting them will result in the creation of a workspace without these values
-        set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling
-        can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The
-        `orgId` parameter can only be used by admin users of another organization (such as partners).
+        The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type`, `notes` and
+        `hotdeskingStatus` parameters are optional, and omitting them will result in the creation of a workspace
+        without these values set, or set to their default. A `locationId` must be provided when the `floorId` is set.
+        Calendar and calling can also be set for a new workspace. Omitting them will default to free calling and no
+        calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
         <https://developer.webex.com/docs/api/v1/locations/list-locations>`_, `available numbers
@@ -356,6 +380,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_hosted_meetings: WorkspaceDeviceHostedMeetings
         :param supported_devices: The supported devices for the workspace. Default is `collaborationDevices`.
         :type supported_devices: WorkspaceSupportedDevices
+        :param indoor_navigation: Indoor navigation configuration.
+        :type indoor_navigation: WorkspaceIndoorNavigation
         :param org_id: `OrgId` associated with the workspace. Only admin users of another organization (such as
             partners) may use this parameter.
         :type org_id: str
@@ -389,6 +415,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
         if supported_devices is not None:
             body['supportedDevices'] = enum_str(supported_devices)
+        if indoor_navigation is not None:
+            body['indoorNavigation'] = loads(indoor_navigation.model_dump_json())
         url = self.ep()
         data = super().post(url, json=body)
         r = Workspace.model_validate(data)
@@ -400,8 +428,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         Shows details for a workspace, by ID.
 
-        The `locationId`, `workspaceLocationId`, `floorId`, `capacity`, `type` and `notes` fields will only be present
-        if they have been set for the workspace. Specify the workspace ID in the `workspaceId` parameter in the URI.
+        The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields
+        will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId`
+        parameter in the URI.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -417,7 +446,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                            type: WorkspaceType1 = None, calendar: WorkspaceCreationRequestCalendar = None,
                            sip_address: str = None, calling: WorkspaceCreationRequestCalling = None,
                            notes: str = None, hotdesking_status: WorkspaceHotdeskingStatus = None,
-                           device_hosted_meetings: WorkspaceDeviceHostedMeetings = None) -> Workspace:
+                           device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
+                           indoor_navigation: WorkspaceIndoorNavigation = None) -> Workspace:
         """
         Update a Workspace
 
@@ -477,6 +507,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param device_hosted_meetings: To enable device hosted meetings, set a Webex `siteUrl` and the `enabled` flag
             to `true`.
         :type device_hosted_meetings: WorkspaceDeviceHostedMeetings
+        :param indoor_navigation: Indoor navigation configuration.
+        :type indoor_navigation: WorkspaceIndoorNavigation
         :rtype: :class:`Workspace`
         """
         body = dict()
@@ -504,6 +536,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             body['hotdeskingStatus'] = enum_str(hotdesking_status)
         if device_hosted_meetings is not None:
             body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
+        if indoor_navigation is not None:
+            body['indoorNavigation'] = loads(indoor_navigation.model_dump_json())
         url = self.ep(f'{workspace_id}')
         data = super().put(url, json=body)
         r = Workspace.model_validate(data)

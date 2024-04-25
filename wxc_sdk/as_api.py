@@ -16423,25 +16423,34 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
 
 class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
     def _url(self, location_id: str, path: str = None):
+        """
+
+        :meta private:
+        """
         path = path and f'/{path}' or ''
         return self.ep(f'{location_id}/numbers{path}')
 
-    async def add(self, location_id: str, phone_numbers: list[str], state: NumberState = NumberState.inactive,
-            org_id: str = None):
+    async def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
+            state: NumberState = NumberState.inactive, org_id: str = None):
         """
-        Adds specified set of phone numbers to a location for an organization.
+        Adds a specified set of phone numbers to a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format for all countries, except for the United States, which can also follow the National
-        format. Active phone numbers are in service.
+        must follow E.164 format. Active phone numbers are in service.
 
         Adding a phone number to a location requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        of `spark-admin:telephony_config_write`.
+
+        WARNING: This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco PSTN or Integrated CCP because backend data issues may occur.
 
         :param location_id: LocationId to which numbers should be added.
         :type location_id: str
         :param phone_numbers: List of phone numbers that need to be added.
         :type phone_numbers: list[str]
+        :param number_type: Type of the number.
+        :type number_type: TelephoneNumberType
         :param state: State of the phone numbers.
         :type state: :class:`wxc_sdk.common.NumberState`
         :param org_id: Organization to manage
@@ -16449,8 +16458,13 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         """
         url = self._url(location_id)
         params = org_id and {'orgId': org_id} or None
-        body = {'phoneNumbers': phone_numbers,
-                'state': state}
+        body = dict()
+        body['phoneNumbers'] = phone_numbers
+        if number_type is not None:
+            body['numberType'] = enum_str(number_type)
+        if state is not None:
+            body['state'] = enum_str(state)
+
         await self.post(url=url, params=params, json=body)
 
     async def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
@@ -16464,6 +16478,10 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         Activating a phone number in a location requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
+        WARNING: This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco PSTN or Integrated CCP because backend data issues may occur.
+
         :param location_id: LocationId in which numbers should be activated.
         :type location_id: str
         :param phone_numbers: List of phone numbers to be activated.
@@ -16474,7 +16492,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         url = self._url(location_id)
         params = org_id and {'orgId': org_id} or None
         body = {'phoneNumbers': phone_numbers}
-        await self.put(url=url, params=params, json=body)
+        await super().post(url, params=params, json=body)
 
     async def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
@@ -16486,6 +16504,10 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
 
         Removing a phone number from a location requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
+
+        WARNING: This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco PSTN or Integrated CCP because backend data issues may occur.
 
         :param location_id: LocationId from which numbers should be removed.
         :type location_id: str
@@ -18669,7 +18691,9 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
     def list_gen(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
-             calendar: CalendarType = None, org_id: str = None, **params) -> AsyncGenerator[Workspace, None, None]:
+             calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
+             device_platform: DevicePlatform = None, org_id: str = None,
+             **params) -> AsyncGenerator[Workspace, None, None]:
         """
         List Workspaces
 
@@ -18701,28 +18725,51 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type calling: :class:`CallingType`
         :param supported_devices: List workspaces by supported devices. Possible values: collaborationDevices, phones
         :type supported_devices: str
-
         :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: :class:`CalendarType`
+        :param device_hosted_meetings_enabled: List workspaces enabled for device hosted meetings.
+        :type device_hosted_meetings_enabled: bool
+        :param device_platform: List workspaces by device platform.
+        :type device_platform: DevicePlatform
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        params.update((to_camel(k), enum_str(v))
-                      for k, v in locals().items()
-                      if k not in {'self', 'params', 'enum_str'} and v is not None)
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
+        if floor_id is not None:
+            params['floorId'] = floor_id
+        if display_name is not None:
+            params['displayName'] = display_name
+        if capacity is not None:
+            params['capacity'] = capacity
         if workspace_type is not None:
-            params.pop('workspaceType')
-            params['type'] = workspace_type
+            params['type'] = enum_str(workspace_type)
+        if calling is not None:
+            params['calling'] = calling
+        if supported_devices is not None:
+            params['supportedDevices'] = enum_str(supported_devices)
+        if calendar is not None:
+            params['calendar'] = calendar
+        if device_hosted_meetings_enabled is not None:
+            params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
+        if device_platform is not None:
+            params['devicePlatform'] = enum_str(device_platform)
         ep = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
 
     async def list(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
-             display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
-             calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
-             calendar: CalendarType = None, org_id: str = None, **params) -> List[Workspace]:
+                   display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
+                   calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
+                   calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
+                   device_platform: DevicePlatform = None, org_id: str = None,
+                   **params) -> List[Workspace]:
         """
         List Workspaces
 
@@ -18754,20 +18801,41 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type calling: :class:`CallingType`
         :param supported_devices: List workspaces by supported devices. Possible values: collaborationDevices, phones
         :type supported_devices: str
-
         :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: :class:`CalendarType`
+        :param device_hosted_meetings_enabled: List workspaces enabled for device hosted meetings.
+        :type device_hosted_meetings_enabled: bool
+        :param device_platform: List workspaces by device platform.
+        :type device_platform: DevicePlatform
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        params.update((to_camel(k), enum_str(v))
-                      for k, v in locals().items()
-                      if k not in {'self', 'params', 'enum_str'} and v is not None)
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
+        if floor_id is not None:
+            params['floorId'] = floor_id
+        if display_name is not None:
+            params['displayName'] = display_name
+        if capacity is not None:
+            params['capacity'] = capacity
         if workspace_type is not None:
-            params.pop('workspaceType')
-            params['type'] = workspace_type
+            params['type'] = enum_str(workspace_type)
+        if calling is not None:
+            params['calling'] = calling
+        if supported_devices is not None:
+            params['supportedDevices'] = enum_str(supported_devices)
+        if calendar is not None:
+            params['calendar'] = calendar
+        if device_hosted_meetings_enabled is not None:
+            params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
+        if device_platform is not None:
+            params['devicePlatform'] = enum_str(device_platform)
         ep = self.ep()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Workspace, params=params)]
@@ -18776,11 +18844,11 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         Create a Workspace
 
-        The `locationId`, `workspaceLocationId`, `floorId`, `capacity`, `type`, `notes` and `hotdeskingStatus`
-        parameters are optional, and omitting them will result in the creation of a workspace without these values
-        set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling
-        can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The
-        `orgId` parameter can only be used by admin users of another organization (such as partners).
+        The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type`, `notes` and
+        `hotdeskingStatus` parameters are optional, and omitting them will result in the creation of a workspace
+        without these values set, or set to their default. A `locationId` must be provided when the `floorId` is set.
+        Calendar and calling can also be set for a new workspace. Omitting them will default to free calling and no
+        calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
           <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
@@ -18812,8 +18880,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         Get Workspace Details
 
-        Shows details for a workspace, by ID. The workspaceLocationId, floorId, capacity, type and notes fields will
-        only be present if they have been set for the workspace.
+        Shows details for a workspace, by ID. The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`,
+        `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str

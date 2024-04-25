@@ -22,9 +22,9 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, enum_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'HotdeskingStatus',
-           'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling', 'WorkspaceSupportedDevices',
-           'WorkspacesApi']
+__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'WorkspaceCallingHybridCalling' ,
+           'HotdeskingStatus', 'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling',
+           'WorkspaceSupportedDevices', 'WorkspaceIndoorNavigation', 'WorkspacesApi']
 
 from ..common import DevicePlatform
 
@@ -83,10 +83,14 @@ class WorkspaceEmail(ApiModel):
 class Calendar(WorkspaceEmail):
     #: Calendar type. Calendar of type none does not include an emailAddress field.
     calendar_type: Optional[CalendarType] = Field(alias='type', default=None)
+    #: Workspace email address. Will not be set when the calendar type is `none`.
+    email_address: Optional[str] = None
 
 
 class WorkspaceSupportedDevices(str, Enum):
+    #: Workspace supports collaboration devices.
     collaboration_devices = 'collaborationDevices'
+    #: Workspace supports MPP phones.
     phones = 'phones'
 
 
@@ -129,6 +133,11 @@ class HotdeskingStatus(str, Enum):
     none_ = 'none'
 
 
+class WorkspaceIndoorNavigation(ApiModel):
+    #: URL of a map locating the workspace.
+    url: Optional[str] = None
+
+
 class Workspace(ApiModel):
     """
     Workspace details
@@ -169,6 +178,8 @@ class Workspace(ApiModel):
     supported_devices: Optional[WorkspaceSupportedDevices] = None
     #: The device platform.
     device_platform: Optional[DevicePlatform] = None
+    #: Indoor navigation configuration.
+    indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
 
     def update_or_create(self, for_update: bool = False) -> str:
         """
@@ -237,7 +248,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     def list(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
-             calendar: CalendarType = None, org_id: str = None, **params) -> Generator[Workspace, None, None]:
+             calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
+             device_platform: DevicePlatform = None, org_id: str = None,
+             **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
 
@@ -269,20 +282,41 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type calling: :class:`CallingType`
         :param supported_devices: List workspaces by supported devices. Possible values: collaborationDevices, phones
         :type supported_devices: str
-
         :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: :class:`CalendarType`
+        :param device_hosted_meetings_enabled: List workspaces enabled for device hosted meetings.
+        :type device_hosted_meetings_enabled: bool
+        :param device_platform: List workspaces by device platform.
+        :type device_platform: DevicePlatform
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        params.update((to_camel(k), enum_str(v))
-                      for k, v in locals().items()
-                      if k not in {'self', 'params', 'enum_str'} and v is not None)
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
+        if floor_id is not None:
+            params['floorId'] = floor_id
+        if display_name is not None:
+            params['displayName'] = display_name
+        if capacity is not None:
+            params['capacity'] = capacity
         if workspace_type is not None:
-            params.pop('workspaceType')
-            params['type'] = workspace_type
+            params['type'] = enum_str(workspace_type)
+        if calling is not None:
+            params['calling'] = calling
+        if supported_devices is not None:
+            params['supportedDevices'] = enum_str(supported_devices)
+        if calendar is not None:
+            params['calendar'] = calendar
+        if device_hosted_meetings_enabled is not None:
+            params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
+        if device_platform is not None:
+            params['devicePlatform'] = enum_str(device_platform)
         ep = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
@@ -291,11 +325,11 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         Create a Workspace
 
-        The `locationId`, `workspaceLocationId`, `floorId`, `capacity`, `type`, `notes` and `hotdeskingStatus`
-        parameters are optional, and omitting them will result in the creation of a workspace without these values
-        set, or set to their default. A `locationId` must be provided when the `floorId` is set. Calendar and calling
-        can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The
-        `orgId` parameter can only be used by admin users of another organization (such as partners).
+        The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type`, `notes` and
+        `hotdeskingStatus` parameters are optional, and omitting them will result in the creation of a workspace
+        without these values set, or set to their default. A `locationId` must be provided when the `floorId` is set.
+        Calendar and calling can also be set for a new workspace. Omitting them will default to free calling and no
+        calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
           <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
@@ -327,8 +361,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         Get Workspace Details
 
-        Shows details for a workspace, by ID. The workspaceLocationId, floorId, capacity, type and notes fields will
-        only be present if they have been set for the workspace.
+        Shows details for a workspace, by ID. The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`,
+        `capacity`, `type` and `notes` fields will only be present if they have been set for the workspace.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
