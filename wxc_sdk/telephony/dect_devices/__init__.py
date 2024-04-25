@@ -885,6 +885,6 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         if exclude_virtual_line is not None:
             params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
         if usage_type is not None:
-            params['usageType'] = usage_type
+            params['usageType'] = enum_str(usage_type)
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)

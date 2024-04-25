@@ -1,9 +1,11 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional, Any
+from typing import Optional, Any, Union
+
+from dateutil.parser import isoparse
 
 from ..api_child import ApiChild
-from ..base import ApiModel, dt_iso_str
+from ..base import ApiModel, dt_iso_str, enum_str
 from ..base import SafeEnum as Enum
 
 __all__ = ['EventData', 'ComplianceEvent', 'EventResource', 'EventType', 'EventsApi']
@@ -200,13 +202,18 @@ class EventsApi(ApiChild, base='events'):
     spark-compliance:events_read scope. See the Compliance Guide for more information.
     """
 
-    def list(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
-             from_: datetime = None, to_: datetime = None, **params) -> Generator[ComplianceEvent, None, None]:
+    def list(self, has_attachments: bool = None, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
+             from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
+             **params) -> Generator[ComplianceEvent, None, None]:
         """
-        List events in your organization.
-        Several query parameters are available to filter the events returned in
-        the response. Long result sets will be split into pages.
+        List events in your organization. Several query parameters are available to filter the response.
 
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param has_attachments: If enabled, filters message events to only those that contain the `attachments`
+            attribute.
+        :type has_attachments: bool
         :param resource: List events with a specific resource type.
         :type resource: EventResource
         :param type_: List events with a specific event type.
@@ -220,15 +227,23 @@ class EventsApi(ApiChild, base='events'):
         :type to_: str
         """
         if resource is not None:
-            params['resource'] = resource
+            params['resource'] = enum_str(resource)
         if type_ is not None:
-            params['type'] = type_
+            params['type'] = enum_str(type)
         if actor_id is not None:
             params['actorId'] = actor_id
+        if has_attachments is not None:
+            params['hasAttachments'] = str(has_attachments).lower()
         if from_ is not None:
-            params['from'] = dt_iso_str(from_)
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
         if to_ is not None:
-            params['to'] = dt_iso_str(to_)
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ComplianceEvent, params=params)
 

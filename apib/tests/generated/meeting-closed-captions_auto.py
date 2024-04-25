@@ -190,7 +190,7 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         """
         params = {}
         if format_ is not None:
-            params['format'] = format_
+            params['format'] = enum_str(format_)
         params['meetingId'] = meeting_id
         url = self.ep(f'{closed_caption_id}/download')
         super().get(url, params=params)

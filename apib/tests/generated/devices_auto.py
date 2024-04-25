@@ -272,9 +272,9 @@ class DevicesApi(ApiChild, base='devices'):
         if display_name is not None:
             params['displayName'] = display_name
         if product is not None:
-            params['product'] = product
+            params['product'] = enum_str(product)
         if type is not None:
-            params['type'] = type
+            params['type'] = enum_str(type)
         if tag is not None:
             params['tag'] = tag
         if connection_status is not None:
@@ -288,13 +288,13 @@ class DevicesApi(ApiChild, base='devices'):
         if error_code is not None:
             params['errorCode'] = error_code
         if capability is not None:
-            params['capability'] = capability
+            params['capability'] = enum_str(capability)
         if permission is not None:
             params['permission'] = permission
         if mac is not None:
             params['mac'] = mac
         if device_platform is not None:
-            params['devicePlatform'] = device_platform
+            params['devicePlatform'] = enum_str(device_platform)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, item_key='items', params=params)
 

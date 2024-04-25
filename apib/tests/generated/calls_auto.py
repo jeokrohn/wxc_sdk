@@ -88,7 +88,7 @@ class CallsApi(ApiChild, base='calls'):
         :type to_: Union[str, datetime]
         :return: Generator yielding :class:`Call` instances
         """
-        params['status'] = status
+        params['status'] = enum_str(status)
         if room_id is not None:
             params['roomId'] = room_id
         if from_ is not None:

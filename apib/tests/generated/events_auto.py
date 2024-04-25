@@ -212,9 +212,9 @@ class EventsApi(ApiChild, base='events'):
         :return: Generator yielding :class:`Event` instances
         """
         if resource is not None:
-            params['resource'] = resource
+            params['resource'] = enum_str(resource)
         if type is not None:
-            params['type'] = type
+            params['type'] = enum_str(type)
         if actor_id is not None:
             params['actorId'] = actor_id
         if from_ is not None:

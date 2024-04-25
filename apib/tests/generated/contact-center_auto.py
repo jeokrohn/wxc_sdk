@@ -347,7 +347,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
             params['agentIds'] = agent_ids
         if org_id is not None:
             params['orgId'] = org_id
-        params['interval'] = interval
+        params['interval'] = enum_str(interval)
         url = self.ep('agents/statistics')
         data = super().get(url, params=params)
         r = AgentStatsResponse.model_validate(data)
@@ -384,7 +384,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
             params['queueIds'] = queue_ids
         if org_id is not None:
             params['orgId'] = org_id
-        params['interval'] = interval
+        params['interval'] = enum_str(interval)
         url = self.ep('queues/statistics')
         data = super().get(url, params=params)
         r = QueueStatsResponse.model_validate(data)

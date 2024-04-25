@@ -686,7 +686,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         params = {}
         if type is not None:
-            params['type'] = type
+            params['type'] = enum_str(type)
         url = self.ep('history')
         data = super().get(url, params=params)
         r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])

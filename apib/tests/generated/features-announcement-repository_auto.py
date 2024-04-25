@@ -176,7 +176,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
-            params['locationId'] = location_id
+            params['locationId'] = enum_str(location_id)
         if order is not None:
             params['order'] = order
         if file_name is not None:

@@ -120,6 +120,9 @@ class Parameter:
             python_val = f'str({self.python_name}).lower()'
         elif self.python_type == 'list[str]':
             python_val = f"','.join({self.python_name})"
+        elif self.is_enum:
+            # body['{name}'] = enum_str({python_name})
+            python_val = f"enum_str({self.python_name})"
         else:
             if self.python_type == 'datetime':
                 # datetime parameters in URLs are something like:

@@ -972,13 +972,18 @@ class AsEventsApi(AsApiChild, base='events'):
     spark-compliance:events_read scope. See the Compliance Guide for more information.
     """
 
-    def list_gen(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
-             from_: datetime = None, to_: datetime = None, **params) -> AsyncGenerator[ComplianceEvent, None, None]:
+    def list_gen(self, has_attachments: bool = None, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
+             from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
+             **params) -> AsyncGenerator[ComplianceEvent, None, None]:
         """
-        List events in your organization.
-        Several query parameters are available to filter the events returned in
-        the response. Long result sets will be split into pages.
+        List events in your organization. Several query parameters are available to filter the response.
 
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param has_attachments: If enabled, filters message events to only those that contain the `attachments`
+            attribute.
+        :type has_attachments: bool
         :param resource: List events with a specific resource type.
         :type resource: EventResource
         :param type_: List events with a specific event type.
@@ -992,25 +997,38 @@ class AsEventsApi(AsApiChild, base='events'):
         :type to_: str
         """
         if resource is not None:
-            params['resource'] = resource
+            params['resource'] = enum_str(resource)
         if type_ is not None:
-            params['type'] = type_
+            params['type'] = enum_str(type)
         if actor_id is not None:
             params['actorId'] = actor_id
+        if has_attachments is not None:
+            params['hasAttachments'] = str(has_attachments).lower()
         if from_ is not None:
-            params['from'] = dt_iso_str(from_)
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
         if to_ is not None:
-            params['to'] = dt_iso_str(to_)
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ComplianceEvent, params=params)
 
-    async def list(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
-             from_: datetime = None, to_: datetime = None, **params) -> List[ComplianceEvent]:
+    async def list(self, has_attachments: bool = None, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
+             from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
+             **params) -> List[ComplianceEvent]:
         """
-        List events in your organization.
-        Several query parameters are available to filter the events returned in
-        the response. Long result sets will be split into pages.
+        List events in your organization. Several query parameters are available to filter the response.
 
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param has_attachments: If enabled, filters message events to only those that contain the `attachments`
+            attribute.
+        :type has_attachments: bool
         :param resource: List events with a specific resource type.
         :type resource: EventResource
         :param type_: List events with a specific event type.
@@ -1024,15 +1042,23 @@ class AsEventsApi(AsApiChild, base='events'):
         :type to_: str
         """
         if resource is not None:
-            params['resource'] = resource
+            params['resource'] = enum_str(resource)
         if type_ is not None:
-            params['type'] = type_
+            params['type'] = enum_str(type)
         if actor_id is not None:
             params['actorId'] = actor_id
+        if has_attachments is not None:
+            params['hasAttachments'] = str(has_attachments).lower()
         if from_ is not None:
-            params['from'] = dt_iso_str(from_)
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
         if to_ is not None:
-            params['to'] = dt_iso_str(to_)
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=ComplianceEvent, params=params)]
 
@@ -12284,13 +12310,11 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         missed, received) are returned.
 
         :param history_type: The type of call history records to retrieve. If not specified, then all call history
-            records are retrieved.
-            Possible values: placed, missed, received
+            records are retrieved. Possible values: placed, missed, received
         :type history_type: HistoryType or str
         :return: yields :class:`CallHistoryRecord` objects
         """
-        history_type = history_type and HistoryType.history_type_or_str(history_type)
-        params = history_type and {'type': history_type.value} or None
+        params = history_type and {'type': enum_str(history_type)} or None
         url = self.ep('history')
         return self.session.follow_pagination(url=url, model=CallHistoryRecord, params=params)
 
@@ -12301,13 +12325,11 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         missed, received) are returned.
 
         :param history_type: The type of call history records to retrieve. If not specified, then all call history
-            records are retrieved.
-            Possible values: placed, missed, received
+            records are retrieved. Possible values: placed, missed, received
         :type history_type: HistoryType or str
         :return: yields :class:`CallHistoryRecord` objects
         """
-        history_type = history_type and HistoryType.history_type_or_str(history_type)
-        params = history_type and {'type': history_type.value} or None
+        params = history_type and {'type': enum_str(history_type)} or None
         url = self.ep('history')
         return [o async for o in self.session.follow_pagination(url=url, model=CallHistoryRecord, params=params)]
 
@@ -13027,7 +13049,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         if exclude_virtual_line is not None:
             params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
         if usage_type is not None:
-            params['usageType'] = usage_type
+            params['usageType'] = enum_str(usage_type)
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)
 
@@ -13077,7 +13099,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         if exclude_virtual_line is not None:
             params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
         if usage_type is not None:
-            params['usageType'] = usage_type
+            params['usageType'] = enum_str(usage_type)
         url = self.ep('devices/availableMembers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)]
 
@@ -18765,11 +18787,11 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
 
     async def list(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
-                   display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
-                   calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
-                   calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-                   device_platform: DevicePlatform = None, org_id: str = None,
-                   **params) -> List[Workspace]:
+             display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
+             calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
+             calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
+             device_platform: DevicePlatform = None, org_id: str = None,
+             **params) -> List[Workspace]:
         """
         List Workspaces
 

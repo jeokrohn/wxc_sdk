@@ -103,9 +103,9 @@ class PoliciesApi(ApiChild, base='policies'):
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
-        params['type'] = type
+        params['type'] = enum_str(type)
         if action is not None:
-            params['action'] = action
+            params['action'] = enum_str(action)
         if to_ is not None:
             if isinstance(to_, str):
                 to_ = isoparse(to_)

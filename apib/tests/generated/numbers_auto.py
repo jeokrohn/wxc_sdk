@@ -615,15 +615,15 @@ class NumbersApi(ApiChild, base='telephony/config'):
         if owner_id is not None:
             params['ownerId'] = owner_id
         if owner_type is not None:
-            params['ownerType'] = owner_type
+            params['ownerType'] = enum_str(owner_type)
         if extension is not None:
             params['extension'] = extension
         if number_type is not None:
-            params['numberType'] = number_type
+            params['numberType'] = enum_str(number_type)
         if phone_number_type is not None:
-            params['phoneNumberType'] = phone_number_type
+            params['phoneNumberType'] = enum_str(phone_number_type)
         if state is not None:
-            params['state'] = state
+            params['state'] = enum_str(state)
         if details is not None:
             params['details'] = str(details).lower()
         if toll_free_numbers is not None:

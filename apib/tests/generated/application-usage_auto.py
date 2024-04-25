@@ -112,7 +112,7 @@ class ApplicationUsageApi(ApiChild, base='application/usage'):
         if app_id is not None:
             params['appId'] = app_id
         if order_by is not None:
-            params['orderBy'] = order_by
+            params['orderBy'] = enum_str(order_by)
         if cursor is not None:
             params['cursor'] = cursor
         url = self.ep()

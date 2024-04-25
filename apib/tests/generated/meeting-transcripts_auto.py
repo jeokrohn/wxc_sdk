@@ -242,7 +242,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         """
         params = {}
         if format_ is not None:
-            params['format'] = format_
+            params['format'] = enum_str(format_)
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'meetingTranscripts/{transcript_id}/download')

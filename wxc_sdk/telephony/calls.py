@@ -8,7 +8,7 @@ from typing import Optional, Literal, Union
 from pydantic import Field
 
 from ..api_child import ApiChild
-from ..base import ApiModel, to_camel
+from ..base import ApiModel, to_camel, enum_str
 from ..base import SafeEnum as Enum
 from ..webhook import WebhookEvent, WebhookEventData
 
@@ -197,12 +197,6 @@ class HistoryType(str, Enum):
     placed = 'placed'
     missed = 'missed'
     received = 'received'
-
-    @staticmethod
-    def history_type_or_str(v: Union[str, 'HistoryType']) -> 'HistoryType':
-        if isinstance(v, HistoryType):
-            return v
-        return HistoryType(v)
 
 
 class CallHistoryRecord(ApiModel):
@@ -570,12 +564,10 @@ class CallsApi(ApiChild, base='telephony/calls'):
         missed, received) are returned.
 
         :param history_type: The type of call history records to retrieve. If not specified, then all call history
-            records are retrieved.
-            Possible values: placed, missed, received
+            records are retrieved. Possible values: placed, missed, received
         :type history_type: HistoryType or str
         :return: yields :class:`CallHistoryRecord` objects
         """
-        history_type = history_type and HistoryType.history_type_or_str(history_type)
-        params = history_type and {'type': history_type.value} or None
+        params = history_type and {'type': enum_str(history_type)} or None
         url = self.ep('history')
         return self.session.follow_pagination(url=url, model=CallHistoryRecord, params=params)

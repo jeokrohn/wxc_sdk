@@ -142,15 +142,15 @@ class CallMembershipsApi(ApiChild, base='call/memberships'):
         :type to_: Union[str, datetime]
         :return: Generator yielding :class:`CallMembership` instances
         """
-        params['callStatus'] = call_status
+        params['callStatus'] = enum_str(call_status)
         if call_id is not None:
             params['callId'] = call_id
         if is_host is not None:
-            params['isHost'] = is_host
+            params['isHost'] = enum_str(is_host)
         if person_id is not None:
             params['personId'] = person_id
         if status is not None:
-            params['status'] = status
+            params['status'] = enum_str(status)
         if from_ is not None:
             if isinstance(from_, str):
                 from_ = isoparse(from_)

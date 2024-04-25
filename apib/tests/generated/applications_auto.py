@@ -192,17 +192,17 @@ class ApplicationsApi(ApiChild, base='applications'):
         :return: Generator yielding :class:`Application` instances
         """
         if type is not None:
-            params['type'] = type
+            params['type'] = enum_str(type)
         if org_id is not None:
             params['orgId'] = org_id
         if created_by is not None:
             params['createdBy'] = created_by
         if submission_status is not None:
-            params['submissionStatus'] = submission_status
+            params['submissionStatus'] = enum_str(submission_status)
         if org_submission_status is not None:
-            params['orgSubmissionStatus'] = org_submission_status
+            params['orgSubmissionStatus'] = enum_str(org_submission_status)
         if order_by is not None:
-            params['orderBy'] = order_by
+            params['orderBy'] = enum_str(order_by)
         if category is not None:
             params['category'] = category
         if tag is not None:

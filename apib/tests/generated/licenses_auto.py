@@ -259,7 +259,7 @@ class LicensesApi(ApiChild, base='licenses'):
         """
         params = {}
         if include_assigned_to is not None:
-            params['includeAssignedTo'] = include_assigned_to
+            params['includeAssignedTo'] = enum_str(include_assigned_to)
         if next is not None:
             params['next'] = next
         if limit is not None:
