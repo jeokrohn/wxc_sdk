@@ -17,9 +17,9 @@ __all__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject',
            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType',
            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasState', 'ItemObject', 'JobExecutionStatusObject',
            'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
-           'NumberObjectLocation', 'NumberObjectOwner', 'NumberOwnerType', 'NumberState', 'NumbersApi',
-           'StartJobResponse', 'State', 'Status', 'StepExecutionStatusesObject', 'TelephonyType',
-           'ValidateNumbersResponse']
+           'NumberObjectLocation', 'NumberObjectOwner', 'NumberOwnerType', 'NumberState', 'NumberStateOptions',
+           'NumberTypeOptions', 'NumbersApi', 'StartJobResponse', 'Status', 'StepExecutionStatusesObject',
+           'TelephonyType', 'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -270,10 +270,17 @@ class NumberObject(ApiModel):
     owner: Optional[NumberObjectOwner] = None
 
 
-class State(str, Enum):
-    #: Active state.
+class NumberTypeOptions(str, Enum):
+    #: Indicates a toll-free PSTN number.
+    tollfree = 'TOLLFREE'
+    #: Indicates a normal Direct Inward Dial (DID) PSTN number.
+    did = 'DID'
+
+
+class NumberStateOptions(str, Enum):
+    #: Indicates number is activated and has calling capability.
     active = 'ACTIVE'
-    #: Inactive state
+    #: Indicates a number is not yet activated and has no calling capability.
     inactive = 'INACTIVE'
 
 
@@ -379,7 +386,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def add_phone_numbers_to_a_location(self, location_id: str, phone_numbers: list[str], state: State,
+    def add_phone_numbers_to_a_location(self, location_id: str, phone_numbers: list[str],
+                                        number_type: NumberTypeOptions = None, state: NumberStateOptions = None,
                                         org_id: str = None):
         """
         Add Phone Numbers to a location
@@ -394,16 +402,18 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <br/>
 
-        <div><Callout type="warning">This API is only supported for Local Gateway (LGW) connected locations. It is not
-        supported and should not be used for non-LGW connected locations because backend data issues may
-        occur.</Callout></div>
+        <div><Callout type="warning">This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco PSTN or Integrated CCP because backend data issues may occur.</Callout></div>
 
         :param location_id: LocationId to which numbers should be added.
         :type location_id: str
         :param phone_numbers: List of phone numbers that need to be added.
         :type phone_numbers: list[str]
-        :param state: State of the phone numbers.
-        :type state: State
+        :param number_type: Type of the number.
+        :type number_type: NumberTypeOptions
+        :param state: Reflects the state of the number. By default the state of a number is `ACTIVE`.
+        :type state: NumberStateOptions
         :param org_id: Organization of the Route Group.
         :type org_id: str
         :rtype: None
@@ -413,7 +423,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['phoneNumbers'] = phone_numbers
-        body['state'] = enum_str(state)
+        if number_type is not None:
+            body['numberType'] = enum_str(number_type)
+        if state is not None:
+            body['state'] = enum_str(state)
         url = self.ep(f'locations/{location_id}/numbers')
         super().post(url, params=params, json=body)
 
@@ -431,9 +444,9 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <br/>
 
-        <div><Callout type="warning">This API is only supported for Local Gateway (LGW) connected locations. It is not
-        supported and should not be used for non-LGW connected locations because backend data issues may
-        occur.</Callout></div>
+        <div><Callout type="warning">This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco PSTN or Integrated CCP because backend data issues may occur.</Callout></div>
 
         :param location_id: `LocationId` to which numbers should be added.
         :type location_id: str
@@ -465,9 +478,9 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <br/>
 
-        <div><Callout type="warning">This API is only supported for Local Gateway (LGW) connected locations. It is not
-        supported and should not be used for non-LGW connected locations because backend data issues may
-        occur.</Callout></div>
+        <div><Callout type="warning">This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco PSTN or Integrated CCP because backend data issues may occur.</Callout></div>
 
         :param location_id: `LocationId` to which numbers should be added.
         :type location_id: str

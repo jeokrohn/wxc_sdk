@@ -147,6 +147,7 @@ from wxc_sdk.telephony.jobs import ApplyLineKeyTemplateJobDetails, ErrorMessageO
 from wxc_sdk.telephony.location import CallingLineId, PSTNConnection, TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
+from wxc_sdk.telephony.location.numbers import TelephoneNumberType
 from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 from wxc_sdk.telephony.organisation_vm import OrganisationVoicemailSettings, OrganisationVoicemailSettingsAPI
 from wxc_sdk.telephony.paging import Paging, PagingAgent
@@ -269,13 +270,13 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu',
            'StandardRegistrationApproveRule', 'StartJobResponse', 'StartStopAnnouncement', 'StatusAPI',
            'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict', 'StrandedCalls', 'StrandedCallsAction',
-           'SupportedDevice', 'SupportedDevices', 'SurveyResult', 'TagOp', 'Team', 'TeamMembership', 'Telephony',
-           'TelephonyCall', 'TelephonyDevice', 'TelephonyDeviceDetails', 'TelephonyDeviceOwner',
-           'TelephonyDeviceProxy', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty',
-           'TelephonyType', 'TestCallRoutingResult', 'Tokens', 'TrackingCode', 'TrackingCodeItem',
-           'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet', 'TranscriptStatus',
-           'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType', 'TrunkType',
-           'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',
+           'SupportedDevice', 'SupportedDevices', 'SurveyResult', 'TagOp', 'Team', 'TeamMembership',
+           'TelephoneNumberType', 'Telephony', 'TelephonyCall', 'TelephonyDevice', 'TelephonyDeviceDetails',
+           'TelephonyDeviceOwner', 'TelephonyDeviceProxy', 'TelephonyEvent', 'TelephonyEventData',
+           'TelephonyLocation', 'TelephonyParty', 'TelephonyType', 'TestCallRoutingResult', 'Tokens', 'TrackingCode',
+           'TrackingCodeItem', 'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet',
+           'TranscriptStatus', 'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType',
+           'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',
            'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
            'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers',
            'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody',

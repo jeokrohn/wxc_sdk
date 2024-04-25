@@ -38,6 +38,7 @@ Release history
 - break: different return type for :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
 - fix: corrected enum values in :class:`wxc_sdk.telephony.ServiceType`
 - feat: new event types in :class:`wxc_sdk.webhook.WebhookEventType`
+- feat: new parameter number_type for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
 
 1.18.0
 ------
