@@ -223,7 +223,8 @@ class LocationsApi(ApiChild, base='locations'):
             if p in {'address', 'body', 'self'} or v is None:
                 continue
             p = to_camel(p)
-            if p == 'address1' or address:
+            if p in {'address1', 'address2', 'city', 'state', 'postalCode', 'country'}:
+                # these are actually address parameters
                 address[p] = v
             else:
                 body[p] = v
