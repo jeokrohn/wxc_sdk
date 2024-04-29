@@ -1552,7 +1552,8 @@ class AsLocationsApi(AsApiChild, base='locations'):
         return Location.model_validate(await self.get(ep, params=params))
 
     async def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
-               city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None) -> str:
+               city: str, state: str, postal_code: str, country: str, address2: str = None, latitude: str = None,
+               longitude: str = None, notes: str = None, org_id: str = None) -> str:
         """
         Create a new Location for a given organization. Only an admin in the organization can create a new Location.
 
@@ -1564,6 +1565,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         The following body parameters are required to create a new location: name, timeZone, preferredLanguage,
         address, announcementLanguage.
 
+        latitude, longitude and notes are optional parameters to create a new location.
 
         :param name: The name of the location.
         :type name: str
@@ -1586,9 +1588,15 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :param country: ISO-3166 2-Letter Country Code.
         :type country: str
         :param org_id: Create a location common attribute for this organization.
+        :param latitude: Latitude
+        :type latitude: str
+        :param longitude: Longitude
+        :type longitude: str
+        :param notes: Notes
+        :type notes: str
         :type org_id: str
         :return: ID of new location
-        :rtype: :class:`Location`
+        :rtype: str
         """
         body = {}
         address = {}
