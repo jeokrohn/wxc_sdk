@@ -68,6 +68,15 @@ class Location(ApiModel):
     #: Notes
     notes: Optional[str] = None
 
+    def update(self) -> dict:
+        """
+        get data for update call
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_unset=True, exclude_none=False, by_alias=True,
+                               exclude={'location_id', 'org_id'})
+
     @property
     def location_id_uuid(self) -> str:
         """
@@ -258,8 +267,7 @@ class LocationsApi(ApiChild, base='locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
 
-        data = json.loads(settings_copy.model_dump_json(exclude={'location_id', 'org_id'}, exclude_none=False,
-                                                        exclude_unset=True))
+        data = settings.update()
         self.put(url=url, json=data, params=params)
 
     def list_floors(self, location_id: str) -> List[Floor]:

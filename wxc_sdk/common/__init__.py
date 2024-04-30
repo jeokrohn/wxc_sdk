@@ -1123,4 +1123,3 @@ class AssignedDectNetwork(ApiModel):
 class DevicePlatform(str, Enum):
     cisco = 'cisco'
     microsoft_teams_room = 'microsoftTeamsRoom'
-

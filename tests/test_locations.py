@@ -40,6 +40,7 @@ from wxc_sdk.telephony.voicemail_groups import VoicemailGroup
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace
 
+
 # TODO: add test cases for floors etc. (see WorksspaceLocations test cases)
 
 
@@ -253,6 +254,46 @@ class TestLocation(TestWithLocations):
         details = self.api.locations.details(location_id=location_id)
         self.assertEqual('de_de', details.preferred_language)
         self.assertEqual('Europe/Berlin', details.time_zone)
+
+    @async_test
+    async def test_005_create_and_update_location(self):
+        """
+        Create a test location (no calling)
+        """
+        async with RandomLocation() as random_location:
+            address = await random_location.random_address()
+            address1 = await random_location.random_address()
+        # determine a name for the new randon location
+        location_names = set(loc.name for loc in self.api.locations.list())
+        new_location_name = next((name
+                                  for i in range(1, 100)
+                                  if (name := f'{address.city} {i:02d}') not in location_names))
+        new_location_id = self.api.locations.create(name=new_location_name,
+                                                    time_zone='America/Chicago',
+                                                    preferred_language='en_us',
+                                                    announcement_language='en_us',
+                                                    address1=address.address1,
+                                                    city=address.city,
+                                                    state=address.state_or_province_abbr,
+                                                    postal_code=address.zip_or_postal_code,
+                                                    country='US',
+                                                    address2=address.address2,
+                                                    latitude=address.geo_location.lat,
+                                                    longitude=address.geo_location.lon,
+                                                    notes='auto generated')
+        location_details = self.api.locations.details(location_id=new_location_id)
+        # try to update the location
+        update = location_details.model_copy(deep=True)
+        new_address = LocationAddress(address1=address1.address1, address2=address1.address2, city=address1.city,
+                                      state=address1.state_or_province_abbr, postal_code=address1.zip_or_postal_code,
+                                      country='US')
+        update.address = new_address
+        update.longitude = address1.geo_location.lon
+        update.latitude = address1.geo_location.lat
+        update.notes = 'updated notes'
+        self.api.locations.update(location_id=new_location_id, settings=update)
+        after_update = self.api.locations.details(location_id=new_location_id)
+        self.assertEqual(update, after_update)
 
 
 class CodeAndName(ApiModel):
@@ -952,7 +993,7 @@ class TestLocationConsistency(TestCaseWithLog):
                          list_call: Callable[[], Generator[Any, None, None]],
                          key_attr: Callable[[Any], str], entity: str):
             owner_webex_id = number_key.owner.owner_id
-            decoded_owner_webex_id = base64.b64decode(owner_webex_id+'==').decode()
+            decoded_owner_webex_id = base64.b64decode(owner_webex_id + '==').decode()
             # we use the UUID for the lookup
             owner_uuid = webex_id_to_uuid(owner_webex_id)
             if not cache:
@@ -966,7 +1007,7 @@ class TestLocationConsistency(TestCaseWithLog):
             if (en := cache.get(owner_uuid)) is None:
                 return f'{entity} not found'
             en_webex_id = key_attr(en)
-            decoded_en_webex_id = base64.b64decode(en_webex_id+'==').decode()
+            decoded_en_webex_id = base64.b64decode(en_webex_id + '==').decode()
             if decoded_owner_webex_id != decoded_en_webex_id:
                 # looks like we found an entry using the UUID as index, but the actual IDs are different
                 return f'{entity}: id mismatch, from owner: {decoded_owner_webex_id}, entity id: {decoded_en_webex_id}'
@@ -1005,7 +1046,7 @@ class TestLocationConsistency(TestCaseWithLog):
                 owner_id = device.person_id or device.workspace_id
                 if not owner_id:
                     continue
-                decoded_owner_id = base64.b64decode(owner_id+'==').decode()
+                decoded_owner_id = base64.b64decode(owner_id + '==').decode()
 
                 # try to find a number with this owner_id
                 number = next((number for number in numbers
@@ -1017,7 +1058,7 @@ class TestLocationConsistency(TestCaseWithLog):
                 print(f'device "{device.display_name}" no owner found for '
                       f'{"workspace" if device.workspace_id else "person"}_id: '
                       f'{owner_id}, {decoded_owner_id}'
-                      f'{", might be a room device w/o calling" if device.product_type==ProductType.roomdesk else ""}')
+                      f'{", might be a room device w/o calling" if device.product_type == ProductType.roomdesk else ""}')
             return err
 
         class ValidatorCache(NamedTuple):
