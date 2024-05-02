@@ -41,6 +41,7 @@ Subpackages
    wxc_sdk.telephony
    wxc_sdk.webhook
    wxc_sdk.workspace_locations
+   wxc_sdk.workspace_personalization
    wxc_sdk.workspace_settings
    wxc_sdk.workspaces
 

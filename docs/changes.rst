@@ -41,6 +41,7 @@ Release history
 - feat: new parameter number_type for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
 - feat: new attribute :attr:`wxc_sdk.workspaces.Workspace.indoor_navigation`
 - feat: added latitude, longitude, and notes parameter to :meth:`api.locations.create <wxc_sdk.locations.LocationsApi.create>`
+- feat: workspace personalization API: :attr:`api.workspace_personalization <wxc_sdk.WebexSimpleApi.workspace_personalization>`
 
 1.18.0
 ------
