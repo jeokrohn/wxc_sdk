@@ -8956,7 +8956,7 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
            An integer specifies the number of errors that the service provider will accept before the operation is
            terminated and an error response is returned.
            It is OPTIONAL in a request.
-           Maximum number of operations allowed to fail before the server stops processing the request. The value must 
+           Maximum number of operations allowed to fail before the server stops processing the request. The value must
            be between 1 and 100.
 
         4. `operations` parameter
@@ -8966,7 +8966,7 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
            + `operations.method`
 
              The HTTP method of the current operation. Possible values are POST, PATCH or DELETE.
-           + `operations.path`
+           + `operations.path
 
              The Resource's relative path. If the method is POST the value must specify a Resource type endpoint;
              e.g., /Users or /Groups whereas all other method values must specify the path to a specific Resource;
@@ -8984,7 +8984,7 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
              resources in
              the response and cross-reference new resources in and across operations within a bulk request.
              It is REQUIRED when "method" is "POST".
-   
+
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
         :param fail_on_errors: An integer specifying the maximum number of errors that the service provider will accept
@@ -9229,7 +9229,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
             if start_index > paginated_result.total_results:
                 break
         return
-    
+
     async def search_all(self, org_id: str, filter: str = None, attributes: str = None,
                          excluded_attributes: str = None,
                          sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
@@ -9257,13 +9257,13 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
 
         - `id_full_admin`
         - `id_user_admin`
-        
+
         **Usage**:
 
         1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
 
         2. Support 3 schemas:
-        
+
         - "urn:ietf:params:scim:schemas:core:2.0:User"
         - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
         - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"

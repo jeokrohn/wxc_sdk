@@ -1145,6 +1145,10 @@ The method name is a link to the method documentation.
         :param location_id:
    * - :meth:`api.workspace_locations.floors.update <wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.update>`
         Updates details for a floor, by ID
+   * - :meth:`api.workspace_personalization.get_personalization_task <wxc_sdk.workspace_personalization.WorkspacePersonalizationApi.get_personalization_task>`
+        Get Personalization Task
+   * - :meth:`api.workspace_personalization.personalize_a_workspace <wxc_sdk.workspace_personalization.WorkspacePersonalizationApi.personalize_a_workspace>`
+        Personalize a Workspace
    * - :meth:`api.workspace_settings.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         Configure Call Bridge Settings
    * - :meth:`api.workspace_settings.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`

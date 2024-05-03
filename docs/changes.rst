@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.19.0
+------
 - feat: DECT devices with additional operations: :class:`wxc_sdk.telephony.dect_devices.DECTDevicesApi`
 
   * :meth:`list_dect_networks <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_dect_networks>`
