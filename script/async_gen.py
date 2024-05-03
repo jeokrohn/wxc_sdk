@@ -395,6 +395,7 @@ class ClassDef:
         module_name = Module.module_name_from_path(path=path)
         for m in class_re.finditer(source):
             cd = ClassDef.register_class(module_name=module_name, source=m.group(0), **m.groupdict())
+            log.debug(f'register_class: {module_name}.{m.group("class_name")}')
             yield cd
 
 
