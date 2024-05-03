@@ -1,5 +1,4 @@
 import logging
-import re
 from collections import defaultdict
 from itertools import chain
 from typing import Literal, Any, Optional, Union, ClassVar, Generator, NamedTuple
@@ -626,7 +625,7 @@ class ApibDatastructure(ApibElement):
     A datastructure can have these childs
         * ApibEnum
         * ApibObject
-        * ApibElement - the element value is the name of the super-class in this case, the content attribute of the 
+        * ApibElement - the element value is the name of the super-class in this case, the content attribute of the
                         child then has the list of addtl. attributes
     """
 

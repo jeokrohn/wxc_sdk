@@ -8,7 +8,6 @@ Searching and viewing locations in your organization requires an administrator a
 spark-admin:people_read and spark-admin:people_write or spark-admin:device_read AND spark-admin:device_writescope
 combinations.
 """
-import json
 from collections.abc import Generator
 from typing import Optional, List
 

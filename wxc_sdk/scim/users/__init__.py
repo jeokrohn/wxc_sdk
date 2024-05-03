@@ -17,7 +17,6 @@ __all__ = ['EmailObject', 'EmailObjectType', 'ScimUser',
            'ScimPhoneNumberType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
            'UserTypeObject']
 
-
 SCHEMAS = [
     "urn:ietf:params:scim:schemas:core:2.0:User",
     "urn:scim:schemas:extension:cisco:webexidentity:2.0:User",
@@ -538,7 +537,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
             if start_index > paginated_result.total_results:
                 break
         return
-    
+
     async def search_all(self, org_id: str, filter: str = None, attributes: str = None,
                          excluded_attributes: str = None,
                          sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
@@ -578,13 +577,13 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
 
         - `id_full_admin`
         - `id_user_admin`
-        
+
         **Usage**:
 
         1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
 
         2. Support 3 schemas:
-        
+
         - "urn:ietf:params:scim:schemas:core:2.0:User"
         - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
         - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"

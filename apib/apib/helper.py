@@ -2,6 +2,7 @@ from typing import Any
 
 __all__ = ['is_element']
 
+
 def is_element(v: Any) -> bool:
     """
     Check if v is an 'element'

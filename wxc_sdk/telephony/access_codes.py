@@ -122,4 +122,3 @@ class LocationAccessCodesApi(ApiChild, base='telephony/config/locations'):
             params['orgId'] = org_id
         url = self._endpoint(location_id=location_id)
         super().delete(url, params=params)
-

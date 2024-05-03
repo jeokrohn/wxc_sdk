@@ -79,4 +79,3 @@ class CallBridgeApi(PersonSettingsApiChild):
         body = setting.model_dump(mode='json', exclude_none=True, by_alias=True)
         url = self.f_ep(entity_id)
         super().put(url, params=params, json=body)
-

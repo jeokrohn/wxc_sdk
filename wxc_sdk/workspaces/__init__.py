@@ -19,10 +19,10 @@ from typing import Optional
 from pydantic import Field
 
 from ..api_child import ApiChild
-from ..base import ApiModel, to_camel, enum_str
+from ..base import ApiModel, enum_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'WorkspaceCallingHybridCalling' ,
+__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'WorkspaceCallingHybridCalling',
            'HotdeskingStatus', 'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling',
            'WorkspaceSupportedDevices', 'WorkspaceIndoorNavigation', 'WorkspacesApi']
 
@@ -194,8 +194,8 @@ class Workspace(ApiModel):
                                              'hybrid_calling': True,
                                              # only include workspace_location_id if no location_id is given
                                              # location_id is the preferred/new way of setting the location
-                                             'workspace_location_id': not (
-                                                     self.workspace_location_id and not self.location_id),
+                                             'workspace_location_id': not (self.workspace_location_id and
+                                                                           not self.location_id),
                                              'supported_devices': for_update})
 
     @staticmethod

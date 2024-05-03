@@ -1,4 +1,4 @@
-import json
+import logging
 import logging
 import re
 from collections import defaultdict, Counter
@@ -233,14 +233,14 @@ class Endpoint:
         return None
 
     @property
-    def returns_list(self)->Optional[str]:
+    def returns_list(self) -> Optional[str]:
         """
         if endpoint is a 'list' endpoint return the base datatype of the list
         """
         if self.method != 'GET':
             return None
 
-        def attribute_list_base(a: Attribute)->Optional[str]:
+        def attribute_list_base(a: Attribute) -> Optional[str]:
             if a.referenced_class:
                 return a.referenced_class
             m = re.match(r'list\[(\S+)]', a.python_type)
@@ -873,7 +873,8 @@ class PythonClassRegistry:
         if member.element == 'select':
             sample = None
             options: list[ApibOption] = [option for option in member.content]
-            python_types = [simple_python_type(option.content.value.element, option.content.value.content) for option in options]
+            python_types = [simple_python_type(option.content.value.element, option.content.value.content) for option in
+                            options]
             python_type = f'Union[{", ".join(python_types)}]'
             docstring = None
             referenced_class = None

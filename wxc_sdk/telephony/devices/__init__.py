@@ -235,7 +235,7 @@ class ProgrammableLineKey(ApiModel):
         :param lines: number of programmable line keys
         :return: list of programmable line keys
         """
-        r = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open) for i in range(1, lines+1)]
+        r = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open) for i in range(1, lines + 1)]
         r[0].line_key_type = LineKeyType.primary_line
         return r
 

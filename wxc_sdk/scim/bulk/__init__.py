@@ -106,7 +106,7 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
            An integer specifies the number of errors that the service provider will accept before the operation is
            terminated and an error response is returned.
            It is OPTIONAL in a request.
-           Maximum number of operations allowed to fail before the server stops processing the request. The value must 
+           Maximum number of operations allowed to fail before the server stops processing the request. The value must
            be between 1 and 100.
 
         4. `operations` parameter
@@ -116,7 +116,7 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
            + `operations.method`
 
              The HTTP method of the current operation. Possible values are POST, PATCH or DELETE.
-           + `operations.path`
+           + `operations.path
 
              The Resource's relative path. If the method is POST the value must specify a Resource type endpoint;
              e.g., /Users or /Groups whereas all other method values must specify the path to a specific Resource;
@@ -134,7 +134,7 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
              resources in
              the response and cross-reference new resources in and across operations within a bulk request.
              It is REQUIRED when "method" is "POST".
-   
+
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
         :param fail_on_errors: An integer specifying the maximum number of errors that the service provider will accept
