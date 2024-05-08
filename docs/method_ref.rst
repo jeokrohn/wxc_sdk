@@ -394,7 +394,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
         Modify a person's voicemail passcode
    * - :meth:`api.person_settings.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
-        Read Voicemail Settings for a Person
+        Read Voicemail Settings for a Person or virtual line
+   * - :meth:`api.person_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
+        Reset Voicemail PIN
    * - :meth:`api.reports.create <wxc_sdk.reports.ReportsApi.create>`
         Create a new report
    * - :meth:`api.reports.delete <wxc_sdk.reports.ReportsApi.delete>`
@@ -1091,6 +1093,18 @@ The method name is a link to the method documentation.
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.telephony.virtual_lines.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
+   * - :meth:`api.telephony.virtual_lines.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
+        Configure Voicemail Settings for a Person
+   * - :meth:`api.telephony.virtual_lines.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
+        Configure Busy Voicemail Greeting for a Person
+   * - :meth:`api.telephony.virtual_lines.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
+        Configure No Answer Voicemail Greeting for a Person
+   * - :meth:`api.telephony.virtual_lines.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
+        Modify a person's voicemail passcode
+   * - :meth:`api.telephony.virtual_lines.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
+        Read Voicemail Settings for a Person or virtual line
+   * - :meth:`api.telephony.virtual_lines.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
+        Reset Voicemail PIN
    * - :meth:`api.telephony.voice_messaging.delete <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.delete>`
         Delete a specfic voicemail message for the user
    * - :meth:`api.telephony.voice_messaging.list <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.list>`

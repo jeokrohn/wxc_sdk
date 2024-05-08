@@ -5841,7 +5841,8 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
+        # feature}
         self.feature_prefix = '/features/'
         if selector == ApiSelector.workspace:
             self.selector = 'workspaces'
@@ -5881,7 +5882,8 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
+        # feature}
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
@@ -5895,6 +5897,9 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
                       ('people', 'agent'): ('telephony/config/people', '/'),
                       }
         selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
+        if selector == 'people' and self.feature == 'voicemail' and path == 'passcode':
+            # this is a new endpoint for users and is the only VM endpoint with a different URL structure
+            return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
         return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')
 
 
@@ -8046,14 +8051,14 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
 
 class AsVoicemailApi(AsPersonSettingsApiChild):
     """
-    API for person's call voicemail settings
+    API for person's call voicemail settings. Also used for virtual lines
     """
 
     feature = 'voicemail'
 
     async def read(self, person_id: str, org_id: str = None) -> VoicemailSettings:
         """
-        Read Voicemail Settings for a Person
+        Read Voicemail Settings for a Person or virtual line
         Retrieve a Person's Voicemail Settings
 
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
@@ -8065,7 +8070,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their settings.
 
-        :param person_id: Unique identifier for the person.
+        :param person_id: Unique identifier for the person or virtual line
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
@@ -8106,7 +8111,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
                             upload_as: str = None, org_id: str = None,
                             greeting_key: str):
         """
-        handled greeting configuration
+        handle greeting configuration
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -8215,8 +8220,32 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             params['orgId'] = org_id
         body = dict()
         body['passcode'] = passcode
-        url = self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
+        url = self.f_ep(person_id, 'passcode')
         await super().put(url, params=params, json=body)
+
+    async def reset_pin(self, person_id: str, org_id: str = None):
+        """
+        Reset Voicemail PIN
+
+        Reset a voicemail PIN for a person.
+
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.
+
+        This API requires a full or user administrator or location administrator auth token with
+        the`spark-admin:people_write` scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep('actions/resetPin/invoke')
+        await super().post(url, params=params)
 
 
 class AsPersonSettingsApi(AsApiChild, base='people'):
@@ -8297,7 +8326,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.people)
         self.voicemail = AsVoicemailApi(session=session)
 
-    # TODO: move to voicemail API?
+    # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
 
     async def reset_vm_pin(self, person_id: str, org_id: str = None):
         """
@@ -8309,6 +8338,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         messages via Voicemail. A voicemail PIN is used to retrieve your voicemail messages.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+
+        This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
 
         :param person_id: Unique identifier for the person.
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
@@ -16959,6 +16990,8 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     permissions_in: AsIncomingPermissionsApi
     #: outgoing permissions
     permissions_out: AsOutgoingPermissionsApi
+    #: Voicemail Settings
+    voicemail: AsVoicemailApi
 
     def __init__(self, session):
         super().__init__(session=session)
@@ -16971,6 +17004,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
     async def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
                phone_number: str = None, extension: str = None, caller_id_last_name: str = None,

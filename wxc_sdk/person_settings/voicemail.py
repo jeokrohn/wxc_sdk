@@ -88,14 +88,14 @@ class XForwardingSetting:
 
 class VoicemailApi(PersonSettingsApiChild):
     """
-    API for person's call voicemail settings
+    API for person's call voicemail settings. Also used for virtual lines
     """
 
     feature = 'voicemail'
 
     def read(self, person_id: str, org_id: str = None) -> VoicemailSettings:
         """
-        Read Voicemail Settings for a Person
+        Read Voicemail Settings for a Person or virtual line
         Retrieve a Person's Voicemail Settings
 
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
@@ -107,7 +107,7 @@ class VoicemailApi(PersonSettingsApiChild):
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their settings.
 
-        :param person_id: Unique identifier for the person.
+        :param person_id: Unique identifier for the person or virtual line
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
@@ -148,7 +148,7 @@ class VoicemailApi(PersonSettingsApiChild):
                             upload_as: str = None, org_id: str = None,
                             greeting_key: str):
         """
-        handled greeting configuration
+        handle greeting configuration
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -257,5 +257,29 @@ class VoicemailApi(PersonSettingsApiChild):
             params['orgId'] = org_id
         body = dict()
         body['passcode'] = passcode
-        url = self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
+        url = self.f_ep(person_id, 'passcode')
         super().put(url, params=params, json=body)
+
+    def reset_pin(self, person_id: str, org_id: str = None):
+        """
+        Reset Voicemail PIN
+
+        Reset a voicemail PIN for a person.
+
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.
+
+        This API requires a full or user administrator or location administrator auth token with
+        the`spark-admin:people_write` scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep('actions/resetPin/invoke')
+        super().post(url, params=params)

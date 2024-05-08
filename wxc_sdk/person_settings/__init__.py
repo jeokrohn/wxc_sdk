@@ -185,7 +185,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.people)
         self.voicemail = VoicemailApi(session=session)
 
-    # TODO: move to voicemail API?
+    # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
     def reset_vm_pin(self, person_id: str, org_id: str = None):
         """
         Reset Voicemail PIN
@@ -196,6 +196,8 @@ class PersonSettingsApi(ApiChild, base='people'):
         messages via Voicemail. A voicemail PIN is used to retrieve your voicemail messages.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+
+        This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
 
         :param person_id: Unique identifier for the person.
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
