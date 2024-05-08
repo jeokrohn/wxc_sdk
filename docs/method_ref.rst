@@ -251,12 +251,12 @@ The method name is a link to the method documentation.
         Get all devices for a person
    * - :meth:`api.person_settings.reset_vm_pin <wxc_sdk.person_settings.PersonSettingsApi.reset_vm_pin>`
         Reset Voicemail PIN
-   * - :meth:`api.person_settings.agent_caller_id.available_queues <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_queues>`
-        Retrieve the list of the person's available call queues and the associated Caller ID information
+   * - :meth:`api.person_settings.agent_caller_id.available_caller_ids <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_caller_ids>`
+        Retrieve Agent's List of Available Caller IDs
+   * - :meth:`api.person_settings.agent_caller_id.configure <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.configure>`
+        Modify Agent's Caller ID Information
    * - :meth:`api.person_settings.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
-        Retrieve a call queue agent's Caller ID information
-   * - :meth:`api.person_settings.agent_caller_id.update <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.update>`
-        Modify a call queue agent's Caller ID information
+        Retrieve Agent's Caller ID Information
    * - :meth:`api.person_settings.appservices.configure <wxc_sdk.person_settings.appservices.AppServicesApi.configure>`
         Modify a Person's Application Services Settings
    * - :meth:`api.person_settings.appservices.read <wxc_sdk.person_settings.appservices.AppServicesApi.read>`
@@ -1023,6 +1023,12 @@ The method name is a link to the method documentation.
         Update a Virtual Line
    * - :meth:`api.telephony.virtual_lines.update_directory_search <wxc_sdk.telephony.virtual_line.VirtualLinesApi.update_directory_search>`
         Update Directory search for a Virtual Line
+   * - :meth:`api.telephony.virtual_lines.agent_caller_id.available_caller_ids <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_caller_ids>`
+        Retrieve Agent's List of Available Caller IDs
+   * - :meth:`api.telephony.virtual_lines.agent_caller_id.configure <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.configure>`
+        Modify Agent's Caller ID Information
+   * - :meth:`api.telephony.virtual_lines.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
+        Retrieve Agent's Caller ID Information
    * - :meth:`api.telephony.virtual_lines.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         Configure Call Bridge Settings
    * - :meth:`api.telephony.virtual_lines.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`

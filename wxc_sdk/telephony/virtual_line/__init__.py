@@ -8,7 +8,7 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import PrimaryOrShared, AssignedDectNetwork
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice
+from ...person_settings import TelephonyDevice, AgentCallerIdApi
 from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.call_recording import CallRecordingApi
@@ -128,6 +128,8 @@ class VirtualLineDevices(ApiModel):
 
 @dataclass(init=False)
 class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
+    #: agent caller id Api
+    agent_caller_id: AgentCallerIdApi
     #: Call bridge settings
     call_bridge: CallBridgeApi
     #: call intercept settings
@@ -147,6 +149,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
 
     def __init__(self, session):
         super().__init__(session=session)
+        self.agent_caller_id = AgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.virtual_line)
         self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)

@@ -16941,6 +16941,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
 
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
+    #: agent caller id Api
+    agent_caller_id: AsAgentCallerIdApi
     #: Call bridge settings
     call_bridge: AsCallBridgeApi
     #: call intercept settings
@@ -16960,6 +16962,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
 
     def __init__(self, session):
         super().__init__(session=session)
+        self.agent_caller_id = AsAgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.virtual_line)
         self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)

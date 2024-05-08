@@ -3,6 +3,7 @@ Release history
 
 - feat: new attribute :attr:`Privacy.enable_phone_status_pickup_barge_in_privacy  <wxc_sdk.person_settings.privacy.Privacy>`
 - break: in line with the breaking change `announced on April 2nd, 2024 <https://developer.webex.com/docs/api/changelog>`_ signature and implementation of :class:`api.person_settings.agent_caller_id <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi>` changed.
+- feat: agent caller id API for virtual lines :attr:`api.telephony.virtual_lines.agent_caller_id <wxc_sdk.telephony.virtual_line.VirtualLinesApi.agent_caller_id>`
 
 1.19.0
 ------
