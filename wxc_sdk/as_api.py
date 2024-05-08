@@ -65,17 +65,18 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
            'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
            'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
-           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
-           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
-           'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
-           'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
-           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
-           'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi',
+           'AsPersonSettingsApiChild', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi',
+           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
+           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi',
+           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
+           'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi',
+           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -5895,11 +5896,12 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
                       ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
                       ('people', 'callBridge'): ('telephony/config/people', '/features/'),
                       ('people', 'agent'): ('telephony/config/people', '/'),
+                      ('people', 'musicOnHold'): ('telephony/config/people', '/'),
                       }
-        selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
         if selector == 'people' and self.feature == 'voicemail' and path == 'passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
+        selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
         return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')
 
 
@@ -6843,6 +6845,65 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
                     id_list.append(me.member and me.member.member_id or me.cpe and me.cpe.cpe_id)
             data['monitoredElements'] = id_list
         await self.put(ep, params=params, json=data)
+
+
+class AsMusicOnHoldApi(AsPersonSettingsApiChild):
+
+    feature = 'musicOnHold'
+
+    async def read(self, entity_id: str, org_id: str = None) -> MusicOnHold:
+        """
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace.
+
+        Retrieve the music on hold settings.
+
+        Music on hold is played when a caller is put on hold, or the call is parked.
+
+        Retrieving a person's music on hold settings requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`GetMusicOnHoldObject`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = MusicOnHold.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: MusicOnHold,
+                  org_id: str = None):
+        """
+        Configure Music On Hold Settings for a Personvirtual line, or workspace.
+
+        Configure music on hold settings.
+
+        Music on hold is played when a caller is put on hold, or the call is parked.
+
+        To configure music on hold settings for a person, music on hold setting must be enabled for this location.
+
+        Updating a person's music on hold settings requires a full or user administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace.
+        :type entity_id: str
+        :param settings: new MOH settings
+        :type settings: MusicOnHold
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
 
 
 class AsNumbersApi(AsPersonSettingsApiChild):
@@ -8281,6 +8342,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     hoteling: AsHotelingApi
     #: Person's Monitoring Settings
     monitoring: AsMonitoringApi
+    #: music on hold settings
+    music_on_hold: AsMusicOnHoldApi
     #: Phone Numbers for a Person
     numbers: AsNumbersApi
     #: Incoming Permission Settings for a Person
@@ -8316,6 +8379,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.forwarding = AsPersonForwardingApi(session=session)
         self.hoteling = AsHotelingApi(session=session)
         self.monitoring = AsMonitoringApi(session=session)
+        self.music_on_hold = AsMusicOnHoldApi(session=session)
         self.numbers = AsNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session)
@@ -16986,6 +17050,8 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     caller_id: AsCallerIdApi
     #: forwarding settings
     forwarding: AsPersonForwardingApi
+    #: music on hold settings
+    music_on_hold: AsMusicOnHoldApi
     #: incoming permissions
     permissions_in: AsIncomingPermissionsApi
     #: outgoing permissions
@@ -17002,6 +17068,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
+        self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.virtual_line)

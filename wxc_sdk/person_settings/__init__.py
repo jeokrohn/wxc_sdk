@@ -19,6 +19,7 @@ from .dnd import DndApi
 from .exec_assistant import ExecAssistantApi
 from .forwarding import PersonForwardingApi
 from .hoteling import HotelingApi
+from .moh import MusicOnHoldApi
 from .monitoring import MonitoringApi
 from .numbers import NumbersApi
 from .permissions_in import IncomingPermissionsApi
@@ -140,6 +141,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     hoteling: HotelingApi
     #: Person's Monitoring Settings
     monitoring: MonitoringApi
+    #: music on hold settings
+    music_on_hold: MusicOnHoldApi
     #: Phone Numbers for a Person
     numbers: NumbersApi
     #: Incoming Permission Settings for a Person
@@ -175,6 +178,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.forwarding = PersonForwardingApi(session=session)
         self.hoteling = HotelingApi(session=session)
         self.monitoring = MonitoringApi(session=session)
+        self.music_on_hold = MusicOnHoldApi(session=session)
         self.numbers = NumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session)

@@ -313,6 +313,10 @@ The method name is a link to the method documentation.
         Configure Call Waiting Settings for a Person
    * - :meth:`api.person_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
         Retrieve a Person's Monitoring Settings
+   * - :meth:`api.person_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
+        Configure Music On Hold Settings for a Personvirtual line, or workspace
+   * - :meth:`api.person_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace
    * - :meth:`api.person_settings.numbers.read <wxc_sdk.person_settings.numbers.NumbersApi.read>`
         Get a person's phone numbers including alternate numbers
    * - :meth:`api.person_settings.numbers.update <wxc_sdk.person_settings.numbers.NumbersApi.update>`
@@ -1059,6 +1063,10 @@ The method name is a link to the method documentation.
         Configure an Entity's Call Forwarding Settings
    * - :meth:`api.telephony.virtual_lines.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
         Retrieve an entity's Call Forwarding Settings
+   * - :meth:`api.telephony.virtual_lines.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
+        Configure Music On Hold Settings for a Personvirtual line, or workspace
+   * - :meth:`api.telephony.virtual_lines.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace
    * - :meth:`api.telephony.virtual_lines.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
         Configure incoming permissions settings
    * - :meth:`api.telephony.virtual_lines.permissions_in.read <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.read>`

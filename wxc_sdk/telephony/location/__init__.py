@@ -73,6 +73,8 @@ class TelephonyLocation(ApiModel):
     enforce_outside_dial_digit: Optional[bool] = None
     # TODO: undocumented
     subscription_id: Optional[str] = None
+    # TODO: undocumented, item 169
+    carrier_account_id: Optional[str] = None
 
     def update(self) -> dict:
         """

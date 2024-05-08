@@ -17,6 +17,7 @@ from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.common import ApiSelector
 from ...person_settings.forwarding import PersonForwardingApi
+from ...person_settings.moh import MusicOnHoldApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
 from ...person_settings.voicemail import VoicemailApi
@@ -144,6 +145,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     caller_id: CallerIdApi
     #: forwarding settings
     forwarding: PersonForwardingApi
+    #: music on hold settings
+    music_on_hold: MusicOnHoldApi
     #: incoming permissions
     permissions_in: IncomingPermissionsApi
     #: outgoing permissions
@@ -160,6 +163,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
+        self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.voicemail = VoicemailApi(session=session, selector=ApiSelector.virtual_line)

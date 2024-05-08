@@ -5,6 +5,8 @@ Release history
 - break: in line with the breaking change `announced on April 2nd, 2024 <https://developer.webex.com/docs/api/changelog>`_ signature and implementation of :class:`api.person_settings.agent_caller_id <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi>` changed.
 - feat: agent caller id API for virtual lines :attr:`api.telephony.virtual_lines.agent_caller_id <wxc_sdk.telephony.virtual_line.VirtualLinesApi.agent_caller_id>`
 - feat: voicemail API for virtual lines :attr:`api.telephony.virtual_lines.voicemail <wxc_sdk.telephony.virtual_line.VirtualLinesApi.voicemail>`
+- feat: MoH settings API for users :attr:`api.telephony.person_settings.music_on_hold <wxc_sdk.person_settings.PersonSettingsApi.music_on_hold>`
+- feat: MoH API for virtual lines :attr:`api.telephony.virtual_lines.music_on_hold <wxc_sdk.telephony.virtual_line.VirtualLinesApi.music_on_hold>`
 
 1.19.0
 ------

@@ -80,6 +80,7 @@ from wxc_sdk.person_settings.dnd import DND
 from wxc_sdk.person_settings.exec_assistant import ExecAssistantType, _Helper
 from wxc_sdk.person_settings.forwarding import CallForwardingAlways, CallForwardingCommon, CallForwardingNoAnswer, \
     CallForwardingPerson, PersonForwardingSetting
+from wxc_sdk.person_settings.moh import MusicOnHold
 from wxc_sdk.person_settings.monitoring import MonitoredElement, MonitoredElementMember, Monitoring
 from wxc_sdk.person_settings.numbers import PersonNumbers, PersonPhoneNumber, UpdatePersonNumbers, \
     UpdatePersonPhoneNumber
@@ -240,11 +241,11 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony', 'MeetingType',
            'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message', 'MessageAttachment',
            'MessageSummary', 'MessagesData', 'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember',
-           'MonitoredMember', 'Monitoring', 'MoveNumberCounts', 'MppCustomization', 'MppVlanDevice', 'NameObject',
-           'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation', 'NoteType',
-           'Notification', 'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberItem',
-           'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState',
-           'NumberType', 'OfficeNumber', 'OnboardingMethod', 'OrgComplianceAnnouncement',
+           'MonitoredMember', 'Monitoring', 'MoveNumberCounts', 'MppCustomization', 'MppVlanDevice', 'MusicOnHold',
+           'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation',
+           'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails',
+           'NumberItem', 'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner',
+           'NumberState', 'NumberType', 'OfficeNumber', 'OnboardingMethod', 'OrgComplianceAnnouncement',
            'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
            'OutboundProxy', 'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting',
            'OwnerType', 'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst',
