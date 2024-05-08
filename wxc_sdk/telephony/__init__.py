@@ -22,6 +22,7 @@ from .huntgroup import HuntGroupApi
 from .jobs import JobsApi
 from .location import TelephonyLocationApi
 from .location.intercept import LocationInterceptApi
+from .org_access_codes import OrganisationAccessCodesApi
 from .organisation_vm import OrganisationVoicemailSettingsAPI
 from .paging import PagingApi
 from .pnc import PrivateNetworkConnectApi
@@ -84,7 +85,7 @@ class NumberListPhoneNumber(ApiModel):
     phone_number_type: Optional[NumberListPhoneNumberType] = None
     #: Indicates if the phone number is used as location clid.
     main_number: bool
-    #: Indicates if a phone number is a toll free number.
+    #: Indicates if a phone number is a toll-free number.
     toll_free_number: bool
     #: Indicates Telephony type for the number.
     #: example: MOBILE_NUMBER
@@ -506,9 +507,12 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     #: location specific settings
     location: TelephonyLocationApi
     locations: TelephonyLocationApi
+    #: organisation access codes
+    organisation_access_codes: OrganisationAccessCodesApi
     #: organisation voicemail settings
     organisation_voicemail: OrganisationVoicemailSettingsAPI
     paging: PagingApi
+    #: location level outgoing permissions
     permissions_out: OutgoingPermissionsApi
     pickup: CallPickupApi
     prem_pstn: PremisePstnApi
@@ -538,6 +542,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.jobs = JobsApi(session=session)
         self.location = TelephonyLocationApi(session=session)
         self.locations = self.location
+        self.organisation_access_codes = OrganisationAccessCodesApi(session=session)
         self.organisation_voicemail = OrganisationVoicemailSettingsAPI(session=session)
         self.paging = PagingApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.location)

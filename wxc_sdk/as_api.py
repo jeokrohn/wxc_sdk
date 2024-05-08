@@ -65,17 +65,18 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
            'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
            'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
-           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
-           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
-           'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
-           'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
-           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
-           'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsNumbersApi', 'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi',
+           'AsPersonSettingsApiChild', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi',
+           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
+           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi',
+           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
+           'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi',
+           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -13973,6 +13974,103 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         await self.put(ep, params=params, data=data)
 
 
+class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPermission/accessCodes'):
+    """
+    Viewing an organisation requires a full, user or read-only administrator auth token with a scope
+    of `spark-admin:telephony_config_read.
+    """
+
+    def list_gen(self, org_id: str = None) -> AsyncGenerator[AuthCode, None, None]:
+        """
+        Retrieve the organisation's access codes.
+
+        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
+        to bypass outgoing or incoming calling permissions.
+
+        This API requires a full, user or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read
+
+        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
+            parameter as the default is the same organisation as the token used to access the API.
+        :type org_id: str
+        :rtype: list[AuthorizationCode]
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=AuthCode, params=params,
+                                              item_key='accessCodes')
+
+    async def list(self, org_id: str = None) -> List[AuthCode]:
+        """
+        Retrieve the organisation's access codes.
+
+        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
+        to bypass outgoing or incoming calling permissions.
+
+        This API requires a full, user or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read
+
+        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
+            parameter as the default is the same organisation as the token used to access the API.
+        :type org_id: str
+        :rtype: list[AuthorizationCode]
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=AuthCode, params=params,
+                                              item_key='accessCodes')]
+
+    async def delete(self, delete_codes: List[str] = None,
+               org_id: str = None):
+        """
+        Delete Outgoing Permission Access Code for an Organisation
+
+        Deletes the access code details for a particular organisation and max limit is 10k per request.
+
+        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
+        to bypass outgoing or incoming calling permissions.
+
+        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param delete_codes: Indicates access codes to delete.
+        :type delete_codes: list[str]
+        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
+            parameter as the default is the same organisation as the token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = dict()
+        if delete_codes is not None:
+            body['deleteCodes'] = delete_codes
+        url = self.ep()
+        await super().put(url, params=params, json=body)
+
+    async def create(self, access_codes: List[AuthCode], org_id: str = None):
+        """
+        Create Access Codes for an Organisation
+
+        Create new access codes for the organisation and max limit is 10k per request.
+
+        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
+        to bypass outgoing or incoming calling permissions.
+
+        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param access_codes: Indicates the set of activation codes and description.
+        :type access_codes: list[AuthCode]
+        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
+            parameter as the default is the same organisation as the token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = dict()
+        body['accessCodes'] = [ac.create() for ac in access_codes]
+        url = self.ep()
+        await super().post(url, params=params, json=body)
+
+
 class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voicemail/settings'):
     """
     API for Organisation voicemail settings
@@ -17818,9 +17916,12 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     #: location specific settings
     location: AsTelephonyLocationApi
     locations: AsTelephonyLocationApi
+    #: organisation access codes
+    organisation_access_codes: AsOrganisationAccessCodesApi
     #: organisation voicemail settings
     organisation_voicemail: AsOrganisationVoicemailSettingsAPI
     paging: AsPagingApi
+    #: location level outgoing permissions
     permissions_out: AsOutgoingPermissionsApi
     pickup: AsCallPickupApi
     prem_pstn: AsPremisePstnApi
@@ -17850,6 +17951,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
         self.locations = self.location
+        self.organisation_access_codes = AsOrganisationAccessCodesApi(session=session)
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.location)
