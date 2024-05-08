@@ -21,6 +21,9 @@ class Privacy(ApiModel):
     aa_naming_dialing_enabled: Optional[bool] = None
     #: When true phone status directory privacy will be enabled.
     enable_phone_status_directory_privacy: Optional[bool] = None
+    #: When `true` privacy is enforced for call pickup and barge-in. Only people specified by `monitoringAgents` can
+    #: pick up the call or barge in by dialing the extension.
+    enable_phone_status_pickup_barge_in_privacy: Optional[bool] = None
     #: List of people that are being monitored.
     #: for updates IDs can be used directly instead of :class:`wxc_sdk.common.PersonPlaceAgent` objects
     monitoring_agents: Optional[list[Union[str, PersonPlaceAgent]]] = None

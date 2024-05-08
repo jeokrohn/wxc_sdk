@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new attribute :attr:`Privacy.enable_phone_status_pickup_barge_in_privacy  <wxc_sdk.person_settings.privacy.Privacy>`
+
 1.19.0
 ------
 - feat: DECT devices with additional operations: :class:`wxc_sdk.telephony.dect_devices.DECTDevicesApi`
