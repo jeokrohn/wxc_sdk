@@ -183,12 +183,13 @@ class Workspace(ApiModel):
 
     def update_or_create(self, for_update: bool = False) -> str:
         """
-        JSON for update ot create
+        JSON for update or create
 
         :meta private:
         """
         # supported device cannot be changed later
         return self.model_dump_json(exclude={'workspace_id': True,
+                                             'org_id': True,
                                              'sip_address': True,
                                              'created': True,
                                              'hybrid_calling': True,

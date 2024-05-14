@@ -499,11 +499,10 @@ class TestCreate(TestWithLocations):
             # get an extension in location
             extension = next(available_extensions_gen(api=self.api,
                                                       location_id=target_location.location_id))
-
             # get a name for new workspace
             name = next(new_workspace_names(api=self.api))
 
-        # create workspace w/o calling 1st
+        # create workspace w calling 1st
         print(f'Creating workspace "{name}"')
 
         new_workspace = Workspace(

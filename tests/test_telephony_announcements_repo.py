@@ -242,7 +242,6 @@ class Repo(TestWithLocations):
             await api.telephony.announcements_repo.delete(announcement_id='jhgfdghj')
 
 
-@skip('Asked to stop testing by Bob Russel')
 class RepoUsage(TestWithLocations):
     """
     Tests with references to announcements
