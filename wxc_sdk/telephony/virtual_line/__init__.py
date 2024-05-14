@@ -9,12 +9,13 @@ from ...base import ApiModel
 from ...common import PrimaryOrShared, AssignedDectNetwork
 from ...locations import LocationAddress
 from ...person_settings import TelephonyDevice
-from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.call_recording import CallRecordingApi
 from ...person_settings.call_waiting import CallWaitingApi
+from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.common import ApiSelector
+from ...person_settings.ecbn import UserEmergencyServicesApi
 from ...person_settings.forwarding import PersonForwardingApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
@@ -138,6 +139,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     call_waiting: CallWaitingApi
     #: caller id settings
     caller_id: CallerIdApi
+    #: ECBN settings
+    ecbn: UserEmergencyServicesApi
     #: forwarding settings
     forwarding: PersonForwardingApi
     #: incoming permissions
@@ -152,6 +155,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.ecbn = UserEmergencyServicesApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)

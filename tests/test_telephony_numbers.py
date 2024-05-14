@@ -1,12 +1,13 @@
 """
 Unit test for numbers
 """
+import base64
 import random
 from dataclasses import dataclass, field
 from typing import ClassVar, Optional
 
 from wxc_sdk.all_types import *
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, TestCaseWithUsers
 from tests.testutil import LocationInfo, us_location_info, available_tns
 from wxc_sdk.telephony import TelephonyType
 
@@ -43,6 +44,36 @@ class TestNumbers(TestCaseWithLog):
     def test_006_included_mobile(self):
         numbers = list(self.api.telephony.phone_numbers(included_telephony_type=TelephonyType.mobile_number))
         print(f'Got {len(numbers)} mobile numbers')
+
+
+class TestNumberConsistency(TestCaseWithUsers):
+    def test_number_consistency(self):
+        numbers = self.api.telephony.phone_numbers(number_type=NumberType.number, owner_type=OwnerType.people)
+        locations = {loc.location_id:loc for loc in self.api.locations.list()}
+        err = False
+        for number in numbers:
+            print(f'number: {number.phone_number}')
+            # owner has to be a person
+            if not number.owner:
+                print(' - no owner')
+                err = True
+                continue
+            if number.owner.owner_type != OwnerType.people:
+                print(f' - wrong owner type: {number.owner.owner_type}')
+                err = True
+                continue
+            number_location_id = number.location.id
+            person = next(user for user in self.users if user.person_id == number.owner.owner_id)
+            if person.location_id != number_location_id:
+                print(f'  - person location id ({base64.b64decode(person.location_id+"==").decode()}) does not match'
+                      f' number location id ({base64.b64decode(number_location_id+"==").decode()})')
+                print(f'    Person: "{person.display_name}" in "{locations[person.location_id].name}"')
+                print(f'    Number location: "{locations[number_location_id].name}"')
+
+                err = True
+        self.assertFalse(err)
+
+        ...
 
 
 class TestValidateExtensions(TestCaseWithLog):

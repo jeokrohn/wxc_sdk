@@ -7,11 +7,12 @@ from dataclasses import dataclass
 from .devices import WorkspaceDevicesApi
 from .numbers import WorkspaceNumbersApi
 from ..api_child import ApiChild
-from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.call_intercept import CallInterceptApi
 from ..person_settings.call_waiting import CallWaitingApi
+from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.caller_id import CallerIdApi
 from ..person_settings.common import ApiSelector
+from ..person_settings.ecbn import UserEmergencyServicesApi
 from ..person_settings.forwarding import PersonForwardingApi
 from ..person_settings.monitoring import MonitoringApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
@@ -35,6 +36,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     call_waiting: CallWaitingApi
     caller_id: CallerIdApi
     devices: WorkspaceDevicesApi
+    ecbn: UserEmergencyServicesApi
     forwarding: PersonForwardingApi
     monitoring: MonitoringApi
     numbers: WorkspaceNumbersApi
@@ -48,6 +50,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.workspace)
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.workspace)
         self.devices = WorkspaceDevicesApi(session=session)
+        self.ecbn = UserEmergencyServicesApi(session=session, selector=ApiSelector.workspace)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.workspace)
         self.monitoring = MonitoringApi(session=session, selector=ApiSelector.workspace)
         self.numbers = WorkspaceNumbersApi(session=session)

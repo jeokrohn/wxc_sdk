@@ -2,6 +2,12 @@ Release history
 ===============
 
 - feat: new attribute :attr:`Privacy.enable_phone_status_pickup_barge_in_privacy  <wxc_sdk.person_settings.privacy.Privacy>`
+- feat: new API, organisation level emergency settings :attr:`api.telephony.emergency_services <wxc_sdk.telephony.TelephonyApi.emergency_services>`
+- feat: new API, location level emergency settings :attr:`api.telephony.location.emergency_services <wxc_sdk.telephony.location.TelephonyLocationApi.emergency_services>`
+- feat: new API, user ECBN settings :attr:`api.person_settings.ecbn <wxc_sdk.person_settings.PersonSettingsApi.ecbn>`
+- feat: new API, virtual line ECBN settings :attr:`api.telephony.virtual_lines.ecbn <wxc_sdk.telephony.virtual_line.VirtualLinesApi.ecbn>`
+- feat: new API, workspace ECBN settings :attr:`api.workspace_settings.ecbn <wxc_sdk.workspace_settings.WorkspaceSettingsApi.ecbn>`
+
 
 1.19.0
 ------
