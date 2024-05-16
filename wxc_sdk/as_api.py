@@ -55,11 +55,11 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsAnnouncementsRepositoryApi', 'AsApiChild', 'AsAppServicesApi', 'AsApplyLineKeyTemplatesJobsApi',
            'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
            'AsCallBridgeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
-           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi',
-           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
-           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
-           'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
-           'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
+           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi',
+           'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi',
+           'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi',
+           'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
            'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationInterceptApi',
            'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
            'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
@@ -72,10 +72,11 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
            'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
            'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -11768,6 +11769,209 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         await super().put(url, params=params, json=body)
 
 
+class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/translationPatterns'):
+    """
+    Translation Patterns
+
+    A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls only.
+
+    Call routing supports translation patterns at the organization level.
+
+    Viewing these translation patterns for an organization requires a full or read-only administrator auth token with a
+    scope of `spark-admin:telephony_config_read`.
+
+    Modifying these translation patterns for an organization requires a full administrator auth token with a scope
+    of `spark-admin:telephony_config_write`.
+    """
+
+    async def create(self, pattern: TranslationPattern,
+               org_id: str = None) -> str:
+        """
+        Create a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Create a translation pattern for a given organization.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param pattern: Translation pattern to create
+        :type pattern: TranslationPattern
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = pattern.create_update()
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def list_gen(self, limit_to_location_id: str = None,
+             limit_to_org_level_enabled: bool = None, name: str = None,
+             matching_pattern: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[TranslationPattern, None, None]:
+        """
+        Retrieve a list of Translation Patterns
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve a list of translation patterns for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: bool
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternGet` instances
+        """
+        params = org_id and {'orgId': org_id} or None
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
+                                              params=params)
+
+    async def list(self, limit_to_location_id: str = None,
+             limit_to_org_level_enabled: bool = None, name: str = None,
+             matching_pattern: str = None, org_id: str = None,
+             **params) -> List[TranslationPattern]:
+        """
+        Retrieve a list of Translation Patterns
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve a list of translation patterns for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: bool
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternGet` instances
+        """
+        params = org_id and {'orgId': org_id} or None
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
+                                              params=params)]
+
+    async def details(self, translation_id: str,
+                org_id: str = None) -> TranslationPattern:
+        """
+        Retrieve the details of a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve the details of a translation pattern for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param translation_id: Retrieve the translation pattern with the matching ID.
+        :type translation_id: str
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: :class:`TranslationPattern`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{translation_id}')
+        data = await super().get(url, params=params)
+        r = TranslationPattern.model_validate(data)
+        return r
+
+    async def update(self, pattern: TranslationPattern, org_id: str = None):
+        """
+        Modify a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Modify a translation pattern for a given organization.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param pattern: Translation pattern to be updated
+        :type pattern: TranslationPattern
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = pattern.create_update()
+        url = self.ep(f'{pattern.id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete(self, translation_id: str, org_id: str = None):
+        """
+        Delete a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Delete a translation pattern for a given organization.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param translation_id: Delete a translation pattern with the matching ID.
+        :type translation_id: str
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{translation_id}')
+        await super().delete(url, params=params)
+
+
+@dataclass(init=False)
+class AsCallRoutingApi(AsApiChild, base='telephony/config'):
+    """
+    Call Routing Api
+    """
+    #: translation patterns
+    tp: AsTranslationPatternsApi
+
+    def __init__(self, session: AsRestSession):
+        super().__init__(session=session)
+        self.tp = AsTranslationPatternsApi(session=session)
+
+
 class AsCallparkExtensionApi(AsApiChild, base='telephony'):
     """
     Call Park Extension API
@@ -17805,6 +18009,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     auto_attendant: AsAutoAttendantApi
     #: location call intercept settings
     call_intercept: AsLocationInterceptApi
+    call_routing: AsCallRoutingApi
     calls: AsCallsApi
     callpark: AsCallParkApi
     callpark_extension: AsCallparkExtensionApi
@@ -17839,6 +18044,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.announcements_repo = AsAnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AsAutoAttendantApi(session=session)
         self.call_intercept = AsLocationInterceptApi(session=session)
+        self.call_routing = AsCallRoutingApi(session=session)
         self.call_recording = AsCallRecordingSettingsApi(session=session)
         self.calls = AsCallsApi(session=session)
         self.callpark = AsCallParkApi(session=session)

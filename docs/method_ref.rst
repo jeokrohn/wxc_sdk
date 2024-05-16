@@ -553,6 +553,16 @@ The method name is a link to the method documentation.
         Update the organization compliance announcement
    * - :meth:`api.telephony.call_recording.update_terms_of_service <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_terms_of_service>`
         Update Call Recording Terms Of Service Settings
+   * - :meth:`api.telephony.call_routing.tp.create <wxc_sdk.telephony.call_routing.translation_pattern.TranslationPatternsApi.create>`
+        Create a Translation Pattern
+   * - :meth:`api.telephony.call_routing.tp.delete <wxc_sdk.telephony.call_routing.translation_pattern.TranslationPatternsApi.delete>`
+        Delete a Translation Pattern
+   * - :meth:`api.telephony.call_routing.tp.details <wxc_sdk.telephony.call_routing.translation_pattern.TranslationPatternsApi.details>`
+        Retrieve the details of a Translation Pattern
+   * - :meth:`api.telephony.call_routing.tp.list <wxc_sdk.telephony.call_routing.translation_pattern.TranslationPatternsApi.list>`
+        Retrieve a list of Translation Patterns
+   * - :meth:`api.telephony.call_routing.tp.update <wxc_sdk.telephony.call_routing.translation_pattern.TranslationPatternsApi.update>`
+        Modify a Translation Pattern
    * - :meth:`api.telephony.callpark.available_agents <wxc_sdk.telephony.callpark.CallParkApi.available_agents>`
         Get available agents from Call Parks
    * - :meth:`api.telephony.callpark.available_recalls <wxc_sdk.telephony.callpark.CallParkApi.available_recalls>`

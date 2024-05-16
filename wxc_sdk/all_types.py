@@ -116,6 +116,7 @@ from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, 
     AutoAttendantMenu, Dialing, MenuKey
 from wxc_sdk.telephony.call_recording import CallRecordingInfo, CallRecordingTermsOfService, \
     LocationComplianceAnnouncement, OrgComplianceAnnouncement
+from wxc_sdk.telephony.call_routing.translation_pattern import TranslationPattern
 from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallParkRecall, CallParkSettings, \
     LocationCallParkSettings, RecallHuntGroup
 from wxc_sdk.telephony.callpickup import CallPickup, PickupNotificationType
@@ -277,9 +278,9 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'TelephonyDeviceOwner', 'TelephonyDeviceProxy', 'TelephonyEvent', 'TelephonyEventData',
            'TelephonyLocation', 'TelephonyParty', 'TelephonyType', 'TestCallRoutingResult', 'Tokens', 'TrackingCode',
            'TrackingCodeItem', 'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet',
-           'TranscriptStatus', 'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType',
-           'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',
-           'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
+           'TranscriptStatus', 'TranslationPattern', 'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail',
+           'TrunkDeviceType', 'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile',
+           'UnansweredCalls', 'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
            'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers',
            'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody',
            'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserLicensesResponse',

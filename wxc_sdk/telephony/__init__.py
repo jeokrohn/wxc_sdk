@@ -11,6 +11,7 @@ from .access_codes import LocationAccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
 from .call_recording import CallRecordingSettingsApi
+from .call_routing import CallRoutingApi
 from .callpark import CallParkApi
 from .callpark_extension import CallparkExtensionApi
 from .callpickup import CallPickupApi
@@ -493,6 +494,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     auto_attendant: AutoAttendantApi
     #: location call intercept settings
     call_intercept: LocationInterceptApi
+    call_routing: CallRoutingApi
     calls: CallsApi
     callpark: CallParkApi
     callpark_extension: CallparkExtensionApi
@@ -527,6 +529,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.announcements_repo = AnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.call_intercept = LocationInterceptApi(session=session)
+        self.call_routing = CallRoutingApi(session=session)
         self.call_recording = CallRecordingSettingsApi(session=session)
         self.calls = CallsApi(session=session)
         self.callpark = CallParkApi(session=session)
