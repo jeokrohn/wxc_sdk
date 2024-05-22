@@ -1,3 +1,5 @@
+import random
+import re
 from itertools import zip_longest
 from operator import attrgetter
 
@@ -20,7 +22,7 @@ class TestOrgAccessCodes(TestCaseWithLog):
         """
         list access codes and check pagination
         """
-        access_codes =  list(self.api.telephony.organisation_access_codes.list())
+        access_codes = list(self.api.telephony.organisation_access_codes.list())
         print(f'{len(access_codes)} access codes')
         self.print_requests()
 
@@ -67,6 +69,8 @@ class TestOrgAccessCodes(TestCaseWithLog):
         new_codes = (AuthCode(code=c, description=f'auth code {c}')
                      for i in range(1, 200000)
                      if (c := f'1{i:06}') not in existing)
+
+        # create new access codes so that we end up having 100 k access codes
         to_create = [next(new_codes) for _ in range(100000 - len(existing))]
         nci = iter(to_create)
         batches = [b for b in zip_longest(*([nci] * 10000))]
@@ -82,14 +86,27 @@ class TestOrgAccessCodes(TestCaseWithLog):
                 api.delete(delete_codes=[ac.code for ac in batch if ac is not None])
 
     def test_delete_all(self):
+        """
+        Delete all access codes in batches of 2000
+        """
         api = self.api.telephony.organisation_access_codes
         existing = list(api.list())
         ex_iter = iter(existing)
         batch_size = 2000
-        batches = [b for b in zip_longest(*([ex_iter] * 2000))]
+        batches = [b for b in zip_longest(*([ex_iter] * batch_size))]
         for batch in batches:
             api.delete([ac.code for ac in batch if ac])
         after = list(api.list())
+
+        # print summary of delete codes requests
+        requests = [r
+                    for r in self.requests(method='PUT',
+                                           url_filter=re.compile('.*/v1/telephony/config/outgoingPermission/'
+                                                                 'accessCodes'))]
+        print(f'{len(requests)} requests')
+        for request in requests:
+            print(f'{request.method} {request.url}, {request.time_ms:.03f} ms, '
+                  f'{len(request.request_body["deleteCodes"])} access codes')
         self.assertTrue(not after)
 
     def test_create_conflicting(self):
