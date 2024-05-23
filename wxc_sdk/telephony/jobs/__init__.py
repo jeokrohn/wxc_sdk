@@ -18,7 +18,8 @@ __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'Job
            'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'NumberJob',
            'ErrorMessageObject', 'ErrorObject', 'ManageNumberErrorItem', 'ManageNumbersJobsApi',
            'InitiateMoveNumberJobsBody', 'ApplyLineKeyTemplatesJobsApi', 'LineKeyTemplateAdvisoryTypes',
-           'ApplyLineKeyTemplateJobDetails', 'RebuildPhonesJobsApi']
+           'ApplyLineKeyTemplateJobDetails', 'RebuildPhonesJobsApi', 'UpdateRoutingPrefixJobsApi',
+           'RoutingPrefixCounts']
 
 
 class StepExecutionStatus(ApiModel):
@@ -60,6 +61,11 @@ class JobExecutionStatus(ApiModel):
     #: Status of each step within a job.
     step_execution_statuses: list[StepExecutionStatus] = Field(default_factory=list)
 
+class RoutingPrefixCounts(ApiModel):
+    #: Indicates the total number of records whose routing prefix update is successful.
+    routing_prefix_updated: Optional[int] = None
+    #: Indicates the total number of records whose routing prefix update failed.
+    routing_prefix_failed: Optional[int] = None
 
 class StartJobResponse(ApiModel):
     #: Job name.
@@ -86,15 +92,17 @@ class StartJobResponse(ApiModel):
     #: has no effect when the job is being triggered at organization level.
     location_customizations_enabled: Optional[bool] = None
     #: Indicates if the job was run at organization level ('CUSTOMER') or location ('LOCATION') level.
-    target: str
+    target: Optional[str] = None
     #: Unique location identifier for which the job was run.
-    location_id: str
+    location_id: Optional[str] = None
     #: name of location for which the job was run, only present for target LOCATION
     location_name: Optional[str] = None
     #: Displays job completion percentage
-    percentage_complete: int
+    percentage_complete: Optional[int] = None
     #: Count of number of devices rebuilt.
     device_count: Optional[int] = None
+    #: Job statistics.
+    counts: Optional[RoutingPrefixCounts] = None
 
 
 class JobErrorMessage(ApiModel):
@@ -734,6 +742,80 @@ class RebuildPhonesJobsApi(ApiChild, base='telephony/config/jobs/devices/rebuild
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
 
+class UpdateRoutingPrefixJobsApi(ApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
+    def list(self, org_id: str = None) -> Generator[StartJobResponse, None, None]:
+        """
+        Get a List of Update Routing Prefix jobs
+
+        Get the list of all update routing prefix jobs in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the update routing prefix jobs in an organization.
+
+        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of update routing prefix jobs in this organization.
+        :type org_id: str
+        :rtype: list[StartJobResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = super().get(url, params=params)
+        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params,item_key='items')
+
+    def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Get the job status of Update Routing Prefix job
+
+        Get the status of the update routing prefix job by its job ID.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to check the status of update routing prefix job by job ID in an organization.
+
+        Checking the status of the update routing prefix job in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check update routing prefix job status in this organization.
+        :type org_id: str
+        :rtype: :class:`StartJobResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = super().get(url, params=params)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
+        """
+        Get job errors for update routing prefix job
+
+        GET job errors for the update routing prefix job in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
+
+        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+
 @dataclass(init=False)
 class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
@@ -747,6 +829,8 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     apply_line_key_templates: ApplyLineKeyTemplatesJobsApi
     #: API for rebuild phone jobs
     rebuild_phones: RebuildPhonesJobsApi
+    #: API for update routing prefix jobs
+    update_routing_prefix: UpdateRoutingPrefixJobsApi
 
     def __init__(self, *, session: RestSession):
         super().__init__(session=session)
@@ -754,3 +838,4 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
         self.manage_numbers = ManageNumbersJobsApi(session=session)
         self.apply_line_key_templates = ApplyLineKeyTemplatesJobsApi(session=session)
         self.rebuild_phones = RebuildPhonesJobsApi(session=session)
+        self.update_routing_prefix = UpdateRoutingPrefixJobsApi(session=session)

@@ -143,7 +143,7 @@ from wxc_sdk.telephony.huntgroup import BusinessContinuity, HGCallPolicies, Hunt
 from wxc_sdk.telephony.jobs import ApplyLineKeyTemplateJobDetails, ErrorMessageObject, ErrorObject, \
     InitiateMoveNumberJobsBody, JobError, JobErrorItem, JobErrorMessage, JobExecutionStatus, \
     LineKeyTemplateAdvisoryTypes, ManageNumberErrorItem, MoveNumberCounts, NumberItem, NumberJob, \
-    StartJobResponse, StepExecutionStatus
+    RoutingPrefixCounts, StartJobResponse, StepExecutionStatus
 from wxc_sdk.telephony.location import CallingLineId, PSTNConnection, TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
@@ -264,10 +264,10 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'RecurYearlyByDay', 'Recurrence', 'RedirectReason', 'Redirection', 'Registration', 'RejectAction',
            'RepoAnnouncement', 'Report', 'ReportTemplate', 'RepositoryUsage', 'ResponseError', 'ResponseStatus',
            'ResponseStatusType', 'RingPattern', 'Room', 'RoomTab', 'RoomType', 'RouteGroup', 'RouteGroupUsage',
-           'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType', 'SafeEnum',
-           'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType',
-           'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions',
-           'ScimPhoneNumberType', 'ScimUser', 'SearchUserResponse', 'Sender', 'ServiceType',
+           'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType',
+           'RoutingPrefixCounts', 'SafeEnum', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel',
+           'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType',
+           'SchedulingOptions', 'ScimPhoneNumberType', 'ScimUser', 'SearchUserResponse', 'Sender', 'ServiceType',
            'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType',
            'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu',
            'StandardRegistrationApproveRule', 'StartJobResponse', 'StartStopAnnouncement', 'StatusAPI',

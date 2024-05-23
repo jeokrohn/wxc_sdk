@@ -757,6 +757,12 @@ The method name is a link to the method documentation.
         Rebuild Phones Configuration
    * - :meth:`api.telephony.jobs.rebuild_phones.status <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.status>`
         Get the Job Status of a Rebuild Phones Job
+   * - :meth:`api.telephony.jobs.update_routing_prefix.errors <wxc_sdk.telephony.jobs.UpdateRoutingPrefixJobsApi.errors>`
+        Get job errors for update routing prefix job
+   * - :meth:`api.telephony.jobs.update_routing_prefix.list <wxc_sdk.telephony.jobs.UpdateRoutingPrefixJobsApi.list>`
+        Get a List of Update Routing Prefix jobs
+   * - :meth:`api.telephony.jobs.update_routing_prefix.status <wxc_sdk.telephony.jobs.UpdateRoutingPrefixJobsApi.status>`
+        Get the job status of Update Routing Prefix job
    * - :meth:`api.telephony.location.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
    * - :meth:`api.telephony.location.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`

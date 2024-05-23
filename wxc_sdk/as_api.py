@@ -72,10 +72,11 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
            'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
            'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsUpdateRoutingPrefixJobsApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -13771,6 +13772,104 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
         return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
 
 
+class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
+    async def list(self, org_id: str = None) -> list[StartJobResponse]:
+        """
+        Get a List of Update Routing Prefix jobs
+
+        Get the list of all update routing prefix jobs in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the update routing prefix jobs in an organization.
+
+        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of update routing prefix jobs in this organization.
+        :type org_id: str
+        :rtype: list[StartJobResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[StartJobResponse]).validate_python(data)
+        return r
+
+    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Get the job status of Update Routing Prefix job
+
+        Get the status of the update routing prefix job by its job ID.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to check the status of update routing prefix job by job ID in an organization.
+
+        Checking the status of the update routing prefix job in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check update routing prefix job status in this organization.
+        :type org_id: str
+        :rtype: :class:`StartJobResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get job errors for update routing prefix job
+
+        GET job errors for the update routing prefix job in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
+
+        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        Get job errors for update routing prefix job
+
+        GET job errors for the update routing prefix job in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
+
+        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
 class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     """
     Jobs API
@@ -13783,6 +13882,8 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
     #: API for rebuild phone jobs
     rebuild_phones: AsRebuildPhonesJobsApi
+    #: API for update routing prefix jobs
+    update_routing_prefix: AsUpdateRoutingPrefixJobsApi
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
@@ -13790,6 +13891,7 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
         self.manage_numbers = AsManageNumbersJobsApi(session=session)
         self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
         self.rebuild_phones = AsRebuildPhonesJobsApi(session=session)
+        self.update_routing_prefix = AsUpdateRoutingPrefixJobsApi(session=session)
 
 
 class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
