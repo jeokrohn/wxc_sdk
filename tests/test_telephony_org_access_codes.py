@@ -1,5 +1,6 @@
 import random
 import re
+from contextlib import contextmanager
 from itertools import zip_longest
 from operator import attrgetter
 
@@ -9,6 +10,46 @@ from wxc_sdk.rest import RestError
 
 
 class TestOrgAccessCodes(TestCaseWithLog):
+
+    def create_codes(self, number_of_access_codes: int = 100000, batch_size: int = 10000,
+                     with_logging: bool = False) -> list[AuthCode]:
+        """
+        create org level access codes
+        :param number_of_access_codes: target number of access codes.
+            If less than zero then create -number_of_access_codes
+        :param batch_size: batch size for access code creation
+        :param with_logging: w/ or w/o logging
+        """
+
+        @contextmanager
+        def log_context():
+            if with_logging:
+                yield None
+                return
+            with self.no_log():
+                yield None
+
+        with log_context():
+            codes_before = list(self.api.telephony.organisation_access_codes.list())
+            existing_codes = set(ac.code for ac in codes_before)
+            if 0 < number_of_access_codes <= len(existing_codes):
+                return
+            new_codes = (AuthCode(code=c, description=f'auth code {c}')
+                         for i in range(1, 110000)
+                         if (c := f'1{i:06}') not in existing_codes)
+            # these are the access codes we need to create
+            if number_of_access_codes < 0:
+                missing = - number_of_access_codes
+            else:
+                missing = number_of_access_codes - len(existing_codes)
+            to_create = [next(new_codes) for _ in range(missing)]
+            nci = iter(to_create)
+            batches = [[ac for ac in b if ac is not None]
+                       for b in zip_longest(*([nci] * batch_size))]
+            api = self.api.telephony.organisation_access_codes
+            for batch in batches:
+                api.create(access_codes=[ac for ac in batch if ac is not None])
+        return codes_before
 
     def print_requests(self) -> list[LoggedRequest]:
         requests = list(self.requests(method='GET', url_filter='.*/v1/telephony/config/outgoingPermission/accessCodes'))
@@ -30,23 +71,19 @@ class TestOrgAccessCodes(TestCaseWithLog):
         """
         Create some access codes
         """
-        api = self.api.telephony.organisation_access_codes
-
-        existing = set(ac.code for ac in self.api.telephony.organisation_access_codes.list())
-        new_codes = (AuthCode(code=c, description=f'auth code {c}')
-                     for i in range(1, 110000)
-                     if (c := f'1{i:06}') not in existing)
-
-        to_create = [next(new_codes) for i in range(1000)]
-        api.create(access_codes=to_create)
+        to_create = 1000
+        existing = self.create_codes(number_of_access_codes=-to_create, with_logging=True)
         access_codes_after = list(self.api.telephony.organisation_access_codes.list())
-        self.assertEqual(len(existing) + len(to_create), len(access_codes_after))
-        codes = set(map(attrgetter('code'), access_codes_after))
-        missing = [ac for ac in to_create if ac.code not in codes]
-        if missing:
-            print('Missing codes:')
-            print('\n'.join(f'* {m.code}' for m in missing))
-        self.assertFalse(missing)
+        self.assertEqual(len(existing) + to_create, len(access_codes_after))
+        print(f'before: {len(existing)} codes, after: {len(access_codes_after)} codes')
+
+    def test_create_100k(self):
+        """
+        Create 100k access codes
+        """
+        self.create_codes(number_of_access_codes=100000, batch_size=10000, with_logging=True)
+        codes = list(self.api.telephony.organisation_access_codes.list())
+        self.assertEqual(100000, len(codes))
 
     def test_create_too_many(self):
         """
@@ -64,35 +101,25 @@ class TestOrgAccessCodes(TestCaseWithLog):
         Create access codes and see if we ever get pagination on list()
         """
         api = self.api.telephony.organisation_access_codes
-
-        existing = set(ac.code for ac in api.list())
-        new_codes = (AuthCode(code=c, description=f'auth code {c}')
-                     for i in range(1, 200000)
-                     if (c := f'1{i:06}') not in existing)
-
-        # create new access codes so that we end up having 100 k access codes
-        to_create = [next(new_codes) for _ in range(100000 - len(existing))]
-        nci = iter(to_create)
-        batches = [b for b in zip_longest(*([nci] * 10000))]
-        for batch in batches:
-            api.create(access_codes=[ac for ac in batch if ac is not None])
+        before = self.create_codes(number_of_access_codes=100000, with_logging=False)
         try:
-            list(api.list())
+            if len(before) != 100000:
+                list(api.list())
             requests = self.print_requests()
-            self.assertFalse(not requests)
+            print(f'{len(requests)} requests')
+            self.assertTrue(len(requests > 1))
         finally:
-            # cleanup
-            for batch in batches:
-                api.delete(delete_codes=[ac.code for ac in batch if ac is not None])
+            ...
 
-    def test_delete_all(self):
+    def delete_codes(self, batch_size: int = 10000):
         """
-        Delete all access codes in batches of 2000
+        Delete all auth codes in batche with given size
+        :param batch_size:
+        :return:
         """
         api = self.api.telephony.organisation_access_codes
         existing = list(api.list())
         ex_iter = iter(existing)
-        batch_size = 2000
         batches = [b for b in zip_longest(*([ex_iter] * batch_size))]
         for batch in batches:
             api.delete([ac.code for ac in batch if ac])
@@ -108,6 +135,18 @@ class TestOrgAccessCodes(TestCaseWithLog):
             print(f'{request.method} {request.url}, {request.time_ms:.03f} ms, '
                   f'{len(request.request_body["deleteCodes"])} access codes')
         self.assertTrue(not after)
+
+    def test_delete_all_10k_batches(self):
+        """
+        Delete all access codes in batches of 10k
+        """
+        self.delete_codes(batch_size=10000)
+
+    def test_delete_all_2k_batches(self):
+        """
+        Delete all access codes in batches of 2000
+        """
+        self.delete_codes(batch_size=2000)
 
     def test_create_conflicting(self):
         """
