@@ -71,7 +71,7 @@ fi
 
 if [ ${apib} ]; then
     echo "==> Creating Python sources from APIB files"
-    script/apib2py.py "*.apib" --exclude "convergedRecordings|attachment-actions|location-call-settings|meeting-preferences"
+    script/apib2py.py "*.apib" --exclude "attachment-actions|meeting-preferences"
 fi
 
 
