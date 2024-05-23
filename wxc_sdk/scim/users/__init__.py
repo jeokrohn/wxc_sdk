@@ -82,6 +82,8 @@ class WebexUser(ApiModel):
 
     # TODO: only returned as result of create() but not even in details() ?
     meta: Optional[WebexUserMeta] = None
+    # TODO: undocumented
+    user_name_type: Optional[str] = None
 
 
 class UserTypeObject(str, Enum):

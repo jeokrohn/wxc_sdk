@@ -119,6 +119,15 @@ class TestScimRead(TestWithScimToken):
         print(f'Items per page: {users.items_per_page}')
         print(f'resources: {len(users.resources)}')
 
+    def test_search_users_with_work_extensions(self):
+        org_id = webex_id_to_uuid(self.me.org_id)
+        users = self.api.scim.users.search(org_id=org_id, filter='phoneNumbers [ type eq "work_extension"]')
+
+        print(f'total results: {users.total_results}')
+        print(f'start index: {users.start_index}')
+        print(f'Items per page: {users.items_per_page}')
+        print(f'resources: {len(users.resources)}')
+
     def test_search_all(self):
         """
         test search_all()
