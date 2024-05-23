@@ -568,6 +568,8 @@ class Attribute:
             name = snake_case(name)
             if name == 'none':
                 name = 'none_'
+            elif name == 'in':
+                name = 'in_'
             name, _ = subn(r'[^a-z0-9]', '_', name)
             name = sub('^([0-9])', 'd\\1', name)
             value = self.name
