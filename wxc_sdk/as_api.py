@@ -16952,6 +16952,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         Locations are used to support calling features which can be defined at the location level.
 
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
         :return: A unique identifier for the location.
         :rtype: str
         """
@@ -16967,6 +16968,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
         Searching and viewing locations with Webex Calling details in your organization require an administrator auth
         token with the spark-admin:telephony_config_read scope.
+
         :param name: List locations whose name contains this string.
         :type name: str
         :param order: Sort the list of locations based on name, either asc or desc.
@@ -16987,6 +16989,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
         Searching and viewing locations with Webex Calling details in your organization require an administrator auth
         token with the spark-admin:telephony_config_read scope.
+
         :param name: List locations whose name contains this string.
         :type name: str
         :param order: Sort the list of locations based on name, either asc or desc.
