@@ -763,8 +763,7 @@ class UpdateRoutingPrefixJobsApi(ApiChild, base='telephony/config/jobs/updateRou
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        data = super().get(url, params=params)
-        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params,item_key='items')
+        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')
 
     def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
         """

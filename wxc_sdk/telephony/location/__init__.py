@@ -81,7 +81,7 @@ class TelephonyLocation(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
                                exclude={'location_id', 'name', 'user_limit', 'default_domain',
                                         'e911_setup_required', 'subscription_id'})
 
@@ -216,7 +216,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')
 
-    def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
+    def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None) -> Optional[str]:
         """
         Update Webex Calling details for a location, by ID.
 
@@ -244,12 +244,16 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :type settings: :class:`TelephonyLocation`
         :param org_id: Updating Webex Calling location attributes for this organization.
         :type org_id: str
-        :return:
+        :return: batch job id of update job if one is created
+        :rtype: str
         """
         data = settings.update()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        self.put(url=url, json=data, params=params)
+        data = self.put(url=url, json=data, params=params)
+        if data:
+            return data.get('batchJobId')
+        return
 
     def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
                                      service_enabled: bool = None, org_id: str = None):

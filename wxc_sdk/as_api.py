@@ -13773,7 +13773,7 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
 
 
 class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
-    async def list(self, org_id: str = None) -> list[StartJobResponse]:
+    def list_gen(self, org_id: str = None) -> AsyncGenerator[StartJobResponse, None, None]:
         """
         Get a List of Update Routing Prefix jobs
 
@@ -13793,9 +13793,29 @@ class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updat
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        data = await super().get(url, params=params)
-        r = TypeAdapter(list[StartJobResponse]).validate_python(data)
-        return r
+        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')
+
+    async def list(self, org_id: str = None) -> List[StartJobResponse]:
+        """
+        Get a List of Update Routing Prefix jobs
+
+        Get the list of all update routing prefix jobs in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the update routing prefix jobs in an organization.
+
+        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of update routing prefix jobs in this organization.
+        :type org_id: str
+        :rtype: list[StartJobResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')]
 
     async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
         """
@@ -16981,7 +17001,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')]
 
-    async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
+    async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None) -> Optional[str]:
         """
         Update Webex Calling details for a location, by ID.
 
@@ -17009,12 +17029,16 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :type settings: :class:`TelephonyLocation`
         :param org_id: Updating Webex Calling location attributes for this organization.
         :type org_id: str
-        :return:
+        :return: batch job id of update job if one is created
+        :rtype: str
         """
         data = settings.update()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        await self.put(url=url, json=data, params=params)
+        data = await self.put(url=url, json=data, params=params)
+        if data:
+            return data.get('batchJobId')
+        return
 
     async def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
                                      service_enabled: bool = None, org_id: str = None):
