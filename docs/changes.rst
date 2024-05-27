@@ -7,6 +7,10 @@ Release history
 - feat: voicemail API for virtual lines :attr:`api.telephony.virtual_lines.voicemail <wxc_sdk.telephony.virtual_line.VirtualLinesApi.voicemail>`
 - feat: MoH settings API for users :attr:`api.telephony.person_settings.music_on_hold <wxc_sdk.person_settings.PersonSettingsApi.music_on_hold>`
 - feat: MoH API for virtual lines :attr:`api.telephony.virtual_lines.music_on_hold <wxc_sdk.telephony.virtual_line.VirtualLinesApi.music_on_hold>`
+- break: consistently use entity_id instead of person_id in privacy API
+- feat: privacy API for virtual lines: :attr:`api.telephony.virtual_lines.privacy <wxc_sdk.telephony.virtual_line.VirtualLinesApi.privacy>`
+- feat: privacy API for workspaces: :attr:`api.workspace_settings.privacy <wxc_sdk.workspace_settings.WorkspaceSettingsApi.privacy>`
+
 
 1.19.0
 ------

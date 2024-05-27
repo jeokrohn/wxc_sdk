@@ -5891,6 +5891,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
                       ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
                       ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+                      ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
                       ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
@@ -7545,56 +7546,56 @@ class AsPreferredAnswerApi(AsApiChild, base='telephony/config/people'):
 
 class AsPrivacyApi(AsPersonSettingsApiChild):
     """
-    API for person's call monitoring settings
+    API for privacy settings for users, vírtual lines and workspaces
     """
 
     feature = 'privacy'
 
-    async def read(self, person_id: str, org_id: str = None) -> Privacy:
+    async def read(self, entity_id: str, org_id: str = None) -> Privacy:
         """
-        Get a person's Privacy Settings
+        Get Privacy Settings for an entity
 
-        Get a person's privacy settings for the specified person id.
+        Get privacy settings for the specified entity id.
 
-        The privacy feature enables the person's line to be monitored by others and determine if they can be reached
+        The privacy feature enables the entity's line to be monitored by others and determine if they can be reached
         by Auto Attendant services.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: privacy settings
         :rtype: :class:`Privacy`
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
         return Privacy.model_validate(data)
 
-    async def configure(self, person_id: str, settings: Privacy, org_id: str = None):
+    async def configure(self, entity_id: str, settings: Privacy, org_id: str = None):
         """
-        Configure Call Waiting Settings for a Person
+        Configure an entity's Privacy Settings
 
-        Configure a Person's Call Waiting Settings
+        Configure an entity's privacy settings for the specified entity ID.
 
-        With this feature, a person can place an active call on hold and answer an incoming call. When enabled,
-        while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore
-        the call.
+        The privacy feature enables the entity's line to be monitored by others and determine if they can be reached by
+        Auto Attendant services.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full or user administrator or location administrator auth token with
+        the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: settings for update
         :type settings: :class:`Monitoring`
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = json.loads(settings.model_dump_json())
         if settings.monitoring_agents is not None:
@@ -17056,6 +17057,8 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     permissions_in: AsIncomingPermissionsApi
     #: outgoing permissions
     permissions_out: AsOutgoingPermissionsApi
+    #: Privacy Settings
+    privacy: AsPrivacyApi
     #: Voicemail Settings
     voicemail: AsVoicemailApi
 
@@ -17071,6 +17074,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.virtual_line)
         self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
     async def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
@@ -18836,6 +18840,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     numbers: AsWorkspaceNumbersApi
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
+    privacy: AsPrivacyApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
@@ -18849,6 +18854,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.numbers = AsWorkspaceNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
+        self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.workspace)
 
 
 class AsWorkspacesApi(AsApiChild, base='workspaces'):

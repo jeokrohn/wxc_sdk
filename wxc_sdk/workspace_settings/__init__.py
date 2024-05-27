@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from .devices import WorkspaceDevicesApi
 from .numbers import WorkspaceNumbersApi
 from ..api_child import ApiChild
+from ..person_settings import PrivacyApi
 from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.call_intercept import CallInterceptApi
 from ..person_settings.call_waiting import CallWaitingApi
@@ -40,6 +41,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     numbers: WorkspaceNumbersApi
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
+    privacy: PrivacyApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
@@ -53,3 +55,4 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.numbers = WorkspaceNumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
+        self.privacy = PrivacyApi(session=session, selector=ApiSelector.workspace)

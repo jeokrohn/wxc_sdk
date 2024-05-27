@@ -8,7 +8,7 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import PrimaryOrShared, AssignedDectNetwork
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice
+from ...person_settings import TelephonyDevice, PrivacyApi
 from ...person_settings.agent_caller_id import AgentCallerIdApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.call_recording import CallRecordingApi
@@ -151,6 +151,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     permissions_in: IncomingPermissionsApi
     #: outgoing permissions
     permissions_out: OutgoingPermissionsApi
+    #: Privacy Settings
+    privacy: PrivacyApi
     #: Voicemail Settings
     voicemail: VoicemailApi
 
@@ -166,6 +168,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.privacy = PrivacyApi(session=session, selector=ApiSelector.virtual_line)
         self.voicemail = VoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
     def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,

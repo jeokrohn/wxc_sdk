@@ -360,9 +360,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.preferred_answer.read <wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.read>`
         Get Preferred Answer Endpoint
    * - :meth:`api.person_settings.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
-        Configure Call Waiting Settings for a Person
+        Configure an entity's Privacy Settings
    * - :meth:`api.person_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
-        Get a person's Privacy Settings
+        Get Privacy Settings for an entity
    * - :meth:`api.person_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
         Configure Push-to-Talk Settings for a Person
    * - :meth:`api.person_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
@@ -1101,6 +1101,10 @@ The method name is a link to the method documentation.
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.telephony.virtual_lines.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
+   * - :meth:`api.telephony.virtual_lines.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
+        Configure an entity's Privacy Settings
+   * - :meth:`api.telephony.virtual_lines.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
+        Get Privacy Settings for an entity
    * - :meth:`api.telephony.virtual_lines.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
         Configure Voicemail Settings for a Person
    * - :meth:`api.telephony.virtual_lines.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
@@ -1245,6 +1249,10 @@ The method name is a link to the method documentation.
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.workspace_settings.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
+   * - :meth:`api.workspace_settings.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
+        Configure an entity's Privacy Settings
+   * - :meth:`api.workspace_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
+        Get Privacy Settings for an entity
    * - :meth:`api.workspaces.capabilities <wxc_sdk.workspaces.WorkspacesApi.capabilities>`
         Shows the capabilities for a workspace by ID
    * - :meth:`api.workspaces.create <wxc_sdk.workspaces.WorkspacesApi.create>`

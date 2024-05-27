@@ -76,6 +76,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
         alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
                       ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
                       ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+                      ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
                       ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
                       ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
