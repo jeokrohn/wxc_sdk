@@ -685,6 +685,11 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
     feature = 'outgoingPermission'
 
+    def __getattribute__(self, item):
+        if item == 'access_codes' and self.selector == ApiSelector.location:
+            raise AttributeError("access_codes API is not available for locations. Use the telephony access_codes API")
+        return super().__getattribute__(item)
+
     def __init__(self, *, session: RestSession,
                  selector: ApiSelector = 'person'):
         super().__init__(session=session, selector=selector)

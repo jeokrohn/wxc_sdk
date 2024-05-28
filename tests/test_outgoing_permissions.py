@@ -16,7 +16,7 @@ from tests.base import TestCaseWithLog, async_test, TestLocationsUsersWorkspaces
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsDigitPatternsApi, AsOutgoingPermissionsApi
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.common import OwnerType, IdAndName, AuthCodeLevel
+from wxc_sdk.common import OwnerType, IdAndName, AuthCodeLevel, AuthCode
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern, Action, OutgoingPermissionsApi
@@ -140,20 +140,39 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLines):
                   api=self.api.telephony.virtual_lines.permissions_out)
 
     def create(self, entity: str, entity_id: str, api: OutgoingPermissionsApi):
-        codes = api.access_codes.read(entity_id=entity_id)
-        existing = set(ac.code for ac in codes.access_codes)
+        def location_read():
+            return self.api.telephony.access_codes.read(location_id=entity_id)
+
+        def read():
+            r = api.access_codes.read(entity_id=entity_id)
+            return r.access_codes
+
+        for_location = 'location' in entity.lower()
+        if for_location:
+            reader = location_read
+        else:
+            reader = read
+        codes = reader()
+        existing = set(ac.code for ac in codes)
         new_codes = (code for i in range(9000, 10000)
                      if (code := f'{i}') not in existing)
 
         # create new code
         new_code = next(new_codes)
         print(f'{entity}/{entity_id}: creating access code {new_code}')
-        api.access_codes.create(entity_id=entity_id, code=new_code,
-                                description=f'test_{new_code}')
+        description = f'test_{new_code}'
+        if for_location:
+            self.api.telephony.access_codes.create(location_id=entity_id,
+                                                   access_codes=[AuthCode(code=new_code,
+                                                                          description=description,
+                                                                          level=AuthCodeLevel.location)])
+        else:
+            api.access_codes.create(entity_id=entity_id, code=new_code,
+                                    description=description)
 
         # verify that the code exists
-        codes_after = api.access_codes.read(entity_id=entity_id)
-        created_code = next((ac for ac in codes_after.access_codes if ac.code == new_code), None)
+        codes_after = reader()
+        created_code = next((ac for ac in codes_after if ac.code == new_code), None)
         self.assertIsNotNone(created_code, 'access code not created')
         if 'location' in entity.lower():
             self.assertIsNone(created_code.level)
@@ -161,12 +180,14 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLines):
             self.assertEqual(AuthCodeLevel.custom, created_code.level)
 
         # try to remove access code again
-        api.access_codes.modify(entity_id=entity_id, delete_codes=[created_code])
-        codes_after = api.access_codes.read(entity_id=entity_id)
-        created_code = next((ac for ac in codes_after.access_codes if ac.code == new_code), None)
+        if for_location:
+            self.api.telephony.access_codes.delete_codes(location_id=entity_id, access_codes=[new_code])
+        else:
+            api.access_codes.modify(entity_id=entity_id, delete_codes=[created_code])
+        codes_after = reader()
+        created_code = next((ac for ac in codes_after if ac.code == new_code), None)
         self.assertIsNone(created_code, 'access code still there')
 
-    @skip('Different access codes API for locations')
     def test_location_create(self):
         """
         create access code for random location
