@@ -13980,7 +13980,8 @@ class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPe
     of `spark-admin:telephony_config_read.
     """
 
-    def list_gen(self, org_id: str = None) -> AsyncGenerator[AuthCode, None, None]:
+    def list_gen(self, code: list[str] = None, description: list[str] = None, org_id: str = None,
+             **params) -> AsyncGenerator[AuthCode, None, None]:
         """
         Retrieve the organisation's access codes.
 
@@ -13990,17 +13991,27 @@ class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPe
         This API requires a full, user or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read
 
+        :param code: Filter access code based on the comma-separated list provided in the `code` array.
+        :type code: list[str]
+        :param description: Filter access code based on the comma-separated list provided in the `description` array.
+        :type description: list[str]
         :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
             parameter as the default is the same organisation as the token used to access the API.
         :type org_id: str
         :rtype: list[AuthorizationCode]
         """
-        params = org_id and {'orgId': org_id} or None
+        if org_id is not None:
+            params['orgId'] = org_id
+        if code is not None:
+            params['code'] = ','.join(code)
+        if description is not None:
+            params['description'] = ','.join(description)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=AuthCode, params=params,
                                               item_key='accessCodes')
 
-    async def list(self, org_id: str = None) -> List[AuthCode]:
+    async def list(self, code: list[str] = None, description: list[str] = None, org_id: str = None,
+             **params) -> List[AuthCode]:
         """
         Retrieve the organisation's access codes.
 
@@ -14010,12 +14021,21 @@ class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPe
         This API requires a full, user or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read
 
+        :param code: Filter access code based on the comma-separated list provided in the `code` array.
+        :type code: list[str]
+        :param description: Filter access code based on the comma-separated list provided in the `description` array.
+        :type description: list[str]
         :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
             parameter as the default is the same organisation as the token used to access the API.
         :type org_id: str
         :rtype: list[AuthorizationCode]
         """
-        params = org_id and {'orgId': org_id} or None
+        if org_id is not None:
+            params['orgId'] = org_id
+        if code is not None:
+            params['code'] = ','.join(code)
+        if description is not None:
+            params['description'] = ','.join(description)
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=AuthCode, params=params,
                                               item_key='accessCodes')]

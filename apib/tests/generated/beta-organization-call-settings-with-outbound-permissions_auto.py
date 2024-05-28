@@ -31,7 +31,9 @@ class BetaOrganizationCallSettingsWithOutboundPermissionsApi(ApiChild, base='tel
     `spark-admin:telephony_config_read.
     """
 
-    def retrieve_access_codes_for_an_organization(self, org_id: str = None) -> list[AuthorizationCode]:
+    def retrieve_access_codes_for_an_organization(self, code: list[str] = None, description: list[str] = None,
+                                                  org_id: str = None,
+                                                  **params) -> Generator[AuthorizationCode, None, None]:
         """
         Retrieve Access Codes for an Organization
 
@@ -43,21 +45,25 @@ class BetaOrganizationCallSettingsWithOutboundPermissionsApi(ApiChild, base='tel
         This API requires a full, user or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read
 
+        :param code: Filter access code based on the comma-separated list provided in the `code` array.
+        :type code: list[str]
+        :param description: Filter access code based on the comma-separated list provided in the `description` array.
+        :type description: list[str]
         :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
             parameter as the default is the same organization as the token used to access the API.
         :type org_id: str
-        :rtype: list[AuthorizationCode]
+        :return: Generator yielding :class:`AuthorizationCode` instances
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        if code is not None:
+            params['code'] = ','.join(code)
+        if description is not None:
+            params['description'] = ','.join(description)
         url = self.ep()
-        data = super().get(url, params=params)
-        r = TypeAdapter(list[AuthorizationCode]).validate_python(data['accessCodes'])
-        return r
+        return self.session.follow_pagination(url=url, model=AuthorizationCode, item_key='accessCodes', params=params)
 
-    def delete_outgoing_permission_access_code_for_an_organization(self, delete_codes: list[str] = None,
-                                                                   org_id: str = None):
+    def delete_outgoing_permission_access_code_for_an_organization(self, delete_codes: list[str], org_id: str = None):
         """
         Delete Outgoing Permission Access Code for an Organization
 
@@ -79,8 +85,7 @@ class BetaOrganizationCallSettingsWithOutboundPermissionsApi(ApiChild, base='tel
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        if delete_codes is not None:
-            body['deleteCodes'] = delete_codes
+        body['deleteCodes'] = delete_codes
         url = self.ep()
         super().put(url, params=params, json=body)
 
