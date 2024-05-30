@@ -84,6 +84,16 @@ class WebexUser(ApiModel):
     meta: Optional[WebexUserMeta] = None
     # TODO: undocumented
     user_name_type: Optional[str] = None
+    # tODO: undocumented
+    license_id: Optional[list[str]] = Field(alias='licenseID', default=None)
+    # TODO: undocumented
+    mac_addresses: Optional[list[str]] = None
+    # TODO: undocumented
+    user_preferences: Optional[list[str]] = None
+    # TODO: undocumented
+    train_site_names: Optional[list[str]] = None
+    # TODO: undocumented
+    managed_sites: Optional[list[dict]] = None
 
 
 class UserTypeObject(str, Enum):
@@ -217,6 +227,12 @@ class ScimMeta(ApiModel):
     last_modified: Optional[datetime] = None
 
 
+class ScimValueDisplayRef(ApiModel):
+    value: Optional[str] = None
+    display: Optional[str] = None
+    ref: Optional[str] = Field(alias='$ref', default=None)
+
+
 class ScimUser(ApiModel):
     #: Input JSON schemas.
     schemas: Optional[list[str]] = None
@@ -263,6 +279,8 @@ class ScimUser(ApiModel):
     timezone: Optional[str] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
     phone_numbers: Optional[list[UserPhoneNumber]] = None
+    # group information
+    groups: Optional[list[ScimValueDisplayRef]] = None
     #: A list of photos for the user that represent a thing the user has.
     photos: Optional[list[PhotoObject]] = None
     #: User's physical mailing address.
@@ -277,6 +295,7 @@ class ScimUser(ApiModel):
     # TODO: undocumented
     meta: Optional[ScimMeta] = None
     entitlements: Optional[list[dict]] = None
+    roles: Optional[list[dict]] = None
 
     def create_update(self) -> dict:
         """

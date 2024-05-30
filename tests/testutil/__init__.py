@@ -22,7 +22,9 @@ from test_helper.randomuserutil import RandomUserUtil
 from examples.calendarific import CalendarifiyApi
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.common import NumberState
 from wxc_sdk.common.schedules import ScheduleType, Schedule, Event
+from wxc_sdk.licenses import LicenseRequest, LicenseProperties
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
@@ -31,7 +33,8 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
            'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
            'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
-           'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license']
+           'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license',
+           'create_calling_user', 'create_random_calling_user']
 
 from wxc_sdk.telephony.devices import MACState
 
@@ -272,7 +275,8 @@ def get_or_create_business_schedule(*, api: WebexSimpleApi, location_id: str) ->
                                            schedule_id=schedule_id)
 
 
-Inc = Literal['gender', 'name', 'location', 'email', 'login', 'registered', 'dob', 'phone', 'cell', 'id', 'picture', 'nat']
+Inc = Literal[
+    'gender', 'name', 'location', 'email', 'login', 'registered', 'dob', 'phone', 'cell', 'id', 'picture', 'nat']
 
 
 async def random_users(api: AsWebexSimpleApi, user_count: int = 1, inc: Union[Inc, list[Inc]] = 'name') -> list[User]:
@@ -332,6 +336,8 @@ def create_random_wsl(api: WebexSimpleApi) -> WorkspaceLocation:
 
         return asyncio.run(as_random_address())
 
+    # we should not create workspace locations anymore
+    raise NotImplementedError()
     address = random_address()
 
     # get a unique display name
@@ -403,3 +409,83 @@ def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Lo
         supported_devices=supported_devices, **kwargs)
     workspace = api.workspaces.create(settings=new_workspace)
     return workspace
+
+
+def create_calling_user(api: WebexSimpleApi, user: User, location_id: str, calling_license_id: str,
+                        extension: str = None, phone_number: str = None) -> Person:
+    """
+    Create a calling enabled user
+
+    :param api:
+    :param user:
+    :param location_id:
+    :param extension:
+    :param phone_number:
+    :param calling_license_id:
+    :return:
+    """
+    if not any((extension, phone_number)):
+        raise ValueError('extension or phone_number required')
+    # create user
+    new_user = api.people.create(
+        settings=Person(emails=[user.email],
+                        display_name=user.display_name,
+                        first_name=user.name.first,
+                        last_name=user.name.last))
+
+    api.licenses.assign_licenses_to_users(
+        person_id=new_user.person_id,
+        licenses=[LicenseRequest(id=calling_license_id,
+                                 properties=LicenseProperties(location_id=location_id,
+                                                              extension=extension,
+                                                              phone_number=phone_number))])
+    new_user = api.people.details(person_id=new_user.person_id, calling_data=True)
+    return new_user
+
+
+def create_random_calling_user(api: WebexSimpleApi, location_id: str, calling_license_id: str = None,
+                               with_tn: bool = False) -> Person:
+    """
+    create a random calling users in given location
+    :param api:
+    :param location_id:
+    :param calling_license_id:
+    :param with_tn:
+    :return:
+    """
+
+    async def get_random_user() -> User:
+        async with AsWebexSimpleApi(tokens=api.access_token) as as_api:
+            users = await random_users(api=as_api)
+        return users[0]
+    random_user = asyncio.run(get_random_user())
+
+    if with_tn:
+        # figure out the NPA for phone numbers in target location
+        existing_tns = api.telephony.phone_numbers(location_id=location_id,
+                                                   number_type=NumberType.number)
+
+        # take the NPA from the 1st phone number
+        npa = next((n.phone_number[2:5] for n in existing_tns), None)
+        if npa is None:
+            raise ValueError('Could not determine NPA for given location)')
+
+        phone_number = (available_tns(api=api, tn_prefix=npa))[0]
+        # add phone number to location
+        api.telephony.location.number.add(location_id=location_id,
+                                          phone_numbers=[phone_number],
+                                          state=NumberState.active)
+    else:
+        phone_number = None
+    extension = available_extensions(api=api, location_id=location_id)[0]
+    if calling_license_id is None:
+        calling_licenses = [lic for lic in api.licenses.list() if
+                            lic.webex_calling_basic or lic.webex_calling_professional]
+        calling_licenses.sort(key=attrgetter('name'), reverse=True)
+
+        calling_license = next((lic for lic in calling_licenses
+                                if lic.consumed_units < lic.total_units), None)
+        calling_license_id = calling_license.license_id
+    return create_calling_user(api=api, user=random_user, location_id=location_id,
+                               calling_license_id=calling_license_id, extension=extension,
+                               phone_number=phone_number)

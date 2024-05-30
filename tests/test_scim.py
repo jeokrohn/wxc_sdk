@@ -15,17 +15,19 @@ from dotenv import load_dotenv
 from pydantic import TypeAdapter
 from test_helper.randomuser import User
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
 from tests.testutil import random_users, available_extensions_gen
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
+from wxc_sdk.common import OwnerType
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import LicenseRequest, LicenseRequestOperation, LicenseProperties
 from wxc_sdk.people import Person, PhoneNumberType
 from wxc_sdk.scim.bulk import BulkOperation, BulkMethod
 from wxc_sdk.scim.users import ScimUser, NameObject, EmailObject, EmailObjectType, UserTypeObject, UserPhoneNumber, \
     ScimPhoneNumberType, UserAddress, PatchUserOperation, PatchUserOperationOp
+from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.tokens import Tokens
 
 
@@ -94,7 +96,6 @@ def get_tokens() -> Optional[Tokens]:
 
 @dataclass(init=False)
 class TestWithScimToken(TestCaseWithLog):
-
     test_api: ClassVar[WebexSimpleApi]
 
     @classmethod
@@ -450,7 +451,7 @@ class TestScimUpdate(TestWithScimToken):
         Try to update a phone number of a user
         """
         me = self.api.people.me()
-        print(f'org: id {me.org_id}, base64 decoded {base64.b64decode(me.org_id+"==")}')
+        print(f'org: id {me.org_id}, base64 decoded {base64.b64decode(me.org_id + "==")}')
         org_id = webex_id_to_uuid(me.org_id)
         api = self.api.scim.users
         target_details = api.details(org_id=org_id, user_id=self.target_user.id)
@@ -556,7 +557,7 @@ class TestScimAndPeople(TestScimCreate, TestWithLocations):
             license_after = self.test_api.licenses.details(license_id=standard_license.license_id)
             scim_user_after = api.details(org_id=org_id, user_id=scim_user.id)
             webex_user_after = self.test_api.people.details(person_id=webex_user.person_id, calling_data=True)
-            self.assertEqual(standard_license.consumed_by_users+1, license_after.consumed_by_users)
+            self.assertEqual(standard_license.consumed_by_users + 1, license_after.consumed_by_users)
 
             # work phone number should be gone
             scim_work_phone = next((pn for pn in scim_user_after.phone_numbers
@@ -590,3 +591,108 @@ class TestScimAndPeople(TestScimCreate, TestWithLocations):
                     sleep(3)
                 else:
                     break
+
+
+@dataclass(init=False)
+class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
+    """
+    tests to validate number information in CI (and people API) for calling users
+
+    """
+
+    @property
+    def org_id(self) -> str:
+        return webex_id_to_uuid(self.me.org_id)
+
+    @async_test
+    async def test_numbers(self):
+        """
+        for all calling users look at number information in
+            * people API
+            * numbers API
+            * scim
+        """
+        # for all locations we have users in we also need the site prefix
+        location_ids = set(user.location_id for user in self.users)
+        telephony_location_details = {loc.location_id: loc
+                                      for loc in await asyncio.gather(
+                *[self.async_api.telephony.location.details(location_id=loc_id) for loc_id in location_ids])}
+        telephony_location_details: dict[str, TelephonyLocation]
+
+        # get all primary numbers owned by users
+        numbers = {number.owner.owner_id: number
+                   for number in self.api.telephony.phone_numbers(owner_type=OwnerType.people)}
+
+        # get all scim user details
+        scim_details = await asyncio.gather(
+            *[self.async_api.scim.users.details(org_id=self.org_id,
+                                                user_id=webex_id_to_uuid(user.person_id))
+              for user in self.users])
+        scim_users = list(
+            self.api.scim.users.search_all(org_id=self.org_id, return_groups='true', include_group_details='true'))
+        foo = 1
+        for user, scim_user in zip(self.users, scim_details):
+            user: Person
+            scim_user: ScimUser
+            print(f'User: {user.display_name}({user.emails[0]})')
+            print(user.phone_numbers)
+            print(scim_user.phone_numbers)
+            number = numbers.get(user.person_id)
+            print(f'Number: {number}')
+            location = telephony_location_details.get(user.location_id)
+            print(f'Location "{location.name}", prefix: {location.routing_prefix}')
+
+            # check phone number
+            work = next((pn.value for pn in user.phone_numbers if pn.number_type == 'work'), None)
+            if work != number.phone_number:
+                print(f'************ phone number mismatch!!')
+
+            # check extension
+            work_extension = next((pn.value for pn in user.phone_numbers if pn.number_type == 'work_extension'), None)
+            if work_extension != number.esn:
+                print('************ work extension mismatch!!')
+                # set correct extension in SCIM
+                self.api.scim.users.patch(org_id=self.org_id,
+                                          user_id=scim_user.id,
+                                          operations=[
+                                              PatchUserOperation(op=PatchUserOperationOp.replace,
+                                                                 path='phoneNumbers[type eq "work_extension"].value',
+                                                                 value=number.esn)])
+                after_update = self.api.scim.users.details(org_id=self.org_id, user_id=scim_user.id)
+                print(f'SCIM numbers after update: {after_update.phone_numbers}')
+
+                # try to update user via people API
+                people_update = user.model_copy(deep=True)
+                people_update.extension = number.extension
+                self.api.people.update(person=people_update, calling_data=True)
+                people_details = self.api.people.details(person_id=user.person_id, calling_data=True)
+                after_details = self.api.scim.users.details(org_id=self.org_id, user_id=scim_user.id)
+                print(f'numbers after details: {after_details.phone_numbers}')
+            print()
+
+    def test_locations(self):
+        """
+        Check consistency between location and SCIM groups
+        """
+        scim_users = {scim_user.id: scim_user
+                      for scim_user in self.api.scim.users.search_all(org_id=self.org_id,
+                                                                      return_groups='true',
+                                                                      include_group_details='true')}
+        locations = {loc.location_id: loc for loc in self.api.locations.list()}
+        for user in self.users:
+            scim_user = scim_users.get(webex_id_to_uuid(user.person_id))
+            print(f'user: {user.display_name}({user.emails[0]})')
+            if not scim_user:
+                print('******** no SCIM user')
+                continue
+            location = locations.get(user.location_id)
+            if not location:
+                print('******** no location')
+                continue
+            location_name = location.name
+            print(f'Location: {location_name}')
+            scim_group_name = scim_user.groups[0].display
+            print(f'SCIM group name: {scim_group_name}')
+            if location_name != scim_group_name:
+                print('******** location inconsistency')
+            print()

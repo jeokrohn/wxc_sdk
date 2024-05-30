@@ -10,11 +10,14 @@ from unittest import skip
 
 from dotenv import load_dotenv
 
+from wxc_sdk.common import RouteType
+from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.numbers import PersonNumbers
 from wxc_sdk.rest import RestError
-from tests.base import TestCaseWithLog, async_test
-from tests.testutil import calling_users
+from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.testutil import calling_users, create_random_calling_user
+from wxc_sdk.telephony.location import TelephonyLocation
 
 
 @contextmanager
@@ -184,3 +187,19 @@ class TestPeoplePhoneNumbers(TestCaseWithLog):
                 print(f' ok: {", ".join(pn.value for pn in person.phone_numbers)}')
             err = err or person_error
         self.assertFalse(err, 'Some number issues...')
+
+
+@skip('Enable if needed to create some random calling users')
+class TestCallingUser(TestWithLocations):
+    def test_create_random_calling_user(self):
+        t_loc: TelephonyLocation
+        lgw_locations = [loc for loc, t_loc in zip(self.locations, self.telephony_locations)
+                         if t_loc.connection and t_loc.connection.type in {RouteType.trunk, RouteType.route_group}]
+        target_location: Location = choice(lgw_locations)
+        print(f'Creating new random user in location "{target_location.name}"')
+        new_user = create_random_calling_user(api=self.api, location_id=target_location.location_id,
+                                              with_tn=True)
+        print(new_user)
+        print(f'created "{new_user.display_name}"')
+        print(json.dumps(new_user.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+

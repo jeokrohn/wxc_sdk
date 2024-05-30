@@ -35,6 +35,7 @@ from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
 from wxc_sdk.rooms import Room
 from wxc_sdk.scopes import parse_scopes
+from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.workspaces import Workspace, CallingType
@@ -480,7 +481,8 @@ class TestWithLocations(TestCaseWithLog):
     """
     Test cases with existing locations
     """
-    locations: list[Location] = field(default_factory=list)
+    locations: ClassVar[list[Location]]
+    telephony_locations: ClassVar[list[TelephonyLocation]]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -500,14 +502,16 @@ class TestWithLocations(TestCaseWithLog):
                 raise validation_error
 
             # the calling locations are the ones for which we can actually get calling details
-            result = [loc for loc, detail in zip(locations, details)
+            result = [(loc, detail) for loc, detail in zip(locations, details)
                       if not isinstance(detail, Exception)]
-            return result
+            cls.locations, cls.telephony_locations = list(zip(*result))
+            return
 
         if cls.api is None:
             cls.locations = None
+            cls.telephony_locations = None
             return
-        cls.locations = asyncio.run(get_calling_locations())
+        asyncio.run(get_calling_locations())
 
     def setUp(self) -> None:
         """
