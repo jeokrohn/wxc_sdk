@@ -187,6 +187,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         **Usage**:
 
         1. The input JSON must conform to one of the following schemas:
+
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
