@@ -4,6 +4,7 @@ Release history
 - feat: new attribute :attr:`Privacy.enable_phone_status_pickup_barge_in_privacy  <wxc_sdk.person_settings.privacy.Privacy>`
 - feat: new API :attr:`api.telephony.jobs.update_routing_prefix <wxc_sdk.telephony.jobs.JobsApi.update_routing_prefix>`
 - feat: :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>` now returns job id of update routing prefix job (if present)
+- feat: new API :attr:`api.scim.groups <wxc_sdk.scim.ScimV2Api.groups>`
 
 1.19.0
 ------

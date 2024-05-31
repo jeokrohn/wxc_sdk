@@ -25,6 +25,7 @@ from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import LicenseRequest, LicenseRequestOperation, LicenseProperties
 from wxc_sdk.people import Person, PhoneNumberType
 from wxc_sdk.scim.bulk import BulkOperation, BulkMethod
+from wxc_sdk.scim.groups import ScimGroup, ScimGroupMember
 from wxc_sdk.scim.users import ScimUser, NameObject, EmailObject, EmailObjectType, UserTypeObject, UserPhoneNumber, \
     ScimPhoneNumberType, UserAddress, PatchUserOperation, PatchUserOperationOp
 from wxc_sdk.telephony.location import TelephonyLocation
@@ -109,6 +110,10 @@ class TestWithScimToken(TestCaseWithLog):
         # replace session access token with service app access token
         cls.api.session._tokens.access_token = tokens.access_token
 
+    @property
+    def org_id(self) -> str:
+        return webex_id_to_uuid(self.me.org_id)
+
 
 class TestScimRead(TestWithScimToken):
     def test_search(self):
@@ -133,8 +138,7 @@ class TestScimRead(TestWithScimToken):
         """
         test search_all()
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
-        users = list(self.api.scim.users.search_all(org_id=org_id))
+        users = list(self.api.scim.users.search_all(org_id=self.org_id))
         print(f'Got {len(users)} users')
         requests = [r for r in self.requests(method='GET', url_filter=r'.+scim/.+/v2/Users')]
         for i, r in enumerate(requests):
@@ -600,10 +604,6 @@ class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
 
     """
 
-    @property
-    def org_id(self) -> str:
-        return webex_id_to_uuid(self.me.org_id)
-
     @async_test
     async def test_numbers(self):
         """
@@ -696,3 +696,72 @@ class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
             if location_name != scim_group_name:
                 print('******** location inconsistency')
             print()
+
+
+@dataclass(init=False)
+class TestScimGroups(TestWithScimToken):
+    def test_search(self):
+        """
+        search groups
+        """
+        groups = self.api.scim.groups.search(org_id=self.org_id, include_members=True)
+        print(f'total results: {groups.total_results}')
+        print(f'start index: {groups.start_index}')
+        print(f'Items per page: {groups.items_per_page}')
+        print(f'resources: {len(groups.resources)}')
+
+    def test_search_all(self):
+        """
+        search all
+        """
+        groups = list(self.api.scim.groups.search_all(org_id=self.org_id, include_members=True))
+        print(f'{len(groups)} groups')
+        print(json.dumps(TypeAdapter(list[ScimGroup]).dump_python(groups, mode='json', by_alias=True), indent=2))
+
+    @async_test
+    async def test_as_search_all(self):
+        """
+        search all, async variant
+        """
+        groups = await self.async_api.scim.groups.search_all(org_id=self.org_id)
+        print(f'{len(groups)} groups')
+
+    def test_members(self):
+        """
+        members
+        """
+        groups = list(self.api.scim.groups.search_all(org_id=self.org_id, include_members=True))
+        group = groups[1]
+        members = self.api.scim.groups.members(org_id=self.org_id, group_id=group.id)
+        print(f'total results: {members.member_size}')
+        print(f'start index: {members.start_index}')
+        print(f'Items per page: {members.items_per_page}')
+        print(f'members: {len(members.members)}')
+        print(f'display name: {members.display_name}')
+        print(json.dumps(TypeAdapter(list[ScimGroupMember]).dump_python(members.members, mode='json', by_alias=True),
+                         indent=2))
+
+    def test_members_all(self):
+        """
+        members_all
+        """
+        groups = list(self.api.scim.groups.search_all(org_id=self.org_id, include_members=True))
+        group = groups[1]
+        members = list(self.api.scim.groups.members_all(org_id=self.org_id, group_id=group.id, count=2))
+        print(f'{len(members)} members')
+        print(json.dumps(TypeAdapter(list[ScimGroupMember]).dump_python(members, mode='json', by_alias=True), indent=2))
+
+        foo = 1
+
+    @async_test
+    async def test_as_members_all(self):
+        """
+        members_all
+        """
+        groups = list(self.api.scim.groups.search_all(org_id=self.org_id, include_members=True))
+        group = groups[1]
+        members = await self.async_api.scim.groups.members_all(org_id=self.org_id, group_id=group.id, count=2)
+        print(f'{len(members)} members')
+        print(json.dumps(TypeAdapter(list[ScimGroupMember]).dump_python(members, mode='json', by_alias=True), indent=2))
+
+        foo = 1

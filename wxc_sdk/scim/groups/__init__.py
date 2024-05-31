@@ -1,251 +1,188 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional
 
-from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
 
-from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
+from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.scim.child import ScimApiChild
+from wxc_sdk.scim.users import PatchUserOperation
+
+__all__ = ['ScimGroup', 'ScimGroupMember',
+           'WebexGroup',
+           'WebexGroupMeta', 'GroupMemberObject',
+           'GroupMemberResponse', 'ManagedBy', 'GroupMeta',
+           'MetaObjectResourceType',
+           'WebexGroupOwner', 'SCIM2GroupsApi', 'SearchGroupResponse']
+
+SCHEMAS = [
+    "urn:ietf:params:scim:schemas:core:2.0:Group",
+    "urn:scim:schemas:extension:cisco:webexidentity:2.0:Group"
+]
 
 
-__all__ = ['GetGroupResponse', 'GetGroupResponseMembers',
-           'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group',
-           'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GroupMemberObject',
-           'GroupMemberResponse', 'GroupMemberResponseMembers', 'ManagedByObject', 'MetaObject',
-           'MetaObjectResourceType', 'PatchGroupOperations', 'PatchGroupOperationsOp',
-           'PostGroupUrnscimschemasextensionciscowebexidentity20Group',
-           'PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners', 'SCIM2GroupsApi', 'SearchGroupResponse']
-
-
-class PatchGroupOperationsOp(str, Enum):
-    add = 'add'
-    replace = 'replace'
-    remove = 'remove'
-
-
-class PatchGroupOperations(ApiModel):
-    #: The operation to perform.
-    #: example: add
-    op: Optional[PatchGroupOperationsOp] = None
-    #: A string containing an attribute path describing the target of the operation.
-    #: example: displayName
-    path: Optional[str] = None
-    #: New value.
-    #: example: new attribute value
-    value: Optional[str] = None
-
-
-class PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners(ApiModel):
+class WebexGroupOwner(ApiModel):
     #: The identifier of the owner of this group.
-    #: example: c5349664-9f3d-410b-8bd3-6c31f181f13d
     value: Optional[str] = None
 
 
-class ManagedByObject(ApiModel):
+class ManagedBy(ApiModel):
     #: The Organization identifier of the resource.
-    #: example: d1349664-9f3d-410b-8bd3-6c31f181f14e
     org_id: Optional[str] = None
     #: The resource type.
-    #: example: user
     type: Optional[str] = None
     #: The identifier of the resource.
-    #: example: c5349664-9f3d-410b-8bd3-6c31f181f13d
     id: Optional[str] = None
     #: The delegated role.
-    #: example: location_full_admin
     role: Optional[str] = None
-
-
-class PostGroupUrnscimschemasextensionciscowebexidentity20Group(ApiModel):
-    #: The identifier of this Group.
-    #: example: policy
-    usage: Optional[str] = None
-    #: The owners of this group.
-    owners: Optional[list[PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners]] = None
-    #: A list of delegates of this group.
-    managed_by: Optional[list[ManagedByObject]] = None
 
 
 class GroupMemberObject(ApiModel):
     #: The identifier of the member of this Group.
-    #: example: c5349664-9f3d-410b-8bd3-6c31f181f13d
     value: Optional[str] = None
     #: A label indicating the type of resource, for example user, machine, or group.
-    #: example: user
     type: Optional[str] = None
 
 
-class GetGroupResponseMembers(ApiModel):
+class ScimGroupMember(ApiModel):
     #: A label indicating the type of resource, for example user, machine, or group.
-    #: example: user
     type: Optional[str] = None
     #: The identifier of the member of this Group.
-    #: example: c5349664-9f3d-410b-8bd3-6c31f181f13d
     value: Optional[str] = None
     #: A human-readable name for the group member.
-    #: example: A user
     display: Optional[str] = None
     #: The URI corresponding to a SCIM resource that is a member of this Group.
-    #: example: https://example.com/v2/Users/c5349664-9f3d-410b-8bd3-6c31f181f13d
-    _ref: Optional[str] = Field(alias='$ref', default=None)
+    ref: Optional[str] = Field(alias='$ref', default=None)
 
 
-class GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta(ApiModel):
+class WebexGroupMeta(ApiModel):
     #: The ID of the organization to which this group belongs.
-    #: example: e9f9ab27-0459-4cd0-bd72-089bde5a7da6
-    organization_id: Optional[str] = Field(alias='organizationID', default=None)
+    organization_id: Optional[str] = None
 
 
-class GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group(ApiModel):
+class WebexGroup(ApiModel):
     #: The identifier of this group.
-    #: example: location
     usage: Optional[str] = None
     #: The owners of this group.
-    owners: Optional[list[PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners]] = None
+    owners: Optional[list[WebexGroupOwner]] = None
     #: A list of delegates of this group.
-    managed_by: Optional[list[ManagedByObject]] = None
+    managed_by: Optional[list[ManagedBy]] = None
     #: The identifier of the source.
-    #: example: AD
     provision_source: Optional[str] = None
     #: Response metadata.
-    meta: Optional[GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta] = None
+    meta: Optional[WebexGroupMeta] = None
 
 
 class MetaObjectResourceType(str, Enum):
-    group = 'group'
-    user = 'user'
+    group = 'Group'
+    user = 'User'
 
 
-class MetaObject(ApiModel):
-    #: example: group
+class GroupMeta(ApiModel):
     resource_type: Optional[MetaObjectResourceType] = None
     #: The date and time the group was created.
-    #: example: 2011-08-01T21:32:44.882Z
     created: Optional[datetime] = None
     #: The date and time the group was last changed.
-    #: example: 2011-08-01T21:32:44.882Z
     last_modified: Optional[datetime] = None
     #: The version of the group.
-    #: example: "W\/\"e180ee84f0671b1\""
     version: Optional[str] = None
     #: The resource itself.
-    #: example: https://example.com/v2/Groups/e9e30dba-f08f-4109-8486-d5c6a331660a
     location: Optional[str] = None
 
 
-class GetGroupResponse(ApiModel):
+class ScimGroup(ApiModel):
     #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:schemas:core:2.0:Group', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:Group']
     schemas: Optional[list[str]] = None
     #: A human-readable name for the group.
-    #: example: group1@example.com
     display_name: Optional[str] = None
     #: A unique identifier for the group.
-    #: example: cb8f48e4-5db2-496b-b43d-83d8d5a2a4b3
     id: Optional[str] = None
     #: An identifier for the resource as defined by the provisioning client.
-    #: example: test
     external_id: Optional[str] = None
     #: A list of members of this group.
-    members: Optional[list[GetGroupResponseMembers]] = None
+    members: Optional[list[ScimGroupMember]] = None
     #: Response metadata.
-    meta: Optional[MetaObject] = None
+    meta: Optional[GroupMeta] = None
     #: The Cisco extention of SCIM 2
-    urn_scim_schemas_extension_cisco_webexidentity_2_0_group: Optional[GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
+    webex_group: Optional[WebexGroup] = Field(
+        alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
+
+    def create_update(self) -> dict:
+        """
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json',
+                               exclude_none=True,
+                               by_alias=True,
+                               exclude={'id': True,
+                                        'schemas': True,
+                                        'meta': True,
+                                        'webex_group': {'meta': True}})
+        data['schemas'] = SCHEMAS
+        return data
 
 
 class SearchGroupResponse(ApiModel):
     #: Input JSON schemas.
-    #: example: ['urn:scim:schemas:extension:cisco:webexidentity:2.0:GroupMembers']
     schemas: Optional[list[str]] = None
     #: Total number of groups in search results.
-    #: example: 2
-    member_size: Optional[int] = None
+    total_results: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching contacts.
-    #: example: 1
     start_index: Optional[int] = None
     #: An array of group objects.
-    resources: Optional[list[GetGroupResponse]] = Field(alias='Resources', default=None)
-
-
-class GroupMemberResponseMembers(ApiModel):
-    #: A label indicating the type of resource, for example user, machine, or group.
-    #: example: user
-    type: Optional[str] = None
-    #: The identifier of the member of this Group.
-    #: example: c5349664-9f3d-410b-8bd3-6c31f181f13d
-    value: Optional[str] = None
-    #: A human-readable name for the group member.
-    #: example: A user
-    display: Optional[str] = None
+    resources: Optional[list[ScimGroup]] = Field(alias='Resources', default=None)
 
 
 class GroupMemberResponse(ApiModel):
     #: Input JSON schemas.
-    #: example: ['urn:ietf:params:scim:api:messages:2.0:ListResponse']
     schemas: Optional[list[str]] = None
     #: A human-readable name for the group.
-    #: example: group1@example.com
     display_name: Optional[str] = None
     #: Total number of groups in search results.
-    #: example: 2
-    total_results: Optional[int] = None
+    member_size: Optional[int] = None
     #: The total number of items in a paged result.
-    #: example: 2
     items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching groups.
-    #: example: 1
     start_index: Optional[int] = None
     #: A list of members of this group.
-    members: Optional[list[GroupMemberResponseMembers]] = None
+    members: Optional[list[ScimGroupMember]] = None
 
 
-class SCIM2GroupsApi(ApiChild, base='identity/scim'):
+class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
     """
     SCIM 2 Groups
-    
+
     Implementation of the SCIM 2.0 group part for group management in a standards based manner. Please also see the
     `SCIM Specification
-    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with detailed in
+    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with
+    detailed in
     `SCIM 2.0 schema
     <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
     """
 
-    def create_a_group(self, org_id: str, schemas: list[str], display_name: str, external_id: str,
-                       members: list[GroupMemberObject],
-                       urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group) -> GetGroupResponse:
+    def create(self, org_id: str, group: ScimGroup) -> ScimGroup:
         """
         Create a group
 
         Create a new group for a given organization. The group may optionally be created with group members.
 
-        <br/>
-
         **Authorization**
 
         OAuth token returned by Identity Broker.
-
-        <br/>
 
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
 
-        <br/>
-
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_group_admin`
-
-        <br/>
 
         **Usage**:
 
@@ -253,37 +190,24 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
-        1. Unrecognized schemas (ID/section) are ignored.
+        2. Unrecognized schemas (ID/section) are ignored.
 
-        1. Read-only attributes provided as input values are ignored.
+        3. Read-only attributes provided as input values are ignored.
 
         :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
             from the OAuth token is used.
         :type org_id: str
-        :param schemas: Input JSON schemas.
-        :type schemas: list[str]
-        :param display_name: A human-readable name for the Group.
-        :type display_name: str
-        :param external_id: An identifier for the resource as defined by the provisioning client.
-        :type external_id: str
-        :param members: A list of members of this group.
-        :type members: list[GroupMemberObject]
-        :param urn_scim_schemas_extension_cisco_webexidentity_2_0_group: The Cisco extension of SCIM 2.
-        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group
-        :rtype: :class:`GetGroupResponse`
+        :param group: Group settings
+        :type group: ScimGroup
+        :rtype: :class:`ScimGroup`
         """
-        body = dict()
-        body['schemas'] = schemas
-        body['displayName'] = display_name
-        body['externalId'] = external_id
-        body['members'] = TypeAdapter(list[GroupMemberObject]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
+        body = group.create_update()
         url = self.ep(f'{org_id}/v2/Groups')
         data = super().post(url, json=body)
-        r = GetGroupResponse.model_validate(data)
+        r = ScimGroup.model_validate(data)
         return r
 
-    def get_a_group(self, org_id: str, group_id: str, excluded_attributes: str = None) -> GetGroupResponse:
+    def details(self, org_id: str, group_id: str, excluded_attributes: str = None) -> ScimGroup:
         """
         Get a group
 
@@ -291,30 +215,20 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
 
         Optionally, members can be retrieved with this request. The maximum number of members returned is 500.
 
-        <br/>
-
         **Authorization**
 
         OAuth token rendered by Identity Broker.
 
-        <br/>
-
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
         - `identity:people_read`
-
-        <br/>
 
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_group_admin`
-
         - `id_readonly_admin`
-
         - `id_device_admin`
 
         :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
@@ -324,19 +238,19 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         :type group_id: str
         :param excluded_attributes: Attributes to be excluded from the return.
         :type excluded_attributes: str
-        :rtype: :class:`GetGroupResponse`
+        :rtype: :class:`ScimGroup`
         """
         params = {}
         if excluded_attributes is not None:
             params['excludedAttributes'] = excluded_attributes
         url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         data = super().get(url, params=params)
-        r = GetGroupResponse.model_validate(data)
+        r = ScimGroup.model_validate(data)
         return r
 
-    def search_groups(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
-                      start_index: int = None, count: int = None, sort_by: str = None, sort_order: str = None,
-                      include_members: bool = None, member_type: str = None) -> SearchGroupResponse:
+    def search(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
+               start_index: int = None, count: int = None, sort_by: str = None, sort_order: str = None,
+               include_members: bool = None, member_type: str = None) -> SearchGroupResponse:
         """
         Search groups
 
@@ -345,30 +259,20 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
-        <br/>
-
         **Authorization**
 
         An OAuth token rendered by Identity Broker.
 
-        <br/>
-
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
         - `identity:people_read`
-
-        <br/>
 
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_group_admin`
-
         - `id_readonly_admin`
-
         - `id_device_admin`
 
         :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
@@ -423,44 +327,91 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         r = SearchGroupResponse.model_validate(data)
         return r
 
-    def get_group_members(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                          member_type: str = None) -> GroupMemberResponse:
+    def search_all(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
+                   count: int = None, sort_by: str = None, sort_order: str = None,
+                   include_members: bool = None, member_type: str = None) -> Generator[ScimGroup, None, None]:
+        """
+        Same operation as search() but returns a generator of ScimGroups instead of paginated resources
+
+        See :meth:`SCIM2GroupsApi.search` for parameter documentation
+
+        :param org_id:
+        :param filter:
+        :param excluded_attributes:
+        :param attributes:
+        :param count:
+        :param sort_by:
+        :param sort_order:
+        :param include_members:
+        :param member_type:
+        :return:
+        """
+        '''async
+    async def search_all_gen(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str 
+    = None,
+                             count: int = None, sort_by: str = None, sort_order: str = None,
+                             include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup, 
+                             None, None]:
+        params = {k: v for k, v in locals().items()
+                  if k not in {'self', 'count'} and v is not None}
+        start_index = None
+        while True:
+            paginated_result = await self.search(**params, start_index=start_index, count=count)
+            for r in paginated_result.resources:
+                yield r
+            # prepare getting the next page
+            count = paginated_result.items_per_page
+            start_index = paginated_result.start_index + paginated_result.items_per_page
+            if start_index > paginated_result.total_results:
+                break
+        return
+
+    async def search_all(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
+                         count: int = None, sort_by: str = None, sort_order: str = None,
+                         include_members: bool = None, member_type: str = None) -> list[ScimGroup]:
+        params = {k: v for k, v in locals().items()
+                  if k not in {'self'} and v is not None}
+        return [u async for u in self.search_all_gen(**params)]
+        '''
+        params = {k: v for k, v in locals().items()
+                  if k not in {'self', 'count'} and v is not None}
+        start_index = None
+        while True:
+            paginated_result = self.search(**params, start_index=start_index, count=count)
+            yield from paginated_result.resources
+            # prepare getting the next page
+            count = paginated_result.items_per_page
+            start_index = paginated_result.start_index + paginated_result.items_per_page
+            if start_index > paginated_result.total_results:
+                break
+        return
+
+    def members(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
+                member_type: str = None) -> GroupMemberResponse:
         """
         Get Group Members
 
         Returns the members of a group.
 
         - The default maximum number of members returned is 500.
-
         - Control parameters are available to page through the members and to control the size of the results.
-
         - Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
-
-        <br/>
 
         **Authorization**
 
         OAuth token returned by the Identity Broker.
 
-        <br/>
-
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
         - `identity:people_read`
-
-        <br/>
 
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_group_admin`
-
         - `id_readonly_admin`
-
         - `id_device_admin`
 
         :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
@@ -489,37 +440,75 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         r = GroupMemberResponse.model_validate(data)
         return r
 
-    def update_a_group_with_put(self, org_id: str, group_id: str, schemas: list[str], display_name: str,
-                                external_id: str, members: list[GroupMemberObject],
-                                urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group) -> GetGroupResponse:
+    def members_all(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
+                    member_type: str = None) -> Generator[ScimGroupMember, None, None]:
+        """
+        Same operation as members() but returns a generator of ScimGroupMembers instead of paginated resources
+
+        See :meth:`SCIM2GroupsApi.members` for parameter documentation
+
+        :param org_id:
+        :param group_id:
+        :param start_index:
+        :param count:
+        :param member_type:
+        :return:
+        """
+        '''async
+    async def members_all_gen(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
+                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None, None]:
+        params = {k: v for k, v in locals().items()
+                  if k not in {'self', 'count'} and v is not None}
+        start_index = None
+        while True:
+            paginated_result = await self.members(**params, start_index=start_index, count=count)
+            for r in paginated_result.members:
+                yield r
+            # prepare getting the next page
+            count = paginated_result.items_per_page
+            start_index = paginated_result.start_index + paginated_result.items_per_page
+            if start_index > paginated_result.member_size:
+                break
+        return
+
+    async def members_all(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
+                          member_type: str = None) -> list[ScimGroupMember]:
+        params = {k: v for k, v in locals().items()
+                  if k not in {'self'} and v is not None}
+        return [u async for u in self.members_all_gen(**params)]
+        '''
+
+        params = {k: v for k, v in locals().items()
+                  if k not in {'self', 'count'} and v is not None}
+        start_index = None
+        while True:
+            paginated_result = self.members(**params, start_index=start_index, count=count)
+            yield from paginated_result.members
+            # prepare getting the next page
+            count = paginated_result.items_per_page
+            start_index = paginated_result.start_index + paginated_result.items_per_page
+            if start_index > paginated_result.member_size:
+                break
+        return
+
+    def update(self, org_id: str, group: ScimGroup) -> ScimGroup:
         """
         Update a group with PUT
 
         Replace the contents of the Group.
 
-        Specify the group ID in the `groupId` parameter in the URI.
-
-        <br/>
-
         **Authorization**
 
         OAuth token returned by Identity Broker.
-
-        <br/>
 
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
 
-        <br/>
-
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_group_admin`
-
-        <br/>
 
         **Usage**:
 
@@ -527,74 +516,46 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
-        1. Unrecognized schemas (ID/section) are ignored.
+        2. Unrecognized schemas (ID/section) are ignored.
 
-        1. Read-only attributes provided as input values are ignored.
+        3. Read-only attributes provided as input values are ignored.
 
-        1. The group `id` is not changed.
+        4. The group `id` is not changed.
 
-        1. All attributes are cleaned up if a new value is not provided by the client.
+        5. All attributes are cleaned up if a new value is not provided by the client.
 
-        1. The values, `meta` and `created` are not changed.
+        6. The values, `meta` and `created` are not changed.
 
         :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
             from the OAuth token is used.
         :type org_id: str
-        :param group_id: A unique identifier for the group.
-        :type group_id: str
-        :param schemas: Input JSON schemas.
-        :type schemas: list[str]
-        :param display_name: A human-readable name for the group.
-        :type display_name: str
-        :param external_id: An identifier for the resource as defined by the provisioning client.
-        :type external_id: str
-        :param members: A list of members of this group.
-        :type members: list[GroupMemberObject]
-        :param urn_scim_schemas_extension_cisco_webexidentity_2_0_group: The Cisco extension of SCIM 2.
-        :type urn_scim_schemas_extension_cisco_webexidentity_2_0_group: PostGroupUrnscimschemasextensionciscowebexidentity20Group
-        :rtype: :class:`GetGroupResponse`
+        :rtype: :class:`ScimGroup`
         """
-        body = dict()
-        body['schemas'] = schemas
-        body['displayName'] = display_name
-        body['externalId'] = external_id
-        body['members'] = TypeAdapter(list[GroupMemberObject]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
-        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
+        body = group.create_update()
+        url = self.ep(f'{org_id}/v2/Groups/{group.id}')
         data = super().put(url, json=body)
-        r = GetGroupResponse.model_validate(data)
+        r = ScimGroup.model_validate(data)
         return r
 
-    def update_a_group_with_patch(self, org_id: str, group_id: str, schemas: list[str],
-                                  operations: list[PatchGroupOperations]) -> GetGroupResponse:
+    def patch(self, org_id: str, group_id: str, schemas: list[str],
+              operations: list[PatchUserOperation]) -> ScimGroup:
         """
         Update a group with PATCH
 
         Update group attributes with PATCH.
 
-        Specify the group ID in the `groupId` parameter in the URI.
-
-        <br/>
-
         **Authorization**
 
         OAuth token returned by Identity Broker.
-
-        <br/>
 
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
 
-        <br/>
-
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_group_admin`
-
-        <br/>
 
         **Usage**:
 
@@ -602,21 +563,19 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
-        1. Unrecognized schemas (ID/section) are ignored.
+        2. Unrecognized schemas (ID/section) are ignored.
 
-        1. Read-only attributes provided as input values are ignored.
+        3. Read-only attributes provided as input values are ignored.
 
-        1. Each operation on an attribute must be compatible with the attribute's mutability.
+        4. Each operation on an attribute must be compatible with the attribute's mutability.
 
-        1. Each PATCH operation represents a single action to be applied to the
+        5. Each PATCH operation represents a single action to be applied to the
         same SCIM resource specified by the request URI. Operations are
         applied sequentially in the order they appear in the array. Each
         operation in the sequence is applied to the target resource; the
         resulting resource becomes the target of the next operation.
         Evaluation continues until all operations are successfully applied or
         until an error condition is encountered.
-
-        <br/>
 
         **Add operations**:
 
@@ -625,89 +584,61 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         JSON object containing the sub-attributes of the complex attribute specified in the operation's `path`. The
         result of the add operation depends upon the target location indicated by `path` references:
 
-        <br/>
-
         - If omitted, the target location is assumed to be the resource itself. The `value` parameter contains a set of
-        attributes to be added to the resource.
-
+          attributes to be added to the resource.
         - If the target location does not exist, the attribute and value are added.
-
         - If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the
-        `value` parameter.
-
+          `value` parameter.
         - If the target location specifies a multi-valued attribute, a new value is added to the attribute.
-
         - If the target location specifies a single-valued attribute, the existing value is replaced.
-
         - If the target location specifies an attribute that does not exist (has no value), the attribute is added with
-        the new value.
-
+          the new value.
         - If the target location exists, the value is replaced.
-
         - If the target location already contains the value specified, no changes should be made to the resource.
-
-        <br/>
 
         **Replace operations**:
 
         The `replace` operation replaces the value at the target location specified by the `path`. The operation
         performs the following functions, depending on the target location specified by `path`:
 
-        <br/>
-
         - If the `path` parameter is omitted, the target is assumed to be the resource itself. In this case, the
-        `value` attribute shall contain a list of one or more attributes that are to be replaced.
-
+          `value` attribute shall contain a list of one or more attributes that are to be replaced.
         - If the target location is a single-value attribute, the value of the attribute is replaced.
-
         - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
-        are replaced.
-
+          are replaced.
         - If the target location path specifies an attribute that does not exist, the service provider shall treat the
-        operation as an "add".
-
+          operation as an "add".
         - If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the
-        `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.
-        Sub-attributes that are not specified in the `value` parameters are left unchanged.
-
+          `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.
+          Sub-attributes that are not specified in the `value` parameters are left unchanged.
         - If the target location is a multi-valued attribute and a value selection ("valuePath") filter is specified
-        that matches one or more values of the multi-valued attribute, then all matching record values will be
-        replaced.
-
+          that matches one or more values of the multi-valued attribute, then all matching record values will be
+          replaced.
         - If the target location is a complex multi-valued attribute with a value selection filter ("valuePath") and a
-        specific sub-attribute (e.g., "addresses[type eq "work"].streetAddress"), the matching sub-attribute of all
-        matching records is replaced.
-
+          specific sub-attribute (e.g., "addresses[type eq "work"].streetAddress"), the matching sub-attribute of all
+          matching records is replaced.
         - If the target location is a multi-valued attribute for which a value selection filter ("valuePath") has been
-        supplied and no record match was made, the service provider will indicate the failure by returning HTTP status
-        code 400 and a `scimType` error code of `noTarget`.
-
-        <br/>
+          supplied and no record match was made, the service provider will indicate the failure by returning HTTP status
+          code 400 and a `scimType` error code of `noTarget`.
 
         **Remove operations**:
 
         The `remove` operation removes the value at the target location specified by the required attribute `path`. The
         operation performs the following functions, depending on the target location specified by `path`:
 
-        <br/>
-
         - If `path` is unspecified, the operation fails with HTTP status code 400 and a "scimType" error code of
-        "noTarget".
-
+          "noTarget".
         - If the target location is a single-value attribute, the attribute and its associated value is removed, and
-        the attribute will be considered unassigned.
-
+          the attribute will be considered unassigned.
         - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
-        are removed, and the attribute SHALL be considered unassigned.
-
+          are removed, and the attribute SHALL be considered unassigned.
         - If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the
-        values matched by the filter are removed. If no other values remain after the removal of the selected values,
-        the multi-valued attribute will be considered unassigned.
-
+          values matched by the filter are removed. If no other values remain after the removal of the selected values,
+          the multi-valued attribute will be considered unassigned.
         - If the target location is a complex multi-valued attribute and a complex filter is specified based on the
-        attribute`s sub-attributes, the matching records are removed. Sub-attributes whose values have been removed
-        will be considered unassigned. If the complex multi-valued attribute has no remaining records, the attribute
-        will be considered unassigned.
+          attribute`s sub-attributes, the matching records are removed. Sub-attributes whose values have been removed
+          will be considered unassigned. If the complex multi-valued attribute has no remaining records, the attribute
+          will be considered unassigned.
 
         :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
             from the OAuth token is used.
@@ -718,42 +649,34 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         :type schemas: list[str]
         :param operations: A list of patch operations.
         :type operations: list[PatchGroupOperations]
-        :rtype: :class:`GetGroupResponse`
+        :rtype: :class:`ScimGroup`
         """
         body = dict()
         body['schemas'] = schemas
-        body['Operations'] = TypeAdapter(list[PatchGroupOperations]).dump_python(operations, mode='json', by_alias=True, exclude_none=True)
+        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(operations, mode='json', by_alias=True,
+                                                                               exclude_none=True)
         url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         data = super().patch(url, json=body)
-        r = GetGroupResponse.model_validate(data)
+        r = ScimGroup.model_validate(data)
         return r
 
-    def delete_a_group(self, org_id: str, group_id: str):
+    def delete(self, org_id: str, group_id: str):
         """
         Delete a group
 
         Remove a group from the system.
 
-        Specify the group ID in the `groupId` parameter in the URI.
-
-        <br/>
-
         **Authorization**
 
         OAuth token rendered by Identity Broker.
-
-        <br/>
 
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
 
-        <br/>
-
         The following administrators can use this API:
 
         - `id_full_admin`
-
         - `id_group_admin`
 
         :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID

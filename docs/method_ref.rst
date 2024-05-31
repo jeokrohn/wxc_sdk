@@ -431,6 +431,24 @@ The method name is a link to the method documentation.
         Updates details for a room, by ID
    * - :meth:`api.scim.bulk.bulk_request <wxc_sdk.scim.bulk.SCIM2BulkApi.bulk_request>`
         User bulk API
+   * - :meth:`api.scim.groups.create <wxc_sdk.scim.groups.SCIM2GroupsApi.create>`
+        Create a group
+   * - :meth:`api.scim.groups.delete <wxc_sdk.scim.groups.SCIM2GroupsApi.delete>`
+        Delete a group
+   * - :meth:`api.scim.groups.details <wxc_sdk.scim.groups.SCIM2GroupsApi.details>`
+        Get a group
+   * - :meth:`api.scim.groups.members <wxc_sdk.scim.groups.SCIM2GroupsApi.members>`
+        Get Group Members
+   * - :meth:`api.scim.groups.members_all <wxc_sdk.scim.groups.SCIM2GroupsApi.members_all>`
+        Same operation as members() but returns a generator of ScimGroupMembers instead of paginated resources
+   * - :meth:`api.scim.groups.patch <wxc_sdk.scim.groups.SCIM2GroupsApi.patch>`
+        Update a group with PATCH
+   * - :meth:`api.scim.groups.search <wxc_sdk.scim.groups.SCIM2GroupsApi.search>`
+        Search groups
+   * - :meth:`api.scim.groups.search_all <wxc_sdk.scim.groups.SCIM2GroupsApi.search_all>`
+        Same operation as search() but returns a generator of ScimGroups instead of paginated resources
+   * - :meth:`api.scim.groups.update <wxc_sdk.scim.groups.SCIM2GroupsApi.update>`
+        Update a group with PUT
    * - :meth:`api.scim.users.create <wxc_sdk.scim.users.SCIM2UsersApi.create>`
         Create a user
    * - :meth:`api.scim.users.delete <wxc_sdk.scim.users.SCIM2UsersApi.delete>`

@@ -558,7 +558,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
                          excluded_attributes: str = None,
                          sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
                          include_group_details: str = None,
-                         group_usage_types: str = None) -> AsyncGenerator[ScimUser, None, None]:
+                         group_usage_types: str = None) -> list[ScimUser]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self'} and v is not None}
         return [u async for u in self.search_all_gen(**params)]
