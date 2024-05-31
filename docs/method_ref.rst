@@ -1181,6 +1181,10 @@ The method name is a link to the method documentation.
         Get Personalization Task
    * - :meth:`api.workspace_personalization.personalize_a_workspace <wxc_sdk.workspace_personalization.WorkspacePersonalizationApi.personalize_a_workspace>`
         Personalize a Workspace
+   * - :meth:`api.workspace_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
+        Configure Barge In Settings
+   * - :meth:`api.workspace_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
+        Retrieve Barge In Settings
    * - :meth:`api.workspace_settings.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         Configure Call Bridge Settings
    * - :meth:`api.workspace_settings.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`

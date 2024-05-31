@@ -73,17 +73,19 @@ class PersonSettingsApiChild(ApiChild, base=''):
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
-        alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
-                      ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
-                      ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
-                      ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
-                      ('people', 'callBridge'): ('telephony/config/people', '/features/'),
-                      ('people', 'agent'): ('telephony/config/people', '/'),
-                      ('people', 'musicOnHold'): ('telephony/config/people', '/'),
-                      }
+        alternates = {
+            ('workspaces', 'bargeIn'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
+            ('people', 'agent'): ('telephony/config/people', '/'),
+            ('people', 'callBridge'): ('telephony/config/people', '/features/'),
+            ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
+            ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
+            ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
+            ('people', 'musicOnHold'): ('telephony/config/people', '/'),
+        }
         if selector == 'people' and self.feature == 'voicemail' and path == 'passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')

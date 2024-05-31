@@ -83,7 +83,7 @@ class AgentCallerIdApi(PersonSettingsApiChild):
     """
     API to manage agent caller id settings
 
-    Also used for virtual lines, workspaces
+    Also used for virtual lines
     """
     feature = 'agent'
 
