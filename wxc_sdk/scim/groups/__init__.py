@@ -281,8 +281,9 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         :type org_id: str
         :param filter: The url encoded filter. The example content is 'displayName Eq "group1@example.com" or
             displayName Eq "group2@example.com"'.
-        For more filter patterns, see https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2. If the value is
-        empty, the API returns all groups under the organization.
+
+            For more filter patterns, see https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2. If the value is
+            empty, the API returns all groups under the organization.
         :type filter: str
         :param excluded_attributes: Attributes to be excluded from the return.
         :type excluded_attributes: str
@@ -396,8 +397,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
 
         - The default maximum number of members returned is 500.
         - Control parameters are available to page through the members and to control the size of the results.
-        - Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+        - Long result sets are split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
 
         **Authorization**
 
@@ -514,6 +514,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         **Usage**:
 
         1. The input JSON must conform to one of the following schemas:
+
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
@@ -561,6 +562,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         **Usage**:
 
         1. The input JSON must conform to one of the following schemas:
+
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
