@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse',
+__all__ = ['EmailObject', 'EmailObjectType', 'ExternalAttributeObject', 'GetUserResponse',
            'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedOrgsObject',
            'ManagerResponseObject', 'NameObject', 'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject',
            'PhotoObjectType', 'PostUserUrnietfparamsscimschemasextensionenterprise20User',
@@ -94,6 +94,15 @@ class ManagedOrgsObject(ApiModel):
     role: Optional[str] = None
 
 
+class ExternalAttributeObject(ApiModel):
+    #: Source of external attribute.
+    #: example: Source.1_7ddf1f2c-2985-4c37-a450-d58bbc201750
+    source: Optional[str] = None
+    #: Value of external attribute.
+    #: example: externalAttribute1_value
+    value: Optional[str] = None
+
+
 class PostUserUrnscimschemasextensionciscowebexidentity20User(ApiModel):
     #: Account status of the user.
     #: example: ['element='string' content='active' attributes={'typeAttributes': ApibArray(element='array', content=[ApibString(element='string', content='fixed', attributes=None, meta=None)], attributes=None, meta=None)} meta=None']
@@ -102,6 +111,12 @@ class PostUserUrnscimschemasextensionciscowebexidentity20User(ApiModel):
     sip_addresses: Optional[list[SipAddressObject]] = None
     #: Organizations that the user can manage.
     managed_orgs: Optional[list[ManagedOrgsObject]] = None
+    #: The extension attributes of the user. Postfix support from 1 to 15, for example,
+    #: "extensionAttribute1","extensionAttribute2"..."extensionAttribute15".
+    extension_attribute_: Optional[list[str]] = Field(alias='extensionAttribute*', default=None)
+    #: The external attributes of the user. Postfix support from 1 to 15, for example,
+    #: "externalAttribute1","externalAttribute2"..."externalAttribute15".
+    external_attribute_: Optional[list[ExternalAttributeObject]] = Field(alias='externalAttribute*', default=None)
 
 
 class UserTypeObject(str, Enum):
@@ -389,8 +404,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
 
         - `identity:people_rw`
 
-        - `Identity:SCIM`
-
         <br/>
 
         The following administrators can use this API:
@@ -516,10 +529,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
 
         - `identity:people_read`
 
-        - `Identity:SCIM`
-
-        - `Identity:SCIM_read`
-
         <br/>
 
         The following administrators can use this API:
@@ -565,10 +574,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         - `identity:people_rw`
 
         - `identity:people_read`
-
-        - `Identity:SCIM`
-
-        - `Identity:SCIM_read`
 
         <br/>
 
@@ -680,8 +685,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
-        - `Identity:SCIM`
 
         <br/>
 
@@ -814,8 +817,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
-        - `Identity:SCIM`
 
         <br/>
 
@@ -970,8 +971,6 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-
-        - `Identity:SCIM`
 
         <br/>
 

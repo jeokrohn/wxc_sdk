@@ -359,7 +359,6 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-        - `Identity:SCIM`
 
         The following administrators can use this API:
 
@@ -403,8 +402,6 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
 
         - `identity:people_rw`
         - `identity:people_read`
-        - `Identity:SCIM`
-        - `Identity:SCIM_read`
 
         The following administrators can use this API:
 
@@ -439,8 +436,6 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
 
         - `identity:people_rw`
         - `identity:people_read`
-        - `Identity:SCIM`
-        - `Identity:SCIM_read`
 
         The following administrators can use this API:
 
@@ -592,7 +587,6 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-        - `Identity:SCIM`
 
         The following administrators can use this API:
 
@@ -645,7 +639,6 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-        - `Identity:SCIM`
 
         The following administrators can use this API:
 

@@ -92,7 +92,6 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
-        - `Identity:SCIM`
 
         **Usage**:
 

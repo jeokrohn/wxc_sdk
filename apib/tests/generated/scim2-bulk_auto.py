@@ -77,8 +77,6 @@ class BulkManageSCIM2UsersAndGroupsApi(ApiChild, base='identity/scim'):
 
         - `identity:people_rw`
 
-        - `Identity:SCIM`
-
         <br/>
 
         **Usage**:
