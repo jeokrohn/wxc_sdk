@@ -437,6 +437,9 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         - Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
+        **Note**
+        Location groups are different from SCIM groups. You cannot search for identities in a location via groups.
+
         <br/>
 
         **Authorization**

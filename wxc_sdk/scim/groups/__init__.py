@@ -399,6 +399,10 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         - Control parameters are available to page through the members and to control the size of the results.
         - Long result sets are split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
 
+        **Note**
+
+        Location groups are different from SCIM groups. You cannot search for identities in a location via groups.
+
         **Authorization**
 
         OAuth token returned by the Identity Broker.
