@@ -549,7 +549,7 @@ class Attribute:
             yield Attribute(name=e.content, python_type=simple_python_type(e.element),
                             docstring=e.description, sample=None, referenced_class=None)
 
-    def source(self, for_enum: bool) -> str:
+    def source(self, for_enum: bool, with_example: bool = True) -> str:
         """
         Python source for one class attribute
         """
@@ -582,7 +582,7 @@ class Attribute:
             if attr_name in RESERVED_PARAM_NAMES:
                 attr_name = f'{attr_name}_'
 
-            if self.sample:
+            if with_example and self.sample:
                 lines.append(f'#: example: {self.sample}')
 
             # something like
@@ -622,7 +622,7 @@ class PythonClass:
         if not_unique:
             raise KeyError(f'class {self.name} has duplicate attributes: {", ".join(not_unique)}')
 
-    def source(self) -> Optional[str]:
+    def source(self, with_example: bool = True) -> Optional[str]:
         """
         Source code for this class or None
         """
@@ -637,7 +637,8 @@ class PythonClass:
             attribute_sources = ('...',)
         else:
             attribute_sources = chain.from_iterable(map(str.splitlines,
-                                                        (f'{a.source(self.is_enum)}' for a in self.attributes)))
+                                                        (f'{a.source(self.is_enum, with_example)}'
+                                                         for a in self.attributes)))
 
         result = CLASS_TEMPLATE.format(class_name=self.name,
                                        baseclass=baseclass,

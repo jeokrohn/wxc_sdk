@@ -65,7 +65,7 @@ class CodeGenerator:
         """
         return self.class_registry.endpoints()
 
-    def source(self) -> str:
+    def source(self, with_example: bool = True) -> str:
         """
         Generate Python source for the APIB files read
             * dataclasses
@@ -109,7 +109,7 @@ class CodeGenerator:
         for python_class in self.class_registry.classes():
             if not self.with_unreferenced_classes and python_class.name not in referenced_classes:
                 continue
-            class_source = python_class.source()
+            class_source = python_class.source(with_example=with_example)
             if class_source:
                 referenced_classes.add(python_class.name)
                 class_sources.append(class_source)

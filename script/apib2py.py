@@ -53,6 +53,8 @@ def main():
                         help='Python.re to exclude some APIB files; matches on basenames of APIB files')
     parser.add_argument('--with-unref', action='store_true',
                         help='include unreferenced classes')
+    parser.add_argument('--with-examples', action='store_true',
+                        help='include example values for attributes')
     args = parser.parse_args()
 
     apib_path = args.apib
@@ -84,6 +86,8 @@ def main():
               file=sys.stderr)
         exit(1)
 
+    with_examples = args.with_examples or False
+
     # conversion for each APIB files
     def convert_one_apib(apib_path: str):
         """
@@ -114,7 +118,7 @@ def main():
             return
 
         with output_ctx() as f:
-            print(code_gen.source(),
+            print(code_gen.source(with_example=with_examples),
                   end='',
                   file=f)
 
