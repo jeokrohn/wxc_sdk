@@ -2,6 +2,7 @@ import json
 import os.path
 import sys
 import tempfile
+from contextlib import contextmanager
 from importlib import import_module
 from os.path import basename, splitext
 from unittest import TestCase
@@ -30,6 +31,25 @@ class TestReturnValues(TestCase):
     """
     apib_file = 'user-call-settings.apib'
 
+    @contextmanager
+    def import_py_module(self, source: str):
+        with tempfile.TemporaryDirectory() as dir:
+            sys.path.insert(0, dir)
+            try:
+                module_name = splitext(basename(self.apib_file))[0]
+                py_path = os.path.join(dir, f'{module_name}.py')
+                # write Python source to temp dir
+                with open(py_path, mode='w') as py_file:
+                    py_file.write(source)
+                module = import_module(module_name)
+                try:
+                    yield module
+                finally:
+                    del sys.modules[module.__name__]
+            finally:
+                sys.path.pop(0)
+        return
+
     def test_001_code_gen(self):
         # join APIB_PATH and apib_file
         apib_path = os.path.join(APIB_PATH, self.apib_file)
@@ -37,17 +57,7 @@ class TestReturnValues(TestCase):
         code_gen.read_blueprint(apib_path)
         code_gen.cleanup()
         source = code_gen.source()
-        with tempfile.TemporaryDirectory() as dir:
-            py_path = os.path.join(dir, f'{splitext(basename(self.apib_file))[0]}.py')
-            # write Python source to temp dir
-            with open(py_path, mode='w') as py_file:
-                py_file.write(source)
-            sm = sys.modules
-            # import module
-            # TODO: need to figure out to create module from string
-            #   ... or how to import from tempdir
-            module = import_module(py_path)
-
+        with self.import_py_module(source) as module:
             err = None
             for _, api in code_gen.class_registry.apis():
                 for endpoint in api.endpoints:
@@ -62,9 +72,18 @@ class TestReturnValues(TestCase):
                         err = err or e
                         continue
                     # what is the result class?
-                    print(f'{endpoint.name}, result: {endpoint.result}, result_referenced_class: {endpoint.result_referenced_class}')
-                    # find result class in module
-                    # use <model>.model_parse() to try to deserialize the body
-                    foo = 1
+                    print(f'{endpoint.name}, result: {endpoint.result}, '
+                          f'result_referenced_class: {endpoint.result_referenced_class}')
+                    validator = endpoint.body_validator(module)
+                    # try to deserialize the body
+                    try:
+                        result = validator(response_body)
+                    except Exception as e:
+                        print(f'{endpoint.name}, ********* failed to parse body: {e}', file=sys.stderr)
+                        err = err or e
+                        continue
+                # for
+            # for
+        # with
         if err:
             raise err
