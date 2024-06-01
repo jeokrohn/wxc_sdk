@@ -66,6 +66,9 @@ class WebhookResource(str, Enum):
     #: The `Recordings
     #: <https://developer.webex.com/docs/api/v1/recordings>`_ resource.
     recordings = 'recordings'
+    #: The `CallRecordings
+    #: <https://developer.webex.com/docs/api/v1/converged-recordings>`_ resource.
+    converged_recordings = 'convergedRecordings'
     #: The `Meeting Participants
     #: <https://developer.webex.com/docs/api/v1/meeting-participants>`_ resource.
     meeting_participants = 'meetingParticipants'
@@ -119,6 +122,11 @@ class Webhook(ApiModel):
     org_id: Optional[str] = None
     created_by: Optional[str] = None
     app_id: Optional[str] = None
+    #: Specify `org` when creating an org/admin level webhook. Supported for `meetings`, `recordings`,
+    #: `convergedRecordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`,
+    #: `rooms`, and `messaging` (for Compliance Officers and messages with file attachments only - see
+    #: `inline file DLP
+    #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     owned_by: Optional[str] = None
 
     @property

@@ -33,6 +33,9 @@ class WebhookResource(str, Enum):
     #: The `Recordings
     #: <https://developer.webex.com/docs/api/v1/recordings>`_ resource.
     recordings = 'recordings'
+    #: The `CallRecordings
+    #: <https://developer.webex.com/docs/api/v1/converged-recordings>`_ resource.
+    converged_recordings = 'convergedRecordings'
     #: The `Meeting Participants
     #: <https://developer.webex.com/docs/api/v1/meeting-participants>`_ resource.
     meeting_participants = 'meetingParticipants'
@@ -102,8 +105,9 @@ class Webhook(ApiModel):
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
     #: Specify `org` when creating an org/admin level webhook. Supported for `meetings`, `recordings`,
-    #: `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`, and `messaging`
-    #: (for Compliance Officers and messages with file attachments only - see `inline file DLP
+    #: `convergedRecordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`,
+    #: `rooms`, and `messaging` (for Compliance Officers and messages with file attachments only - see
+    #: `inline file DLP
     #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     #: example: org
     owned_by: Optional[str] = None
@@ -173,10 +177,10 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param secret: The secret used to generate payload signature.
         :type secret: str
         :param owned_by: Specify `org` when creating an org/admin level webhook. Supported for `meetings`,
-            `recordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`,
-            and `messaging` (for Compliance Officers and messages with file attachments only - see `inline file DLP
-            <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_)
-            resources.
+            `recordings`, `convergedRecordings`,`meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`,
+            `controlHubAlerts`, `rooms`, and `messaging` (for Compliance Officers and messages with file attachments
+            only - see `inline file DLP
+            <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
         :type owned_by: str
         :rtype: :class:`Webhook`
         """
@@ -234,10 +238,10 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param secret: The secret used to generate payload signature.
         :type secret: str
         :param owned_by: Specify `org` when creating an org/admin level webhook. Supported for `meetings`,
-            `recordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`,
-            and `messaging` (for Compliance Officers and messages with file attachments only - see `inline file DLP
-            <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_)
-            resources.
+            `recordings`, `convergedRecordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`,
+            `controlHubAlerts`, `rooms`, and `messaging` (for Compliance Officers and messages with file attachments
+            only - see `inline file DLP
+            <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: WebhookStatus
