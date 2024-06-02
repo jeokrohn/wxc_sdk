@@ -17,6 +17,7 @@ Subpackages
    wxc_sdk.authorizations
    wxc_sdk.cdr
    wxc_sdk.common
+   wxc_sdk.converged_recordings
    wxc_sdk.device_configurations
    wxc_sdk.devices
    wxc_sdk.events

@@ -12,6 +12,8 @@ __all__ = ['RecordingFormat', 'RecordingServiceType', 'RecordingStatus', 'Record
 
 
 class RecordingFormat(str, Enum):
+    #: Recording file format is MP3.
+    mp3 = 'MP3'
     #: Recording file format is MP4.
     mp4 = 'MP4'
     #: Recording file format is ARF, a proprietary Webex recording format.
@@ -29,6 +31,8 @@ class RecordingServiceType(str, Enum):
     training_center = 'TrainingCenter'
     #: The service type for the recording is the support meeting.
     support_center = 'SupportCenter'
+    calling = 'calling'
+    all = 'all'
 
 
 class RecordingStatus(str, Enum):

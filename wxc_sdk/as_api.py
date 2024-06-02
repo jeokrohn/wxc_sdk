@@ -56,17 +56,18 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
            'AsCallBridgeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
            'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi',
-           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
-           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
-           'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
-           'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationInterceptApi',
-           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
-           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
-           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
-           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
-           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConvergedRecordingsApi',
+           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
+           'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi',
+           'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi',
+           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsLocationAccessCodesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi',
+           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
            'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
            'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -371,6 +372,258 @@ class AsAuthorizationsApi(AsApiChild, base='authorizations'):
             if org_id:
                 params['orgId'] = org_id
         await super().delete(url, params=params)
+
+
+class AsConvergedRecordingsApi(AsApiChild, base=''):
+    """
+    Converged Recordings
+
+    Not supported for Webex for Government (FedRAMP)
+
+    Webex Meetings and Webex Calling (with Webex as the Call Recording provider) leverage the same recording
+    infrastructure. That ensures that users can use the same recording API to fetch call recordings and/or meeting
+    recordings. This convergence allows the sharing of functionality (summaries, transcripts, etc.) across the Webex
+    Suite and provides a consistent user experience.
+
+    This API is currently limited to Webex Calling i.e., providing details for call recordings but will later be
+    extended to include Webex Meeting recordings.
+
+    When the recording is paused in a call, the recording does not contain the pause. If the recording is stopped and
+    restarted in a call, several recordings are created. Those recordings will be consolidated and available all at
+    once.
+
+    For information on the call recording feature, refer to `Manage call recording for Webex Calling
+    <https://help.webex.com/en-us/article/ilga4/Manage-call-recording-for-Webex-Calling#wbxch_t_manage-call
+    -recording_selecting-call-recording-provider>`_.
+    """
+
+    def list_gen(self, from_: Union[str, datetime] = None,
+             to_: Union[str, datetime] = None, status: RecordingStatus = None,
+             service_type: RecordingServiceType = None,
+             format_: str = None, owner_id: str = None,
+             owner_email: str = None, owner_type: RecordingOwnerType = None,
+             storage_region: RecordingStorageRegion = None,
+             location_id: str = None,
+             **params) -> AsyncGenerator[ConvergedRecording, None, None]:
+        """
+        List Recordings for Compliance officer
+
+        List recordings for compliance officer. You can specify a date range, and the maximum number of recordings to
+        return.
+
+        The list returned is sorted in descending order by the date and time that the recordings were created.
+
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`.
+        :type to_: Union[str, datetime]
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+        :type status: RecordingStatus
+        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
+            service-type. Valid values are `calling`, or `all`.
+        :type service_type: RecordingServiceType
+        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
+            `MP3`.
+        :type format_: RecordingObjectFormat
+        :param owner_id: Webex user Id to fetch recordings for a particular user.
+        :type owner_id: str
+        :param owner_email: Webex email address to fetch recordings for a particular user.
+        :type owner_email: str
+        :param owner_type: Recording based on type of user.
+        :type owner_type: RecordingOwnerType
+        :param storage_region: Recording stored in certain Webex locations.
+        :type storage_region: RecordingStorageRegion
+        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
+            Hub).
+        :type location_id: str
+        :return: Generator yielding :class:`RecordingObject` instances
+        """
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if status is not None:
+            params['status'] = enum_str(status)
+        if service_type is not None:
+            params['serviceType'] = enum_str(service_type)
+        if format_ is not None:
+            params['format'] = enum_str(format_)
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_email is not None:
+            params['ownerEmail'] = owner_email
+        if owner_type is not None:
+            params['ownerType'] = enum_str(owner_type)
+        if storage_region is not None:
+            params['storageRegion'] = enum_str(storage_region)
+        if location_id is not None:
+            params['locationId'] = location_id
+        url = self.ep('admin/convergedRecordings')
+        return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
+
+    async def list(self, from_: Union[str, datetime] = None,
+             to_: Union[str, datetime] = None, status: RecordingStatus = None,
+             service_type: RecordingServiceType = None,
+             format_: str = None, owner_id: str = None,
+             owner_email: str = None, owner_type: RecordingOwnerType = None,
+             storage_region: RecordingStorageRegion = None,
+             location_id: str = None,
+             **params) -> List[ConvergedRecording]:
+        """
+        List Recordings for Compliance officer
+
+        List recordings for compliance officer. You can specify a date range, and the maximum number of recordings to
+        return.
+
+        The list returned is sorted in descending order by the date and time that the recordings were created.
+
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`.
+        :type to_: Union[str, datetime]
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+        :type status: RecordingStatus
+        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
+            service-type. Valid values are `calling`, or `all`.
+        :type service_type: RecordingServiceType
+        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
+            `MP3`.
+        :type format_: RecordingObjectFormat
+        :param owner_id: Webex user Id to fetch recordings for a particular user.
+        :type owner_id: str
+        :param owner_email: Webex email address to fetch recordings for a particular user.
+        :type owner_email: str
+        :param owner_type: Recording based on type of user.
+        :type owner_type: RecordingOwnerType
+        :param storage_region: Recording stored in certain Webex locations.
+        :type storage_region: RecordingStorageRegion
+        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
+            Hub).
+        :type location_id: str
+        :return: Generator yielding :class:`RecordingObject` instances
+        """
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if status is not None:
+            params['status'] = enum_str(status)
+        if service_type is not None:
+            params['serviceType'] = enum_str(service_type)
+        if format_ is not None:
+            params['format'] = enum_str(format_)
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_email is not None:
+            params['ownerEmail'] = owner_email
+        if owner_type is not None:
+            params['ownerType'] = enum_str(owner_type)
+        if storage_region is not None:
+            params['storageRegion'] = enum_str(storage_region)
+        if location_id is not None:
+            params['locationId'] = location_id
+        url = self.ep('admin/convergedRecordings')
+        return [o async for o in self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)]
+
+    async def details(self, recording_id: str) -> ConvergedRecordingWithDirectDownloadLinks:
+        """
+        Get Recording Details
+
+        Retrieves details for a recording with a specified recording ID.
+
+        Only recordings of owner with the authenticated user may be retrieved.
+
+        :param recording_id: A unique identifier for the recording.
+        :type recording_id: str
+        :rtype: :class:`ConvergedRecordingWithDirectDownloadLinks`
+        """
+        url = self.ep(f'convergedRecordings/{recording_id}')
+        data = await super().get(url)
+        r = ConvergedRecordingWithDirectDownloadLinks.model_validate(data)
+        return r
+
+    async def delete(self, recording_id: str, reason: str = None, comment: str = None):
+        """
+        Delete a Recording
+
+        Removes a recording with a specified recording ID. The deleted recording cannot be recovered.
+
+        If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users
+        (host, attendees and shared), and to Compliance officer also. This action purges the recordings from Webex.
+
+        :param recording_id: A unique identifier for the recording.
+        :type recording_id: str
+        :param reason: Reason for deleting a recording. Only required when a Compliance Officer is operating on another
+            user's recording.
+        :type reason: str
+        :param comment: Compliance Officer's explanation for deleting a recording. The comment can be a maximum of 255
+            characters long.
+        :type comment: str
+        :rtype: None
+        """
+        body = dict()
+        if reason is not None:
+            body['reason'] = reason
+        if comment is not None:
+            body['comment'] = comment
+        url = self.ep(f'convergedRecordings/{recording_id}')
+        await super().delete(url, json=body)
+
+    async def metadata(self, recording_id: str, show_all_types: bool = None):
+        """
+        Get Recording metadata
+
+        Retrieves metadata details for a recording with a specified recording ID. The recording must be owned by the
+        authenticated user.
+
+        For information on the metadata fields, refer to `Metadata Guide
+        <https://developer.webex.com/docs/webex-calling-overview>`_
+
+        :param recording_id: A unique identifier for the recording.
+        :type recording_id: str
+        :param show_all_types: If `showAllTypes` is `true`, all attributes will be shown. If it's `false` or not
+            specified, the following attributes of the metadata will be hidden.
+
+            * serviceData.callActivity.mediaStreams
+            * serviceData.callActivity.participants
+            * serviceData.callActivity.redirectInfo
+            * serviceData.callActivity.redirectedCall
+        :type show_all_types: bool
+        :rtype: None
+        """
+        params = {}
+        if show_all_types is not None:
+            params['showAllTypes'] = str(show_all_types).lower()
+        url = self.ep(f'convergedRecordings/{recording_id}/metadata')
+        await super().get(url, params=params)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):
@@ -9057,6 +9310,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         **Usage**:
 
         1. The input JSON must conform to one of the following schemas:
+
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
@@ -9150,8 +9404,9 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         :type org_id: str
         :param filter: The url encoded filter. The example content is 'displayName Eq "group1@example.com" or
             displayName Eq "group2@example.com"'.
-        For more filter patterns, see https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2. If the value is
-        empty, the API returns all groups under the organization.
+
+            For more filter patterns, see https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2. If the value is
+            empty, the API returns all groups under the organization.
         :type filter: str
         :param excluded_attributes: Attributes to be excluded from the return.
         :type excluded_attributes: str
@@ -9233,8 +9488,11 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
 
         - The default maximum number of members returned is 500.
         - Control parameters are available to page through the members and to control the size of the results.
-        - Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+        - Long result sets are split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
+
+        **Note**
+
+        Location groups are different from SCIM groups. You cannot search for identities in a location via groups.
 
         **Authorization**
 
@@ -9323,6 +9581,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         **Usage**:
 
         1. The input JSON must conform to one of the following schemas:
+
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
@@ -9370,6 +9629,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         **Usage**:
 
         1. The input JSON must conform to one of the following schemas:
+
         - `urn:ietf:params:scim:schemas:core:2.0:Group`
         - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
 
@@ -19683,6 +19943,8 @@ class AsWebexSimpleApi:
     authorizations: AsAuthorizationsApi
     #: CDR API :class:`AsDetailedCDRApi`
     cdr: AsDetailedCDRApi
+    #: converged recordings API :class:`AsConvergedRecordingsApi`
+    converged_recordings: AsConvergedRecordingsApi
     #: device configurations API :class:`AsDeviceConfigurationsApi`
     device_configurations: AsDeviceConfigurationsApi
     #: devices API :class:`AsDevicesApi`
@@ -19762,6 +20024,7 @@ class AsWebexSimpleApi:
         self.attachment_actions = AsAttachmentActionsApi(session=session)
         self.authorizations = AsAuthorizationsApi(session=session)
         self.cdr = AsDetailedCDRApi(session=session)
+        self.converged_recordings = AsConvergedRecordingsApi(session=session)
         self.device_configurations = AsDeviceConfigurationsApi(session=session)
         self.devices = AsDevicesApi(session=session)
         self.events = AsEventsApi(session=session)

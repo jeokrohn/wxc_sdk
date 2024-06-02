@@ -6,6 +6,7 @@ Release history
 - feat: :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>` now returns job id of update routing prefix job (if present)
 - feat: new API :attr:`api.scim.groups <wxc_sdk.scim.ScimV2Api.groups>`
 - feat: convergedRecordings support for webhooks
+- feat: new API :attr:`api.converged_recordings <wxc_sdk.WebexSimpleApi.converged_recordings>`
 
 1.19.0
 ------

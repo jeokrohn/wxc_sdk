@@ -9,6 +9,7 @@ from .admin_audit import AdminAuditEventsApi
 from .attachment_actions import AttachmentActionsApi
 from .authorizations import AuthorizationsApi
 from .cdr import DetailedCDRApi
+from .converged_recordings import ConvergedRecordingsApi
 from .device_configurations import DeviceConfigurationsApi
 from .devices import DevicesApi
 from .events import EventsApi
@@ -61,6 +62,8 @@ class WebexSimpleApi:
     authorizations: AuthorizationsApi
     #: CDR API :class:`cdr.DetailedCDRApi`
     cdr: DetailedCDRApi
+    #: converged recordings API :class:`converged_recordings.ConvergedRecordingsApi`
+    converged_recordings: ConvergedRecordingsApi
     #: device configurations API :class:`device_configurations.DeviceConfigurationsApi`
     device_configurations: DeviceConfigurationsApi
     #: devices API :class:`devices.DevicesApi`
@@ -140,6 +143,7 @@ class WebexSimpleApi:
         self.attachment_actions = AttachmentActionsApi(session=session)
         self.authorizations = AuthorizationsApi(session=session)
         self.cdr = DetailedCDRApi(session=session)
+        self.converged_recordings = ConvergedRecordingsApi(session=session)
         self.device_configurations = DeviceConfigurationsApi(session=session)
         self.devices = DevicesApi(session=session)
         self.events = EventsApi(session=session)
