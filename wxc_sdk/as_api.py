@@ -444,7 +444,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
             Hub).
         :type location_id: str
-        :return: Generator yielding :class:`RecordingObject` instances
+        :return: Generator yielding :class:`ConvergedRecording` instances
         """
         if from_ is not None:
             if isinstance(from_, str):
@@ -522,7 +522,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
             Hub).
         :type location_id: str
-        :return: Generator yielding :class:`RecordingObject` instances
+        :return: Generator yielding :class:`ConvergedRecording` instances
         """
         if from_ is not None:
             if isinstance(from_, str):
@@ -597,7 +597,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         url = self.ep(f'convergedRecordings/{recording_id}')
         await super().delete(url, json=body)
 
-    async def metadata(self, recording_id: str, show_all_types: bool = None):
+    async def metadata(self, recording_id: str, show_all_types: bool = None) -> dict:
         """
         Get Recording metadata
 
@@ -623,7 +623,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         if show_all_types is not None:
             params['showAllTypes'] = str(show_all_types).lower()
         url = self.ep(f'convergedRecordings/{recording_id}/metadata')
-        await super().get(url, params=params)
+        return await super().get(url, params=params)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):
