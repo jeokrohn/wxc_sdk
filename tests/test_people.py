@@ -10,6 +10,7 @@ from unittest import skip
 
 from dotenv import load_dotenv
 
+from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import RouteType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
@@ -127,6 +128,16 @@ class TestPeople(TestCaseWithLog):
         self.assertTrue(all('userName' in item for item in list_requests[1].response_body.get('items')),
                         'list by id doesn\'t return userName')
 
+    @async_test
+    async def test_007_get_details_by_uuid(self):
+        """
+        Get details for all users, but use UUID as user id in the request
+        """
+        users = list(self.api.people.list())
+        details_list = await asyncio.gather(*[self.async_api.people.details(person_id=webex_id_to_uuid(user.person_id))
+                                              for user in users])
+        print(f'Got details for {len(details_list)} users')
+
 
 class TestPeoplePhoneNumbers(TestCaseWithLog):
     """
@@ -202,4 +213,3 @@ class TestCallingUser(TestWithLocations):
         print(new_user)
         print(f'created "{new_user.display_name}"')
         print(json.dumps(new_user.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
-
