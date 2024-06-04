@@ -162,3 +162,7 @@ cython_debug/
 /tests/scim_service_app.env
 /tests/scim_service_app.yml
 /beta tracker.md
+/tests/recording_service_app.env
+/tests/recording_service_app.yml
+/tests/test_integration.env
+/tests/test_integration.yml

@@ -40,7 +40,9 @@ class ApiChild:
         :return: endpoint URL
         :rtype: str
         """
-        path = path and f'/{path}' or ''
+        path = path or ''
+        if self.base and path:
+            path = f'/{path}'
         return self.session.ep(f'{self.base}{path}')
 
     def get(self, *args, **kwargs) -> StrOrDict:

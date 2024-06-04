@@ -115,7 +115,9 @@ class AsApiChild:
         :return: endpoint URL
         :rtype: str
         """
-        path = path and f'/{path}' or ''
+        path = path or ''
+        if self.base and path:
+            path = f'/{path}'
         return self.session.ep(f'{self.base}{path}')
 
     async def get(self, *args, **kwargs) -> StrOrDict:
@@ -597,7 +599,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         url = self.ep(f'convergedRecordings/{recording_id}')
         await super().delete(url, json=body)
 
-    async def metadata(self, recording_id: str, show_all_types: bool = None) -> dict:
+    async def metadata(self, recording_id: str, show_all_types: bool = None) -> ConvergedRecordingMeta:
         """
         Get Recording metadata
 
@@ -623,7 +625,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         if show_all_types is not None:
             params['showAllTypes'] = str(show_all_types).lower()
         url = self.ep(f'convergedRecordings/{recording_id}/metadata')
-        return await super().get(url, params=params)
+        data = await super().get(url, params=params)
+        return ConvergedRecordingMeta.model_validate(data)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):

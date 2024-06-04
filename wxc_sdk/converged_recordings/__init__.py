@@ -12,8 +12,8 @@ from wxc_sdk.base import SafeEnum as Enum
 __all__ = ['ConvergedRecordingsApi',
            'RecordingStorageRegion', 'ConvergedRecording',
            'RecordingOwnerType', 'RecordingServiceData',
-           'ConvergedRecordingWithDirectDownloadLinks',
-           'TemporaryDirectDownloadLink']
+           'ConvergedRecordingWithDirectDownloadLinks', 'ConvergedRecordingMeta',
+           'TemporaryDirectDownloadLink', 'RecordingSession', 'RecordingParty', 'RecordingPartyActor']
 
 from wxc_sdk.meetings.recordings import RecordingFormat, RecordingStatus, RecordingServiceType
 
@@ -27,11 +27,35 @@ class RecordingOwnerType(str, Enum):
     virtual_line = 'virtualLine'
 
 
+class RecordingSession(ApiModel):
+    start_time: Optional[datetime] = None
+
+
+class RecordingPartyActor(ApiModel):
+    id: Optional[str] = None
+    type: Optional[str] = None
+
+
+class RecordingParty(ApiModel):
+    actor: Optional[RecordingPartyActor]
+    name: Optional[str] = None
+    number: Optional[str] = None
+
+
 class RecordingServiceData(ApiModel):
     #: Webex calling location for recording user.
     location_id: Optional[str] = None
     #: Call ID for which recording was done.
     call_session_id: Optional[str] = None
+    call_recording_id: Optional[str] = None
+    personality: Optional[str] = None
+    calling_party: Optional[RecordingParty] = None
+    called_party: Optional[RecordingParty] = None
+    call_id: Optional[str] = None
+    session: Optional[RecordingSession] = None
+    recording_type: Optional[str] = None
+    recording_actions: Optional[list[dict]] = None
+    call_activity: Optional[list[dict]] = None
 
 
 class ConvergedRecording(ApiModel):
@@ -123,6 +147,19 @@ class RecordingStorageRegion(str, Enum):
     de = 'DE'
     au = 'AU'
     in_ = 'IN'
+
+
+class ConvergedRecordingMeta(ApiModel):
+    id: Optional[str] = None
+    org_id: Optional[str] = None
+    owner_id: Optional[str] = None
+    owner_type: Optional[str] = None
+    owner_name: Optional[str] = None
+    owner_email: Optional[str] = None
+    storage_region: Optional[str] = None
+    service_type: Optional[str] = None
+    version: Optional[str] = None
+    service_data: Optional[RecordingServiceData] = None
 
 
 class ConvergedRecordingsApi(ApiChild, base=''):
@@ -270,7 +307,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep(f'convergedRecordings/{recording_id}')
         super().delete(url, json=body)
 
-    def metadata(self, recording_id: str, show_all_types: bool = None) -> dict:
+    def metadata(self, recording_id: str, show_all_types: bool = None) -> ConvergedRecordingMeta:
         """
         Get Recording metadata
 
@@ -296,4 +333,5 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         if show_all_types is not None:
             params['showAllTypes'] = str(show_all_types).lower()
         url = self.ep(f'convergedRecordings/{recording_id}/metadata')
-        return super().get(url, params=params)
+        data = super().get(url, params=params)
+        return ConvergedRecordingMeta.model_validate(data)

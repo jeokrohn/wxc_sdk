@@ -43,7 +43,7 @@ from wxc_sdk.workspaces import Workspace, CallingType
 log = logging.getLogger(__name__)
 
 __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
-           'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces']
+           'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces', 'WithIntegrationTokens']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
@@ -183,6 +183,52 @@ class TestCaseWithTokens(TestCase):
 
 
 async_test = TestCaseWithTokens.async_test
+
+
+@dataclass(init=False)
+class WithIntegrationTokens(TestCase):
+    integration_token_identifier: ClassVar[str] = 'TEST_INTEGRATION'
+    integration_tokens: ClassVar[Tokens]
+
+    @classmethod
+    def build_integration(cls) -> Integration:
+        """
+        read integration parameters from environment variables and create an integration
+        """
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            f'{cls.integration_token_identifier.lower()}.env')
+        load_dotenv(path)
+
+        client_id = os.getenv(f'{cls.integration_token_identifier}_CLIENT_ID')
+        client_secret = os.getenv(f'{cls.integration_token_identifier}_CLIENT_SECRET')
+        scopes = parse_scopes(os.getenv(f'{cls.integration_token_identifier}_CLIENT_SCOPES'))
+        redirect_url = 'http://localhost:6001/redirect'
+        if not all((client_id, client_secret, scopes)):
+            raise ValueError('failed to get integration parameters from environment')
+        return Integration(client_id=client_id, client_secret=client_secret, scopes=scopes,
+                           redirect_url=redirect_url)
+
+    @classmethod
+    def get_integration_tokens(cls) -> Optional[Tokens]:
+        """
+
+        Tokens are read from a YML file. If needed an OAuth flow is initiated.
+
+        :return: tokens
+        :rtype: :class:`wxc_sdk.tokens.Tokens`
+        """
+
+        integration = cls.build_integration()
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            f'{cls.integration_token_identifier.lower()}.yml')
+        tokens = integration.get_cached_tokens_from_yml(yml_path=path)
+        return tokens
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        # get service app tokens
+        cls.integration_tokens = cls.get_integration_tokens()
 
 
 # noinspection DuplicatedCode
