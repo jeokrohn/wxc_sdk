@@ -2,6 +2,7 @@ Release history
 ===============
 
 - feat: new attribute :attr:`Privacy.enable_phone_status_pickup_barge_in_privacy  <wxc_sdk.person_settings.privacy.Privacy>`
+- feat: new API :attr:`api.telephony.organisation_access_codes <wxc_sdk.telephony.TelephonyApi.organisation_access_codes>`
 
 1.19.0
 ------

@@ -13998,7 +13998,7 @@ class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPe
         :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
             parameter as the default is the same organisation as the token used to access the API.
         :type org_id: str
-        :rtype: list[AuthorizationCode]
+        :return: Generator yielding :class:`AuthCode` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -14028,7 +14028,7 @@ class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPe
         :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
             parameter as the default is the same organisation as the token used to access the API.
         :type org_id: str
-        :rtype: list[AuthorizationCode]
+        :return: Generator yielding :class:`AuthCode` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
