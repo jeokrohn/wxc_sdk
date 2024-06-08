@@ -222,6 +222,14 @@ class AuthCode(ApiModel):
     #: Indicates the level of each access code.
     level: Optional[AuthCodeLevel] = None
 
+    def create(self) -> dict:
+        """
+        dict for auth code creation
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'level'})
+
 
 class RouteType(str, Enum):
     #: Route group must include at least one trunk with a maximum of 10 trunks per route group.

@@ -889,6 +889,12 @@ The method name is a link to the method documentation.
         Get Location Voicemail
    * - :meth:`api.telephony.locations.voicemail.update <wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.update>`
         Get Location Voicemail
+   * - :meth:`api.telephony.organisation_access_codes.create <wxc_sdk.telephony.org_access_codes.OrganisationAccessCodesApi.create>`
+        Create Access Codes for an Organisation
+   * - :meth:`api.telephony.organisation_access_codes.delete <wxc_sdk.telephony.org_access_codes.OrganisationAccessCodesApi.delete>`
+        Delete Outgoing Permission Access Code for an Organisation
+   * - :meth:`api.telephony.organisation_access_codes.list <wxc_sdk.telephony.org_access_codes.OrganisationAccessCodesApi.list>`
+        Retrieve the organisation's access codes
    * - :meth:`api.telephony.organisation_voicemail.read <wxc_sdk.telephony.organisation_vm.OrganisationVoicemailSettingsAPI.read>`
         Get Voicemail Settings
    * - :meth:`api.telephony.organisation_voicemail.update <wxc_sdk.telephony.organisation_vm.OrganisationVoicemailSettingsAPI.update>`
