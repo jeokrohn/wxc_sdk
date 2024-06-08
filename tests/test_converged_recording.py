@@ -22,24 +22,17 @@ class WithRecordingServiceApp(TestCase):
     """
     Base class for tests that need to use the recording service app.
     Service app hase these scopes:
-        * spark:telephony_config_write
-        * meeting:recordings_read
-        * spark-compliance:meetings_write
-        * meeting:admin_recordings_read
-        * meeting:recordings_write
-        * spark-compliance:meetings_read
-        * spark-compliance:webhooks_write
-        * spark:telephony_config_read
-        * spark-compliance:events_read
-        * spark-compliance:recordings_write
         * spark-compliance:webhooks_read
-        * spark-compliance:messages_write
         * spark:kms
-        * meeting:admin_recordings_write
+        * spark-admin:locations_read
+        * spark:people_read
+        * spark-compliance:webhooks_write
+        * identity:people_read
         * spark-admin:telephony_config_read
-        * spark-admin:telephony_config_write
-        * spark-compliance:messages_read
         * spark-compliance:recordings_read
+        * identity:people_rw
+        * spark-admin:people_read
+        * spark-compliance:recordings_write
     """
     test_api: ClassVar[WebexSimpleApi]
     token_identifier: ClassVar[str] = 'RECORDING_SERVICE_APP'
@@ -136,7 +129,9 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens, Tes
         cls.integration_api = WebexSimpleApi(tokens=cls.integration_tokens)
 
     def test_list(self):
-        api = self.integration_api
+        # api = self.integration_api
+        api = self.recording_service_api
+        # https://jira-eng-gpk2.cisco.com/jira/browse/WEBEX-38382ged2 should fix this
         recordings = list(api.converged_recordings.list())
         print(json.dumps(TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True),
                          indent=2))
