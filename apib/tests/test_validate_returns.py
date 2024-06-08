@@ -33,7 +33,14 @@ class TestReturnValues(TestCase):
 
     @contextmanager
     def import_py_module(self, source: str):
+        """
+        Context manager: temporarily import given Python source as module and yield module reference
+        :param source: Python source
+        :return: yields imported module
+        """
+        # temp directory to safe the source to
         with tempfile.TemporaryDirectory() as dir:
+            # temporarily add path to temp dir to Python path
             sys.path.insert(0, dir)
             try:
                 module_name = splitext(basename(self.apib_file))[0]
@@ -45,8 +52,10 @@ class TestReturnValues(TestCase):
                 try:
                     yield module
                 finally:
+                    # get rid of moduke
                     del sys.modules[module.__name__]
             finally:
+                # restore original path; remove temp dir
                 sys.path.pop(0)
         return
 
@@ -59,8 +68,11 @@ class TestReturnValues(TestCase):
         source = code_gen.source()
         with self.import_py_module(source) as module:
             err = None
+            # iterate through all APIs in the APIB; usually there is only one
             for _, api in code_gen.class_registry.apis():
+                # look at each endpoint in the API
                 for endpoint in api.endpoints:
+                    # endpoints w/o response body are not really interesting
                     if not endpoint.response_body:
                         # print(f'{endpoint.name}, no response body')
                         continue
@@ -74,6 +86,7 @@ class TestReturnValues(TestCase):
                     # what is the result class?
                     print(f'{endpoint.name}, result: {endpoint.result}, '
                           f'result_referenced_class: {endpoint.result_referenced_class}')
+                    # get an validator for the response data
                     validator = endpoint.body_validator(module)
                     # try to deserialize the body
                     try:

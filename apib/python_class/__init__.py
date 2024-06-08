@@ -423,13 +423,16 @@ class Endpoint:
                 raise ValueError(f'Failed to find class "{class_name}" in module')
             return model
 
+        def validate(data: dict) -> Any:
+            return validator(getter(data))
+
         getter = lambda x: x
         if pa := self.paginated:
             model = get_module_class(pa.referenced_class)
             model = TypeAdapter(list[model])
             getter = lambda x: x[pa.name]
             validator = model.validate_python
-            return getter, validator
+            return validate
         if self.result != self.result_referenced_class:
             # complex return type -> need to use TypeAdapter
             for_ta = self.result.replace(self.result_referenced_class,
@@ -465,9 +468,10 @@ class Endpoint:
                         except NameError as e:
                             raise ValueError(f'Failed to find class "{sra.referenced_class}" in module') from e
                         validator = ta.validate_python
-
-        def validate(data: dict) -> Any:
-            return validator(getter(data))
+                    # if .. else ..
+                # if .. else ..
+            # if .. else ..
+        # if .. else ..
 
         return validate
 
