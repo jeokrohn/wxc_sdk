@@ -7,6 +7,7 @@ import subprocess
 __all__ = ['read_api_blueprint']
 
 import sys
+from os.path import isfile
 
 
 def read_api_blueprint(path: str) -> dict:
@@ -17,6 +18,8 @@ def read_api_blueprint(path: str) -> dict:
     :param path:
     :return:
     """
+    if not isfile(path):
+        raise FileNotFoundError(f'not found: {path}')
     # run the external program
     process = subprocess.Popen(['drafter', '-f', 'json', path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 

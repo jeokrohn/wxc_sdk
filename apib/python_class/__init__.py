@@ -2,7 +2,7 @@ import logging
 import logging
 import re
 from collections import defaultdict, Counter
-from collections.abc import Generator, Iterable
+from collections.abc import Generator, Iterable, Callable
 from dataclasses import dataclass, field
 from functools import partial
 from io import StringIO
@@ -10,16 +10,17 @@ from itertools import chain
 from operator import attrgetter
 from os.path import commonprefix
 from re import subn, sub
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Type
 from urllib.parse import urljoin
 
 import dateutil.parser
+from pydantic import TypeAdapter
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember
 from apib.apib.classes import ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray, ApibApi, ApibOption
 from apib.tools import break_line, sanitize_class_name, snake_case, words_to_camel, \
     remove_html_comments, remove_div, lines_for_docstring
-from wxc_sdk.base import to_camel
+from wxc_sdk.base import to_camel, ApiModel
 
 __all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Parameter', 'simple_python_type']
 
@@ -410,6 +411,69 @@ class Endpoint:
             else:
                 source.print(f':rtype: {self.result}')
         source.print(f'"""')
+
+    def body_validator(self, module) -> Callable[[dict], Any]:
+        """
+        Get a callable that can validate the body of the response
+        """
+
+        def get_module_class(class_name: str) -> Type[ApiModel]:
+            model = getattr(module, class_name, None)
+            if model is None:
+                raise ValueError(f'Failed to find class "{class_name}" in module')
+            return model
+
+        def validate(data: dict) -> Any:
+            return validator(getter(data))
+
+        getter = lambda x: x
+        if pa := self.paginated:
+            model = get_module_class(pa.referenced_class)
+            model = TypeAdapter(list[model])
+            getter = lambda x: x[pa.name]
+            validator = model.validate_python
+            return validate
+        if self.result != self.result_referenced_class:
+            # complex return type -> need to use TypeAdapter
+            for_ta = self.result.replace(self.result_referenced_class,
+                                         f"module.{self.result_referenced_class}")
+            ta = eval(f'TypeAdapter({for_ta})')
+            validator = ta.validate_python
+        else:
+            # simple return type
+            if not (sra := self.single_result_attribute):
+                # not a single result attribute -> need to deserialize for result
+                model = get_module_class(self.result)
+                validator = model.model_validate
+            else:
+                # single result attribute->instead of deserializing the result type we take the value of the
+                # attribute and deserialize that .. if needed
+                getter = lambda x: x[sra.name]
+                if not sra.referenced_class:
+                    # no need to parse anything, just pick the return value from the data
+                    validator = lambda x: x
+                else:
+                    # single result attribute is not a simple Python type -> we need deserialization
+                    if sra.referenced_class == sra.python_type:
+                        model = get_module_class(sra.python_type)
+                        if not issubclass(model, ApiModel):
+                            validator = model
+                        else:
+                            validator = model.model_validate
+                    else:
+                        python_type = sra.python_type.replace(sra.referenced_class,
+                                                              f"module.{sra.referenced_class}")
+                        try:
+                            ta = eval(f"TypeAdapter({python_type})")
+                        except NameError as e:
+                            raise ValueError(f'Failed to find class "{sra.referenced_class}" in module') from e
+                        validator = ta.validate_python
+                    # if .. else ..
+                # if .. else ..
+            # if .. else ..
+        # if .. else ..
+
+        return validate
 
     def source_call_and_return(self, source: SourceIO):
         """
