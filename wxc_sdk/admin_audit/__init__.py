@@ -73,11 +73,15 @@ class AuditEventData(ApiModel):
     changed_attributes: Optional[Any] = None
     changed_group_members: Optional[Any] = None
     client_id: Optional[Any] = None
+    command_key: Optional[Any] = None
     config_key: Optional[Any] = None
     config_value: Optional[Any] = None
+    current_location_name: Optional[Any] = None
+    dect_network_name: Optional[Any] = None
     deleted_auth_code: Optional[Any] = None
     deleted_pattern_name: Optional[Any] = None
-    dect_network_name: Optional[Any] = None
+    deleted_pattern: Optional[Any] = None
+    device_id: Optional[Any] = None
     email_type: Optional[Any] = None
     enrollment_status: Optional[Any] = None
     entitlements: Optional[Any] = None
@@ -88,19 +92,24 @@ class AuditEventData(ApiModel):
     failed_reason: Optional[Any] = None
     job_name: Optional[Any] = None
     locale: Optional[Any] = None
-    location: Optional[Any] = None
     location_id: Optional[Any] = None
     location_name: Optional[Any] = None
+    location: Optional[Any] = None
     mac_address: Optional[Any] = None
     name: Optional[Any] = None
+    new_org_default_enabled: Optional[Any] = None
+    new_vendor_name: Optional[Any] = None
     numbers: Optional[Any] = None
     offer_map: Optional[Any] = None
-    operation: Optional[Any] = None
+    old_org_default_enabled: Optional[Any] = None
+    old_vendor_name: Optional[Any] = None
     operation_type: Optional[Any] = None
+    operation: Optional[Any] = None
     org_id: Optional[Any] = None
     owner_id: Optional[Any] = None
     owner_type: Optional[Any] = None
     previous_value: Optional[Any] = None
+    result: Optional[Any] = None
     role_added: Optional[Any] = None
     role_removed: Optional[Any] = None
     rule_name: Optional[Any] = None
@@ -111,6 +120,7 @@ class AuditEventData(ApiModel):
     setting_value: Optional[Any] = None
     tags: Optional[Any] = None
     target_email: Optional[Any] = None
+    target_location_name: Optional[Any] = None
     token_id: Optional[Any] = None
     trial_expiration_dtm: Optional[Any] = None
     trial_id: Optional[Any] = None
@@ -120,6 +130,7 @@ class AuditEventData(ApiModel):
     updated_fields: Optional[Any] = None
     updated_settings: Optional[Any] = None
     user_name: Optional[Any] = None
+    vendor_name: Optional[Any] = None
 
 
 class AuditEvent(ApiModel):

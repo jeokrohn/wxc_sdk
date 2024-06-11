@@ -107,7 +107,7 @@ class TestOrgAccessCodes(TestCaseWithLog):
                 list(api.list())
             requests = self.print_requests()
             print(f'{len(requests)} requests')
-            self.assertTrue(len(requests > 1))
+            self.assertTrue(len(requests) > 1)
         finally:
             ...
 

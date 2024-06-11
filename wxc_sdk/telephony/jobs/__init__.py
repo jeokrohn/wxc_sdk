@@ -254,6 +254,8 @@ class MoveNumberCounts(ApiModel):
     numbers_moved: Optional[int] = None
     #: Indicates the total number of phone numbers failed.
     numbers_failed: Optional[int] = None
+    numbers_activated: Optional[int] = None
+    numbers_usage_changed: Optional[int] = None
 
 
 class NumberJob(ApiModel):

@@ -76,11 +76,13 @@ class TestInternalDialing(TestWithLocations):
                                  if loc.address.country == 'IN')
         if india_location_ids:
             # filter out trunks in india locations
-            # need to get trunk details so that we can take a look at the location iod of the trunk
+            # need to get trunk details so that we can take a look at the location id of the trunk
             trunk_details = get_trunk_details(trunk.route_id for trunk in trunks)
 
+            detail: TrunkDetail
+            trunk: RouteIdentity
             trunks = [trunk for trunk, detail in zip(trunks, trunk_details)
-                      if detail.location.location_id not in india_location_ids]
+                      if detail.location.id not in india_location_ids]
         if not trunks:
             self.skipTest('Need at least trunk not in India to run this test')
 
