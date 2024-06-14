@@ -232,7 +232,7 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
         return self.session.follow_pagination(url=url, model=Enterprise, item_key='items', params=params)
 
     def update_directory_sync_for_a_broad_works_enterprise(self, id: str,
-                                                           enable_dir_sync: str) -> TriggerDirectorySyncResponse:
+                                                           enable_dir_sync: bool) -> TriggerDirectorySyncResponse:
         """
         Update Directory Sync for a BroadWorks Enterprise
 
@@ -251,7 +251,7 @@ class BetaBroadWorksEnterprisesWithEnterpriseGroupContactSupportApi(ApiChild, ba
         :param id: A unique identifier for the enterprise in question.
         :type id: str
         :param enable_dir_sync: The toggle to enable/disable directory sync.
-        :type enable_dir_sync: str
+        :type enable_dir_sync: bool
         :rtype: :class:`TriggerDirectorySyncResponse`
         """
         body = dict()
