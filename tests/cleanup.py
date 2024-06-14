@@ -21,6 +21,7 @@ from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.people import Person
+from wxc_sdk.person_settings.permissions_out import DigitPattern
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.callqueue import CallQueue
 
@@ -321,6 +322,28 @@ async def main():
                 return_exceptions=True)
         except Exception:
             pass
+
+        # remove ocp test patterns from all users
+        users = list(api.people.list())
+
+        async def remove_ocp_patterns(user: Person):
+            try:
+                dpapi = as_api.person_settings.permissions_out.digit_patterns
+                response = await dpapi.get_digit_patterns(user.person_id)
+                patterns: list[DigitPattern] = response.digit_patterns
+                patterns_to_delete: list[DigitPattern] = list(filtered(patterns))
+                if not patterns_to_delete:
+                    return
+                print(f'Removing {len(patterns_to_delete)} patterns for {user.display_name}')
+                await asyncio.gather(*[dpapi.delete(user.person_id, digit_pattern_id=pattern.id)
+                                       for pattern in patterns_to_delete],
+                                     return_exceptions=True)
+            except Exception as e:
+                print(f'Error removing patterns for {user.display_name}: {e}')
+
+        await asyncio.gather(*[remove_ocp_patterns(user)
+                               for user in users],
+                             return_exceptions=True)
 
 
 if __name__ == '__main__':
