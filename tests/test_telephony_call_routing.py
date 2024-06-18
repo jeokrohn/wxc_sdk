@@ -1466,7 +1466,7 @@ class TestTranslationPattern(TestCallRouting):
         self.assertEqual(400, rest_error.response.status_code)
         self.assertEqual(9676, rest_error.code)
 
-    @skip('Might hurt the backend')
+    #@skip('Might hurt the backend')
     @async_test
     async def test_create_max(self):
         """
@@ -1507,9 +1507,10 @@ class TestTranslationPattern(TestCallRouting):
                            for req in self.requests(method='POST',
                                                     url_filter=r'.+telephony/config/callRouting/translationPatterns')]
         create_success = [req for req in create_requests if req.status == 201]
+        delete_success = [req for req in delete_requests if req.status == 204]
         print(f'{len(create_success)} TPs created')
-        print(f'{len(delete_requests)} TPs deleted')
-        self.assertEqual(len(create_success), len(delete_requests))
+        print(f'{len(delete_success)} TPs deleted')
+        self.assertEqual(len(create_success), len(delete_success))
 
         list_after = list(tpa.list())
         self.assertEqual(len(list_before), len(list_after), 'Some TPs not deleted')
