@@ -11784,6 +11784,21 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
     of `spark-admin:telephony_config_write`.
     """
 
+    def ep(self, path: str = None, location_id: str = None):
+        """
+        Get ep with optional location_id
+
+        :meta private:
+        :param path:
+        :param location_id:
+        :return:
+        """
+        if location_id is None:
+            return super().ep(path)
+        path = path and f'/{path}' or ''
+        base = 'telephony/config/locations'
+        return self.session.ep(f'{base}/{location_id}/callRouting/translationPatterns{path}')
+
     async def create(self, pattern: TranslationPattern,
                org_id: str = None) -> str:
         """
@@ -11793,6 +11808,9 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         only.
 
         Create a translation pattern for a given organization.
+
+        To create a location level translation pattern set the location.id attribute of the translation pattern
+        argument.
 
         Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
 
@@ -11804,7 +11822,7 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         """
         params = org_id and {'orgId': org_id} or None
         body = pattern.create_update()
-        url = self.ep()
+        url = self.ep(location_id=pattern.location and pattern.location.id or None)
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -11837,7 +11855,8 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         :type org_id: str
         :return: Generator yielding :class:`TranslationPatternGet` instances
         """
-        params = org_id and {'orgId': org_id} or None
+        if org_id:
+            params['orgId'] = org_id
         if limit_to_location_id is not None:
             params['limitToLocationId'] = limit_to_location_id
         if limit_to_org_level_enabled is not None:
@@ -11878,7 +11897,8 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         :type org_id: str
         :return: Generator yielding :class:`TranslationPatternGet` instances
         """
-        params = org_id and {'orgId': org_id} or None
+        if org_id:
+            params['orgId'] = org_id
         if limit_to_location_id is not None:
             params['limitToLocationId'] = limit_to_location_id
         if limit_to_org_level_enabled is not None:
@@ -11892,6 +11912,7 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
                                               params=params)]
 
     async def details(self, translation_id: str,
+                location_id: str = None,
                 org_id: str = None) -> TranslationPattern:
         """
         Retrieve the details of a Translation Pattern
@@ -11905,12 +11926,15 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
 
         :param translation_id: Retrieve the translation pattern with the matching ID.
         :type translation_id: str
+        :param location_id: Unique identifier for the location. Only used when getting details for location level
+            translation patterns
+        :type location_id: str
         :param org_id: ID of the organization containing the translation pattern.
         :type org_id: str
         :rtype: :class:`TranslationPattern`
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(f'{translation_id}')
+        url = self.ep(path=translation_id, location_id=location_id)
         data = await super().get(url, params=params)
         r = TranslationPattern.model_validate(data)
         return r
@@ -11922,7 +11946,8 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
         only.
 
-        Modify a translation pattern for a given organization.
+        Modify a translation pattern for a given organization. To update a location level translation pattern the
+        location.id attribute of the pattern has to be set
 
         Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
 
@@ -11934,10 +11959,10 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         """
         params = org_id and {'orgId': org_id} or None
         body = pattern.create_update()
-        url = self.ep(f'{pattern.id}')
+        url = self.ep(location_id=pattern.location and pattern.location.id or None, path=pattern.id)
         await super().put(url, params=params, json=body)
 
-    async def delete(self, translation_id: str, org_id: str = None):
+    async def delete(self, translation_id: str, location_id: str = None, org_id: str = None):
         """
         Delete a Translation Pattern
 
@@ -11950,12 +11975,14 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
 
         :param translation_id: Delete a translation pattern with the matching ID.
         :type translation_id: str
+        :param location_id: Unique identifier for the location. Only used when deleting location level translation
+            patterns
         :param org_id: ID of the organization containing the translation pattern.
         :type org_id: str
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(f'{translation_id}')
+        url = self.ep(location_id=location_id, path=translation_id)
         await super().delete(url, params=params)
 
 
@@ -18357,8 +18384,11 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         return [o async for o in self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')]
 
     async def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
-                          originator_number: str = None, org_id: str = None) -> TestCallRoutingResult:
+                          originator_number: str = None, include_applied_services: bool = None,
+                          org_id: str = None) -> TestCallRoutingResult:
         """
+        Test Call Routing
+
         Validates that an incoming call can be routed.
 
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -18367,29 +18397,36 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
 
-        Test call routing requires a full administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
-
+        Test call routing requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param originator_id: This element is used to identify the originating party. It can be a person ID or a trunk
             ID.
         :type originator_id: str
         :param originator_type: This element is used to identify if the `originatorId` is of type `PEOPLE` or `TRUNK`.
-        :type originator_type: :class:`OriginatorType`
-        :param destination: This element specifies called party. It can be any dialable string, for example, an
-            ESN number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+        :type originator_type: OriginatorType
+        :param destination: This element specifies the called party. It can be any dialable string, for example, an ESN
+            number, E.164 number, hosted user DN, extension, extension with location code, URL, or FAC code.
         :type destination: str
         :param originator_number: Only used when `originatorType` is `TRUNK`. The `originatorNumber` can be a phone
             number or URI.
         :type originator_number: str
+        :param include_applied_services: This element is used to retrieve if any translation pattern, call intercept,
+            permission by type, or permission by digit pattern is present for the called party.
+        :type include_applied_services: bool
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
-        :return: call routing test result
         :rtype: :class:`TestCallRoutingResult`
         """
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
+        body = dict()
+        body['originatorId'] = originator_id
+        body['originatorType'] = enum_str(originator_type)
+        if originator_number is not None:
+            body['originatorNumber'] = originator_number
+        body['destination'] = destination
+        if include_applied_services is not None:
+            body['includeAppliedServices'] = include_applied_services
         url = self.ep('actions/testCallRouting/invoke')
         data = await self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)

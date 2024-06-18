@@ -33,13 +33,13 @@ from .voice_messaging import VoiceMessagingApi
 from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
 from ..api_child import ApiChild
-from ..base import ApiModel, to_camel, plus1
+from ..base import ApiModel, to_camel, plus1, enum_str
 from ..base import SafeEnum as Enum
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
     DeviceCustomization, IdAndName, OwnerType, NumberOwner
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.common import ApiSelector
-from ..person_settings.permissions_out import OutgoingPermissionsApi
+from ..person_settings.permissions_out import OutgoingPermissionsApi, Action
 from ..rest import RestSession
 
 __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
@@ -49,8 +49,11 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'LocationAndNumbers', 'HostedUserDestination', 'ServiceType', 'HostedFeatureDestination',
            'TrunkDestination', 'PbxUserDestination', 'PstnNumberDestination', 'VirtualExtensionDestination',
            'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination',
-           'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'SupportedDevice',
-           'AnnouncementLanguage', 'TelephonyApi', 'DeviceSettingsConfiguration', 'SupportedDevices']
+           'TranslationPatternConfigurationLevel', 'AppliedServiceTranslationPattern', 'ConfigurationLevel',
+           'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
+           'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
+           'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
+           'SupportedDevice', 'AnnouncementLanguage', 'SupportedDevices', 'TelephonyApi']
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -341,6 +344,135 @@ class EmergencyDestination(TrunkDestination):
     is_red_sky: bool
 
 
+class TranslationPatternConfigurationLevel(str, Enum):
+    #: The applied services of location level.
+    location = 'LOCATION'
+    #: The applied services of the organization level.
+    organization = 'ORGANIZATION'
+
+
+class AppliedServiceTranslationPattern(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: ORGANIZATION
+    configuration_level: Optional[TranslationPatternConfigurationLevel] = None
+    #: Name given to a translation pattern.
+    #: example: TP1
+    name: Optional[str] = None
+    #: Matching pattern given to a translation pattern.
+    #: example: +91XXX
+    matching_pattern: Optional[str] = None
+    #: Replacement pattern given to a translation pattern.
+    #: example: +91234
+    replacement_pattern: Optional[str] = None
+    #: The original called number.
+    #: example: +91236
+    matched_number: Optional[str] = None
+    #: The modified number after matching against `matchingPattern` and replacing with corresponding
+    #: `replacementPattern`.
+    #: example: +91234
+    translated_number: Optional[str] = None
+
+
+class ConfigurationLevel(str, Enum):
+    #: The applied services at the location level.
+    location = 'LOCATION'
+    #: The applied services at the user level.
+    user = 'USER'
+    #: The applied services at the place level.
+    place = 'PLACE'
+    #: The applied services at the virtual line level.
+    virtual_line = 'VIRTUAL_LINE'
+
+
+class CallInterceptDetailsPermission(str, Enum):
+    #: Call intercept is disabled.
+    disallow = 'DISALLOW'
+    #: Call intercept is transferred to a number.
+    transfer = 'TRANSFER'
+
+
+class CallInterceptDetails(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: USER
+    configuration_level: Optional[ConfigurationLevel] = None
+    #: The choices that indicate call intercept permissions.
+    #: example: TRANSFER
+    permission: Optional[CallInterceptDetailsPermission] = None
+    #: The number to which the outgoing permission by type is to be transferred.
+    #: example: +14157279300
+    transfer_number: Optional[str] = None
+
+
+class CallingPlanReason(str, Enum):
+    #: Calling plan gives the Fraud Containment reason.
+    fraud_containment = 'FRAUD_CONTAINMENT'
+    #: The Cisco calling plan reason.
+    cisco_calling_plan = 'CISCO_CALLING_PLAN'
+    #: The reason if the transfer number 1 is not configured.
+    transfer_number_1_not_configured = 'TRANSFER_NUMBER_1_NOT_CONFIGURED'
+    #: The reason if the transfer number 2 is not configured.
+    transfer_number_2_not_configured = 'TRANSFER_NUMBER_2_NOT_CONFIGURED'
+    #: The reason if the transfer number 3 is not configured.
+    transfer_number_3_not_configured = 'TRANSFER_NUMBER_3_NOT_CONFIGURED'
+    #: The reason for Webex mobile international transfer forward.
+    webex_mobile_premium_international_transfer_forward = 'WEBEX_MOBILE_PREMIUM_INTERNATIONAL_TRANSFER_FORWARD'
+
+
+class OutgoingCallingPlanPermissionsByType(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: USER
+    configuration_level: Optional[ConfigurationLevel] = None
+    #: Designates the action to be taken for each call type and if transferring the call type is allowed.
+    #: example: INTERNAL_CALL
+    call_type: Optional[str] = None
+    #: Action to be performed on the input number that matches with the OCP.
+    #: example: ALLOW
+    permission: Optional[Action] = None
+    #: The number to which the outgoing permission by type is to be transferred.
+    #: example: +14157279300
+    transfer_number: Optional[str] = None
+    #: The reason for the result reported for non-standard OCP service.
+    #: example: FRAUD_CONTAINMENT
+    reason: Optional[CallingPlanReason] = None
+    #: A transfer number is present in case it gets transferred to some other number.
+    #: example: +14157279300
+    number: Optional[str] = None
+
+
+class OutgoingCallingPlanPermissionsByDigitPattern(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: USER
+    configuration_level: Optional[ConfigurationLevel] = None
+    #: Name given to a digit pattern.
+    #: example: DPattern
+    name: Optional[str] = None
+    #: Action to be performed on the input number that matches with the digit pattern.
+    #: example: ALLOW
+    permission: Optional[Action] = None
+    #: example: +14157279300
+    transfer_number: Optional[str] = None
+    #: Pattern is given to a digit pattern.
+    #: example: +91!
+    pattern: Optional[str] = None
+    #: The reason for the result reported for non-standard OCP service.
+    #: example: FRAUD_CONTAINMENT
+    reason: Optional[CallingPlanReason] = None
+    #: A transfer number is present in case it gets transferred to some other number.
+    #: example: +14157279300
+    number: Optional[str] = None
+
+
+class AppliedService(ApiModel):
+    #: Returns the details of the Translation Pattern if applied.
+    translation_pattern: Optional[AppliedServiceTranslationPattern] = None
+    #: Returns the details of call intercept if applied.
+    intercept_details: Optional[CallInterceptDetails] = None
+    #: Returns the details of permissions by type configuration if applied under OCP.
+    outgoing_calling_plan_permissions_by_type: Optional[OutgoingCallingPlanPermissionsByType] = None
+    #: Returns the details of digit pattern configuration if applied under OCP.
+    outgoing_calling_plan_permissions_by_digit_pattern: Optional[OutgoingCallingPlanPermissionsByDigitPattern] = None
+
+
 class TestCallRoutingResult(ApiModel):
     #: Language for call queue.
     language: Optional[str] = None
@@ -386,6 +518,9 @@ class TestCallRoutingResult(ApiModel):
     unknown_extension: Optional[TrunkDestination] = None
     #: This data object is returned when destinationType is UNKNOWN_NUMBER.
     unknown_number: Optional[TrunkDestination] = None
+    #: Returned if any origin is configured with intercept details, outgoing permissions by type, digit pattern, or
+    #: translation pattern.
+    applied_services: Optional[list[AppliedService]] = None
 
 
 class DeviceType(str, Enum):
@@ -740,8 +875,11 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
 
     def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
-                          originator_number: str = None, org_id: str = None) -> TestCallRoutingResult:
+                          originator_number: str = None, include_applied_services: bool = None,
+                          org_id: str = None) -> TestCallRoutingResult:
         """
+        Test Call Routing
+
         Validates that an incoming call can be routed.
 
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -750,29 +888,36 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
 
-        Test call routing requires a full administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
-
+        Test call routing requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param originator_id: This element is used to identify the originating party. It can be a person ID or a trunk
             ID.
         :type originator_id: str
         :param originator_type: This element is used to identify if the `originatorId` is of type `PEOPLE` or `TRUNK`.
-        :type originator_type: :class:`OriginatorType`
-        :param destination: This element specifies called party. It can be any dialable string, for example, an
-            ESN number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+        :type originator_type: OriginatorType
+        :param destination: This element specifies the called party. It can be any dialable string, for example, an ESN
+            number, E.164 number, hosted user DN, extension, extension with location code, URL, or FAC code.
         :type destination: str
         :param originator_number: Only used when `originatorType` is `TRUNK`. The `originatorNumber` can be a phone
             number or URI.
         :type originator_number: str
+        :param include_applied_services: This element is used to retrieve if any translation pattern, call intercept,
+            permission by type, or permission by digit pattern is present for the called party.
+        :type include_applied_services: bool
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
-        :return: call routing test result
         :rtype: :class:`TestCallRoutingResult`
         """
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
+        body = dict()
+        body['originatorId'] = originator_id
+        body['originatorType'] = enum_str(originator_type)
+        if originator_number is not None:
+            body['originatorNumber'] = originator_number
+        body['destination'] = destination
+        if include_applied_services is not None:
+            body['includeAppliedServices'] = include_applied_services
         url = self.ep('actions/testCallRouting/invoke')
         data = self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)

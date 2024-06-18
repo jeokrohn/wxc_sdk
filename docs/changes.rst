@@ -2,6 +2,8 @@ Release history
 ===============
 
 - feat: new attribute :attr:`Privacy.enable_phone_status_pickup_barge_in_privacy  <wxc_sdk.person_settings.privacy.Privacy>`
+- feat: new API translation patterns :attr:`api.telephony.call_routing.tp <wxc_sdk.telephony.call_routing.CallRoutingApi.tp>`
+- feat: enhanced response for :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>` controlled by include_applied_services parameter
 
 1.19.0
 ------

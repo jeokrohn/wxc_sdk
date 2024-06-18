@@ -1,10 +1,18 @@
 from collections.abc import Generator
-from typing import Optional
+from typing import Optional, Literal
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['TranslationPatternsApi', 'TranslationPattern']
+__all__ = ['TranslationPatternsApi', 'TranslationPattern', 'TranslationPatternLevel']
+
+from wxc_sdk.common import IdAndName
+
+
+class TranslationPatternLevel(str, Enum):
+    organization = 'Organization'
+    location = 'Location'
 
 
 class TranslationPattern(ApiModel):
@@ -16,6 +24,8 @@ class TranslationPattern(ApiModel):
     matching_pattern: Optional[str] = None
     #: Replacement pattern given to a translation pattern for an organization.
     replacement_pattern: Optional[str] = None
+    level: Optional[TranslationPatternLevel] = None
+    location: Optional[IdAndName] = None
 
     def create_update(self) -> dict:
         """
@@ -23,7 +33,7 @@ class TranslationPattern(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude={'id'}, by_alias=True)
+        return self.model_dump(mode='json', exclude={'id', 'level', 'location'}, by_alias=True)
 
 
 class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/translationPatterns'):
@@ -41,6 +51,21 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
     of `spark-admin:telephony_config_write`.
     """
 
+    def ep(self, path: str = None, location_id: str = None):
+        """
+        Get ep with optional location_id
+
+        :meta private:
+        :param path:
+        :param location_id:
+        :return:
+        """
+        if location_id is None:
+            return super().ep(path)
+        path = path and f'/{path}' or ''
+        base = 'telephony/config/locations'
+        return self.session.ep(f'{base}/{location_id}/callRouting/translationPatterns{path}')
+
     def create(self, pattern: TranslationPattern,
                org_id: str = None) -> str:
         """
@@ -50,6 +75,9 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         only.
 
         Create a translation pattern for a given organization.
+
+        To create a location level translation pattern set the location.id attribute of the translation pattern
+        argument.
 
         Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
 
@@ -61,7 +89,7 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         """
         params = org_id and {'orgId': org_id} or None
         body = pattern.create_update()
-        url = self.ep()
+        url = self.ep(location_id=pattern.location and pattern.location.id or None)
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -94,7 +122,8 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         :type org_id: str
         :return: Generator yielding :class:`TranslationPatternGet` instances
         """
-        params = org_id and {'orgId': org_id} or None
+        if org_id:
+            params['orgId'] = org_id
         if limit_to_location_id is not None:
             params['limitToLocationId'] = limit_to_location_id
         if limit_to_org_level_enabled is not None:
@@ -108,6 +137,7 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
                                               params=params)
 
     def details(self, translation_id: str,
+                location_id: str = None,
                 org_id: str = None) -> TranslationPattern:
         """
         Retrieve the details of a Translation Pattern
@@ -121,12 +151,15 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
 
         :param translation_id: Retrieve the translation pattern with the matching ID.
         :type translation_id: str
+        :param location_id: Unique identifier for the location. Only used when getting details for location level
+            translation patterns
+        :type location_id: str
         :param org_id: ID of the organization containing the translation pattern.
         :type org_id: str
         :rtype: :class:`TranslationPattern`
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(f'{translation_id}')
+        url = self.ep(path=translation_id, location_id=location_id)
         data = super().get(url, params=params)
         r = TranslationPattern.model_validate(data)
         return r
@@ -138,7 +171,8 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
         only.
 
-        Modify a translation pattern for a given organization.
+        Modify a translation pattern for a given organization. To update a location level translation pattern the
+        location.id attribute of the pattern has to be set
 
         Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
 
@@ -150,10 +184,10 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         """
         params = org_id and {'orgId': org_id} or None
         body = pattern.create_update()
-        url = self.ep(f'{pattern.id}')
+        url = self.ep(location_id=pattern.location and pattern.location.id or None, path=pattern.id)
         super().put(url, params=params, json=body)
 
-    def delete(self, translation_id: str, org_id: str = None):
+    def delete(self, translation_id: str, location_id: str = None, org_id: str = None):
         """
         Delete a Translation Pattern
 
@@ -166,10 +200,12 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
 
         :param translation_id: Delete a translation pattern with the matching ID.
         :type translation_id: str
+        :param location_id: Unique identifier for the location. Only used when deleting location level translation
+            patterns
         :param org_id: ID of the organization containing the translation pattern.
         :type org_id: str
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(f'{translation_id}')
+        url = self.ep(location_id=location_id, path=translation_id)
         super().delete(url, params=params)

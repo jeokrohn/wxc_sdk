@@ -11,10 +11,12 @@ from itertools import chain
 from json import dumps, loads
 from random import shuffle, choice, randint
 from typing import ClassVar, Optional, Union, NamedTuple
+from unittest import skip
 
 from tests.base import TestCaseWithLog, async_test
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState
+from wxc_sdk.as_rest import AsRestError
+from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState, IdAndName
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
@@ -23,6 +25,7 @@ from wxc_sdk.telephony import OriginatorType, DestinationType, NumberType, CallS
     HostedFeatureDestination, ServiceType, HostedUserDestination, CallSourceInfo, PbxUserDestination, \
     NumberListPhoneNumber
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantMenu
+from wxc_sdk.telephony.call_routing.translation_pattern import TranslationPattern, TranslationPatternLevel
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation
@@ -1123,11 +1126,11 @@ class TestHostedFeature(TestCallRouting):
             if result.hosted_feature.service_instance_id != expected.hosted_feature.service_instance_id:
                 def print_service_instance_id(instance_id: str):
                     print(f'  service instance id: {instance_id}')
-                    decoded = base64.b64decode(instance_id+'==').decode()
+                    decoded = base64.b64decode(instance_id + '==').decode()
                     print(f'  b64decoded: {decoded}')
                     last_part = decoded.split('/')[-1]
                     try:
-                        decoded_last_part = base64.b64decode(last_part+'==').decode()
+                        decoded_last_part = base64.b64decode(last_part + '==').decode()
                         print(f'  last part b64decoded: {decoded_last_part}')
                     except UnicodeDecodeError:
                         pass
@@ -1339,3 +1342,174 @@ class TestHostedFeature(TestCallRouting):
         self.print_result(result=result)
         expected = self.result_service_by_phone_numer(service=cq, location=location)
         self.assert_result_wrong_service_instance_id_format(expected=expected, result=result)
+
+
+class TestTranslationPattern(TestCallRouting):
+    """
+    Tests for translation patterns
+    """
+
+    @staticmethod
+    def tp_name(pattern: str) -> str:
+        return f'Test {pattern}'
+
+    def test_list_org_level(self):
+        """
+        List translation patterns at org level
+        """
+        patterns = list(self.api.telephony.call_routing.tp.list())
+        print(f'Org has {len(patterns)} TPs')
+        print(f'Org has {sum(1 for pat in patterns if pat.location is None)} org level patterns')
+        inconsistent_level = [pat for pat in patterns if (pat.location is None) != (pat.level == 'Organization')]
+        print('\n'.join(str(pat) for pat in inconsistent_level))
+        self.assertEqual(0, len(inconsistent_level), 'Inconsistent TP levels')
+
+    @async_test
+    async def test_list_location_level(self):
+        """
+        List translation patterns at location level
+        """
+        locations = self.locations
+        tpa = self.async_api.telephony.call_routing.tp
+        tp_lists = await asyncio.gather(*[tpa.list(limitToLocationId=loc.location_id)
+                                          for loc in locations],
+                                        return_exceptions=True)
+        err = None
+        for location, tp_list in zip(locations, tp_lists):
+            location: Location
+            tp_list: Union[Exception, list[TranslationPattern]]
+            if isinstance(tp_list, Exception):
+                print(f'Failed to list TPs for location "{location.name}": {tp_list}')
+                err = err or tp_list
+            else:
+                print(f'Location "{location.name}" has {len(tp_list)} TPs')
+        if err is not None:
+            raise err
+
+    def new_patterns(self, location: Location = None,
+                     existing_tps: list[TranslationPattern] = None) -> Generator[str, None, None]:
+        """
+        Generate new test translation patterns for a location (or org if location is None)
+        """
+        location_id = location.location_id if location else None
+        tpa = self.api.telephony.call_routing.tp
+        if existing_tps is None:
+            existing_tps = list(tpa.list())
+        existing_tps = [tp
+                        for tp in existing_tps
+                        if ((location_id is not None and tp.location and tp.location.id == location_id) or
+                            (location_id is None and tp.location)) is None]
+        existing = set(tp.matching_pattern for tp in existing_tps)
+        return (pattern for i in range(1, 100000) if (pattern := f'9{i:05}!') not in existing)
+
+    def create_tp_and_validate(self, location: Location = None):
+        """
+        Create a new translation pattern and validate it
+
+        :param location: location to create the TP in; can be None for org level
+        """
+        tpa = self.api.telephony.call_routing.tp
+        tp_list_before = list(tpa.list())
+        location_id = location.location_id if location else None
+
+        new_pattern = next(self.new_patterns(location=location, existing_tps=tp_list_before))
+        if location is not None:
+            print(f'Creating new location level TP "{new_pattern}" in location "{location.name}"')
+        else:
+            print(f'Creating new org level TP "{new_pattern}"')
+        tp = TranslationPattern(name=self.tp_name(new_pattern), matching_pattern=new_pattern,
+                                replacement_pattern='*88*')
+        if location_id is not None:
+            tp.location = IdAndName(id=location_id)
+        tp_id = tpa.create(tp)
+        try:
+            tp_list_after = list(tpa.list())
+            self.assertEqual(len(tp_list_before) + 1, len(tp_list_after), 'New TP not in list')
+            tp_in_list = next(tp for tp in tp_list_after if tp.id == tp_id)
+            if location is None:
+                self.assertIsNone(tp_in_list.location, 'Location not None')
+                self.assertEqual(TranslationPatternLevel.organization, tp_in_list.level, 'Level not org')
+            else:
+                self.assertEqual(location_id, tp_in_list.location.id, 'Location not set')
+                self.assertEqual(location.name, tp_in_list.location.name, 'Location name not set')
+                self.assertEqual(TranslationPatternLevel.location, tp_in_list.level, 'Level not location')
+            details = tpa.details(translation_id=tp_id, location_id=location_id)
+            self.assertEqual(details.create_update(), tp.create_update(), 'Details do not match')
+        finally:
+            print(f'Deleting TP "{new_pattern}"')
+            tpa.delete(translation_id=tp_id, location_id=location_id)
+            tp_list_after = list(tpa.list())
+            self.assertEqual(len(tp_list_before), len(tp_list_after), 'New TP not deleted')
+
+    def test_create_org_tp(self):
+        """
+        Create org level translation pattern
+        """
+        self.create_tp_and_validate()
+
+    def test_create_location_tp(self):
+        """
+        Create location level translation pattern
+        """
+        location = choice(self.locations)
+        self.create_tp_and_validate(location=location)
+
+    def test_create_invalid(self):
+        """
+        Create invalid translation pattern
+        """
+        tpa = self.api.telephony.call_routing.tp
+        with self.assertRaises(RestError) as exc:
+            tp = TranslationPattern(name='invalid', matching_pattern='!!', replacement_pattern='12')
+            tp_id = tpa.create(tp)
+        rest_error: RestError = exc.exception
+        self.assertEqual(400, rest_error.response.status_code)
+        self.assertEqual(9676, rest_error.code)
+
+    @skip('Might hurt the backend')
+    @async_test
+    async def test_create_max(self):
+        """
+        test maximum number of TPs
+        """
+        new_patterns = self.new_patterns()
+        pattern_id_list = []
+        tpa = self.api.telephony.call_routing.tp
+        as_tpa = self.async_api.telephony.call_routing.tp
+        list_before = list(tpa.list())
+
+        async def create_one(pattern: str):
+            tp = TranslationPattern(name=self.tp_name(pattern), matching_pattern=pattern, replacement_pattern='*88*')
+            try:
+                tp_id = await as_tpa.create(tp)
+                pattern_id_list.append(tp_id)
+            finally:
+                ...
+            return
+
+        try:
+            # create TPs in batches of 100 until we fail
+            while True:
+                tp_batch = [next(new_patterns) for _ in range(100)]
+                await asyncio.gather(*[create_one(pattern)
+                                       for pattern in tp_batch])
+        except AsRestError as e:
+            tp_list = list(tpa.list())
+            print(f'TP creation finally failed with: {e}')
+            print(f'{len(tp_list)} TPs in total after creating patterns')
+        finally:
+            await asyncio.gather(*[as_tpa.delete(translation_id=tp_id) for tp_id in pattern_id_list],
+                                 return_exceptions=True)
+        delete_requests = [req
+                           for req in self.requests(method='DELETE',
+                                                    url_filter=r'.+/telephony/config/callRouting/translationPatterns')]
+        create_requests = [req
+                           for req in self.requests(method='POST',
+                                                    url_filter=r'.+telephony/config/callRouting/translationPatterns')]
+        create_success = [req for req in create_requests if req.status == 201]
+        print(f'{len(create_success)} TPs created')
+        print(f'{len(delete_requests)} TPs deleted')
+        self.assertEqual(len(create_success), len(delete_requests))
+
+        list_after = list(tpa.list())
+        self.assertEqual(len(list_before), len(list_after), 'Some TPs not deleted')
