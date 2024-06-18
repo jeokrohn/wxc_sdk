@@ -630,13 +630,17 @@ class Attribute:
             name = self.name.strip('"')
             name = name.strip("'")
             name = snake_case(name)
-            if name in RESERVED_PARAM_NAMES and name != 'none':
-                name = f'{name}_'
-            name, _ = subn(r'[^a-z0-9]', '_', name)
-            name = sub('^([0-9])', 'd\\1', name)
-            value = self.name
-            value = value.replace("'", '')
-            lines.append(f"{name} = '{value}'")
+            if name != 'none' or True:
+                # skip creation of 'none' attribute for enums; this is most probably meant to refer to the actual Null
+                # value
+                if name in RESERVED_PARAM_NAMES:
+                    name = f'{name}_'
+                name, _ = subn(r'[^a-z0-9]', '_', name)
+                name = sub('^([0-9])', 'd\\1', name)
+                value = self.name
+                value = value.replace("'", '')
+                lines.append(f"{name} = '{value}'")
+            # if
         else:
             # something like:
             #   actor_org_name: Optional[str] = None
