@@ -27,7 +27,7 @@ __all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Param
 log = logging.getLogger(__name__)
 
 # some Python names are not allowed as parameter names
-RESERVED_PARAM_NAMES = {'from', 'to', 'max', 'format'}
+RESERVED_PARAM_NAMES = {'from', 'to', 'max', 'format', 'global', 'none', 'in'}
 
 CLASS_TEMPLATE = """
 class {class_name}{baseclass}:
@@ -630,10 +630,8 @@ class Attribute:
             name = self.name.strip('"')
             name = name.strip("'")
             name = snake_case(name)
-            if name == 'none':
-                name = 'none_'
-            elif name == 'in':
-                name = 'in_'
+            if name in RESERVED_PARAM_NAMES and name != 'none':
+                name = f'{name}_'
             name, _ = subn(r'[^a-z0-9]', '_', name)
             name = sub('^([0-9])', 'd\\1', name)
             value = self.name
