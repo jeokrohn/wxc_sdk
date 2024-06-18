@@ -1535,7 +1535,7 @@ class PythonClassRegistry:
             type_hint = None
         else:
             type_hint = member.meta.title
-            if type_hint is None and member.value and member.value.element.lower() == 'string':
+            if type_hint is None and member.value and member.value.element.lower() in {'string', 'boolean'}:
                 # use value as fallback
                 type_hint = member.value.element
         optional = 'required' not in member.type_attributes

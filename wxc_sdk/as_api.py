@@ -55,28 +55,27 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsAnnouncementsRepositoryApi', 'AsApiChild', 'AsAppServicesApi', 'AsApplyLineKeyTemplatesJobsApi',
            'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
            'AsCallBridgeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
-           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi',
-           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConvergedRecordingsApi',
-           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
-           'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi',
-           'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi',
-           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
-           'AsLocationAccessCodesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi',
-           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi',
-           'AsPersonSettingsApiChild', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi',
-           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
-           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi',
-           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi', 'AsSCIM2UsersApi',
-           'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi',
-           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
-           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
-           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
+           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi',
+           'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi',
+           'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi',
+           'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
+           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
+           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
+           'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
+           'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
+           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
+           'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
            'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
@@ -115,9 +114,7 @@ class AsApiChild:
         :return: endpoint URL
         :rtype: str
         """
-        path = path or ''
-        if self.base and path:
-            path = f'/{path}'
+        path = path and f'/{path}' or ''
         return self.session.ep(f'{self.base}{path}')
 
     async def get(self, *args, **kwargs) -> StrOrDict:
@@ -374,259 +371,6 @@ class AsAuthorizationsApi(AsApiChild, base='authorizations'):
             if org_id:
                 params['orgId'] = org_id
         await super().delete(url, params=params)
-
-
-class AsConvergedRecordingsApi(AsApiChild, base=''):
-    """
-    Converged Recordings
-
-    Not supported for Webex for Government (FedRAMP)
-
-    Webex Meetings and Webex Calling (with Webex as the Call Recording provider) leverage the same recording
-    infrastructure. That ensures that users can use the same recording API to fetch call recordings and/or meeting
-    recordings. This convergence allows the sharing of functionality (summaries, transcripts, etc.) across the Webex
-    Suite and provides a consistent user experience.
-
-    This API is currently limited to Webex Calling i.e., providing details for call recordings but will later be
-    extended to include Webex Meeting recordings.
-
-    When the recording is paused in a call, the recording does not contain the pause. If the recording is stopped and
-    restarted in a call, several recordings are created. Those recordings will be consolidated and available all at
-    once.
-
-    For information on the call recording feature, refer to `Manage call recording for Webex Calling
-    <https://help.webex.com/en-us/article/ilga4/Manage-call-recording-for-Webex-Calling#wbxch_t_manage-call
-    -recording_selecting-call-recording-provider>`_.
-    """
-
-    def list_gen(self, from_: Union[str, datetime] = None,
-             to_: Union[str, datetime] = None, status: RecordingStatus = None,
-             service_type: RecordingServiceType = None,
-             format_: str = None, owner_id: str = None,
-             owner_email: str = None, owner_type: RecordingOwnerType = None,
-             storage_region: RecordingStorageRegion = None,
-             location_id: str = None,
-             **params) -> AsyncGenerator[ConvergedRecording, None, None]:
-        """
-        List Recordings for Compliance officer
-
-        List recordings for compliance officer. You can specify a date range, and the maximum number of recordings to
-        return.
-
-        The list returned is sorted in descending order by the date and time that the recordings were created.
-
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
-
-        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `from` cannot be after `to`.
-        :type from_: Union[str, datetime]
-        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `to` cannot be before `from`.
-        :type to_: Union[str, datetime]
-        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
-            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
-        :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`, or `all`.
-        :type service_type: RecordingServiceType
-        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
-            `MP3`.
-        :type format_: RecordingObjectFormat
-        :param owner_id: Webex user Id to fetch recordings for a particular user.
-        :type owner_id: str
-        :param owner_email: Webex email address to fetch recordings for a particular user.
-        :type owner_email: str
-        :param owner_type: Recording based on type of user.
-        :type owner_type: RecordingOwnerType
-        :param storage_region: Recording stored in certain Webex locations.
-        :type storage_region: RecordingStorageRegion
-        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
-            Hub).
-        :type location_id: str
-        :return: Generator yielding :class:`ConvergedRecording` instances
-        """
-        if from_ is not None:
-            if isinstance(from_, str):
-                from_ = isoparse(from_)
-            from_ = dt_iso_str(from_)
-            params['from'] = from_
-        if to_ is not None:
-            if isinstance(to_, str):
-                to_ = isoparse(to_)
-            to_ = dt_iso_str(to_)
-            params['to'] = to_
-        if status is not None:
-            params['status'] = enum_str(status)
-        if service_type is not None:
-            params['serviceType'] = enum_str(service_type)
-        if format_ is not None:
-            params['format'] = enum_str(format_)
-        if owner_id is not None:
-            params['ownerId'] = owner_id
-        if owner_email is not None:
-            params['ownerEmail'] = owner_email
-        if owner_type is not None:
-            params['ownerType'] = enum_str(owner_type)
-        if storage_region is not None:
-            params['storageRegion'] = enum_str(storage_region)
-        if location_id is not None:
-            params['locationId'] = location_id
-        url = self.ep('admin/convergedRecordings')
-        return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
-
-    async def list(self, from_: Union[str, datetime] = None,
-             to_: Union[str, datetime] = None, status: RecordingStatus = None,
-             service_type: RecordingServiceType = None,
-             format_: str = None, owner_id: str = None,
-             owner_email: str = None, owner_type: RecordingOwnerType = None,
-             storage_region: RecordingStorageRegion = None,
-             location_id: str = None,
-             **params) -> List[ConvergedRecording]:
-        """
-        List Recordings for Compliance officer
-
-        List recordings for compliance officer. You can specify a date range, and the maximum number of recordings to
-        return.
-
-        The list returned is sorted in descending order by the date and time that the recordings were created.
-
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
-
-        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `from` cannot be after `to`.
-        :type from_: Union[str, datetime]
-        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `to` cannot be before `from`.
-        :type to_: Union[str, datetime]
-        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
-            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
-        :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`, or `all`.
-        :type service_type: RecordingServiceType
-        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
-            `MP3`.
-        :type format_: RecordingObjectFormat
-        :param owner_id: Webex user Id to fetch recordings for a particular user.
-        :type owner_id: str
-        :param owner_email: Webex email address to fetch recordings for a particular user.
-        :type owner_email: str
-        :param owner_type: Recording based on type of user.
-        :type owner_type: RecordingOwnerType
-        :param storage_region: Recording stored in certain Webex locations.
-        :type storage_region: RecordingStorageRegion
-        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
-            Hub).
-        :type location_id: str
-        :return: Generator yielding :class:`ConvergedRecording` instances
-        """
-        if from_ is not None:
-            if isinstance(from_, str):
-                from_ = isoparse(from_)
-            from_ = dt_iso_str(from_)
-            params['from'] = from_
-        if to_ is not None:
-            if isinstance(to_, str):
-                to_ = isoparse(to_)
-            to_ = dt_iso_str(to_)
-            params['to'] = to_
-        if status is not None:
-            params['status'] = enum_str(status)
-        if service_type is not None:
-            params['serviceType'] = enum_str(service_type)
-        if format_ is not None:
-            params['format'] = enum_str(format_)
-        if owner_id is not None:
-            params['ownerId'] = owner_id
-        if owner_email is not None:
-            params['ownerEmail'] = owner_email
-        if owner_type is not None:
-            params['ownerType'] = enum_str(owner_type)
-        if storage_region is not None:
-            params['storageRegion'] = enum_str(storage_region)
-        if location_id is not None:
-            params['locationId'] = location_id
-        url = self.ep('admin/convergedRecordings')
-        return [o async for o in self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)]
-
-    async def details(self, recording_id: str) -> ConvergedRecordingWithDirectDownloadLinks:
-        """
-        Get Recording Details
-
-        Retrieves details for a recording with a specified recording ID.
-
-        Only recordings of owner with the authenticated user may be retrieved.
-
-        :param recording_id: A unique identifier for the recording.
-        :type recording_id: str
-        :rtype: :class:`ConvergedRecordingWithDirectDownloadLinks`
-        """
-        url = self.ep(f'convergedRecordings/{recording_id}')
-        data = await super().get(url)
-        r = ConvergedRecordingWithDirectDownloadLinks.model_validate(data)
-        return r
-
-    async def delete(self, recording_id: str, reason: str = None, comment: str = None):
-        """
-        Delete a Recording
-
-        Removes a recording with a specified recording ID. The deleted recording cannot be recovered.
-
-        If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users
-        (host, attendees and shared), and to Compliance officer also. This action purges the recordings from Webex.
-
-        :param recording_id: A unique identifier for the recording.
-        :type recording_id: str
-        :param reason: Reason for deleting a recording. Only required when a Compliance Officer is operating on another
-            user's recording.
-        :type reason: str
-        :param comment: Compliance Officer's explanation for deleting a recording. The comment can be a maximum of 255
-            characters long.
-        :type comment: str
-        :rtype: None
-        """
-        body = dict()
-        if reason is not None:
-            body['reason'] = reason
-        if comment is not None:
-            body['comment'] = comment
-        url = self.ep(f'convergedRecordings/{recording_id}')
-        await super().delete(url, json=body)
-
-    async def metadata(self, recording_id: str, show_all_types: bool = None) -> ConvergedRecordingMeta:
-        """
-        Get Recording metadata
-
-        Retrieves metadata details for a recording with a specified recording ID. The recording must be owned by the
-        authenticated user.
-
-        For information on the metadata fields, refer to `Metadata Guide
-        <https://developer.webex.com/docs/webex-calling-overview>`_
-
-        :param recording_id: A unique identifier for the recording.
-        :type recording_id: str
-        :param show_all_types: If `showAllTypes` is `true`, all attributes will be shown. If it's `false` or not
-            specified, the following attributes of the metadata will be hidden.
-
-            * serviceData.callActivity.mediaStreams
-            * serviceData.callActivity.participants
-            * serviceData.callActivity.redirectInfo
-            * serviceData.callActivity.redirectedCall
-        :type show_all_types: bool
-        :rtype: None
-        """
-        params = {}
-        if show_all_types is not None:
-            params['showAllTypes'] = str(show_all_types).lower()
-        url = self.ep(f'convergedRecordings/{recording_id}/metadata')
-        data = await super().get(url, params=params)
-        return ConvergedRecordingMeta.model_validate(data)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):
@@ -7553,11 +7297,6 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
 
     feature = 'outgoingPermission'
 
-    def __getattribute__(self, item):
-        if item == 'access_codes' and self.selector == ApiSelector.location:
-            raise AttributeError("access_codes API is not available for locations. Use the telephony access_codes API")
-        return super().__getattribute__(item)
-
     def __init__(self, *, session: AsRestSession,
                  selector: ApiSelector = 'person'):
         super().__init__(session=session, selector=selector)
@@ -9204,6 +8943,7 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
+        - `Identity:SCIM`
 
         **Usage**:
 
@@ -9279,490 +9019,6 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
         return r
 
 
-class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
-    """
-    SCIM 2 Groups
-
-    Implementation of the SCIM 2.0 group part for group management in a standards based manner. Please also see the
-    `SCIM Specification
-    <http://www.simplecloud.info/>`_. The schema and API design follows the standard SCIM 2.0 definition with
-    detailed in
-    `SCIM 2.0 schema
-    <https://datatracker.ietf.org/doc/html/rfc7643>`_ and `SCIM 2.0 Protocol
-    """
-
-    async def create(self, org_id: str, group: ScimGroup) -> ScimGroup:
-        """
-        Create a group
-
-        Create a new group for a given organization. The group may optionally be created with group members.
-
-        **Authorization**
-
-        OAuth token returned by Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_group_admin`
-
-        **Usage**:
-
-        1. The input JSON must conform to one of the following schemas:
-
-        - `urn:ietf:params:scim:schemas:core:2.0:Group`
-        - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
-
-        2. Unrecognized schemas (ID/section) are ignored.
-
-        3. Read-only attributes provided as input values are ignored.
-
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
-        :param group: Group settings
-        :type group: ScimGroup
-        :rtype: :class:`ScimGroup`
-        """
-        body = group.create_update()
-        url = self.ep(f'{org_id}/v2/Groups')
-        data = await super().post(url, json=body)
-        r = ScimGroup.model_validate(data)
-        return r
-
-    async def details(self, org_id: str, group_id: str, excluded_attributes: str = None) -> ScimGroup:
-        """
-        Get a group
-
-        Retrieve details for a group, by ID.
-
-        Optionally, members can be retrieved with this request. The maximum number of members returned is 500.
-
-        **Authorization**
-
-        OAuth token rendered by Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-        - `identity:people_read`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_group_admin`
-        - `id_readonly_admin`
-        - `id_device_admin`
-
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
-        :param group_id: A unique identifier for the group.
-        :type group_id: str
-        :param excluded_attributes: Attributes to be excluded from the return.
-        :type excluded_attributes: str
-        :rtype: :class:`ScimGroup`
-        """
-        params = {}
-        if excluded_attributes is not None:
-            params['excludedAttributes'] = excluded_attributes
-        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
-        data = await super().get(url, params=params)
-        r = ScimGroup.model_validate(data)
-        return r
-
-    async def search(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
-               start_index: int = None, count: int = None, sort_by: str = None, sort_order: str = None,
-               include_members: bool = None, member_type: str = None) -> SearchGroupResponse:
-        """
-        Search groups
-
-        Retrieve a list of groups in the organization.
-
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
-
-        **Authorization**
-
-        An OAuth token rendered by Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-        - `identity:people_read`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_group_admin`
-        - `id_readonly_admin`
-        - `id_device_admin`
-
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
-        :param filter: The url encoded filter. The example content is 'displayName Eq "group1@example.com" or
-            displayName Eq "group2@example.com"'.
-
-            For more filter patterns, see https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2. If the value is
-            empty, the API returns all groups under the organization.
-        :type filter: str
-        :param excluded_attributes: Attributes to be excluded from the return.
-        :type excluded_attributes: str
-        :param attributes: The attributes to return.
-        :type attributes: str
-        :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
-        :type start_index: int
-        :param count: An integer indicating the desired maximum number of query results per page. The default is 100.
-        :type count: int
-        :param sort_by: A string indicating the attribute whose value be used to order the returned responses. Now we
-            only allow `displayName, id, meta.lastModified` to sort.
-        :type sort_by: str
-        :param sort_order: A string indicating the order in which the `sortBy` parameter is applied. Allowed values are
-            `ascending` and `descending`.
-        :type sort_order: str
-        :param include_members: Default "false". If false, no members returned.
-        :type include_members: bool
-        :param member_type: Filter the members by member type. Sample data: `user`, `machine`, `group`.
-        :type member_type: str
-        :rtype: :class:`SearchGroupResponse`
-        """
-        params = {}
-        if filter is not None:
-            params['filter'] = filter
-        if excluded_attributes is not None:
-            params['excludedAttributes'] = excluded_attributes
-        if attributes is not None:
-            params['attributes'] = attributes
-        if start_index is not None:
-            params['startIndex'] = start_index
-        if count is not None:
-            params['count'] = count
-        if sort_by is not None:
-            params['sortBy'] = sort_by
-        if sort_order is not None:
-            params['sortOrder'] = sort_order
-        if include_members is not None:
-            params['includeMembers'] = str(include_members).lower()
-        if member_type is not None:
-            params['memberType'] = member_type
-        url = self.ep(f'{org_id}/v2/Groups')
-        data = await super().get(url, params=params)
-        r = SearchGroupResponse.model_validate(data)
-        return r
-
-    async def search_all_gen(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str 
-    = None,
-                             count: int = None, sort_by: str = None, sort_order: str = None,
-                             include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup, 
-                             None, None]:
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self', 'count'} and v is not None}
-        start_index = None
-        while True:
-            paginated_result = await self.search(**params, start_index=start_index, count=count)
-            for r in paginated_result.resources:
-                yield r
-            # prepare getting the next page
-            count = paginated_result.items_per_page
-            start_index = paginated_result.start_index + paginated_result.items_per_page
-            if start_index > paginated_result.total_results:
-                break
-        return
-
-    async def search_all(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
-                         count: int = None, sort_by: str = None, sort_order: str = None,
-                         include_members: bool = None, member_type: str = None) -> list[ScimGroup]:
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self'} and v is not None}
-        return [u async for u in self.search_all_gen(**params)]
-        
-
-    async def members(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                member_type: str = None) -> GroupMemberResponse:
-        """
-        Get Group Members
-
-        Returns the members of a group.
-
-        - The default maximum number of members returned is 500.
-        - Control parameters are available to page through the members and to control the size of the results.
-        - Long result sets are split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
-
-        **Note**
-
-        Location groups are different from SCIM groups. You cannot search for identities in a location via groups.
-
-        **Authorization**
-
-        OAuth token returned by the Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-        - `identity:people_read`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_group_admin`
-        - `id_readonly_admin`
-        - `id_device_admin`
-
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
-        :param group_id: A unique identifier for the group.
-        :type group_id: str
-        :param start_index: The index to start for group pagination.
-        :type start_index: int
-        :param count: Non-negative integer that specifies the desired number of search results per page. The maximum
-            value for the count is 500.
-        :type count: int
-        :param member_type: Filter the members by member type. Sample data: `user`, `machine`, `group`.
-        :type member_type: str
-        :rtype: :class:`GroupMemberResponse`
-        """
-        params = {}
-        if start_index is not None:
-            params['startIndex'] = start_index
-        if count is not None:
-            params['count'] = count
-        if member_type is not None:
-            params['memberType'] = member_type
-        url = self.ep(f'{org_id}/v2/Groups/{group_id}/Members')
-        data = await super().get(url, params=params)
-        r = GroupMemberResponse.model_validate(data)
-        return r
-
-    async def members_all_gen(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None, None]:
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self', 'count'} and v is not None}
-        start_index = None
-        while True:
-            paginated_result = await self.members(**params, start_index=start_index, count=count)
-            for r in paginated_result.members:
-                yield r
-            # prepare getting the next page
-            count = paginated_result.items_per_page
-            start_index = paginated_result.start_index + paginated_result.items_per_page
-            if start_index > paginated_result.member_size:
-                break
-        return
-
-    async def members_all(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                          member_type: str = None) -> list[ScimGroupMember]:
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self'} and v is not None}
-        return [u async for u in self.members_all_gen(**params)]
-        
-
-    async def update(self, org_id: str, group: ScimGroup) -> ScimGroup:
-        """
-        Update a group with PUT
-
-        Replace the contents of the Group.
-
-        **Authorization**
-
-        OAuth token returned by Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_group_admin`
-
-        **Usage**:
-
-        1. The input JSON must conform to one of the following schemas:
-
-        - `urn:ietf:params:scim:schemas:core:2.0:Group`
-        - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
-
-        2. Unrecognized schemas (ID/section) are ignored.
-
-        3. Read-only attributes provided as input values are ignored.
-
-        4. The group `id` is not changed.
-
-        5. All attributes are cleaned up if a new value is not provided by the client.
-
-        6. The values, `meta` and `created` are not changed.
-
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
-        :rtype: :class:`ScimGroup`
-        """
-        body = group.create_update()
-        url = self.ep(f'{org_id}/v2/Groups/{group.id}')
-        data = await super().put(url, json=body)
-        r = ScimGroup.model_validate(data)
-        return r
-
-    async def patch(self, org_id: str, group_id: str, schemas: list[str],
-              operations: list[PatchUserOperation]) -> ScimGroup:
-        """
-        Update a group with PATCH
-
-        Update group attributes with PATCH.
-
-        **Authorization**
-
-        OAuth token returned by Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_group_admin`
-
-        **Usage**:
-
-        1. The input JSON must conform to one of the following schemas:
-
-        - `urn:ietf:params:scim:schemas:core:2.0:Group`
-        - `urn:scim:schemas:extension:cisco:webexidentity:2.0:Group`
-
-        2. Unrecognized schemas (ID/section) are ignored.
-
-        3. Read-only attributes provided as input values are ignored.
-
-        4. Each operation on an attribute must be compatible with the attribute's mutability.
-
-        5. Each PATCH operation represents a single action to be applied to the
-        same SCIM resource specified by the request URI. Operations are
-        applied sequentially in the order they appear in the array. Each
-        operation in the sequence is applied to the target resource; the
-        resulting resource becomes the target of the next operation.
-        Evaluation continues until all operations are successfully applied or
-        until an error condition is encountered.
-
-        **Add operations**:
-
-        The `add` operation is used to add a new attribute value to an existing resource. The operation must contain a
-        `value` member whose content specifies the value to be added. The value may be a quoted value, or it may be a
-        JSON object containing the sub-attributes of the complex attribute specified in the operation's `path`. The
-        result of the add operation depends upon the target location indicated by `path` references:
-
-        - If omitted, the target location is assumed to be the resource itself. The `value` parameter contains a set of
-          attributes to be added to the resource.
-        - If the target location does not exist, the attribute and value are added.
-        - If the target location specifies a complex attribute, a set of sub-attributes shall be specified in the
-          `value` parameter.
-        - If the target location specifies a multi-valued attribute, a new value is added to the attribute.
-        - If the target location specifies a single-valued attribute, the existing value is replaced.
-        - If the target location specifies an attribute that does not exist (has no value), the attribute is added with
-          the new value.
-        - If the target location exists, the value is replaced.
-        - If the target location already contains the value specified, no changes should be made to the resource.
-
-        **Replace operations**:
-
-        The `replace` operation replaces the value at the target location specified by the `path`. The operation
-        performs the following functions, depending on the target location specified by `path`:
-
-        - If the `path` parameter is omitted, the target is assumed to be the resource itself. In this case, the
-          `value` attribute shall contain a list of one or more attributes that are to be replaced.
-        - If the target location is a single-value attribute, the value of the attribute is replaced.
-        - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
-          are replaced.
-        - If the target location path specifies an attribute that does not exist, the service provider shall treat the
-          operation as an "add".
-        - If the target location specifies a complex attribute, a set of sub-attributes SHALL be specified in the
-          `value` parameter, which replaces any existing values or adds where an attribute did not previously exist.
-          Sub-attributes that are not specified in the `value` parameters are left unchanged.
-        - If the target location is a multi-valued attribute and a value selection ("valuePath") filter is specified
-          that matches one or more values of the multi-valued attribute, then all matching record values will be
-          replaced.
-        - If the target location is a complex multi-valued attribute with a value selection filter ("valuePath") and a
-          specific sub-attribute (e.g., "addresses[type eq "work"].streetAddress"), the matching sub-attribute of all
-          matching records is replaced.
-        - If the target location is a multi-valued attribute for which a value selection filter ("valuePath") has been
-          supplied and no record match was made, the service provider will indicate the failure by returning HTTP status
-          code 400 and a `scimType` error code of `noTarget`.
-
-        **Remove operations**:
-
-        The `remove` operation removes the value at the target location specified by the required attribute `path`. The
-        operation performs the following functions, depending on the target location specified by `path`:
-
-        - If `path` is unspecified, the operation fails with HTTP status code 400 and a "scimType" error code of
-          "noTarget".
-        - If the target location is a single-value attribute, the attribute and its associated value is removed, and
-          the attribute will be considered unassigned.
-        - If the target location is a multi-valued attribute and no filter is specified, the attribute and all values
-          are removed, and the attribute SHALL be considered unassigned.
-        - If the target location is a multi-valued attribute and a complex filter is specified comparing a `value`, the
-          values matched by the filter are removed. If no other values remain after the removal of the selected values,
-          the multi-valued attribute will be considered unassigned.
-        - If the target location is a complex multi-valued attribute and a complex filter is specified based on the
-          attribute`s sub-attributes, the matching records are removed. Sub-attributes whose values have been removed
-          will be considered unassigned. If the complex multi-valued attribute has no remaining records, the attribute
-          will be considered unassigned.
-
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
-        :param group_id: A unique identifier for the group.
-        :type group_id: str
-        :param schemas: Input JSON schemas.
-        :type schemas: list[str]
-        :param operations: A list of patch operations.
-        :type operations: list[PatchGroupOperations]
-        :rtype: :class:`ScimGroup`
-        """
-        body = dict()
-        body['schemas'] = schemas
-        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(operations, mode='json', by_alias=True,
-                                                                               exclude_none=True)
-        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
-        data = await super().patch(url, json=body)
-        r = ScimGroup.model_validate(data)
-        return r
-
-    async def delete(self, org_id: str, group_id: str):
-        """
-        Delete a group
-
-        Remove a group from the system.
-
-        **Authorization**
-
-        OAuth token rendered by Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_group_admin`
-
-        :param org_id: The ID of the organization to which this group belongs. If not specified, the organization ID
-            from the OAuth token is used.
-        :type org_id: str
-        :param group_id: A unique identifier for the group.
-        :type group_id: str
-        :rtype: None
-        """
-        url = self.ep(f'{org_id}/v2/Groups/{group_id}')
-        await super().delete(url)
-
-
 class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
     """
     SCIM 2 Users
@@ -9796,6 +9052,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
+        - `Identity:SCIM`
 
         The following administrators can use this API:
 
@@ -9839,6 +9096,8 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
 
         - `identity:people_rw`
         - `identity:people_read`
+        - `Identity:SCIM`
+        - `Identity:SCIM_read`
 
         The following administrators can use this API:
 
@@ -9873,6 +9132,8 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
 
         - `identity:people_rw`
         - `identity:people_read`
+        - `Identity:SCIM`
+        - `Identity:SCIM_read`
 
         The following administrators can use this API:
 
@@ -9974,7 +9235,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
                          excluded_attributes: str = None,
                          sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
                          include_group_details: str = None,
-                         group_usage_types: str = None) -> list[ScimUser]:
+                         group_usage_types: str = None) -> AsyncGenerator[ScimUser, None, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self'} and v is not None}
         return [u async for u in self.search_all_gen(**params)]
@@ -9991,6 +9252,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
+        - `Identity:SCIM`
 
         The following administrators can use this API:
 
@@ -10043,6 +9305,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         One of the following OAuth scopes is required:
 
         - `identity:people_rw`
+        - `Identity:SCIM`
 
         The following administrators can use this API:
 
@@ -10178,13 +9441,11 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
 class AsScimV2Api(AsApiChild, base=''):
     users: AsSCIM2UsersApi
     bulk: AsSCIM2BulkApi
-    groups: AsSCIM2GroupsApi
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
         self.users = AsSCIM2UsersApi(session=session)
         self.bulk = AsSCIM2BulkApi(session=session)
-        self.groups = AsSCIM2GroupsApi(session=session)
 
 
 class AsStatusAPI(AsApiChild, base='status'):
@@ -12508,6 +11769,236 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         await super().put(url, params=params, json=body)
 
 
+class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/translationPatterns'):
+    """
+    Translation Patterns
+
+    A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls only.
+
+    Call routing supports translation patterns at the organization level.
+
+    Viewing these translation patterns for an organization requires a full or read-only administrator auth token with a
+    scope of `spark-admin:telephony_config_read`.
+
+    Modifying these translation patterns for an organization requires a full administrator auth token with a scope
+    of `spark-admin:telephony_config_write`.
+    """
+
+    def ep(self, path: str = None, location_id: str = None):
+        """
+        Get ep with optional location_id
+
+        :meta private:
+        :param path:
+        :param location_id:
+        :return:
+        """
+        if location_id is None:
+            return super().ep(path)
+        path = path and f'/{path}' or ''
+        base = 'telephony/config/locations'
+        return self.session.ep(f'{base}/{location_id}/callRouting/translationPatterns{path}')
+
+    async def create(self, pattern: TranslationPattern,
+               org_id: str = None) -> str:
+        """
+        Create a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Create a translation pattern for a given organization.
+
+        To create a location level translation pattern set the location.id attribute of the translation pattern
+        argument.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param pattern: Translation pattern to create
+        :type pattern: TranslationPattern
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = pattern.create_update()
+        url = self.ep(location_id=pattern.location and pattern.location.id or None)
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def list_gen(self, limit_to_location_id: str = None,
+             limit_to_org_level_enabled: bool = None, name: str = None,
+             matching_pattern: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[TranslationPattern, None, None]:
+        """
+        Retrieve a list of Translation Patterns
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve a list of translation patterns for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: bool
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternGet` instances
+        """
+        if org_id:
+            params['orgId'] = org_id
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
+                                              params=params)
+
+    async def list(self, limit_to_location_id: str = None,
+             limit_to_org_level_enabled: bool = None, name: str = None,
+             matching_pattern: str = None, org_id: str = None,
+             **params) -> List[TranslationPattern]:
+        """
+        Retrieve a list of Translation Patterns
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve a list of translation patterns for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: bool
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternGet` instances
+        """
+        if org_id:
+            params['orgId'] = org_id
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
+                                              params=params)]
+
+    async def details(self, translation_id: str,
+                location_id: str = None,
+                org_id: str = None) -> TranslationPattern:
+        """
+        Retrieve the details of a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve the details of a translation pattern for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param translation_id: Retrieve the translation pattern with the matching ID.
+        :type translation_id: str
+        :param location_id: Unique identifier for the location. Only used when getting details for location level
+            translation patterns
+        :type location_id: str
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: :class:`TranslationPattern`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(path=translation_id, location_id=location_id)
+        data = await super().get(url, params=params)
+        r = TranslationPattern.model_validate(data)
+        return r
+
+    async def update(self, pattern: TranslationPattern, org_id: str = None):
+        """
+        Modify a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Modify a translation pattern for a given organization. To update a location level translation pattern the
+        location.id attribute of the pattern has to be set
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param pattern: Translation pattern to be updated
+        :type pattern: TranslationPattern
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = pattern.create_update()
+        url = self.ep(location_id=pattern.location and pattern.location.id or None, path=pattern.id)
+        await super().put(url, params=params, json=body)
+
+    async def delete(self, translation_id: str, location_id: str = None, org_id: str = None):
+        """
+        Delete a Translation Pattern
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Delete a translation pattern for a given organization.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param translation_id: Delete a translation pattern with the matching ID.
+        :type translation_id: str
+        :param location_id: Unique identifier for the location. Only used when deleting location level translation
+            patterns
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id=location_id, path=translation_id)
+        await super().delete(url, params=params)
+
+
+@dataclass(init=False)
+class AsCallRoutingApi(AsApiChild, base='telephony/config'):
+    """
+    Call Routing Api
+    """
+    #: translation patterns
+    tp: AsTranslationPatternsApi
+
+    def __init__(self, session: AsRestSession):
+        super().__init__(session=session)
+        self.tp = AsTranslationPatternsApi(session=session)
+
+
 class AsCallparkExtensionApi(AsApiChild, base='telephony'):
     """
     Call Park Extension API
@@ -14511,124 +14002,6 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
         return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
 
 
-class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
-    def list_gen(self, org_id: str = None) -> AsyncGenerator[StartJobResponse, None, None]:
-        """
-        Get a List of Update Routing Prefix jobs
-
-        Get the list of all update routing prefix jobs in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the update routing prefix jobs in an organization.
-
-        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of update routing prefix jobs in this organization.
-        :type org_id: str
-        :rtype: list[StartJobResponse]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep()
-        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')
-
-    async def list(self, org_id: str = None) -> List[StartJobResponse]:
-        """
-        Get a List of Update Routing Prefix jobs
-
-        Get the list of all update routing prefix jobs in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the update routing prefix jobs in an organization.
-
-        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of update routing prefix jobs in this organization.
-        :type org_id: str
-        :rtype: list[StartJobResponse]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep()
-        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')]
-
-    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
-        """
-        Get the job status of Update Routing Prefix job
-
-        Get the status of the update routing prefix job by its job ID.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to check the status of update routing prefix job by job ID in an organization.
-
-        Checking the status of the update routing prefix job in an organization requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job status for this `jobId`.
-        :type job_id: str
-        :param org_id: Check update routing prefix job status in this organization.
-        :type org_id: str
-        :rtype: :class:`StartJobResponse`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(job_id)
-        data = await super().get(url, params=params)
-        r = StartJobResponse.model_validate(data)
-        return r
-
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
-        """
-        Get job errors for update routing prefix job
-
-        GET job errors for the update routing prefix job in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
-
-        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
-        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
-
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
-        """
-        Get job errors for update routing prefix job
-
-        GET job errors for the update routing prefix job in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
-
-        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
-        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
-
-
 class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     """
     Jobs API
@@ -14641,8 +14014,6 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
     #: API for rebuild phone jobs
     rebuild_phones: AsRebuildPhonesJobsApi
-    #: API for update routing prefix jobs
-    update_routing_prefix: AsUpdateRoutingPrefixJobsApi
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
@@ -14650,7 +14021,6 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
         self.manage_numbers = AsManageNumbersJobsApi(session=session)
         self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
         self.rebuild_phones = AsRebuildPhonesJobsApi(session=session)
-        self.update_routing_prefix = AsUpdateRoutingPrefixJobsApi(session=session)
 
 
 class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
@@ -14832,123 +14202,6 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         data = settings.model_dump_json()
         await self.put(ep, params=params, data=data)
-
-
-class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPermission/accessCodes'):
-    """
-    Viewing an organisation requires a full, user or read-only administrator auth token with a scope
-    of `spark-admin:telephony_config_read.
-    """
-
-    def list_gen(self, code: list[str] = None, description: list[str] = None, org_id: str = None,
-             **params) -> AsyncGenerator[AuthCode, None, None]:
-        """
-        Retrieve the organisation's access codes.
-
-        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
-        to bypass outgoing or incoming calling permissions.
-
-        This API requires a full, user or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read
-
-        :param code: Filter access code based on the comma-separated list provided in the `code` array.
-        :type code: list[str]
-        :param description: Filter access code based on the comma-separated list provided in the `description` array.
-        :type description: list[str]
-        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
-            parameter as the default is the same organisation as the token used to access the API.
-        :type org_id: str
-        :return: Generator yielding :class:`AuthCode` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        if code is not None:
-            params['code'] = ','.join(code)
-        if description is not None:
-            params['description'] = ','.join(description)
-        url = self.ep()
-        return self.session.follow_pagination(url=url, model=AuthCode, params=params,
-                                              item_key='accessCodes')
-
-    async def list(self, code: list[str] = None, description: list[str] = None, org_id: str = None,
-             **params) -> List[AuthCode]:
-        """
-        Retrieve the organisation's access codes.
-
-        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
-        to bypass outgoing or incoming calling permissions.
-
-        This API requires a full, user or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read
-
-        :param code: Filter access code based on the comma-separated list provided in the `code` array.
-        :type code: list[str]
-        :param description: Filter access code based on the comma-separated list provided in the `description` array.
-        :type description: list[str]
-        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
-            parameter as the default is the same organisation as the token used to access the API.
-        :type org_id: str
-        :return: Generator yielding :class:`AuthCode` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        if code is not None:
-            params['code'] = ','.join(code)
-        if description is not None:
-            params['description'] = ','.join(description)
-        url = self.ep()
-        return [o async for o in self.session.follow_pagination(url=url, model=AuthCode, params=params,
-                                              item_key='accessCodes')]
-
-    async def delete(self, delete_codes: List[str] = None,
-               org_id: str = None):
-        """
-        Delete Outgoing Permission Access Code for an Organisation
-
-        Deletes the access code details for a particular organisation and max limit is 10k per request.
-
-        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
-        to bypass outgoing or incoming calling permissions.
-
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
-
-        :param delete_codes: Indicates access codes to delete.
-        :type delete_codes: list[str]
-        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
-            parameter as the default is the same organisation as the token used to access the API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = org_id and {'orgId': org_id} or None
-        body = dict()
-        if delete_codes is not None:
-            body['deleteCodes'] = delete_codes
-        url = self.ep()
-        await super().put(url, params=params, json=body)
-
-    async def create(self, access_codes: List[AuthCode], org_id: str = None):
-        """
-        Create Access Codes for an Organisation
-
-        Create new access codes for the organisation and max limit is 10k per request.
-
-        Access codes, also known as authorization codes, provide a mechanism to allow authorized users to enter a code
-        to bypass outgoing or incoming calling permissions.
-
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
-
-        :param access_codes: Indicates the set of activation codes and description.
-        :type access_codes: list[AuthCode]
-        :param org_id: ID of the organisation. Only admin users of another organisation (such as partners) may use this
-            parameter as the default is the same organisation as the token used to access the API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = org_id and {'orgId': org_id} or None
-        body = dict()
-        body['accessCodes'] = [ac.create() for ac in access_codes]
-        url = self.ep()
-        await super().post(url, params=params, json=body)
 
 
 class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voicemail/settings'):
@@ -17808,7 +17061,6 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         Locations are used to support calling features which can be defined at the location level.
 
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
-
         :return: A unique identifier for the location.
         :rtype: str
         """
@@ -17824,7 +17076,6 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
         Searching and viewing locations with Webex Calling details in your organization require an administrator auth
         token with the spark-admin:telephony_config_read scope.
-
         :param name: List locations whose name contains this string.
         :type name: str
         :param order: Sort the list of locations based on name, either asc or desc.
@@ -17845,7 +17096,6 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
         Searching and viewing locations with Webex Calling details in your organization require an administrator auth
         token with the spark-admin:telephony_config_read scope.
-
         :param name: List locations whose name contains this string.
         :type name: str
         :param order: Sort the list of locations based on name, either asc or desc.
@@ -17860,7 +17110,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')]
 
-    async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None) -> Optional[str]:
+    async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
         """
         Update Webex Calling details for a location, by ID.
 
@@ -17888,16 +17138,12 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :type settings: :class:`TelephonyLocation`
         :param org_id: Updating Webex Calling location attributes for this organization.
         :type org_id: str
-        :return: batch job id of update job if one is created
-        :rtype: str
+        :return:
         """
         data = settings.update()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        data = await self.put(url=url, json=data, params=params)
-        if data:
-            return data.get('batchJobId')
-        return
+        await self.put(url=url, json=data, params=params)
 
     async def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
                                      service_enabled: bool = None, org_id: str = None):
@@ -18790,6 +18036,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     auto_attendant: AsAutoAttendantApi
     #: location call intercept settings
     call_intercept: AsLocationInterceptApi
+    call_routing: AsCallRoutingApi
     calls: AsCallsApi
     callpark: AsCallParkApi
     callpark_extension: AsCallparkExtensionApi
@@ -18803,12 +18050,9 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     #: location specific settings
     location: AsTelephonyLocationApi
     locations: AsTelephonyLocationApi
-    #: organisation access codes
-    organisation_access_codes: AsOrganisationAccessCodesApi
     #: organisation voicemail settings
     organisation_voicemail: AsOrganisationVoicemailSettingsAPI
     paging: AsPagingApi
-    #: location level outgoing permissions
     permissions_out: AsOutgoingPermissionsApi
     pickup: AsCallPickupApi
     prem_pstn: AsPremisePstnApi
@@ -18827,6 +18071,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.announcements_repo = AsAnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AsAutoAttendantApi(session=session)
         self.call_intercept = AsLocationInterceptApi(session=session)
+        self.call_routing = AsCallRoutingApi(session=session)
         self.call_recording = AsCallRecordingSettingsApi(session=session)
         self.calls = AsCallsApi(session=session)
         self.callpark = AsCallParkApi(session=session)
@@ -18838,7 +18083,6 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
         self.locations = self.location
-        self.organisation_access_codes = AsOrganisationAccessCodesApi(session=session)
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.location)
@@ -19140,8 +18384,11 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         return [o async for o in self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')]
 
     async def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
-                          originator_number: str = None, org_id: str = None) -> TestCallRoutingResult:
+                          originator_number: str = None, include_applied_services: bool = None,
+                          org_id: str = None) -> TestCallRoutingResult:
         """
+        Test Call Routing
+
         Validates that an incoming call can be routed.
 
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -19150,29 +18397,36 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         patterns.
         Specific dial patterns can be defined as part of your dial plan.
 
-        Test call routing requires a full administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
-
+        Test call routing requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param originator_id: This element is used to identify the originating party. It can be a person ID or a trunk
             ID.
         :type originator_id: str
         :param originator_type: This element is used to identify if the `originatorId` is of type `PEOPLE` or `TRUNK`.
-        :type originator_type: :class:`OriginatorType`
-        :param destination: This element specifies called party. It can be any dialable string, for example, an
-            ESN number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+        :type originator_type: OriginatorType
+        :param destination: This element specifies the called party. It can be any dialable string, for example, an ESN
+            number, E.164 number, hosted user DN, extension, extension with location code, URL, or FAC code.
         :type destination: str
         :param originator_number: Only used when `originatorType` is `TRUNK`. The `originatorNumber` can be a phone
             number or URI.
         :type originator_number: str
+        :param include_applied_services: This element is used to retrieve if any translation pattern, call intercept,
+            permission by type, or permission by digit pattern is present for the called party.
+        :type include_applied_services: bool
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
-        :return: call routing test result
         :rtype: :class:`TestCallRoutingResult`
         """
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
+        body = dict()
+        body['originatorId'] = originator_id
+        body['originatorType'] = enum_str(originator_type)
+        if originator_number is not None:
+            body['originatorNumber'] = originator_number
+        body['destination'] = destination
+        if include_applied_services is not None:
+            body['includeAppliedServices'] = include_applied_services
         url = self.ep('actions/testCallRouting/invoke')
         data = await self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)
@@ -20067,8 +19321,6 @@ class AsWebexSimpleApi:
     authorizations: AsAuthorizationsApi
     #: CDR API :class:`AsDetailedCDRApi`
     cdr: AsDetailedCDRApi
-    #: converged recordings API :class:`AsConvergedRecordingsApi`
-    converged_recordings: AsConvergedRecordingsApi
     #: device configurations API :class:`AsDeviceConfigurationsApi`
     device_configurations: AsDeviceConfigurationsApi
     #: devices API :class:`AsDevicesApi`
@@ -20148,7 +19400,6 @@ class AsWebexSimpleApi:
         self.attachment_actions = AsAttachmentActionsApi(session=session)
         self.authorizations = AsAuthorizationsApi(session=session)
         self.cdr = AsDetailedCDRApi(session=session)
-        self.converged_recordings = AsConvergedRecordingsApi(session=session)
         self.device_configurations = AsDeviceConfigurationsApi(session=session)
         self.devices = AsDevicesApi(session=session)
         self.events = AsEventsApi(session=session)

@@ -209,7 +209,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         if last_status_change is not None:
             params['lastStatusChange'] = last_status_change
         if status is not None:
-            params['status'] = status
+            params['status'] = enum_str(status)
         if after is not None:
             params['after'] = after
         if self_activated is not None:

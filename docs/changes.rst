@@ -8,6 +8,8 @@ Release history
 - feat: convergedRecordings support for webhooks
 - feat: new API :attr:`api.converged_recordings <wxc_sdk.WebexSimpleApi.converged_recordings>`
 - feat: new API :attr:`api.telephony.organisation_access_codes <wxc_sdk.telephony.TelephonyApi.organisation_access_codes>`
+- feat: new API translation patterns :attr:`api.telephony.call_routing.tp <wxc_sdk.telephony.call_routing.CallRoutingApi.tp>`
+- feat: enhanced response for :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>` controlled by include_applied_services parameter
 
 1.19.0
 ------

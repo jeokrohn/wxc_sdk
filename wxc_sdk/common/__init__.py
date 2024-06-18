@@ -35,7 +35,7 @@ class IdOnly(ApiModel):
 
 
 class IdAndName(IdOnly):
-    name: str
+    name: Optional[str] = None
 
 
 class LinkRelation(ApiModel):

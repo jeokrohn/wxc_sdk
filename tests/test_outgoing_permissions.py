@@ -20,7 +20,8 @@ from wxc_sdk.common import OwnerType, IdAndName, AuthCodeLevel, AuthCode
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern, Action, OutgoingPermissionsApi
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OriginatorType, DestinationType
+from wxc_sdk.telephony import (NumberType, NumberListPhoneNumber, OriginatorType, DestinationType,
+                               TestCallRoutingResult, ConfigurationLevel)
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.workspaces import Workspace, CallingType
 
@@ -602,7 +603,8 @@ class TestBetweenUsers(TestCaseWithLog):
         routing_result = self.api.telephony.test_call_routing(
             originator_id=self.user_a.id, originator_type=OriginatorType.user,
             destination=self.user_b.extension,
-            originator_number=self.user_a.extension)
+            originator_number=self.user_a.extension,
+            include_applied_services=True)
         self.assertFalse(routing_result.is_rejected,
                          'Call should be accepted')
         self.assertEqual(DestinationType.hosted_agent, routing_result.destination_type,
@@ -610,15 +612,28 @@ class TestBetweenUsers(TestCaseWithLog):
         self.assertEqual(self.user_b.id, routing_result.hosted_user.hu_id,
                          'Wrong destination')
 
-    def a_cant_call_b(self):
+    def a_cant_call_b(self) -> TestCallRoutingResult:
         # verify that A can no longer call B
         print('Verifying that A can no longer call B')
         routing_result = self.api.telephony.test_call_routing(
             originator_id=self.user_a.id, originator_type=OriginatorType.user,
             destination=self.user_b.extension,
-            originator_number=self.user_a.extension)
+            originator_number=self.user_a.extension,
+            include_applied_services=True)
         self.assertTrue(routing_result.is_rejected,
                         'Call should be rejected')
+        # routing result has to reflect the block
+        self.assertEqual(1, len(routing_result.applied_services),
+                         'Number of applied services')
+        service = routing_result.applied_services[0]
+        ocp_by_digit_pattern = service.outgoing_calling_plan_permissions_by_digit_pattern
+        self.assertIsNotNone(ocp_by_digit_pattern,
+                             'Outgoing calling plan permissions by digit pattern missing')
+        self.assertEqual(Action.block, ocp_by_digit_pattern.permission, 'Permission incorrect')
+        self.assertEqual(self.user_b.extension, ocp_by_digit_pattern.pattern, 'Digit pattern incorrect')
+        self.assertEqual(self.user_b.extension, ocp_by_digit_pattern.number, 'Number incorrect')
+
+        return routing_result
 
     @contextmanager
     def block_b_at_location_level(self):
@@ -664,7 +679,12 @@ class TestCallRouting(TestBetweenUsers):
         """
         self.a_can_call_b()
         with self.block_b_at_location_level():
-            self.a_cant_call_b()
+            routing_result = self.a_cant_call_b()
+            # routing result has to reflect the block at location level
+            service = routing_result.applied_services[0]
+            ocp_by_digit_pattern = service.outgoing_calling_plan_permissions_by_digit_pattern
+            self.assertEqual(ConfigurationLevel.location, ocp_by_digit_pattern.configuration_level,
+                             'Configuration level wrong')
 
     def test_block_extension_on_user_level(self):
         """
@@ -672,7 +692,12 @@ class TestCallRouting(TestBetweenUsers):
         """
         self.a_can_call_b()
         with self.block_b_at_user_a():
-            self.a_cant_call_b()
+            routing_result = self.a_cant_call_b()
+            # routing result has to reflect the block at user level
+            service = routing_result.applied_services[0]
+            ocp_by_digit_pattern = service.outgoing_calling_plan_permissions_by_digit_pattern
+            self.assertEqual(ConfigurationLevel.user, ocp_by_digit_pattern.configuration_level,
+                             'Configuration level wrong')
 
     def test_block_extension_at_location_level_and_allow_at_user_level(self):
         """
@@ -680,6 +705,6 @@ class TestCallRouting(TestBetweenUsers):
         """
         self.a_can_call_b()
         with self.block_b_at_location_level():
-            self.a_cant_call_b()
+            routing_result = self.a_cant_call_b()
             with self.block_b_at_user_a(block=False):
                 self.a_can_call_b()
