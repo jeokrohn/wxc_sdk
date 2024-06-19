@@ -351,7 +351,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         url = self.ep('resume')
         super().post(url, json=body)
 
-    def divert(self, call_id: str, destination: str = None, to_voicemail: str = None):
+    def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):
         """
         Divert
 
@@ -366,7 +366,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
             specified user's voicemail.
-        :type to_voicemail: str
+        :type to_voicemail: bool
         :rtype: None
         """
         body = dict()
@@ -423,7 +423,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         url = self.ep('transfer')
         super().post(url, json=body)
 
-    def park(self, call_id: str, destination: str = None, is_group_park: str = None) -> PartyInformation:
+    def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> PartyInformation:
         """
         Park
 
@@ -438,7 +438,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type destination: str
         :param is_group_park: If set to`true`, the call is parked against an automatically selected member of the
             user's call park group and the destination parameter is ignored.
-        :type is_group_park: str
+        :type is_group_park: bool
         :rtype: PartyInformation
         """
         body = dict()

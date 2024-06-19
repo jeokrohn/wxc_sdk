@@ -13287,6 +13287,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
     def call_history_gen(self, history_type: Union[str, HistoryType] = None) -> AsyncGenerator[CallHistoryRecord, None, None]:
         """
         List Call History
+
         Get the list of call history records for the user. A maximum of 20 call history records per type (placed,
         missed, received) are returned.
 
@@ -13302,6 +13303,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
     async def call_history(self, history_type: Union[str, HistoryType] = None) -> List[CallHistoryRecord]:
         """
         List Call History
+
         Get the list of call history records for the user. A maximum of 20 call history records per type (placed,
         missed, received) are returned.
 
@@ -13313,6 +13315,36 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         params = history_type and {'type': enum_str(history_type)} or None
         url = self.ep('history')
         return [o async for o in self.session.follow_pagination(url=url, model=CallHistoryRecord, params=params)]
+
+    async def mute(self, call_id: str):
+        """
+        Mute
+
+        Mute a call.
+
+        :param call_id: The call identifier of the call to mute.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('mute')
+        await super().post(url, json=body)
+
+    async def unmute(self, call_id: str):
+        """
+        Unmute
+
+        Unmute a call.
+
+        :param call_id: The call identifier of the call to unmute.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('unmute')
+        await super().post(url, json=body)
 
 
 class AsDECTDevicesApi(AsApiChild, base='telephony/config'):

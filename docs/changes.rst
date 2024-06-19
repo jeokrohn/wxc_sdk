@@ -10,6 +10,8 @@ Release history
 - feat: new API :attr:`api.telephony.organisation_access_codes <wxc_sdk.telephony.TelephonyApi.organisation_access_codes>`
 - feat: new API translation patterns :attr:`api.telephony.call_routing.tp <wxc_sdk.telephony.call_routing.CallRoutingApi.tp>`
 - feat: enhanced response for :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>` controlled by include_applied_services parameter
+- feat: new endpoint :meth:`api.telephony.calls.mute <wxc_sdk.telephony.calls.CallsApi.mute>`
+- feat: new endpoint :meth:`api.telephony.calls.unmute <wxc_sdk.telephony.calls.CallsApi.unmute>`
 
 1.19.0
 ------

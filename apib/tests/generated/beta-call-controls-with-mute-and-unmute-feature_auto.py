@@ -352,7 +352,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         url = self.ep('resume')
         super().post(url, json=body)
 
-    def divert(self, call_id: str, destination: str = None, to_voicemail: str = None):
+    def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):
         """
         Divert
 
@@ -367,7 +367,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
             specified user's voicemail.
-        :type to_voicemail: str
+        :type to_voicemail: bool
         :rtype: None
         """
         body = dict()
@@ -424,7 +424,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         url = self.ep('transfer')
         super().post(url, json=body)
 
-    def park(self, call_id: str, destination: str = None, is_group_park: str = None) -> PartyInformation:
+    def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> PartyInformation:
         """
         Park
 
@@ -439,7 +439,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         :type destination: str
         :param is_group_park: If set to`true`, the call is parked against an automatically selected member of the
             user's call park group and the destination parameter is ignored.
-        :type is_group_park: str
+        :type is_group_park: bool
         :rtype: PartyInformation
         """
         body = dict()
@@ -641,7 +641,7 @@ class BetaCallControlsWithMuteAndUnmuteFeatureApi(ApiChild, base='telephony/call
         """
         params = {}
         if type is not None:
-            params['type'] = type
+            params['type'] = enum_str(type)
         url = self.ep('history')
         data = super().get(url, params=params)
         r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])
