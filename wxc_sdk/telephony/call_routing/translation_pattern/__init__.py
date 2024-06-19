@@ -66,7 +66,7 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         base = 'telephony/config/locations'
         return self.session.ep(f'{base}/{location_id}/callRouting/translationPatterns{path}')
 
-    def create(self, pattern: TranslationPattern,
+    def create(self, pattern: TranslationPattern, location_id: str = None,
                org_id: str = None) -> str:
         """
         Create a Translation Pattern
@@ -76,20 +76,19 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
 
         Create a translation pattern for a given organization.
 
-        To create a location level translation pattern set the location.id attribute of the translation pattern
-        argument.
-
         Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
 
         :param pattern: Translation pattern to create
         :type pattern: TranslationPattern
+        :param location_id: Unique identifier for the location. Only used when creating location level translation
+        :type location_id: str
         :param org_id: ID of the organization containing the translation pattern.
         :type org_id: str
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
         body = pattern.create_update()
-        url = self.ep(location_id=pattern.location and pattern.location.id or None)
+        url = self.ep(location_id=location_id)
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -164,7 +163,7 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         r = TranslationPattern.model_validate(data)
         return r
 
-    def update(self, pattern: TranslationPattern, org_id: str = None):
+    def update(self, pattern: TranslationPattern, location_id: str = None, org_id: str = None):
         """
         Modify a Translation Pattern
 
@@ -178,13 +177,16 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
 
         :param pattern: Translation pattern to be updated
         :type pattern: TranslationPattern
+        :param location_id: Unique identifier for the location. Only used when updating location level translation
+            pattern
+        :type location_id: str
         :param org_id: ID of the organization containing the translation pattern.
         :type org_id: str
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
         body = pattern.create_update()
-        url = self.ep(location_id=pattern.location and pattern.location.id or None, path=pattern.id)
+        url = self.ep(location_id=location_id, path=pattern.id)
         super().put(url, params=params, json=body)
 
     def delete(self, translation_id: str, location_id: str = None, org_id: str = None):
