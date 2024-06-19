@@ -137,6 +137,8 @@ from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType,
 from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, HistoryType, \
     ParkedAgainst, Personality, Recall, RecordingState, RedirectReason, Redirection, RejectAction, TelephonyCall, \
     TelephonyEvent, TelephonyEventData, TelephonyParty
+from wxc_sdk.telephony.conference import ConferenceDetails, ConferenceParticipant, ConferenceState, \
+    ConferenceTypeEnum
 from wxc_sdk.telephony.dect_devices import BaseStationDetail, BaseStationResponse, BaseStationResult, \
     BaseStationsResponse, DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, \
     Handset, UsageType
@@ -214,13 +216,14 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingLineIdPolicy',
            'CallingPermissions', 'CallingPlanReason', 'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject',
            'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting',
-           'CommonDeviceCustomization', 'ComplianceEvent', 'Component', 'ConfigurationLevel', 'ConnectionStatus',
-           'ConvergedRecording', 'ConvergedRecordingMeta', 'ConvergedRecordingWithDirectDownloadLinks',
-           'CreateInviteesItem', 'CreateMeetingBody', 'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody',
-           'CreateResponse', 'CustomNumbers', 'Customer', 'CustomizedQuestionForCreateMeeting', 'DECTHandsetItem',
-           'DECTHandsetLine', 'DECTHandsetList', 'DECTNetworkDetail', 'DECTNetworkModel', 'DND', 'DectCustomization',
-           'DectDevice', 'DefaultAudioType', 'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType',
-           'Device', 'DeviceActivationState', 'DeviceConfiguration', 'DeviceConfigurationOperation',
+           'CommonDeviceCustomization', 'ComplianceEvent', 'Component', 'ConferenceDetails', 'ConferenceParticipant',
+           'ConferenceState', 'ConferenceTypeEnum', 'ConfigurationLevel', 'ConnectionStatus', 'ConvergedRecording',
+           'ConvergedRecordingMeta', 'ConvergedRecordingWithDirectDownloadLinks', 'CreateInviteesItem',
+           'CreateMeetingBody', 'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse',
+           'CustomNumbers', 'Customer', 'CustomizedQuestionForCreateMeeting', 'DECTHandsetItem', 'DECTHandsetLine',
+           'DECTHandsetList', 'DECTNetworkDetail', 'DECTNetworkModel', 'DND', 'DectCustomization', 'DectDevice',
+           'DefaultAudioType', 'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType', 'Device',
+           'DeviceActivationState', 'DeviceConfiguration', 'DeviceConfigurationOperation',
            'DeviceConfigurationResponse', 'DeviceConfigurationSource', 'DeviceConfigurationSourceEditability',
            'DeviceConfigurationSources', 'DeviceCustomization', 'DeviceCustomizations', 'DeviceLayout',
            'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner',

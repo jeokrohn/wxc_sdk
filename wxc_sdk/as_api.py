@@ -56,7 +56,7 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
            'AsCallBridgeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
            'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
-           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
+           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
            'AsConvergedRecordingsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi',
            'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi',
            'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi',
@@ -13347,6 +13347,170 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         await super().post(url, json=body)
 
 
+class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
+    """
+    Conference Controls
+
+    Not supported for Webex for Government (FedRAMP)
+
+    Conference Control APIs in support of Webex Calling.
+
+    All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
+    scope.
+    """
+
+    async def start_conference(self, call_ids: list[str]):
+        """
+        Start Conference
+
+        Join the user's calls into a conference.  A minimum of two call IDs are required. Each call ID identifies an
+        existing call between the user
+        and a participant to be added to the conference.
+
+        :param call_ids: List of call identifiers of the participants to join into the conference. A minimum of two
+            call IDs are required.
+        :type call_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        body['callIds'] = call_ids
+        url = self.ep()
+        await super().post(url, json=body)
+
+    async def release_conference(self):
+        """
+        Release Conference
+
+        Release the conference (the host and all participants). Note that for a 3WC (three-way call) the `Transfer API
+        <https://developer.webex.com/docs/api/v1/call-controls/transfer>`_
+        can be used to perform an attended transfer so that the participants remain connected.
+
+        :rtype: None
+        """
+        url = self.ep()
+        await super().delete(url)
+
+    async def get_conference_details(self) -> ConferenceDetails:
+        """
+        Get Conference Details
+
+        Get the details of the conference.  An empty JSON object body is returned if there is no conference.
+
+        :rtype: :class:`ConferenceDetails`
+        """
+        url = self.ep()
+        data = await super().get(url)
+        r = ConferenceDetails.model_validate(data)
+        return r
+
+    async def add_participant(self, call_id: str):
+        """
+        Add Participant
+
+        Adds a participant to an existing conference.  The request body contains the participant's call ID.
+
+        :param call_id: The call identifier of the participant to add.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('addParticipant')
+        await super().post(url, json=body)
+
+    async def mute(self, call_id: str = None):
+        """
+        Mute
+
+        Mutes the host or a participant. Mutes the host when no request body is provided (i.e. media stream from the
+        host will not be transmitted to the conference).  Mutes a participant when the request body contains the
+        participant's call ID (i.e. media stream from the participant will not be transmitted to the conference).
+
+        :param call_id: The call identifier of the participant to mute. The conference host is muted when this
+            attribute is not provided.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        url = self.ep('mute')
+        await super().post(url, json=body)
+
+    async def unmute(self, call_id: str = None):
+        """
+        Unmute
+
+        Unmutes the host or a participant. Unmutes the host when no request body is provided (i.e. media stream from
+        the host will be transmitted to the conference).  Unmutes a participant when the request body contains the
+        participant's call ID (i.e. media stream from the participant will be transmitted to the conference).
+
+        :param call_id: The call identifier of the participant to unmute. The conference host is unmuted when this
+            attribute is not provided.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        url = self.ep('unmute')
+        await super().post(url, json=body)
+
+    async def deafen_participant(self, call_id: str):
+        """
+        Deafen Participant
+
+        Deafens a participant (i.e. media stream will not be transmitted to the participant).
+        The request body contains the call ID of the participant to deafen
+
+        :param call_id: The call identifier of the participant to deafen.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('deafen')
+        await super().post(url, json=body)
+
+    async def undeafen_participant(self, call_id: str):
+        """
+        Undeafen Participant
+
+        Undeafens a participant (i.e. resume transmitting the conference media stream to the participant).
+        The request body contains the call ID of the participant to undeafen.
+
+        :param call_id: The call identifier of the participant to undeafen.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('undeafen')
+        await super().post(url, json=body)
+
+    async def hold(self):
+        """
+        Hold
+
+        Hold the conference host.  There is no request body.
+
+        :rtype: None
+        """
+        url = self.ep('hold')
+        await super().post(url)
+
+    async def resume(self):
+        """
+        Resume
+
+        Resumes the held conference host.  There is no request body.
+
+        :rtype: None
+        """
+        url = self.ep('resume')
+        await super().post(url)
+
+
 class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
     """
     DECT Devices Settings
@@ -19067,6 +19231,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     callpark_extension: AsCallparkExtensionApi
     callqueue: AsCallQueueApi
     call_recording: AsCallRecordingSettingsApi
+    conference: AsConferenceControlsApi
     dect_devices: AsDECTDevicesApi
     #: WxC device operations
     devices: AsTelephonyDevicesApi
@@ -19105,6 +19270,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.callpark = AsCallParkApi(session=session)
         self.callpark_extension = AsCallparkExtensionApi(session=session)
         self.callqueue = AsCallQueueApi(session=session)
+        self.conference = AsConferenceControlsApi(session=session)
         self.dect_devices = AsDECTDevicesApi(session=session)
         self.devices = AsTelephonyDevicesApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
