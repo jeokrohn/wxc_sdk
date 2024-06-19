@@ -1909,7 +1909,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def modify_numbers_for_route_list(self, route_list_id: str, numbers: list[RouteListNumberPatch] = None,
-                                      delete_all_numbers: str = None,
+                                      delete_all_numbers: bool = None,
                                       org_id: str = None) -> list[RouteListNumberPatchResponse]:
         """
         Modify Numbers for Route List
@@ -1928,7 +1928,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type numbers: list[RouteListNumberPatch]
         :param delete_all_numbers: If present, the numbers array is ignored and all numbers in the route list are
             deleted.
-        :type delete_all_numbers: str
+        :type delete_all_numbers: bool
         :param org_id: Organization to which the Route List belongs.
         :type org_id: str
         :rtype: list[RouteListNumberPatchResponse]

@@ -16266,7 +16266,8 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, params=params)]
 
-    async def update_numbers(self, rl_id: str, numbers: List[NumberAndAction],
+    async def update_numbers(self, rl_id: str, numbers: List[NumberAndAction] = None,
+                       delete_all_numbers: bool = None,
                        org_id: str = None) -> List[UpdateNumbersResponse]:
         """
         Modify numbers for a specific Route List of a Customer.
@@ -16281,6 +16282,9 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         :type rl_id: str
         :param numbers: Array of the numbers to be deleted/added.
         :type numbers: list[:class:`NumberAndAction`]
+        :param delete_all_numbers: If present, the numbers array is ignored and all numbers in the route list are
+            deleted.
+        :type delete_all_numbers: bool
         :param org_id: Organization to which Route List belongs.
         :type org_id: str
         :return: list of update number status
@@ -16289,11 +16293,13 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         url = self.ep(f'{rl_id}/numbers')
         params = org_id and {'orgId': org_id} or None
 
-        class Body(ApiModel):
-            numbers: list[NumberAndAction]
-
-        body = Body(numbers=numbers).model_dump_json()
-        data = await self.put(url=url, params=params, data=body)
+        body = dict()
+        if numbers is not None:
+            body['numbers'] = TypeAdapter(list[NumberAndAction]).dump_python(numbers, mode='json', by_alias=True,
+                                                                             exclude_none=True)
+        if delete_all_numbers is not None:
+            body['deleteAllNumbers'] = delete_all_numbers
+        data = await self.put(url=url, params=params, json=body)
         if data:
             return TypeAdapter(list[UpdateNumbersResponse]).validate_python(data['numberStatus'])
         else:

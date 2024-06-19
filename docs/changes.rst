@@ -12,6 +12,7 @@ Release history
 - feat: enhanced response for :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>` controlled by include_applied_services parameter
 - feat: new endpoint :meth:`api.telephony.calls.mute <wxc_sdk.telephony.calls.CallsApi.mute>`
 - feat: new endpoint :meth:`api.telephony.calls.unmute <wxc_sdk.telephony.calls.CallsApi.unmute>`
+- feat: added delete_all_numbers parameter to :meth:`api.telephony.prem_pstn.route_list.update_numbers <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update_numbers>`
 
 1.19.0
 ------
