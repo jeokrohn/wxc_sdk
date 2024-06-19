@@ -27,6 +27,7 @@ from .location.intercept import LocationInterceptApi
 from .org_access_codes import OrganisationAccessCodesApi
 from .organisation_vm import OrganisationVoicemailSettingsAPI
 from .paging import PagingApi
+from .playlists import PlayListApi
 from .pnc import PrivateNetworkConnectApi
 from .prem_pstn import PremisePstnApi
 from .virtual_line import VirtualLinesApi
@@ -654,6 +655,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     #: location level outgoing permissions
     permissions_out: OutgoingPermissionsApi
     pickup: CallPickupApi
+    playlist: PlayListApi
     prem_pstn: PremisePstnApi
     pnc: PrivateNetworkConnectApi
     schedules: ScheduleApi
@@ -688,6 +690,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.paging = PagingApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.location)
         self.pickup = CallPickupApi(session=session)
+        self.playlist = PlayListApi(session=session)
         self.pnc = PrivateNetworkConnectApi(session=session)
         self.prem_pstn = PremisePstnApi(session=session)
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)

@@ -14,6 +14,7 @@ Release history
 - feat: new endpoint :meth:`api.telephony.calls.unmute <wxc_sdk.telephony.calls.CallsApi.unmute>`
 - feat: added delete_all_numbers parameter to :meth:`api.telephony.prem_pstn.route_list.update_numbers <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update_numbers>`
 - feat: new API :attr:`api.telephony.conference <wxc_sdk.telephony.TelephonyApi.conference>`
+- feat: new API :attr:`api.telephony.playlist <wxc_sdk.telephony.TelephonyApi.playlist>`
 
 1.19.0
 ------

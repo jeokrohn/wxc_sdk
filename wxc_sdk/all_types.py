@@ -162,6 +162,7 @@ from wxc_sdk.telephony.location.numbers import TelephoneNumberType
 from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 from wxc_sdk.telephony.organisation_vm import OrganisationVoicemailSettings, OrganisationVoicemailSettingsAPI
 from wxc_sdk.telephony.paging import Paging, PagingAgent
+from wxc_sdk.telephony.playlists import PlayList, PlaylistAnnouncement
 from wxc_sdk.telephony.pnc import NetworkConnectionType
 from wxc_sdk.telephony.prem_pstn import DialPatternValidationResult
 from wxc_sdk.telephony.prem_pstn.dial_plan import CreateResponse, DialPlan, PatternAndAction
@@ -270,10 +271,10 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'Person', 'PersonAddress', 'PersonDevicesResponse', 'PersonForwardingSetting', 'PersonNumbers',
            'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalMeetingRoom',
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType',
-           'PhotoObject', 'PhotoObjectType', 'PickupNotificationType', 'PinLength', 'Policy',
-           'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse', 'PrimaryOrShared',
-           'Privacy', 'ProductType', 'ProgrammableLineKey', 'PskObject', 'PstnNumberDestination',
-           'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
+           'PhotoObject', 'PhotoObjectType', 'PickupNotificationType', 'PinLength', 'PlayList',
+           'PlaylistAnnouncement', 'Policy', 'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType',
+           'PreferredAnswerResponse', 'PrimaryOrShared', 'Privacy', 'ProductType', 'ProgrammableLineKey', 'PskObject',
+           'PstnNumberDestination', 'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
            'QueryMeetingParticipantsWithEmailBody', 'Question', 'QuestionAnswer', 'QuestionOption', 'QuestionType',
            'QuestionWithAnswers', 'QueueCallerId', 'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk', 'Recall',
            'RecallHuntGroup', 'ReceptionistSettings', 'Record', 'Recording', 'RecordingFormat', 'RecordingOwnerType',

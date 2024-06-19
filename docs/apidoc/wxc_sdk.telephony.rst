@@ -22,6 +22,7 @@ Subpackages
    wxc_sdk.telephony.jobs
    wxc_sdk.telephony.location
    wxc_sdk.telephony.org_access_codes
+   wxc_sdk.telephony.playlists
    wxc_sdk.telephony.prem_pstn
    wxc_sdk.telephony.virtual_line
 
