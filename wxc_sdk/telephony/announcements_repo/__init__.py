@@ -51,6 +51,8 @@ class RepoAnnouncement(IdAndName):
     feature_reference_count: Optional[int] = None
     #: Call features referenced by this announcement.
     feature_references: Optional[list[FeatureReference]] = None
+    #: list of playlists this announcement is assigned to
+    playlists: Optional[list[IdAndName]] = None
 
 
 class RepositoryUsage(ApiModel):

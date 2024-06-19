@@ -31,7 +31,8 @@ class TestPlaylists(TestCaseWithLog):
                                                        return_exceptions=True)
         print(f'Go assigned locations for {len(assigned_locations_list)} playlists')
 
-    def test_create(self):
+    @async_test
+    async def test_create(self):
         """
         Try to create a playlist
         """
@@ -43,14 +44,22 @@ class TestPlaylists(TestCaseWithLog):
         ann_files = list(self.api.telephony.announcements_repo.list())
         if not ann_files:
             self.skip('No announcement files found')
-        targets: list[RepoAnnouncement] = random.sample(ann_files, min(5, len(ann_files)))
+        targets: list[RepoAnnouncement] = random.sample(ann_files, min(3, len(ann_files)))
         target_ids = [target.id for target in targets]
         print(f'Creating playlist {pl_name} with {len(targets)} announcements')
         print('\n'.join(f'  {target.id}: {target.name}' for target in targets))
         new_pl_id = self.api.telephony.playlist.create(name=pl_name, announcement_ids=target_ids)
         try:
-            foo = 1
-            ...
+            # get details for all repo announcements we used to check that the playlist is referenced
+            details_list = await asyncio.gather(*[self.async_api.telephony.announcements_repo.details(target.id)
+                                                  for target in targets],
+                                                return_exceptions=True)
+            details_list: list[RepoAnnouncement]
+            # all repo announcements have to have at least one referenced playlist and our new playlist has to be one
+            # of them
+            self.assertTrue(all(details.playlists and next((pl for pl in details.playlists if pl.id == new_pl_id), None)
+                                for details in details_list),
+                            'Not all announcements have the new playlist referenced')
         finally:
             print(f'Deleting playlist {pl_name}')
             self.api.telephony.playlist.delete(new_pl_id)

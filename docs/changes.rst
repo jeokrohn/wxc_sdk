@@ -15,6 +15,7 @@ Release history
 - feat: added delete_all_numbers parameter to :meth:`api.telephony.prem_pstn.route_list.update_numbers <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update_numbers>`
 - feat: new API :attr:`api.telephony.conference <wxc_sdk.telephony.TelephonyApi.conference>`
 - feat: new API :attr:`api.telephony.playlist <wxc_sdk.telephony.TelephonyApi.playlist>`
+- feat: api.telephony.announcements_repo.details :meth:`wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.details` result now has playlists attribute with playlists referencing the announcement
 
 1.19.0
 ------
