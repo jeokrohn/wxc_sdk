@@ -520,7 +520,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
         Gets the list of supported devices for an organization location
    * - :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>`
-        Validates that an incoming call can be routed
+        Test Call Routing
    * - :meth:`api.telephony.ucm_profiles <wxc_sdk.telephony.TelephonyApi.ucm_profiles>`
         Read the List of UC Manager Profiles
    * - :meth:`api.telephony.validate_extensions <wxc_sdk.telephony.TelephonyApi.validate_extensions>`
@@ -635,6 +635,8 @@ The method name is a link to the method documentation.
         Hold a connected call
    * - :meth:`api.telephony.calls.list_calls <wxc_sdk.telephony.calls.CallsApi.list_calls>`
         Get the list of details for all active calls associated with the user
+   * - :meth:`api.telephony.calls.mute <wxc_sdk.telephony.calls.CallsApi.mute>`
+        Mute
    * - :meth:`api.telephony.calls.park <wxc_sdk.telephony.calls.CallsApi.park>`
         Park a connected call
    * - :meth:`api.telephony.calls.pause_recording <wxc_sdk.telephony.calls.CallsApi.pause_recording>`
@@ -659,6 +661,28 @@ The method name is a link to the method documentation.
         Transfer two calls together
    * - :meth:`api.telephony.calls.transmit_dtmf <wxc_sdk.telephony.calls.CallsApi.transmit_dtmf>`
         Transmit DTMF digits to a call
+   * - :meth:`api.telephony.calls.unmute <wxc_sdk.telephony.calls.CallsApi.unmute>`
+        Unmute
+   * - :meth:`api.telephony.conference.add_participant <wxc_sdk.telephony.conference.ConferenceControlsApi.add_participant>`
+        Add Participant
+   * - :meth:`api.telephony.conference.deafen_participant <wxc_sdk.telephony.conference.ConferenceControlsApi.deafen_participant>`
+        Deafen Participant
+   * - :meth:`api.telephony.conference.get_conference_details <wxc_sdk.telephony.conference.ConferenceControlsApi.get_conference_details>`
+        Get Conference Details
+   * - :meth:`api.telephony.conference.hold <wxc_sdk.telephony.conference.ConferenceControlsApi.hold>`
+        Hold
+   * - :meth:`api.telephony.conference.mute <wxc_sdk.telephony.conference.ConferenceControlsApi.mute>`
+        Mute
+   * - :meth:`api.telephony.conference.release_conference <wxc_sdk.telephony.conference.ConferenceControlsApi.release_conference>`
+        Release Conference
+   * - :meth:`api.telephony.conference.resume <wxc_sdk.telephony.conference.ConferenceControlsApi.resume>`
+        Resume
+   * - :meth:`api.telephony.conference.start_conference <wxc_sdk.telephony.conference.ConferenceControlsApi.start_conference>`
+        Start Conference
+   * - :meth:`api.telephony.conference.undeafen_participant <wxc_sdk.telephony.conference.ConferenceControlsApi.undeafen_participant>`
+        Undeafen Participant
+   * - :meth:`api.telephony.conference.unmute <wxc_sdk.telephony.conference.ConferenceControlsApi.unmute>`
+        Unmute
    * - :meth:`api.telephony.dect_devices.add_a_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_a_handset>`
         Add a Handset to a DECT Network
    * - :meth:`api.telephony.dect_devices.available_members <wxc_sdk.telephony.dect_devices.DECTDevicesApi.available_members>`
@@ -825,10 +849,6 @@ The method name is a link to the method documentation.
         Modify current configuration for routing unknown extensions to the Premises as internal calls
    * - :meth:`api.telephony.location.internal_dialing.url <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.url>`
         
-   * - :meth:`api.telephony.location.moh.create <wxc_sdk.telephony.location.moh.LocationMoHApi.create>`
-        :param location_id: Add new access code for this location
-   * - :meth:`api.telephony.location.moh.delete_codes <wxc_sdk.telephony.location.moh.LocationMoHApi.delete_codes>`
-        Delete Access Code Location
    * - :meth:`api.telephony.location.moh.read <wxc_sdk.telephony.location.moh.LocationMoHApi.read>`
         Get Music On Hold
    * - :meth:`api.telephony.location.moh.update <wxc_sdk.telephony.location.moh.LocationMoHApi.update>`
@@ -875,10 +895,6 @@ The method name is a link to the method documentation.
         Modify current configuration for routing unknown extensions to the Premises as internal calls
    * - :meth:`api.telephony.locations.internal_dialing.url <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.url>`
         
-   * - :meth:`api.telephony.locations.moh.create <wxc_sdk.telephony.location.moh.LocationMoHApi.create>`
-        :param location_id: Add new access code for this location
-   * - :meth:`api.telephony.locations.moh.delete_codes <wxc_sdk.telephony.location.moh.LocationMoHApi.delete_codes>`
-        Delete Access Code Location
    * - :meth:`api.telephony.locations.moh.read <wxc_sdk.telephony.location.moh.LocationMoHApi.read>`
         Get Music On Hold
    * - :meth:`api.telephony.locations.moh.update <wxc_sdk.telephony.location.moh.LocationMoHApi.update>`
@@ -953,6 +969,20 @@ The method name is a link to the method documentation.
         Read the List of Call Pickups
    * - :meth:`api.telephony.pickup.update <wxc_sdk.telephony.callpickup.CallPickupApi.update>`
         Update a Call Pickup
+   * - :meth:`api.telephony.playlist.assigned_locations <wxc_sdk.telephony.playlists.PlayListApi.assigned_locations>`
+        Fetch list of locations which are assigned to the announcement playlist
+   * - :meth:`api.telephony.playlist.create <wxc_sdk.telephony.playlists.PlayListApi.create>`
+        Create announcement Playlist at organization level
+   * - :meth:`api.telephony.playlist.delete <wxc_sdk.telephony.playlists.PlayListApi.delete>`
+        Delete an announcement playlist for an organization
+   * - :meth:`api.telephony.playlist.details <wxc_sdk.telephony.playlists.PlayListApi.details>`
+        Fetch details of announcement playlist at the organization level
+   * - :meth:`api.telephony.playlist.list <wxc_sdk.telephony.playlists.PlayListApi.list>`
+        Fetch list of announcement playlist on organization level
+   * - :meth:`api.telephony.playlist.modify <wxc_sdk.telephony.playlists.PlayListApi.modify>`
+        Modify announcement playlist at organization level
+   * - :meth:`api.telephony.playlist.modify_assigned_locations <wxc_sdk.telephony.playlists.PlayListApi.modify_assigned_locations>`
+        Modify list of assigned locations to the announcement playlist
    * - :meth:`api.telephony.pnc.read <wxc_sdk.telephony.pnc.PrivateNetworkConnectApi.read>`
         Get Private Network Connect
    * - :meth:`api.telephony.pnc.update <wxc_sdk.telephony.pnc.PrivateNetworkConnectApi.update>`
