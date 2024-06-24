@@ -25,6 +25,7 @@ from .people import PeopleApi
 from .person_settings import PersonSettingsApi
 from .reports import ReportsApi
 from .rest import RestSession
+from .roles import RolesApi
 from .room_tabs import RoomTabsApi
 from .rooms import RoomsApi
 from .scim import ScimV2Api
@@ -92,6 +93,8 @@ class WebexSimpleApi:
     people: PeopleApi
     #: Reports API :class:`reports.ReportsApi`
     reports: ReportsApi
+    #: Roles API :class:`roles.RolesApi`
+    roles: RolesApi
     #: Rooms API :class:`rooms.RoomsApi`
     rooms: RoomsApi
     #: Room tabs API :class:`room_tabs.RoomTabsApi`
@@ -158,6 +161,7 @@ class WebexSimpleApi:
         self.person_settings = PersonSettingsApi(session=session)
         self.people = PeopleApi(session=session)
         self.reports = ReportsApi(session=session)
+        self.roles = RolesApi(session=session)
         self.rooms = RoomsApi(session=session)
         self.room_tabs = RoomTabsApi(session=session)
         self.scim = ScimV2Api(session=session)

@@ -70,10 +70,10 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi',
            'AsPersonSettingsApiChild', 'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
-           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi',
-           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi', 'AsSCIM2UsersApi',
-           'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi',
-           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi',
+           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
+           'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
+           'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI', 'AsTeamMembershipsApi',
+           'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi',
            'AsTranslationPatternsApi', 'AsTrunkApi', 'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi',
            'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi',
            'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi',
@@ -5959,17 +5959,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         if min_response is not None:
             params['minResponse'] = str(min_response).lower()
         url = self.ep()
-        data = settings.model_dump_json(exclude={'person_id': True,
-                                                 'created': True,
-                                                 'last_modified': True,
-                                                 'timezone': True,
-                                                 'last_activity': True,
-                                                 'sip_addresses': True,
-                                                 'status': True,
-                                                 'invite_pending': True,
-                                                 'login_enabled': True,
-                                                 'person_type': True})
-        return Person.model_validate(await self.post(url, data=data, params=params))
+        data = settings.create_update()
+        return Person.model_validate(await self.post(url, json=data, params=params))
 
     async def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
@@ -6048,22 +6039,10 @@ class AsPeopleApi(AsApiChild, base='people'):
         if min_response:
             params['minResponse'] = 'true'
 
-        if not all(v is not None
-                   for v in (person.display_name, person.first_name, person.last_name)):
-            raise ValueError('display_name, first_name, and last_name are required')
-
         # some attributes should not be included in update
-        data = person.model_dump_json(exclude={'created': True,
-                                               'last_modified': True,
-                                               'timezone': True,
-                                               'last_activity': True,
-                                               'sip_addresses': True,
-                                               'status': True,
-                                               'invite_pending': True,
-                                               'login_enabled': True,
-                                               'person_type': True})
+        data = person.create_update()
         ep = self.ep(path=person.person_id)
-        return Person.model_validate(await self.put(url=ep, data=data, params=params))
+        return Person.model_validate(await self.put(url=ep, json=data, params=params))
 
     async def me(self, calling_data: bool = False) -> Person:
         """
@@ -8836,6 +8815,45 @@ class AsReportsApi(AsApiChild, base='devices'):
             return list(reader)
 
         
+
+
+class AsRolesApi(AsApiChild, base='roles'):
+    """
+    Roles
+
+    A persona for an authenticated user, corresponding to a set of privileges within an organization. This roles
+    resource can be accessed only by an admin and shows only roles relevant to an admin.
+    """
+
+    async def list(self) -> list[IdAndName]:
+        """
+        List Roles
+
+        List all roles.
+
+        :rtype: list[Role]
+        """
+        url = self.ep()
+        data = await super().get(url)
+        r = TypeAdapter(list[IdAndName]).validate_python(data['items'])
+        return r
+
+    async def details(self, role_id: str) -> IdAndName:
+        """
+        Get Role Details
+
+        Shows details for a role, by ID.
+
+        Specify the role ID in the `roleId` parameter in the URI.
+
+        :param role_id: The unique identifier for the role.
+        :type role_id: str
+        :rtype: :class:`Role`
+        """
+        url = self.ep(f'{role_id}')
+        data = await super().get(url)
+        r = IdAndName.model_validate(data)
+        return r
 
 
 class AsRoomTabsApi(AsApiChild, base='room/tabs'):
@@ -20693,6 +20711,8 @@ class AsWebexSimpleApi:
     people: AsPeopleApi
     #: Reports API :class:`AsReportsApi`
     reports: AsReportsApi
+    #: Roles API :class:`AsRolesApi`
+    roles: AsRolesApi
     #: Rooms API :class:`AsRoomsApi`
     rooms: AsRoomsApi
     #: Room tabs API :class:`AsRoomTabsApi`
@@ -20759,6 +20779,7 @@ class AsWebexSimpleApi:
         self.person_settings = AsPersonSettingsApi(session=session)
         self.people = AsPeopleApi(session=session)
         self.reports = AsReportsApi(session=session)
+        self.roles = AsRolesApi(session=session)
         self.rooms = AsRoomsApi(session=session)
         self.room_tabs = AsRoomTabsApi(session=session)
         self.scim = AsScimV2Api(session=session)

@@ -16,6 +16,7 @@ Release history
 - feat: new API :attr:`api.telephony.conference <wxc_sdk.telephony.TelephonyApi.conference>`
 - feat: new API :attr:`api.telephony.playlist <wxc_sdk.telephony.TelephonyApi.playlist>`
 - feat: support for playlist in :meth:`api.telephony.location.moh.read <wxc_sdk.telephony.location.moh.LocationMoHApi.read>` and :meth:`api.telephony.location.moh.update <wxc_sdk.telephony.location.moh.LocationMoHApi.update>`
+- feat: new API :attr:`api.roles <wxc_sdk.WebexSimpleApi.roles>`
 
 1.19.0
 ------

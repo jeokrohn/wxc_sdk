@@ -415,6 +415,10 @@ The method name is a link to the method documentation.
         Lists all reports
    * - :meth:`api.reports.list_templates <wxc_sdk.reports.ReportsApi.list_templates>`
         List all the available report templates that can be generated
+   * - :meth:`api.roles.details <wxc_sdk.roles.RolesApi.details>`
+        Get Role Details
+   * - :meth:`api.roles.list <wxc_sdk.roles.RolesApi.list>`
+        List Roles
    * - :meth:`api.room_tabs.create_tab <wxc_sdk.room_tabs.RoomTabsApi.create_tab>`
         Add a tab with a specified URL to a room
    * - :meth:`api.room_tabs.delete_tab <wxc_sdk.room_tabs.RoomTabsApi.delete_tab>`

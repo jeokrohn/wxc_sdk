@@ -33,6 +33,7 @@ Subpackages
    wxc_sdk.people
    wxc_sdk.person_settings
    wxc_sdk.reports
+   wxc_sdk.roles
    wxc_sdk.room_tabs
    wxc_sdk.rooms
    wxc_sdk.scim

@@ -225,6 +225,25 @@ class Person(ApiModelWithErrors):
         return next((number for number in self.phone_numbers
                      if number.value.startswith('+')), None)
 
+    def create_update(self)->dict:
+        """
+        Date for create() and udpate()
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+                               exclude={'person_id': True,
+                                        'created': True,
+                                        'last_modified': True,
+                                        'timezone': True,
+                                        'last_activity': True,
+                                        'sip_addresses': True,
+                                        'status': True,
+                                        'invite_pending': True,
+                                        'login_enabled': True,
+                                        'person_type': True}
+                               )
+
 
 class PeopleApi(ApiChild, base='people'):
     """
@@ -356,17 +375,8 @@ class PeopleApi(ApiChild, base='people'):
         if min_response is not None:
             params['minResponse'] = str(min_response).lower()
         url = self.ep()
-        data = settings.model_dump_json(exclude={'person_id': True,
-                                                 'created': True,
-                                                 'last_modified': True,
-                                                 'timezone': True,
-                                                 'last_activity': True,
-                                                 'sip_addresses': True,
-                                                 'status': True,
-                                                 'invite_pending': True,
-                                                 'login_enabled': True,
-                                                 'person_type': True})
-        return Person.model_validate(self.post(url, data=data, params=params))
+        data = settings.create_update()
+        return Person.model_validate(self.post(url, json=data, params=params))
 
     def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
@@ -445,22 +455,10 @@ class PeopleApi(ApiChild, base='people'):
         if min_response:
             params['minResponse'] = 'true'
 
-        if not all(v is not None
-                   for v in (person.display_name, person.first_name, person.last_name)):
-            raise ValueError('display_name, first_name, and last_name are required')
-
         # some attributes should not be included in update
-        data = person.model_dump_json(exclude={'created': True,
-                                               'last_modified': True,
-                                               'timezone': True,
-                                               'last_activity': True,
-                                               'sip_addresses': True,
-                                               'status': True,
-                                               'invite_pending': True,
-                                               'login_enabled': True,
-                                               'person_type': True})
+        data = person.create_update()
         ep = self.ep(path=person.person_id)
-        return Person.model_validate(self.put(url=ep, data=data, params=params))
+        return Person.model_validate(self.put(url=ep, json=data, params=params))
 
     def me(self, calling_data: bool = False) -> Person:
         """
