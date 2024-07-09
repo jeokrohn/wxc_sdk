@@ -737,6 +737,8 @@ The method name is a link to the method documentation.
         Create a Line Key Template
    * - :meth:`api.telephony.devices.dect_devices <wxc_sdk.telephony.devices.TelephonyDevicesApi.dect_devices>`
         Read the DECT device type list
+   * - :meth:`api.telephony.devices.delete_background_images <wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_background_images>`
+        Delete Device Background Images
    * - :meth:`api.telephony.devices.delete_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_line_key_template>`
         Delete a Line Key Template
    * - :meth:`api.telephony.devices.details <wxc_sdk.telephony.devices.TelephonyDevicesApi.details>`
@@ -751,6 +753,8 @@ The method name is a link to the method documentation.
         Get Device Settings for a Workspace
    * - :meth:`api.telephony.devices.line_key_template_details <wxc_sdk.telephony.devices.TelephonyDevicesApi.line_key_template_details>`
         Get details of a Line Key Template
+   * - :meth:`api.telephony.devices.list_background_images <wxc_sdk.telephony.devices.TelephonyDevicesApi.list_background_images>`
+        Read the List of Background Images
    * - :meth:`api.telephony.devices.list_line_key_templates <wxc_sdk.telephony.devices.TelephonyDevicesApi.list_line_key_templates>`
         Read the list of Line Key Templates
    * - :meth:`api.telephony.devices.members <wxc_sdk.telephony.devices.TelephonyDevicesApi.members>`
@@ -769,6 +773,8 @@ The method name is a link to the method documentation.
         Update Device Settings for a Person
    * - :meth:`api.telephony.devices.update_workspace_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_workspace_device_settings>`
         Update Device Settings for a Workspace
+   * - :meth:`api.telephony.devices.upload_background_image <wxc_sdk.telephony.devices.TelephonyDevicesApi.upload_background_image>`
+        Upload a Device Background Image
    * - :meth:`api.telephony.devices.validate_macs <wxc_sdk.telephony.devices.TelephonyDevicesApi.validate_macs>`
         Validate a list of MAC addresses
    * - :meth:`api.telephony.huntgroup.by_name <wxc_sdk.telephony.huntgroup.HuntGroupApi.by_name>`

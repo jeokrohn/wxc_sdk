@@ -1,5 +1,10 @@
 Release history
 ===============
+- feat: manage device background images
+
+  * :meth:`api.telephony.devices.list_background_images <wxc_sdk.telephony.devices.TelephonyDevicesApi.list_background_images>`
+  * :meth:`api.telephony.devices.upload_background_image <wxc_sdk.telephony.devices.TelephonyDevicesApi.upload_background_image>`
+  * :meth:`api.telephony.devices.delete_background_images <wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_background_images>`
 
 1.20.0
 ------

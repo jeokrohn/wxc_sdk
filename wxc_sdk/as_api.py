@@ -151,14 +151,14 @@ class AsApiChild:
         """
         return await self.session.rest_put(*args, **kwargs)
 
-    async def delete(self, *args, **kwargs) -> None:
+    async def delete(self, *args, **kwargs) -> StrOrDict:
         """
         DELETE request
 
         :param args:
         :param kwargs:
         """
-        await self.session.rest_delete(*args, **kwargs)
+        return await self.session.rest_delete(*args, **kwargs)
 
     async def patch(self, *args, **kwargs) -> StrOrDict:
         """
@@ -17903,6 +17903,111 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         body = settings.model_dump(mode='json', exclude_none=True, by_alias=True)
         url = self.ep(f'workspaces/{workspace_id}/devices/settings')
         await super().put(url, params=params, json=body)
+
+    async def list_background_images(self, org_id: str = None) -> BackgroundImages:
+        """
+        Read the List of Background Images
+
+        Gets the list of device background images for an organization.
+
+        Webex Calling supports the upload of up to 100 background image files for each org. These image files can then
+        be referenced by MPP phones in that org for use as their background image.
+
+        Retrieving this list requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieves the list of images in this organization.
+        :type org_id: str
+        :rtype: :class:`BackgroundImages`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('devices/backgroundImages')
+        data = await super().get(url, params=params)
+        r = BackgroundImages.model_validate(data)
+        return r
+
+    async def upload_background_image(self, device_id: str, file: Union[BufferedReader, str], file_name: str = None,
+                                org_id: str = None) -> BackgroundImage:
+        """
+        Upload a Device Background Image
+
+        Configure a device's background image by uploading an image with file format, `.jpeg` or `.png`, encoded image
+        file. Maximum image file size allowed to upload is 625 KB.
+
+        The request must be a multipart/form-data request rather than JSON, using the image/jpeg or image/png
+        content-type.
+
+        Webex Calling supports the upload of up to 100 background image files for each org. These image files can then
+        be referenced by MPP phones in that org for use as their background image.
+
+        Uploading a device background image requires a full or device administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
+            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
+            content length might be calculated wrong
+        :type file: Union[BufferedReader, str]
+        :param file_name: filename for the content. Only required if content is a reader
+        :type file_name: str
+        :param org_id: Uploads the image in this organization.
+        :type org_id: str
+        :rtype: :class:`BackgroundImage`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'devices/{device_id}/actions/backgroundImageUpload/invoke')
+        if isinstance(file, str):
+            file_name = file_name or os.path.basename(file)
+            file = open(file, mode='rb')
+            must_close = True
+        else:
+            must_close = False
+            # an existing reader
+            if not file_name:
+                raise ValueError('upload_as is required')
+        encoder = MultipartEncoder({'fileName': file_name,
+                                    'file': (file_name, file, f'image/{file_name.split(".")[-1].lower()}')})
+        try:
+            data = await super().post(url, data=encoder, headers={'Content-Type': encoder.content_type},
+                                params=params)
+        finally:
+            if must_close:
+                file.close()
+        r = BackgroundImage.model_validate(data)
+        return r
+
+    async def delete_background_images(self, background_images: list[DeleteImageRequestObject],
+                                 org_id: str = None) -> DeleteDeviceBackgroundImagesResponse:
+        """
+        Delete Device Background Images
+
+        Delete the list of designated device background images for an organization. Maximum is 10 images per request.
+
+        Deleting a device background image requires a full or device administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param background_images: Array of images to be deleted.
+        :type background_images: list[DeleteImageRequestObject]
+        :param org_id: Deletes the list of images in this organization.
+        :type org_id: str
+        :rtype: :class:`DeleteDeviceBackgroundImagesResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['backgroundImages'] = TypeAdapter(list[DeleteImageRequestObject]).dump_python(background_images,
+                                                                                           mode='json', by_alias=True,
+                                                                                           exclude_none=True)
+        url = self.ep('devices/backgroundImages')
+        data = await super().delete(url, params=params, json=body)
+        r = DeleteDeviceBackgroundImagesResponse.model_validate(data)
+        return r
 
 
 class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):

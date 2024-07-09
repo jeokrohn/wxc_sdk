@@ -75,14 +75,14 @@ class ApiChild:
         """
         return self.session.rest_put(*args, **kwargs)
 
-    def delete(self, *args, **kwargs) -> None:
+    def delete(self, *args, **kwargs) -> StrOrDict:
         """
         DELETE request
 
         :param args:
         :param kwargs:
         """
-        self.session.rest_delete(*args, **kwargs)
+        return self.session.rest_delete(*args, **kwargs)
 
     def patch(self, *args, **kwargs) -> StrOrDict:
         """

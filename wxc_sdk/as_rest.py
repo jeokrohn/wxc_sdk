@@ -365,14 +365,14 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('PUT', *args, **kwargs)
 
-    async def rest_delete(self, *args, **kwargs) -> None:
+    async def rest_delete(self, *args, **kwargs) -> StrOrDict:
         """
         DELETE request
 
         :param args:
         :param kwargs:
         """
-        await self._rest_request('DELETE', *args, **kwargs)
+        return await self._rest_request('DELETE', *args, **kwargs)
 
     async def rest_patch(self, *args, **kwargs) -> StrOrDict:
         """

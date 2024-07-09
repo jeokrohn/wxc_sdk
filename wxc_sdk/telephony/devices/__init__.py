@@ -2,22 +2,27 @@
 Telephony devices
 """
 import json
+import os
 from collections.abc import Generator
+from io import BufferedReader
 from typing import Optional, Union, Any
 
 from pydantic import TypeAdapter, Field, field_validator, field_serializer
+from requests_toolbelt import MultipartEncoder
 
 from ...api_child import ApiChild
 from ...base import ApiModel, plus1, to_camel, enum_str
 from ...base import SafeEnum as Enum
+from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName, \
+    ApplyLineKeyTemplateAction
 
 __all__ = ['DectDevice', 'MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
            'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi', 'LineKeyType', 'ProgrammableLineKey',
            'LineKeyTemplate', 'TelephonyDeviceDetails', 'ActivationState', 'TelephonyDeviceOwner',
-           'TelephonyDeviceProxy', 'LayoutMode', 'KemModuleType', 'KemKey', 'DeviceLayout', 'DeviceSettings']
-
-from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName, \
-    ApplyLineKeyTemplateAction
+           'TelephonyDeviceProxy', 'LayoutMode', 'KemModuleType', 'KemKey', 'DeviceLayout', 'DeviceSettings',
+           'BackgroundImage', 'BackgroundImages', 'DeleteImageRequestObject',
+           'DeleteImageResponseSuccessObjectResult', 'DeleteImageResponseSuccessObject',
+           'DeleteDeviceBackgroundImagesResponse']
 
 
 class ActivationState(str, Enum):
@@ -339,6 +344,50 @@ class DeviceSettings(ApiModel):
         :meta private:
         """
         return 'ON' if v else 'OFF'
+
+
+class BackgroundImage(ApiModel):
+    #: The URL of the image file.
+    background_image_url: Optional[str] = None
+    #: The name of the image file.
+    file_name: Optional[str] = None
+    #: The total number of images in the org after uploading.
+    count: Optional[int] = None
+
+
+class BackgroundImages(ApiModel):
+    #: Array of background images.
+    background_images: Optional[list[BackgroundImage]] = None
+    #: The total number of images in the org.
+    count: Optional[int] = None
+
+
+class DeleteImageRequestObject(ApiModel):
+    #: The name of the image file to be deleted.
+    file_name: Optional[str] = None
+    #: Flag to force delete the image. When `forceDelete` = true, if any device, location, or org level custom
+    #: background URL is configured with the `backgroundImageURL` containing the filename being deleted, the
+    #: background image is set to `None`.
+    force_delete: Optional[bool] = None
+
+
+class DeleteImageResponseSuccessObjectResult(ApiModel):
+    #: The status of the deletion.
+    status: Optional[int] = None
+
+
+class DeleteImageResponseSuccessObject(ApiModel):
+    #: The name of the image file.
+    file_name: Optional[str] = None
+    #: The result of the deletion.
+    result: Optional[DeleteImageResponseSuccessObjectResult] = None
+
+
+class DeleteDeviceBackgroundImagesResponse(ApiModel):
+    #: Array of deleted images.
+    items: Optional[list[DeleteImageResponseSuccessObject]] = None
+    #: The total number of images in the org after deletion.
+    count: Optional[int] = None
 
 
 class TelephonyDevicesApi(ApiChild, base='telephony/config'):
@@ -977,3 +1026,108 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         body = settings.model_dump(mode='json', exclude_none=True, by_alias=True)
         url = self.ep(f'workspaces/{workspace_id}/devices/settings')
         super().put(url, params=params, json=body)
+
+    def list_background_images(self, org_id: str = None) -> BackgroundImages:
+        """
+        Read the List of Background Images
+
+        Gets the list of device background images for an organization.
+
+        Webex Calling supports the upload of up to 100 background image files for each org. These image files can then
+        be referenced by MPP phones in that org for use as their background image.
+
+        Retrieving this list requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieves the list of images in this organization.
+        :type org_id: str
+        :rtype: :class:`BackgroundImages`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('devices/backgroundImages')
+        data = super().get(url, params=params)
+        r = BackgroundImages.model_validate(data)
+        return r
+
+    def upload_background_image(self, device_id: str, file: Union[BufferedReader, str], file_name: str = None,
+                                org_id: str = None) -> BackgroundImage:
+        """
+        Upload a Device Background Image
+
+        Configure a device's background image by uploading an image with file format, `.jpeg` or `.png`, encoded image
+        file. Maximum image file size allowed to upload is 625 KB.
+
+        The request must be a multipart/form-data request rather than JSON, using the image/jpeg or image/png
+        content-type.
+
+        Webex Calling supports the upload of up to 100 background image files for each org. These image files can then
+        be referenced by MPP phones in that org for use as their background image.
+
+        Uploading a device background image requires a full or device administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
+            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
+            content length might be calculated wrong
+        :type file: Union[BufferedReader, str]
+        :param file_name: filename for the content. Only required if content is a reader
+        :type file_name: str
+        :param org_id: Uploads the image in this organization.
+        :type org_id: str
+        :rtype: :class:`BackgroundImage`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'devices/{device_id}/actions/backgroundImageUpload/invoke')
+        if isinstance(file, str):
+            file_name = file_name or os.path.basename(file)
+            file = open(file, mode='rb')
+            must_close = True
+        else:
+            must_close = False
+            # an existing reader
+            if not file_name:
+                raise ValueError('upload_as is required')
+        encoder = MultipartEncoder({'fileName': file_name,
+                                    'file': (file_name, file, f'image/{file_name.split(".")[-1].lower()}')})
+        try:
+            data = super().post(url, data=encoder, headers={'Content-Type': encoder.content_type},
+                                params=params)
+        finally:
+            if must_close:
+                file.close()
+        r = BackgroundImage.model_validate(data)
+        return r
+
+    def delete_background_images(self, background_images: list[DeleteImageRequestObject],
+                                 org_id: str = None) -> DeleteDeviceBackgroundImagesResponse:
+        """
+        Delete Device Background Images
+
+        Delete the list of designated device background images for an organization. Maximum is 10 images per request.
+
+        Deleting a device background image requires a full or device administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param background_images: Array of images to be deleted.
+        :type background_images: list[DeleteImageRequestObject]
+        :param org_id: Deletes the list of images in this organization.
+        :type org_id: str
+        :rtype: :class:`DeleteDeviceBackgroundImagesResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['backgroundImages'] = TypeAdapter(list[DeleteImageRequestObject]).dump_python(background_images,
+                                                                                           mode='json', by_alias=True,
+                                                                                           exclude_none=True)
+        url = self.ep('devices/backgroundImages')
+        data = super().delete(url, params=params, json=body)
+        r = DeleteDeviceBackgroundImagesResponse.model_validate(data)
+        return r
