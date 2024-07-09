@@ -24,7 +24,7 @@ from ..base import SafeEnum as Enum
 
 __all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'WorkspaceCallingHybridCalling',
            'HotdeskingStatus', 'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling',
-           'WorkspaceSupportedDevices', 'WorkspaceIndoorNavigation', 'WorkspacesApi']
+           'WorkspaceSupportedDevices', 'WorkspaceIndoorNavigation', 'WorkspacesApi', 'SupportAndConfiguredInfo']
 
 from ..common import DevicePlatform
 
