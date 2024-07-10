@@ -141,13 +141,16 @@ def get_tokens() -> Optional[Tokens]:
 
 @dataclass(init=False)
 class TestCaseWithTokens(TestCase):
+    """
+    A test case that requires access tokens to run
+    """
     api: ClassVar[WebexSimpleApi]
     me: ClassVar[Person]
     tokens: ClassVar[Tokens]
     async_api: AsWebexSimpleApi = field(default=None)
-    """
-    A test case that requires access tokens to run
-    """
+
+    # use proxy for all requests; only works for sync API calls
+    proxy: ClassVar[bool] = False
 
     @staticmethod
     def async_test(as_test):
@@ -175,6 +178,9 @@ class TestCaseWithTokens(TestCase):
         if tokens:
             cls.api = WebexSimpleApi(tokens=tokens)
             cls.me = cls.api.people.me()
+            if cls.proxy:
+                cls.api.session.proxies = {'http': 'http://localhost:9090', 'https': 'http://localhost:9090'}
+                cls.api.session.verify = False
         else:
             cls.api = None
 
