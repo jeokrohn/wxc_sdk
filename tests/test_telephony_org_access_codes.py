@@ -1,10 +1,8 @@
-import random
 import re
 from contextlib import contextmanager
 from itertools import zip_longest
-from operator import attrgetter
 
-from tests.base import TestCaseWithLog, LoggedRequest, async_test
+from tests.base import TestCaseWithLog, LoggedRequest
 from wxc_sdk.common import AuthCode
 from wxc_sdk.rest import RestError
 
