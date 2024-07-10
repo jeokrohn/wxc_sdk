@@ -8,13 +8,7 @@ from wxc_sdk.rest import RestError
 
 
 class TestOrgAccessCodes(TestCaseWithLog):
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        return
-        cls.api.session.proxies = {'http': 'http://localhost:9090', 'https': 'http://localhost:9090'}
-        cls.api.session.verify = False
+    proxy = True
 
     def create_codes(self, number_of_access_codes: int = 100000, batch_size: int = 10000,
                      with_logging: bool = False) -> list[AuthCode]:
