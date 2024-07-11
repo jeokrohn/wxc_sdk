@@ -12,9 +12,10 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['EmailObject', 'EmailObjectType', 'ExternalAttributeObject', 'GetUserResponse',
-           'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedOrgsObject',
-           'ManagerResponseObject', 'NameObject', 'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject',
-           'PhotoObjectType', 'PostUserUrnietfparamsscimschemasextensionenterprise20User',
+           'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User',
+           'GetUserResponseUrnscimschemasextensionciscowebexidentity20User', 'ManagedGroupsObject',
+           'ManagedOrgsObject', 'ManagerResponseObject', 'NameObject', 'PatchUserOperations', 'PatchUserOperationsOp',
+           'PhotoObject', 'PhotoObjectType', 'PostUserUrnietfparamsscimschemasextensionenterprise20User',
            'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager',
            'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUserAddresses', 'PutUserPhoneNumbers',
            'PutUserPhoneNumbersType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
@@ -272,6 +273,33 @@ class GetUserResponseUrnietfparamsscimschemasextensionenterprise20User(ApiModel)
     manager: Optional[ManagerResponseObject] = None
 
 
+class ManagedGroupsObject(ApiModel):
+    #: Webex Identity assigned group identifier.
+    #: example: 3936af3e-15ff-43d1-9ef5-66c569ef34f5
+    group_id: Optional[str] = None
+    #: Role in the target group for the user.
+    #: example: location_admin
+    role: Optional[str] = None
+
+
+class GetUserResponseUrnscimschemasextensionciscowebexidentity20User(ApiModel):
+    #: Account status of the user.
+    #: example: ['element='string' content='active' attributes={'typeAttributes': ApibArray(element='array', content=[ApibString(element='string', content='fixed', attributes=None, meta=None)], attributes=None, meta=None)} meta=None']
+    account_status: Optional[list[str]] = None
+    #: sipAddress values for the user.
+    sip_addresses: Optional[list[SipAddressObject]] = None
+    #: Organizations that the user can manage.
+    managed_orgs: Optional[list[ManagedOrgsObject]] = None
+    #: Groups that the user can manage.
+    managed_groups: Optional[list[ManagedGroupsObject]] = None
+    #: The extension attributes of the user. Postfix support from 1 to 15, for example,
+    #: "extensionAttribute1","extensionAttribute2"..."extensionAttribute15".
+    extension_attribute_: Optional[list[str]] = Field(alias='extensionAttribute*', default=None)
+    #: The external attributes of the user. Postfix support from 1 to 15, for example,
+    #: "externalAttribute1","externalAttribute2"..."externalAttribute15".
+    external_attribute_: Optional[list[ExternalAttributeObject]] = Field(alias='externalAttribute*', default=None)
+
+
 class GetUserResponse(ApiModel):
     #: Input JSON schemas.
     #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
@@ -338,7 +366,7 @@ class GetUserResponse(ApiModel):
     #: SCIM2 enterprise extension
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[GetUserResponseUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
-    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[GetUserResponseUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
 
 
 class SearchUserResponse(ApiModel):
@@ -418,14 +446,14 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
 
         1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
 
-        1. Support 3 schemas :
+        2. Support 3 schemas :
         - "urn:ietf:params:scim:schemas:core:2.0:User"
         - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
         - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"
 
-        1. Unrecognized schemas (ID/section) are ignored.
+        3. Unrecognized schemas (ID/section) are ignored.
 
-        1. Read-only attributes provided as input values are ignored.
+        4. Read-only attributes provided as input values are ignored.
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
@@ -700,20 +728,20 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
 
         1. Input JSON must contain schema: "urn:ietf:params:scim:schemas:core:2.0:User".
 
-        1. Support 3 schemas :
+        2. Support 3 schemas :
         - "urn:ietf:params:scim:schemas:core:2.0:User"
         - "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
         - "urn:scim:schemas:extension:cisco:webexidentity:2.0:User"
 
-        1. Unrecognized schemas (ID/section) are ignored.
+        3. Unrecognized schemas (ID/section) are ignored.
 
-        1. Read-only attributes provided as input values are ignored.
+        4. Read-only attributes provided as input values are ignored.
 
-        1. User `id` will not be changed.
+        5. User `id` will not be changed.
 
-        1. `meta`.`created` will not be changed.
+        6. `meta`.`created` will not be changed.
 
-        1. The PUT API replaces the contents of the user's data with the data in the request body.  All attributes
+        7. The PUT API replaces the contents of the user's data with the data in the request body.  All attributes
         specified in the request body will replace all existing attributes for the userId specified in the URL.
         Should you wish to replace or change some attributes as opposed to all attributes please refer to the SCIM
         PATCH operation https://developer.webex.com/docs/api/v1/scim2-user/update-a-user-with-patch .
@@ -834,9 +862,9 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         The PATCH api supports `add`, `remove` and `replace` operations on any individual
         attribute allowing only specific attributes of the user's object to be modified.
 
-        1. Each operation against an attribute must be compatible with the attribute's mutability.
+        2. Each operation against an attribute must be compatible with the attribute's mutability.
 
-        1. Each PATCH operation represents a single action to be applied to the
+        3. Each PATCH operation represents a single action to be applied to the
         same SCIM resource specified by the request URI.  Operations are
         applied sequentially in the order they appear in the array.  Each
         operation in the sequence is applied to the target resource; the

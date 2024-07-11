@@ -15,7 +15,7 @@ __all__ = ['EmailObject', 'EmailObjectType', 'ScimUser',
            'UserManager',
            'WebexUser', 'UserAddress', 'UserPhoneNumber',
            'ScimPhoneNumberType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
-           'UserTypeObject']
+           'UserTypeObject', 'ManagedGroup', 'WebexUserMeta', 'ScimMeta', 'ScimValueDisplayRef']
 
 SCHEMAS = [
     "urn:ietf:params:scim:schemas:core:2.0:User",
@@ -66,6 +66,15 @@ class WebexUserMeta(ApiModel):
     organization_id: Optional[str] = None
 
 
+class ManagedGroup(ApiModel):
+    #: Webex Identity assigned group identifier.
+    #: example: 3936af3e-15ff-43d1-9ef5-66c569ef34f5
+    group_id: Optional[str] = None
+    #: Role in the target group for the user.
+    #: example: location_admin
+    role: Optional[str] = None
+
+
 class WebexUser(ApiModel):
     #: Account status of the user.
     account_status: Optional[list[str]] = None
@@ -73,6 +82,8 @@ class WebexUser(ApiModel):
     sip_addresses: Optional[list[SipAddressObject]] = None
     #: Organizations that the user can manage.
     managed_orgs: Optional[list[ManagedOrg]] = None
+    #: Groups that the user can manage.
+    managed_groups: Optional[list[ManagedGroup]] = None
 
     # TODO: missing doc
     provision_source: Optional[str] = None

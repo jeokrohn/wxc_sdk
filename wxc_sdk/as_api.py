@@ -12619,7 +12619,7 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         :type pattern: TranslationPattern
         :param location_id: Unique identifier for the location. Only used when creating location level translation
         :type location_id: str
-        :param org_id: ID of the organization containing the translation pattern.
+        :param org_id: ID of the organization containing the translation pattern
         :type org_id: str
         :rtype: str
         """

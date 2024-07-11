@@ -103,10 +103,10 @@ from wxc_sdk.scim.bulk import BulkErrorResponse, BulkMethod, BulkOperation, Bulk
 from wxc_sdk.scim.groups import GroupMemberObject, GroupMemberResponse, GroupMeta, ManagedBy, \
     MetaObjectResourceType, ScimGroup, ScimGroupMember, SearchGroupResponse, WebexGroup, WebexGroupMeta, \
     WebexGroupOwner
-from wxc_sdk.scim.users import EmailObject, EmailObjectType, EnterpriseUser, ManagedOrg, ManagerObject, \
-    NameObject, PatchUserOperation, PatchUserOperationOp, PhotoObject, PhotoObjectType, ScimPhoneNumberType, \
-    ScimUser, SearchUserResponse, SipAddressObject, UserAddress, UserManager, UserPhoneNumber, UserTypeObject, \
-    WebexUser
+from wxc_sdk.scim.users import EmailObject, EmailObjectType, EnterpriseUser, ManagedGroup, ManagedOrg, \
+    ManagerObject, NameObject, PatchUserOperation, PatchUserOperationOp, PhotoObject, PhotoObjectType, ScimMeta, \
+    ScimPhoneNumberType, ScimUser, ScimValueDisplayRef, SearchUserResponse, SipAddressObject, UserAddress, \
+    UserManager, UserPhoneNumber, UserTypeObject, WebexUser, WebexUserMeta
 from wxc_sdk.status import Component, Incident, IncidentUpdate, StatusAPI, StatusSummary, WebexStatus
 from wxc_sdk.team_memberships import TeamMembership
 from wxc_sdk.teams import Team
@@ -254,14 +254,14 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'LineKeyTemplate', 'LineKeyTemplateAdvisoryTypes', 'LineKeyType', 'LinkRelation', 'Location',
            'LocationAddress', 'LocationAndNumbers', 'LocationCallParkSettings', 'LocationComplianceAnnouncement',
            'LocationMoHGreetingType', 'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState',
-           'MACStatus', 'MACValidationResponse', 'ManageNumberErrorItem', 'ManagedBy', 'ManagedOrg', 'ManagerObject',
-           'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType', 'MeetingDevice', 'MeetingOptions',
-           'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony', 'MeetingType',
-           'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message', 'MessageAttachment',
-           'MessageSummary', 'MessagesData', 'MetaObjectResourceType', 'MohMessageSetting', 'MonitoredElement',
-           'MonitoredElementMember', 'MonitoredMember', 'Monitoring', 'MoveNumberCounts', 'MppCustomization',
-           'MppVlanDevice', 'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer',
-           'NoiseCancellation', 'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType',
+           'MACStatus', 'MACValidationResponse', 'ManageNumberErrorItem', 'ManagedBy', 'ManagedGroup', 'ManagedOrg',
+           'ManagerObject', 'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType', 'MeetingDevice',
+           'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony',
+           'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message',
+           'MessageAttachment', 'MessageSummary', 'MessagesData', 'MetaObjectResourceType', 'MohMessageSetting',
+           'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember', 'Monitoring', 'MoveNumberCounts',
+           'MppCustomization', 'MppVlanDevice', 'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService',
+           'NoAnswer', 'NoiseCancellation', 'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType',
            'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber',
            'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType', 'OfficeNumber',
            'OnboardingMethod', 'OrgComplianceAnnouncement', 'OrganisationVoicemailSettings',
@@ -289,15 +289,16 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType',
            'RoutingPrefixCounts', 'SafeEnum', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel',
            'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType',
-           'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimPhoneNumberType', 'ScimUser',
-           'SearchGroupResponse', 'SearchUserResponse', 'Sender', 'ServiceType', 'SimultaneousInterpretation',
-           'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType',
-           'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse',
-           'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
-           'StrandedCalls', 'StrandedCallsAction', 'SupportAndConfiguredInfo', 'SupportedDevice', 'SupportedDevices',
-           'SurveyResult', 'TagOp', 'Team', 'TeamMembership', 'TelephoneNumberType', 'Telephony', 'TelephonyCall',
-           'TelephonyDevice', 'TelephonyDeviceDetails', 'TelephonyDeviceOwner', 'TelephonyDeviceProxy',
-           'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty', 'TelephonyType',
+           'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimMeta', 'ScimPhoneNumberType', 'ScimUser',
+           'ScimValueDisplayRef', 'SearchGroupResponse', 'SearchUserResponse', 'Sender', 'ServiceType',
+           'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType',
+           'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu',
+           'StandardRegistrationApproveRule', 'StartJobResponse', 'StartStopAnnouncement', 'StatusAPI',
+           'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict', 'StrandedCalls', 'StrandedCallsAction',
+           'SupportAndConfiguredInfo', 'SupportedDevice', 'SupportedDevices', 'SurveyResult', 'TagOp', 'Team',
+           'TeamMembership', 'TelephoneNumberType', 'Telephony', 'TelephonyCall', 'TelephonyDevice',
+           'TelephonyDeviceDetails', 'TelephonyDeviceOwner', 'TelephonyDeviceProxy', 'TelephonyEvent',
+           'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty', 'TelephonyType',
            'TemporaryDirectDownloadLink', 'TestCallRoutingResult', 'Tokens', 'TrackingCode', 'TrackingCodeItem',
            'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet', 'TranscriptStatus',
            'TranslationPattern', 'TranslationPatternConfigurationLevel', 'TranslationPatternLevel', 'TransportType',
@@ -316,10 +317,10 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
            'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
            'VoicemailSettings', 'VoicemailTransferToNumber', 'VolumeSettings', 'WaitMessageSetting', 'WaitMode',
-           'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner', 'WebexStatus', 'WebexUser', 'Webhook', 'WebhookCreate',
-           'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus',
-           'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceType',
-           'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail',
+           'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner', 'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook',
+           'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource',
+           'WebhookStatus', 'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork',
+           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail',
            'WorkspaceIndoorNavigation', 'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers',
            'WorkspacePersonalizationTaskResponse', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper',
            'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

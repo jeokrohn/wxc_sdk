@@ -334,8 +334,8 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         r = GetGroupResponse.model_validate(data)
         return r
 
-    def search_groups(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
-                      start_index: int = None, count: int = None, sort_by: str = None, sort_order: str = None,
+    def search_groups(self, org_id: str, filter: str = None, attributes: str = None, excluded_attributes: str = None,
+                      sort_by: str = None, sort_order: str = None, start_index: int = None, count: int = None,
                       include_members: bool = None, member_type: str = None) -> SearchGroupResponse:
         """
         Search groups
@@ -379,20 +379,20 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         For more filter patterns, see https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2. If the value is
         empty, the API returns all groups under the organization.
         :type filter: str
-        :param excluded_attributes: Attributes to be excluded from the return.
-        :type excluded_attributes: str
         :param attributes: The attributes to return.
         :type attributes: str
-        :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
-        :type start_index: int
-        :param count: An integer indicating the desired maximum number of query results per page. The default is 100.
-        :type count: int
+        :param excluded_attributes: Attributes to be excluded from the return.
+        :type excluded_attributes: str
         :param sort_by: A string indicating the attribute whose value be used to order the returned responses. Now we
             only allow `displayName, id, meta.lastModified` to sort.
         :type sort_by: str
         :param sort_order: A string indicating the order in which the `sortBy` parameter is applied. Allowed values are
             `ascending` and `descending`.
         :type sort_order: str
+        :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
+        :type start_index: int
+        :param count: An integer indicating the desired maximum number of query results per page. The default is 100.
+        :type count: int
         :param include_members: Default "false". If false, no members returned.
         :type include_members: bool
         :param member_type: Filter the members by member type. Sample data: `user`, `machine`, `group`.
@@ -402,18 +402,18 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         params = {}
         if filter is not None:
             params['filter'] = filter
-        if excluded_attributes is not None:
-            params['excludedAttributes'] = excluded_attributes
         if attributes is not None:
             params['attributes'] = attributes
-        if start_index is not None:
-            params['startIndex'] = start_index
-        if count is not None:
-            params['count'] = count
+        if excluded_attributes is not None:
+            params['excludedAttributes'] = excluded_attributes
         if sort_by is not None:
             params['sortBy'] = sort_by
         if sort_order is not None:
             params['sortOrder'] = sort_order
+        if start_index is not None:
+            params['startIndex'] = start_index
+        if count is not None:
+            params['count'] = count
         if include_members is not None:
             params['includeMembers'] = str(include_members).lower()
         if member_type is not None:
