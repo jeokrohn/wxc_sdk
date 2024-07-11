@@ -11,16 +11,18 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['ActionOnRouteList', 'CallDestinationType', 'CallRoutingApi', 'CallSourceInfo', 'CallSourceType',
-           'Customer', 'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate',
-           'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'Emergency',
-           'FeatureAccessCode', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount',
-           'LocalGateways', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PstnNumber',
-           'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup',
-           'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
+__all__ = ['ActionOnRouteList', 'AppliedServices', 'CallDestinationType', 'CallInterceptDetails',
+           'CallInterceptDetailsPermission', 'CallRoutingApi', 'CallSourceInfo', 'CallSourceType',
+           'CallingPermissionAction', 'CallingPlanReason', 'ConfigurationLevelType', 'Customer', 'DeviceStatus',
+           'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidateResult',
+           'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'Emergency', 'FeatureAccessCode', 'HostedAgent',
+           'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount', 'LocalGateways', 'NumberStatus',
+           'OriginatorType', 'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByTypeCallType',
+           'PbxUser', 'PstnNumber', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType',
+           'RouteGroup', 'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
            'RouteListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ServiceType',
-           'TestCallRoutingPostResponse', 'Trunk', 'TrunkGet', 'TrunkType', 'TrunkTypeWithDeviceType',
-           'VirtualExtension', 'VirtualExtensionRange']
+           'TestCallRoutingPostResponse', 'TranslationPattern', 'TranslationPatternConfigurationLevel', 'Trunk',
+           'TrunkGet', 'TrunkType', 'TrunkTypeWithDeviceType', 'VirtualExtension', 'VirtualExtensionRange']
 
 
 class ActionOnRouteList(str, Enum):
@@ -30,42 +32,189 @@ class ActionOnRouteList(str, Enum):
     delete = 'DELETE'
 
 
+class TranslationPatternConfigurationLevel(str, Enum):
+    #: The applied services of location level.
+    location = 'LOCATION'
+    #: The applied services of the organization level.
+    organization = 'ORGANIZATION'
+
+
+class TranslationPattern(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: ORGANIZATION
+    configuration_level: Optional[TranslationPatternConfigurationLevel] = None
+    #: Name given to a translation pattern.
+    #: example: TP1
+    name: Optional[str] = None
+    #: Matching pattern given to a translation pattern.
+    #: example: +91XXX
+    matching_pattern: Optional[str] = None
+    #: Replacement pattern given to a translation pattern.
+    #: example: +91234
+    replacement_pattern: Optional[str] = None
+    #: The original called number.
+    #: example: +91236
+    matched_number: Optional[str] = None
+    #: The modified number after matching against `matchingPattern` and replacing with corresponding
+    #: `replacementPattern`.
+    #: example: +91234
+    translated_number: Optional[str] = None
+
+
+class ConfigurationLevelType(str, Enum):
+    #: The applied services at the location level.
+    location = 'LOCATION'
+    #: The applied services at the user level.
+    user = 'USER'
+    #: The applied services at the place level.
+    place = 'PLACE'
+    #: The applied services at the virtual line level.
+    virtual_line = 'VIRTUAL_LINE'
+
+
+class CallInterceptDetailsPermission(str, Enum):
+    #: Call intercept is disabled.
+    disallow = 'DISALLOW'
+    #: Call intercept is transferred to a number.
+    transfer = 'TRANSFER'
+
+
+class CallInterceptDetails(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: USER
+    configuration_level: Optional[ConfigurationLevelType] = None
+    #: The choices that indicate call intercept permissions.
+    #: example: TRANSFER
+    permission: Optional[CallInterceptDetailsPermission] = None
+    #: The number to which the outgoing permission by type is to be transferred.
+    #: example: +14157279300
+    transfer_number: Optional[str] = None
+
+
+class OutgoingCallingPlanPermissionsByTypeCallType(str, Enum):
+    #: Controls calls within your own company.
+    internal_call = 'INTERNAL_CALL'
+    #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the
+    #: originating caller, usually free of charge from a landline.
+    toll_free = 'TOLL_FREE'
+    #: Controls calls to locations outside of the long-distance areas that require an international calling code before
+    #: the number is dialed.
+    international = 'INTERNATIONAL'
+    #: Controls calls requiring Operator Assistance.
+    operator_assisted = 'OPERATOR_ASSISTED'
+    #: Controls calls to Directory Assistant companies that require a charge to connect the call.
+    chargeable_directory_assisted = 'CHARGEABLE_DIRECTORY_ASSISTED'
+    #: Controls calls to carrier-specific number assignments to special services or destinations.
+    special_services_i = 'SPECIAL_SERVICES_I'
+    #: Controls calls to carrier-specific number assignments to special services or destinations.
+    special_services_ii = 'SPECIAL_SERVICES_II'
+    #: Controls calls used to provide information or entertainment for a fee charged directly to the caller.
+    premium_services_i = 'PREMIUM_SERVICES_I'
+    #: Controls calls used to provide information or entertainment for a fee charged directly to the caller.
+    premium_services_ii = 'PREMIUM_SERVICES_II'
+    #: Controls calls that are within your country of origin, both within and outside of your local area code.
+    national = 'NATIONAL'
+
+
+class CallingPermissionAction(str, Enum):
+    #: Allow the designated call type.
+    allow = 'ALLOW'
+    #: Block the designated call type.
+    block = 'BLOCK'
+    #: Allow only via Authorization Code.
+    auth_code = 'AUTH_CODE'
+    #: Transfer to Auto Transfer Number 1. The answering person can then approve the call and send it through or reject
+    #: the call.
+    transfer_number_1 = 'TRANSFER_NUMBER_1'
+    #: Transfer to Auto Transfer Number 2. The answering person can then approve the call and send it through or reject
+    #: the call.
+    transfer_number_2 = 'TRANSFER_NUMBER_2'
+    #: Transfer to Auto Transfer Number 3. The answering person can then approve the call and send it through or reject
+    #: the call.
+    transfer_number_3 = 'TRANSFER_NUMBER_3'
+
+
+class CallingPlanReason(str, Enum):
+    #: Calling plan gives the Fraud Containment reason.
+    fraud_containment = 'FRAUD_CONTAINMENT'
+    #: The Cisco calling plan reason.
+    cisco_calling_plan = 'CISCO_CALLING_PLAN'
+    #: The reason if the transfer number 1 is not configured.
+    transfer_number_1_not_configured = 'TRANSFER_NUMBER_1_NOT_CONFIGURED'
+    #: The reason if the transfer number 2 is not configured.
+    transfer_number_2_not_configured = 'TRANSFER_NUMBER_2_NOT_CONFIGURED'
+    #: The reason if the transfer number 3 is not configured.
+    transfer_number_3_not_configured = 'TRANSFER_NUMBER_3_NOT_CONFIGURED'
+    #: The reason for Webex mobile international transfer forward.
+    webex_mobile_premium_international_transfer_forward = 'WEBEX_MOBILE_PREMIUM_INTERNATIONAL_TRANSFER_FORWARD'
+
+
+class OutgoingCallingPlanPermissionsByType(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: USER
+    configuration_level: Optional[ConfigurationLevelType] = None
+    #: Designates the action to be taken for each call type and if transferring the call type is allowed.
+    #: example: INTERNAL_CALL
+    call_type: Optional[OutgoingCallingPlanPermissionsByTypeCallType] = None
+    #: Action to be performed on the input number that matches with the OCP.
+    #: example: ALLOW
+    permission: Optional[CallingPermissionAction] = None
+    #: The number to which the outgoing permission by type is to be transferred.
+    #: example: +14157279300
+    transfer_number: Optional[str] = None
+    #: The reason for the result reported for non-standard OCP service.
+    #: example: FRAUD_CONTAINMENT
+    reason: Optional[CallingPlanReason] = None
+    #: A transfer number is present in case it gets transferred to some other number.
+    #: example: +14157279300
+    number: Optional[str] = None
+
+
+class AppliedServices(ApiModel):
+    #: Returns the details of the Translation Pattern if applied.
+    translation_pattern: Optional[TranslationPattern] = None
+    #: Returns the details of call intercept if applied.
+    intercept_details: Optional[CallInterceptDetails] = None
+    #: Returns the details of permissions by type configuration if applied under OCP.
+    outgoing_calling_plan_permissions_by_type: Optional[OutgoingCallingPlanPermissionsByType] = None
+
+
 class CallSourceType(str, Enum):
-    #: Indicates that the call source is a route list.
+    #: Route list is a type of call source.
     route_list = 'ROUTE_LIST'
-    #: Indicates that the call source is a dial pattern.
+    #: Dial pattern is a type of call source.
     dial_pattern = 'DIAL_PATTERN'
-    #: Indicates that the call source extension is unknown.
+    #: The call source extension is unknown.
     unkown_extension = 'UNKOWN_EXTENSION'
-    #: Indicates that the call source phone number is unknown.
+    #: The call source phone number is unknown.
     unkown_number = 'UNKOWN_NUMBER'
 
 
 class CallSourceInfo(ApiModel):
-    #: Indicates the type of call source.
+    #: Type of call source.
     #: example: DIAL_PATTERN
     call_source_type: Optional[CallSourceType] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk and the trunk belongs to a route group which
-    #: is assigned to a route list with the name `routeListA` and also `originatorNumber` is a number assigned to
-    #: `routeListA`, then `routeListA` is returned here. This element is returned when `callSourceType` is
-    #: `ROUTE_LIST`.
+    #: Name of a route list.  When `originatorType` is `trunk`, `originatorId` is a valid trunk and the trunk belongs
+    #: to a route group which is assigned to a route list with the name `routeListA` and also `originatorNumber` is a
+    #: number assigned to `routeListA`, then `routeListA` is returned here. This element is returned when
+    #: `callSourceType` is `ROUTE_LIST`.
     #: example: routeList1
     route_list_name: Optional[str] = None
     #: Unique identifier for the route list.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0xJU1QvZDA2YWQ5M2QtY2NkOC00MzI1LTg0YzUtMDA2NThhYTdhMDBj
     route_list_id: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name `trunkA`, `trunkA` belongs to a
-    #: route group which is assigned to a route list with name `routeListA`, `trunkA` is also assigned to `dialPlanA`
-    #: as routing choice, `dialPlanA` has `dialPattern` xxxx assigned. If the `originatorNumber` matches the
-    #: `dialPattern` `xxxx`, `dialPlanA` is returned. This element is returned when `callSourceType` is
-    #: `DIAL_PATTERN`.
+    #: Name of a dial plan. When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name `trunkA`,
+    #: `trunkA` belongs to a route group which is assigned to a route list with the name `routeListA`, `trunkA` is
+    #: also assigned to `dialPlanA` as routing choice, `dialPlanA` has `dialPattern` xxxx assigned. If the
+    #: `originatorNumber` matches the `dialPattern` `xxxx`, `dialPlanA` is returned. This element is returned when
+    #: `callSourceType` is `DIAL_PATTERN`.
     #: example: dialPlan1
     dial_plan_name: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name `trunkA`, `trunkA` belongs to a
-    #: route group which is assigned to a route list with the name `routeListA`, `trunkA` is also assigned to
-    #: `dialPlanA` as routing choice, `dialPlanA` has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches
-    #: the `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is
-    #: `DIAL_PATTERN`.
+    #: Pattern given to a dial plan. When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name
+    #: `trunkA`, `trunkA` belongs to a route group which is assigned to a route list with the name `routeListA`,
+    #: `trunkA` is also assigned to `dialPlanA` as routing choice, `dialPlanA` has `dialPattern` `xxxx` assigned. If
+    #: the `originatorNumber` matches the `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is
+    #: returned when `callSourceType` is `DIAL_PATTERN`.
     #: example: *888
     dial_pattern: Optional[str] = None
     #: Unique identifier for dial plan.
@@ -83,7 +232,7 @@ class Customer(ApiModel):
 
 
 class CallDestinationType(str, Enum):
-    #: Destination is a person or workspace with details in the `hostedAgent` field.
+    #: A destination is a person or workspace with details in the `hostedAgent` field.
     hosted_agent = 'HOSTED_AGENT'
     #: Destination is a calling feature like auto-attendant or hunt group with details in the `hostedFeature` field.
     hosted_feature = 'HOSTED_FEATURE'
@@ -216,7 +365,7 @@ class DialPlanGet(ApiModel):
 
 
 class Emergency(ApiModel):
-    #: Indicates if `RedSky` is in use.
+    #: If `RedSky` is in use.
     #: example: True
     is_red_sky: Optional[bool] = None
     #: Name of the trunk.
@@ -249,9 +398,9 @@ class FeatureAccessCode(ApiModel):
 
 
 class HostedAgentType(str, Enum):
-    #: Indicates that this object is a person.
+    #: This object is a person.
     people = 'PEOPLE'
-    #: Indicates a workspace that is not assigned to a specific person such as for a shared device in a common area.
+    #: A workspace that is not assigned to a specific person such as for a shared device in a common area.
     place = 'PLACE'
 
 
@@ -283,21 +432,21 @@ class HostedAgent(ApiModel):
 
 
 class ServiceType(str, Enum):
-    #: Indicates that this destination is an auto attendant.
+    #: The destination is an auto attendant.
     auto_attendant = 'AUTO_ATTENDANT'
-    #: Indicates that this destination is the Office (Broadworks) Anywhere feature.
+    #: The destination is the Office (Broadworks) Anywhere feature.
     broadworks_anywhere = 'BROADWORKS_ANYWHERE'
-    #: Indicates that this destination is the Call Queue feature.
+    #: The destination is the Call Queue feature.
     call_queue = 'CALL_QUEUE'
-    #: Indicates that this destination is the Contact Center Link feature.
+    #: The destination is the Contact Center Link feature.
     contact_center_link = 'CONTACT_CENTER_LINK'
-    #: Indicates that this destination is the Group Paging feature.
+    #: The destination is the Group Paging feature.
     group_paging = 'GROUP_PAGING'
-    #: Indicates that this destination is the Hunt Group feature.
+    #: The destination is the Hunt Group feature.
     hunt_group = 'HUNT_GROUP'
-    #: Indicates that this destination is the Voice Messaging feature.
+    #: The destination is the Voice Messaging feature.
     voice_messaging = 'VOICE_MESSAGING'
-    #: Indicates that this destination is the Voice Mail Group feature.
+    #: The destination is the Voice Mail Group feature.
     voice_mail_group = 'VOICE_MAIL_GROUP'
 
 
@@ -363,7 +512,7 @@ class NumberStatus(str, Enum):
 
 
 class OriginatorType(str, Enum):
-    #: Indicates that this object is a person.
+    #: The originator type object is a person.
     people = 'PEOPLE'
     #: Connection between Webex Calling and the premises.
     trunk = 'TRUNK'
@@ -560,7 +709,7 @@ class VirtualExtension(ApiModel):
     #: Location name if the virtual extension is at the location level, empty if it is at the customer level.
     #: example: locationName1
     location_name: Optional[str] = None
-    #: Location ID if the virtual extension is at the location level, empty if it is at customer level.
+    #: Location ID if the virtual extension is at the location level, empty if it is at the customer level.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzVlZmI5MTFhLThmNmUtNGU2Ny1iOTZkLWNkM2VmNmRhNDE2OA
     location_id: Optional[str] = None
     #: Name of the trunk.
@@ -667,6 +816,9 @@ class TestCallRoutingPostResponse(ApiModel):
     unknown_extension: Optional[PstnNumber] = None
     #: Returned when `destinationType` is `UNKNOWN_NUMBER`.
     unknown_number: Optional[PstnNumber] = None
+    #: Returned if any origin is configured with intercept details, outgoing permissions by type, or translation
+    #: pattern.
+    applied_services: Optional[list[AppliedServices]] = None
 
 
 class TrunkType(str, Enum):
@@ -787,7 +939,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     """
 
     def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
-                          originator_number: str = None, org_id: str = None) -> TestCallRoutingPostResponse:
+                          originator_number: str = None, include_applied_services: bool = None,
+                          org_id: str = None) -> TestCallRoutingPostResponse:
         """
         Test Call Routing
 
@@ -813,6 +966,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :param originator_number: Only used when `originatorType` is `TRUNK`. The `originatorNumber` can be a phone
             number or URI.
         :type originator_number: str
+        :param include_applied_services: This element is used to retrieve if any translation pattern, call intercept,
+            permission by type is present for the called party.
+        :type include_applied_services: bool
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
         :rtype: :class:`TestCallRoutingPostResponse`
@@ -826,6 +982,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if originator_number is not None:
             body['originatorNumber'] = originator_number
         body['destination'] = destination
+        if include_applied_services is not None:
+            body['includeAppliedServices'] = include_applied_services
         url = self.ep('actions/testCallRouting/invoke')
         data = super().post(url, params=params, json=body)
         r = TestCallRoutingPostResponse.model_validate(data)
@@ -1755,7 +1913,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageRouteList')
         return self.session.follow_pagination(url=url, model=RouteGroupUsageRouteListGet, item_key='routeGroupUsageRouteListGet', params=params)
 
-    def read_the_list_of_route_lists(self, name: list[str] = None, location_id: list[str] = None, order: str = None,
+    def read_the_list_of_route_lists(self, order: str = None, name: list[str] = None, location_id: list[str] = None,
                                      org_id: str = None, **params) -> Generator[RouteList, None, None]:
         """
         Read the List of Route Lists
@@ -1768,25 +1926,25 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         Retrieving the Route List requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
+        :param order: Order the Route List according to the designated fields. Available sort fields are `name`, and
+            `locationId`. Sort order is ascending by default
+        :type order: str
         :param name: Return the list of Route List matching the route list name.
         :type name: list[str]
         :param location_id: Return the list of Route Lists matching the location id.
         :type location_id: list[str]
-        :param order: Order the Route List according to the designated fields. Available sort fields are `name`, and
-            `locationId`. Sort order is ascending by default
-        :type order: str
         :param org_id: List all Route List for this organization.
         :type org_id: str
         :return: Generator yielding :class:`RouteList` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
         if name is not None:
             params['name'] = ','.join(name)
         if location_id is not None:
             params['locationId'] = ','.join(location_id)
-        if order is not None:
-            params['order'] = order
         url = self.ep('premisePstn/routeLists')
         return self.session.follow_pagination(url=url, model=RouteList, item_key='routeLists', params=params)
 
@@ -1946,7 +2104,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[RouteListNumberPatchResponse]).validate_python(data['numberStatus'])
         return r
 
-    def get_numbers_assigned_to_a_route_list(self, route_list_id: str, order: str = None, number: str = None,
+    def get_numbers_assigned_to_a_route_list(self, route_list_id: str, number: str = None, order: str = None,
                                              org_id: str = None, **params) -> Generator[str, None, None]:
         """
         Get numbers assigned to a Route List
@@ -1959,20 +2117,20 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
-        :param order: Order the Route Lists according to number, ascending or descending.
-        :type order: str
         :param number: Number assigned to the route list.
         :type number: str
+        :param order: Order the Route Lists according to number, ascending or descending.
+        :type order: str
         :param org_id: Organization to which the Route List belongs.
         :type org_id: str
         :return: Numbers assigned to the Route list.
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if order is not None:
-            params['order'] = order
         if number is not None:
             params['number'] = number
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
         return self.session.follow_pagination(url=url, model=None, item_key='numbers', params=params)
 

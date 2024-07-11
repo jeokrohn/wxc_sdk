@@ -29,7 +29,7 @@ class TranslationPattern(ApiModel):
 
     def create_update(self) -> dict:
         """
-        Date for create() and update()
+        Data for create() and update()
 
         :meta private:
         """
@@ -82,7 +82,7 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         :type pattern: TranslationPattern
         :param location_id: Unique identifier for the location. Only used when creating location level translation
         :type location_id: str
-        :param org_id: ID of the organization containing the translation pattern.
+        :param org_id: ID of the organization containing the translation pattern
         :type org_id: str
         :rtype: str
         """
