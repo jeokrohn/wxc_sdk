@@ -462,7 +462,7 @@ class PeopleApi(ApiChild, base='people'):
                         avatar: str = None, roles: list[str] = None, licenses: list[str] = None,
                         department: str = None, manager: str = None, manager_id: str = None, title: str = None,
                         addresses: list[PersonAddresses] = None, site_urls: list[str] = None,
-                        login_enabled: str = None, org_id: str = None) -> Person:
+                        login_enabled: bool = None, org_id: str = None) -> Person:
         """
         Update a Person
 
@@ -545,7 +545,7 @@ class PeopleApi(ApiChild, base='people'):
         :type site_urls: list[str]
         :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
             authenticated user is an admin user for the person's organization.
-        :type login_enabled: str
+        :type login_enabled: bool
         :param org_id: The ID of the organization to which this person belongs.
         :type org_id: str
         :rtype: :class:`Person`
