@@ -11,10 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['ConvergedRecordingsApi', 'ListRecordingsForComplianceOfficerServiceType',
-           'ListRecordingsForComplianceOfficerStorageRegion', 'RecordingObject', 'RecordingObjectFormat',
-           'RecordingObjectOwnerType', 'RecordingObjectServiceData', 'RecordingObjectServiceType',
-           'RecordingObjectStatus', 'RecordingObjectWithDirectDownloadLinks',
+__all__ = ['ConvergedRecordingsApi', 'ListRecordingsForComplianceOfficerStorageRegion', 'RecordingObject',
+           'RecordingObjectFormat', 'RecordingObjectOwnerType', 'RecordingObjectServiceData',
+           'RecordingObjectServiceType', 'RecordingObjectStatus', 'RecordingObjectWithDirectDownloadLinks',
            'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks']
 
 
@@ -153,11 +152,6 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     service_data: Optional[RecordingObjectServiceData] = None
 
 
-class ListRecordingsForComplianceOfficerServiceType(str, Enum):
-    calling = 'calling'
-    all = 'all'
-
-
 class ListRecordingsForComplianceOfficerStorageRegion(str, Enum):
     us = 'US'
     sg = 'SG'
@@ -166,6 +160,7 @@ class ListRecordingsForComplianceOfficerStorageRegion(str, Enum):
     de = 'DE'
     au = 'AU'
     in_ = 'IN'
+    ca = 'CA'
 
 
 class ConvergedRecordingsApi(ApiChild, base=''):
@@ -194,7 +189,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
 
     def list_recordings_for_compliance_officer(self, from_: Union[str, datetime] = None, to_: Union[str,
                                                datetime] = None, status: RecordingObjectStatus = None,
-                                               service_type: ListRecordingsForComplianceOfficerServiceType = None,
+                                               service_type: RecordingObjectServiceType = None,
                                                format_: RecordingObjectFormat = None, owner_id: str = None,
                                                owner_email: str = None, owner_type: RecordingObjectOwnerType = None,
                                                storage_region: ListRecordingsForComplianceOfficerStorageRegion = None,
@@ -210,6 +205,8 @@ class ConvergedRecordingsApi(ApiChild, base=''):
 
         Long result sets are split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
+
+        List recordings requires the spark-compliance:recordings_read scope.
 
         #### Request Header
 
@@ -229,8 +226,8 @@ class ConvergedRecordingsApi(ApiChild, base=''):
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: RecordingObjectStatus
         :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`, or `all`.
-        :type service_type: ListRecordingsForComplianceOfficerServiceType
+            service-type. Valid values are `calling`.
+        :type service_type: RecordingObjectServiceType
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
         :type format_: RecordingObjectFormat
@@ -284,6 +281,8 @@ class ConvergedRecordingsApi(ApiChild, base=''):
 
         Only recordings of owner with the authenticated user may be retrieved.
 
+        Get Recording Details requires the spark-compliance:recordings_read scope.
+
         #### Request Header
 
         * `timezone`: *`Time zone
@@ -306,7 +305,10 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         Removes a recording with a specified recording ID. The deleted recording cannot be recovered.
 
         If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users
-        (host, attendees and shared), and to Compliance officer also. This action purges the recordings from Webex.
+        (host, attendees and shared), and to the Compliance officer as well. This action purges the recordings from
+        Webex.
+
+        Delete a Recording requires the spark-compliance:recordings_write scope.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
@@ -334,7 +336,9 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         authenticated user.
 
         For information on the metadata fields, refer to `Metadata Guide
-        <https://developer.webex.com/docs/webex-calling-overview>`_
+        <https://developer.webex.com/docs/api/guides/consolidated-metadata-documentation-and-samples-guide>`_
+
+        Get Recording metadata requires the spark-compliance:recordings_read scope.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
@@ -352,3 +356,44 @@ class ConvergedRecordingsApi(ApiChild, base=''):
             params['showAllTypes'] = str(show_all_types).lower()
         url = self.ep(f'convergedRecordings/{recording_id}/metadata')
         super().get(url, params=params)
+
+    def reassign_recordings(self, reassign_owner_email: str, owner_email: str = None, recording_ids: list[str] = None):
+        """
+        Reassign Recordings
+
+        Reassigns recordings to a new user. As an administrator, you can reassign a list of recordings or all
+        recordings of a particular user to a new user.
+        The recordings can belong to an org user, a virtual line, or a workspace, but the destination user should only
+        be a valid org user.
+
+        * "reassignOwnerEmail" is always required. It must be provided in every case.
+
+        * "ownerEmail" and "recordingIds" cannot both be empty. At least one of them must be provided.
+
+        * If "recordingIds" is empty but "ownerEmail" is provided, it means that all recordings owned by the
+        "ownerEmail" will be reassigned to "reassignOwnerEmail."
+
+        * If "recordingIds" is provided and "ownerEmail" is also provided, only the recordings specified by
+        "recordingIds" that are owned by "ownerEmail" will be reassigned to "reassignOwnerEmail."
+
+        * If "ownerEmail" is empty but "recordingIds" is provided, the recordings specified by "recordingIds" will be
+        reassigned to "reassignOwnerEmail," regardless of the current owner.
+
+        The `spark-admin:recordings_write` scope is required to reassign recordings.
+
+        :param reassign_owner_email: New owner of the recordings.
+        :type reassign_owner_email: str
+        :param owner_email: Recording owner email. Can be a user, a virtual line, or a workspace.
+        :type owner_email: str
+        :param recording_ids: List of recording identifiers to be reassigned.
+        :type recording_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        if owner_email is not None:
+            body['ownerEmail'] = owner_email
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        body['reassignOwnerEmail'] = reassign_owner_email
+        url = self.ep('convergedRecordings/reassign')
+        super().post(url, json=body)

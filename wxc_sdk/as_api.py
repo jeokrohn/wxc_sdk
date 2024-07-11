@@ -416,8 +416,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+        List recordings requires the spark-compliance:recordings_read scope.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -494,8 +493,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
+        List recordings requires the spark-compliance:recordings_read scope.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
@@ -564,6 +562,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
         Only recordings of owner with the authenticated user may be retrieved.
 
+        Get Recording Details requires the spark-compliance:recordings_read scope.
+
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
         :rtype: :class:`ConvergedRecordingWithDirectDownloadLinks`
@@ -581,6 +581,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
         If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users
         (host, attendees and shared), and to Compliance officer also. This action purges the recordings from Webex.
+
+        Delete a Recording requires the spark-compliance:recordings_write scope.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
@@ -608,7 +610,9 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         authenticated user.
 
         For information on the metadata fields, refer to `Metadata Guide
-        <https://developer.webex.com/docs/webex-calling-overview>`_
+        <https://developer.webex.com/docs/api/guides/consolidated-metadata-documentation-and-samples-guide>`_
+
+        Get Recording metadata requires the spark-compliance:recordings_read scope.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
@@ -628,6 +632,48 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         url = self.ep(f'convergedRecordings/{recording_id}/metadata')
         data = await super().get(url, params=params)
         return ConvergedRecordingMeta.model_validate(data)
+
+    async def reassign(self, reassign_owner_email: str, owner_email: str = None, recording_ids: List[str] = None):
+        """
+        Reassign Recordings
+
+        Reassigns recordings to a new user. As an administrator, you can reassign a list of recordings or all
+        recordings of a particular user to a new user.
+
+        The recordings can belong to an org user, a virtual line, or a workspace, but the destination user should only
+        be a valid org user.
+
+        * "reassignOwnerEmail" is always required. It must be provided in every case.
+
+        * "ownerEmail" and "recordingIds" cannot both be empty. At least one of them must be provided.
+
+        * If "recordingIds" is empty but "ownerEmail" is provided, it means that all recordings owned by the
+          "ownerEmail" will be reassigned to "reassignOwnerEmail."
+
+        * If "recordingIds" is provided and "ownerEmail" is also provided, only the recordings specified by
+          "recordingIds" that are owned by "ownerEmail" will be reassigned to "reassignOwnerEmail."
+
+        * If "ownerEmail" is empty but "recordingIds" is provided, the recordings specified by "recordingIds" will be
+          reassigned to "reassignOwnerEmail," regardless of the current owner.
+
+        The `spark-admin:recordings_write` scope is required to reassign recordings.
+
+        :param reassign_owner_email: New owner of the recordings.
+        :type reassign_owner_email: str
+        :param owner_email: Recording owner email. Can be a user, a virtual line, or a workspace.
+        :type owner_email: str
+        :param recording_ids: List of recording identifiers to be reassigned.
+        :type recording_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        if owner_email is not None:
+            body['ownerEmail'] = owner_email
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        body['reassignOwnerEmail'] = reassign_owner_email
+        url = self.ep('convergedRecordings/reassign')
+        await super().post(url, json=body)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):
@@ -5447,11 +5493,11 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         :type update: Membership
 
         """
-        data = update.model_dump_json(include={'is_moderator', 'is_room_hidden'})
         if update.id is None:
             raise ValueError('ID has to be set')
+        data = update.update()
         url = self.ep(f'{update.id}')
-        data = await super().put(url=url, data=data)
+        data = await super().put(url=url, json=data)
         return Membership.model_validate(data)
 
     async def delete(self, membership_id: str):

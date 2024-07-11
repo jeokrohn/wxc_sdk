@@ -31,6 +31,8 @@ The method name is a link to the method documentation.
         List Recordings for Compliance officer
    * - :meth:`api.converged_recordings.metadata <wxc_sdk.converged_recordings.ConvergedRecordingsApi.metadata>`
         Get Recording metadata
+   * - :meth:`api.converged_recordings.reassign <wxc_sdk.converged_recordings.ConvergedRecordingsApi.reassign>`
+        Reassign Recordings
    * - :meth:`api.device_configurations.list <wxc_sdk.device_configurations.DeviceConfigurationsApi.list>`
         Lists all device configurations associated with the given device ID
    * - :meth:`api.device_configurations.update <wxc_sdk.device_configurations.DeviceConfigurationsApi.update>`
