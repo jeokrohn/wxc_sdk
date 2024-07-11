@@ -252,10 +252,9 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :rtype: None
         """
         params = {}
-        params['announcementId'] = announcement_id
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep('announcements/{announcementsId}')
+        url = self.ep(f'announcements/{announcement_id}')
         super().delete(url, params=params)
 
     def fetch_details_of_a_binary_announcement_greeting_at_the_organization_level(self, announcement_id: str,
@@ -356,7 +355,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = AnnouncementUsageResponse.model_validate(data)
         return r
 
-    def delete_an_announcement_greeting_in_a_location(self, location_id: str, org_id: str = None):
+    def delete_an_announcement_greeting_in_a_location(self, location_id: str, announcement_id: str,
+                                                      org_id: str = None):
         """
         Delete an announcement greeting in a location.
 
@@ -365,6 +365,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
 
         :param location_id: Unique identifier of a location where announcement is being created.
         :type location_id: str
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
         :param org_id: Delete an announcement for location in this organization.
         :type org_id: str
         :rtype: None
@@ -372,7 +374,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'locations/{location_id}/announcements/{announcementsId}')
+        url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         super().delete(url, params=params)
 
     def fetch_details_of_a_binary_announcement_greeting_at_location_level(self, location_id: str, announcement_id: str,
