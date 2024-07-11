@@ -80,11 +80,14 @@ class WorkspaceEmail(ApiModel):
     email_address: Optional[str] = None
 
 
-class Calendar(WorkspaceEmail):
+class Calendar(ApiModel):
     #: Calendar type. Calendar of type none does not include an emailAddress field.
     calendar_type: Optional[CalendarType] = Field(alias='type', default=None)
     #: Workspace email address. Will not be set when the calendar type is `none`.
     email_address: Optional[str] = None
+    #: The `ResourceGroup` ID is associated with the workspace and is only applicable for on-premise MICROSOFT
+    #: calendar.
+    resource_group_id: Optional[str] = None
 
 
 class WorkspaceSupportedDevices(str, Enum):

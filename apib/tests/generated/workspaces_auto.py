@@ -207,6 +207,10 @@ class WorkspaceCreationRequestCalendar(ApiModel):
     #: Workspace email address. Will not be set when the calendar type is `none`.
     #: example: workspace@example.com
     email_address: Optional[str] = None
+    #: The `ResourceGroup` ID is associated with the workspace and is only applicable for on-premise MICROSOFT
+    #: calendar.
+    #: example: Y2lzY29zcGFyazovL3VybjpURUFNOk5vcndheS9SRVNPVVJDRV9HUk9VUC9jOGFiMDJhNC01NjI5LTRiNTctOGUyNy03ZDZkZjJlN2YzNzA=
+    resource_group_id: Optional[str] = None
 
 
 class SupportAndConfiguredInfo(ApiModel):
@@ -368,8 +372,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type sip_address: str
         :param calling: Calling.
         :type calling: WorkspaceCreationRequestCalling
-        :param calendar: Workspace calendar configuration. Provide a type (`microsoft`, `google` or `none`) and an
-            `emailAddress`. Default is `none`.
+        :param calendar: Workspace calendar configuration requires a `type` (`microsoft`, `google`, or `none`), an
+            `emailAddress`, and a `resourceGroupId`. The default is `none`.
         :type calendar: WorkspaceCreationRequestCalendar
         :param notes: Notes associated to the workspace.
         :type notes: str
@@ -491,9 +495,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type capacity: int
         :param type: The type that best describes the workspace.
         :type type: WorkspaceType1
-        :param calendar: An empty/null calendar field will not cause any changes. Provide a type (`microsoft`, `google`
-            or `none`) and an `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none`
-            type does not require an `emailAddress`.
+        :param calendar: An empty or null `calendar` field will not cause any changes. Provide a `type` (`microsoft`,
+            `google`, or `none`), an `emailAddress`, and a `resourceGroupId`. To remove a calendar, set the `type` to
+            `none`; this does not require an `emailAddress` or `resourceGroupId`.
         :type calendar: WorkspaceCreationRequestCalendar
         :param sip_address: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`.
         :type sip_address: str
