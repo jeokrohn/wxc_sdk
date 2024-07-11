@@ -187,11 +187,11 @@ class DevicesApi(ApiChild, base='devices'):
     `spark-admin:devices_write` scopes.
     """
 
-    def list_devices(self, person_id: str = None, workspace_id: str = None, location_id: str = None,
-                     workspace_location_id: str = None, display_name: str = None, product: ListDevicesProduct = None,
-                     type: ListDevicesType = None, tag: str = None, connection_status: str = None, serial: str = None,
-                     software: str = None, upgrade_channel: str = None, error_code: str = None,
-                     capability: DeviceCapabilities = None, permission: str = None, mac: str = None,
+    def list_devices(self, display_name: str = None, person_id: str = None, workspace_id: str = None,
+                     connection_status: str = None, product: ListDevicesProduct = None, type: ListDevicesType = None,
+                     serial: str = None, tag: str = None, software: str = None, upgrade_channel: str = None,
+                     error_code: str = None, capability: DeviceCapabilities = None, permission: str = None,
+                     location_id: str = None, workspace_location_id: str = None, mac: str = None,
                      device_platform: DevicePlatform = None, org_id: str = None,
                      **params) -> Generator[Device, None, None]:
         """
@@ -201,37 +201,31 @@ class DevicesApi(ApiChild, base='devices'):
         mode. This requires the `spark:devices_read` scope. Administrators can list all devices within their
         organization. This requires an administrator auth token with the `spark-admin:devices_read` scope.
 
+        :param display_name:
+        List devices with this display name.
+        :type display_name: str
         :param person_id:
         List devices by person ID.
         :type person_id: str
         :param workspace_id:
         List devices by workspace ID.
         :type workspace_id: str
-        :param location_id:
-        List devices by location ID.
-        :type location_id: str
-        :param workspace_location_id:
-        List devices by workspace location ID. Deprecated, prefer `locationId`.
-        :type workspace_location_id: str
-        :param display_name:
-        List devices with this display name.
-        :type display_name: str
+        :param connection_status:
+        List devices with this connection status.
+        :type connection_status: str
         :param product:
         List devices with this product name.
         :type product: ListDevicesProduct
         :param type:
         List devices with this type.
         :type type: ListDevicesType
+        :param serial:
+        List devices with this serial number.
+        :type serial: str
         :param tag:
         List devices which have a tag. Searching for multiple tags (logical AND) can be done by comma separating the
         `tag` values or adding several `tag` parameters.
         :type tag: str
-        :param connection_status:
-        List devices with this connection status.
-        :type connection_status: str
-        :param serial:
-        List devices with this serial number.
-        :type serial: str
         :param software:
         List devices with this software version.
         :type software: str
@@ -247,6 +241,12 @@ class DevicesApi(ApiChild, base='devices'):
         :param permission:
         List devices with this permission.
         :type permission: str
+        :param location_id:
+        List devices by location ID.
+        :type location_id: str
+        :param workspace_location_id:
+        List devices by workspace location ID. Deprecated, prefer `locationId`.
+        :type workspace_location_id: str
         :param mac:
         List devices with this MAC address.
         :type mac: str
@@ -259,28 +259,24 @@ class DevicesApi(ApiChild, base='devices'):
         :type org_id: str
         :return: Generator yielding :class:`Device` instances
         """
+        if display_name is not None:
+            params['displayName'] = display_name
         if person_id is not None:
             params['personId'] = person_id
         if workspace_id is not None:
             params['workspaceId'] = workspace_id
         if org_id is not None:
             params['orgId'] = org_id
-        if location_id is not None:
-            params['locationId'] = location_id
-        if workspace_location_id is not None:
-            params['workspaceLocationId'] = workspace_location_id
-        if display_name is not None:
-            params['displayName'] = display_name
+        if connection_status is not None:
+            params['connectionStatus'] = connection_status
         if product is not None:
             params['product'] = enum_str(product)
         if type is not None:
             params['type'] = enum_str(type)
-        if tag is not None:
-            params['tag'] = tag
-        if connection_status is not None:
-            params['connectionStatus'] = connection_status
         if serial is not None:
             params['serial'] = serial
+        if tag is not None:
+            params['tag'] = tag
         if software is not None:
             params['software'] = software
         if upgrade_channel is not None:
@@ -291,6 +287,10 @@ class DevicesApi(ApiChild, base='devices'):
             params['capability'] = enum_str(capability)
         if permission is not None:
             params['permission'] = permission
+        if location_id is not None:
+            params['locationId'] = location_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
         if mac is not None:
             params['mac'] = mac
         if device_platform is not None:
@@ -332,6 +332,9 @@ class DevicesApi(ApiChild, base='devices'):
         `spark-admin:devices_write` scope.
 
         Specify the device ID in the `deviceId` parameter in the URI.
+
+        <div><Callout type="warning">Deleting a device from a person with a Webex Calling Standard license will enable
+        Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
@@ -408,6 +411,9 @@ class DevicesApi(ApiChild, base='devices'):
         `supported devices
         <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
 
+        <div><Callout type="warning">Adding a device to a person with a Webex Calling Standard license will disable
+        Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
+
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str
         :param person_id: The ID of the person who will own the device once activated.
@@ -451,6 +457,9 @@ class DevicesApi(ApiChild, base='devices'):
         * The `password` field is only required for third party devices. You can obtain the required third party phone
         configuration from `here
         <https://developer.webex.com/docs/api/v1/beta-device-call-settings-with-third-party-device-support/get-third-party-device>`_.
+
+        <div><Callout type="warning">Adding a device to a person with a Webex Calling Standard license will disable
+        Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
 
         :param mac: The MAC address of the device being created.
         :type mac: str
