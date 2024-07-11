@@ -37,6 +37,14 @@ class Membership(ApiModel):
     #: The date and time when the membership was created.
     created: Optional[datetime] = None
 
+    def update(self) -> dict:
+        """
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
+                               include={'is_moderator', 'is_room_hidden'})
+
 
 class MembershipsData(WebhookEventData, Membership):
     """
@@ -138,11 +146,11 @@ class MembershipApi(ApiChild, base='memberships'):
         :type update: Membership
 
         """
-        data = update.model_dump_json(include={'is_moderator', 'is_room_hidden'})
         if update.id is None:
             raise ValueError('ID has to be set')
+        data = update.update()
         url = self.ep(f'{update.id}')
-        data = super().put(url=url, data=data)
+        data = super().put(url=url, json=data)
         return Membership.model_validate(data)
 
     def delete(self, membership_id: str):

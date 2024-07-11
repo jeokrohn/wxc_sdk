@@ -107,7 +107,7 @@ class MembershipsApi(ApiChild, base='memberships'):
         return self.session.follow_pagination(url=url, model=Membership, item_key='items', params=params)
 
     def create_a_membership(self, room_id: str, person_id: str = None, person_email: str = None,
-                            is_moderator: str = None) -> Membership:
+                            is_moderator: bool = None) -> Membership:
         """
         Create a Membership
 
@@ -121,7 +121,7 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param person_email: The email address of the person.
         :type person_email: str
         :param is_moderator: Whether or not the participant is a room moderator.
-        :type is_moderator: str
+        :type is_moderator: bool
         :rtype: :class:`Membership`
         """
         body = dict()
@@ -154,7 +154,7 @@ class MembershipsApi(ApiChild, base='memberships'):
         r = Membership.model_validate(data)
         return r
 
-    def update_a_membership(self, membership_id: str, is_moderator: str, is_room_hidden: str) -> Membership:
+    def update_a_membership(self, membership_id: str, is_moderator: bool, is_room_hidden: bool) -> Membership:
         """
         Update a Membership
 
@@ -165,10 +165,10 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str
         :param is_moderator: Whether or not the participant is a room moderator.
-        :type is_moderator: str
+        :type is_moderator: bool
         :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the
             room visible again.
-        :type is_room_hidden: str
+        :type is_room_hidden: bool
         :rtype: :class:`Membership`
         """
         body = dict()
