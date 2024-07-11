@@ -8,7 +8,7 @@ from wxc_sdk.rest import RestError
 
 
 class TestOrgAccessCodes(TestCaseWithLog):
-    proxy = True
+    proxy = False
 
     def create_codes(self, number_of_access_codes: int = 100000, batch_size: int = 10000,
                      with_logging: bool = False) -> list[AuthCode]:
