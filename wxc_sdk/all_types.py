@@ -186,8 +186,8 @@ from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloo
 from wxc_sdk.workspace_personalization import WorkspacePersonalizationTaskResponse
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, HotdeskingStatus, \
-    WorkSpaceType, Workspace, WorkspaceCalling, WorkspaceCallingHybridCalling, WorkspaceEmail, \
-    WorkspaceIndoorNavigation, WorkspaceSupportedDevices, WorkspaceWebexCalling
+    SupportAndConfiguredInfo, WorkSpaceType, Workspace, WorkspaceCalling, WorkspaceCallingHybridCalling, \
+    WorkspaceEmail, WorkspaceIndoorNavigation, WorkspaceSupportedDevices, WorkspaceWebexCalling
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationState', 'AdaptiveCard',
            'AdaptiveCardAction', 'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentQueue',
@@ -294,10 +294,10 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType',
            'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse',
            'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
-           'StrandedCalls', 'StrandedCallsAction', 'SupportedDevice', 'SupportedDevices', 'SurveyResult', 'TagOp',
-           'Team', 'TeamMembership', 'TelephoneNumberType', 'Telephony', 'TelephonyCall', 'TelephonyDevice',
-           'TelephonyDeviceDetails', 'TelephonyDeviceOwner', 'TelephonyDeviceProxy', 'TelephonyEvent',
-           'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty', 'TelephonyType',
+           'StrandedCalls', 'StrandedCallsAction', 'SupportAndConfiguredInfo', 'SupportedDevice', 'SupportedDevices',
+           'SurveyResult', 'TagOp', 'Team', 'TeamMembership', 'TelephoneNumberType', 'Telephony', 'TelephonyCall',
+           'TelephonyDevice', 'TelephonyDeviceDetails', 'TelephonyDeviceOwner', 'TelephonyDeviceProxy',
+           'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty', 'TelephonyType',
            'TemporaryDirectDownloadLink', 'TestCallRoutingResult', 'Tokens', 'TrackingCode', 'TrackingCodeItem',
            'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet', 'TranscriptStatus',
            'TranslationPattern', 'TranslationPatternConfigurationLevel', 'TranslationPatternLevel', 'TransportType',
