@@ -7,6 +7,7 @@ Release history
   * :meth:`api.telephony.devices.delete_background_images <wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_background_images>`
 
 - feat: new :meth:`api.converged_recordings.reassign <wxc_sdk.converged_recordings.ConvergedRecordingsApi.reassign>`
+- feat: new API: :attr:`api.telephony.api.telephony.supervisors <wxc_sdk.telephony.TelephonyApi.supervisors>`
 
 1.20.0
 ------
