@@ -782,3 +782,9 @@ class TestCallQueuePolicies(TestWithQueues):
             self.assertEqual(before.forced_forward_enabled, restored.forced_forward_enabled)
             self.assertEqual(before.transfer_phone_number or update.transfer_phone_number,
                              restored.transfer_phone_number)
+
+class TestOrgSettings(TestCaseWithLog):
+    def test_read(self):
+        settings = self.api.telephony.callqueue.get_call_queue_settings()
+        print(json.dumps(json.loads(settings.model_dump(mode='json', by_alias=True)), indent=2))
+        foo =1

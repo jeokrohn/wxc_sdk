@@ -15,7 +15,7 @@ from ...rest import RestSession
 
 __all__ = ['CallBounce', 'DistinctiveRing', 'CallQueueCallPolicies', 'OverflowAction', 'OverflowSetting', 'WaitMode',
            'WaitMessageSetting', 'AudioSource', 'WelcomeMessageSetting', 'ComfortMessageSetting', 'MohMessageSetting',
-           'ComfortMessageBypass', 'QueueSettings', 'CallQueue', 'CallQueueApi', 'CQRoutingType']
+           'ComfortMessageBypass', 'QueueSettings', 'CallQueue', 'CallQueueApi', 'CQRoutingType', 'CallQueueSettings']
 
 
 class CallBounce(ApiModel):
@@ -376,6 +376,12 @@ class CallQueue(HGandCQ):
         return CallQueue(**params)
 
 
+class CallQueueSettings(ApiModel):
+    #: Modify the optimized simultaneous ring algorithm setting.
+    maintain_queue_position_for_sim_ring_enabled: Optional[bool] = None
+    #: Enable this setting to change the status of an agent to unavailable in case of bounced calls.
+    force_agent_unavailable_on_bounced_enabled: Optional[bool] = None
+
 @dataclass(init=False)
 class CallQueueApi:
     """
@@ -659,3 +665,51 @@ class CallQueueApi:
         cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         self._session.rest_put(url=url, data=cq_data, params=params)
+
+    def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettings:
+        """
+        Get Call Queue Settings
+
+        Retrieve Call Queue Settings for a specific organization.
+
+        Call Queue Settings are used to enable the Simultaneous Ringing algorithm that maintains queue positions for
+        customers.
+
+        Retrieving Call Queue Settings requires a full, user, or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param org_id: Call Queue Settings for this organization.
+        :type org_id: str
+        :rtype: :class:`CallQueueSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self._session.ep('telephony/config/queues/settings')
+        data = self._session.get(url, params=params)
+        r = CallQueueSettings.model_validate(data)
+        return r
+
+    def update_call_queue_settings(self, settings: CallQueueSettings, org_id: str = None):
+        """
+        Update Call Queue Settings
+
+        Update Call Queue Settings for a specific organization.
+
+        Call Queue Settings are used to enable the Simultaneous Ringing algorithm that maintains queue positions for
+        customers.
+
+        Updating Call Queue Settings requires a full or user administrator auth token with a scope
+        `spark-admin:telephony_config_write`.
+
+        :param settings: Call Queue Settings for this organization.
+        :param org_id: update Call Queue Settings for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self._session.ep('telephony/config/queues/settings')
+        self._session.put(url, params=params, json=body)
