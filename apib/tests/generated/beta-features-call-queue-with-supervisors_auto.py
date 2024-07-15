@@ -13,7 +13,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['AgentAction', 'AvailableSupervisorsListObject', 'BetaFeaturesCallQueueWithSupervisorsApi',
            'GetSupervisorDetailsResponse', 'ListSupervisorAgentObject', 'ListSupervisorAgentStatusObject',
-           'ListSupervisorObject', 'PostPersonPlaceVirtualLineSupervisorObject']
+           'ListSupervisorObject', 'PostPersonPlaceVirtualLineSupervisorObject',
+           'PutPersonPlaceVirtualLineAgentObject']
 
 
 class ListSupervisorObject(ApiModel):
@@ -101,6 +102,14 @@ class AgentAction(str, Enum):
     delete = 'DELETE'
 
 
+class PutPersonPlaceVirtualLineAgentObject(ApiModel):
+    #: ID of person, workspace or virtual line.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS81OGVkZTIwNi0yNTM5LTQ1ZjQtODg4Ny05M2E3ZWIwZWI3ZDI
+    id: Optional[str] = None
+    #: Enumeration that indicates whether an agent needs to be added (`ADD`) or deleted (`DELETE`) from a supervisor.
+    action: Optional[AgentAction] = None
+
+
 class ListSupervisorAgentStatusObject(ApiModel):
     #: ID of person, workspace or virtual line.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85NTA4OTc4ZC05YmFkLTRmYWEtYTljNC0wOWQ4NWQ4ZmRjZTY
@@ -120,7 +129,7 @@ class GetSupervisorDetailsResponse(ApiModel):
     agents: Optional[list[ListSupervisorAgentObject]] = None
 
 
-class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
+class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/supervisors'):
     """
     Beta Features: Call Queue with Supervisors
     
@@ -166,7 +175,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
-        url = self.ep('telephony/config/supervisors')
+        url = self.ep()
         return self.session.follow_pagination(url=url, model=ListSupervisorObject, item_key='supervisors', params=params)
 
     def create_a_supervisor(self, id: str, agents: list[PostPersonPlaceVirtualLineSupervisorObject],
@@ -195,7 +204,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
         body = dict()
         body['id'] = id
         body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineSupervisorObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep('telephony/config/supervisors')
+        url = self.ep()
         super().post(url, params=params, json=body)
 
     def delete_a_supervisor(self, supervisor_id: str, org_id: str = None):
@@ -217,7 +226,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'v1/telephony/config/supervisors/{supervisor_id}')
+        url = self.ep(f'{supervisor_id}')
         super().delete(url, params=params)
 
     def delete_bulk_supervisors(self, supervisors_id: list[str], delete_all: bool = None, org_id: str = None):
@@ -245,7 +254,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
         body['supervisorsId'] = supervisors_id
         if delete_all is not None:
             body['deleteAll'] = delete_all
-        url = self.ep('v1/telephony/config/supervisors')
+        url = self.ep()
         super().delete(url, params=params, json=body)
 
     def list_available_supervisors(self, name: str = None, phone_number: str = None, order: str = None,
@@ -280,7 +289,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
-        url = self.ep('v1/telephony/config/supervisors/availableSupervisors')
+        url = self.ep('availableSupervisors')
         return self.session.follow_pagination(url=url, model=AvailableSupervisorsListObject, item_key='supervisors', params=params)
 
     def get_supervisor_details(self, supervisor_id: str, max_: int = None, start: int = None, name: str = None,
@@ -326,15 +335,16 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
-        url = self.ep(f'v1/telephony/config/supervisors/{supervisor_id}')
+        url = self.ep(f'{supervisor_id}')
         data = super().get(url, params=params)
         r = GetSupervisorDetailsResponse.model_validate(data)
         return r
 
-    def assign_un_assign_agents_to_supervisor(self, supervisor_id: str, id: str, action: AgentAction,
-                                              org_id: str = None) -> list[ListSupervisorAgentStatusObject]:
+    def assign_or_unassign_agents_to_supervisor(self, supervisor_id: str,
+                                                agents: list[PutPersonPlaceVirtualLineAgentObject],
+                                                org_id: str = None) -> list[ListSupervisorAgentStatusObject]:
         """
-        Assign/Un-assign Agents to Supervisor
+        Assign or Unassign Agents to Supervisor
 
         Assign or unassign agents to the supervisor for an organization.
 
@@ -345,11 +355,8 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
 
         :param supervisor_id: Identifier of the superviser to be updated.
         :type supervisor_id: str
-        :param id: ID of person, workspace or virtual line.
-        :type id: str
-        :param action: Enumeration that indicates whether an agent needs to be added (`ADD`) or deleted (`DELETE`) from
-            a supervisor.
-        :type action: AgentAction
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[PutPersonPlaceVirtualLineAgentObject]
         :param org_id: Assign or unassign agents to a supervisor for this organization.
         :type org_id: str
         :rtype: list[ListSupervisorAgentStatusObject]
@@ -358,9 +365,8 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['id'] = id
-        body['action'] = enum_str(action)
-        url = self.ep(f'v1/telephony/config/supervisors/{supervisor_id}')
+        body['agents'] = TypeAdapter(list[PutPersonPlaceVirtualLineAgentObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'{supervisor_id}')
         data = super().put(url, params=params, json=body)
         r = TypeAdapter(list[ListSupervisorAgentStatusObject]).validate_python(data['supervisorAgentStatus'])
         return r
@@ -396,5 +402,5 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base=''):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
-        url = self.ep('v1/telephony/config//supervisors/availableAgents')
+        url = self.ep('availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableSupervisorsListObject, item_key='agents', params=params)
