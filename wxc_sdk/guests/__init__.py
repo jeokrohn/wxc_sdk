@@ -11,22 +11,16 @@ __all__ = ['Guest', 'GuestManagementApi']
 
 class Guest(ApiModel):
     #: The unique id of the guest. This is a `personId`
-    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zNzlhNWQ4ZC1hNTE4LTQ3NmQtYmY1NC1mZmE5MWQ3OWM4MTI
     id: Optional[str] = None
     #: The external unique identifier of the guest.
-    #: example: PersonNo#1
     subject: Optional[str] = None
     #: The guest’s display name shown in Webex applications
-    #: example: Person of Interest
     display_name: Optional[str] = None
     #: The person’s synthetic email in Webex.
-    #: example: 1ad14c30-59a6-31a7-b345-963e3d167e10@appid.ciscospark.com
     email: Optional[str] = None
     #: The guests access token. Guest tokens usually are over 2000 characters in length.
-    #: example: eyJhbGciOiJSUzI1NiJ9.eyJkw1zx5iIDv7FL3cWQ_JEjehqtPVRmFf572q7RZwSIZgQRziAw
     access_token: Optional[str] = None
     #: The token expiration in seconds from the time of issuance.
-    #: example: 64799
     expires_in: Optional[int] = None
     #: absolute time of guest access token expiration
     expires_at: Optional[datetime] = None  #: expiration, calculated at time of guest creation

@@ -25,28 +25,21 @@ __all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineNumber', 'VirtualLineLo
 
 class VirtualLineNumber(ApiModel):
     #: Virtual Line external.  Either `external` or `extension` is mandatory.
-    #: example: +15558675313
     external: Optional[str] = None
     #: Virtual Line extension.  Either `external` or `extension` is mandatory.
-    #: example: 6101
     extension: Optional[str] = None
     #: Routing prefix of location.
-    #: example: 1234
     routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
-    #: example: 12346101
     esn: Optional[str] = None
     #: Number is Primary or Alternative Number.
-    #: example: True
     primary: Optional[bool] = None
 
 
 class VirtualLineLocation(ApiModel):
     #: ID of location associated with virtual line.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
     id: Optional[str] = None
     #: Name of location associated with virtual line.
-    #: example: Main Location Test
     name: Optional[str] = None
     #: The address of the virtual line.
     address: Optional[LocationAddress] = None
@@ -54,50 +47,36 @@ class VirtualLineLocation(ApiModel):
 
 class VirtualLine(ApiModel):
     #: A unique identifier for the virtual line.
-    #: example: Y2lzY29zcGFyazovL3VzL1ZJUlRVQUxfTElORS9iMTJhNTBiMi01N2NiLTQ0MzktYjc1MS1jZDQ4M2I4MjhmNmU=
     id: Optional[str] = None
     #: Last name for virtual line.
-    #: example: Shen
     last_name: Optional[str] = None
     #: First name for virtual line.
-    #: example: Tom
     first_name: Optional[str] = None
     #: Display name defined for a virtual line.
-    #: example: Bob Smith
     display_name: Optional[str] = None
     #: `callerIdLastName` for virtual line.
-    #: example: Shen
     caller_id_last_name: Optional[str] = None
     #: `callerIdFirstName` for virtual line.
-    #: example: Tom
     caller_id_first_name: Optional[str] = None
     #: `callerIdNumber` for virtual line.
-    #: example: +15558675313
     caller_id_number: Optional[str] = None
     #: `externalCallerIdNamePolicy` for the virtual line.
-    #: example: DIRECT_LINE
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
     #: `customExternalCallerIdName` for virtual line.
-    #: example: Tom
     custom_external_caller_id_name: Optional[str] = None
     #: Calling details of virtual line.
     number: Optional[VirtualLineNumber] = None
     #: Location details of virtual line.
     location: Optional[VirtualLineLocation] = None
     #: Number of devices assigned to a virtual line.
-    #: example: 1
     number_of_devices_assigned: Optional[int] = None
     #: Type of billing plan.
-    #: example: BCOCP1
     billing_plan: Optional[str] = None
     #: Flag to indicate a directory search.
-    #: example: True
     directory_search_enabled: Optional[bool] = None
     #: Virtual Line's announcement language.
-    #: example: 'French'
     announcement_language: Optional[str] = None
     #: Time zone defined for the virtual line.
-    #: example: Africa/Algiers
     time_zone: Optional[str] = None
     #: Calling details of virtual line.
     #: List of devices assigned to a virtual line.
@@ -106,13 +85,10 @@ class VirtualLine(ApiModel):
 
 class VirtualLineNumberPhoneNumber(ApiModel):
     #: Phone number that is assigned to a virtual line.
-    #: example: +15558675309
     direct_number: Optional[str] = None
     #: Extension that is assigned to a virtual line.
-    #: example: 5309
     extension: Optional[str] = None
     #: If `true` marks the phone number as primary.
-    #: example: True
     primary: Optional[bool] = None
 
 
@@ -122,7 +98,6 @@ class VirtualLineDevices(ApiModel):
     #: Indicates to which line a device can be assigned.
     available_endpoint_type: Optional[PrimaryOrShared] = None
     #: Maximum number of devices a virtual line can be assigned to.
-    #: example: 35
     max_device_count: Optional[int] = None
 
 

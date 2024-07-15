@@ -47,7 +47,6 @@ class ForwardingSetting(ApiModel):
     #: `Always` call forwarding is enabled or disabled.
     enabled: Optional[bool] = None
     #: Destination for "Always" call forwarding.
-    #: example: 2225551212
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
     ring_reminder_enabled: Optional[bool] = None

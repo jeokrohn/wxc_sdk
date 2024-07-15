@@ -14,36 +14,27 @@ class CallRecordingInfo(ApiModel):
     #: Details of the organization.
     organization: Optional[IdAndName] = None
     #: Whether or not the call recording is enabled.
-    #: example: True
     enabled: Optional[bool] = None
     #: A unique identifier for the vendor.
-    #: example: Y2lzY29zcGFyazovL3VzL1JFQ09SRElOR19WRU5ET1IvNTNkYzRjODctODQwOC00ODgyLTk1NzAtZGNhMmJjZGI5Mjgw
     vendor_id: Optional[str] = None
     #: A unique name for the vendor.
-    #: example: Dubber
     vendor_name: Optional[str] = None
     #: Url where can be found terms of service for the vendor.
     #:
     #: **NOTE**: This is expected to be empty for Webex Recording Platform.
-    #: example: https://www.dubber.net/terms
     terms_of_service_url: Optional[str] = None
 
 
 class CallRecordingTermsOfService(ApiModel):
     #: A unique identifier for the vendor.
-    #: example: Y2lzY29zcGFyazovL3VzL1JFQ09SRElOR19WRU5ET1IvNTNkYzRjODctODQwOC00ODgyLTk1NzAtZGNhMmJjZGI5Mjgw
     vendor_id: Optional[str] = None
     #: A unique name for the vendor.
-    #: example: Dubber
     vendor_name: Optional[str] = None
     #: Whether or not the call recording terms of service are enabled.
-    #: example: True
     terms_of_service_enabled: Optional[bool] = None
     #: Url where can be found terms of service for the vendor.
     #:
     #: **NOTE**: This is expected to be empty for Webex Recording Platform.
-    #: example: https://www.dubber.net/terms
-    #: example: https://www.dubber.net/terms
     terms_of_service_url: Optional[str] = None
 
 
@@ -60,7 +51,6 @@ class OrgComplianceAnnouncement(ApiModel):
 
 class LocationComplianceAnnouncement(OrgComplianceAnnouncement):
     #: Flag to indicate whether to use the customer level compliance announcement default settings.
-    #: example: True
     use_org_settings_enabled: Optional[bool] = None
 
 

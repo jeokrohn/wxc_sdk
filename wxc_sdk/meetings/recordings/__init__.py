@@ -66,64 +66,46 @@ class TemporaryDirectDownloadLinks(ApiModel):
 
 class Recording(ApiModel):
     #: A unique identifier for the recording.
-    #: example: 4f914b1dfe3c4d11a61730f18c0f5387
     id: Optional[str] = None
     #: Unique identifier for the recording's ended meeting instance.
-    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
     meeting_id: Optional[str] = None
     #: Unique identifier for the recording's scheduled meeting instance.
-    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
     scheduled_meeting_id: Optional[str] = None
     #: Unique identifier for the recording's meeting series.
-    #: example: f91b6edce9864428af084977b7c68291
     meeting_series_id: Optional[str] = None
     #: The recording's topic.
-    #: example: John's Meeting
     topic: Optional[str] = None
     #: The date and time recording was created in `ISO 8601
     #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. Please note that it's not the time the
     #: record button was clicked in meeting but the time the recording file was generated offline.
-    #: example: 2019-01-27T17:43:24Z
     create_time: Optional[datetime] = None
     #: The date and time recording started in `ISO 8601
     #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format. It indicates when the record button was
     #: clicked in the meeting.
-    #: example: 2019-01-27T17:40:20Z
     time_recorded: Optional[datetime] = None
     #: Site URL for the recording.
-    #: example: site4-example.webex.com
     #: Display name for the meeting host.
-    #: example: John Andersen
     host_display_name: Optional[str] = None
     #: Email address for the meeting host.
-    #: example: john.andersen@example.com
     host_email: Optional[str] = None
     #: Site URL for the recording.
-    #: example: site4-example.webex.com
     site_url: Optional[str] = None
     #: The download link for recording. This attribute is not available if **Prevent downloading** has been turned on
     #: for the recording being requested. The **Prevent downloading** option can be viewed and set by a site admin on
     #: `Control Hub
     #: <https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control
     # -Hub>`_.
-    #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
     download_url: Optional[str] = None
     #: The playback link for recording.
-    #: example: https://site4-example.webex.com/site4/ldr.php?RCID=7a8a476b29a32cd1e06dfa6c81970f19
     playback_url: Optional[str] = None
     #: The recording's password.
-    #: example: BgJep@43
     password: Optional[str] = None
-    #: example: MP4
     format: Optional[RecordingFormat] = None
     #: The service type for the recording.
-    #: example: MeetingCenter
     service_type: Optional[RecordingServiceType] = None
     #: The duration of the recording, in seconds.
-    #: example: 4472
     duration_seconds: Optional[int] = None
     #: The size of the recording file, in bytes.
-    #: example: 248023188
     size_bytes: Optional[int] = None
     #: Whether or not the recording has been shared to the current user.
     share_to_me: Optional[bool] = None

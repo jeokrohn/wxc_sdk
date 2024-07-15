@@ -94,13 +94,10 @@ class NumberListPhoneNumber(ApiModel):
     #: Indicates if a phone number is a toll-free number.
     toll_free_number: bool
     #: Indicates Telephony type for the number.
-    #: example: MOBILE_NUMBER
     included_telephony_types: Optional[TelephonyType] = None
     #: Mobile Network for the number if number is MOBILE_NUMBER.
-    #: example: mobileNetwork
     mobile_network: Optional[str] = None
     #: Routing Profile for the number if number is MOBILE_NUMBER.
-    #: example: AttRtPf
     routing_profile: Optional[str] = None
     location: IdAndName
     owner: Optional[NumberOwner] = None
@@ -356,23 +353,17 @@ class TranslationPatternConfigurationLevel(str, Enum):
 
 class AppliedServiceTranslationPattern(ApiModel):
     #: The level from which the configuration is applied.
-    #: example: ORGANIZATION
     configuration_level: Optional[TranslationPatternConfigurationLevel] = None
     #: Name given to a translation pattern.
-    #: example: TP1
     name: Optional[str] = None
     #: Matching pattern given to a translation pattern.
-    #: example: +91XXX
     matching_pattern: Optional[str] = None
     #: Replacement pattern given to a translation pattern.
-    #: example: +91234
     replacement_pattern: Optional[str] = None
     #: The original called number.
-    #: example: +91236
     matched_number: Optional[str] = None
     #: The modified number after matching against `matchingPattern` and replacing with corresponding
     #: `replacementPattern`.
-    #: example: +91234
     translated_number: Optional[str] = None
 
 
@@ -396,13 +387,10 @@ class CallInterceptDetailsPermission(str, Enum):
 
 class CallInterceptDetails(ApiModel):
     #: The level from which the configuration is applied.
-    #: example: USER
     configuration_level: Optional[ConfigurationLevel] = None
     #: The choices that indicate call intercept permissions.
-    #: example: TRANSFER
     permission: Optional[CallInterceptDetailsPermission] = None
     #: The number to which the outgoing permission by type is to be transferred.
-    #: example: +14157279300
     transfer_number: Optional[str] = None
 
 
@@ -423,45 +411,32 @@ class CallingPlanReason(str, Enum):
 
 class OutgoingCallingPlanPermissionsByType(ApiModel):
     #: The level from which the configuration is applied.
-    #: example: USER
     configuration_level: Optional[ConfigurationLevel] = None
     #: Designates the action to be taken for each call type and if transferring the call type is allowed.
-    #: example: INTERNAL_CALL
     call_type: Optional[str] = None
     #: Action to be performed on the input number that matches with the OCP.
-    #: example: ALLOW
     permission: Optional[Action] = None
     #: The number to which the outgoing permission by type is to be transferred.
-    #: example: +14157279300
     transfer_number: Optional[str] = None
     #: The reason for the result reported for non-standard OCP service.
-    #: example: FRAUD_CONTAINMENT
     reason: Optional[CallingPlanReason] = None
     #: A transfer number is present in case it gets transferred to some other number.
-    #: example: +14157279300
     number: Optional[str] = None
 
 
 class OutgoingCallingPlanPermissionsByDigitPattern(ApiModel):
     #: The level from which the configuration is applied.
-    #: example: USER
     configuration_level: Optional[ConfigurationLevel] = None
     #: Name given to a digit pattern.
-    #: example: DPattern
     name: Optional[str] = None
     #: Action to be performed on the input number that matches with the digit pattern.
-    #: example: ALLOW
     permission: Optional[Action] = None
-    #: example: +14157279300
     transfer_number: Optional[str] = None
     #: Pattern is given to a digit pattern.
-    #: example: +91!
     pattern: Optional[str] = None
     #: The reason for the result reported for non-standard OCP service.
-    #: example: FRAUD_CONTAINMENT
     reason: Optional[CallingPlanReason] = None
     #: A transfer number is present in case it gets transferred to some other number.
-    #: example: +14157279300
     number: Optional[str] = None
 
 
@@ -492,10 +467,8 @@ class TestCallRoutingResult(ApiModel):
     #: true if the call would be rejected.
     is_rejected: bool
     #: Calling line ID (CLID) configured for the calling user.
-    #: example: +12036680442
     calling_line_id: Optional[str] = Field(alias='callingLineID', default=None)
     #: Routing profile that is used to route network calls.
-    #: example: AttRtPf
     routing_profile: Optional[str] = None
     #: This data object is returned when destinationType is HOSTED_USER.
     hosted_user: Optional[HostedUserDestination] = Field(alias='hostedAgent', default=None)

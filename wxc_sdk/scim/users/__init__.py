@@ -68,10 +68,8 @@ class WebexUserMeta(ApiModel):
 
 class ManagedGroup(ApiModel):
     #: Webex Identity assigned group identifier.
-    #: example: 3936af3e-15ff-43d1-9ef5-66c569ef34f5
     group_id: Optional[str] = None
     #: Role in the target group for the user.
-    #: example: location_admin
     role: Optional[str] = None
 
 

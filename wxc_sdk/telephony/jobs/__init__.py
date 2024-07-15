@@ -460,13 +460,10 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
 
 class LineKeyTemplateAdvisoryTypes(ApiModel):
     #: Refine search by warnings for More shared appearances than shared users.
-    #: example: True
     more_shared_appearances_enabled: Optional[bool] = None
     #: Refine search by warnings for Fewer shared appearances than shared users.
-    #: example: True
     few_shared_appearances_enabled: Optional[bool] = None
     #: Refine search by warnings for More monitor appearances than monitors.
-    #: example: True
     more_monitor_appearances_enabled: Optional[bool] = None
 
 

@@ -1104,7 +1104,6 @@ class NumberOwner(ApiModel):
     #: First name of the PSTN phone number's owner
     first_name: Optional[str] = None
     #: Display name of the PSTN phone number's owner and will only be returned when the owner type is a Feature.
-    #: example: Mark Zand
     display_name: Optional[str] = None
 
 

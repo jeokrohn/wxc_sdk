@@ -218,17 +218,13 @@ class LineKeyType(str, Enum):
 
 class ProgrammableLineKey(ApiModel):
     #: An index representing a Line Key. Index starts from 1 representing the first key on the left side of the phone.
-    #: example: 2
     line_key_index: Optional[int] = None
     #: The action that would be performed when the Line Key is pressed.
-    #: example: SPEED_DIAL
     line_key_type: Optional[LineKeyType] = None
     #: This is applicable only when the lineKeyType is `SPEED_DIAL`.
-    #: example: Help Line
     line_key_label: Optional[str] = None
     #: This is applicable only when the lineKeyType is `SPEED_DIAL` and the value must be a valid Telephone Number,
     #: Ext, or SIP URI (format: user@host using A-Z,a-z,0-9,-_ .+ for user and host).
-    #: example: 5646
     line_key_value: Optional[str] = None
 
     @classmethod
@@ -247,16 +243,12 @@ class ProgrammableLineKey(ApiModel):
 
 class LineKeyTemplate(ApiModel):
     #: Unique identifier for the Line Key Template
-    #: example: Y2lzY29zcGFyazovL1VTL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS9kNDUzM2MwYi1hZGRmLTRjODUtODk0YS1hZTVkOTAyYzAyMDM=
     id: Optional[str] = None
     #: Name of the Line Key Template
-    #: example: template for 8845
     template_name: Optional[str] = None
     #: The Device Model for which the Line Key Template is applicable
-    #: example: DMS Cisco 8845
     device_model: Optional[str] = None
     #: The friendly display name used to represent the device model in Control Hub
-    #: example: Cisco 8845
     display_name: Optional[str] = Field(alias='modelDisplayName', default=None)
     #: Indicates whether user can reorder the line keys.
     user_reorder_enabled: Optional[bool] = None
@@ -290,35 +282,27 @@ class KemModuleType(str, Enum):
 
 class KemKey(ApiModel):
     #: An index representing a KEM Module. The Index starts from 1 representing the first KEM Module.
-    #: example: 1
     kem_module_index: Optional[int] = None
     #: An index representing a KEM Key. The Index starts from 1 representing the first key on the left side of the
     #: phone.
-    #: example: 1
     kem_key_index: Optional[int] = None
     #: The action that would be performed when the KEM Key is pressed.
-    #: example: SPEED_DIAL
     kem_key_type: Optional[LineKeyType] = None
     #: Applicable only when the kemKeyType is `SPEED_DIAL`.
-    #: example: Office
     kem_key_label: Optional[str] = None
     #: Applicable only when the kemKeyType is `SPEED_DIAL`. Value must be a valid Telephone Number, Ext, or SIP URI
     #: (format: `user@host` limited to `A-Z,a-z,0-9,-_ .+` for user and host).
-    #: example: 213457
     kem_key_value: Optional[str] = None
 
 
 class DeviceLayout(ApiModel):
     #: Defines the layout mode of the device, i.e. DEFAULT or CUSTOM.
-    #: example: CUSTOM
     layout_mode: Optional[LayoutMode] = None
     #: If `true`, user customization is enabled..
-    #: example: True
     user_reorder_enabled: Optional[bool] = None
     #: Contains a mapping of Line Keys and their corresponding actions.
     line_keys: Optional[list[ProgrammableLineKey]] = None
     #: Type of KEM module.
-    #: example: KEM_14_KEYS
     kem_module_type: Optional[KemModuleType] = None
     #: Contains a mapping of KEM Keys and their corresponding actions.
     kem_keys: Optional[list[KemKey]] = None

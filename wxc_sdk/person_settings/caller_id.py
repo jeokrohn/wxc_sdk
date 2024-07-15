@@ -50,42 +50,30 @@ class CallerId(ApiModel):
     #: Allowed types for the `selected` field. This field is read-only and cannot be modified.
     caller_id_types: Optional[list[CallerIdSelectedType]] = Field(alias='types', default=None)
     #: Which type of outgoing Caller ID will be used. This setting is for the number portion.
-    #: example: DIRECT_LINE
     selected: Optional[CallerIdSelectedType] = None
     #: Direct number which will be shown if `DIRECT_LINE` is selected.
-    #: example: 2025551212
     direct_number: Optional[str] = None
     #: Extension number which will be shown if `DIRECT_LINE` is selected.
-    #: example: 3456
     extension_number: Optional[str] = None
     #: Location number which will be shown if `LOCATION_NUMBER` is selected.
-    #: example: 2025551212
     location_number: Optional[str] = None
     #: Mobile number which will be shown if `MOBILE_NUMBER` is selected.
-    #: example: 2025552121
     mobile_number: Optional[str] = None
     #: Flag to indicate if the location number is toll-free number.
     toll_free_location_number: Optional[bool] = None
     #: This value must be an assigned number from the virtual line's location.
-    #: example: 2025551212
     custom_number: Optional[str] = None
     #: Person's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
-    #: example: Hakim
     first_name: Optional[str] = None
     #: Person's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
-    #: example: Gonzales
     last_name: Optional[str] = None
     #: `true` if the virtual line's identity is blocked when receiving a transferred or forwarded call.
-    #: example: True
     block_in_forward_calls_enabled: Optional[bool] = None
     #: Designates which type of External Caller Id Name policy is used. Default is `DIRECT_LINE`.
-    #: example: DIRECT_LINE
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
     #: Custom External Caller Name, which will be shown if External Caller Id Name is `OTHER`.
-    #: example: Hakim custom
     custom_external_caller_id_name: Optional[str] = None
     #: Location's caller ID. This field is read-only and cannot be modified.
-    #: example: Hakim location
     location_external_caller_id_name: Optional[str] = None
     #: To set the user's main number as additional external caller ID.
     additional_external_caller_id_direct_line_enabled: Optional[bool] = None

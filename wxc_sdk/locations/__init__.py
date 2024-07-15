@@ -21,22 +21,16 @@ __all__ = ['LocationAddress', 'Location', 'Floor', 'LocationsApi']
 
 class LocationAddress(ApiModel):
     #: Address 1 of the location.
-    #: example: 771 Alder Drive
     address1: Optional[str] = None
     #: Address 2 of the location.
-    #: example: Cisco Site 5
     address2: Optional[str] = None
     #: City of the location.
-    #: example: Milpitas
     city: Optional[str] = None
     #: State code of the location.
-    #: example: CA
     state: Optional[str] = None
     #: Postal code of the location.
-    #: example: 95035
     postal_code: Optional[str] = None
     #: ISO-3166 2-Letter country code of the location.
-    #: example: US
     country: Optional[str] = None
 
 
@@ -95,13 +89,10 @@ class Floor(ApiModel):
     #: Unique identifier for the floor.
     id: Optional[str] = None
     #: Unique identifier for the location.
-    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4NjczZDIwLWM0M2EtNDQ5Ni1iYWIxLTNiMjhhZGJjMjViYQ
     location_id: Optional[str] = None
     #: The floor number.
-    #: example: -1
     floor_number: Optional[int] = None
     #: The floor display name.
-    #: example: The basement
     display_name: Optional[str] = None
 
     def update(self) -> dict:

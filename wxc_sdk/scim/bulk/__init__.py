@@ -20,17 +20,13 @@ class BulkMethod(str, Enum):
 
 class BulkOperation(ApiModel):
     #: The HTTP method of the current operation.
-    #: example: PATCH
     method: Optional[BulkMethod] = None
     #: The resource's relative path. If the method is POST, the value must specify a resource type endpoint, for
     #: example `/Users` or `/Groups`. All other method values must specify the path to a specific resource.
-    #: example: /Users/2819c223-7f76-453a-919d-413861904646
     path: Optional[str] = None
     #: The Resource JSON data as it appears for a single POST or PATCH resource operation.
-    #: example: JSON text
     data: Optional[dict] = None
     #: The transient identifier of a newly created resource, unique within a bulk request and created by the client.
-    #: example: ytrewq
     bulk_id: Optional[str] = None
 
 

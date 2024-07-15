@@ -99,7 +99,6 @@ class WorkspaceSupportedDevices(str, Enum):
 
 class WorkspaceCallingHybridCalling(ApiModel):
     #: End user email address in Cisco Unified CM.
-    #: example: workspace@example.com
     email_address: Optional[str] = None
 
 
