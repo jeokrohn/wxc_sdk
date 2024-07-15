@@ -623,6 +623,24 @@ The method name is a link to the method documentation.
         Read the List of Call Park Extensions
    * - :meth:`api.telephony.callpark_extension.update <wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.update>`
         Update the designated Call Park Extension
+   * - :meth:`api.telephony.callqueue.by_name <wxc_sdk.telephony.callqueue.CallQueueApi.by_name>`
+        Get queue info by name
+   * - :meth:`api.telephony.callqueue.create <wxc_sdk.telephony.callqueue.CallQueueApi.create>`
+        Create a Call Queue
+   * - :meth:`api.telephony.callqueue.delete_queue <wxc_sdk.telephony.callqueue.CallQueueApi.delete_queue>`
+        Delete a Call Queue
+   * - :meth:`api.telephony.callqueue.details <wxc_sdk.telephony.callqueue.CallQueueApi.details>`
+        Get Details for a Call Queue
+   * - :meth:`api.telephony.callqueue.get_call_queue_settings <wxc_sdk.telephony.callqueue.CallQueueApi.get_call_queue_settings>`
+        Get Call Queue Settings
+   * - :meth:`api.telephony.callqueue.list <wxc_sdk.telephony.callqueue.CallQueueApi.list>`
+        Read the List of Call Queues
+   * - :meth:`api.telephony.callqueue.update <wxc_sdk.telephony.callqueue.CallQueueApi.update>`
+        Update a Call Queue
+   * - :meth:`api.telephony.callqueue.update_call_queue_settings <wxc_sdk.telephony.callqueue.CallQueueApi.update_call_queue_settings>`
+        Update Call Queue Settings
+   * - :meth:`api.telephony.callqueue.update_or_create <wxc_sdk.telephony.callqueue.CallQueueApi.update_or_create>`
+        Get JSON for update or create
    * - :meth:`api.telephony.calls.answer <wxc_sdk.telephony.calls.CallsApi.answer>`
         Answer an incoming call
    * - :meth:`api.telephony.calls.barge_in <wxc_sdk.telephony.calls.CallsApi.barge_in>`

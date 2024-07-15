@@ -8,6 +8,7 @@ from .announcement import AnnouncementApi
 from .policies import CQPolicyApi
 from ..forwarding import ForwardingApi, FeatureSelector
 from ..hg_and_cq import HGandCQ, Policy, Agent
+from ...api_child import ApiChild
 from ...base import SafeEnum as Enum
 from ...base import to_camel, ApiModel
 from ...common import RingPattern, Greeting, AnnAudioFile, IdAndName
@@ -382,8 +383,9 @@ class CallQueueSettings(ApiModel):
     #: Enable this setting to change the status of an agent to unavailable in case of bounced calls.
     force_agent_unavailable_on_bounced_enabled: Optional[bool] = None
 
+
 @dataclass(init=False)
-class CallQueueApi:
+class CallQueueApi(ApiChild, base=''):
     """
     Call Queue APÍ
     """
@@ -392,7 +394,7 @@ class CallQueueApi:
     policy: CQPolicyApi
 
     def __init__(self, session: RestSession):
-        self._session = session
+        super().__init__(session=session)
         self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AnnouncementApi(session=session)
         self.policy = CQPolicyApi(session=session)
@@ -407,9 +409,9 @@ class CallQueueApi:
         :return:
         """
         if location_id is None:
-            return self._session.ep('telephony/config/queues')
+            return self.ep('telephony/config/queues')
         else:
-            ep = self._session.ep(f'telephony/config/locations/{location_id}/queues')
+            ep = self.ep(f'telephony/config/locations/{location_id}/queues')
             if queue_id:
                 ep = f'{ep}/{queue_id}'
             return ep
@@ -480,7 +482,7 @@ class CallQueueApi:
                       if i and v is not None and k != 'params')
         url = self._endpoint()
         # noinspection PyTypeChecker
-        return self._session.follow_pagination(url=url, model=CallQueue, params=params)
+        return self.session.follow_pagination(url=url, model=CallQueue, params=params)
 
     def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
         """
@@ -535,7 +537,7 @@ class CallQueueApi:
         params = org_id and {'orgId': org_id} or {}
         cq_data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = self._session.rest_post(url, data=cq_data, params=params)
+        data = self.post(url, data=cq_data, params=params)
         return data['id']
 
     def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
@@ -561,7 +563,7 @@ class CallQueueApi:
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = org_id and {'orgId': org_id} or None
-        self._session.rest_delete(url=url, params=params)
+        self.delete(url=url, params=params)
 
     def details(self, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
         """
@@ -588,7 +590,7 @@ class CallQueueApi:
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = {'orgId': org_id} if org_id is not None else {}
-        data = self._session.rest_get(url, params=params)
+        data = self.get(url, params=params)
         result = CallQueue.model_validate(data)
         result.location_id = location_id
         # noinspection PyTypeChecker
@@ -664,7 +666,7 @@ class CallQueueApi:
             raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
-        self._session.rest_put(url=url, data=cq_data, params=params)
+        self.put(url=url, data=cq_data, params=params)
 
     def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettings:
         """
@@ -685,8 +687,8 @@ class CallQueueApi:
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self._session.ep('telephony/config/queues/settings')
-        data = self._session.get(url, params=params)
+        url = self.ep('telephony/config/queues/settings')
+        data = self.get(url, params=params)
         r = CallQueueSettings.model_validate(data)
         return r
 
@@ -711,5 +713,5 @@ class CallQueueApi:
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self._session.ep('telephony/config/queues/settings')
-        self._session.put(url, params=params, json=body)
+        url = self.ep('telephony/config/queues/settings')
+        self.put(url, params=params, json=body)

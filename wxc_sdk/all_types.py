@@ -129,8 +129,8 @@ from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallP
     LocationCallParkSettings, RecallHuntGroup
 from wxc_sdk.telephony.callpickup import CallPickup, PickupNotificationType
 from wxc_sdk.telephony.callqueue import AudioSource, CQRoutingType, CallBounce, CallQueue, CallQueueCallPolicies, \
-    ComfortMessageBypass, ComfortMessageSetting, DistinctiveRing, MohMessageSetting, OverflowAction, \
-    OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, WelcomeMessageSetting
+    CallQueueSettings, ComfortMessageBypass, ComfortMessageSetting, DistinctiveRing, MohMessageSetting, \
+    OverflowAction, OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, WelcomeMessageSetting
 from wxc_sdk.telephony.callqueue.announcement import Announcement
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward, \
     HolidayService, NightService, ScheduleLevel, StrandedCalls, StrandedCallsAction
@@ -214,11 +214,11 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'CallForwardingPerson', 'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers',
            'CallInfo', 'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallPark', 'CallParkExtension',
            'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueCallPolicies',
-           'CallRecordingInfo', 'CallRecordingSetting', 'CallRecordingTermsOfService', 'CallSourceInfo',
-           'CallSourceType', 'CallState', 'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType',
-           'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingLineIdPolicy', 'CallingPermissions',
-           'CallingPlanReason', 'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption',
-           'CnameRecord', 'CoHost', 'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting',
+           'CallQueueSettings', 'CallRecordingInfo', 'CallRecordingSetting', 'CallRecordingTermsOfService',
+           'CallSourceInfo', 'CallSourceType', 'CallState', 'CallType', 'CallTypePermission', 'CallerId',
+           'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingLineIdPolicy',
+           'CallingPermissions', 'CallingPlanReason', 'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject',
+           'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting',
            'CommonDeviceCustomization', 'ComplianceEvent', 'Component', 'ConferenceDetails', 'ConferenceParticipant',
            'ConferenceState', 'ConferenceTypeEnum', 'ConfigurationLevel', 'ConnectionStatus', 'ConvergedRecording',
            'ConvergedRecordingMeta', 'ConvergedRecordingWithDirectDownloadLinks', 'CreateInviteesItem',

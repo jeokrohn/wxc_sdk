@@ -11,7 +11,7 @@ from typing import ClassVar
 from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
 from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
 from wxc_sdk.all_types import *
-from wxc_sdk.telephony.callqueue import CQRoutingType
+from wxc_sdk.telephony.callqueue import CQRoutingType, CallQueueSettings
 from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, ScheduleLevel, NightService, \
     StrandedCalls, StrandedCallsAction, ForcedForward
 from wxc_sdk.telephony.hg_and_cq import CallingLineIdPolicy
@@ -51,7 +51,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
     Test call queue creation
     """
 
-    #@skip('TODO: to create a CQ we need a TN in the location so that we can properly set the caller ID for the CQ')
+    # @skip('TODO: to create a CQ we need a TN in the location so that we can properly set the caller ID for the CQ')
     def test_001_create_simple(self):
         """
         create a simple call queue
@@ -783,8 +783,28 @@ class TestCallQueuePolicies(TestWithQueues):
             self.assertEqual(before.transfer_phone_number or update.transfer_phone_number,
                              restored.transfer_phone_number)
 
+
 class TestOrgSettings(TestCaseWithLog):
     def test_read(self):
+        """
+        Read org level call queue settings
+        """
         settings = self.api.telephony.callqueue.get_call_queue_settings()
-        print(json.dumps(json.loads(settings.model_dump(mode='json', by_alias=True)), indent=2))
-        foo =1
+        print(json.dumps(settings.model_dump(mode='json', by_alias=True), indent=2))
+
+    def test_update(self):
+        """
+        Updating org level call queue settings
+        """
+        before = self.api.telephony.callqueue.get_call_queue_settings()
+        update = CallQueueSettings(
+            maintain_queue_position_for_sim_ring_enabled=not before.maintain_queue_position_for_sim_ring_enabled,
+            force_agent_unavailable_on_bounced_enabled=not before.force_agent_unavailable_on_bounced_enabled)
+        self.api.telephony.callqueue.update_call_queue_settings(settings=update)
+        try:
+            after = self.api.telephony.callqueue.get_call_queue_settings()
+            self.assertEqual(update, after)
+        finally:
+            self.api.telephony.callqueue.update_call_queue_settings(settings=before)
+            after = self.api.telephony.callqueue.get_call_queue_settings()
+            self.assertEqual(before, after)

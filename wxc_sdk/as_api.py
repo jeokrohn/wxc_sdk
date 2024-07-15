@@ -643,18 +643,13 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         The recordings can belong to an org user, a virtual line, or a workspace, but the destination user should only
         be a valid org user.
 
-        * "reassignOwnerEmail" is always required. It must be provided in every case.
+        * If only the 'ownerEmail' is provided, it indicates that all recordings owned by the "ownerEmail" will be
+        reassigned.
 
-        * "ownerEmail" and "recordingIds" cannot both be empty. At least one of them must be provided.
+        * If only the 'recordingIds' are provided, it indicates that these 'recordingIds' will be reassigned.
 
-        * If "recordingIds" is empty but "ownerEmail" is provided, it means that all recordings owned by the
-          "ownerEmail" will be reassigned to "reassignOwnerEmail."
-
-        * If "recordingIds" is provided and "ownerEmail" is also provided, only the recordings specified by
-          "recordingIds" that are owned by "ownerEmail" will be reassigned to "reassignOwnerEmail."
-
-        * If "ownerEmail" is empty but "recordingIds" is provided, the recordings specified by "recordingIds" will be
-          reassigned to "reassignOwnerEmail," regardless of the current owner.
+        * If both the 'ownerEmail' and 'recordingIds' are provided, only the recordingIds belonging to the provided
+        'ownerEmail' will be reassigned.
 
         The `spark-admin:recordings_write` scope is required to reassign recordings.
 
@@ -12025,7 +12020,7 @@ class AsCQPolicyApi:
         await self._session.rest_put(url=url, params=params, data=update.model_dump_json())
 
 
-class AsCallQueueApi:
+class AsCallQueueApi(AsApiChild, base=''):
     """
     Call Queue APÍ
     """
@@ -12034,7 +12029,7 @@ class AsCallQueueApi:
     policy: AsCQPolicyApi
 
     def __init__(self, session: AsRestSession):
-        self._session = session
+        super().__init__(session=session)
         self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AsAnnouncementApi(session=session)
         self.policy = AsCQPolicyApi(session=session)
@@ -12049,9 +12044,9 @@ class AsCallQueueApi:
         :return:
         """
         if location_id is None:
-            return self._session.ep('telephony/config/queues')
+            return self.ep('telephony/config/queues')
         else:
-            ep = self._session.ep(f'telephony/config/locations/{location_id}/queues')
+            ep = self.ep(f'telephony/config/locations/{location_id}/queues')
             if queue_id:
                 ep = f'{ep}/{queue_id}'
             return ep
@@ -12122,7 +12117,7 @@ class AsCallQueueApi:
                       if i and v is not None and k != 'params')
         url = self._endpoint()
         # noinspection PyTypeChecker
-        return self._session.follow_pagination(url=url, model=CallQueue, params=params)
+        return self.session.follow_pagination(url=url, model=CallQueue, params=params)
 
     async def list(self, location_id: str = None, name: str = None, phone_number: str = None, department_id: str = None,
              department_name: str = None, org_id: str = None, **params) -> List[CallQueue]:
@@ -12160,7 +12155,7 @@ class AsCallQueueApi:
                       if i and v is not None and k != 'params')
         url = self._endpoint()
         # noinspection PyTypeChecker
-        return [o async for o in self._session.follow_pagination(url=url, model=CallQueue, params=params)]
+        return [o async for o in self.session.follow_pagination(url=url, model=CallQueue, params=params)]
 
     async def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
         """
@@ -12215,7 +12210,7 @@ class AsCallQueueApi:
         params = org_id and {'orgId': org_id} or {}
         cq_data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = await self._session.rest_post(url, data=cq_data, params=params)
+        data = await self.post(url, data=cq_data, params=params)
         return data['id']
 
     async def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
@@ -12241,7 +12236,7 @@ class AsCallQueueApi:
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = org_id and {'orgId': org_id} or None
-        await self._session.rest_delete(url=url, params=params)
+        await self.delete(url=url, params=params)
 
     async def details(self, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
         """
@@ -12268,7 +12263,7 @@ class AsCallQueueApi:
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = {'orgId': org_id} if org_id is not None else {}
-        data = await self._session.rest_get(url, params=params)
+        data = await self.get(url, params=params)
         result = CallQueue.model_validate(data)
         result.location_id = location_id
         # noinspection PyTypeChecker
@@ -12344,7 +12339,55 @@ class AsCallQueueApi:
             raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
-        await self._session.rest_put(url=url, data=cq_data, params=params)
+        await self.put(url=url, data=cq_data, params=params)
+
+    async def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettings:
+        """
+        Get Call Queue Settings
+
+        Retrieve Call Queue Settings for a specific organization.
+
+        Call Queue Settings are used to enable the Simultaneous Ringing algorithm that maintains queue positions for
+        customers.
+
+        Retrieving Call Queue Settings requires a full, user, or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param org_id: Call Queue Settings for this organization.
+        :type org_id: str
+        :rtype: :class:`CallQueueSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('telephony/config/queues/settings')
+        data = await self.get(url, params=params)
+        r = CallQueueSettings.model_validate(data)
+        return r
+
+    async def update_call_queue_settings(self, settings: CallQueueSettings, org_id: str = None):
+        """
+        Update Call Queue Settings
+
+        Update Call Queue Settings for a specific organization.
+
+        Call Queue Settings are used to enable the Simultaneous Ringing algorithm that maintains queue positions for
+        customers.
+
+        Updating Call Queue Settings requires a full or user administrator auth token with a scope
+        `spark-admin:telephony_config_write`.
+
+        :param settings: Call Queue Settings for this organization.
+        :param org_id: update Call Queue Settings for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep('telephony/config/queues/settings')
+        await self.put(url, params=params, json=body)
 
 
 class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
