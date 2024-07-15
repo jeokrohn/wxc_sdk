@@ -63,8 +63,7 @@ from wxc_sdk.messages import AdaptiveCard, AdaptiveCardAction, AdaptiveCardBody,
 from wxc_sdk.organizations import Organization
 from wxc_sdk.people import PeopleStatus, Person, PersonAddress, PersonType, PhoneNumber, PhoneNumberType, \
     SipAddress, SipType
-from wxc_sdk.person_settings import DeviceActivationState, DeviceOwner, Hoteling, PersonDevicesResponse, \
-    TelephonyDevice
+from wxc_sdk.person_settings import DeviceActivationState, DeviceList, DeviceOwner, Hoteling, TelephonyDevice
 from wxc_sdk.person_settings.agent_caller_id import AgentCallerId, AvailableCallerIdType
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
@@ -212,7 +211,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'DefaultAudioType', 'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType', 'Device',
            'DeviceActivationState', 'DeviceConfiguration', 'DeviceConfigurationOperation',
            'DeviceConfigurationResponse', 'DeviceConfigurationSource', 'DeviceConfigurationSourceEditability',
-           'DeviceConfigurationSources', 'DeviceCustomization', 'DeviceCustomizations', 'DeviceLayout',
+           'DeviceConfigurationSources', 'DeviceCustomization', 'DeviceCustomizations', 'DeviceLayout', 'DeviceList',
            'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner',
            'DevicePlatform', 'DeviceSettings', 'DeviceSettingsConfiguration', 'DeviceStatus', 'DeviceType',
            'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse',
@@ -251,10 +250,10 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'OwnerType', 'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst',
            'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody', 'PatchMeetingResponse',
            'PatchUserOperation', 'PatchUserOperationOp', 'PatternAction', 'PatternAndAction', 'PbxUserDestination',
-           'PeopleStatus', 'Person', 'PersonAddress', 'PersonDevicesResponse', 'PersonForwardingSetting',
-           'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType',
-           'PersonalMeetingRoom', 'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber',
-           'PhoneNumberType', 'PhotoObject', 'PhotoObjectType', 'PickupNotificationType', 'PinLength', 'Policy',
+           'PeopleStatus', 'Person', 'PersonAddress', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
+           'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalMeetingRoom',
+           'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType',
+           'PhotoObject', 'PhotoObjectType', 'PickupNotificationType', 'PinLength', 'Policy',
            'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse', 'PrimaryOrShared',
            'Privacy', 'ProductType', 'ProgrammableLineKey', 'PskObject', 'PstnNumberDestination',
            'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',

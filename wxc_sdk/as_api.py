@@ -5888,17 +5888,19 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
-        alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
-                      ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
-                      ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
-                      ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
-                      ('people', 'callBridge'): ('telephony/config/people', '/features/'),
-                      ('people', 'agent'): ('telephony/config/people', '/'),
-                      ('people', 'musicOnHold'): ('telephony/config/people', '/'),
-                      }
+        alternates = {
+            ('workspaces', 'bargeIn'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
+            ('people', 'agent'): ('telephony/config/people', '/'),
+            ('people', 'callBridge'): ('telephony/config/people', '/features/'),
+            ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
+            ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
+            ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
+            ('people', 'musicOnHold'): ('telephony/config/people', '/'),
+        }
         if selector == 'people' and self.feature == 'voicemail' and path == 'passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
@@ -5910,7 +5912,7 @@ class AsAgentCallerIdApi(AsPersonSettingsApiChild):
     """
     API to manage agent caller id settings
 
-    Also used for virtual lines, workspaces
+    Also used for virtual lines
     """
     feature = 'agent'
 
@@ -6040,7 +6042,7 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
 
 class AsBargeApi(AsPersonSettingsApiChild):
     """
-    API for barge settings; also used for virtual lines
+    API for barge settings; also used for virtual lines and workspaces
     """
 
     feature = 'bargeIn'
@@ -8414,7 +8416,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         await self.post(url, params=params)
 
-    async def devices(self, person_id: str, org_id: str = None) -> PersonDevicesResponse:
+    async def devices(self, person_id: str, org_id: str = None) -> DeviceList:
         """
         Get all devices for a person.
 
@@ -8425,12 +8427,12 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         :param org_id: organization that person belongs to
         :type org_id: str
         :return: device info for user
-        :rtype: PersonDevicesResponse
+        :rtype: DeviceList
         """
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = await self.get(url=url, params=params)
-        return PersonDevicesResponse.model_validate(data)
+        return DeviceList.model_validate(data)
 
 
 class AsReportsApi(AsApiChild, base='devices'):
@@ -18766,6 +18768,25 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/devices')
         return [o async for o in self.session.follow_pagination(url=url, model=TelephonyDevice, params=params, item_key='devices')]
 
+    async def list_and_counts(self, workspace_id: str, org_id: str = None) -> DeviceList:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/devices')
+        data = await self.get(url=url, params=params)
+        return DeviceList.model_validate(data)
+
     async def modify_hoteling(self, workspace_id: str, hoteling: Hoteling, org_id: str = None):
         """
         Modify devices for a workspace.
@@ -18779,8 +18800,7 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         :param org_id: Organization to which the workspace belongs.
         :type org_id: str
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace
-        -devices
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace-devices
         """
         params = {}
         if org_id is not None:
@@ -18830,6 +18850,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     this class are instances of the respective user settings APIs. When calling endpoints of these APIs workspace IDs
     need to be passed to the ``person_id`` parameter of the called function.
     """
+    barge: AsBargeApi
     call_bridge: AsCallBridgeApi
     call_intercept: AsCallInterceptApi
     call_waiting: AsCallWaitingApi
@@ -18844,6 +18865,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.barge = AsBargeApi(session=session, selector=ApiSelector.workspace)
         self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.workspace)
         self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.workspace)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.workspace)

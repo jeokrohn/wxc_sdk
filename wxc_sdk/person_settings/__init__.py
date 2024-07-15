@@ -37,7 +37,7 @@ from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 
 __all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'Hoteling', 'TelephonyDevice',
-           'PersonDevicesResponse']
+           'DeviceList']
 
 
 # TODO: UC profile
@@ -100,11 +100,13 @@ class TelephonyDevice(ApiModel):
     location: Optional[IdAndName] = None
 
 
-class PersonDevicesResponse(ApiModel):
+class DeviceList(ApiModel):
     #: Array of devices available to person.
     devices: list[TelephonyDevice]
     #: Maximum number of devices a person can be assigned to.
     max_device_count: int
+    #: Maximum number of devices a person can own.
+    max_owned_device_count: Optional[int] = None
 
 
 @dataclass(init=False)
@@ -211,7 +213,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         self.post(url, params=params)
 
-    def devices(self, person_id: str, org_id: str = None) -> PersonDevicesResponse:
+    def devices(self, person_id: str, org_id: str = None) -> DeviceList:
         """
         Get all devices for a person.
 
@@ -222,9 +224,9 @@ class PersonSettingsApi(ApiChild, base='people'):
         :param org_id: organization that person belongs to
         :type org_id: str
         :return: device info for user
-        :rtype: PersonDevicesResponse
+        :rtype: DeviceList
         """
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = self.get(url=url, params=params)
-        return PersonDevicesResponse.model_validate(data)
+        return DeviceList.model_validate(data)

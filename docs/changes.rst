@@ -11,6 +11,7 @@ Release history
 - feat: privacy API for virtual lines: :attr:`api.telephony.virtual_lines.privacy <wxc_sdk.telephony.virtual_line.VirtualLinesApi.privacy>`
 - feat: privacy API for workspaces: :attr:`api.workspace_settings.privacy <wxc_sdk.workspace_settings.WorkspaceSettingsApi.privacy>`
 - feat: barge API for workspaces: :attr:`api.workspace_settings.barge <wxc_sdk.workspace_settings.WorkspaceSettingsApi.barge>`
+- feat: new :meth:`api.workspace_settings.devices.list_and_counts <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list_and_counts>`
 
 1.19.0
 ------
