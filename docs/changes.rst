@@ -12,6 +12,7 @@ Release history
     * :meth:`api.telephony.callqueue.get_call_queue_settings <wxc_sdk.telephony.callqueue.CallQueueApi.get_call_queue_settings>`
     * :meth:`api.telephony.callqueue.update_call_queue_settings <wxc_sdk.telephony.callqueue.CallQueueApi.update_call_queue_settings>`
 - fix: call queue API missing from method reference
+- feat: new API: :attr:`api.telephony.api.telephony.supervisors <wxc_sdk.telephony.TelephonyApi.supervisors>`
 
 1.20.0
 ------

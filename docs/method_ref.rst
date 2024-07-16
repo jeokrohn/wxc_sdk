@@ -1113,6 +1113,22 @@ The method name is a link to the method documentation.
         List of Schedules for a Person or location
    * - :meth:`api.telephony.schedules.update <wxc_sdk.common.schedules.ScheduleApi.update>`
         Update a Schedule
+   * - :meth:`api.telephony.supervisors.assign_un_assign_agents <wxc_sdk.telephony.supervisor.SupervisorApi.assign_un_assign_agents>`
+        Assign/Un-assign Agents to Supervisor
+   * - :meth:`api.telephony.supervisors.available_agents <wxc_sdk.telephony.supervisor.SupervisorApi.available_agents>`
+        List Available Agents
+   * - :meth:`api.telephony.supervisors.available_supervisors <wxc_sdk.telephony.supervisor.SupervisorApi.available_supervisors>`
+        List Available Supervisors
+   * - :meth:`api.telephony.supervisors.create <wxc_sdk.telephony.supervisor.SupervisorApi.create>`
+        Create a Supervisor
+   * - :meth:`api.telephony.supervisors.delete <wxc_sdk.telephony.supervisor.SupervisorApi.delete>`
+        Delete A Supervisor
+   * - :meth:`api.telephony.supervisors.delete_bulk <wxc_sdk.telephony.supervisor.SupervisorApi.delete_bulk>`
+        Delete Bulk supervisors
+   * - :meth:`api.telephony.supervisors.details <wxc_sdk.telephony.supervisor.SupervisorApi.details>`
+        GET Supervisor Details
+   * - :meth:`api.telephony.supervisors.list <wxc_sdk.telephony.supervisor.SupervisorApi.list>`
+        Get List of Supervisors
    * - :meth:`api.telephony.virtual_lines.assigned_devices <wxc_sdk.telephony.virtual_line.VirtualLinesApi.assigned_devices>`
         Get List of Devices assigned for a Virtual Line
    * - :meth:`api.telephony.virtual_lines.create <wxc_sdk.telephony.virtual_line.VirtualLinesApi.create>`
