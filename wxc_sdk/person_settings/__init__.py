@@ -7,6 +7,7 @@ from typing import Optional
 from pydantic import Field
 
 from .agent_caller_id import AgentCallerIdApi
+from .app_shared_line import AppSharedLineApi
 from .appservices import AppServicesApi
 from .available_numbers import AvailableNumbersApi
 from .barge import BargeApi
@@ -118,6 +119,7 @@ class PersonSettingsApi(ApiChild, base='people'):
 
     #: agent caller id Api
     agent_caller_id: AgentCallerIdApi
+    app_shared_line: AppSharedLineApi
     #: Person's Application Services Settings
     appservices: AppServicesApi
     #: Available numbers for a person
@@ -170,6 +172,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session)
+        self.app_shared_line = AppSharedLineApi(session=session)
         self.appservices = AppServicesApi(session=session)
         self.available_numbers = AvailableNumbersApi(session=session)
         self.barge = BargeApi(session=session)

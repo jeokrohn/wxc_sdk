@@ -13,6 +13,7 @@ Submodules
    :maxdepth: 4
 
    wxc_sdk.person_settings.agent_caller_id
+   wxc_sdk.person_settings.app_shared_line
    wxc_sdk.person_settings.appservices
    wxc_sdk.person_settings.available_numbers
    wxc_sdk.person_settings.barge

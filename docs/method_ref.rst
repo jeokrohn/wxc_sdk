@@ -257,6 +257,14 @@ The method name is a link to the method documentation.
         Modify Agent's Caller ID Information
    * - :meth:`api.person_settings.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
         Retrieve Agent's Caller ID Information
+   * - :meth:`api.person_settings.app_shared_line.f_ep <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.f_ep>`
+        :meta private:
+   * - :meth:`api.person_settings.app_shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
+        Get Shared-Line Appearance Members
+   * - :meth:`api.person_settings.app_shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>`
+        Search Shared-Line Appearance Members
+   * - :meth:`api.person_settings.app_shared_line.update_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.update_members>`
+        Put Shared-Line Appearance Members
    * - :meth:`api.person_settings.appservices.configure <wxc_sdk.person_settings.appservices.AppServicesApi.configure>`
         Modify a Person's Application Services Settings
    * - :meth:`api.person_settings.appservices.read <wxc_sdk.person_settings.appservices.AppServicesApi.read>`
