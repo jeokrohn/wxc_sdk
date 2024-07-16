@@ -18,6 +18,9 @@ Release history
   * :meth:`api.person_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
   * :meth:`api.person_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
 - feat: push to talk API for virtual lines: :attr:`api.telephony.virtual_lines.push_to_talk <wxc_sdk.telephony.virtual_line.VirtualLinesApi.push_to_talk>`
+- feat: available numbers API for users: :attr:`api.person_settings.available_numbers <wxc_sdk.person_settings.PersonSettingsApi.available_numbers>`
+- feat: available numbers API for virtual lines: :attr:`api.telephony.virtual_lines.available_numbers <wxc_sdk.telephony.virtual_line.VirtualLinesApi.available_numbers>`
+- feat: available numbers API for workspaces: :attr:`api.workspace_settings.available_numbers <wxc_sdk.workspace_settings.WorkspaceSettingsApi.available_numbers>`
 
 1.19.0
 ------

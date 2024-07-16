@@ -261,6 +261,22 @@ The method name is a link to the method documentation.
         Modify a Person's Application Services Settings
    * - :meth:`api.person_settings.appservices.read <wxc_sdk.person_settings.appservices.AppServicesApi.read>`
         Retrieve a Person's Application Services Settings
+   * - :meth:`api.person_settings.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
+        Get Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`
+        Get Call Forward Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.call_intercept <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_intercept>`
+        Get Call Intercept Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
+        Get ECBN Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
+        Get endpoint URL
+   * - :meth:`api.person_settings.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
+        Get Fax Message Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
+        Get Person Primary Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.secondary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.secondary>`
+        Get Person Secondary Available Phone Numbers
    * - :meth:`api.person_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
         Configure Barge In Settings
    * - :meth:`api.person_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
@@ -1035,6 +1051,22 @@ The method name is a link to the method documentation.
         Modify Agent's Caller ID Information
    * - :meth:`api.telephony.virtual_lines.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
         Retrieve Agent's Caller ID Information
+   * - :meth:`api.telephony.virtual_lines.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
+        Get Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`
+        Get Call Forward Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.call_intercept <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_intercept>`
+        Get Call Intercept Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
+        Get ECBN Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
+        Get endpoint URL
+   * - :meth:`api.telephony.virtual_lines.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
+        Get Fax Message Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
+        Get Person Primary Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.secondary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.secondary>`
+        Get Person Secondary Available Phone Numbers
    * - :meth:`api.telephony.virtual_lines.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
         Configure Barge In Settings
    * - :meth:`api.telephony.virtual_lines.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
@@ -1189,6 +1221,22 @@ The method name is a link to the method documentation.
         Get Personalization Task
    * - :meth:`api.workspace_personalization.personalize_a_workspace <wxc_sdk.workspace_personalization.WorkspacePersonalizationApi.personalize_a_workspace>`
         Personalize a Workspace
+   * - :meth:`api.workspace_settings.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
+        Get Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`
+        Get Call Forward Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.call_intercept <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_intercept>`
+        Get Call Intercept Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
+        Get ECBN Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
+        Get endpoint URL
+   * - :meth:`api.workspace_settings.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
+        Get Fax Message Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
+        Get Person Primary Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.secondary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.secondary>`
+        Get Person Secondary Available Phone Numbers
    * - :meth:`api.workspace_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
         Configure Barge In Settings
    * - :meth:`api.workspace_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`

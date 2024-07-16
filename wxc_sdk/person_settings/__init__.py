@@ -8,6 +8,7 @@ from pydantic import Field
 
 from .agent_caller_id import AgentCallerIdApi
 from .appservices import AppServicesApi
+from .available_numbers import AvailableNumbersApi
 from .barge import BargeApi
 from .call_intercept import CallInterceptApi
 from .call_recording import CallRecordingApi
@@ -119,6 +120,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     agent_caller_id: AgentCallerIdApi
     #: Person's Application Services Settings
     appservices: AppServicesApi
+    #: Available numbers for a person
+    available_numbers: AvailableNumbersApi
     #: Barge In Settings for a Person
     barge: BargeApi
     #: Do Not Disturb Settings for a Person
@@ -168,6 +171,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session)
         self.appservices = AppServicesApi(session=session)
+        self.available_numbers = AvailableNumbersApi(session=session)
         self.barge = BargeApi(session=session)
         self.dnd = DndApi(session=session)
         self.call_bridge = CallBridgeApi(session=session)

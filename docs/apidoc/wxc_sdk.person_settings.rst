@@ -14,6 +14,7 @@ Submodules
 
    wxc_sdk.person_settings.agent_caller_id
    wxc_sdk.person_settings.appservices
+   wxc_sdk.person_settings.available_numbers
    wxc_sdk.person_settings.barge
    wxc_sdk.person_settings.call_intercept
    wxc_sdk.person_settings.call_recording
