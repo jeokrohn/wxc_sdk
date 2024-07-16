@@ -1109,6 +1109,10 @@ The method name is a link to the method documentation.
         Configure an entity's Privacy Settings
    * - :meth:`api.telephony.virtual_lines.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
         Get Privacy Settings for an entity
+   * - :meth:`api.telephony.virtual_lines.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
+        Configure Push-to-Talk Settings for a Person
+   * - :meth:`api.telephony.virtual_lines.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
+        Read Push-to-Talk Settings for a Person
    * - :meth:`api.telephony.virtual_lines.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
         Configure Voicemail Settings for a Person
    * - :meth:`api.telephony.virtual_lines.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`

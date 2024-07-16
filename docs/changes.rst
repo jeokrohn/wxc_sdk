@@ -13,6 +13,11 @@ Release history
 - feat: barge API for workspaces: :attr:`api.workspace_settings.barge <wxc_sdk.workspace_settings.WorkspaceSettingsApi.barge>`
 - feat: new :meth:`api.workspace_settings.devices.list_and_counts <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list_and_counts>`
 - feat: barge API for virtual lines: :attr:`api.telephony.virtual_lines.barge <wxc_sdk.telephony.virtual_line.VirtualLinesApi.barge>`
+- break: consistently use entity_id instead of person_id in push to talk API
+
+  * :meth:`api.person_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
+  * :meth:`api.person_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
+- feat: push to talk API for virtual lines: :attr:`api.telephony.virtual_lines.push_to_talk <wxc_sdk.telephony.virtual_line.VirtualLinesApi.push_to_talk>`
 
 1.19.0
 ------

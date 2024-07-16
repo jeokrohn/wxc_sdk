@@ -7614,11 +7614,13 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
 class AsPushToTalkApi(AsPersonSettingsApiChild):
     """
     API for person's PTT settings
+
+    Also used for virtual lines
     """
 
     feature = 'pushToTalk'
 
-    async def read(self, person_id: str, org_id: str = None) -> PushToTalkSettings:
+    async def read(self, entity_id: str, org_id: str = None) -> PushToTalkSettings:
         """
         Read Push-to-Talk Settings for a Person
         Retrieve a Person's Push-to-Talk Settings
@@ -7628,19 +7630,19 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: PTT settings for specific user
         :rtype: PushToTalkSettings
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return PushToTalkSettings.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, settings: PushToTalkSettings, org_id: str = None):
+    async def configure(self, entity_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
         Configure Push-to-Talk Settings for a Person
 
@@ -7651,14 +7653,14 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
         :param settings: new setting to be applied. For members only the ID needs to be set
         :type settings: PushToTalkSettings
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         if settings.members:
             # for an update member is just a list of IDs
@@ -17063,6 +17065,8 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     permissions_out: AsOutgoingPermissionsApi
     #: Privacy Settings
     privacy: AsPrivacyApi
+    #: Push to Talk Settings
+    push_to_talk: AsPushToTalkApi
     #: Voicemail Settings
     voicemail: AsVoicemailApi
 
@@ -17080,6 +17084,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.virtual_line)
+        self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.virtual_line)
         self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
     async def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,

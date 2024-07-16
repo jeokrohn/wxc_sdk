@@ -22,6 +22,7 @@ from ...person_settings.moh import MusicOnHoldApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
 from ...person_settings.privacy import PrivacyApi
+from ...person_settings.push_to_talk import PushToTalkApi
 from ...person_settings.voicemail import VoicemailApi
 
 __all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineNumber', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber',
@@ -157,6 +158,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     permissions_out: OutgoingPermissionsApi
     #: Privacy Settings
     privacy: PrivacyApi
+    #: Push to Talk Settings
+    push_to_talk: PushToTalkApi
     #: Voicemail Settings
     voicemail: VoicemailApi
 
@@ -174,6 +177,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.privacy = PrivacyApi(session=session, selector=ApiSelector.virtual_line)
+        self.push_to_talk = PushToTalkApi(session=session, selector=ApiSelector.virtual_line)
         self.voicemail = VoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
     def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
