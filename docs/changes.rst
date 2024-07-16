@@ -22,6 +22,7 @@ Release history
 - feat: available numbers API for virtual lines: :attr:`api.telephony.virtual_lines.available_numbers <wxc_sdk.telephony.virtual_line.VirtualLinesApi.available_numbers>`
 - feat: available numbers API for workspaces: :attr:`api.workspace_settings.available_numbers <wxc_sdk.workspace_settings.WorkspaceSettingsApi.available_numbers>`
 - feat: Webex app shared line API for users: :attr:`api.person_settings.app_shared_line <wxc_sdk.person_settings.PersonSettingsApi.app_shared_line>`
+- feat: MS Teams settings API for users: :attr:`api.person_settings.ms_teams <wxc_sdk.person_settings.PersonSettingsApi.ms_teams>`
 
 1.19.0
 ------

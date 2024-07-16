@@ -337,6 +337,10 @@ The method name is a link to the method documentation.
         Configure Call Waiting Settings for a Person
    * - :meth:`api.person_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
         Retrieve a Person's Monitoring Settings
+   * - :meth:`api.person_settings.ms_teams.configure <wxc_sdk.person_settings.msteams.MSTeamsSettingApi.configure>`
+        Configure a Person's MS Teams Setting
+   * - :meth:`api.person_settings.ms_teams.read <wxc_sdk.person_settings.msteams.MSTeamsSettingApi.read>`
+        Retrieve a Person's MS Teams Settings
    * - :meth:`api.person_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
         Configure Music On Hold Settings for a Personvirtual line, or workspace
    * - :meth:`api.person_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`

@@ -30,6 +30,7 @@ Submodules
    wxc_sdk.person_settings.hoteling
    wxc_sdk.person_settings.moh
    wxc_sdk.person_settings.monitoring
+   wxc_sdk.person_settings.msteams
    wxc_sdk.person_settings.numbers
    wxc_sdk.person_settings.permissions_in
    wxc_sdk.person_settings.permissions_out

@@ -81,5 +81,5 @@
 | Get Person Primary Available Phone Numbers                | X    | GET https://webexapis.com/v1/telephony/config/people/primary/availableNumbers                                     |
 | Get Person ECBN Available Phone Numbers                   | X    | GET https://webexapis.com/v1/telephony/config/people/{personId}/emergencyCallbackNumber/availableNumbers          |
 | Get Person Call Intercept Available Phone Numbers         | X    | GET https://webexapis.com/v1/telephony/config/people/{personId}/callIntercept/availableNumbers                    |
-| Retrieve a Person's MS Teams Settings                     |      | GET https://webexapis.com/v1/telephony/config/people/{personId}/settings/msTeams                                  |
-| Configure a Person's MS Teams Setting                     |      | PUT https://webexapis.com/v1/telephony/config/people/{personId}/settings/msTeams                                  |
+| Retrieve a Person's MS Teams Settings                     | X    | GET https://webexapis.com/v1/telephony/config/people/{personId}/settings/msTeams                                  |
+| Configure a Person's MS Teams Setting                     | X    | PUT https://webexapis.com/v1/telephony/config/people/{personId}/settings/msTeams                                  |

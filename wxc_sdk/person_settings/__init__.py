@@ -23,6 +23,7 @@ from .forwarding import PersonForwardingApi
 from .hoteling import HotelingApi
 from .moh import MusicOnHoldApi
 from .monitoring import MonitoringApi
+from .msteams import MSTeamsSettingApi
 from .numbers import NumbersApi
 from .permissions_in import IncomingPermissionsApi
 from .permissions_out import OutgoingPermissionsApi
@@ -148,6 +149,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     hoteling: HotelingApi
     #: Person's Monitoring Settings
     monitoring: MonitoringApi
+    #; MS Teams settings
+    ms_teams: MSTeamsSettingApi
     #: music on hold settings
     music_on_hold: MusicOnHoldApi
     #: Phone Numbers for a Person
@@ -187,6 +190,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.forwarding = PersonForwardingApi(session=session)
         self.hoteling = HotelingApi(session=session)
         self.monitoring = MonitoringApi(session=session)
+        self.ms_teams = MSTeamsSettingApi(session=session)
         self.music_on_hold = MusicOnHoldApi(session=session)
         self.numbers = NumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session)
