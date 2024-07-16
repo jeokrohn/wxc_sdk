@@ -1,5 +1,4 @@
 import logging
-import logging
 import re
 from collections import defaultdict, Counter
 from collections.abc import Generator, Iterable
@@ -566,8 +565,8 @@ class Attribute:
             name = self.name.strip('"')
             name = name.strip("'")
             name = snake_case(name)
-            if name == 'none':
-                name = 'none_'
+            if name in {'none', 'global'}:
+                name = f'{name}_'
             name, _ = subn(r'[^a-z0-9]', '_', name)
             name = sub('^([0-9])', 'd\\1', name)
             value = self.name
