@@ -8,8 +8,9 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import PrimaryOrShared, AssignedDectNetwork
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice, PrivacyApi
+from ...person_settings import TelephonyDevice
 from ...person_settings.agent_caller_id import AgentCallerIdApi
+from ...person_settings.barge import BargeApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.call_recording import CallRecordingApi
 from ...person_settings.call_waiting import CallWaitingApi
@@ -20,6 +21,7 @@ from ...person_settings.forwarding import PersonForwardingApi
 from ...person_settings.moh import MusicOnHoldApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
+from ...person_settings.privacy import PrivacyApi
 from ...person_settings.voicemail import VoicemailApi
 
 __all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineNumber', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber',
@@ -133,6 +135,8 @@ class VirtualLineDevices(ApiModel):
 class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     #: agent caller id Api
     agent_caller_id: AgentCallerIdApi
+    #: barge settings
+    barge: BargeApi
     #: Call bridge settings
     call_bridge: CallBridgeApi
     #: call intercept settings
@@ -159,6 +163,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     def __init__(self, session):
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.barge = BargeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.virtual_line)
         self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)

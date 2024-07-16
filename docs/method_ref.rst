@@ -1035,6 +1035,10 @@ The method name is a link to the method documentation.
         Modify Agent's Caller ID Information
    * - :meth:`api.telephony.virtual_lines.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
         Retrieve Agent's Caller ID Information
+   * - :meth:`api.telephony.virtual_lines.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
+        Configure Barge In Settings
+   * - :meth:`api.telephony.virtual_lines.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
+        Retrieve Barge In Settings
    * - :meth:`api.telephony.virtual_lines.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         Configure Call Bridge Settings
    * - :meth:`api.telephony.virtual_lines.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`

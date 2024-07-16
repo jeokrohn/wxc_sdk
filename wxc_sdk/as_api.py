@@ -5842,8 +5842,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
-        # feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         self.feature_prefix = '/features/'
         if selector == ApiSelector.workspace:
             self.selector = 'workspaces'
@@ -5883,8 +5882,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
-        # feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
@@ -6095,9 +6093,11 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
     """
     User Call Settings with Call Bridge Feature
 
+    Also used for virtual lines
+
     Not supported for Webex for Government (FedRAMP)
 
-     Person Call Settings supports modifying Webex Calling settings for a specific person.
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
 
     Viewing People requires a full, user, or read-only administrator auth token with a scope
     of `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
@@ -17041,6 +17041,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     #: agent caller id Api
     agent_caller_id: AsAgentCallerIdApi
+    #: barge settings
+    barge: AsBargeApi
     #: Call bridge settings
     call_bridge: AsCallBridgeApi
     #: call intercept settings
@@ -17067,6 +17069,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     def __init__(self, session):
         super().__init__(session=session)
         self.agent_caller_id = AsAgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.barge = AsBargeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.virtual_line)
         self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)
