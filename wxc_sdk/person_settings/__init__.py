@@ -124,8 +124,6 @@ class PersonSettingsApi(ApiChild, base='people'):
     available_numbers: AvailableNumbersApi
     #: Barge In Settings for a Person
     barge: BargeApi
-    #: Do Not Disturb Settings for a Person
-    dnd: DndApi
     #: Call bridge settings for a person
     call_bridge: CallBridgeApi
     #: Call Intercept Settings for a Person
@@ -138,6 +136,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     caller_id: CallerIdApi
     #: Person's Calling Behavior
     calling_behavior: CallingBehaviorApi
+    #: Do Not Disturb Settings for a Person
+    dnd: DndApi
     #: Executive Assistant Settings for a Person
     exec_assistant: ExecAssistantApi
     #: Forwarding Settings for a Person

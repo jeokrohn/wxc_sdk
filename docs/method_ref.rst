@@ -1158,7 +1158,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.virtual_lines.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
         Reset Voicemail PIN
    * - :meth:`api.telephony.voice_messaging.delete <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.delete>`
-        Delete a specfic voicemail message for the user
+        Delete a specific voicemail message for the user
    * - :meth:`api.telephony.voice_messaging.list <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.list>`
         Get the list of all voicemail messages for the user
    * - :meth:`api.telephony.voice_messaging.mark_as_read <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.mark_as_read>`

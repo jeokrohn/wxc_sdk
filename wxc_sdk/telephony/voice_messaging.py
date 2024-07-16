@@ -86,9 +86,9 @@ class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
 
     def delete(self, message_id: str):
         """
-        Delete a specfic voicemail message for the user.
+        Delete a specific voicemail message for the user.
 
-        :param message_id: The message identifer of the voicemail message to delete
+        :param message_id: The message identifier of the voicemail message to delete
         :type message_id: str
         """
         url = self.ep(f'{message_id}')

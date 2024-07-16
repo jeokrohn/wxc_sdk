@@ -8930,8 +8930,6 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     available_numbers: AsAvailableNumbersApi
     #: Barge In Settings for a Person
     barge: AsBargeApi
-    #: Do Not Disturb Settings for a Person
-    dnd: AsDndApi
     #: Call bridge settings for a person
     call_bridge: AsCallBridgeApi
     #: Call Intercept Settings for a Person
@@ -8944,6 +8942,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     caller_id: AsCallerIdApi
     #: Person's Calling Behavior
     calling_behavior: AsCallingBehaviorApi
+    #: Do Not Disturb Settings for a Person
+    dnd: AsDndApi
     #: Executive Assistant Settings for a Person
     exec_assistant: AsExecAssistantApi
     #: Forwarding Settings for a Person
@@ -18147,9 +18147,9 @@ class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
 
     async def delete(self, message_id: str):
         """
-        Delete a specfic voicemail message for the user.
+        Delete a specific voicemail message for the user.
 
-        :param message_id: The message identifer of the voicemail message to delete
+        :param message_id: The message identifier of the voicemail message to delete
         :type message_id: str
         """
         url = self.ep(f'{message_id}')
