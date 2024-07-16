@@ -27,8 +27,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
-        # feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         self.feature_prefix = '/features/'
         if selector == ApiSelector.workspace:
             self.selector = 'workspaces'
@@ -68,8 +67,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
-        # feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
