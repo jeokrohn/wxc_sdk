@@ -25,13 +25,13 @@
 | Configure Hoteling Settings for a Person                  | X    | PUT https://webexapis.com/v1/people/{personId}/features/hoteling                                                  |
 | Retrieve a person's Monitoring Settings                   | X    | GET https://webexapis.com/v1/people/{personId}/features/monitoring                                                |
 | Modify a person's Monitoring Settings                     | X    | PUT https://webexapis.com/v1/people/{personId}/features/monitoring                                                |
-| Validate or Initiate Move Users Job                       |      | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation                                           |
-| List Move Users Jobs                                      |      | GET https://webexapis.com/v1/telephony/config/jobs/person/moveLocation                                            |
-| Get Move Users Job Status                                 |      | GET https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}                                    |
-| Abandon the Move Users Job                                |      | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/actions/abandon/invoke            |
-| Pause the Move Users Job                                  |      | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/actions/pause/invoke              |
-| Resume the Move Users Job                                 |      | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/actions/resume/invoke             |
-| List Move Users Job errors                                |      | GET https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/errors                             |
+| Validate or Initiate Move Users Job                       | X    | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation                                           |
+| List Move Users Jobs                                      | X    | GET https://webexapis.com/v1/telephony/config/jobs/person/moveLocation                                            |
+| Get Move Users Job Status                                 | X    | GET https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}                                    |
+| Abandon the Move Users Job                                | X    | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/actions/abandon/invoke            |
+| Pause the Move Users Job                                  | X    | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/actions/pause/invoke              |
+| Resume the Move Users Job                                 | X    | POST https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/actions/resume/invoke             |
+| List Move Users Job errors                                | X    | GET https://webexapis.com/v1/telephony/config/jobs/person/moveLocation/{jobId}/errors                             |
 | Retrieve Music On Hold Settings for a Person              | X    | GET https://webexapis.com/v1/telephony/config/people/{personId}/musicOnHold                                       |
 | Configure Music On Hold Settings for a Person             | X    | PUT https://webexapis.com/v1/telephony/config/people/{personId}/musicOnHold                                       |
 | Read Incoming Permission Settings for a Person            | X    | GET https://webexapis.com/v1/people/{personId}/features/incomingPermission                                        |

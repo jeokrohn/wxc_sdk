@@ -783,6 +783,20 @@ The method name is a link to the method documentation.
         Resume the paused Manage Numbers Job
    * - :meth:`api.telephony.jobs.manage_numbers.status <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.status>`
         Returns the status and other details of the job
+   * - :meth:`api.telephony.jobs.move_users.abandon <wxc_sdk.telephony.jobs.MoveUsersJobsApi.abandon>`
+        Abandon the Move Users Job
+   * - :meth:`api.telephony.jobs.move_users.errors <wxc_sdk.telephony.jobs.MoveUsersJobsApi.errors>`
+        List Move Users Job errors
+   * - :meth:`api.telephony.jobs.move_users.list <wxc_sdk.telephony.jobs.MoveUsersJobsApi.list>`
+        List Move Users Jobs
+   * - :meth:`api.telephony.jobs.move_users.pause <wxc_sdk.telephony.jobs.MoveUsersJobsApi.pause>`
+        Pause the Move Users Job
+   * - :meth:`api.telephony.jobs.move_users.resume <wxc_sdk.telephony.jobs.MoveUsersJobsApi.resume>`
+        Resume the Move Users Job
+   * - :meth:`api.telephony.jobs.move_users.status <wxc_sdk.telephony.jobs.MoveUsersJobsApi.status>`
+        Get Move Users Job Status
+   * - :meth:`api.telephony.jobs.move_users.validate_or_initiate <wxc_sdk.telephony.jobs.MoveUsersJobsApi.validate_or_initiate>`
+        Validate or Initiate Move Users Job
    * - :meth:`api.telephony.jobs.rebuild_phones.errors <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.errors>`
         Get Job Errors for a Rebuild Phones Job
    * - :meth:`api.telephony.jobs.rebuild_phones.list <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.list>`
