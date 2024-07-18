@@ -5895,6 +5895,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
@@ -20283,6 +20284,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
     privacy: AsPrivacyApi
+    push_to_talk: AsPushToTalkApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
@@ -20302,6 +20304,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.workspace)
+        self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.workspace)
 
 
 class AsWorkspacesApi(AsApiChild, base='workspaces'):

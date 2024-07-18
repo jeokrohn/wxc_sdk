@@ -22,6 +22,7 @@ from ..person_settings.moh import MusicOnHoldApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..person_settings.privacy import PrivacyApi
+from ..person_settings.push_to_talk import PushToTalkApi
 from ..rest import RestSession
 
 __all__ = ['WorkspaceSettingsApi']
@@ -52,6 +53,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
     privacy: PrivacyApi
+    push_to_talk: PushToTalkApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
@@ -71,3 +73,4 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.privacy = PrivacyApi(session=session, selector=ApiSelector.workspace)
+        self.push_to_talk = PushToTalkApi(session=session, selector=ApiSelector.workspace)

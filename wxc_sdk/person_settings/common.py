@@ -79,6 +79,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),

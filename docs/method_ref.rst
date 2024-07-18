@@ -1353,6 +1353,10 @@ The method name is a link to the method documentation.
         Configure an entity's Privacy Settings
    * - :meth:`api.workspace_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
         Get Privacy Settings for an entity
+   * - :meth:`api.workspace_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
+        Configure Push-to-Talk Settings for a Person
+   * - :meth:`api.workspace_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
+        Read Push-to-Talk Settings for a Person
    * - :meth:`api.workspaces.capabilities <wxc_sdk.workspaces.WorkspacesApi.capabilities>`
         Shows the capabilities for a workspace by ID
    * - :meth:`api.workspaces.create <wxc_sdk.workspaces.WorkspacesApi.create>`

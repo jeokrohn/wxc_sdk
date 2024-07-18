@@ -32,10 +32,10 @@
 | Modify Barge In Call Settings for a Workspace                   | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/bargeIn                                          |
 | Retrieve DoNotDisturb Settings for a Workspace                  | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/doNotDisturb                                     |
 | Modify DoNotDisturb Settings for a Workspace                    | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/doNotDisturb                                     |
-| Retrieve Call Bridge Warning Tone Settings for a Workspace      |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callBridge                                       |
-| Modify Call Bridge Warning Tone Settings for a Workspace        |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callBridge                                       |
-| Read Push-to-Talk Settings for a Workspace                      |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/pushToTalk                                       |
-| Configure Push-to-Talk Settings for a Workspace                 |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/pushToTalk                                       |
+| Retrieve Call Bridge Warning Tone Settings for a Workspace      | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callBridge                                       |
+| Modify Call Bridge Warning Tone Settings for a Workspace        | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callBridge                                       |
+| Read Push-to-Talk Settings for a Workspace                      | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/pushToTalk                                       |
+| Configure Push-to-Talk Settings for a Workspace                 | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/pushToTalk                                       |
 | Retrieve Privacy Settings for a Workspace                       | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/privacy                                          |
 | Modify Privacy Settings for a Workspace                         | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/privacy                                          |
 | Read Voicemail Settings for a Workspace                         |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |

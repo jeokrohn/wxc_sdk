@@ -141,3 +141,28 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(update, after)
 
+    def test_read_call_bridge(self):
+        api = self.api.workspace_settings.call_bridge
+        api.read(self.workspace.workspace_id)
+
+    def test_configure_call_bridge(self):
+        api = self.api.workspace_settings.call_bridge
+        r = api.read(self.workspace.workspace_id)
+        update = r.model_copy(deep=True)
+        update.warning_tone_enabled = not r.warning_tone_enabled
+        api.configure(self.workspace.workspace_id, update)
+        after = api.read(self.workspace.workspace_id)
+        self.assertEqual(update, after)
+
+    def test_read_ptt(self):
+        api = self.api.workspace_settings.push_to_talk
+        api.read(self.workspace.workspace_id)
+
+    def test_configure_ptt(self):
+        api = self.api.workspace_settings.push_to_talk
+        r = api.read(self.workspace.workspace_id)
+        update = r.model_copy(deep=True)
+        update.allow_auto_answer = not r.allow_auto_answer
+        api.configure(self.workspace.workspace_id, update)
+        after = api.read(self.workspace.workspace_id)
+        self.assertEqual(update, after)
