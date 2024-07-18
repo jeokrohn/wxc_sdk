@@ -392,9 +392,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
         Get Privacy Settings for an entity
    * - :meth:`api.person_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
-        Configure Push-to-Talk Settings for a Person
+        Configure Push-to-Talk Settings for an entity
    * - :meth:`api.person_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
-        Read Push-to-Talk Settings for a Person
+        Read Push-to-Talk Settings for an entity
    * - :meth:`api.person_settings.receptionist.configure <wxc_sdk.person_settings.receptionist.ReceptionistApi.configure>`
         Modify Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.receptionist.read <wxc_sdk.person_settings.receptionist.ReceptionistApi.read>`
@@ -1168,9 +1168,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.virtual_lines.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
         Get Privacy Settings for an entity
    * - :meth:`api.telephony.virtual_lines.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
-        Configure Push-to-Talk Settings for a Person
+        Configure Push-to-Talk Settings for an entity
    * - :meth:`api.telephony.virtual_lines.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
-        Read Push-to-Talk Settings for a Person
+        Read Push-to-Talk Settings for an entity
    * - :meth:`api.telephony.virtual_lines.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
         Configure Voicemail Settings for a Person
    * - :meth:`api.telephony.virtual_lines.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
@@ -1354,9 +1354,21 @@ The method name is a link to the method documentation.
    * - :meth:`api.workspace_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
         Get Privacy Settings for an entity
    * - :meth:`api.workspace_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
-        Configure Push-to-Talk Settings for a Person
+        Configure Push-to-Talk Settings for an entity
    * - :meth:`api.workspace_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
-        Read Push-to-Talk Settings for a Person
+        Read Push-to-Talk Settings for an entity
+   * - :meth:`api.workspace_settings.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
+        Configure Voicemail Settings for a Person
+   * - :meth:`api.workspace_settings.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
+        Configure Busy Voicemail Greeting for a Person
+   * - :meth:`api.workspace_settings.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
+        Configure No Answer Voicemail Greeting for a Person
+   * - :meth:`api.workspace_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
+        Modify a person's voicemail passcode
+   * - :meth:`api.workspace_settings.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
+        Read Voicemail Settings for a Person or virtual line
+   * - :meth:`api.workspace_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
+        Reset Voicemail PIN
    * - :meth:`api.workspaces.capabilities <wxc_sdk.workspaces.WorkspacesApi.capabilities>`
         Shows the capabilities for a workspace by ID
    * - :meth:`api.workspaces.create <wxc_sdk.workspaces.WorkspacesApi.create>`

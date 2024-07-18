@@ -5888,14 +5888,15 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
         alternates = {
+            ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'bargeIn'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
-            ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
-            ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
@@ -8436,27 +8437,26 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
     """
     API for person's PTT settings
 
-    Also used for virtual lines
+    Also used for virtual lines and workspaces
     """
 
     feature = 'pushToTalk'
 
     async def read(self, entity_id: str, org_id: str = None) -> PushToTalkSettings:
         """
-        Read Push-to-Talk Settings for a Person
-        Retrieve a Person's Push-to-Talk Settings
+        Read Push-to-Talk Settings for an entity
 
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param entity_id: Unique identifier for the person.
+        :param entity_id: Unique identifier for the entity.
         :type entity_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return: PTT settings for specific user
+        :return: PTT settings for specific entity
         :rtype: PushToTalkSettings
         """
         ep = self.f_ep(person_id=entity_id)
@@ -8465,9 +8465,9 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
 
     async def configure(self, entity_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
-        Configure Push-to-Talk Settings for a Person
+        Configure Push-to-Talk Settings for an entity
 
-        Configure a Person's Push-to-Talk Settings
+        Configure an entity's Push-to-Talk Settings
 
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
@@ -8478,7 +8478,7 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
         :type entity_id: str
         :param settings: new setting to be applied. For members only the ID needs to be set
         :type settings: PushToTalkSettings
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
         ep = self.f_ep(person_id=entity_id)
@@ -20285,6 +20285,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     permissions_out: AsOutgoingPermissionsApi
     privacy: AsPrivacyApi
     push_to_talk: AsPushToTalkApi
+    voicemail: AsVoicemailApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
@@ -20305,6 +20306,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.workspace)
         self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.workspace)
+        self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.workspace)
 
 
 class AsWorkspacesApi(AsApiChild, base='workspaces'):

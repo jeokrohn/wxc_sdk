@@ -166,3 +166,16 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         api.configure(self.workspace.workspace_id, update)
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(update, after)
+
+    def test_read_voicemail(self):
+        api = self.api.workspace_settings.voicemail
+        api.read(self.workspace.workspace_id)
+
+    def test_configure_voicemail(self):
+        api = self.api.workspace_settings.voicemail
+        r = api.read(self.workspace.workspace_id)
+        update = r.model_copy(deep=True)
+        update.enabled = not r.enabled
+        api.configure(self.workspace.workspace_id, update)
+        after = api.read(self.workspace.workspace_id)
+        self.assertEqual(update, after)

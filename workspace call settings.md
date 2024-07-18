@@ -38,8 +38,8 @@
 | Configure Push-to-Talk Settings for a Workspace                 | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/pushToTalk                                       |
 | Retrieve Privacy Settings for a Workspace                       | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/privacy                                          |
 | Modify Privacy Settings for a Workspace                         | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/privacy                                          |
-| Read Voicemail Settings for a Workspace                         |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
-| Configure Voicemail Settings for a Workspace                    |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
+| Read Voicemail Settings for a Workspace                         | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
+| Configure Voicemail Settings for a Workspace                    | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
 | Retrieve Sequential Ring Criteria for a Workspace               |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                     |
 | Modify Sequential Ring Criteria for a Workspace                 |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                     |
 | Read Call Policy Settings for a Workspace                       |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callPolicies                                     |

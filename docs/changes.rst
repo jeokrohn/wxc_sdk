@@ -28,6 +28,7 @@ Release history
 - feat: anonymous calls rejection API for workspaces: :attr:`api.workspace_settings.anon_calls <wxc_sdk.workspace_settings.WorkspaceSettingsApi.anon_calls>`
 - feat: do not disturb API for workspaces: :attr:`api.workspace_settings.dnd <wxc_sdk.workspace_settings.WorkspaceSettingsApi.dnd>`
 - feat: push to talk API for workspaces: :attr:`api.workspace_settings.push_to_talk <wxc_sdk.workspace_settings.WorkspaceSettingsApi.push_to_talk>`
+- feat: voicemail settings API for workspaces: :attr:`api.workspace_settings.voicemail <wxc_sdk.workspace_settings.WorkspaceSettingsApi.voicemail>`
 
 1.19.0
 ------

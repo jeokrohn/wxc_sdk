@@ -72,14 +72,15 @@ class PersonSettingsApiChild(ApiChild, base=''):
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
         alternates = {
+            ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'bargeIn'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
-            ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
-            ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
