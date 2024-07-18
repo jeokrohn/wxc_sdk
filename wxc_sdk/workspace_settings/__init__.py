@@ -7,7 +7,8 @@ from dataclasses import dataclass
 from .devices import WorkspaceDevicesApi
 from .numbers import WorkspaceNumbersApi
 from ..api_child import ApiChild
-from ..person_settings import PrivacyApi, BargeApi, AvailableNumbersApi
+from ..person_settings.available_numbers import AvailableNumbersApi
+from ..person_settings.barge import BargeApi
 from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.call_intercept import CallInterceptApi
 from ..person_settings.call_waiting import CallWaitingApi
@@ -15,8 +16,10 @@ from ..person_settings.caller_id import CallerIdApi
 from ..person_settings.common import ApiSelector
 from ..person_settings.forwarding import PersonForwardingApi
 from ..person_settings.monitoring import MonitoringApi
+from ..person_settings.moh import MusicOnHoldApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi
+from ..person_settings.privacy import PrivacyApi
 from ..rest import RestSession
 
 __all__ = ['WorkspaceSettingsApi']
@@ -40,6 +43,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     devices: WorkspaceDevicesApi
     forwarding: PersonForwardingApi
     monitoring: MonitoringApi
+    music_on_hold: MusicOnHoldApi
     numbers: WorkspaceNumbersApi
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
@@ -56,6 +60,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.devices = WorkspaceDevicesApi(session=session)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.workspace)
         self.monitoring = MonitoringApi(session=session, selector=ApiSelector.workspace)
+        self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.workspace)
         self.numbers = WorkspaceNumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)

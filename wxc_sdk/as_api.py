@@ -20218,6 +20218,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     devices: AsWorkspaceDevicesApi
     forwarding: AsPersonForwardingApi
     monitoring: AsMonitoringApi
+    music_on_hold: AsMusicOnHoldApi
     numbers: AsWorkspaceNumbersApi
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
@@ -20234,6 +20235,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.devices = AsWorkspaceDevicesApi(session=session)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.workspace)
         self.monitoring = AsMonitoringApi(session=session, selector=ApiSelector.workspace)
+        self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.workspace)
         self.numbers = AsWorkspaceNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)

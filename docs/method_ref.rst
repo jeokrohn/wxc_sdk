@@ -1301,6 +1301,10 @@ The method name is a link to the method documentation.
         Configure Call Waiting Settings for a Person
    * - :meth:`api.workspace_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
         Retrieve a Person's Monitoring Settings
+   * - :meth:`api.workspace_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
+        Configure Music On Hold Settings for a Personvirtual line, or workspace
+   * - :meth:`api.workspace_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace
    * - :meth:`api.workspace_settings.numbers.read <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read>`
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization
    * - :meth:`api.workspace_settings.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
