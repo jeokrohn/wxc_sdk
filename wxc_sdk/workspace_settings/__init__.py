@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from .devices import WorkspaceDevicesApi
 from .numbers import WorkspaceNumbersApi
 from ..api_child import ApiChild
+from ..person_settings.anon_calls import AnonCallsApi
 from ..person_settings.available_numbers import AvailableNumbersApi
 from ..person_settings.barge import BargeApi
 from ..person_settings.callbridge import CallBridgeApi
@@ -34,6 +35,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     this class are instances of the respective user settings APIs. When calling endpoints of these APIs workspace IDs
     need to be passed to the ``person_id`` parameter of the called function.
     """
+    anon_calls: AnonCallsApi
     available_numbers: AvailableNumbersApi
     barge: BargeApi
     call_bridge: CallBridgeApi
@@ -51,6 +53,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
+        self.anon_calls = AnonCallsApi(session=session, selector=ApiSelector.workspace)
         self.available_numbers = AvailableNumbersApi(session=session, selector=ApiSelector.workspace)
         self.barge = BargeApi(session=session, selector=ApiSelector.workspace)
         self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.workspace)

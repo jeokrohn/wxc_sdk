@@ -10,7 +10,7 @@
 | Modify Monitoring Settings for a Workspace                      | X    | PUT https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring                                               |
 | Retrieve Music On Hold Settings for a Workspace                 | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/musicOnHold                                      |
 | Modify Music On Hold Settings for a Workspace                   | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/musicOnHold                                      |
-| List numbers associated with a specific workspace               |      | GET https://webexapis.com/v1/workspaces/{workspaceId}/features/numbers                                                  |
+| List numbers associated with a specific workspace               | X    | GET https://webexapis.com/v1/workspaces/{workspaceId}/features/numbers                                                  |
 | Retrieve Incoming Permission Settings for a Workspace           | X    | GET https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission                                       |
 | Modify Incoming Permission Settings for a Workspace             | X    | PUT https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission                                       |
 | Retrieve Outgoing Permission Settings for a Workspace           | X    | GET https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission                                       |
@@ -22,12 +22,12 @@
 | Configure Call Intercept Settings for a Workspace               | X    | PUT https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept                                                |
 | Retrieve Transfer Numbers Settings for a Workspace              | X    | GET https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers                   |
 | Modify Transfer Numbers Settings for a Workspace                | X    | PUT https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers                   |
-| Get Workspace Available Phone Numbers                           |      | GET https://webexapis.com/v1/telephony/config/workspaces/availableNumbers                                               |
-| Get Workspace ECBN Available Phone Numbers                      |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/emergencyCallbackNumber/availableNumbers         |
-| Get Workspace Call Forward Available Phone Numbers              |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callForwarding/availableNumbers                  |
-| Get Workspace Call Intercept Available Phone Numbers            |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callIntercept/availableNumbers                   |
-| Retrieve Anonymous Call Settings for a Workspace                |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/anonymousCallReject                              |
-| Modify Anonymous Call Settings for a Workspace                  |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/anonymousCallReject                              |
+| Get Workspace Available Phone Numbers                           | X    | GET https://webexapis.com/v1/telephony/config/workspaces/availableNumbers                                               |
+| Get Workspace ECBN Available Phone Numbers                      | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/emergencyCallbackNumber/availableNumbers         |
+| Get Workspace Call Forward Available Phone Numbers              | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callForwarding/availableNumbers                  |
+| Get Workspace Call Intercept Available Phone Numbers            | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callIntercept/availableNumbers                   |
+| Retrieve Anonymous Call Settings for a Workspace                | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/anonymousCallReject                              |
+| Modify Anonymous Call Settings for a Workspace                  | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/anonymousCallReject                              |
 | Retrieve Barge In Call Settings for a Workspace                 | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/bargeIn                                          |
 | Modify Barge In Call Settings for a Workspace                   | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/bargeIn                                          |
 | Retrieve DoNotDisturb Settings for a Workspace                  |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/doNotDisturb                                     |

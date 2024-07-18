@@ -52,7 +52,7 @@ CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
 __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi',
-           'AsAnnouncementsRepositoryApi', 'AsApiChild', 'AsAppServicesApi', 'AsAppSharedLineApi',
+           'AsAnnouncementsRepositoryApi', 'AsAnonCallsApi', 'AsApiChild', 'AsAppServicesApi', 'AsAppSharedLineApi',
            'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
            'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallInterceptApi',
            'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallRecordingSettingsApi',
@@ -5893,6 +5893,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
@@ -20090,6 +20091,64 @@ class AsWorkspacePersonalizationApi(AsApiChild, base='workspaces'):
         return r
 
 
+class AsAnonCallsApi(AsPersonSettingsApiChild):
+    """
+    API for anonymous call reject settings; so far only used for workspaces
+    """
+
+    feature = 'anonymousCallReject'
+
+    async def read(self, entity_id: str, org_id: str = None) -> bool:
+        """
+        Retrieve Anonymous Call Settings for an entity.
+
+        Anonymous Call Rejection, when enabled, blocks all incoming calls from unidentified or blocked caller IDs.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: bool
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = data['enabled']
+        return r
+
+    async def configure(self, entity_id: str, enabled: bool, org_id: str = None):
+        """
+        Modify Anonymous Call Settings for an entity.
+
+        Anonymous Call Rejection, when enabled, blocks all incoming calls from unidentified or blocked caller IDs.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param enabled: `true` if the Anonymous Call Rejection feature is enabled.
+        :type enabled: bool
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
 class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
     def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[TelephonyDevice, None, None]:
         """
@@ -20209,6 +20268,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     this class are instances of the respective user settings APIs. When calling endpoints of these APIs workspace IDs
     need to be passed to the ``person_id`` parameter of the called function.
     """
+    anon_calls: AsAnonCallsApi
     available_numbers: AsAvailableNumbersApi
     barge: AsBargeApi
     call_bridge: AsCallBridgeApi
@@ -20226,6 +20286,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.anon_calls = AsAnonCallsApi(session=session, selector=ApiSelector.workspace)
         self.available_numbers = AsAvailableNumbersApi(session=session, selector=ApiSelector.workspace)
         self.barge = AsBargeApi(session=session, selector=ApiSelector.workspace)
         self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.workspace)

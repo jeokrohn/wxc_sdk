@@ -24,7 +24,8 @@ Release history
 - feat: Webex app shared line API for users: :attr:`api.person_settings.app_shared_line <wxc_sdk.person_settings.PersonSettingsApi.app_shared_line>`
 - feat: MS Teams settings API for users: :attr:`api.person_settings.ms_teams <wxc_sdk.person_settings.PersonSettingsApi.ms_teams>`
 - feat: move users jobs API: :attr:`api.telephony.jobs.move_users <wxc_sdk.telephony.jobs.JobsApi.move_users>`
-- feat: MoH settings for workspaces: :attr:`api.workspace_settings.music_on_hold <wxc_sdk.workspace_settings.WorkspaceSettingsApi.music_on_hold>`
+- feat: MoH settings API for workspaces: :attr:`api.workspace_settings.music_on_hold <wxc_sdk.workspace_settings.WorkspaceSettingsApi.music_on_hold>`
+- feat: anonymous calls rejection API for workspaces: :attr:`api.workspace_settings.anon_calls <wxc_sdk.workspace_settings.WorkspaceSettingsApi.anon_calls>`
 
 1.19.0
 ------

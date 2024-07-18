@@ -2,11 +2,16 @@
 Webex Calling Workspace settings
 """
 import asyncio
+import random
+from dataclasses import dataclass
+from typing import ClassVar
 
-from tests.base import TestCaseWithLog, async_test
+from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.testutil import create_workspace_with_webex_calling
+from wxc_sdk.licenses import License
 from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
-from wxc_sdk.workspaces import Workspace, CallingType
+from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
 
 class TestWorkspaceSettings(TestCaseWithLog):
@@ -64,3 +69,61 @@ class TestWorkspaceSettings(TestCaseWithLog):
             for pn in numbers.phone_numbers:
                 print(f'  - {pn.extension or "no extension"} {pn.external or "no TN"}')
         self.assertFalse(any(isinstance(nl, Exception) for nl in number_lists))
+
+
+@dataclass(init=False)
+class TestWithProfessionalWorkspace(TestWithLocations):
+    """
+    Tests for workspace settings using a temporary professional workspace
+    """
+    # temporary workspace with professional license
+    workspace: ClassVar[Workspace] = None
+
+    @classmethod
+    def create_temp_workspace(cls):
+        """
+        Create a temporary workspace with professional license
+        """
+        # get pro license
+        pro_license = next((lic
+                            for lic in cls.api.licenses.list()
+                            if lic.webex_calling_professional and lic.consumed_units < lic.total_units),
+                           None)
+        if pro_license:
+            pro_license: License
+            # create WS in random location
+            location = random.choice(cls.locations)
+            workspace = create_workspace_with_webex_calling(api=cls.api,
+                                                            target_location=location,
+                                                            # workspace_location_id=wsl.id,
+                                                            supported_devices=WorkspaceSupportedDevices.phones,
+                                                            notes=f'temp location for professional workspace tests, '
+                                                                  f'location "{location.name}"',
+                                                            license=pro_license)
+            cls.workspace = workspace
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.create_temp_workspace()
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        if cls.workspace:
+            cls.api.workspaces.delete_workspace(cls.workspace.workspace_id)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.assertIsNotNone(self.workspace, 'No professional workspace created')
+
+    def test_read_anon_calls(self):
+        api = self.api.workspace_settings.anon_calls
+        api.read(self.workspace.workspace_id)
+
+    def test_configure_anon_calls(self):
+        api = self.api.workspace_settings.anon_calls
+        r = api.read(self.workspace.workspace_id)
+        api.configure(self.workspace.workspace_id, not r)
+        after = api.read(self.workspace.workspace_id)
+        self.assertEqual(not r, after)

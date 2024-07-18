@@ -1247,6 +1247,10 @@ The method name is a link to the method documentation.
         Get Personalization Task
    * - :meth:`api.workspace_personalization.personalize_a_workspace <wxc_sdk.workspace_personalization.WorkspacePersonalizationApi.personalize_a_workspace>`
         Personalize a Workspace
+   * - :meth:`api.workspace_settings.anon_calls.configure <wxc_sdk.person_settings.anon_calls.AnonCallsApi.configure>`
+        Modify Anonymous Call Settings for an entity
+   * - :meth:`api.workspace_settings.anon_calls.read <wxc_sdk.person_settings.anon_calls.AnonCallsApi.read>`
+        Retrieve Anonymous Call Settings for an entity
    * - :meth:`api.workspace_settings.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
         Get Available Phone Numbers
    * - :meth:`api.workspace_settings.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`
