@@ -26,6 +26,7 @@ Release history
 - feat: move users jobs API: :attr:`api.telephony.jobs.move_users <wxc_sdk.telephony.jobs.JobsApi.move_users>`
 - feat: MoH settings API for workspaces: :attr:`api.workspace_settings.music_on_hold <wxc_sdk.workspace_settings.WorkspaceSettingsApi.music_on_hold>`
 - feat: anonymous calls rejection API for workspaces: :attr:`api.workspace_settings.anon_calls <wxc_sdk.workspace_settings.WorkspaceSettingsApi.anon_calls>`
+- feat: do not disturb API for workspaces: :attr:`api.workspace_settings.dnd <wxc_sdk.workspace_settings.WorkspaceSettingsApi.dnd>`
 
 1.19.0
 ------

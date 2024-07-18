@@ -127,3 +127,17 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         api.configure(self.workspace.workspace_id, not r)
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(not r, after)
+
+    def test_read_dnd(self):
+        api = self.api.workspace_settings.dnd
+        api.read(self.workspace.workspace_id)
+
+    def test_configure_dnd(self):
+        api = self.api.workspace_settings.dnd
+        r = api.read(self.workspace.workspace_id)
+        update = r.model_copy(deep=True)
+        update.enabled = not r.enabled
+        api.configure(self.workspace.workspace_id, update)
+        after = api.read(self.workspace.workspace_id)
+        self.assertEqual(update, after)
+

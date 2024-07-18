@@ -318,9 +318,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.calling_behavior.read <wxc_sdk.person_settings.calling_behavior.CallingBehaviorApi.read>`
         Read Person's Calling Behavior
    * - :meth:`api.person_settings.dnd.configure <wxc_sdk.person_settings.dnd.DndApi.configure>`
-        Configure Do Not Disturb Settings for a Person
+        Configure Do Not Disturb Settings for an entity
    * - :meth:`api.person_settings.dnd.read <wxc_sdk.person_settings.dnd.DndApi.read>`
-        Read Do Not Disturb Settings for a Person
+        Read Do Not Disturb Settings for an entity
    * - :meth:`api.person_settings.exec_assistant.configure <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.configure>`
         Modify Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.exec_assistant.read <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.read>`
@@ -1297,6 +1297,10 @@ The method name is a link to the method documentation.
         Get all devices for a workspace
    * - :meth:`api.workspace_settings.devices.modify_hoteling <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.modify_hoteling>`
         Modify devices for a workspace
+   * - :meth:`api.workspace_settings.dnd.configure <wxc_sdk.person_settings.dnd.DndApi.configure>`
+        Configure Do Not Disturb Settings for an entity
+   * - :meth:`api.workspace_settings.dnd.read <wxc_sdk.person_settings.dnd.DndApi.read>`
+        Read Do Not Disturb Settings for an entity
    * - :meth:`api.workspace_settings.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
         Configure an Entity's Call Forwarding Settings
    * - :meth:`api.workspace_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
