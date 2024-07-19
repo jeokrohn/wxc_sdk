@@ -55,27 +55,28 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsAnnouncementsRepositoryApi', 'AsAnonCallsApi', 'AsApiChild', 'AsAppServicesApi', 'AsAppSharedLineApi',
            'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
            'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallInterceptApi',
-           'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallRecordingSettingsApi',
-           'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
-           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
-           'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi',
-           'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi',
-           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
-           'AsLocationAccessCodesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi',
-           'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi',
-           'AsPersonSettingsApiChild', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi',
-           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
-           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi',
-           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
-           'AsScimApiChild', 'AsScimV2Api', 'AsSequentialRingApi', 'AsStatusAPI', 'AsTeamMembershipsApi',
-           'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi',
-           'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi',
-           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueApi', 'AsCallRecordingApi',
+           'AsCallRecordingSettingsApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
+           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
+           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
+           'AsDigitPatternsApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
+           'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
+           'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
+           'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
+           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
+           'AsSequentialRingApi', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi',
+           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
            'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
            'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
@@ -5891,6 +5892,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'bargeIn'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'callPolicies'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
@@ -20143,6 +20145,81 @@ class AsAnonCallsApi(AsPersonSettingsApiChild):
         await super().put(url, params=params, json=body)
 
 
+class AsCallPolicyApi(AsPersonSettingsApiChild):
+    """
+    API for call policy settings.
+
+    For now only used for workspaces
+    """
+
+    feature = 'callPolicies'
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> PrivacyOnRedirectedCalls:
+        """
+        Read Call Policy Settings for an entity
+
+        Retrieve Call Policies settings.
+
+        The call policy feature enables administrator to configure call policy settings such as Connected Line
+        Identification Privacy on Redirected Calls for a professional workspace.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:workspaces_read` scope can be used to read workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: PrivacyOnRedirectedCalls
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        return r
+
+    async def configure(self, entity_id: str,
+                  connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls,
+                  org_id: str = None):
+        """
+        Configure Call Policy Settings for an entity
+
+        Configure Call Policies settings.
+
+        The call policy feature enables administrator to configure call policy settings such as Connected Line
+        Identification Privacy on Redirected Calls for a professional workspace.
+
+        This API requires a full or user administrator or location administrator auth token with the
+        `spark-admin:workspaces_write` scope can be used to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param connected_line_id_privacy_on_redirected_calls: Specifies the connection type to be used.
+        :type connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['connectedLineIdPrivacyOnRedirectedCalls'] = enum_str(connected_line_id_privacy_on_redirected_calls)
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
 class AsSequentialRingApi(AsPersonSettingsApiChild):
     """
     API for sequential ring settings
@@ -20466,6 +20543,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     barge: AsBargeApi
     call_bridge: AsCallBridgeApi
     call_intercept: AsCallInterceptApi
+    call_policy: AsCallPolicyApi
     call_waiting: AsCallWaitingApi
     caller_id: AsCallerIdApi
     dnd: AsDndApi
@@ -20488,6 +20566,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.barge = AsBargeApi(session=session, selector=ApiSelector.workspace)
         self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.workspace)
         self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.workspace)
+        self.call_policy = AsCallPolicyApi(session=session, selector=ApiSelector.workspace)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.workspace)
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.workspace)
         self.devices = AsWorkspaceDevicesApi(session=session)

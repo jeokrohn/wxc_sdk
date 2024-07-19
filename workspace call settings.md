@@ -40,8 +40,8 @@
 | Modify Privacy Settings for a Workspace                         | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/privacy                                          |
 | Read Voicemail Settings for a Workspace                         | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
 | Configure Voicemail Settings for a Workspace                    | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
-| Read Call Policy Settings for a Workspace                       |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callPolicies                                     |
-| Configure Call Policy Settings for a Workspace                  |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callPolicies                                     |
+| Read Call Policy Settings for a Workspace                       | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callPolicies                                     |
+| Configure Call Policy Settings for a Workspace                  | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callPolicies                                     |
 | Configure Busy Voicemail Greeting for a Place                   | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadBusyGreeting/invoke     |
 | Configure No Answer Voicemail Greeting for a Place              | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadNoAnswerGreeting/invoke |
 | Retrieve Sequential Ring Criteria for a Workspace               | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                     |

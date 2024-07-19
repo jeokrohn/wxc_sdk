@@ -19,6 +19,7 @@ Submodules
    wxc_sdk.person_settings.available_numbers
    wxc_sdk.person_settings.barge
    wxc_sdk.person_settings.call_intercept
+   wxc_sdk.person_settings.call_policy
    wxc_sdk.person_settings.call_recording
    wxc_sdk.person_settings.call_waiting
    wxc_sdk.person_settings.callbridge

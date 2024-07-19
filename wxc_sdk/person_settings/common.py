@@ -75,6 +75,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
             ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'bargeIn'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'callPolicies'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),

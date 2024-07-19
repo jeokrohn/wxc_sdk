@@ -12,6 +12,7 @@ from ..person_settings.available_numbers import AvailableNumbersApi
 from ..person_settings.barge import BargeApi
 from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.call_intercept import CallInterceptApi
+from ..person_settings.call_policy import CallPolicyApi
 from ..person_settings.call_waiting import CallWaitingApi
 from ..person_settings.caller_id import CallerIdApi
 from ..person_settings.common import ApiSelector
@@ -44,6 +45,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     barge: BargeApi
     call_bridge: CallBridgeApi
     call_intercept: CallInterceptApi
+    call_policy: CallPolicyApi
     call_waiting: CallWaitingApi
     caller_id: CallerIdApi
     dnd: DndApi
@@ -66,6 +68,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.barge = BargeApi(session=session, selector=ApiSelector.workspace)
         self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.workspace)
         self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.workspace)
+        self.call_policy = CallPolicyApi(session=session, selector=ApiSelector.workspace)
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.workspace)
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.workspace)
         self.devices = WorkspaceDevicesApi(session=session)

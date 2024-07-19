@@ -13,6 +13,7 @@ from wxc_sdk.common.schedules import ScheduleType, Schedule
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
 from wxc_sdk.person_settings import TelephonyDevice
+from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
 from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingNumber, SequentialRingCriteria, \
     Source, SequentialRingCallsFrom, RingCriteriaScheduleLevel
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
@@ -124,22 +125,22 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         super().setUp()
         self.assertIsNotNone(self.workspace, 'No professional workspace created')
 
-    def test_read_anon_calls(self):
+    def test_anon_calls_read(self):
         api = self.api.workspace_settings.anon_calls
         api.read(self.workspace.workspace_id)
 
-    def test_configure_anon_calls(self):
+    def test_anon_calls_configure(self):
         api = self.api.workspace_settings.anon_calls
         r = api.read(self.workspace.workspace_id)
         api.configure(self.workspace.workspace_id, not r)
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(not r, after)
 
-    def test_read_dnd(self):
+    def test_dnd_read(self):
         api = self.api.workspace_settings.dnd
         api.read(self.workspace.workspace_id)
 
-    def test_configure_dnd(self):
+    def test_dnd_configure(self):
         api = self.api.workspace_settings.dnd
         r = api.read(self.workspace.workspace_id)
         update = r.model_copy(deep=True)
@@ -148,11 +149,11 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(update, after)
 
-    def test_read_call_bridge(self):
+    def test_call_bridge_read(self):
         api = self.api.workspace_settings.call_bridge
         api.read(self.workspace.workspace_id)
 
-    def test_configure_call_bridge(self):
+    def test__call_bridgeconfigure(self):
         api = self.api.workspace_settings.call_bridge
         r = api.read(self.workspace.workspace_id)
         update = r.model_copy(deep=True)
@@ -161,11 +162,11 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(update, after)
 
-    def test_read_ptt(self):
+    def test_ptt_read(self):
         api = self.api.workspace_settings.push_to_talk
         api.read(self.workspace.workspace_id)
 
-    def test_configure_ptt(self):
+    def test_ptt_configure(self):
         api = self.api.workspace_settings.push_to_talk
         r = api.read(self.workspace.workspace_id)
         update = r.model_copy(deep=True)
@@ -174,11 +175,11 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(update, after)
 
-    def test_read_voicemail(self):
+    def test_voicemail_read(self):
         api = self.api.workspace_settings.voicemail
         api.read(self.workspace.workspace_id)
 
-    def test_configure_voicemail(self):
+    def test_voicemail_configure(self):
         api = self.api.workspace_settings.voicemail
         r = api.read(self.workspace.workspace_id)
         update = r.model_copy(deep=True)
@@ -391,7 +392,8 @@ class TestWithProfessionalWorkspace(TestWithLocations):
                                               calls_from=SequentialRingCallsFrom.any_phone_number, ring_enabled=True)
             cid1 = api.create_criteria(self.workspace.workspace_id, criteria)
             criteria = SequentialRingCriteria(schedule_name='', schedule_level='GLOBAL',
-                                              calls_from=SequentialRingCallsFrom.select_phone_numbers, ring_enabled=False,
+                                              calls_from=SequentialRingCallsFrom.select_phone_numbers,
+                                              ring_enabled=False,
                                               phone_numbers=['+4961007739765', '+4961007739766'],
                                               anonymous_callers_enabled=False, unavailable_callers_enabled=False)
             cid2 = api.create_criteria(self.workspace.workspace_id, criteria)
@@ -441,3 +443,26 @@ class TestWithProfessionalWorkspace(TestWithLocations):
                                                         after.phone_numbers)),
                             f'phone numbers in update and after are not equal: '
                             f'{", ".join(str(pn.phone_number) for pn in after.phone_numbers if pn.phone_number)}')
+
+    def test_call_policy_read(self):
+        """
+        read call policy settings
+        """
+        api = self.api.workspace_settings.call_policy
+        api.read(self.workspace.workspace_id)
+
+    def test_call_policy_configure(self):
+        """
+        configure call policy settings
+        """
+        api = self.api.workspace_settings.call_policy
+        before = api.read(self.workspace.workspace_id)
+        try:
+            for i in PrivacyOnRedirectedCalls:
+                api.configure(self.workspace.workspace_id, i)
+                r = api.read(self.workspace.workspace_id)
+                self.assertEqual(i, r)
+        finally:
+            # restore original settings
+            api.configure(self.workspace.workspace_id, before)
+        return

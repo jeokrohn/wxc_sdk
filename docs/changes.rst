@@ -30,6 +30,8 @@ Release history
 - feat: push to talk API for workspaces: :attr:`api.workspace_settings.push_to_talk <wxc_sdk.workspace_settings.WorkspaceSettingsApi.push_to_talk>`
 - feat: voicemail settings API for workspaces: :attr:`api.workspace_settings.voicemail <wxc_sdk.workspace_settings.WorkspaceSettingsApi.voicemail>`
 - feat: sequential ring settings API for workspaces: :attr:`api.workspace_settings.sequential_ring <wxc_sdk.workspace_settings.WorkspaceSettingsApi.sequential_ring>`
+- feat: call policy settings API for workspaces: :attr:`api.workspace_settings.call_policy <wxc_sdk.workspace_settings.WorkspaceSettingsApi.call_policy>`
+
 
 1.19.0
 ------

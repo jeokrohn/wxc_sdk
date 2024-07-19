@@ -1281,6 +1281,10 @@ The method name is a link to the method documentation.
         Configure Call Intercept Greeting
    * - :meth:`api.workspace_settings.call_intercept.read <wxc_sdk.person_settings.call_intercept.CallInterceptApi.read>`
         Read Call Intercept Settings
+   * - :meth:`api.workspace_settings.call_policy.configure <wxc_sdk.person_settings.call_policy.CallPolicyApi.configure>`
+        Configure Call Policy Settings for an entity
+   * - :meth:`api.workspace_settings.call_policy.read <wxc_sdk.person_settings.call_policy.CallPolicyApi.read>`
+        Read Call Policy Settings for an entity
    * - :meth:`api.workspace_settings.call_waiting.configure <wxc_sdk.person_settings.call_waiting.CallWaitingApi.configure>`
         Configure Call Waiting Settings
    * - :meth:`api.workspace_settings.call_waiting.read <wxc_sdk.person_settings.call_waiting.CallWaitingApi.read>`
