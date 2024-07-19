@@ -58,7 +58,7 @@ class ScheduleDay(str, Enum):
     sunday = 'SUNDAY'
 
     @staticmethod
-    def mon_to_fri():
+    def mon_to_fri() -> list['ScheduleDay']:
         return [ScheduleDay.monday, ScheduleDay.tuesday, ScheduleDay.wednesday, ScheduleDay.thursday,
                 ScheduleDay.friday]
 
@@ -281,18 +281,23 @@ class Schedule(ApiModel):
         :return: business hours schedule
         :rtype: :class:`Schedule`
         """
-        dt_day = datetime.date.today()
-        weekday = dt_day.weekday()
-        # we want to start on a monday
-        if weekday:
-            dt_day = dt_day + datetime.timedelta(days=7 - weekday)
+        dt_today = datetime.date.today()
+        weekday_today = dt_today.weekday()
 
         schedule = Schedule(name=name, schedule_type=ScheduleType.business_hours)
         schedule.events = []
-        for day in ScheduleDay.mon_to_fri():
+        for weekday, day in enumerate(ScheduleDay.mon_to_fri()):
             # Two events
             # * from start to break
             # * from break end to end of day
+            day = day.name.capitalize()
+            if weekday < weekday_today:
+                # pick day next week
+                dt_day = dt_today + datetime.timedelta(days=7 + weekday - weekday_today)
+            else:
+                # day this week
+                dt_day = dt_today + datetime.timedelta(days=weekday - weekday_today)
+
             schedule.events.append(Event.day_start_end(name=f'{day} 1',
                                                        day=dt_day,
                                                        start_time=day_start,
@@ -301,7 +306,6 @@ class Schedule(ApiModel):
                                                        day=dt_day,
                                                        start_time=break_end,
                                                        end_time=day_end))
-            dt_day = dt_day + datetime.timedelta(days=1)
         return schedule
 
     def create_update(self, update: bool = False) -> str:

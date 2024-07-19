@@ -1,6 +1,7 @@
 """
 Unit test for Schedules
 """
+import asyncio
 # TODO: testcase for event update
 # TODO test case for event delete
 # TODO test case for schedule delete
@@ -12,8 +13,8 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import ClassVar
 
+from tests.base import TestWithLocations, async_test
 from wxc_sdk.all_types import *
-from tests.base import TestWithLocations
 
 
 class TestScheduleList(TestWithLocations):
@@ -299,3 +300,32 @@ class TestUpdateSchedule(TestWithTestSchedules):
             event_json = event.model_dump_json(exclude={'event_id', 'name'})
             after_event_json = after_event.model_dump_json(exclude={'event_id', 'name'})
             self.assertEqual(event_json, after_event_json)
+
+
+class TestAllDetails(TestWithLocations):
+    """
+    list all schedules of all locations
+    """
+
+    @async_test
+    async def test_all_details(self):
+        sapi = self.async_api.telephony.schedules
+        schedule_lists = await asyncio.gather(*[sapi.list(obj_id=loc.location_id)
+                                                for loc in self.locations])
+        schedule_lists: list[list[Schedule]]
+        # get details for all schedules
+        sched_list: list[Schedule]
+        schedule_lists = await asyncio.gather(*[asyncio.gather(*[sapi.details(loc.location_id,
+                                                                              schedule_type=sched.schedule_type,
+                                                                              schedule_id=sched.schedule_id)
+                                                                 for sched in sched_list])
+                                                for loc, sched_list in zip(self.locations, schedule_lists)])
+        for location, schedule_list in zip(self.locations, schedule_lists):
+            print(f'{location.name}: {len(schedule_list)} schedules')
+            print(' ', end='')
+            print(', '.join(f'{sched.name}' for sched in schedule_list))
+            for schedule in schedule_list:
+                print(f'  {schedule.name}: {len(schedule.events)} events')
+                for event in schedule.events:
+                    data = event.model_dump(exclude={'event_id', 'new_name'}, mode='json', by_alias=True)
+                    print(f'    {data}')
