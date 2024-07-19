@@ -40,16 +40,16 @@
 | Modify Privacy Settings for a Workspace                         | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/privacy                                          |
 | Read Voicemail Settings for a Workspace                         | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
 | Configure Voicemail Settings for a Workspace                    | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail                                        |
-| Retrieve Sequential Ring Criteria for a Workspace               |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                     |
-| Modify Sequential Ring Criteria for a Workspace                 |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                     |
 | Read Call Policy Settings for a Workspace                       |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callPolicies                                     |
 | Configure Call Policy Settings for a Workspace                  |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/callPolicies                                     |
-| Configure Busy Voicemail Greeting for a Place                   |      | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadBusyGreeting/invoke     |
-| Configure No Answer Voicemail Greeting for a Place              |      | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadNoAnswerGreeting/invoke |
-| Delete Sequential Ring Criteria for a Workspace                 |      | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                  |
-| Create Sequential Ring Criteria for a Workspace                 |      | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria                         |
-| Retrieve Sequential Ring Settings for a Workspace               |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing                                   |
-| Modify Sequential Ring Settings for a Workspace                 |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing                                   |
+| Configure Busy Voicemail Greeting for a Place                   | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadBusyGreeting/invoke     |
+| Configure No Answer Voicemail Greeting for a Place              | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/voicemail/actions/uploadNoAnswerGreeting/invoke |
+| Retrieve Sequential Ring Criteria for a Workspace               | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                     |
+| Modify Sequential Ring Criteria for a Workspace                 | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                     |
+| Delete Sequential Ring Criteria for a Workspace                 | X    | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria/{id}                  |
+| Create Sequential Ring Criteria for a Workspace                 | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing/criteria                         |
+| Retrieve Sequential Ring Settings for a Workspace               | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing                                   |
+| Modify Sequential Ring Settings for a Workspace                 | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/sequentialRing                                   |
 | Retrieve Simultaneous Ring Settings for a Workspace             |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/simultaneousRing                                 |
 | Modify Simultaneous Ring Settings for a Workspace               |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/simultaneousRing                                 |
 | Retrieve Simultaneous Ring Criteria for a Workspace             |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/simultaneousRing/criteria/{id}                   |

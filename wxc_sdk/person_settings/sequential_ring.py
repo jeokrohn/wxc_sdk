@@ -1,0 +1,316 @@
+from typing import Optional
+
+from pydantic import TypeAdapter
+
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.common.schedules import ScheduleType
+from wxc_sdk.person_settings.common import PersonSettingsApiChild
+
+__all__ = ['RingCriteriaScheduleLevel', 'SequentialRingCallsFrom', 'SequentialRingCriteria', 'SequentialRingNumber',
+           'Source', 'SequentialRingCrit', 'SequentialRing', 'SequentialRingApi']
+
+
+class RingCriteriaScheduleLevel(str, Enum):
+    #: Indicates schedule specified is of `GROUP` level.
+    group = 'GROUP'
+    global_ = 'GLOBAL'
+
+
+class SequentialRingCallsFrom(str, Enum):
+    #: Criteria applies to all incoming numbers.
+    any_phone_number = 'ANY_PHONE_NUMBER'
+    #: Criteria applies only for specific incoming numbers.
+    select_phone_numbers = 'SELECT_PHONE_NUMBERS'
+
+
+class SequentialRingCriteria(ApiModel):
+    #: Unique identifier for criteria.
+    id: Optional[str] = None
+    #: Name of the location's schedule which determines when the sequential ring is in effect. Creating criteria
+    #: without schedule_name nor schedule_type creates a criteria for all hours all days
+    schedule_name: Optional[str] = None
+    #: This indicates the type of schedule. Creating criteria without schedule_name nor schedule_type creates a
+    #: criteria for all hours all days
+    schedule_type: Optional[ScheduleType] = None
+    #: This indicates the level of the schedule specified by `scheduleName`.
+    schedule_level: Optional[RingCriteriaScheduleLevel] = None
+    #: This indicates if criteria are applicable for calls from any phone number or selected phone numbers.
+    calls_from: Optional[SequentialRingCallsFrom] = None
+    #: When `true` incoming calls from private numbers are allowed. This is only applicable when `callsFrom` is set to
+    #: `SELECT_PHONE_NUMBERS`.
+    anonymous_callers_enabled: Optional[bool] = None
+    #: When `true` incoming calls from unavailable numbers are allowed. This is only applicable when `callsFrom` is set
+    #: to `SELECT_PHONE_NUMBERS`.
+    unavailable_callers_enabled: Optional[bool] = None
+    #: When callsFrom is set to `SELECT_PHONE_NUMBERS`, indicates a list of incoming phone numbers for which the
+    #: criteria apply.
+    phone_numbers: Optional[list[str]] = None
+    #: When set to `true` sequential ringing is enabled for calls that meet the current criteria. Criteria with
+    #: `ringEnabled` set to `false` take priority.
+    ring_enabled: Optional[bool] = None
+
+    def update(self) -> dict:
+        """
+        data for update
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_none=True,
+                               exclude={})
+        return data
+
+
+class SequentialRingNumber(ApiModel):
+    #: Phone number set as the sequential number.
+    phone_number: Optional[str] = None
+    #: When set to `true` the called party is required to press 1 on the keypad to receive the call.
+    answer_confirmation_required_enabled: Optional[bool] = None
+    #: The number of rings to the specified phone number before the call advances to the subsequent number in the
+    #: sequence or goes to voicemail.
+    number_of_rings: Optional[int] = None
+
+
+class Source(str, Enum):
+    #: Criteria applies to all incoming numbers.
+    all_numbers = 'ALL_NUMBERS'
+    #: Criteria applies only for specific incoming numbers.
+    specific_numbers = 'SPECIFIC_NUMBERS'
+
+
+class SequentialRingCrit(ApiModel):
+    #: Unique identifier for criteria.
+    id: Optional[str] = None
+    #: Name of the location's schedule which determines when the sequential ring is in effect.
+    schedule_name: Optional[str] = None
+    #: Indicates if criteria are applicable for calls from any phone number or specific phone number.
+    source: Optional[Source] = None
+    #: When set to `true` sequential ringing is enabled for calls that meet the current criteria. Criteria with
+    #: `ringEnabled` set to `false` take priority.
+    ring_enabled: Optional[bool] = None
+
+
+class SequentialRing(ApiModel):
+    #: When set to `true` sequential ring is enabled.
+    enabled: Optional[bool] = None
+    #: When set to `true`, the webex calling primary line will ring first.
+    ring_base_location_first_enabled: Optional[bool] = None
+    #: The number of times the primary line will ring.
+    base_location_number_of_rings: Optional[int] = None
+    #: When set to `true` and the primary line is busy, the system redirects calls to the numbers configured for
+    #: sequential ringing.
+    continue_if_base_location_is_busy_enabled: Optional[bool] = None
+    #: When set to `true` calls are directed to voicemail.
+    calls_to_voicemail_enabled: Optional[bool] = None
+    #: A list of up to five phone numbers to which calls will be directed.
+    phone_numbers: Optional[list[SequentialRingNumber]] = None
+    #: A list of criteria specifying conditions when sequential ringing is in effect.
+    criteria: Optional[list[SequentialRingCrit]] = None
+
+    def update(self) -> dict:
+        """
+        data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
+                               exclude={'criteria'})
+
+
+class SequentialRingApi(PersonSettingsApiChild):
+    """
+    API for sequential ring settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'sequentialRing'
+
+    def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SequentialRingCriteria:
+        """
+        Retrieve sequential ring criteria for a workspace.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SequentialRingCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = super().get(url, params=params)
+        r = SequentialRingCriteria.model_validate(data)
+        return r
+
+    def configure_criteria(self, entity_id: str, id: str, settings: SequentialRingCriteria,
+                           org_id: str = None):
+        """
+        Modify sequential ring criteria for a workspace.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to
+        update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the workspace.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        super().put(url, params=params, json=body)
+
+    def delete_criteria(self, workspace_id: str, id: str, org_id: str = None):
+        """
+        Delete sequential ring criteria for a workspace.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        This API requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:workspaces_read` to read workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(workspace_id, f'criteria/{id}')
+        super().delete(url, params=params)
+
+    def create_criteria(self, workspace_id: str, settings: SequentialRingCriteria,
+                        org_id: str = None) -> str:
+        """
+        Create sequential ring criteria for a workspace.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to
+        update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param settings: new settings to be applied.
+        :type settings: SequentialRingCriteria
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        body.pop('id', None)
+
+        url = self.f_ep(workspace_id, f'criteria')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def read(self, workspace_id: str,
+             org_id: str = None) -> SequentialRing:
+        """
+        Retrieve sequential ring settings for a workspace.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+
+        This API requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:workspaces_read` to read workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SequentialRing`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(workspace_id)
+        data = super().get(url, params=params)
+        r = SequentialRing.model_validate(data)
+        return r
+
+    def configure(self, workspace_id: str, settings: SequentialRing,
+                  org_id: str = None):
+        """
+        Modify sequential ring settings for a workspace.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to
+        update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param settings
+        :type settings: SequentialRing
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(workspace_id)
+        super().put(url, params=params, json=body)
