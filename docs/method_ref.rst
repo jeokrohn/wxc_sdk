@@ -1373,6 +1373,18 @@ The method name is a link to the method documentation.
         Retrieve sequential ring settings for a workspace
    * - :meth:`api.workspace_settings.sequential_ring.read_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.read_criteria>`
         Retrieve sequential ring criteria for a workspace
+   * - :meth:`api.workspace_settings.sim_ring.configure <wxc_sdk.person_settings.sim_ring.SimRingApi.configure>`
+        Modify Simultaneous Ring Settings for an entity
+   * - :meth:`api.workspace_settings.sim_ring.configure_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.configure_criteria>`
+        Modify Simultaneous Ring Criteria for an entity
+   * - :meth:`api.workspace_settings.sim_ring.create_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.create_criteria>`
+        Create Simultaneous Ring Criteria for an entity
+   * - :meth:`api.workspace_settings.sim_ring.delete_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.delete_criteria>`
+        Delete Simultaneous Ring Criteria for an entity
+   * - :meth:`api.workspace_settings.sim_ring.read <wxc_sdk.person_settings.sim_ring.SimRingApi.read>`
+        Retrieve Simultaneous Ring Settings for an entity
+   * - :meth:`api.workspace_settings.sim_ring.read_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.read_criteria>`
+        Retrieve Simultaneous Ring Criteria for an entity
    * - :meth:`api.workspace_settings.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
         Configure Voicemail Settings for an entity
    * - :meth:`api.workspace_settings.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`

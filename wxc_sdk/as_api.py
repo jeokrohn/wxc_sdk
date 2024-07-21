@@ -73,8 +73,8 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
            'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
            'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
-           'AsSequentialRingApi', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi',
-           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi',
+           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
            'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
            'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
            'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
@@ -5899,6 +5899,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'sequentialRing'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'simultaneousRing'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
@@ -20249,7 +20250,7 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
-        :rtype: :class:`SequentialRingCriteria`
+        :rtype: :class:`SelectiveCriteria`
         """
         params = {}
         if org_id is not None:
@@ -20293,7 +20294,7 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
         url = self.f_ep(entity_id, f'criteria/{id}')
         await super().put(url, params=params, json=body)
 
-    async def delete_criteria(self, workspace_id: str, id: str, org_id: str = None):
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
         """
         Delete sequential ring criteria for a workspace.
 
@@ -20307,8 +20308,8 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param workspace_id: Unique identifier for the workspace.
-        :type workspace_id: str
+        :param entity_id: Unique identifier for the workspace.
+        :type entity_id: str
         :param id: Unique identifier for the criteria.
         :type id: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
@@ -20320,10 +20321,10 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.f_ep(workspace_id, f'criteria/{id}')
+        url = self.f_ep(entity_id, f'criteria/{id}')
         await super().delete(url, params=params)
 
-    async def create_criteria(self, workspace_id: str, settings: SequentialRingCriteria,
+    async def create_criteria(self, entity_id: str, settings: SequentialRingCriteria,
                         org_id: str = None) -> str:
         """
         Create sequential ring criteria for a workspace.
@@ -20338,10 +20339,10 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param workspace_id: Unique identifier for the workspace.
-        :type workspace_id: str
+        :param entity_id: Unique identifier for the workspace.
+        :type entity_id: str
         :param settings: new settings to be applied.
-        :type settings: SequentialRingCriteria
+        :type settings: SelectiveCriteria
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
@@ -20352,14 +20353,13 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.update()
-        body.pop('id', None)
 
-        url = self.f_ep(workspace_id, f'criteria')
+        url = self.f_ep(entity_id, f'criteria')
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r
 
-    async def read(self, workspace_id: str,
+    async def read(self, entity_id: str,
              org_id: str = None) -> SequentialRing:
         """
         Retrieve sequential ring settings for a workspace.
@@ -20372,8 +20372,8 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param workspace_id: Unique identifier for the workspace.
-        :type workspace_id: str
+        :param entity_id: Unique identifier for the workspace.
+        :type entity_id: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
@@ -20383,12 +20383,12 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.f_ep(workspace_id)
+        url = self.f_ep(entity_id)
         data = await super().get(url, params=params)
         r = SequentialRing.model_validate(data)
         return r
 
-    async def configure(self, workspace_id: str, settings: SequentialRing,
+    async def configure(self, entity_id: str, settings: SequentialRing,
                   org_id: str = None):
         """
         Modify sequential ring settings for a workspace.
@@ -20401,9 +20401,9 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param workspace_id: Unique identifier for the workspace.
-        :type workspace_id: str
-        :param settings
+        :param entity_id: Unique identifier for the workspace.
+        :type entity_id: str
+        :param settings: Settings for new criteria
         :type settings: SequentialRing
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
@@ -20415,7 +20415,219 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.update()
-        url = self.f_ep(workspace_id)
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSimRingApi(AsPersonSettingsApiChild):
+    """
+    API for simultaneous ring settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'simultaneousRing'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SimRingCriteria:
+        """
+        Retrieve Simultaneous Ring Criteria for an entity
+
+        Retrieve Simultaneous Ring Criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace
+        settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SimRingCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SimRingCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SimRingCriteria,
+                           org_id: str = None):
+        """
+        Modify Simultaneous Ring Criteria for an entity
+
+        Modify Simultaneous Ring Criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SimRingCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Simultaneous Ring Criteria for an entity
+
+        Delete simultaneous ring criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SimRingCriteria, org_id: str = None) -> str:
+        """
+        Create Simultaneous Ring Criteria for an entity
+
+        Create Simultaneous Ring Criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SimRingCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SimRing:
+        """
+        Retrieve Simultaneous Ring Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Schedules can also be set up to ring these phones during certain times of the day or days of the week.
+
+        This API requires a full, read-only or location administrator auth token with a scope
+        of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace
+        settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SimRing`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SimRing.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SimRing,
+                  org_id: str = None):
+        """
+        Modify Simultaneous Ring Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure the workspace phones of your choice to ring
+        simultaneously.
+        Schedules can also be set up to ring these phones during certain times of the day or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: Settings for new criteria
+        :type settings: SimRing
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
         await super().put(url, params=params, json=body)
 
 
@@ -20557,6 +20769,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     privacy: AsPrivacyApi
     push_to_talk: AsPushToTalkApi
     sequential_ring: AsSequentialRingApi
+    sim_ring: AsSimRingApi
     voicemail: AsVoicemailApi
 
     def __init__(self, session: AsRestSession):
@@ -20580,6 +20793,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.workspace)
         self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.workspace)
         self.sequential_ring = AsSequentialRingApi(session=session, selector=ApiSelector.workspace)
+        self.sim_ring = AsSimRingApi(session=session, selector=ApiSelector.workspace)
         self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.workspace)
 
 

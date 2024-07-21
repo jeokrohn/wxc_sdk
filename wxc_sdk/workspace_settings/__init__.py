@@ -25,6 +25,7 @@ from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..person_settings.privacy import PrivacyApi
 from ..person_settings.push_to_talk import PushToTalkApi
 from ..person_settings.sequential_ring import SequentialRingApi
+from ..person_settings.sim_ring import SimRingApi
 from ..person_settings.voicemail import VoicemailApi
 from ..rest import RestSession
 
@@ -59,6 +60,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     privacy: PrivacyApi
     push_to_talk: PushToTalkApi
     sequential_ring: SequentialRingApi
+    sim_ring: SimRingApi
     voicemail: VoicemailApi
 
     def __init__(self, session: RestSession):
@@ -82,4 +84,5 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.privacy = PrivacyApi(session=session, selector=ApiSelector.workspace)
         self.push_to_talk = PushToTalkApi(session=session, selector=ApiSelector.workspace)
         self.sequential_ring = SequentialRingApi(session=session, selector=ApiSelector.workspace)
+        self.sim_ring = SimRingApi(session=session, selector=ApiSelector.workspace)
         self.voicemail = VoicemailApi(session=session, selector=ApiSelector.workspace)

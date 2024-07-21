@@ -41,4 +41,5 @@ Submodules
    wxc_sdk.person_settings.push_to_talk
    wxc_sdk.person_settings.receptionist
    wxc_sdk.person_settings.sequential_ring
+   wxc_sdk.person_settings.sim_ring
    wxc_sdk.person_settings.voicemail

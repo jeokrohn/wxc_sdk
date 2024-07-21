@@ -10,12 +10,13 @@ from typing import ClassVar
 from tests.base import TestCaseWithLog, async_test, TestWithLocations
 from tests.testutil import create_workspace_with_webex_calling
 from wxc_sdk.common.schedules import ScheduleType, Schedule
+from wxc_sdk.common.selective import SelectiveFrom, SelectiveScheduleLevel
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
 from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
-from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingNumber, SequentialRingCriteria, \
-    Source, SequentialRingCallsFrom, RingCriteriaScheduleLevel
+from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingNumber, SequentialRingCriteria
+from wxc_sdk.person_settings.sim_ring import SimRingCriteria, SimRing, SimRingNumber
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
 from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
@@ -125,6 +126,34 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         super().setUp()
         self.assertIsNotNone(self.workspace, 'No professional workspace created')
 
+    @contextmanager
+    def with_schedule(self) -> Schedule:
+        """
+        get or create a schedule for the test
+        """
+        with self.no_log():
+            schedules = list(self.api.telephony.schedules.list(self.workspace.location_id))
+        if False and schedules:
+            temp_schedule: Schedule = random.choice(schedules)
+            yield temp_schedule
+        else:
+            # create a temporary schedule for the test
+            print('creating temporary schedule for the test')
+            temp_schedule = Schedule.business('test schedule')
+            with self.no_log():
+                schedule_id = self.api.telephony.schedules.create(self.workspace.location_id, temp_schedule)
+            try:
+                yield temp_schedule
+            finally:
+                with self.no_log():
+                    print('deleting temporary schedule')
+                    self.api.telephony.schedules.delete_schedule(self.workspace.location_id,
+                                                                 schedule_type=ScheduleType.business_hours,
+                                                                 schedule_id=schedule_id)
+        return
+
+
+class TestWorkspaceSettingsWithProWorkspace(TestWithProfessionalWorkspace):
     def test_anon_calls_read(self):
         api = self.api.workspace_settings.anon_calls
         api.read(self.workspace.workspace_id)
@@ -153,7 +182,7 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         api = self.api.workspace_settings.call_bridge
         api.read(self.workspace.workspace_id)
 
-    def test__call_bridgeconfigure(self):
+    def test_call_bridge_configure(self):
         api = self.api.workspace_settings.call_bridge
         r = api.read(self.workspace.workspace_id)
         update = r.model_copy(deep=True)
@@ -188,6 +217,31 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         after = api.read(self.workspace.workspace_id)
         self.assertEqual(update, after)
 
+    def test_call_policy_read(self):
+        """
+        read call policy settings
+        """
+        api = self.api.workspace_settings.call_policy
+        api.read(self.workspace.workspace_id)
+
+    def test_call_policy_configure(self):
+        """
+        configure call policy settings
+        """
+        api = self.api.workspace_settings.call_policy
+        before = api.read(self.workspace.workspace_id)
+        try:
+            for i in PrivacyOnRedirectedCalls:
+                api.configure(self.workspace.workspace_id, i)
+                r = api.read(self.workspace.workspace_id)
+                self.assertEqual(i, r)
+        finally:
+            # restore original settings
+            api.configure(self.workspace.workspace_id, before)
+        return
+
+
+class SeqRingTest(TestWithProfessionalWorkspace):
     def test_sequential_ring_criteria_create(self):
         """
         create criteria
@@ -195,12 +249,12 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         api = self.api.workspace_settings.sequential_ring
         before = api.read(self.workspace.workspace_id)
         self.assertEqual(0, len(before.criteria))
-        criteria = SequentialRingCriteria(calls_from=SequentialRingCallsFrom.any_phone_number, ring_enabled=True)
+        criteria = SequentialRingCriteria(calls_from=SelectiveFrom.any_phone_number, enabled=True)
         criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
         try:
             details = api.read_criteria(self.workspace.workspace_id, criteria_id)
             self.assertEqual(criteria.calls_from, details.calls_from)
-            self.assertEqual(criteria.ring_enabled, details.ring_enabled)
+            self.assertEqual(criteria.enabled, details.enabled)
 
             # also there should be one criteria in the details
             after = api.read(self.workspace.workspace_id)
@@ -219,7 +273,7 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         before = api.read(self.workspace.workspace_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
-        criteria = SequentialRingCriteria(calls_from=SequentialRingCallsFrom.select_phone_numbers, ring_enabled=True,
+        criteria = SequentialRingCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                           phone_numbers=phone_numbers,
                                           anonymous_callers_enabled=False,
                                           unavailable_callers_enabled=False)
@@ -258,7 +312,7 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         before = api.read(self.workspace.workspace_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
-        criteria = SequentialRingCriteria(calls_from=SequentialRingCallsFrom.select_phone_numbers, ring_enabled=True,
+        criteria = SequentialRingCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                           phone_numbers=phone_numbers,
                                           anonymous_callers_enabled=False,
                                           unavailable_callers_enabled=False)
@@ -287,13 +341,13 @@ class TestWithProfessionalWorkspace(TestWithLocations):
 
     def test_sequential_ring_criteria_remove_phone_number(self):
         """
-        create criteria and renove phone number
+        create criteria and remove phone number
         """
         api = self.api.workspace_settings.sequential_ring
         before = api.read(self.workspace.workspace_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
-        criteria = SequentialRingCriteria(calls_from=SequentialRingCallsFrom.select_phone_numbers, ring_enabled=True,
+        criteria = SequentialRingCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                           phone_numbers=phone_numbers,
                                           anonymous_callers_enabled=False,
                                           unavailable_callers_enabled=False)
@@ -325,41 +379,15 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         """
         api = self.api.workspace_settings.sequential_ring
 
-        @contextmanager
-        def with_schedule() -> Schedule:
-            """
-            get or create a schedule for the test
-            """
-            with self.no_log():
-                schedules = list(self.api.telephony.schedules.list(self.workspace.location_id))
-            if False and schedules:
-                temp_schedule: Schedule = random.choice(schedules)
-                yield temp_schedule
-            else:
-                # create a temporary schedule for the test
-                print('creating temporary schedule for the test')
-                temp_schedule = Schedule.business('test schedule')
-                with self.no_log():
-                    schedule_id = self.api.telephony.schedules.create(self.workspace.location_id, temp_schedule)
-                try:
-                    yield temp_schedule
-                finally:
-                    with self.no_log():
-                        print('deleting temporary schedule')
-                        self.api.telephony.schedules.delete_schedule(self.workspace.location_id,
-                                                                     schedule_type=ScheduleType.business_hours,
-                                                                     schedule_id=schedule_id)
-            return
-
-        with with_schedule() as schedule:
+        with self.with_schedule() as schedule:
             schedule: Schedule
             before = api.read(self.workspace.workspace_id)
             self.assertEqual(0, len(before.criteria))
-            criteria = SequentialRingCriteria(calls_from=SequentialRingCallsFrom.any_phone_number,
-                                              ring_enabled=True,
+            criteria = SequentialRingCriteria(calls_from=SelectiveFrom.any_phone_number,
+                                              enabled=True,
                                               schedule_name=schedule.name,
                                               schedule_type=schedule.schedule_type,
-                                              schedule_level=RingCriteriaScheduleLevel.group)
+                                              schedule_level=SelectiveScheduleLevel.group)
             criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
             try:
                 details = api.read_criteria(self.workspace.workspace_id, criteria_id)
@@ -382,18 +410,19 @@ class TestWithProfessionalWorkspace(TestWithLocations):
         """
         configure sequential ring settings
         """
+        api = self.api.workspace_settings.sequential_ring
 
         @contextmanager
-        def create_criteria() -> SequentialRingCriteria:
+        def create_criteria():
             """
             Create two sequential ring criteria on workspace
             """
             criteria = SequentialRingCriteria(schedule_name='', schedule_level='GLOBAL',
-                                              calls_from=SequentialRingCallsFrom.any_phone_number, ring_enabled=True)
+                                              calls_from=SelectiveFrom.any_phone_number, enabled=True)
             cid1 = api.create_criteria(self.workspace.workspace_id, criteria)
             criteria = SequentialRingCriteria(schedule_name='', schedule_level='GLOBAL',
-                                              calls_from=SequentialRingCallsFrom.select_phone_numbers,
-                                              ring_enabled=False,
+                                              calls_from=SelectiveFrom.select_phone_numbers,
+                                              enabled=False,
                                               phone_numbers=['+4961007739765', '+4961007739766'],
                                               anonymous_callers_enabled=False, unavailable_callers_enabled=False)
             cid2 = api.create_criteria(self.workspace.workspace_id, criteria)
@@ -404,7 +433,6 @@ class TestWithProfessionalWorkspace(TestWithLocations):
                 api.delete_criteria(self.workspace.workspace_id, cid2)
             return
 
-        api = self.api.workspace_settings.sequential_ring
         with create_criteria():
             update = SequentialRing(enabled=True,
                                     ring_base_location_first_enabled=True,
@@ -444,25 +472,231 @@ class TestWithProfessionalWorkspace(TestWithLocations):
                             f'phone numbers in update and after are not equal: '
                             f'{", ".join(str(pn.phone_number) for pn in after.phone_numbers if pn.phone_number)}')
 
-    def test_call_policy_read(self):
+
+class SimRingTest(TestWithProfessionalWorkspace):
+    def test_sim_ring_criteria_create(self):
         """
-        read call policy settings
+        create criteria
         """
-        api = self.api.workspace_settings.call_policy
+        api = self.api.workspace_settings.sim_ring
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        criteria = SimRingCriteria(calls_from=SelectiveFrom.any_phone_number, enabled=True)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            self.assertEqual(criteria.calls_from, details.calls_from)
+            self.assertEqual(criteria.enabled, details.enabled)
+
+            # also there should be one criteria in the details
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(1, len(after.criteria))
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_sim_ring_criteria_create_with_phone_number(self):
+        """
+        create criteria with phone numbers
+        """
+        api = self.api.workspace_settings.sim_ring
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        phone_numbers = ['+4961007739765', '+4961007739766']
+        criteria = SimRingCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
+                                   phone_numbers=phone_numbers,
+                                   anonymous_callers_enabled=False,
+                                   unavailable_callers_enabled=False)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details_with_cleaned_phone_number = details.model_copy(deep=True)
+            details_with_cleaned_phone_number.phone_numbers = \
+                [pn.replace('-', '')
+                 for pn in details_with_cleaned_phone_number.phone_numbers]
+            criteria.id = details.id
+            self.assertEqual(criteria, details_with_cleaned_phone_number)
+
+            # also there should be one criteria in the details
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(1, len(after.criteria))
+
+            # ... and the numbers are somewhat screwed up
+            self.assertTrue(all(pn == pn_after
+                                for pn, pn_after in zip(phone_numbers,
+                                                        details.phone_numbers)),
+                            f'phone numbers in criteria and details are not equal: '
+                            f'{", ".join(details.phone_numbers)}')
+
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_sim_ring_criteria_add_phone_number(self):
+        """
+        create criteria and add phone number
+        """
+        api = self.api.workspace_settings.sim_ring
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        phone_numbers = ['+4961007739765', '+4961007739766']
+        criteria = SimRingCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
+                                   phone_numbers=phone_numbers,
+                                   anonymous_callers_enabled=False,
+                                   unavailable_callers_enabled=False)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            criteria.id = details.id
+            self.assertEqual(2, len(details.phone_numbers))
+            # also there should be one criteria in the details
+            self.assertEqual(1, len(after.criteria))
+
+            # now, let's try to add a phone numbers
+            phone_numbers.append('+4961007739767')
+            update = details.model_copy(deep=True)
+            update.phone_numbers = phone_numbers
+            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            self.assertEqual(3, len(criteria_after.phone_numbers))
+
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_sim_ring_criteria_remove_phone_number(self):
+        """
+        create criteria and remove phone number
+        """
+        api = self.api.workspace_settings.sim_ring
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        phone_numbers = ['+4961007739765', '+4961007739766']
+        criteria = SimRingCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
+                                   phone_numbers=phone_numbers,
+                                   anonymous_callers_enabled=False,
+                                   unavailable_callers_enabled=False)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            criteria.id = details.id
+            self.assertEqual(2, len(details.phone_numbers))
+            # also there should be one criteria in the details
+            self.assertEqual(1, len(after.criteria))
+
+            # now, let's try to remove a phone numbers
+            update = details.model_copy(deep=True)
+            update.phone_numbers = phone_numbers[:-1]
+            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            self.assertEqual(1, len(criteria_after.phone_numbers))
+
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_sim_ring_criteria_create_with_schedule(self):
+        """
+        create criteria with actual schedule
+        """
+        api = self.api.workspace_settings.sim_ring
+
+        with self.with_schedule() as schedule:
+            schedule: Schedule
+            before = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(before.criteria))
+            criteria = SimRingCriteria(calls_from=SelectiveFrom.any_phone_number,
+                                       enabled=True,
+                                       schedule_name=schedule.name,
+                                       schedule_type=schedule.schedule_type,
+                                       schedule_level=SelectiveScheduleLevel.group)
+            criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+            try:
+                details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+                after = api.read(self.workspace.workspace_id)
+                self.assertEqual(1, len(after.criteria))
+            finally:
+                # clean up: delete criteria again
+                api.delete_criteria(self.workspace.workspace_id, criteria_id)
+                after = api.read(self.workspace.workspace_id)
+                self.assertEqual(0, len(after.criteria))
+
+    def test_sim_ring_read(self):
+        """
+        read sim ring settings
+        """
+        api = self.api.workspace_settings.sim_ring
         api.read(self.workspace.workspace_id)
 
-    def test_call_policy_configure(self):
+    def test_sim_ring_configure(self):
         """
-        configure call policy settings
+        configure sim ring settings
         """
-        api = self.api.workspace_settings.call_policy
-        before = api.read(self.workspace.workspace_id)
-        try:
-            for i in PrivacyOnRedirectedCalls:
-                api.configure(self.workspace.workspace_id, i)
-                r = api.read(self.workspace.workspace_id)
-                self.assertEqual(i, r)
-        finally:
-            # restore original settings
-            api.configure(self.workspace.workspace_id, before)
-        return
+        api = self.api.workspace_settings.sim_ring
+
+        @contextmanager
+        def create_criteria():
+            """
+            Create two sim ring criteria on workspace
+            """
+            criteria = SimRingCriteria(schedule_name='', schedule_level='GLOBAL',
+                                       calls_from=SelectiveFrom.any_phone_number, enabled=True)
+            cid1 = api.create_criteria(self.workspace.workspace_id, criteria)
+            criteria = SimRingCriteria(schedule_name='', schedule_level='GLOBAL',
+                                       calls_from=SelectiveFrom.select_phone_numbers,
+                                       enabled=False,
+                                       phone_numbers=['+4961007739765', '+4961007739766'],
+                                       anonymous_callers_enabled=False, unavailable_callers_enabled=False)
+            cid2 = api.create_criteria(self.workspace.workspace_id, criteria)
+            try:
+                yield
+            finally:
+                api.delete_criteria(self.workspace.workspace_id, cid1)
+                api.delete_criteria(self.workspace.workspace_id, cid2)
+            return
+
+        with create_criteria():
+            update = SimRing(enabled=True,
+                             do_not_ring_if_on_call_enabled=True,
+                             criterias_enabled=True,
+                             phone_numbers=[SimRingNumber(phone_number='+4961009764',
+                                                          answer_confirmation_enabled=True)])
+            api.configure(self.workspace.workspace_id, update)
+            after = api.read(self.workspace.workspace_id)
+
+            # apparently the phone numbers are returned in a weird format: +49-61007739764
+            # to check the update we want to ignore that
+            after_with_cleaned_phone_number = after.model_copy(deep=True)
+            for pn in after_with_cleaned_phone_number.phone_numbers:
+                if pn.phone_number is None:
+                    continue
+                pn.phone_number = pn.phone_number.replace('-', '')
+
+            # also, sim ring settings always are returned with five phone numbers; for the test we are going to
+            # ignore the ones that are not set
+            after_with_cleaned_phone_number.phone_numbers = [pn for pn in after_with_cleaned_phone_number.phone_numbers
+                                                             if pn.phone_number]
+
+            # as the update doesn't have criteria, we also want to ignore differences in criteria
+            update.criteria = after.criteria
+            self.assertEqual(update, after_with_cleaned_phone_number)
+
+            # we created two criteria, so there should be two criteria in the details
+            self.assertEqual(2, len(after.criteria))
+
+            # finally, raise an error if the phone numbers are not equal
+            self.assertTrue(all(pn == pn_after
+                                for pn, pn_after in zip(update.phone_numbers,
+                                                        after.phone_numbers)),
+                            f'phone numbers in update and after are not equal: '
+                            f'{", ".join(str(pn.phone_number) for pn in after.phone_numbers if pn.phone_number)}')

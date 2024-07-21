@@ -23,6 +23,8 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence, \
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, ScheduleWeek
+from wxc_sdk.common.selective import SelectiveCrit, SelectiveCriteria, SelectiveFrom, SelectiveScheduleLevel, \
+    SelectiveSource
 from wxc_sdk.device_configurations import DeviceConfiguration, DeviceConfigurationOperation, \
     DeviceConfigurationResponse, DeviceConfigurationSource, DeviceConfigurationSourceEditability, \
     DeviceConfigurationSources
@@ -70,6 +72,7 @@ from wxc_sdk.person_settings.available_numbers import AvailableNumber, Available
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptAnnouncements, InterceptNumber, InterceptSetting, \
     InterceptSettingIncoming, InterceptSettingOutgoing, InterceptTypeIncoming, InterceptTypeOutgoing
+from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
 from wxc_sdk.person_settings.call_recording import CallRecordingSetting, Notification, NotificationRepeat, \
     NotificationType, Record, StartStopAnnouncement
 from wxc_sdk.person_settings.callbridge import CallBridgeSetting
@@ -93,8 +96,8 @@ from wxc_sdk.person_settings.preferred_answer import PreferredAnswerEndpoint, Pr
 from wxc_sdk.person_settings.privacy import Privacy
 from wxc_sdk.person_settings.push_to_talk import PTTConnectionType, PushToTalkAccessType, PushToTalkSettings
 from wxc_sdk.person_settings.receptionist import ReceptionistSettings
-from wxc_sdk.person_settings.sequential_ring import RingCriteriaScheduleLevel, SequentialRing, \
-    SequentialRingCallsFrom, SequentialRingCrit, SequentialRingCriteria, SequentialRingNumber, Source
+from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingCriteria, SequentialRingNumber
+from wxc_sdk.person_settings.sim_ring import SimRing, SimRingCriteria, SimRingNumber
 from wxc_sdk.person_settings.voicemail import UnansweredCalls, VoicemailEnabledWithGreeting, VoicemailSettings
 from wxc_sdk.reports import CallingCDR, Report, ReportTemplate, ValidationRules
 from wxc_sdk.room_tabs import RoomTab
@@ -261,22 +264,23 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType',
            'PhotoObject', 'PhotoObjectType', 'PickupNotificationType', 'PinLength', 'Policy',
            'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse', 'PrimaryOrShared',
-           'Privacy', 'ProductType', 'ProgrammableLineKey', 'PskObject', 'PstnNumberDestination',
-           'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
+           'Privacy', 'PrivacyOnRedirectedCalls', 'ProductType', 'ProgrammableLineKey', 'PskObject',
+           'PstnNumberDestination', 'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
            'QueryMeetingParticipantsWithEmailBody', 'Question', 'QuestionAnswer', 'QuestionOption', 'QuestionType',
            'QuestionWithAnswers', 'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk', 'Recall', 'RecallHuntGroup',
            'ReceptionistSettings', 'Record', 'Recording', 'RecordingFormat', 'RecordingServiceType', 'RecordingState',
            'RecordingStatus', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason',
            'Redirection', 'Registration', 'RejectAction', 'RepoAnnouncement', 'Report', 'ReportTemplate',
-           'RepositoryUsage', 'ResponseError', 'ResponseStatus', 'ResponseStatusType', 'RingCriteriaScheduleLevel',
-           'RingPattern', 'Room', 'RoomTab', 'RoomType', 'RouteGroup', 'RouteGroupUsage', 'RouteIdentity',
-           'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType', 'SafeEnum', 'Schedule',
-           'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr',
-           'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions', 'ScimPhoneNumberType',
-           'ScimUser', 'SearchUserResponse', 'Sender', 'SequentialRing', 'SequentialRingCallsFrom',
-           'SequentialRingCrit', 'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SettingsObject',
+           'RepositoryUsage', 'ResponseError', 'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'Room',
+           'RoomTab', 'RoomType', 'RouteGroup', 'RouteGroupUsage', 'RouteIdentity', 'RouteList',
+           'RouteListDestination', 'RouteListDetail', 'RouteType', 'SafeEnum', 'Schedule', 'ScheduleApiBase',
+           'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek',
+           'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions', 'ScimPhoneNumberType', 'ScimUser',
+           'SearchUserResponse', 'SelectiveCrit', 'SelectiveCriteria', 'SelectiveFrom', 'SelectiveScheduleLevel',
+           'SelectiveSource', 'Sender', 'SequentialRing', 'SequentialRingCriteria', 'SequentialRingNumber',
+           'ServiceType', 'SettingsObject', 'SimRing', 'SimRingCriteria', 'SimRingNumber',
            'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType',
-           'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu', 'Source',
+           'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu',
            'StandardRegistrationApproveRule', 'StartJobResponse', 'StartMoveUsersJobResponse',
            'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
            'StrandedCalls', 'StrandedCallsAction', 'SupportedDevice', 'SupportedDevices', 'SurveyResult', 'TagOp',

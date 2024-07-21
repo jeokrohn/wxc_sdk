@@ -4,6 +4,8 @@ from wxc_sdk.base import enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
+__all__ = ['CallPolicyApi', 'PrivacyOnRedirectedCalls']
+
 
 class PrivacyOnRedirectedCalls(str, Enum):
     #: Connected line identification is not blocked on redirected calls.
