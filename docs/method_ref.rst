@@ -1361,6 +1361,18 @@ The method name is a link to the method documentation.
         Configure Push-to-Talk Settings for an entity
    * - :meth:`api.workspace_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
         Read Push-to-Talk Settings for an entity
+   * - :meth:`api.workspace_settings.selective_accept.configure <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure>`
+        Modify Selective Accept Settings for an entity
+   * - :meth:`api.workspace_settings.selective_accept.configure_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure_criteria>`
+        Modify Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_accept.create_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.create_criteria>`
+        Create Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_accept.delete_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.delete_criteria>`
+        Delete Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_accept.read <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.read>`
+        Retrieve Selective Accept Settings for an entity
+   * - :meth:`api.workspace_settings.selective_accept.read_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.read_criteria>`
+        Retrieve Selective Accept Criteria for an entity
    * - :meth:`api.workspace_settings.selective_reject.configure <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure>`
         Modify Selective Reject Settings for an entity
    * - :meth:`api.workspace_settings.selective_reject.configure_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure_criteria>`
