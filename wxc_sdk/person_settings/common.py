@@ -83,6 +83,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
             ('workspaces', 'priorityAlert'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'selectiveAccept'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'selectiveForward'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'selectiveReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'sequentialRing'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'simultaneousRing'): ('telephony/config/workspaces', '/'),

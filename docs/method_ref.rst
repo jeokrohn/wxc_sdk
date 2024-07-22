@@ -1385,6 +1385,18 @@ The method name is a link to the method documentation.
         Retrieve Selective Accept Settings for an entity
    * - :meth:`api.workspace_settings.selective_accept.read_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.read_criteria>`
         Retrieve Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_forward.configure <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.configure>`
+        Modify Selective Forward Settings for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.configure_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.configure_criteria>`
+        Modify Selective Forward Criteria for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.create_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.create_criteria>`
+        Create Selective Forward Criteria for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.delete_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.delete_criteria>`
+        Delete Selective Forward Criteria for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.read <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.read>`
+        Retrieve Selective Forward Settings for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.read_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.read_criteria>`
+        Retrieve Selective Forward Criteria for a Workspace
    * - :meth:`api.workspace_settings.selective_reject.configure <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure>`
         Modify Selective Reject Settings for an entity
    * - :meth:`api.workspace_settings.selective_reject.configure_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure_criteria>`

@@ -17,10 +17,12 @@ from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
 from wxc_sdk.person_settings.priority_alert import PriorityAlertApi, PriorityAlertCriteria, PriorityAlert
 from wxc_sdk.person_settings.selective_accept import SelectiveAcceptApi, SelectiveAcceptCriteria, SelectiveAccept
+from wxc_sdk.person_settings.selective_forward import SelectiveForwardApi, SelectiveForwardCriteria, SelectiveForward
 from wxc_sdk.person_settings.selective_reject import SelectiveRejectApi, SelectiveRejectCriteria, SelectiveReject
 from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingNumber, SequentialRingCriteria, \
     SequentialRingApi
 from wxc_sdk.person_settings.sim_ring import SimRingCriteria, SimRing, SimRingNumber, SimRingApi
+from wxc_sdk.telephony import NumberType
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
 from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
@@ -1350,6 +1352,254 @@ class PriorityAlertTest(TestWithProfessionalWorkspace):
 
         with create_criteria():
             update = PriorityAlert(enabled=True)
+            api.configure(self.workspace.workspace_id, update)
+            after = api.read(self.workspace.workspace_id)
+
+            # as the update doesn't have criteria, we also want to ignore differences in criteria
+            update.criteria = after.criteria
+            self.assertEqual(update, after)
+
+            # we created two criteria, so there should be two criteria in the details
+            self.assertEqual(2, len(after.criteria))
+
+
+@dataclass(init=False)
+class SelectiveForwardTest(TestWithProfessionalWorkspace):
+    tapi: ClassVar[SelectiveForwardApi]
+    forward_to_phone_number: ClassVar[str]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.tapi = cls.api.workspace_settings.selective_forward
+        numbers = list(cls.api.telephony.phone_numbers(location_id=cls.location.location_id,number_type=NumberType.number))
+        if numbers:
+            cls.forward_to_phone_number = random.choice(numbers).phone_number
+        else:
+            cls.forward_to_phone_number = None
+
+    def setUp(self) -> None:
+        super().setUp()
+        if self.forward_to_phone_number is None:
+            self.fail('No phone numbers available')
+
+    def test_criteria_create(self):
+        """
+        create criteria
+        """
+        api = self.tapi
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.any_phone_number, enabled=True,
+                                            forward_to_phone_number=self.forward_to_phone_number,
+                                            send_to_voicemail_enabled=True)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            self.assertEqual(criteria.calls_from, details.calls_from)
+            self.assertEqual(criteria.enabled, details.enabled)
+            self.assertEqual(criteria.send_to_voicemail_enabled, details.send_to_voicemail_enabled)
+            # apparently the phone numbers are returned in a weird format: +49-6100135393
+            self.assertEqual(criteria.forward_to_phone_number,
+                             details.forward_to_phone_number.replace('-', ''))
+
+            # also there should be one criteria in the details
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(1, len(after.criteria))
+            self.assertEqual(criteria.forward_to_phone_number, details.forward_to_phone_number)
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_criteria_create_with_phone_number(self):
+        """
+        create criteria with phone numbers
+        """
+        api = self.tapi
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        phone_numbers = ['+4961007739765', '+4961007739766']
+        criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
+                                            phone_numbers=phone_numbers,
+                                            anonymous_callers_enabled=False,
+                                            unavailable_callers_enabled=False,
+                                            forward_to_phone_number=self.forward_to_phone_number,
+                                            send_to_voicemail_enabled=True)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details_with_cleaned_phone_number = details.model_copy(deep=True)
+            details_with_cleaned_phone_number.phone_numbers = \
+                [pn.replace('-', '')
+                 for pn in details_with_cleaned_phone_number.phone_numbers]
+            criteria.id = details.id
+            details_with_cleaned_phone_number.forward_to_phone_number = (
+                details.forward_to_phone_number.replace('-', ''))
+            self.assertEqual(criteria, details_with_cleaned_phone_number)
+
+            # also there should be one criteria in the details
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(1, len(after.criteria))
+
+            # ... and the numbers are somewhat screwed up
+            err = False
+            if not all(pn == pn_after
+                                for pn, pn_after in zip(phone_numbers,
+                                                        details.phone_numbers)):
+                print(f'phone numbers in criteria and details are not equal: '
+                            f'{", ".join(details.phone_numbers)}')
+                err = True
+            if criteria.forward_to_phone_number != details.forward_to_phone_number:
+                print(f'forward_to_phone_number in criteria and details are not equal: '
+                            f'{criteria.forward_to_phone_number} != {details.forward_to_phone_number}')
+                err = True
+            self.assertFalse(err, 'Some number issues; check output')
+
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_criteria_add_phone_number(self):
+        """
+        create criteria and add phone number
+        """
+        api = self.tapi
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        phone_numbers = ['+4961007739765', '+4961007739766']
+        criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
+                                            phone_numbers=phone_numbers,
+                                            anonymous_callers_enabled=False,
+                                            unavailable_callers_enabled=False,
+                                            forward_to_phone_number=self.forward_to_phone_number)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            criteria.id = details.id
+            self.assertEqual(2, len(details.phone_numbers))
+            # also there should be one criteria in the details
+            self.assertEqual(1, len(after.criteria))
+
+            # now, let's try to add a phone numbers
+            phone_numbers.append('+4961007739767')
+            update = details.model_copy(deep=True)
+            update.phone_numbers = phone_numbers
+            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            self.assertEqual(3, len(criteria_after.phone_numbers))
+
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_criteria_remove_phone_number(self):
+        """
+        create criteria and remove phone number
+        """
+        api = self.tapi
+        before = api.read(self.workspace.workspace_id)
+        self.assertEqual(0, len(before.criteria))
+        phone_numbers = ['+4961007739765', '+4961007739766']
+        criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
+                                            phone_numbers=phone_numbers,
+                                            anonymous_callers_enabled=False,
+                                            unavailable_callers_enabled=False,
+                                            forward_to_phone_number=self.forward_to_phone_number)
+        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        try:
+            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            criteria.id = details.id
+            self.assertEqual(2, len(details.phone_numbers))
+            # also there should be one criteria in the details
+            self.assertEqual(1, len(after.criteria))
+
+            # now, let's try to remove a phone numbers
+            update = details.model_copy(deep=True)
+            update.phone_numbers = phone_numbers[:-1]
+            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            self.assertEqual(1, len(criteria_after.phone_numbers))
+
+        finally:
+            # clean up: delete criteria again
+            api.delete_criteria(self.workspace.workspace_id, criteria_id)
+            after = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(after.criteria))
+
+    def test_criteria_create_with_schedule(self):
+        """
+        create criteria with actual schedule
+        """
+        api = self.tapi
+
+        with self.with_schedule() as schedule:
+            schedule: Schedule
+            before = api.read(self.workspace.workspace_id)
+            self.assertEqual(0, len(before.criteria))
+            criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.any_phone_number,
+                                                enabled=True,
+                                                schedule_name=schedule.name,
+                                                schedule_type=schedule.schedule_type,
+                                                schedule_level=SelectiveScheduleLevel.group,
+                                                forward_to_phone_number=self.forward_to_phone_number)
+            criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+            try:
+                details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+                after = api.read(self.workspace.workspace_id)
+                self.assertEqual(1, len(after.criteria))
+            finally:
+                # clean up: delete criteria again
+                api.delete_criteria(self.workspace.workspace_id, criteria_id)
+                after = api.read(self.workspace.workspace_id)
+                self.assertEqual(0, len(after.criteria))
+
+    def test_read(self):
+        """
+        read selective forward settings
+        """
+        api = self.tapi
+        api.read(self.workspace.workspace_id)
+
+    def test_configure(self):
+        """
+        configure selective forward settings
+        """
+        api = self.tapi
+
+        @contextmanager
+        def create_criteria():
+            """
+            Create two sim ring criteria on workspace
+            """
+            criteria = SelectiveForwardCriteria(schedule_name='', schedule_level='GLOBAL',
+                                                calls_from=SelectiveFrom.any_phone_number, enabled=True,
+                                                forward_to_phone_number=self.forward_to_phone_number)
+            cid1 = api.create_criteria(self.workspace.workspace_id, criteria)
+            criteria = SelectiveForwardCriteria(schedule_name='', schedule_level='GLOBAL',
+                                                calls_from=SelectiveFrom.select_phone_numbers,
+                                                enabled=False,
+                                                phone_numbers=['+4961007739765', '+4961007739766'],
+                                                anonymous_callers_enabled=False, unavailable_callers_enabled=False,
+                                                forward_to_phone_number=self.forward_to_phone_number)
+            cid2 = api.create_criteria(self.workspace.workspace_id, criteria)
+            try:
+                yield
+            finally:
+                api.delete_criteria(self.workspace.workspace_id, cid1)
+                api.delete_criteria(self.workspace.workspace_id, cid2)
+            return
+
+        with create_criteria():
+            update = SelectiveForward(enabled=True, default_phone_number_to_forward=self.forward_to_phone_number,
+                                      ring_reminder_enabled=True, destination_voicemail_enabled=True)
             api.configure(self.workspace.workspace_id, update)
             after = api.read(self.workspace.workspace_id)
 

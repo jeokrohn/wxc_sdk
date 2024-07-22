@@ -75,9 +75,9 @@
 | Create Priority Alert Criteria for a Workspace                  | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria                          |
 | Modify Priority Alert Criteria for a Workspace                  | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                      |
 | Delete Priority Alert Criteria for a Workspace                  | X    | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                   |
-| Retrieve Selective Forward Settings for a Workspace             |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward                                 |
-| Modify Selective Forward Settings for a Workspace               |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward                                 |
-| Retrieve Selective Forward Criteria for a Workspace             |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}                   |
-| Create Selective Forward Criteria for a Workspace               |      | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria                       |
-| Modify Selective Forward Criteria for a Workspace               |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}                   |
-| Delete Selective Forward Criteria for a Workspace               |      | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}                |
+| Retrieve Selective Forward Settings for a Workspace             | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward                                 |
+| Modify Selective Forward Settings for a Workspace               | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward                                 |
+| Retrieve Selective Forward Criteria for a Workspace             | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}                   |
+| Create Selective Forward Criteria for a Workspace               | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria                       |
+| Modify Selective Forward Criteria for a Workspace               | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}                   |
+| Delete Selective Forward Criteria for a Workspace               | X    | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}                |

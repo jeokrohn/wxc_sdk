@@ -97,6 +97,8 @@ from wxc_sdk.person_settings.priority_alert import PriorityAlert, PriorityAlertC
 from wxc_sdk.person_settings.privacy import Privacy
 from wxc_sdk.person_settings.push_to_talk import PTTConnectionType, PushToTalkAccessType, PushToTalkSettings
 from wxc_sdk.person_settings.receptionist import ReceptionistSettings
+from wxc_sdk.person_settings.selective_accept import SelectiveAccept, SelectiveAcceptCriteria
+from wxc_sdk.person_settings.selective_forward import SelectiveForward, SelectiveForwardCriteria
 from wxc_sdk.person_settings.selective_reject import SelectiveReject, SelectiveRejectCriteria
 from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingCriteria, SequentialRingNumber
 from wxc_sdk.person_settings.sim_ring import SimRing, SimRingCriteria, SimRingNumber
@@ -278,12 +280,13 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType', 'SafeEnum',
            'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType',
            'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions',
-           'ScimPhoneNumberType', 'ScimUser', 'SearchUserResponse', 'SelectiveCrit', 'SelectiveCriteria',
-           'SelectiveFrom', 'SelectiveReject', 'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'SelectiveSource',
-           'Sender', 'SequentialRing', 'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType',
-           'SettingsObject', 'SimRing', 'SimRingCriteria', 'SimRingNumber', 'SimultaneousInterpretation',
-           'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType',
-           'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse',
+           'ScimPhoneNumberType', 'ScimUser', 'SearchUserResponse', 'SelectiveAccept', 'SelectiveAcceptCriteria',
+           'SelectiveCrit', 'SelectiveCriteria', 'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom',
+           'SelectiveReject', 'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'SelectiveSource', 'Sender',
+           'SequentialRing', 'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SettingsObject',
+           'SimRing', 'SimRingCriteria', 'SimRingNumber', 'SimultaneousInterpretation', 'SipAddress',
+           'SipAddressObject', 'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType', 'SiteUrlsRequest',
+           'SoftKeyLayout', 'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse',
            'StartMoveUsersJobResponse', 'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus',
            'StorageType', 'StrOrDict', 'StrandedCalls', 'StrandedCallsAction', 'SupportedDevice', 'SupportedDevices',
            'SurveyResult', 'TagOp', 'Team', 'TeamMembership', 'TelephoneNumberType', 'Telephony', 'TelephonyCall',

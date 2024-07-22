@@ -4,18 +4,34 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.common.selective import SelectiveCriteria, SelectiveCrit
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
-__all__ = ['SelectiveAcceptCriteria', 'SelectiveAccept', 'SelectiveAcceptApi']
+__all__ = ['SelectiveForwardCriteria', 'SelectiveForward', 'SelectiveForwardApi']
 
 
-class SelectiveAcceptCriteria(SelectiveCriteria):
-    _enabled_attr = 'acceptEnabled'
-    _phone_numbers = 'phoneNumbers'
+class SelectiveForwardCriteria(SelectiveCriteria):
+    _enabled_attr = 'forwardEnabled'
+    _phone_numbers = 'numbers'
+
+    #: Phone number to forward calls to during this schedule.
+    forward_to_phone_number: Optional[str] = None
+    #: Enables forwarding for all calls to voicemail. This option is only available for internal phone numbers or
+    #: extensions.
+    send_to_voicemail_enabled: Optional[bool] = None
 
 
-class SelectiveAccept(ApiModel):
-    #: `true` if the Selective Reject feature is enabled.
+class SelectiveForward(ApiModel):
+    #: `true` if the Selective Forward feature is enabled.
+    #: example: True
     enabled: Optional[bool] = None
-    #: A list of criteria specifying conditions when selective reject is in effect.
+    #: Enter the phone number to forward calls to during this schedule.
+    #: example: +1934898988
+    default_phone_number_to_forward: Optional[str] = None
+    #: When `true`, enables a ring reminder for such calls.
+    #: example: True
+    ring_reminder_enabled: Optional[bool] = None
+    #: Enables forwarding for all calls to voicemail. This option is only available for internal phone numbers or
+    #: extensions.
+    destination_voicemail_enabled: Optional[bool] = None
+    #: A list of criteria specifying conditions when selective forward feature is in effect.
     criteria: Optional[list[SelectiveCrit]] = None
 
     def update(self) -> dict:
@@ -28,24 +44,26 @@ class SelectiveAccept(ApiModel):
                                exclude={'criteria'})
 
 
-class SelectiveAcceptApi(PersonSettingsApiChild):
+class SelectiveForwardApi(PersonSettingsApiChild):
     """
-    API for selective accept settings
+    API for selective forward settings
 
     For now only used for workspaces
     """
 
-    feature = 'selectiveAccept'
+    feature = 'selectiveForward'
 
     def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SelectiveAcceptCriteria:
+                      org_id: str = None) -> SelectiveForwardCriteria:
         """
-        Retrieve Selective Accept Criteria for an entity
+        Retrieve Selective Forward Criteria for a Workspace
 
-        Retrieve Selective Accept Criteria Settings for an entity.
+        Retrieve Selective Forward Criteria Settings for a Workspace.
 
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
         Schedules can also be set up for this feature during certain times of the day or days of the week.
+
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
@@ -57,24 +75,25 @@ class SelectiveAcceptApi(PersonSettingsApiChild):
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
-        :rtype: :class:`SelectiveAcceptCriteria`
+        :rtype: :class:`SelectiveCriteria`
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.f_ep(entity_id, f'criteria/{id}')
         data = super().get(url, params=params)
-        r = SelectiveAcceptCriteria.model_validate(data)
+        r = SelectiveForwardCriteria.model_validate(data)
         return r
 
-    def configure_criteria(self, entity_id: str, id: str, settings: SelectiveAcceptCriteria,
+    def configure_criteria(self, entity_id: str, id: str, settings: SelectiveForwardCriteria,
                            org_id: str = None):
         """
-        Modify Selective Accept Criteria for an entity
+        Modify Selective Forward Criteria for a Workspace
 
-        Modify Selective Accept Criteria Settings for an entity.
+        Modify Selective Forward Call Criteria Settings for a Workspace.
 
-        With the Selective Accept feature, you can accept calls at specific times from specific callers
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
         Schedules can also be set up for this feature during certain times of the day or days of the week.
 
         **NOTE**: This API is only available for professional licensed workspaces.
@@ -84,7 +103,7 @@ class SelectiveAcceptApi(PersonSettingsApiChild):
         :param id: Unique identifier for the criteria.
         :type id: str
         :param settings: new settings to be applied.
-        :type settings: SelectiveAcceptCriteria
+        :type settings: SelectiveForwardCriteria
         :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
@@ -100,11 +119,12 @@ class SelectiveAcceptApi(PersonSettingsApiChild):
 
     def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
         """
-        Delete Selective Accept Criteria for an entity
+        Delete Selective Forward Criteria for a Workspace
 
-        Delete Selective Accept criteria Settings for an entity.
+        Delete Selective Forward Call criteria Settings for a workspace.
 
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
         Schedules can also be set up for this feature during certain times of the day or days of the week.
 
         **NOTE**: This API is only available for professional licensed workspaces.
@@ -125,22 +145,26 @@ class SelectiveAcceptApi(PersonSettingsApiChild):
         url = self.f_ep(entity_id, f'criteria/{id}')
         super().delete(url, params=params)
 
-    def create_criteria(self, entity_id: str, settings: SelectiveAcceptCriteria, org_id: str = None) -> str:
+    def create_criteria(self, entity_id: str, settings: SelectiveForwardCriteria,
+                        org_id: str = None) -> str:
         """
-        Create Selective Accept Criteria for an entity
+        Create Selective Forward Criteria for a Workspace
 
-        Create Selective Accept Criteria Settings for an entity.
+        Create Selective Forward Call Criteria Settings for a Workspace.
 
-        With the Selective Accept feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
         Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
         :param settings: new settings to be applied.
-        :type settings: SelectiveAcceptCriteria
+        :type settings: SelectiveCriteria
         :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
@@ -151,17 +175,21 @@ class SelectiveAcceptApi(PersonSettingsApiChild):
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.update()
-        url = self.f_ep(entity_id, 'criteria')
+
+        url = self.f_ep(entity_id, f'criteria')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
     def read(self, entity_id: str,
-             org_id: str = None) -> SelectiveAccept:
+             org_id: str = None) -> SelectiveForward:
         """
-        Retrieve Selective Accept Settings for an entity.
+        Retrieve Selective Forward Settings for a Workspace
 
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Retrieve Selective Forward Call Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
         Schedules can also be set up for this feature during certain times of the day or days of the week.
 
         **NOTE**: This API is only available for professional licensed workspaces.
@@ -172,29 +200,33 @@ class SelectiveAcceptApi(PersonSettingsApiChild):
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
-        :rtype: :class:`SelectiveAccept`
+        :rtype: :class:`SelectiveForward`
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.f_ep(entity_id)
         data = super().get(url, params=params)
-        r = SelectiveAccept.model_validate(data)
+        r = SelectiveForward.model_validate(data)
         return r
 
-    def configure(self, entity_id: str, settings: SelectiveAccept, org_id: str = None):
+    def configure(self, entity_id: str, settings: SelectiveForward,
+                  org_id: str = None):
         """
-        Modify Selective Accept Settings for an entity.
+        Modify Selective Forward Settings for a Workspace
 
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Modify Selective Forward Call Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
         Schedules can also be set up for this feature during certain times of the day or days of the week.
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveAccept
+        :param settings: Settings for new criteria
+        :type settings: SelectiveForward
         :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
