@@ -69,15 +69,16 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
            'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
-           'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
-           'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
-           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
-           'AsSelectiveAcceptApi', 'AsSelectiveRejectApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI',
-           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
-           'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
-           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
+           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi',
+           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
+           'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi', 'AsSelectiveRejectApi', 'AsSequentialRingApi',
+           'AsSimRingApi', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi',
+           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
            'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
@@ -5897,6 +5898,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'priorityAlert'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'selectiveAccept'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'selectiveReject'): ('telephony/config/workspaces', '/'),
@@ -20223,6 +20225,200 @@ class AsCallPolicyApi(AsPersonSettingsApiChild):
         await super().put(url, params=params, json=body)
 
 
+class AsPriorityAlertApi(AsPersonSettingsApiChild):
+    """
+    API for priority alert settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'priorityAlert'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> PriorityAlertCriteria:
+        """
+        Retrieve Priority Alert Criteria for a Workspace
+
+        Retrieve Priority Alert Criteria Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`PriorityAlertCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = PriorityAlertCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: PriorityAlertCriteria,
+                           org_id: str = None):
+        """
+        Modify Priority Alert Criteria for a Workspace
+
+        Modify Priority Alert Criteria Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: PriorityAlertCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Priority Alert Criteria for a Workspace
+
+        Delete Priority Alert criteria Settings for a workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: PriorityAlertCriteria, org_id: str = None) -> str:
+        """
+        Create Priority Alert Criteria for a Workspace
+
+        Create Priority Alert Criteria Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: PriorityAlertCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> PriorityAlert:
+        """
+        Retrieve Priority Alert Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`PriorityAlert`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = PriorityAlert.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: PriorityAlert,
+                  org_id: str = None):
+        """
+        Configure Priority Alert Settings for a Workspace
+
+        Configure a workspace Priority Alert Settings.
+
+        The priority alert feature enables administrator to configure priority alert settings for a professional
+        workspace.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: Settings for new criteria
+        :type settings: PriorityAlert
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
 class AsSelectiveAcceptApi(AsPersonSettingsApiChild):
     """
     API for selective accept settings
@@ -21120,6 +21316,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     numbers: AsWorkspaceNumbersApi
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
+    priority_alert: AsPriorityAlertApi
     privacy: AsPrivacyApi
     push_to_talk: AsPushToTalkApi
     selective_accept: AsSelectiveAcceptApi
@@ -21146,6 +21343,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.numbers = AsWorkspaceNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
+        self.priority_alert = AsPriorityAlertApi(session=session, selector=ApiSelector.workspace)
         self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.workspace)
         self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.workspace)
         self.selective_accept = AsSelectiveAcceptApi(session=session, selector=ApiSelector.workspace)

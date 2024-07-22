@@ -22,6 +22,7 @@ from ..person_settings.monitoring import MonitoringApi
 from ..person_settings.moh import MusicOnHoldApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi
+from ..person_settings.priority_alert import PriorityAlertApi
 from ..person_settings.privacy import PrivacyApi
 from ..person_settings.push_to_talk import PushToTalkApi
 from ..person_settings.selective_accept import SelectiveAcceptApi
@@ -59,6 +60,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     numbers: WorkspaceNumbersApi
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
+    priority_alert: PriorityAlertApi
     privacy: PrivacyApi
     push_to_talk: PushToTalkApi
     selective_accept: SelectiveAcceptApi
@@ -85,6 +87,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.numbers = WorkspaceNumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
+        self.priority_alert = PriorityAlertApi(session=session, selector=ApiSelector.workspace)
         self.privacy = PrivacyApi(session=session, selector=ApiSelector.workspace)
         self.push_to_talk = PushToTalkApi(session=session, selector=ApiSelector.workspace)
         self.selective_accept = SelectiveAcceptApi(session=session, selector=ApiSelector.workspace)

@@ -80,6 +80,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'priorityAlert'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'selectiveAccept'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'selectiveReject'): ('telephony/config/workspaces', '/'),

@@ -34,6 +34,7 @@ Release history
 - feat: simultaneous ring settings API for workspaces: :attr:`api.workspace_settings.sim_ring <wxc_sdk.workspace_settings.WorkspaceSettingsApi.sim_ring>`
 - feat: selective reject settings API for workspaces: :attr:`api.workspace_settings.selective_reject <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_reject>`
 - feat: selective accept settings API for workspaces: :attr:`api.workspace_settings.selective_accept <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_accept>`
+- feat: priority alert settings API for workspaces: :attr:`api.workspace_settings.priority_alert <wxc_sdk.workspace_settings.WorkspaceSettingsApi.priority_alert>`
 
 1.19.0
 ------

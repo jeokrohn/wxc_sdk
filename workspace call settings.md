@@ -63,18 +63,18 @@
 | Modify Selective Reject Criteria for a Workspace                | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}                    |
 | Assign or Unassign numbers associated with a specific workspace |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/numbers                                          |
 | Delete Selective Reject Criteria for a Workspace                | X    | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}                 |
-| Retrieve Selective Accept Settings for a Workspace              |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept                                  |
-| Modify Selective Accept Settings for a Workspace                |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept                                  |
-| Retrieve Selective Accept Criteria for a Workspace              |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}                    |
-| Create Selective Accept Criteria for a Workspace                |      | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria                        |
-| Modify Selective Accept Criteria for a Workspace                |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}                    |
-| Delete Selective Accept Criteria for a Workspace                |      | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}                 |
-| Retrieve Priority Alert Settings for a Workspace                |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert                                    |
-| Configure Priority Alert Settings for a Workspace               |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert                                    |
-| Retrieve Priority Alert Criteria for a Workspace                |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                      |
-| Create Priority Alert Criteria for a Workspace                  |      | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria                          |
-| Modify Priority Alert Criteria for a Workspace                  |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                      |
-| Delete Priority Alert Criteria for a Workspace                  |      | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                   |
+| Retrieve Selective Accept Settings for a Workspace              | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept                                  |
+| Modify Selective Accept Settings for a Workspace                | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept                                  |
+| Retrieve Selective Accept Criteria for a Workspace              | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}                    |
+| Create Selective Accept Criteria for a Workspace                | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria                        |
+| Modify Selective Accept Criteria for a Workspace                | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}                    |
+| Delete Selective Accept Criteria for a Workspace                | X    | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept/criteria/{id}                 |
+| Retrieve Priority Alert Settings for a Workspace                | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert                                    |
+| Configure Priority Alert Settings for a Workspace               | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert                                    |
+| Retrieve Priority Alert Criteria for a Workspace                | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                      |
+| Create Priority Alert Criteria for a Workspace                  | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria                          |
+| Modify Priority Alert Criteria for a Workspace                  | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                      |
+| Delete Priority Alert Criteria for a Workspace                  | X    | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/priorityAlert/criteria/{id}                   |
 | Retrieve Selective Forward Settings for a Workspace             |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward                                 |
 | Modify Selective Forward Settings for a Workspace               |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward                                 |
 | Retrieve Selective Forward Criteria for a Workspace             |      | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveForward/criteria/{id}                   |

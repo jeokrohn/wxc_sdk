@@ -1353,6 +1353,18 @@ The method name is a link to the method documentation.
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.workspace_settings.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
+   * - :meth:`api.workspace_settings.priority_alert.configure <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.configure>`
+        Configure Priority Alert Settings for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.configure_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.configure_criteria>`
+        Modify Priority Alert Criteria for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.create_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.create_criteria>`
+        Create Priority Alert Criteria for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.delete_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.delete_criteria>`
+        Delete Priority Alert Criteria for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.read <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.read>`
+        Retrieve Priority Alert Settings for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.read_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.read_criteria>`
+        Retrieve Priority Alert Criteria for a Workspace
    * - :meth:`api.workspace_settings.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
         Configure an entity's Privacy Settings
    * - :meth:`api.workspace_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
