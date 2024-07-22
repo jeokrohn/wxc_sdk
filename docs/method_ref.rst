@@ -1361,18 +1361,30 @@ The method name is a link to the method documentation.
         Configure Push-to-Talk Settings for an entity
    * - :meth:`api.workspace_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
         Read Push-to-Talk Settings for an entity
+   * - :meth:`api.workspace_settings.selective_reject.configure <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure>`
+        Modify Selective Reject Settings for an entity
+   * - :meth:`api.workspace_settings.selective_reject.configure_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure_criteria>`
+        Modify Selective Reject Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_reject.create_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.create_criteria>`
+        Create Selective Reject Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_reject.delete_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.delete_criteria>`
+        Delete Selective Reject Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_reject.read <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read>`
+        Retrieve Selective Reject Settings for an entity
+   * - :meth:`api.workspace_settings.selective_reject.read_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read_criteria>`
+        Retrieve Selective Reject Criteria for an entity
    * - :meth:`api.workspace_settings.sequential_ring.configure <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.configure>`
-        Modify sequential ring settings for a workspace
+        Modify sequential ring settings for an entity
    * - :meth:`api.workspace_settings.sequential_ring.configure_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.configure_criteria>`
-        Modify sequential ring criteria for a workspace
+        Modify sequential ring criteria for an entity
    * - :meth:`api.workspace_settings.sequential_ring.create_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.create_criteria>`
-        Create sequential ring criteria for a workspace
+        Create sequential ring criteria for an entity
    * - :meth:`api.workspace_settings.sequential_ring.delete_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.delete_criteria>`
-        Delete sequential ring criteria for a workspace
+        Delete sequential ring criteria for an entity
    * - :meth:`api.workspace_settings.sequential_ring.read <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.read>`
-        Retrieve sequential ring settings for a workspace
+        Retrieve sequential ring settings for an entity
    * - :meth:`api.workspace_settings.sequential_ring.read_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.read_criteria>`
-        Retrieve sequential ring criteria for a workspace
+        Retrieve sequential ring criteria for an entity
    * - :meth:`api.workspace_settings.sim_ring.configure <wxc_sdk.person_settings.sim_ring.SimRingApi.configure>`
         Modify Simultaneous Ring Settings for an entity
    * - :meth:`api.workspace_settings.sim_ring.configure_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.configure_criteria>`

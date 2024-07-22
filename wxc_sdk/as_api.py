@@ -73,10 +73,10 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi',
            'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
            'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api',
-           'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI', 'AsTeamMembershipsApi', 'AsTeamsApi',
-           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
-           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsSelectiveRejectApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI', 'AsTeamMembershipsApi',
+           'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi',
+           'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi',
+           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
            'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
            'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
@@ -5898,6 +5898,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'selectiveReject'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'sequentialRing'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'simultaneousRing'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
@@ -20221,6 +20222,192 @@ class AsCallPolicyApi(AsPersonSettingsApiChild):
         await super().put(url, params=params, json=body)
 
 
+class AsSelectiveRejectApi(AsPersonSettingsApiChild):
+    """
+    API for selective reject settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'selectiveReject'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SelectiveRejectCriteria:
+        """
+        Retrieve Selective Reject Criteria for an entity
+
+        Retrieve Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveRejectCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SelectiveRejectCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveRejectCriteria,
+                           org_id: str = None):
+        """
+        Modify Selective Reject Criteria for an entity
+
+        Modify Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveRejectCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Selective Reject Criteria for an entity
+
+        Delete Selective Reject criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SelectiveRejectCriteria, org_id: str = None) -> str:
+        """
+        Create Selective Reject Criteria for an entity
+
+        Create Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveRejectCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, 'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SelectiveReject:
+        """
+        Retrieve Selective Reject Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveReject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SelectiveReject.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SelectiveReject, org_id: str = None):
+        """
+        Modify Selective Reject Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveReject
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
 class AsSequentialRingApi(AsPersonSettingsApiChild):
     """
     API for sequential ring settings
@@ -20233,7 +20420,7 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
     async def read_criteria(self, entity_id: str, id: str,
                       org_id: str = None) -> SequentialRingCriteria:
         """
-        Retrieve sequential ring criteria for a workspace.
+        Retrieve sequential ring criteria for an entity.
 
         The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
         receives incoming calls, these numbers will ring one after another.
@@ -20246,7 +20433,7 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
         :type entity_id: str
         :param id: Unique identifier for the criteria.
         :type id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
@@ -20263,24 +20450,22 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
     async def configure_criteria(self, entity_id: str, id: str, settings: SequentialRingCriteria,
                            org_id: str = None):
         """
-        Modify sequential ring criteria for a workspace.
+        Modify sequential ring criteria for an entity.
 
         The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
         receives incoming calls, these numbers will ring one after another.
         The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
         ring or not.
 
-        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to
-        update workspace settings.
-
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param entity_id: Unique identifier for the workspace.
+        :param entity_id: Unique identifier for the entity.
         :type entity_id: str
         :param id: Unique identifier for the criteria.
         :type id: str
         :param settings: new settings to be applied.
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :type settings: SequentialRingCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
@@ -20290,29 +20475,25 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.update()
-
         url = self.f_ep(entity_id, f'criteria/{id}')
         await super().put(url, params=params, json=body)
 
     async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
         """
-        Delete sequential ring criteria for a workspace.
+        Delete sequential ring criteria for an entity.
 
         The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
         receives incoming calls, these numbers will ring one after another.
         The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
         ring or not.
 
-        This API requires a full, read-only or location administrator auth token with a scope of
-        `spark-admin:workspaces_read` to read workspace settings.
-
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param entity_id: Unique identifier for the workspace.
+        :param entity_id: Unique identifier for the entity.
         :type entity_id: str
         :param id: Unique identifier for the criteria.
         :type id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
@@ -20327,23 +20508,20 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
     async def create_criteria(self, entity_id: str, settings: SequentialRingCriteria,
                         org_id: str = None) -> str:
         """
-        Create sequential ring criteria for a workspace.
+        Create sequential ring criteria for an entity.
 
         The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
         receives incoming calls, these numbers will ring one after another.
         The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
         ring or not.
 
-        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to
-        update workspace settings.
-
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param entity_id: Unique identifier for the workspace.
+        :param entity_id: Unique identifier for the entity.
         :type entity_id: str
         :param settings: new settings to be applied.
         :type settings: SelectiveCriteria
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
@@ -20362,19 +20540,16 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
     async def read(self, entity_id: str,
              org_id: str = None) -> SequentialRing:
         """
-        Retrieve sequential ring settings for a workspace.
+        Retrieve sequential ring settings for an entity.
 
         The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
         receives incoming calls, these numbers will ring one after another.
 
-        This API requires a full, read-only or location administrator auth token with a scope of
-        `spark-admin:workspaces_read` to read workspace settings.
-
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param entity_id: Unique identifier for the workspace.
+        :param entity_id: Unique identifier for the entity.
         :type entity_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
@@ -20391,21 +20566,18 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
     async def configure(self, entity_id: str, settings: SequentialRing,
                   org_id: str = None):
         """
-        Modify sequential ring settings for a workspace.
+        Modify sequential ring settings for an entity.
 
-        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the entity
         receives incoming calls, these numbers will ring one after another.
-
-        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to
-        update workspace settings.
 
         **NOTE**: This API is only available for professional licensed workspaces.
 
-        :param entity_id: Unique identifier for the workspace.
+        :param entity_id: Unique identifier for the entity.
         :type entity_id: str
         :param settings: Settings for new criteria
         :type settings: SequentialRing
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
         :type org_id: str
@@ -20768,6 +20940,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     permissions_out: AsOutgoingPermissionsApi
     privacy: AsPrivacyApi
     push_to_talk: AsPushToTalkApi
+    selective_reject: AsSelectiveRejectApi
     sequential_ring: AsSequentialRingApi
     sim_ring: AsSimRingApi
     voicemail: AsVoicemailApi
@@ -20792,6 +20965,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.workspace)
         self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.workspace)
+        self.selective_reject = AsSelectiveRejectApi(session=session, selector=ApiSelector.workspace)
         self.sequential_ring = AsSequentialRingApi(session=session, selector=ApiSelector.workspace)
         self.sim_ring = AsSimRingApi(session=session, selector=ApiSelector.workspace)
         self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.workspace)

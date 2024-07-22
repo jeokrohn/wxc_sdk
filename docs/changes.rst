@@ -32,6 +32,7 @@ Release history
 - feat: sequential ring settings API for workspaces: :attr:`api.workspace_settings.sequential_ring <wxc_sdk.workspace_settings.WorkspaceSettingsApi.sequential_ring>`
 - feat: call policy settings API for workspaces: :attr:`api.workspace_settings.call_policy <wxc_sdk.workspace_settings.WorkspaceSettingsApi.call_policy>`
 - feat: simultaneous ring settings API for workspaces: :attr:`api.workspace_settings.sim_ring <wxc_sdk.workspace_settings.WorkspaceSettingsApi.sim_ring>`
+- feat: selective reject settings API for workspaces: :attr:`api.workspace_settings.selective_reject <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_reject>`
 
 1.19.0
 ------

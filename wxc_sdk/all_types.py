@@ -96,6 +96,7 @@ from wxc_sdk.person_settings.preferred_answer import PreferredAnswerEndpoint, Pr
 from wxc_sdk.person_settings.privacy import Privacy
 from wxc_sdk.person_settings.push_to_talk import PTTConnectionType, PushToTalkAccessType, PushToTalkSettings
 from wxc_sdk.person_settings.receptionist import ReceptionistSettings
+from wxc_sdk.person_settings.selective_reject import SelectiveReject, SelectiveRejectCriteria
 from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingCriteria, SequentialRingNumber
 from wxc_sdk.person_settings.sim_ring import SimRing, SimRingCriteria, SimRingNumber
 from wxc_sdk.person_settings.voicemail import UnansweredCalls, VoicemailEnabledWithGreeting, VoicemailSettings
@@ -276,12 +277,12 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'RouteListDestination', 'RouteListDetail', 'RouteType', 'SafeEnum', 'Schedule', 'ScheduleApiBase',
            'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek',
            'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions', 'ScimPhoneNumberType', 'ScimUser',
-           'SearchUserResponse', 'SelectiveCrit', 'SelectiveCriteria', 'SelectiveFrom', 'SelectiveScheduleLevel',
-           'SelectiveSource', 'Sender', 'SequentialRing', 'SequentialRingCriteria', 'SequentialRingNumber',
-           'ServiceType', 'SettingsObject', 'SimRing', 'SimRingCriteria', 'SimRingNumber',
-           'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType',
-           'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu',
-           'StandardRegistrationApproveRule', 'StartJobResponse', 'StartMoveUsersJobResponse',
+           'SearchUserResponse', 'SelectiveCrit', 'SelectiveCriteria', 'SelectiveFrom', 'SelectiveReject',
+           'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'SelectiveSource', 'Sender', 'SequentialRing',
+           'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SettingsObject', 'SimRing',
+           'SimRingCriteria', 'SimRingNumber', 'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject',
+           'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout',
+           'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse', 'StartMoveUsersJobResponse',
            'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
            'StrandedCalls', 'StrandedCallsAction', 'SupportedDevice', 'SupportedDevices', 'SurveyResult', 'TagOp',
            'Team', 'TeamMembership', 'TelephoneNumberType', 'Telephony', 'TelephonyCall', 'TelephonyDevice',
