@@ -20,7 +20,7 @@ class VoicemailTests(TestCaseWithUsers):
         """
         with ThreadPoolExecutor() as pool:
             details = list(pool.map(
-                lambda user: self.api.person_settings.voicemail.read(person_id=user.person_id),
+                lambda user: self.api.person_settings.voicemail.read(user.person_id),
                 self.users))
         print(f'Got details for {len(details)} users')
 
@@ -33,13 +33,13 @@ class VoicemailTests(TestCaseWithUsers):
         apv = self.api.person_settings.voicemail
 
         # current settings
-        settings = apv.read(person_id=target_user.person_id)
+        settings = apv.read(target_user.person_id)
 
         # update with current settings (check that some fields a are not send in update)
-        apv.configure(person_id=target_user.person_id, settings=settings)
+        apv.configure(entity_id=target_user.person_id, settings=settings)
 
         # get (updated) settings
-        settings_after = apv.read(person_id=target_user.person_id)
+        settings_after = apv.read(target_user.person_id)
 
         # there should be no difference
         self.assertEqual(settings, settings_after)

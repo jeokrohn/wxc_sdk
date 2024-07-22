@@ -13,6 +13,40 @@ Release history
     * :meth:`api.telephony.callqueue.update_call_queue_settings <wxc_sdk.telephony.callqueue.CallQueueApi.update_call_queue_settings>`
 - fix: call queue API missing from method reference
 - feat: new API: :attr:`api.telephony.api.telephony.supervisors <wxc_sdk.telephony.TelephonyApi.supervisors>`
+- break: in line with the breaking change `announced on April 2nd, 2024 <https://developer.webex.com/docs/api/changelog>`_ signature and implementation of :class:`api.person_settings.agent_caller_id <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi>` changed.
+- feat: agent caller id API for virtual lines :attr:`api.telephony.virtual_lines.agent_caller_id <wxc_sdk.telephony.virtual_line.VirtualLinesApi.agent_caller_id>`
+- feat: voicemail API for virtual lines :attr:`api.telephony.virtual_lines.voicemail <wxc_sdk.telephony.virtual_line.VirtualLinesApi.voicemail>`
+- feat: MoH settings API for users :attr:`api.telephony.person_settings.music_on_hold <wxc_sdk.person_settings.PersonSettingsApi.music_on_hold>`
+- feat: MoH API for virtual lines :attr:`api.telephony.virtual_lines.music_on_hold <wxc_sdk.telephony.virtual_line.VirtualLinesApi.music_on_hold>`
+- break: consistently use entity_id instead of person_id in privacy API
+- feat: privacy API for virtual lines: :attr:`api.telephony.virtual_lines.privacy <wxc_sdk.telephony.virtual_line.VirtualLinesApi.privacy>`
+- feat: privacy API for workspaces: :attr:`api.workspace_settings.privacy <wxc_sdk.workspace_settings.WorkspaceSettingsApi.privacy>`
+- feat: barge API for workspaces: :attr:`api.workspace_settings.barge <wxc_sdk.workspace_settings.WorkspaceSettingsApi.barge>`
+- feat: new :meth:`api.workspace_settings.devices.list_and_counts <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list_and_counts>`
+- feat: barge API for virtual lines: :attr:`api.telephony.virtual_lines.barge <wxc_sdk.telephony.virtual_line.VirtualLinesApi.barge>`
+- break: consistently use entity_id instead of person_id in push to talk API
+
+  * :meth:`api.person_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
+  * :meth:`api.person_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
+- feat: push to talk API for virtual lines: :attr:`api.telephony.virtual_lines.push_to_talk <wxc_sdk.telephony.virtual_line.VirtualLinesApi.push_to_talk>`
+- feat: available numbers API for users: :attr:`api.person_settings.available_numbers <wxc_sdk.person_settings.PersonSettingsApi.available_numbers>`
+- feat: available numbers API for virtual lines: :attr:`api.telephony.virtual_lines.available_numbers <wxc_sdk.telephony.virtual_line.VirtualLinesApi.available_numbers>`
+- feat: available numbers API for workspaces: :attr:`api.workspace_settings.available_numbers <wxc_sdk.workspace_settings.WorkspaceSettingsApi.available_numbers>`
+- feat: Webex app shared line API for users: :attr:`api.person_settings.app_shared_line <wxc_sdk.person_settings.PersonSettingsApi.app_shared_line>`
+- feat: MS Teams settings API for users: :attr:`api.person_settings.ms_teams <wxc_sdk.person_settings.PersonSettingsApi.ms_teams>`
+- feat: move users jobs API: :attr:`api.telephony.jobs.move_users <wxc_sdk.telephony.jobs.JobsApi.move_users>`
+- feat: MoH settings API for workspaces: :attr:`api.workspace_settings.music_on_hold <wxc_sdk.workspace_settings.WorkspaceSettingsApi.music_on_hold>`
+- feat: anonymous calls rejection API for workspaces: :attr:`api.workspace_settings.anon_calls <wxc_sdk.workspace_settings.WorkspaceSettingsApi.anon_calls>`
+- feat: do not disturb API for workspaces: :attr:`api.workspace_settings.dnd <wxc_sdk.workspace_settings.WorkspaceSettingsApi.dnd>`
+- feat: push to talk API for workspaces: :attr:`api.workspace_settings.push_to_talk <wxc_sdk.workspace_settings.WorkspaceSettingsApi.push_to_talk>`
+- feat: voicemail settings API for workspaces: :attr:`api.workspace_settings.voicemail <wxc_sdk.workspace_settings.WorkspaceSettingsApi.voicemail>`
+- feat: sequential ring settings API for workspaces: :attr:`api.workspace_settings.sequential_ring <wxc_sdk.workspace_settings.WorkspaceSettingsApi.sequential_ring>`
+- feat: call policy settings API for workspaces: :attr:`api.workspace_settings.call_policy <wxc_sdk.workspace_settings.WorkspaceSettingsApi.call_policy>`
+- feat: simultaneous ring settings API for workspaces: :attr:`api.workspace_settings.sim_ring <wxc_sdk.workspace_settings.WorkspaceSettingsApi.sim_ring>`
+- feat: selective reject settings API for workspaces: :attr:`api.workspace_settings.selective_reject <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_reject>`
+- feat: selective accept settings API for workspaces: :attr:`api.workspace_settings.selective_accept <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_accept>`
+- feat: priority alert settings API for workspaces: :attr:`api.workspace_settings.priority_alert <wxc_sdk.workspace_settings.WorkspaceSettingsApi.priority_alert>`
+- feat: selective forward settings API for workspaces: :attr:`api.workspace_settings.selective_forward <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_forward>`
 
 1.20.0
 ------

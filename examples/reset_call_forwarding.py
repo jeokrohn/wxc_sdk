@@ -37,7 +37,7 @@ async def main():
 
         # schedule update for each user and wait for completion
         start = time.perf_counter_ns()
-        await asyncio.gather(*[api.person_settings.forwarding.configure(person_id=user.person_id,
+        await asyncio.gather(*[api.person_settings.forwarding.configure(entity_id=user.person_id,
                                                                         forwarding=forwarding)
                                for user in calling_users])
         print(f'Reset call forwarding to default for {len(calling_users)} users in '

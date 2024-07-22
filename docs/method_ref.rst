@@ -261,16 +261,40 @@ The method name is a link to the method documentation.
         Get all devices for a person
    * - :meth:`api.person_settings.reset_vm_pin <wxc_sdk.person_settings.PersonSettingsApi.reset_vm_pin>`
         Reset Voicemail PIN
-   * - :meth:`api.person_settings.agent_caller_id.available_queues <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_queues>`
-        Retrieve the list of the person's available call queues and the associated Caller ID information
+   * - :meth:`api.person_settings.agent_caller_id.available_caller_ids <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_caller_ids>`
+        Retrieve Agent's List of Available Caller IDs
+   * - :meth:`api.person_settings.agent_caller_id.configure <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.configure>`
+        Modify Agent's Caller ID Information
    * - :meth:`api.person_settings.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
-        Retrieve a call queue agent's Caller ID information
-   * - :meth:`api.person_settings.agent_caller_id.update <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.update>`
-        Modify a call queue agent's Caller ID information
+        Retrieve Agent's Caller ID Information
+   * - :meth:`api.person_settings.app_shared_line.f_ep <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.f_ep>`
+        :meta private:
+   * - :meth:`api.person_settings.app_shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
+        Get Shared-Line Appearance Members
+   * - :meth:`api.person_settings.app_shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>`
+        Search Shared-Line Appearance Members
+   * - :meth:`api.person_settings.app_shared_line.update_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.update_members>`
+        Put Shared-Line Appearance Members
    * - :meth:`api.person_settings.appservices.configure <wxc_sdk.person_settings.appservices.AppServicesApi.configure>`
         Modify a Person's Application Services Settings
    * - :meth:`api.person_settings.appservices.read <wxc_sdk.person_settings.appservices.AppServicesApi.read>`
         Retrieve a Person's Application Services Settings
+   * - :meth:`api.person_settings.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
+        Get Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`
+        Get Call Forward Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.call_intercept <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_intercept>`
+        Get Call Intercept Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
+        Get ECBN Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
+        Get endpoint URL
+   * - :meth:`api.person_settings.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
+        Get Fax Message Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
+        Get Person Primary Available Phone Numbers
+   * - :meth:`api.person_settings.available_numbers.secondary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.secondary>`
+        Get Person Secondary Available Phone Numbers
    * - :meth:`api.person_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
         Configure Barge In Settings
    * - :meth:`api.person_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
@@ -304,9 +328,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.calling_behavior.read <wxc_sdk.person_settings.calling_behavior.CallingBehaviorApi.read>`
         Read Person's Calling Behavior
    * - :meth:`api.person_settings.dnd.configure <wxc_sdk.person_settings.dnd.DndApi.configure>`
-        Configure Do Not Disturb Settings for a Person
+        Configure Do Not Disturb Settings for an entity
    * - :meth:`api.person_settings.dnd.read <wxc_sdk.person_settings.dnd.DndApi.read>`
-        Read Do Not Disturb Settings for a Person
+        Read Do Not Disturb Settings for an entity
    * - :meth:`api.person_settings.exec_assistant.configure <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.configure>`
         Modify Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.exec_assistant.read <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.read>`
@@ -323,6 +347,14 @@ The method name is a link to the method documentation.
         Configure Call Waiting Settings for a Person
    * - :meth:`api.person_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
         Retrieve a Person's Monitoring Settings
+   * - :meth:`api.person_settings.ms_teams.configure <wxc_sdk.person_settings.msteams.MSTeamsSettingApi.configure>`
+        Configure a Person's MS Teams Setting
+   * - :meth:`api.person_settings.ms_teams.read <wxc_sdk.person_settings.msteams.MSTeamsSettingApi.read>`
+        Retrieve a Person's MS Teams Settings
+   * - :meth:`api.person_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
+        Configure Music On Hold Settings for a Personvirtual line, or workspace
+   * - :meth:`api.person_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace
    * - :meth:`api.person_settings.numbers.read <wxc_sdk.person_settings.numbers.NumbersApi.read>`
         Get a person's phone numbers including alternate numbers
    * - :meth:`api.person_settings.numbers.update <wxc_sdk.person_settings.numbers.NumbersApi.update>`
@@ -366,13 +398,13 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.preferred_answer.read <wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.read>`
         Get Preferred Answer Endpoint
    * - :meth:`api.person_settings.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
-        Configure Call Waiting Settings for a Person
+        Configure an entity's Privacy Settings
    * - :meth:`api.person_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
-        Get a person's Privacy Settings
+        Get Privacy Settings for an entity
    * - :meth:`api.person_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
-        Configure Push-to-Talk Settings for a Person
+        Configure Push-to-Talk Settings for an entity
    * - :meth:`api.person_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
-        Read Push-to-Talk Settings for a Person
+        Read Push-to-Talk Settings for an entity
    * - :meth:`api.person_settings.receptionist.configure <wxc_sdk.person_settings.receptionist.ReceptionistApi.configure>`
         Modify Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.receptionist.read <wxc_sdk.person_settings.receptionist.ReceptionistApi.read>`
@@ -396,15 +428,17 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.schedules.update <wxc_sdk.common.schedules.ScheduleApi.update>`
         Update a Schedule
    * - :meth:`api.person_settings.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
-        Configure Voicemail Settings for a Person
+        Configure Voicemail Settings for an entity
    * - :meth:`api.person_settings.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
-        Configure Busy Voicemail Greeting for a Person
+        Configure Busy Voicemail Greeting for an entity
    * - :meth:`api.person_settings.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
-        Configure No Answer Voicemail Greeting for a Person
+        Configure No Answer Voicemail Greeting for an entity
    * - :meth:`api.person_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
-        Modify a person's voicemail passcode
+        Modify a entity's voicemail passcode
    * - :meth:`api.person_settings.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
-        Read Voicemail Settings for a Person
+        Read Voicemail Settings for an entity
+   * - :meth:`api.person_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
+        Reset Voicemail PIN
    * - :meth:`api.reports.create <wxc_sdk.reports.ReportsApi.create>`
         Create a new report
    * - :meth:`api.reports.delete <wxc_sdk.reports.ReportsApi.delete>`
@@ -839,6 +873,20 @@ The method name is a link to the method documentation.
         Resume the paused Manage Numbers Job
    * - :meth:`api.telephony.jobs.manage_numbers.status <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.status>`
         Returns the status and other details of the job
+   * - :meth:`api.telephony.jobs.move_users.abandon <wxc_sdk.telephony.jobs.MoveUsersJobsApi.abandon>`
+        Abandon the Move Users Job
+   * - :meth:`api.telephony.jobs.move_users.errors <wxc_sdk.telephony.jobs.MoveUsersJobsApi.errors>`
+        List Move Users Job errors
+   * - :meth:`api.telephony.jobs.move_users.list <wxc_sdk.telephony.jobs.MoveUsersJobsApi.list>`
+        List Move Users Jobs
+   * - :meth:`api.telephony.jobs.move_users.pause <wxc_sdk.telephony.jobs.MoveUsersJobsApi.pause>`
+        Pause the Move Users Job
+   * - :meth:`api.telephony.jobs.move_users.resume <wxc_sdk.telephony.jobs.MoveUsersJobsApi.resume>`
+        Resume the Move Users Job
+   * - :meth:`api.telephony.jobs.move_users.status <wxc_sdk.telephony.jobs.MoveUsersJobsApi.status>`
+        Get Move Users Job Status
+   * - :meth:`api.telephony.jobs.move_users.validate_or_initiate <wxc_sdk.telephony.jobs.MoveUsersJobsApi.validate_or_initiate>`
+        Validate or Initiate Move Users Job
    * - :meth:`api.telephony.jobs.rebuild_phones.errors <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.errors>`
         Get Job Errors for a Rebuild Phones Job
    * - :meth:`api.telephony.jobs.rebuild_phones.list <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.list>`
@@ -1147,6 +1195,32 @@ The method name is a link to the method documentation.
         Update a Virtual Line
    * - :meth:`api.telephony.virtual_lines.update_directory_search <wxc_sdk.telephony.virtual_line.VirtualLinesApi.update_directory_search>`
         Update Directory search for a Virtual Line
+   * - :meth:`api.telephony.virtual_lines.agent_caller_id.available_caller_ids <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_caller_ids>`
+        Retrieve Agent's List of Available Caller IDs
+   * - :meth:`api.telephony.virtual_lines.agent_caller_id.configure <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.configure>`
+        Modify Agent's Caller ID Information
+   * - :meth:`api.telephony.virtual_lines.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
+        Retrieve Agent's Caller ID Information
+   * - :meth:`api.telephony.virtual_lines.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
+        Get Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`
+        Get Call Forward Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.call_intercept <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_intercept>`
+        Get Call Intercept Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
+        Get ECBN Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
+        Get endpoint URL
+   * - :meth:`api.telephony.virtual_lines.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
+        Get Fax Message Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
+        Get Person Primary Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.available_numbers.secondary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.secondary>`
+        Get Person Secondary Available Phone Numbers
+   * - :meth:`api.telephony.virtual_lines.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
+        Configure Barge In Settings
+   * - :meth:`api.telephony.virtual_lines.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
+        Retrieve Barge In Settings
    * - :meth:`api.telephony.virtual_lines.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         Configure Call Bridge Settings
    * - :meth:`api.telephony.virtual_lines.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`
@@ -1175,6 +1249,10 @@ The method name is a link to the method documentation.
         Configure an Entity's Call Forwarding Settings
    * - :meth:`api.telephony.virtual_lines.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
         Retrieve an entity's Call Forwarding Settings
+   * - :meth:`api.telephony.virtual_lines.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
+        Configure Music On Hold Settings for a Personvirtual line, or workspace
+   * - :meth:`api.telephony.virtual_lines.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace
    * - :meth:`api.telephony.virtual_lines.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
         Configure incoming permissions settings
    * - :meth:`api.telephony.virtual_lines.permissions_in.read <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.read>`
@@ -1209,8 +1287,28 @@ The method name is a link to the method documentation.
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.telephony.virtual_lines.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
+   * - :meth:`api.telephony.virtual_lines.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
+        Configure an entity's Privacy Settings
+   * - :meth:`api.telephony.virtual_lines.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
+        Get Privacy Settings for an entity
+   * - :meth:`api.telephony.virtual_lines.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
+        Configure Push-to-Talk Settings for an entity
+   * - :meth:`api.telephony.virtual_lines.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
+        Read Push-to-Talk Settings for an entity
+   * - :meth:`api.telephony.virtual_lines.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
+        Configure Voicemail Settings for an entity
+   * - :meth:`api.telephony.virtual_lines.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
+        Configure Busy Voicemail Greeting for an entity
+   * - :meth:`api.telephony.virtual_lines.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
+        Configure No Answer Voicemail Greeting for an entity
+   * - :meth:`api.telephony.virtual_lines.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
+        Modify a entity's voicemail passcode
+   * - :meth:`api.telephony.virtual_lines.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
+        Read Voicemail Settings for an entity
+   * - :meth:`api.telephony.virtual_lines.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
+        Reset Voicemail PIN
    * - :meth:`api.telephony.voice_messaging.delete <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.delete>`
-        Delete a specfic voicemail message for the user
+        Delete a specific voicemail message for the user
    * - :meth:`api.telephony.voice_messaging.list <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.list>`
         Get the list of all voicemail messages for the user
    * - :meth:`api.telephony.voice_messaging.mark_as_read <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.mark_as_read>`
@@ -1273,6 +1371,30 @@ The method name is a link to the method documentation.
         Get Personalization Task
    * - :meth:`api.workspace_personalization.personalize_a_workspace <wxc_sdk.workspace_personalization.WorkspacePersonalizationApi.personalize_a_workspace>`
         Personalize a Workspace
+   * - :meth:`api.workspace_settings.anon_calls.configure <wxc_sdk.person_settings.anon_calls.AnonCallsApi.configure>`
+        Modify Anonymous Call Settings for an entity
+   * - :meth:`api.workspace_settings.anon_calls.read <wxc_sdk.person_settings.anon_calls.AnonCallsApi.read>`
+        Retrieve Anonymous Call Settings for an entity
+   * - :meth:`api.workspace_settings.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
+        Get Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`
+        Get Call Forward Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.call_intercept <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_intercept>`
+        Get Call Intercept Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
+        Get ECBN Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
+        Get endpoint URL
+   * - :meth:`api.workspace_settings.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
+        Get Fax Message Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
+        Get Person Primary Available Phone Numbers
+   * - :meth:`api.workspace_settings.available_numbers.secondary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.secondary>`
+        Get Person Secondary Available Phone Numbers
+   * - :meth:`api.workspace_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
+        Configure Barge In Settings
+   * - :meth:`api.workspace_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
+        Retrieve Barge In Settings
    * - :meth:`api.workspace_settings.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         Configure Call Bridge Settings
    * - :meth:`api.workspace_settings.call_bridge.read <wxc_sdk.person_settings.callbridge.CallBridgeApi.read>`
@@ -1283,6 +1405,10 @@ The method name is a link to the method documentation.
         Configure Call Intercept Greeting
    * - :meth:`api.workspace_settings.call_intercept.read <wxc_sdk.person_settings.call_intercept.CallInterceptApi.read>`
         Read Call Intercept Settings
+   * - :meth:`api.workspace_settings.call_policy.configure <wxc_sdk.person_settings.call_policy.CallPolicyApi.configure>`
+        Configure Call Policy Settings for an entity
+   * - :meth:`api.workspace_settings.call_policy.read <wxc_sdk.person_settings.call_policy.CallPolicyApi.read>`
+        Read Call Policy Settings for an entity
    * - :meth:`api.workspace_settings.call_waiting.configure <wxc_sdk.person_settings.call_waiting.CallWaitingApi.configure>`
         Configure Call Waiting Settings
    * - :meth:`api.workspace_settings.call_waiting.read <wxc_sdk.person_settings.call_waiting.CallWaitingApi.read>`
@@ -1295,8 +1421,14 @@ The method name is a link to the method documentation.
         Retrieve Caller ID Settings
    * - :meth:`api.workspace_settings.devices.list <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list>`
         Get all devices for a workspace
+   * - :meth:`api.workspace_settings.devices.list_and_counts <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list_and_counts>`
+        Get all devices for a workspace
    * - :meth:`api.workspace_settings.devices.modify_hoteling <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.modify_hoteling>`
         Modify devices for a workspace
+   * - :meth:`api.workspace_settings.dnd.configure <wxc_sdk.person_settings.dnd.DndApi.configure>`
+        Configure Do Not Disturb Settings for an entity
+   * - :meth:`api.workspace_settings.dnd.read <wxc_sdk.person_settings.dnd.DndApi.read>`
+        Read Do Not Disturb Settings for an entity
    * - :meth:`api.workspace_settings.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
         Configure an Entity's Call Forwarding Settings
    * - :meth:`api.workspace_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
@@ -1305,6 +1437,10 @@ The method name is a link to the method documentation.
         Configure Call Waiting Settings for a Person
    * - :meth:`api.workspace_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
         Retrieve a Person's Monitoring Settings
+   * - :meth:`api.workspace_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
+        Configure Music On Hold Settings for a Personvirtual line, or workspace
+   * - :meth:`api.workspace_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace
    * - :meth:`api.workspace_settings.numbers.read <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read>`
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization
    * - :meth:`api.workspace_settings.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
@@ -1341,6 +1477,98 @@ The method name is a link to the method documentation.
         Modify Transfer Numbers Settings for a Place
    * - :meth:`api.workspace_settings.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
+   * - :meth:`api.workspace_settings.priority_alert.configure <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.configure>`
+        Configure Priority Alert Settings for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.configure_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.configure_criteria>`
+        Modify Priority Alert Criteria for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.create_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.create_criteria>`
+        Create Priority Alert Criteria for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.delete_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.delete_criteria>`
+        Delete Priority Alert Criteria for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.read <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.read>`
+        Retrieve Priority Alert Settings for a Workspace
+   * - :meth:`api.workspace_settings.priority_alert.read_criteria <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.read_criteria>`
+        Retrieve Priority Alert Criteria for a Workspace
+   * - :meth:`api.workspace_settings.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
+        Configure an entity's Privacy Settings
+   * - :meth:`api.workspace_settings.privacy.read <wxc_sdk.person_settings.privacy.PrivacyApi.read>`
+        Get Privacy Settings for an entity
+   * - :meth:`api.workspace_settings.push_to_talk.configure <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.configure>`
+        Configure Push-to-Talk Settings for an entity
+   * - :meth:`api.workspace_settings.push_to_talk.read <wxc_sdk.person_settings.push_to_talk.PushToTalkApi.read>`
+        Read Push-to-Talk Settings for an entity
+   * - :meth:`api.workspace_settings.selective_accept.configure <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure>`
+        Modify Selective Accept Settings for an entity
+   * - :meth:`api.workspace_settings.selective_accept.configure_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure_criteria>`
+        Modify Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_accept.create_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.create_criteria>`
+        Create Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_accept.delete_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.delete_criteria>`
+        Delete Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_accept.read <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.read>`
+        Retrieve Selective Accept Settings for an entity
+   * - :meth:`api.workspace_settings.selective_accept.read_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.read_criteria>`
+        Retrieve Selective Accept Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_forward.configure <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.configure>`
+        Modify Selective Forward Settings for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.configure_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.configure_criteria>`
+        Modify Selective Forward Criteria for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.create_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.create_criteria>`
+        Create Selective Forward Criteria for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.delete_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.delete_criteria>`
+        Delete Selective Forward Criteria for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.read <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.read>`
+        Retrieve Selective Forward Settings for a Workspace
+   * - :meth:`api.workspace_settings.selective_forward.read_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.read_criteria>`
+        Retrieve Selective Forward Criteria for a Workspace
+   * - :meth:`api.workspace_settings.selective_reject.configure <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure>`
+        Modify Selective Reject Settings for an entity
+   * - :meth:`api.workspace_settings.selective_reject.configure_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure_criteria>`
+        Modify Selective Reject Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_reject.create_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.create_criteria>`
+        Create Selective Reject Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_reject.delete_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.delete_criteria>`
+        Delete Selective Reject Criteria for an entity
+   * - :meth:`api.workspace_settings.selective_reject.read <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read>`
+        Retrieve Selective Reject Settings for an entity
+   * - :meth:`api.workspace_settings.selective_reject.read_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read_criteria>`
+        Retrieve Selective Reject Criteria for an entity
+   * - :meth:`api.workspace_settings.sequential_ring.configure <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.configure>`
+        Modify sequential ring settings for an entity
+   * - :meth:`api.workspace_settings.sequential_ring.configure_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.configure_criteria>`
+        Modify sequential ring criteria for an entity
+   * - :meth:`api.workspace_settings.sequential_ring.create_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.create_criteria>`
+        Create sequential ring criteria for an entity
+   * - :meth:`api.workspace_settings.sequential_ring.delete_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.delete_criteria>`
+        Delete sequential ring criteria for an entity
+   * - :meth:`api.workspace_settings.sequential_ring.read <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.read>`
+        Retrieve sequential ring settings for an entity
+   * - :meth:`api.workspace_settings.sequential_ring.read_criteria <wxc_sdk.person_settings.sequential_ring.SequentialRingApi.read_criteria>`
+        Retrieve sequential ring criteria for an entity
+   * - :meth:`api.workspace_settings.sim_ring.configure <wxc_sdk.person_settings.sim_ring.SimRingApi.configure>`
+        Modify Simultaneous Ring Settings for an entity
+   * - :meth:`api.workspace_settings.sim_ring.configure_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.configure_criteria>`
+        Modify Simultaneous Ring Criteria for an entity
+   * - :meth:`api.workspace_settings.sim_ring.create_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.create_criteria>`
+        Create Simultaneous Ring Criteria for an entity
+   * - :meth:`api.workspace_settings.sim_ring.delete_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.delete_criteria>`
+        Delete Simultaneous Ring Criteria for an entity
+   * - :meth:`api.workspace_settings.sim_ring.read <wxc_sdk.person_settings.sim_ring.SimRingApi.read>`
+        Retrieve Simultaneous Ring Settings for an entity
+   * - :meth:`api.workspace_settings.sim_ring.read_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.read_criteria>`
+        Retrieve Simultaneous Ring Criteria for an entity
+   * - :meth:`api.workspace_settings.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
+        Configure Voicemail Settings for an entity
+   * - :meth:`api.workspace_settings.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
+        Configure Busy Voicemail Greeting for an entity
+   * - :meth:`api.workspace_settings.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
+        Configure No Answer Voicemail Greeting for an entity
+   * - :meth:`api.workspace_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
+        Modify a entity's voicemail passcode
+   * - :meth:`api.workspace_settings.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
+        Read Voicemail Settings for an entity
+   * - :meth:`api.workspace_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
+        Reset Voicemail PIN
    * - :meth:`api.workspaces.capabilities <wxc_sdk.workspaces.WorkspacesApi.capabilities>`
         Shows the capabilities for a workspace by ID
    * - :meth:`api.workspaces.create <wxc_sdk.workspaces.WorkspacesApi.create>`

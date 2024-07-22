@@ -1,7 +1,7 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.person_settings import TelephonyDevice, Hoteling
+from wxc_sdk.person_settings import TelephonyDevice, Hoteling, DeviceList
 
 __all__ = ['WorkspaceDevicesApi']
 
@@ -25,6 +25,25 @@ class WorkspaceDevicesApi(ApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/devices')
         return self.session.follow_pagination(url=url, model=TelephonyDevice, params=params, item_key='devices')
 
+    def list_and_counts(self, workspace_id: str, org_id: str = None) -> DeviceList:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/devices')
+        data = self.get(url=url, params=params)
+        return DeviceList.model_validate(data)
+
     def modify_hoteling(self, workspace_id: str, hoteling: Hoteling, org_id: str = None):
         """
         Modify devices for a workspace.
@@ -38,8 +57,7 @@ class WorkspaceDevicesApi(ApiChild, base='telephony/config/workspaces'):
         :param org_id: Organization to which the workspace belongs.
         :type org_id: str
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace
-        -devices
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace-devices
         """
         params = {}
         if org_id is not None:

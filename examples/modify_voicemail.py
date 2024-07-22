@@ -68,9 +68,9 @@ def update_vm_settings():
 
             # Modify number of rings value
             vm_settings.send_unanswered_calls.number_of_rings = VOICEMAIL_SETTINGS_NUMBER_OF_RINGS
-            vm.configure(person_id=user.person_id, settings=vm_settings)
+            vm.configure(user.person_id, settings=vm_settings)
             # Read configuration after changes
-            vm_settings = vm.read(person_id=user.person_id)
+            vm_settings = vm.read(user.person_id)
             print(f'\n New Configuration: {vm_settings} ')
             final_report.append((user.display_name, 'SUCCESS'))
         except Exception as e:

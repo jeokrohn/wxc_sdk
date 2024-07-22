@@ -14,7 +14,7 @@ from wxc_sdk import Tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import UserType
 from wxc_sdk.integration import Integration
-from wxc_sdk.person_settings import PersonDevicesResponse
+from wxc_sdk.person_settings import DeviceList
 from wxc_sdk.scopes import parse_scopes
 
 
@@ -78,7 +78,7 @@ async def main():
         # get device info for all users
         user_device_infos = await asyncio.gather(*[api.person_settings.devices(person_id=user.person_id)
                                                    for user in calling_users])
-        user_device_infos: list[PersonDevicesResponse]
+        user_device_infos: list[DeviceList]
         users_wo_devices = [user for user, device_info in zip(calling_users, user_device_infos)
                             if not device_info.devices]
 

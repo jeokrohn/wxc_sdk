@@ -21,7 +21,7 @@ from wxc_sdk.common import UserType, ValidationStatus, DeviceCustomization, Disp
 from wxc_sdk.devices import Device, ProductType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
-from wxc_sdk.person_settings import PersonDevicesResponse, TelephonyDevice
+from wxc_sdk.person_settings import DeviceList, TelephonyDevice
 from wxc_sdk.telephony import DeviceManagedBy
 from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember, \
     MACValidationResponse, DeviceLayout, LayoutMode, ProgrammableLineKey, LineKeyType
@@ -402,7 +402,7 @@ class Members(TestCaseWithLog):
             # noinspection PyTypeChecker
             person_devices_responses = await asyncio.gather(*[self.async_api.person_settings.devices(person_id=user_id)
                                                               for user_id in users])
-        person_devices_responses: list[PersonDevicesResponse]
+        person_devices_responses: list[DeviceList]
 
         # dict of device_id sets by user id
         user_devices: dict[str, set[str]] = defaultdict(set)
@@ -511,7 +511,7 @@ class TestsWithDevices(TestCaseWithLog):
                 person_devices_responses = await asyncio.gather(
                     *[api.person_settings.devices(person_id=user.person_id)
                       for user in users])
-                person_devices_responses: list[PersonDevicesResponse]
+                person_devices_responses: list[DeviceList]
 
                 # get list of unique devices
                 device_ids = set()

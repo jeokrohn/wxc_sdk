@@ -20,7 +20,7 @@ class BargeSettings(ApiModel):
 
 class BargeApi(PersonSettingsApiChild):
     """
-    API for barge settings; also used for virtual lines
+    API for barge settings; also used for virtual lines and workspaces
     """
 
     feature = 'bargeIn'

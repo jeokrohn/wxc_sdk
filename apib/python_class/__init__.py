@@ -1,5 +1,4 @@
 import logging
-import logging
 import re
 from collections import defaultdict, Counter
 from collections.abc import Generator, Iterable, Callable

@@ -2,33 +2,40 @@
 API to manage call queue agent caller ID information
 """
 import json
-from collections.abc import Generator
 from typing import Optional
 
-from pydantic import model_validator
+from pydantic import model_validator, TypeAdapter
 
-from ..api_child import ApiChild
+from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 
-__all__ = ['AgentQueue', 'QueueCallerId', 'AgentCallerIdApi']
+__all__ = ['AvailableCallerIdType', 'AgentCallerId', 'AgentCallerIdApi']
 
 
-class AgentQueue(ApiModel):
-    """
-    Available queue
-    """
-    #: Indicates the Call Queue's unique identifier.
+class AvailableCallerIdType(str, Enum):
+    #: A call queue has been selected for the agent's caller ID.
+    call_queue = 'CALL_QUEUE'
+    #: A hunt group has been selected for the agent's caller ID.
+    hunt_group = 'HUNT_GROUP'
+
+
+class AgentCallerId(ApiModel):
+    #: Call queue or hunt group's unique identifier.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUVVFVUUvMjE3ZDU3YmEtOTMxYi00ZjczLTk1Y2EtOGY3MWFhYzc4MTE5
     id: Optional[str] = None
-    #: Indicates the Call Queue's name.
+    #: Member is of type `CALL_QUEUE` or `HUNT_GROUP`
+    #: example: CALL_QUEUE
+    type: Optional[AvailableCallerIdType] = None
+    #: Call queue or hunt group's name.
+    #: example: TestCallQueue
     name: Optional[str] = None
-    #: When not null, indicates the Call Queue's phone number.
+    #: When not null, it is call queue or hunt group's phone number.
+    #: example: +441234200090
     phone_number: Optional[str] = None
-    #: When not null, indicates the Call Queue's extension number.
+    #: When not null, it is call queue or hunt group's extension number.
+    #: example: 6001
     extension: Optional[str] = None
-    #: Routing prefix of location.
-    routing_prefix: Optional[str] = None
-    #: Routing prefix + extension of a person or workspace.
-    esn: Optional[str] = None
 
 
 class QueueCallerId(ApiModel):
@@ -40,7 +47,7 @@ class QueueCallerId(ApiModel):
     queue_caller_id_enabled: Optional[bool] = None
     #: It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be
     #: populated
-    selected_queue: Optional[AgentQueue] = None
+    selected_queue: Optional[AgentCallerId] = None
 
     @model_validator(mode='before')
     def root(cls, values):
@@ -72,81 +79,75 @@ class QueueCallerId(ApiModel):
         return json.dumps(data)
 
 
-class AgentCallerIdApi(ApiChild, base='telephony/config/people'):
+class AgentCallerIdApi(PersonSettingsApiChild):
     """
-    API to manage call queue agent caller ID information
+    API to manage agent caller id settings
+
+    Also used for virtual lines
     """
+    feature = 'agent'
 
-    # noinspection PyMethodOverriding
-    def ep(self, person_id: str, path: str):
+    def available_caller_ids(self, entity_id: str, org_id: str = None) -> list[AgentCallerId]:
         """
+        Retrieve Agent's List of Available Caller IDs
 
-        :meta private:
-        """
-        return super().ep(f'{person_id}/queues/{path}')
+        Get the list of call queues and hunt groups available for caller ID use by this person, virtual line, or
+        workspace as an agent.
 
-    def available_queues(self, person_id: str, org_id: str = None) -> Generator[AgentQueue, None, None]:
-        """
-        Retrieve the list of the person's available call queues and the associated Caller ID information
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope
+        of `spark-admin:people_read`.
 
-        If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for
-        outgoing Caller ID. This API returns a list of Call Queues from which the person must select. If this setting
-        is disabled or Agent does not belong to any queue this list will be empty.
-
-        This API requires a full admin or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: organization id
+        :param entity_id: Unique identifier for the person, virtual line, or workspace.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :return: yields person's available call queues and the associated Caller ID information
-        :rtype: Generator[AgentQueue, None, None]
+        :rtype: list[AvailableCallerIdObject]
         """
+        ep = self.f_ep(entity_id, 'availableCallerIds')
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(person_id=person_id, path='availableCallerIds')
-        return self.session.follow_pagination(url=url, model=AgentQueue, params=params, item_key='availableQueues')
+        data = self.get(ep, params=params)
+        return TypeAdapter(list[AgentCallerId]).validate_python(data['availableCallerIds'])
 
-    def read(self, person_id: str, org_id: str = None) -> QueueCallerId:
+    def read(self, entity_id: str) -> AgentCallerId:
         """
-        Retrieve a call queue agent's Caller ID information
+        Retrieve Agent's Caller ID Information
 
-        Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone
-        number or their own configured Caller ID. This API fetches the configured Caller ID for the agent in the system.
+        Retrieve the Agent's Caller ID Information.
 
-        This API requires a full admin or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Each agent will be able to set their outgoing Caller ID as either the Call Queue's Caller ID, Hunt Group's
+        Caller ID or their own configured Caller ID.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: organization id
-        :type org_id: str
-        :return: call queue agent's Caller ID information
-        :rtype: QueueCallerId
+        This API requires a full admin or read-only administrator or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace
+        :type entity_id: str
+        :rtype: AgentCallerId
         """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep(person_id=person_id, path='callerId')
-        data = self.get(url=url, params=params)
-        return QueueCallerId.model_validate(data)
-
-    def update(self, person_id: str, update: QueueCallerId, org_id: str = None):
+        url = self.f_ep(entity_id, 'callerId')
+        data = super().get(url)
+        r = AgentCallerId.model_validate(data['selectedCallerId'])
+        return r
+        
+    def configure(self, entity_id: str, selected_caller_id: str = None):
         """
-        Modify a call queue agent's Caller ID information
+        Modify Agent's Caller ID Information.
 
-        Each Agent in the Call Queue will be able to set their outgoing Caller ID as either the designated Call
-        Queue's phone number or their own configured Caller ID. This API modifies the configured Caller ID for the
-        agent in the system.
+        Each Agent will be able to set their outgoing Caller ID as either the designated Call Queue's Caller ID or Hunt
+        Group's Caller ID or their own configured Caller ID
 
-        This API requires a full or user administrator auth token with the spark-admin:telephony_config_write scope.
+        This API requires a full or user administrator or location administrator auth token with
+        the `spark-admin:telephony_config_write` scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param update: new settings
-        :type update: QueueCallerId
-        :param org_id: organization id
-        :type org_id: str
+        :param entity_id: Unique identifier for the person, virtual line, or workspace
+        :type entity_id: str
+        :param selected_caller_id: The unique identifier of the call queue or hunt group to use for the agent's caller
+            ID. Set to null to use the agent's own caller ID.
+        :type selected_caller_id: str
+        :rtype: None
         """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep(person_id=person_id, path='callerId')
-        body = update.for_update()
-        self.put(url=url, params=params, data=body)
+        body = {'selectedCallerId': selected_caller_id}
+        url = self.f_ep(entity_id, 'callerId')
+        super().put(url, json=body)

@@ -19,7 +19,7 @@ class TestRead(TestCaseWithUsers):
         ptt = self.api.person_settings.push_to_talk
 
         with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda user: ptt.read(person_id=user.person_id),
+            settings = list(pool.map(lambda user: ptt.read(entity_id=user.person_id),
                                      self.users))
         print(f'Got PTT settings for {len(self.users)} users')
         print('\n'.join(s.model_dump_json() for s in settings))
@@ -35,13 +35,13 @@ class TestUpdate(TestCaseWithUsers):
         """
         user = random.choice(self.users)
         ptt = self.api.person_settings.push_to_talk
-        settings = ptt.read(person_id=user.person_id)
+        settings = ptt.read(entity_id=user.person_id)
         try:
             yield user
         finally:
             # restore old settings
-            ptt.configure(person_id=user.person_id, settings=settings)
-            restored = ptt.read(person_id=user.person_id)
+            ptt.configure(entity_id=user.person_id, settings=settings)
+            restored = ptt.read(entity_id=user.person_id)
             self.assertEqual(settings, restored)
 
     def test_001_toggle_allow_auto_answer(self):
@@ -51,10 +51,10 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             ptt = self.api.person_settings.push_to_talk
             user: Person
-            before = ptt.read(person_id=user.person_id)
+            before = ptt.read(entity_id=user.person_id)
             settings = PushToTalkSettings(allow_auto_answer=not before.allow_auto_answer)
-            ptt.configure(person_id=user.person_id, settings=settings)
-            after = ptt.read(person_id=user.person_id)
+            ptt.configure(entity_id=user.person_id, settings=settings)
+            after = ptt.read(entity_id=user.person_id)
             self.assertEqual(settings.allow_auto_answer,
                              after.allow_auto_answer)
             after.allow_auto_answer = before.allow_auto_answer
@@ -67,11 +67,11 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             ptt = self.api.person_settings.push_to_talk
             user: Person
-            before = ptt.read(person_id=user.person_id)
+            before = ptt.read(entity_id=user.person_id)
             settings = PushToTalkSettings(connection_type=next(ct for ct in PTTConnectionType
                                                                if ct != before.connection_type))
-            ptt.configure(person_id=user.person_id, settings=settings)
-            after = ptt.read(person_id=user.person_id)
+            ptt.configure(entity_id=user.person_id, settings=settings)
+            after = ptt.read(entity_id=user.person_id)
             self.assertEqual(settings.connection_type,
                              after.connection_type)
             after.connection_type = before.connection_type
@@ -84,11 +84,11 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             ptt = self.api.person_settings.push_to_talk
             user: Person
-            before = ptt.read(person_id=user.person_id)
+            before = ptt.read(entity_id=user.person_id)
             settings = PushToTalkSettings(access_type=next(at for at in PushToTalkAccessType
                                                            if at != before.access_type))
-            ptt.configure(person_id=user.person_id, settings=settings)
-            after = ptt.read(person_id=user.person_id)
+            ptt.configure(entity_id=user.person_id, settings=settings)
+            after = ptt.read(entity_id=user.person_id)
             self.assertEqual(settings.access_type,
                              after.access_type)
             after.access_type = before.access_type
@@ -101,7 +101,7 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             ptt = self.api.person_settings.push_to_talk
             user: Person
-            before = ptt.read(person_id=user.person_id)
+            before = ptt.read(entity_id=user.person_id)
             members_before = before.members or []
             members_before_ids = set(m.member_id for m in members_before)
 
@@ -110,8 +110,8 @@ class TestUpdate(TestCaseWithUsers):
                 self.skipTest('Need at least 5 users to add')
             to_add = random.sample(candidates, 5)
             settings = PushToTalkSettings(members=[MonitoredMember(member_id=u.person_id) for u in to_add])
-            ptt.configure(person_id=user.person_id, settings=settings)
-            after = ptt.read(person_id=user.person_id)
+            ptt.configure(entity_id=user.person_id, settings=settings)
+            after = ptt.read(entity_id=user.person_id)
             self.assertEqual(len(to_add), len(after.members))
             to_add_set = set(m.person_id for m in to_add)
             members_set_after = set(m.member_id for m in after.members)
@@ -126,7 +126,7 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             ptt = self.api.person_settings.push_to_talk
             user: Person
-            before = ptt.read(person_id=user.person_id)
+            before = ptt.read(entity_id=user.person_id)
             members_before = before.members or []
             members_before_ids = set(m.member_id for m in members_before)
 
@@ -135,8 +135,8 @@ class TestUpdate(TestCaseWithUsers):
                 self.skipTest('Need at least 5 users to add')
             to_add = random.sample(candidates, 5)
             settings = PushToTalkSettings(members=[u.person_id for u in to_add])
-            ptt.configure(person_id=user.person_id, settings=settings)
-            after = ptt.read(person_id=user.person_id)
+            ptt.configure(entity_id=user.person_id, settings=settings)
+            after = ptt.read(entity_id=user.person_id)
             self.assertEqual(len(to_add), len(after.members))
             to_add_set = set(m.person_id for m in to_add)
             members_set_after = set(m.member_id for m in after.members)

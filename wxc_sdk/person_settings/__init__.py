@@ -7,7 +7,9 @@ from typing import Optional
 from pydantic import Field
 
 from .agent_caller_id import AgentCallerIdApi
+from .app_shared_line import AppSharedLineApi
 from .appservices import AppServicesApi
+from .available_numbers import AvailableNumbersApi
 from .barge import BargeApi
 from .call_intercept import CallInterceptApi
 from .call_recording import CallRecordingApi
@@ -19,7 +21,9 @@ from .dnd import DndApi
 from .exec_assistant import ExecAssistantApi
 from .forwarding import PersonForwardingApi
 from .hoteling import HotelingApi
+from .moh import MusicOnHoldApi
 from .monitoring import MonitoringApi
+from .msteams import MSTeamsSettingApi
 from .numbers import NumbersApi
 from .permissions_in import IncomingPermissionsApi
 from .permissions_out import OutgoingPermissionsApi
@@ -36,7 +40,7 @@ from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 
 __all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'Hoteling', 'TelephonyDevice',
-           'PersonDevicesResponse']
+           'DeviceList']
 
 
 # TODO: UC profile
@@ -99,11 +103,13 @@ class TelephonyDevice(ApiModel):
     location: Optional[IdAndName] = None
 
 
-class PersonDevicesResponse(ApiModel):
+class DeviceList(ApiModel):
     #: Array of devices available to person.
     devices: list[TelephonyDevice]
     #: Maximum number of devices a person can be assigned to.
     max_device_count: int
+    #: Maximum number of devices a person can own.
+    max_owned_device_count: Optional[int] = None
 
 
 @dataclass(init=False)
@@ -114,12 +120,13 @@ class PersonSettingsApi(ApiChild, base='people'):
 
     #: agent caller id Api
     agent_caller_id: AgentCallerIdApi
+    app_shared_line: AppSharedLineApi
     #: Person's Application Services Settings
     appservices: AppServicesApi
+    #: Available numbers for a person
+    available_numbers: AvailableNumbersApi
     #: Barge In Settings for a Person
     barge: BargeApi
-    #: Do Not Disturb Settings for a Person
-    dnd: DndApi
     #: Call bridge settings for a person
     call_bridge: CallBridgeApi
     #: Call Intercept Settings for a Person
@@ -132,6 +139,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     caller_id: CallerIdApi
     #: Person's Calling Behavior
     calling_behavior: CallingBehaviorApi
+    #: Do Not Disturb Settings for a Person
+    dnd: DndApi
     #: Executive Assistant Settings for a Person
     exec_assistant: ExecAssistantApi
     #: Forwarding Settings for a Person
@@ -140,6 +149,10 @@ class PersonSettingsApi(ApiChild, base='people'):
     hoteling: HotelingApi
     #: Person's Monitoring Settings
     monitoring: MonitoringApi
+    #; MS Teams settings
+    ms_teams: MSTeamsSettingApi
+    #: music on hold settings
+    music_on_hold: MusicOnHoldApi
     #: Phone Numbers for a Person
     numbers: NumbersApi
     #: Incoming Permission Settings for a Person
@@ -162,7 +175,9 @@ class PersonSettingsApi(ApiChild, base='people'):
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session)
+        self.app_shared_line = AppSharedLineApi(session=session)
         self.appservices = AppServicesApi(session=session)
+        self.available_numbers = AvailableNumbersApi(session=session)
         self.barge = BargeApi(session=session)
         self.dnd = DndApi(session=session)
         self.call_bridge = CallBridgeApi(session=session)
@@ -175,6 +190,8 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.forwarding = PersonForwardingApi(session=session)
         self.hoteling = HotelingApi(session=session)
         self.monitoring = MonitoringApi(session=session)
+        self.ms_teams = MSTeamsSettingApi(session=session)
+        self.music_on_hold = MusicOnHoldApi(session=session)
         self.numbers = NumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session)
@@ -185,7 +202,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.people)
         self.voicemail = VoicemailApi(session=session)
 
-    # TODO: move to voicemail API?
+    # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
     def reset_vm_pin(self, person_id: str, org_id: str = None):
         """
         Reset Voicemail PIN
@@ -197,6 +214,8 @@ class PersonSettingsApi(ApiChild, base='people'):
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
+        This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
+
         :param person_id: Unique identifier for the person.
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
             use this parameter as the default is the same organization as the token used to access API.
@@ -205,7 +224,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         self.post(url, params=params)
 
-    def devices(self, person_id: str, org_id: str = None) -> PersonDevicesResponse:
+    def devices(self, person_id: str, org_id: str = None) -> DeviceList:
         """
         Get all devices for a person.
 
@@ -216,9 +235,9 @@ class PersonSettingsApi(ApiChild, base='people'):
         :param org_id: organization that person belongs to
         :type org_id: str
         :return: device info for user
-        :rtype: PersonDevicesResponse
+        :rtype: DeviceList
         """
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = self.get(url=url, params=params)
-        return PersonDevicesResponse.model_validate(data)
+        return DeviceList.model_validate(data)

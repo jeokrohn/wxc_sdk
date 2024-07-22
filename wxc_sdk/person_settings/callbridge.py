@@ -14,9 +14,11 @@ class CallBridgeApi(PersonSettingsApiChild):
     """
     User Call Settings with Call Bridge Feature
 
+    Also used for virtual lines
+
     Not supported for Webex for Government (FedRAMP)
 
-     Person Call Settings supports modifying Webex Calling settings for a specific person.
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
 
     Viewing People requires a full, user, or read-only administrator auth token with a scope
     of `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a

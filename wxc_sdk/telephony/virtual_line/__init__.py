@@ -8,16 +8,22 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import PrimaryOrShared, AssignedDectNetwork
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice
-from ...person_settings.callbridge import CallBridgeApi
+from ...person_settings import TelephonyDevice, AvailableNumbersApi
+from ...person_settings.agent_caller_id import AgentCallerIdApi
+from ...person_settings.barge import BargeApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.call_recording import CallRecordingApi
 from ...person_settings.call_waiting import CallWaitingApi
+from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.common import ApiSelector
 from ...person_settings.forwarding import PersonForwardingApi
+from ...person_settings.moh import MusicOnHoldApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
+from ...person_settings.privacy import PrivacyApi
+from ...person_settings.push_to_talk import PushToTalkApi
+from ...person_settings.voicemail import VoicemailApi
 
 __all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineNumber', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber',
            'VirtualLineDevices']
@@ -103,6 +109,12 @@ class VirtualLineDevices(ApiModel):
 
 @dataclass(init=False)
 class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
+    #: agent caller id Api
+    agent_caller_id: AgentCallerIdApi
+    #: Available numbers for a virtual line
+    available_numbers: AvailableNumbersApi
+    #: barge settings
+    barge: BargeApi
     #: Call bridge settings
     call_bridge: CallBridgeApi
     #: call intercept settings
@@ -115,21 +127,36 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     caller_id: CallerIdApi
     #: forwarding settings
     forwarding: PersonForwardingApi
+    #: music on hold settings
+    music_on_hold: MusicOnHoldApi
     #: incoming permissions
     permissions_in: IncomingPermissionsApi
     #: outgoing permissions
     permissions_out: OutgoingPermissionsApi
+    #: Privacy Settings
+    privacy: PrivacyApi
+    #: Push to Talk Settings
+    push_to_talk: PushToTalkApi
+    #: Voicemail Settings
+    voicemail: VoicemailApi
 
     def __init__(self, session):
         super().__init__(session=session)
+        self.agent_caller_id = AgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.available_numbers = AvailableNumbersApi(session=session, selector=ApiSelector.virtual_line)
+        self.barge = BargeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_intercept = CallInterceptApi(session=session, selector=ApiSelector.virtual_line)
         self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
+        self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.privacy = PrivacyApi(session=session, selector=ApiSelector.virtual_line)
+        self.push_to_talk = PushToTalkApi(session=session, selector=ApiSelector.virtual_line)
+        self.voicemail = VoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
     def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
                phone_number: str = None, extension: str = None, caller_id_last_name: str = None,

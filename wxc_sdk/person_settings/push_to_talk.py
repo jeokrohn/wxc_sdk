@@ -47,51 +47,52 @@ class PushToTalkSettings(ApiModel):
 class PushToTalkApi(PersonSettingsApiChild):
     """
     API for person's PTT settings
+
+    Also used for virtual lines and workspaces
     """
 
     feature = 'pushToTalk'
 
-    def read(self, person_id: str, org_id: str = None) -> PushToTalkSettings:
+    def read(self, entity_id: str, org_id: str = None) -> PushToTalkSettings:
         """
-        Read Push-to-Talk Settings for a Person
-        Retrieve a Person's Push-to-Talk Settings
+        Read Push-to-Talk Settings for an entity
 
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return: PTT settings for specific user
+        :return: PTT settings for specific entity
         :rtype: PushToTalkSettings
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return PushToTalkSettings.model_validate(self.get(ep, params=params))
 
-    def configure(self, person_id: str, settings: PushToTalkSettings, org_id: str = None):
+    def configure(self, entity_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
-        Configure Push-to-Talk Settings for a Person
+        Configure Push-to-Talk Settings for an entity
 
-        Configure a Person's Push-to-Talk Settings
+        Configure an entity's Push-to-Talk Settings
 
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
         :param settings: new setting to be applied. For members only the ID needs to be set
         :type settings: PushToTalkSettings
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         if settings.members:
             # for an update member is just a list of IDs

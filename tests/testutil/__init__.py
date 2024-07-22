@@ -24,7 +24,7 @@ from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.common.schedules import ScheduleType, Schedule, Event
-from wxc_sdk.licenses import LicenseRequest, LicenseProperties
+from wxc_sdk.licenses import LicenseRequest, LicenseProperties, License
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
@@ -387,6 +387,7 @@ def new_workspace_names(api: WebexSimpleApi) -> Generator[str, None, None]:
 
 def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Location,
                                         supported_devices: WorkspaceSupportedDevices,
+                                        license: License = None,
                                         **kwargs) -> Workspace:
     """
     create a workspace with webex calling in given location
@@ -399,13 +400,16 @@ def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Lo
     name = next(new_workspace_names(api=api))
 
     # create workspace with that extension
+    webex_calling = WorkspaceWebexCalling(
+        extension=extension,
+        location_id=target_location.location_id)
+    if license is not None:
+        webex_calling.licenses = [license.license_id]
     new_workspace = Workspace(
         display_name=name,
         calling=WorkspaceCalling(
             type=CallingType.webex,
-            webex_calling=WorkspaceWebexCalling(
-                extension=extension,
-                location_id=target_location.location_id)),
+            webex_calling=webex_calling),
         supported_devices=supported_devices, **kwargs)
     workspace = api.workspaces.create(settings=new_workspace)
     return workspace

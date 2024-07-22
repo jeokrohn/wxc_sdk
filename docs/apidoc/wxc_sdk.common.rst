@@ -13,3 +13,4 @@ Submodules
    :maxdepth: 4
 
    wxc_sdk.common.schedules
+   wxc_sdk.common.selective

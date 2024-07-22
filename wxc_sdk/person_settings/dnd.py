@@ -20,50 +20,48 @@ class DND(ApiModel):
 
 class DndApi(PersonSettingsApiChild):
     """
-    API for person's DND settings
+    API for person's DND settings. Also used for workspaces
     """
 
     feature = 'doNotDisturb'
 
-    def read(self, person_id: str, org_id: str = None) -> DND:
+    def read(self, entity_id: str, org_id: str = None) -> DND:
         """
-        Read Do Not Disturb Settings for a Person
-        Retrieve a Person's Do Not Disturb Settings
+        Read Do Not Disturb Settings for an entity
+        Retrieve an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
         Reminder to play a brief tone on your desktop phone when you receive incoming calls.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a person to read their settings.
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners) may
         use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return:
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         return DND.model_validate(self.get(ep, params=params))
 
-    def configure(self, person_id: str, dnd_settings: DND, org_id: str = None):
+    def configure(self, entity_id: str, dnd_settings: DND, org_id: str = None):
         """
-        Configure Do Not Disturb Settings for a Person
-        Configure a Person's Do Not Disturb Settings
+        Configure Do Not Disturb Settings for an entity
+        Configure an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
         Reminder to play a brief tone on your desktop phone when you receive incoming calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        auth token with spark:people_write scope can be used by an entity to update their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param dnd_settings: new setting to be applied
         :type dnd_settings: DND
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         self.put(ep, params=params, data=dnd_settings.model_dump_json())
