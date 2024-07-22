@@ -52,32 +52,35 @@ CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
 __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi',
-           'AsAnnouncementsRepositoryApi', 'AsApiChild', 'AsAppServicesApi', 'AsApplyLineKeyTemplatesJobsApi',
-           'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
-           'AsCallBridgeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
-           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
-           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
+           'AsAnnouncementsRepositoryApi', 'AsAnonCallsApi', 'AsApiChild', 'AsAppServicesApi', 'AsAppSharedLineApi',
+           'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
+           'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallInterceptApi',
+           'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueApi', 'AsCallRecordingApi',
+           'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi',
+           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
            'AsConvergedRecordingsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi',
            'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi',
            'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi',
            'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
            'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi',
-           'AsPersonSettingsApiChild', 'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
+           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrganisationAccessCodesApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
            'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
-           'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsStatusAPI', 'AsSupervisorApi',
-           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
-           'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi', 'AsUpdateRoutingPrefixJobsApi',
-           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
-           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi',
+           'AsSelectiveForwardApi', 'AsSelectiveRejectApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI',
+           'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
+           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
+           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
            'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
@@ -6105,108 +6108,6 @@ class AsPeopleApi(AsApiChild, base='people'):
         return result
 
 
-class AsAgentCallerIdApi(AsApiChild, base='telephony/config/people'):
-    """
-    API to manage call queue agent caller ID information
-    """
-
-    # noinspection PyMethodOverriding
-    def ep(self, person_id: str, path: str):
-        """
-
-        :meta private:
-        """
-        return super().ep(f'{person_id}/queues/{path}')
-
-    def available_queues_gen(self, person_id: str, org_id: str = None) -> AsyncGenerator[AgentQueue, None, None]:
-        """
-        Retrieve the list of the person's available call queues and the associated Caller ID information
-
-        If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for
-        outgoing Caller ID. This API returns a list of Call Queues from which the person must select. If this setting
-        is disabled or Agent does not belong to any queue this list will be empty.
-
-        This API requires a full admin or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: organization id
-        :type org_id: str
-        :return: yields person's available call queues and the associated Caller ID information
-        :rtype: Generator[AgentQueue, None, None]
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep(person_id=person_id, path='availableCallerIds')
-        return self.session.follow_pagination(url=url, model=AgentQueue, params=params, item_key='availableQueues')
-
-    async def available_queues(self, person_id: str, org_id: str = None) -> List[AgentQueue]:
-        """
-        Retrieve the list of the person's available call queues and the associated Caller ID information
-
-        If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for
-        outgoing Caller ID. This API returns a list of Call Queues from which the person must select. If this setting
-        is disabled or Agent does not belong to any queue this list will be empty.
-
-        This API requires a full admin or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: organization id
-        :type org_id: str
-        :return: yields person's available call queues and the associated Caller ID information
-        :rtype: Generator[AgentQueue, None, None]
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep(person_id=person_id, path='availableCallerIds')
-        return [o async for o in self.session.follow_pagination(url=url, model=AgentQueue, params=params, item_key='availableQueues')]
-
-    async def read(self, person_id: str, org_id: str = None) -> QueueCallerId:
-        """
-        Retrieve a call queue agent's Caller ID information
-
-        Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone
-        number or their own configured Caller ID. This API fetches the configured Caller ID for the agent in the system.
-
-        This API requires a full admin or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: organization id
-        :type org_id: str
-        :return: call queue agent's Caller ID information
-        :rtype: QueueCallerId
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep(person_id=person_id, path='callerId')
-        data = await self.get(url=url, params=params)
-        return QueueCallerId.model_validate(data)
-
-    async def update(self, person_id: str, update: QueueCallerId, org_id: str = None):
-        """
-        Modify a call queue agent's Caller ID information
-
-        Each Agent in the Call Queue will be able to set their outgoing Caller ID as either the designated Call
-        Queue's phone number or their own configured Caller ID. This API modifies the configured Caller ID for the
-        agent in the system.
-
-        This API requires a full or user administrator auth token with the spark-admin:telephony_config_write scope.
-
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param update: new settings
-        :type update: QueueCallerId
-        :param org_id: organization id
-        :type org_id: str
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep(person_id=person_id, path='callerId')
-        body = update.for_update()
-        await self.put(url=url, params=params, data=body)
-
-
 class AsPersonSettingsApiChild(AsApiChild, base=''):
     """
     Base class for all classes implementing person settings APIs
@@ -6265,16 +6166,109 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
-        alternates = {('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
-                      ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
-                      ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
-                      ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
-                      ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
-                      ('people', 'callBridge'): ('telephony/config/people', '/features/'),
-                      }
+        alternates = {
+            ('workspaces', 'anonymousCallReject'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'bargeIn'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'callPolicies'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'priorityAlert'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'pushToTalk'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'selectiveAccept'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'selectiveForward'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'selectiveReject'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'sequentialRing'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'simultaneousRing'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
+            ('people', 'agent'): ('telephony/config/people', '/'),
+            ('people', 'callBridge'): ('telephony/config/people', '/features/'),
+            ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
+            ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
+            ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
+            ('people', 'musicOnHold'): ('telephony/config/people', '/'),
+        }
+        if selector == 'people' and self.feature == 'voicemail' and path == 'passcode':
+            # this is a new endpoint for users and is the only VM endpoint with a different URL structure
+            return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
         selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
         return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')
+
+
+class AsAgentCallerIdApi(AsPersonSettingsApiChild):
+    """
+    API to manage agent caller id settings
+
+    Also used for virtual lines
+    """
+    feature = 'agent'
+
+    async def available_caller_ids(self, entity_id: str, org_id: str = None) -> list[AgentCallerId]:
+        """
+        Retrieve Agent's List of Available Caller IDs
+
+        Get the list of call queues and hunt groups available for caller ID use by this person, virtual line, or
+        workspace as an agent.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope
+        of `spark-admin:people_read`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: list[AvailableCallerIdObject]
+        """
+        ep = self.f_ep(entity_id, 'availableCallerIds')
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(ep, params=params)
+        return TypeAdapter(list[AgentCallerId]).validate_python(data['availableCallerIds'])
+
+    async def read(self, entity_id: str) -> AgentCallerId:
+        """
+        Retrieve Agent's Caller ID Information
+
+        Retrieve the Agent's Caller ID Information.
+
+        Each agent will be able to set their outgoing Caller ID as either the Call Queue's Caller ID, Hunt Group's
+        Caller ID or their own configured Caller ID.
+
+        This API requires a full admin or read-only administrator or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace
+        :type entity_id: str
+        :rtype: AgentCallerId
+        """
+        url = self.f_ep(entity_id, 'callerId')
+        data = await super().get(url)
+        r = AgentCallerId.model_validate(data['selectedCallerId'])
+        return r
+
+    async def configure(self, entity_id: str, selected_caller_id: str = None):
+        """
+        Modify Agent's Caller ID Information.
+
+        Each Agent will be able to set their outgoing Caller ID as either the designated Call Queue's Caller ID or Hunt
+        Group's Caller ID or their own configured Caller ID
+
+        This API requires a full or user administrator or location administrator auth token with
+        the `spark-admin:telephony_config_write` scope.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace
+        :type entity_id: str
+        :param selected_caller_id: The unique identifier of the call queue or hunt group to use for the agent's caller
+            ID. Set to null to use the agent's own caller ID.
+        :type selected_caller_id: str
+        :rtype: None
+        """
+        body = {'selectedCallerId': selected_caller_id}
+        url = self.f_ep(entity_id, 'callerId')
+        await super().put(url, json=body)
 
 
 class AsAppServicesApi(AsPersonSettingsApiChild):
@@ -6335,9 +6329,767 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
         await self.put(ep, params=params, data=data)
 
 
+class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
+    """
+    Webex app shared line API
+    """
+
+    def f_ep(self, person_id: str, application_id: str, path: str) -> str:
+        """
+
+        :meta private:
+        """
+        return super().ep(f'{person_id}/applications/{application_id}/{path}')
+
+    def search_members_gen(self, person_id: str, application_id: str, max_: str = None,
+                       start: str = None, location: str = None, name: str = None,
+                       number: str = None, order: str = None,
+                       extension: str = None, **params) -> AsyncGenerator[MemberCommon, None, None]:
+        """
+        Search Shared-Line Appearance Members
+
+        Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+
+        This API requires a full or user administrator or location administrator auth token with
+        the `spark-admin:people_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :param max_: Number of records per page.
+        :type max_: str
+        :param start: Page number.
+        :type start: str
+        :param location: Location ID for the user.
+        :type location: str
+        :param name: Search for users with names that match the query.
+        :type name: str
+        :param number: Search for users with numbers that match the query.
+        :type number: str
+        :param order: Sort by first name (`fname`) or last name (`lname`).
+        :type order: str
+        :param extension: Search for users with extensions that match the query.
+        :type extension: str
+        :return: Generator yielding :class:`MemberCommon` instances
+        """
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if location is not None:
+            params['location'] = location
+        if name is not None:
+            params['name'] = name
+        if number is not None:
+            params['number'] = number
+        if order is not None:
+            params['order'] = order
+        if extension is not None:
+            params['extension'] = extension
+        url = self.f_ep(person_id=person_id, application_id=application_id, path='availableMembers')
+        return self.session.follow_pagination(url, model=MemberCommon, params=params, item_key='members')
+
+    async def search_members(self, person_id: str, application_id: str, max_: str = None,
+                       start: str = None, location: str = None, name: str = None,
+                       number: str = None, order: str = None,
+                       extension: str = None, **params) -> List[MemberCommon]:
+        """
+        Search Shared-Line Appearance Members
+
+        Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+
+        This API requires a full or user administrator or location administrator auth token with
+        the `spark-admin:people_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :param max_: Number of records per page.
+        :type max_: str
+        :param start: Page number.
+        :type start: str
+        :param location: Location ID for the user.
+        :type location: str
+        :param name: Search for users with names that match the query.
+        :type name: str
+        :param number: Search for users with numbers that match the query.
+        :type number: str
+        :param order: Sort by first name (`fname`) or last name (`lname`).
+        :type order: str
+        :param extension: Search for users with extensions that match the query.
+        :type extension: str
+        :return: Generator yielding :class:`MemberCommon` instances
+        """
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if location is not None:
+            params['location'] = location
+        if name is not None:
+            params['name'] = name
+        if number is not None:
+            params['number'] = number
+        if order is not None:
+            params['order'] = order
+        if extension is not None:
+            params['extension'] = extension
+        url = self.f_ep(person_id=person_id, application_id=application_id, path='availableMembers')
+        return [o async for o in self.session.follow_pagination(url, model=MemberCommon, params=params, item_key='members')]
+
+    async def get_members(self, person_id: str, application_id: str) -> DeviceMembersResponse:
+        """
+        Get Shared-Line Appearance Members
+
+        Get primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.
+
+        This API requires a full or user administrator or location administrator auth token with
+        the `spark-admin:people_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :rtype: :class:`GetSharedLineMemberList`
+        """
+        url = self.f_ep(person_id=person_id, application_id=application_id, path='members')
+        data = await super().get(url)
+        r = DeviceMembersResponse.model_validate(data)
+        return r
+
+    async def update_members(self, person_id: str, application_id: str,
+                       members: list[DeviceMember] = None):
+        """
+        Put Shared-Line Appearance Members
+
+        Add or modify primary and secondary users assigned to shared-lines on a Webex Calling Apps Desktop device.
+
+        This API requires a full or user administrator or location administrator auth token with the
+        `spark-admin:people_write` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :type members: list[DeviceMember]
+        :rtype: None
+        """
+        body = dict()
+        if members is not None:
+            body['members'] = TypeAdapter(list[DeviceMember]).dump_python(members, mode='json', by_alias=True,
+                                                                          exclude_none=True)
+        url = self.f_ep(person_id=person_id, application_id=application_id, path='members')
+        await super().put(url, json=body)
+
+
+class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
+    """
+    API for person's available numbers
+
+    Also used for virtual lines, workspaces
+    
+    Available methods
+        | Method                                     | Virtual Lines | Workspaces | User |
+        |--------------------------------------------|---------------|------------|------|
+        | GET Call Forward Available Phone Numbers   | X             | X          | X    |
+        | GET ECBN Available Phone Numbers           | X             | X          | X    |
+        | GET Fax Message Available Phone Numbers    | X             |            | X    | 
+        | GET Available Phone Numbers                | X             | X          |      |
+        | Get Call Intercept Available Phone Numbers |               | X          | X    |
+        | GET Primary Available Phone Numbers        |               |            | X    |
+        | GET Secondary Available Phone Numbers      |               |            | X    |
+    """
+
+    # lookup for allowed entities for each function
+    existing = {'callForwarding': {'virtualLines', 'workspaces', 'people'},
+                'emergencyCallbackNumber': {'virtualLines', 'workspaces', 'people'},
+                'faxMessage': {'virtualLines', 'people'},
+                '': {'virtualLines', 'workspaces'},
+                'callIntercept': {'workspaces', 'people'},
+                'primary': {'people'},
+                'secondary': {'people'}}
+
+    def __init__(self, *, session: AsRestSession, selector: ApiSelector = ApiSelector.person):
+        super().__init__(session=session)
+        if selector == ApiSelector.person:
+            self.selector = 'people'
+        elif selector == ApiSelector.virtual_line:
+            self.selector = 'virtualLines'
+        elif selector == ApiSelector.workspace:
+            self.selector = 'workspaces'
+
+    def f_ep(self, available_for: str = None, entity_id: str = None) -> str:
+        """
+        Get endpoint URL
+        
+        :meta private:
+        :param available_for: selector, something like callForwarding, faxMessage, ... 
+        :param entity_id: entity id if needed
+        :return: url
+        """
+        # does this feature exist
+        allowed = self.existing.get(available_for)
+        if allowed is None:
+            raise ValueError(f'Invalid feature: {available_for}')
+        if self.selector not in allowed:
+            raise ValueError(f'endpoint {available_for} does not exist for {self.selector}')
+        entity_id = entity_id and f'{entity_id}/' or ''
+        available_for = available_for and f'{available_for}/' or ''
+        url = self.ep(f'{self.selector}/{entity_id}{available_for}availableNumbers')
+        return url
+
+    def primary_gen(self, location_id: str = None, phone_number: list[str] = None,
+                license_type: AvailablePhoneNumberLicenseType = None,
+                org_id: str = None,
+                **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Person Primary Available Phone Numbers
+
+        List numbers that are available to be assigned as a person's primary phone number.
+        By default, this API returns standard and mobile numbers from all locations that are unassigned. The parameters
+        `licenseType` and `locationId` must align with the person's settings to determine the appropriate number for
+        assignment.
+        Failure to provide these parameters may result in the unsuccessful assignment of the returned number.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param license_type: This is used to search numbers according to the person's `licenseType` to which the number
+            will be assigned. Possible input values
+        :type license_type: AvailablePhoneNumberLicenseType
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if license_type is not None:
+            params['licenseType'] = enum_str(license_type)
+        url = self.f_ep('primary')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def primary(self, location_id: str = None, phone_number: list[str] = None,
+                license_type: AvailablePhoneNumberLicenseType = None,
+                org_id: str = None,
+                **params) -> List[AvailableNumber]:
+        """
+        Get Person Primary Available Phone Numbers
+
+        List numbers that are available to be assigned as a person's primary phone number.
+        By default, this API returns standard and mobile numbers from all locations that are unassigned. The parameters
+        `licenseType` and `locationId` must align with the person's settings to determine the appropriate number for
+        assignment.
+        Failure to provide these parameters may result in the unsuccessful assignment of the returned number.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param license_type: This is used to search numbers according to the person's `licenseType` to which the number
+            will be assigned. Possible input values
+        :type license_type: AvailablePhoneNumberLicenseType
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if license_type is not None:
+            params['licenseType'] = enum_str(license_type)
+        url = self.f_ep('primary')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def secondary_gen(self, entity_id: str, phone_number: list[str] = None,
+                  org_id: str = None,
+                  **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Person Secondary Available Phone Numbers
+
+        List standard numbers that are available to be assigned as a person's secondary phone number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.f_ep('secondary', entity_id=entity_id)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def secondary(self, entity_id: str, phone_number: list[str] = None,
+                  org_id: str = None,
+                  **params) -> List[AvailableNumber]:
+        """
+        Get Person Secondary Available Phone Numbers
+
+        List standard numbers that are available to be assigned as a person's secondary phone number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.f_ep('secondary', entity_id=entity_id)
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def fax_message_gen(self, entity_id: str, phone_number: list[str] = None,
+                    org_id: str = None,
+                    **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Fax Message Available Phone Numbers
+
+        Available for: user, virtual line
+
+        List standard numbers that are available to be assigned as a FAX message number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`PersonSecondaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.f_ep('faxMessage', entity_id=entity_id)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def fax_message(self, entity_id: str, phone_number: list[str] = None,
+                    org_id: str = None,
+                    **params) -> List[AvailableNumber]:
+        """
+        Get Fax Message Available Phone Numbers
+
+        Available for: user, virtual line
+
+        List standard numbers that are available to be assigned as a FAX message number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`PersonSecondaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.f_ep('faxMessage', entity_id=entity_id)
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def call_forward_gen(self, entity_id: str, phone_number: list[str] = None,
+                     owner_name: str = None, extension: str = None,
+                     org_id: str = None,
+                     **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Call Forward Available Phone Numbers
+
+        Available for: user, virtual line, workspace
+
+        List service and standard numbers that are available to be assigned as call forward number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.f_ep('callForwarding', entity_id=entity_id)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def call_forward(self, entity_id: str, phone_number: list[str] = None,
+                     owner_name: str = None, extension: str = None,
+                     org_id: str = None,
+                     **params) -> List[AvailableNumber]:
+        """
+        Get Call Forward Available Phone Numbers
+
+        Available for: user, virtual line, workspace
+
+        List service and standard numbers that are available to be assigned as call forward number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.f_ep('callForwarding', entity_id=entity_id)
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def ecbn_gen(self, entity_id: str, phone_number: list[str] = None,
+             owner_name: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get ECBN Available Phone Numbers
+
+        Available for: user, virtual line, workspace
+
+        List standard numbers that are available to be assigned as emergency callback number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.f_ep('emergencyCallbackNumber', entity_id=entity_id)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def ecbn(self, entity_id: str, phone_number: list[str] = None,
+             owner_name: str = None, org_id: str = None,
+             **params) -> List[AvailableNumber]:
+        """
+        Get ECBN Available Phone Numbers
+
+        Available for: user, virtual line, workspace
+
+        List standard numbers that are available to be assigned as emergency callback number.
+        These numbers are associated with the location of the person specified in the request URL, can be active or
+        inactive, and are assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.f_ep('emergencyCallbackNumber', entity_id=entity_id)
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def available_gen(self, location_id: str = None, phone_number: list[str] = None,
+                  org_id: str = None,
+                  **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Available Phone Numbers
+
+        Available for: virtual line, workspace
+
+        List standard numbers that are available to be assigned as phone number.
+        By default, this API returns numbers from all locations that are unassigned. To select the suitable number for
+        assignment, ensure the entities location ID is provided as the `locationId` request parameter.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.f_ep('')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def available(self, location_id: str = None, phone_number: list[str] = None,
+                  org_id: str = None,
+                  **params) -> List[AvailableNumber]:
+        """
+        Get Available Phone Numbers
+
+        Available for: virtual line, workspace
+
+        List standard numbers that are available to be assigned as phone number.
+        By default, this API returns numbers from all locations that are unassigned. To select the suitable number for
+        assignment, ensure the entities location ID is provided as the `locationId` request parameter.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.f_ep('')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def call_intercept_gen(self, entity_id: str, phone_number: list[str] = None,
+                       owner_name: str = None, extension: str = None,
+                       org_id: str = None,
+                       **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Call Intercept Available Phone Numbers
+
+        Available for: user, workspace
+
+        List service and standard numbers that are available to be assigned as call intercept number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.f_ep('callIntercept', entity_id=entity_id)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def call_intercept(self, entity_id: str, phone_number: list[str] = None,
+                       owner_name: str = None, extension: str = None,
+                       org_id: str = None,
+                       **params) -> List[AvailableNumber]:
+        """
+        Get Call Intercept Available Phone Numbers
+
+        Available for: user, workspace
+
+        List service and standard numbers that are available to be assigned as call intercept number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.f_ep('callIntercept', entity_id=entity_id)
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+
 class AsBargeApi(AsPersonSettingsApiChild):
     """
-    API for barge settings; also used for virtual lines
+    API for barge settings; also used for virtual lines and workspaces
     """
 
     feature = 'bargeIn'
@@ -6390,9 +7142,11 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
     """
     User Call Settings with Call Bridge Feature
 
+    Also used for virtual lines
+
     Not supported for Webex for Government (FedRAMP)
 
-     Person Call Settings supports modifying Webex Calling settings for a specific person.
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
 
     Viewing People requires a full, user, or read-only administrator auth token with a scope
     of `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by a
@@ -6857,51 +7611,49 @@ class AsCallingBehaviorApi(AsPersonSettingsApiChild):
 
 class AsDndApi(AsPersonSettingsApiChild):
     """
-    API for person's DND settings
+    API for person's DND settings. Also used for workspaces
     """
 
     feature = 'doNotDisturb'
 
-    async def read(self, person_id: str, org_id: str = None) -> DND:
+    async def read(self, entity_id: str, org_id: str = None) -> DND:
         """
-        Read Do Not Disturb Settings for a Person
-        Retrieve a Person's Do Not Disturb Settings
+        Read Do Not Disturb Settings for an entity
+        Retrieve an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
         Reminder to play a brief tone on your desktop phone when you receive incoming calls.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a person to read their settings.
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners) may
         use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return:
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         return DND.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, dnd_settings: DND, org_id: str = None):
+    async def configure(self, entity_id: str, dnd_settings: DND, org_id: str = None):
         """
-        Configure Do Not Disturb Settings for a Person
-        Configure a Person's Do Not Disturb Settings
+        Configure Do Not Disturb Settings for an entity
+        Configure an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
         Reminder to play a brief tone on your desktop phone when you receive incoming calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        auth token with spark:people_write scope can be used by an entity to update their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param dnd_settings: new setting to be applied
         :type dnd_settings: DND
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         await self.put(ep, params=params, data=dnd_settings.model_dump_json())
 
@@ -7079,6 +7831,67 @@ class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
         await self.put(ep, params=params, data=settings.model_dump_json())
 
 
+class AsMSTeamsSettingApi(AsApiChild, base='telephony/config/people'):
+    async def read(self, person_id: str,
+             org_id: str = None) -> MSTeamsSettings:
+        """
+        Retrieve a Person's MS Teams Settings
+
+        At a person level, MS Teams settings allow access to retrieving the `HIDE WEBEX APP` and `PRESENCE SYNC`
+        settings.
+
+        To retrieve a person's MS Teams settings requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter since the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: :class:`MSTeamsSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{person_id}/settings/msTeams')
+        data = await super().get(url, params=params)
+        r = MSTeamsSettings.model_validate(data)
+        return r
+
+    async def configure(self, person_id: str,
+                  setting_name: str, value: bool,
+                  org_id: str = None):
+        """
+        Configure a Person's MS Teams Setting
+
+        MS Teams settings can be configured at the person level.
+
+        Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param setting_name: The enum value to be set to `HIDE_WEBEX_APP`.
+        :type setting_name: str
+        :param value: The boolean value to update the `HIDE_WEBEX_APP` setting, either `true` or `false`. Set to `null`
+            to delete the `HIDE_WEBEX_APP` setting.
+        :type value: bool
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter since the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['settingName'] = setting_name
+        body['value'] = value
+        url = self.ep(f'{person_id}/settings/msTeams')
+        await super().put(url, params=params, json=body)
+
+
 class AsMonitoringApi(AsPersonSettingsApiChild):
     """
     API for person's call monitoring settings
@@ -7143,6 +7956,65 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
                     id_list.append(me.member and me.member.member_id or me.cpe and me.cpe.cpe_id)
             data['monitoredElements'] = id_list
         await self.put(ep, params=params, json=data)
+
+
+class AsMusicOnHoldApi(AsPersonSettingsApiChild):
+
+    feature = 'musicOnHold'
+
+    async def read(self, entity_id: str, org_id: str = None) -> MusicOnHold:
+        """
+        Retrieve Music On Hold Settings for a Person, virtual line, or workspace.
+
+        Retrieve the music on hold settings.
+
+        Music on hold is played when a caller is put on hold, or the call is parked.
+
+        Retrieving a person's music on hold settings requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`GetMusicOnHoldObject`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = MusicOnHold.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: MusicOnHold,
+                  org_id: str = None):
+        """
+        Configure Music On Hold Settings for a Personvirtual line, or workspace.
+
+        Configure music on hold settings.
+
+        Music on hold is played when a caller is put on hold, or the call is parked.
+
+        To configure music on hold settings for a person, music on hold setting must be enabled for this location.
+
+        Updating a person's music on hold settings requires a full or user administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace.
+        :type entity_id: str
+        :param settings: new MOH settings
+        :type settings: MusicOnHold
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
 
 
 class AsNumbersApi(AsPersonSettingsApiChild):
@@ -7789,56 +8661,56 @@ class AsPreferredAnswerApi(AsApiChild, base='telephony/config/people'):
 
 class AsPrivacyApi(AsPersonSettingsApiChild):
     """
-    API for person's call monitoring settings
+    API for privacy settings for users, vírtual lines and workspaces
     """
 
     feature = 'privacy'
 
-    async def read(self, person_id: str, org_id: str = None) -> Privacy:
+    async def read(self, entity_id: str, org_id: str = None) -> Privacy:
         """
-        Get a person's Privacy Settings
+        Get Privacy Settings for an entity
 
-        Get a person's privacy settings for the specified person id.
+        Get privacy settings for the specified entity id.
 
-        The privacy feature enables the person's line to be monitored by others and determine if they can be reached
+        The privacy feature enables the entity's line to be monitored by others and determine if they can be reached
         by Auto Attendant services.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: privacy settings
         :rtype: :class:`Privacy`
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
         return Privacy.model_validate(data)
 
-    async def configure(self, person_id: str, settings: Privacy, org_id: str = None):
+    async def configure(self, entity_id: str, settings: Privacy, org_id: str = None):
         """
-        Configure Call Waiting Settings for a Person
+        Configure an entity's Privacy Settings
 
-        Configure a Person's Call Waiting Settings
+        Configure an entity's privacy settings for the specified entity ID.
 
-        With this feature, a person can place an active call on hold and answer an incoming call. When enabled,
-        while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore
-        the call.
+        The privacy feature enables the entity's line to be monitored by others and determine if they can be reached by
+        Auto Attendant services.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full or user administrator or location administrator auth token with
+        the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: settings for update
         :type settings: :class:`Monitoring`
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = json.loads(settings.model_dump_json())
         if settings.monitoring_agents is not None:
@@ -7855,51 +8727,52 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
 class AsPushToTalkApi(AsPersonSettingsApiChild):
     """
     API for person's PTT settings
+
+    Also used for virtual lines and workspaces
     """
 
     feature = 'pushToTalk'
 
-    async def read(self, person_id: str, org_id: str = None) -> PushToTalkSettings:
+    async def read(self, entity_id: str, org_id: str = None) -> PushToTalkSettings:
         """
-        Read Push-to-Talk Settings for a Person
-        Retrieve a Person's Push-to-Talk Settings
+        Read Push-to-Talk Settings for an entity
 
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return: PTT settings for specific user
+        :return: PTT settings for specific entity
         :rtype: PushToTalkSettings
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         return PushToTalkSettings.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, settings: PushToTalkSettings, org_id: str = None):
+    async def configure(self, entity_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
-        Configure Push-to-Talk Settings for a Person
+        Configure Push-to-Talk Settings for an entity
 
-        Configure a Person's Push-to-Talk Settings
+        Configure an entity's Push-to-Talk Settings
 
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the person.
+        :type entity_id: str
         :param settings: new setting to be applied. For members only the ID needs to be set
         :type settings: PushToTalkSettings
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         if settings.members:
             # for an update member is just a list of IDs
@@ -8356,15 +9229,14 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
 
 class AsVoicemailApi(AsPersonSettingsApiChild):
     """
-    API for person's call voicemail settings
+    API for person's call voicemail settings. Also used for virtual lines and workspaces
     """
 
     feature = 'voicemail'
 
-    async def read(self, person_id: str, org_id: str = None) -> VoicemailSettings:
+    async def read(self, entity_id: str, org_id: str = None) -> VoicemailSettings:
         """
-        Read Voicemail Settings for a Person
-        Retrieve a Person's Voicemail Settings
+        Read Voicemail Settings for an entity
 
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
         messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, .wav, format.
@@ -8375,22 +9247,21 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param entity_id: Unique identifier for the entity
+        :type entity_id: str
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return: user's voicemail settings
+        :return: entity's voicemail settings
         :rtype: VoicemailSettings
         """
-        url = self.f_ep(person_id=person_id)
+        url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         return VoicemailSettings.model_validate(await self.get(url, params=params))
 
-    async def configure(self, person_id: str, settings: VoicemailSettings, org_id: str = None):
+    async def configure(self, entity_id: str, settings: VoicemailSettings, org_id: str = None):
         """
-        Configure Voicemail Settings for a Person
-        Configure a person's Voicemail Settings
+        Configure Voicemail Settings for an entity
 
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
         messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, .wav, format.
@@ -8403,23 +9274,19 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         :return:
         """
         # some settings can't be part of an update
-        data = settings.model_dump_json(exclude={'send_busy_calls': {'greeting_uploaded': True},
-                                                 'send_unanswered_calls': {'system_max_number_of_rings': True,
-                                                                           'greeting_uploaded': True},
-                                                 'voice_message_forwarding_enabled': True
-                                                 })
-        url = self.f_ep(person_id=person_id)
+        data = settings.update()
+        url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(url, data=data, params=params)
+        await self.put(url, json=data, params=params)
 
-    async def _configure_greeting(self, *, person_id: str, content: Union[BufferedReader, str],
+    async def _configure_greeting(self, *, entity_id: str, content: Union[BufferedReader, str],
                             upload_as: str = None, org_id: str = None,
                             greeting_key: str):
         """
-        handled greeting configuration
+        handle greeting configuration
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param content: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
             reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
             content length might be calculated wrong
@@ -8441,7 +9308,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             if not upload_as:
                 raise ValueError('upload_as is required')
         encoder = MultipartEncoder({'file': (upload_as, content, 'audio/wav')})
-        ep = self.f_ep(person_id=person_id, path=f'actions/{greeting_key}/invoke')
+        ep = self.f_ep(entity_id, path=f'actions/{greeting_key}/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
             await self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type},
@@ -8450,20 +9317,18 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             if must_close:
                 content.close()
 
-    def configure_busy_greeting(self, person_id: str, content: Union[BufferedReader, str],
+    def configure_busy_greeting(self, entity_id: str, content: Union[BufferedReader, str],
                                 upload_as: str = None, org_id: str = None):
         """
-        Configure Busy Voicemail Greeting for a Person
-        Configure a Person's Busy Voicemail Greeting by uploading a Waveform Audio File Format, .wav, encoded audio
-        file.
+        Configure Busy Voicemail Greeting for an entity
 
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param content: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
             reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
             content length might be calculated wrong
@@ -8474,14 +9339,15 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(person_id=person_id, content=content, upload_as=upload_as, org_id=org_id,
+        self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
                                  greeting_key='uploadBusyGreeting')
 
-    def configure_no_answer_greeting(self, person_id: str, content: Union[BufferedReader, str],
+    def configure_no_answer_greeting(self, entity_id: str, content: Union[BufferedReader, str],
                                      upload_as: str = None, org_id: str = None):
         """
-        Configure No Answer Voicemail Greeting for a Person
-        Configure a Person's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, .wav, encoded
+        Configure No Answer Voicemail Greeting for an entity
+
+        Configure an entity's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, .wav, encoded
         audio file.
 
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
@@ -8489,8 +9355,8 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their settings.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param content: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
             reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
             content length might be calculated wrong
@@ -8501,18 +9367,18 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(person_id=person_id, content=content, upload_as=upload_as, org_id=org_id,
+        self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
                                  greeting_key='uploadNoAnswerGreeting')
 
-    async def modify_passcode(self, person_id: str, passcode: str, org_id: str = None):
+    async def modify_passcode(self, entity_id: str, passcode: str, org_id: str = None):
         """
-        Modify a person's voicemail passcode.
+        Modify a entity's voicemail passcode.
 
-        Modifying a person's voicemail passcode requires a full administrator, user administrator or location
+        Modifying a entity's voicemail passcode requires a full administrator, user administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param person_id: Modify voicemail passcode for this person.
-        :type person_id: str
+        :param entity_id: Modify voicemail passcode for this person.
+        :type entity_id: str
         :param passcode: Voicemail access passcode. The minimum length of the passcode is 6 and the maximum length is
             30.
         :type passcode: str
@@ -8525,8 +9391,32 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             params['orgId'] = org_id
         body = dict()
         body['passcode'] = passcode
-        url = self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
+        url = self.f_ep(entity_id, 'passcode')
         await super().put(url, params=params, json=body)
+
+    async def reset_pin(self, person_id: str, org_id: str = None):
+        """
+        Reset Voicemail PIN
+
+        Reset a voicemail PIN for a person.
+
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.
+
+        This API requires a full or user administrator or location administrator auth token with
+        the`spark-admin:people_write` scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.f_ep('actions/resetPin/invoke')
+        await super().post(url, params=params)
 
 
 class AsPersonSettingsApi(AsApiChild, base='people'):
@@ -8536,12 +9426,13 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
 
     #: agent caller id Api
     agent_caller_id: AsAgentCallerIdApi
+    app_shared_line: AsAppSharedLineApi
     #: Person's Application Services Settings
     appservices: AsAppServicesApi
+    #: Available numbers for a person
+    available_numbers: AsAvailableNumbersApi
     #: Barge In Settings for a Person
     barge: AsBargeApi
-    #: Do Not Disturb Settings for a Person
-    dnd: AsDndApi
     #: Call bridge settings for a person
     call_bridge: AsCallBridgeApi
     #: Call Intercept Settings for a Person
@@ -8554,6 +9445,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     caller_id: AsCallerIdApi
     #: Person's Calling Behavior
     calling_behavior: AsCallingBehaviorApi
+    #: Do Not Disturb Settings for a Person
+    dnd: AsDndApi
     #: Executive Assistant Settings for a Person
     exec_assistant: AsExecAssistantApi
     #: Forwarding Settings for a Person
@@ -8562,6 +9455,10 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     hoteling: AsHotelingApi
     #: Person's Monitoring Settings
     monitoring: AsMonitoringApi
+    #; MS Teams settings
+    ms_teams: AsMSTeamsSettingApi
+    #: music on hold settings
+    music_on_hold: AsMusicOnHoldApi
     #: Phone Numbers for a Person
     numbers: AsNumbersApi
     #: Incoming Permission Settings for a Person
@@ -8584,7 +9481,9 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
         self.agent_caller_id = AsAgentCallerIdApi(session=session)
+        self.app_shared_line = AsAppSharedLineApi(session=session)
         self.appservices = AsAppServicesApi(session=session)
+        self.available_numbers = AsAvailableNumbersApi(session=session)
         self.barge = AsBargeApi(session=session)
         self.dnd = AsDndApi(session=session)
         self.call_bridge = AsCallBridgeApi(session=session)
@@ -8597,6 +9496,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.forwarding = AsPersonForwardingApi(session=session)
         self.hoteling = AsHotelingApi(session=session)
         self.monitoring = AsMonitoringApi(session=session)
+        self.ms_teams = AsMSTeamsSettingApi(session=session)
+        self.music_on_hold = AsMusicOnHoldApi(session=session)
         self.numbers = AsNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session)
@@ -8607,7 +9508,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.people)
         self.voicemail = AsVoicemailApi(session=session)
 
-    # TODO: move to voicemail API?
+    # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
 
     async def reset_vm_pin(self, person_id: str, org_id: str = None):
         """
@@ -8620,6 +9521,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
+        This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
+
         :param person_id: Unique identifier for the person.
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
             use this parameter as the default is the same organization as the token used to access API.
@@ -8628,7 +9531,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         await self.post(url, params=params)
 
-    async def devices(self, person_id: str, org_id: str = None) -> PersonDevicesResponse:
+    async def devices(self, person_id: str, org_id: str = None) -> DeviceList:
         """
         Get all devices for a person.
 
@@ -8639,12 +9542,12 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         :param org_id: organization that person belongs to
         :type org_id: str
         :return: device info for user
-        :rtype: PersonDevicesResponse
+        :rtype: DeviceList
         """
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = await self.get(url=url, params=params)
-        return PersonDevicesResponse.model_validate(data)
+        return DeviceList.model_validate(data)
 
 
 class AsReportsApi(AsApiChild, base='devices'):
@@ -14924,6 +15827,523 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         return [o async for o in self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)]
 
 
+class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLocation'):
+    async def validate_or_initiate(self, users_list: list[MoveUsersList],
+                             org_id: str = None) -> StartMoveUsersJobResponse:
+        """
+        Validate or Initiate Move Users Job
+
+        This API allows the user to perform any one of the following operations:
+
+            * When the `validate` attribute is true, this validates the user move from one location to another location.
+
+            * When the `validate` attribute is false, this performs the user move from one location to another location.
+
+        In order to validate or move a user,
+
+            * Maximum of one calling user can be moved at a time.
+
+            * The target location must be a calling location.
+
+            * Only one new extension can be moved to the target location, which is optional. An empty value will
+            remove the
+              already configured extension. If not provided, the existing extension will be retained to the user.
+
+            * Only one new phone number belonging to the target location can be assigned to the user, which is optional.
+              Phone number must follow E.164 format. An empty value will remove the already configured phone number.
+              If not
+              provided, the existing phone number of the user will be moved to the target location.
+
+        Any errors that occur during initial API request validation will be captured directly in error response with
+        appropriate HTTP status code.
+
+        List of possible Errors:
+
+            + 1026005 - Request is supported only for single user.
+
+            + 1026006 - Attribute 'Location ID' is required.
+
+            + 1026006 - Attribute 'User ID' is required.
+
+            + 1026006 - Attribute 'Validate' is required.
+
+            + 1026010 - User is not a valid Calling User.
+
+            + 1026011 - Users list should not be empty.
+
+            + 1026012 - Users should not be empty.
+
+            + 1026013 - The source and the target location cannot be the same.
+
+            + 1026014 - Error occurred while processing the move users request.
+
+            + 1026015 - Error occurred while moving user number to target location.
+
+            + 1026016 - User should have either phone number or extension.
+
+            + 1026017 - Phone number is not in e164 format.
+
+        When the `validate` is set to be true, the errors and impacts associated with the user move will be identified
+        and returned in the response.
+
+        List of possible Errors:
+
+            + 4003 - `User Not Found`
+
+            + 4007 - `User Not Found`
+
+            + 4152 - `Location Not Found`
+
+            + 5620 - `Location Not Found`
+
+            + 4202 - `The extension is not available. It is already assigned to a user : {0}`
+
+            + 8264 - `Routing profile is different with new group: {0}`
+
+            + 19600 - `User has to be within an enterprise to be moved.`
+
+            + 19601 - `User can only be moved to a different group within the same enterprise.`
+
+            + 19602 - `Only regular end user can be moved. Service instance virtual user cannot be moved.`
+
+            + 19603 - `New group already reaches maximum number of user limits.`
+
+            + 19604 - `The {0} number of the user is the same as the calling line ID of the group.`
+
+            + 19605 - `User is assigned services not authorized to the new group: {0}.`
+
+            + 19606 - `User is in an active hoteling/flexible seating association.`
+
+            + 19607 - `User is pilot user of a trunk group.`
+
+            + 19608 - `User is using group level device profiles which is used by other users in current group.
+            Following
+              are the device profiles shared with other users: {0}.`
+
+            + 19609 - `Following device profiles cannot be moved to the new group because there are already devices with
+              the same name defined in the new group: {0}.`
+
+            + 19610 - `The extension of the user is used as transfer to operator number for following Auto Attendent :
+              {0}.`
+
+            + 19611 - `Fail to move announcement file from {0} to {1}.`
+
+            + 19612 - `Fail to move device management file from {0} to {1}.`
+
+            + 19613 - `User is assigned service packs not authorized to the new group: {0}.`
+
+            + 25008 - `Missing Mandatory field name: {0}`
+
+            + 25110 - `{fieldName} cannot be less than {0} or greater than {1} characters.`
+
+            + 25378 - `Target location is same as user's current location.`
+
+            + 25379 - `Error Occurred while Fetching User's Current Location Id.`
+
+            + 25381 - `Error Occurred while rolling back to Old Location Call recording Settings`
+
+            + 25382 - `Error Occurred while Disabling Call Recording for user which is required Before User can be
+            Moved`
+
+            + 25383 - `OCI Error while moving user`
+
+            + 25384 - `Error Occurred while checking for Possible Call Recording Impact.`
+
+            + 25385 - `Error Occurred while getting Call Recording Settings`
+
+            + 27559 - `The groupExternalId search criteria contains groups with different calling zone.`
+
+            + 27960 - `Parameter isWebexCalling, newPhoneNumber, or newExtension can only be set in Webex Calling
+              deployment mode.`
+
+            + 27961 - `Parameter isWebexCalling shall be set if newPhoneNumber or newExtension is set.`
+
+            + 27962 - `Work space cannot be moved.`
+
+            + 27963 - `Virtual profile user cannot be moved.`
+
+            + 27965 - `The user's phone number: {0}, is same as the current group charge number.`
+
+            + 27966 - `The phone number, {0}, is not available in the new group.`
+
+            + 27967 - `User is configured as the ECBN user for another user in the current group.`
+
+            + 27968 - `User is configured as the ECBN user for the current group.`
+
+            + 27969 - `User is associated with DECT handset(s): {0}`
+
+            + 27970 - `User is using a customer managed device: {0}`
+
+            + 27971 - `User is using an ATA device: {0}`
+
+            + 27972 - `User is in an active hotdesking association.`
+
+            + 27975 - `Need to unassign CLID number from group before moving the number to the new group. Phone number:
+              {0}`
+
+            + 27976 - `Local Gateway configuration is different with new group. Phone number: {0}`
+
+            + 1026015 - `Error occurred while moving user number to target location`
+
+            + 10010000 - `Total numbers exceeded maximum limit allowed`
+
+            + 10010001 - `to-location and from-location cannot be same`
+
+            + 10010002 - `to-location and from-location should belong to same customer`
+
+            + 10010003 - `to-location must have a carrier`
+
+            + 10010004 - `from-location must have a carrier`
+
+            + 10010005 - `Different Carrier move is not supported for non-Cisco PSTN carriers.`
+
+            + 10010006 - `Number move not supported for WEBEX_DIRECT carriers.`
+
+            + 10010007 - `Numbers out of sync, missing on CPAPI`
+
+            + 10010008 - `from-location not found or pstn connection missing in CPAPI`
+
+            + 10010010 - `from-location is in transition`
+
+            + 10010009 - `to-location not found or pstn connection missing in CPAPI`
+
+            + 10010011 - `to-location is in transition`
+
+            + 10010012 - `Numbers don't have a carrier Id`
+
+            + 10010013 - `Location less numbers don't have a carrier Id`
+
+            + 10010014 - `Different Carrier move is not supported for numbers with different country or region.`
+
+            + 10010015 - `Numbers contain mobile and non-mobile types.`
+
+            + 10010016 - `To/From location carriers must be same for mobile numbers.`
+
+            + 10010017 - `Move request for location less number not supported`
+
+            + 10010200 - `Move request for more than one block number is not supported`
+
+            + 10010201 - `Cannot move block number as few numbers not from the block starting %s to %s`
+
+            + 10010202 - `Cannot move block number as few numbers failed VERIFICATION from the block %s to %s`
+
+            + 10010203 - `Cannot move block number as few numbers missing from the block %s to %s`
+
+            + 10010204 - `Cannot move number as it is NOT a part of the block %s to %s`
+
+            + 10010205 - `Move request for Cisco PSTN block order not supported.`
+
+            + 10010299 - `Move order couldn't be created as no valid number to move`
+
+            + 10030000 - `Number not found`
+
+            + 10030001 - `Number does not belong to from-location`
+
+            + 10030002 - `Number is not present in CPAPI`
+
+            + 10030003 - `Number assigned to an user or device`
+
+            + 10030004 - `Number not in Active status`
+
+            + 10030005 - `Number is set as main number of the location`
+
+            + 10030006 - `Number has pending order associated with it`
+
+            + 10030007 - `Number belongs to a location but a from-location was not set`
+
+            + 10030008 - `Numbers from multiple carrier ids are not supported`
+
+            + 10030009 - `Location less number belongs to a location. from-location value is set to null or no
+            location id`
+
+            + 10030010 - `One or more numbers are not portable.`
+
+            + 10030011 - `Mobile number carrier was not set`
+
+            + 10030012 - `Number must be assigned for assigned move`
+
+            + 10050000 - `Failed to update customer reference for phone numbers on carrier`
+
+            + 10050001 - `Failed to update customer reference`
+
+            + 10050002 - `Order is not of operation type MOVE`
+
+            + 10050003 - `CPAPI delete call failed`
+
+            + 10050004 - `Not found in database`
+
+            + 10050005 - `Error sending notification to WxcBillingService`
+
+            + 10050006 - `CPAPI provision number as active call failed with status %s ,reason %s`
+
+            + 10050007 - `Failed to update E911 Service`
+
+            + 10050008 - `Target location does not have Inbound Toll Free license`
+
+            + 10050009 - `Source location or Target location subscription found cancelled or suspended`
+
+            + 10050010 - `Moving On Premises or Non Integrated CCP numbers from one location to another is not
+            supported.`
+
+            + 10099999 - `{Error Code} - {Error Message}`
+
+        List of possible Impacts:
+
+            + 19701 - `The identity/device profile the user is using is moved to the new group: {0}.`
+
+            + 19702 - `The user level customized incoming digit string setting is removed from the user. User is set
+            to use
+              the new group setting.`
+
+            + 19703 - `The user level customized outgoing digit plan setting is removed from the user. User is set to
+            use
+              the new group setting.`
+
+            + 19704 - `The user level customized enhanced outgoing calling plan setting is removed from the user.
+            User is
+              set to use the new group setting.`
+
+            + 19705 - `User is removed from following group services: {0}.`
+
+            + 19706 - `The current group schedule used in any criteria is removed from the service settings.`
+
+            + 19707 - `User is removed from the department of the old group.`
+
+            + 19708 - `User is changed to use the default communication barring profile of the new group.`
+
+            + 19709 - `The communication barring profile of the user is assigned to the new group: {0}.`
+
+            + 19710 - `The charge number for the user is removed.`
+
+            + 19711 - `The disabled FACs for the user are removed because they are not available in the new group.`
+
+            + 19712 - `User is removed from trunk group.`
+
+            + 19713 - `The extension of the user is reset to empty due to either the length is out of bounds of the new
+              group, or the extension is already taken in new group.`
+
+            + 19714 - `The extension of the following alternate number is reset to empty due to either the length out of
+              bounds of the new group or the extension is already taken in new group: {0}.`
+
+            + 19715 - `The collaborate room using current group default collaborate bridge is moved to the default
+              collaborate bridge of the new group.`
+
+            + 19716 - `Previously stored voice messages of the user are no longer available. The new voice message
+              will be stored on the mail server of the new group.`
+
+            + 19717 - `The primary number, alternate numbers or fax messaging number of the user are assigned to the new
+              group: {0}.`
+
+            + 19718 - `Following domains are assigned to the new group: {0}.`
+
+            + 19719 - `The NCOS of the user is assigned to the new group: {0}.`
+
+            + 19720 - `The office zone of the user is assigned to the new group: {0}.`
+
+            + 19721 - `The announcement media files are relocated to the new group directory.`
+
+            + 19722 - `User CLID number is set to use the new group CLID number: {0}.`
+
+            + 19723 - `New group CLID number is not configured.`
+
+            + 19724 - `The group level announcement file(s) are removed from the user's music on hold settings.`
+
+            + 25388 - `Target Location Does not Have Vendor Configured. Call Recording for user will be disabled`
+
+            + 25389 - `Call Recording Vendor for user will be changed from:{0} to:{1}`
+
+            + 25390 - `Dub point of user is moved to new external group`
+
+            + 25391 - `Error Occurred while moving Call recording Settings to new location`
+
+            + 25392 - `Error Occurred while checking for Possible Call Recording Impact.`
+
+            + 25393 - `Sending Billing Notification Failed`
+
+        This API requires a full administrator auth token with a scope
+        of `spark-admin:telephony_config_write`, `spark-admin:people_write` and `identity:groups_rw`.
+
+        :param users_list: The user to be moved from the source location.
+        :type users_list: list[MoveUsersList]
+        :param org_id: Create Move Users job for this organization.
+        :type org_id: str
+        :rtype: StartJobResponse
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['usersList'] = TypeAdapter(list[MoveUsersList]).dump_python(users_list, mode='json', by_alias=True,
+                                                                         exclude_none=True)
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = StartMoveUsersJobResponse.model_validate(data['response'])
+        return r
+
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[MoveUserJobDetails, None, None]:
+        """
+        List Move Users Jobs
+
+        Lists all the Move Users jobs for the given organization in order of most recent job to oldest job irrespective
+        of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of Move Users jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobDetailsResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('')
+        return self.session.follow_pagination(url=url, model=MoveUserJobDetails, item_key='items', params=params)
+
+    async def list(self, org_id: str = None, **params) -> List[MoveUserJobDetails]:
+        """
+        List Move Users Jobs
+
+        Lists all the Move Users jobs for the given organization in order of most recent job to oldest job irrespective
+        of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of Move Users jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobDetailsResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('')
+        return [o async for o in self.session.follow_pagination(url=url, model=MoveUserJobDetails, item_key='items', params=params)]
+
+    async def status(self, job_id: str, org_id: str = None) -> MoveUserJobDetails:
+        """
+        Get Move Users Job Status
+
+        Returns the status and other details of the job.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve job details for this organization.
+        :type org_id: str
+        :rtype: :class:`MoveUserJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = MoveUserJobDetails.model_validate(data)
+        return r
+
+    async def abandon(self, job_id: str, org_id: str = None):
+        """
+        Abandon the Move Users Job.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Abandon the Move Users job for this `jobId`.
+        :type job_id: str
+        :param org_id: Abandon the Move Users job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/actions/abandon/invoke')
+        await super().post(url, params=params)
+
+    async def pause(self, job_id: str, org_id: str = None):
+        """
+        Pause the Move Users Job
+
+        Pause the running Move Users Job. A paused job can be resumed or abandoned.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Pause the Move Users job for this `jobId`.
+        :type job_id: str
+        :param org_id: Pause the Move Users job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/actions/pause/invoke')
+        await super().post(url, params=params)
+
+    async def resume(self, job_id: str, org_id: str = None):
+        """
+        Resume the Move Users Job
+
+        Resume the paused Move Users Job that is in paused status.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Resume the Move Users job for this `jobId`.
+        :type job_id: str
+        :param org_id: Resume the Move Users job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/actions/resume/invoke')
+        await super().post(url, params=params)
+
+    def errors_gen(self, job_id: str, org_id: str = None,
+               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        List Move Users Job errors
+
+        Lists all error details of Move Users job. This will not list any errors if `exitCode` is `COMPLETED`. If the
+        status is `COMPLETED_WITH_ERRORS` then this lists the cause of failures.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve the error details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+    async def errors(self, job_id: str, org_id: str = None,
+               **params) -> List[JobErrorItem]:
+        """
+        List Move Users Job errors
+
+        Lists all error details of Move Users job. This will not list any errors if `exitCode` is `COMPLETED`. If the
+        status is `COMPLETED_WITH_ERRORS` then this lists the cause of failures.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve the error details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
+
+
 class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/rebuildPhones'):
     async def rebuild_phones_configuration(self, location_id: str, org_id: str = None) -> StartJobResponse:
         """
@@ -15169,12 +16589,14 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     """
     Jobs API
     """
+    #: API for apply line key template jobs
+    apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
     #: API for device settings jobs
     device_settings: AsDeviceSettingsJobsApi
     #: API for manage numbers jobs
     manage_numbers: AsManageNumbersJobsApi
-    #: API for apply line key template jobs
-    apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
+    # ; API for move users jobs
+    move_users: AsMoveUsersJobsApi
     #: API for rebuild phone jobs
     rebuild_phones: AsRebuildPhonesJobsApi
     #: API for update routing prefix jobs
@@ -15182,9 +16604,10 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
+        self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
         self.device_settings = AsDeviceSettingsJobsApi(session=session)
         self.manage_numbers = AsManageNumbersJobsApi(session=session)
-        self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
+        self.move_users = AsMoveUsersJobsApi(session=session)
         self.rebuild_phones = AsRebuildPhonesJobsApi(session=session)
         self.update_routing_prefix = AsUpdateRoutingPrefixJobsApi(session=session)
 
@@ -19154,6 +20577,12 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
 
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
+    #: agent caller id Api
+    agent_caller_id: AsAgentCallerIdApi
+    #: Available numbers for a virtual line
+    available_numbers: AsAvailableNumbersApi
+    #: barge settings
+    barge: AsBargeApi
     #: Call bridge settings
     call_bridge: AsCallBridgeApi
     #: call intercept settings
@@ -19166,21 +20595,36 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     caller_id: AsCallerIdApi
     #: forwarding settings
     forwarding: AsPersonForwardingApi
+    #: music on hold settings
+    music_on_hold: AsMusicOnHoldApi
     #: incoming permissions
     permissions_in: AsIncomingPermissionsApi
     #: outgoing permissions
     permissions_out: AsOutgoingPermissionsApi
+    #: Privacy Settings
+    privacy: AsPrivacyApi
+    #: Push to Talk Settings
+    push_to_talk: AsPushToTalkApi
+    #: Voicemail Settings
+    voicemail: AsVoicemailApi
 
     def __init__(self, session):
         super().__init__(session=session)
+        self.agent_caller_id = AsAgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.available_numbers = AsAvailableNumbersApi(session=session, selector=ApiSelector.virtual_line)
+        self.barge = AsBargeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.virtual_line)
         self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
+        self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
+        self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.virtual_line)
+        self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.virtual_line)
+        self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
     async def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
                phone_number: str = None, extension: str = None, caller_id_last_name: str = None,
@@ -19633,9 +21077,9 @@ class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
 
     async def delete(self, message_id: str):
         """
-        Delete a specfic voicemail message for the user.
+        Delete a specific voicemail message for the user.
 
-        :param message_id: The message identifer of the voicemail message to delete
+        :param message_id: The message identifier of the voicemail message to delete
         :type message_id: str
         """
         url = self.ep(f'{message_id}')
@@ -20856,6 +22300,1292 @@ class AsWorkspacePersonalizationApi(AsApiChild, base='workspaces'):
         return r
 
 
+class AsAnonCallsApi(AsPersonSettingsApiChild):
+    """
+    API for anonymous call reject settings; so far only used for workspaces
+    """
+
+    feature = 'anonymousCallReject'
+
+    async def read(self, entity_id: str, org_id: str = None) -> bool:
+        """
+        Retrieve Anonymous Call Settings for an entity.
+
+        Anonymous Call Rejection, when enabled, blocks all incoming calls from unidentified or blocked caller IDs.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: bool
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = data['enabled']
+        return r
+
+    async def configure(self, entity_id: str, enabled: bool, org_id: str = None):
+        """
+        Modify Anonymous Call Settings for an entity.
+
+        Anonymous Call Rejection, when enabled, blocks all incoming calls from unidentified or blocked caller IDs.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param enabled: `true` if the Anonymous Call Rejection feature is enabled.
+        :type enabled: bool
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsCallPolicyApi(AsPersonSettingsApiChild):
+    """
+    API for call policy settings.
+
+    For now only used for workspaces
+    """
+
+    feature = 'callPolicies'
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> PrivacyOnRedirectedCalls:
+        """
+        Read Call Policy Settings for an entity
+
+        Retrieve Call Policies settings.
+
+        The call policy feature enables administrator to configure call policy settings such as Connected Line
+        Identification Privacy on Redirected Calls for a professional workspace.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:workspaces_read` scope can be used to read workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: PrivacyOnRedirectedCalls
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        return r
+
+    async def configure(self, entity_id: str,
+                  connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls,
+                  org_id: str = None):
+        """
+        Configure Call Policy Settings for an entity
+
+        Configure Call Policies settings.
+
+        The call policy feature enables administrator to configure call policy settings such as Connected Line
+        Identification Privacy on Redirected Calls for a professional workspace.
+
+        This API requires a full or user administrator or location administrator auth token with the
+        `spark-admin:workspaces_write` scope can be used to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param connected_line_id_privacy_on_redirected_calls: Specifies the connection type to be used.
+        :type connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['connectedLineIdPrivacyOnRedirectedCalls'] = enum_str(connected_line_id_privacy_on_redirected_calls)
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsPriorityAlertApi(AsPersonSettingsApiChild):
+    """
+    API for priority alert settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'priorityAlert'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> PriorityAlertCriteria:
+        """
+        Retrieve Priority Alert Criteria for a Workspace
+
+        Retrieve Priority Alert Criteria Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`PriorityAlertCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = PriorityAlertCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: PriorityAlertCriteria,
+                           org_id: str = None):
+        """
+        Modify Priority Alert Criteria for a Workspace
+
+        Modify Priority Alert Criteria Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: PriorityAlertCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Priority Alert Criteria for a Workspace
+
+        Delete Priority Alert criteria Settings for a workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: PriorityAlertCriteria, org_id: str = None) -> str:
+        """
+        Create Priority Alert Criteria for a Workspace
+
+        Create Priority Alert Criteria Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        Priority Alert Criteria (Schedules) can also be set up to alert these phones during certain times of the day or
+        days of the week.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: PriorityAlertCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> PriorityAlert:
+        """
+        Retrieve Priority Alert Settings for a Workspace.
+
+        The priority alert feature enables administrators to configure priority alert settings for a professional
+        workspace.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`PriorityAlert`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = PriorityAlert.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: PriorityAlert,
+                  org_id: str = None):
+        """
+        Configure Priority Alert Settings for a Workspace
+
+        Configure a workspace Priority Alert Settings.
+
+        The priority alert feature enables administrator to configure priority alert settings for a professional
+        workspace.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: Settings for new criteria
+        :type settings: PriorityAlert
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSelectiveAcceptApi(AsPersonSettingsApiChild):
+    """
+    API for selective accept settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'selectiveAccept'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SelectiveAcceptCriteria:
+        """
+        Retrieve Selective Accept Criteria for an entity
+
+        Retrieve Selective Accept Criteria Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveAcceptCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SelectiveAcceptCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveAcceptCriteria,
+                           org_id: str = None):
+        """
+        Modify Selective Accept Criteria for an entity
+
+        Modify Selective Accept Criteria Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveAcceptCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Selective Accept Criteria for an entity
+
+        Delete Selective Accept criteria Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SelectiveAcceptCriteria, org_id: str = None) -> str:
+        """
+        Create Selective Accept Criteria for an entity
+
+        Create Selective Accept Criteria Settings for an entity.
+
+        With the Selective Accept feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveAcceptCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, 'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SelectiveAccept:
+        """
+        Retrieve Selective Accept Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveAccept`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SelectiveAccept.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SelectiveAccept, org_id: str = None):
+        """
+        Modify Selective Accept Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveAccept
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSelectiveForwardApi(AsPersonSettingsApiChild):
+    """
+    API for selective forward settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'selectiveForward'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SelectiveForwardCriteria:
+        """
+        Retrieve Selective Forward Criteria for a Workspace
+
+        Retrieve Selective Forward Criteria Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SelectiveForwardCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveForwardCriteria,
+                           org_id: str = None):
+        """
+        Modify Selective Forward Criteria for a Workspace
+
+        Modify Selective Forward Call Criteria Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveForwardCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Selective Forward Criteria for a Workspace
+
+        Delete Selective Forward Call criteria Settings for a workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SelectiveForwardCriteria,
+                        org_id: str = None) -> str:
+        """
+        Create Selective Forward Criteria for a Workspace
+
+        Create Selective Forward Call Criteria Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, f'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SelectiveForward:
+        """
+        Retrieve Selective Forward Settings for a Workspace
+
+        Retrieve Selective Forward Call Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveForward`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SelectiveForward.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SelectiveForward,
+                  org_id: str = None):
+        """
+        Modify Selective Forward Settings for a Workspace
+
+        Modify Selective Forward Call Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: Settings for new criteria
+        :type settings: SelectiveForward
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSelectiveRejectApi(AsPersonSettingsApiChild):
+    """
+    API for selective reject settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'selectiveReject'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SelectiveRejectCriteria:
+        """
+        Retrieve Selective Reject Criteria for an entity
+
+        Retrieve Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveRejectCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SelectiveRejectCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveRejectCriteria,
+                           org_id: str = None):
+        """
+        Modify Selective Reject Criteria for an entity
+
+        Modify Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveRejectCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Selective Reject Criteria for an entity
+
+        Delete Selective Reject criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SelectiveRejectCriteria, org_id: str = None) -> str:
+        """
+        Create Selective Reject Criteria for an entity
+
+        Create Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveRejectCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, 'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SelectiveReject:
+        """
+        Retrieve Selective Reject Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveReject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SelectiveReject.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SelectiveReject, org_id: str = None):
+        """
+        Modify Selective Reject Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveReject
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSequentialRingApi(AsPersonSettingsApiChild):
+    """
+    API for sequential ring settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'sequentialRing'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SequentialRingCriteria:
+        """
+        Retrieve sequential ring criteria for an entity.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SequentialRingCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SequentialRingCriteria,
+                           org_id: str = None):
+        """
+        Modify sequential ring criteria for an entity.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SequentialRingCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete sequential ring criteria for an entity.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SequentialRingCriteria,
+                        org_id: str = None) -> str:
+        """
+        Create sequential ring criteria for an entity.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+        The sequential ring criteria specify settings such as schedule and incoming numbers for which to sequentially
+        ring or not.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, f'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SequentialRing:
+        """
+        Retrieve sequential ring settings for an entity.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the workspace
+        receives incoming calls, these numbers will ring one after another.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SequentialRing`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SequentialRing.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SequentialRing,
+                  org_id: str = None):
+        """
+        Modify sequential ring settings for an entity.
+
+        The sequential ring feature enables you to create a list of up to five phone numbers. When the entity
+        receives incoming calls, these numbers will ring one after another.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: Settings for new criteria
+        :type settings: SequentialRing
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSimRingApi(AsPersonSettingsApiChild):
+    """
+    API for simultaneous ring settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'simultaneousRing'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SimRingCriteria:
+        """
+        Retrieve Simultaneous Ring Criteria for an entity
+
+        Retrieve Simultaneous Ring Criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace
+        settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SimRingCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SimRingCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SimRingCriteria,
+                           org_id: str = None):
+        """
+        Modify Simultaneous Ring Criteria for an entity
+
+        Modify Simultaneous Ring Criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SimRingCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Simultaneous Ring Criteria for an entity
+
+        Delete simultaneous ring criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SimRingCriteria, org_id: str = None) -> str:
+        """
+        Create Simultaneous Ring Criteria for an entity
+
+        Create Simultaneous Ring Criteria Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones during certain times of the day
+        or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SimRingCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SimRing:
+        """
+        Retrieve Simultaneous Ring Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously.
+        Schedules can also be set up to ring these phones during certain times of the day or days of the week.
+
+        This API requires a full, read-only or location administrator auth token with a scope
+        of `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace
+        settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SimRing`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SimRing.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SimRing,
+                  org_id: str = None):
+        """
+        Modify Simultaneous Ring Settings for an entity.
+
+        The Simultaneous Ring feature allows you to configure the workspace phones of your choice to ring
+        simultaneously.
+        Schedules can also be set up to ring these phones during certain times of the day or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: Settings for new criteria
+        :type settings: SimRing
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
 class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
     def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[TelephonyDevice, None, None]:
         """
@@ -20893,6 +23623,25 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/devices')
         return [o async for o in self.session.follow_pagination(url=url, model=TelephonyDevice, params=params, item_key='devices')]
 
+    async def list_and_counts(self, workspace_id: str, org_id: str = None) -> DeviceList:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/devices')
+        data = await self.get(url=url, params=params)
+        return DeviceList.model_validate(data)
+
     async def modify_hoteling(self, workspace_id: str, hoteling: Hoteling, org_id: str = None):
         """
         Modify devices for a workspace.
@@ -20906,8 +23655,7 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         :param org_id: Organization to which the workspace belongs.
         :type org_id: str
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace
-        -devices
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace-devices
         """
         params = {}
         if org_id is not None:
@@ -20957,29 +23705,59 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     this class are instances of the respective user settings APIs. When calling endpoints of these APIs workspace IDs
     need to be passed to the ``person_id`` parameter of the called function.
     """
+    anon_calls: AsAnonCallsApi
+    available_numbers: AsAvailableNumbersApi
+    barge: AsBargeApi
     call_bridge: AsCallBridgeApi
     call_intercept: AsCallInterceptApi
+    call_policy: AsCallPolicyApi
     call_waiting: AsCallWaitingApi
     caller_id: AsCallerIdApi
+    dnd: AsDndApi
     devices: AsWorkspaceDevicesApi
     forwarding: AsPersonForwardingApi
     monitoring: AsMonitoringApi
+    music_on_hold: AsMusicOnHoldApi
     numbers: AsWorkspaceNumbersApi
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
+    priority_alert: AsPriorityAlertApi
+    privacy: AsPrivacyApi
+    push_to_talk: AsPushToTalkApi
+    selective_accept: AsSelectiveAcceptApi
+    selective_forward: AsSelectiveForwardApi
+    selective_reject: AsSelectiveRejectApi
+    sequential_ring: AsSequentialRingApi
+    sim_ring: AsSimRingApi
+    voicemail: AsVoicemailApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.anon_calls = AsAnonCallsApi(session=session, selector=ApiSelector.workspace)
+        self.available_numbers = AsAvailableNumbersApi(session=session, selector=ApiSelector.workspace)
+        self.barge = AsBargeApi(session=session, selector=ApiSelector.workspace)
         self.call_bridge = AsCallBridgeApi(session=session, selector=ApiSelector.workspace)
         self.call_intercept = AsCallInterceptApi(session=session, selector=ApiSelector.workspace)
+        self.call_policy = AsCallPolicyApi(session=session, selector=ApiSelector.workspace)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.workspace)
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.workspace)
         self.devices = AsWorkspaceDevicesApi(session=session)
+        self.dnd = AsDndApi(session=session, selector=ApiSelector.workspace)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.workspace)
         self.monitoring = AsMonitoringApi(session=session, selector=ApiSelector.workspace)
+        self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.workspace)
         self.numbers = AsWorkspaceNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
+        self.priority_alert = AsPriorityAlertApi(session=session, selector=ApiSelector.workspace)
+        self.privacy = AsPrivacyApi(session=session, selector=ApiSelector.workspace)
+        self.push_to_talk = AsPushToTalkApi(session=session, selector=ApiSelector.workspace)
+        self.selective_accept = AsSelectiveAcceptApi(session=session, selector=ApiSelector.workspace)
+        self.selective_forward = AsSelectiveForwardApi(session=session, selector=ApiSelector.workspace)
+        self.selective_reject = AsSelectiveRejectApi(session=session, selector=ApiSelector.workspace)
+        self.sequential_ring = AsSequentialRingApi(session=session, selector=ApiSelector.workspace)
+        self.sim_ring = AsSimRingApi(session=session, selector=ApiSelector.workspace)
+        self.voicemail = AsVoicemailApi(session=session, selector=ApiSelector.workspace)
 
 
 class AsWorkspacesApi(AsApiChild, base='workspaces'):
