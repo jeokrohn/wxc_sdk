@@ -275,6 +275,10 @@ class QueueSettings(ApiModel):
     comfort_message_bypass: Optional[ComfortMessageBypass] = None
     #: whisper message to identify the queue for incoming calls.
     whisper_message: Optional[AudioSource] = None
+    use_enterprise_play_tone_to_agent_settings_enabled: Optional[bool] = None
+    play_tone_to_agent_for_barge_in_enabled: Optional[bool] = None
+    play_tone_to_agent_for_silent_monitoring_enabled: Optional[bool] = None
+    play_tone_to_agent_for_supervisor_coaching_enabled: Optional[bool] = None
 
     @staticmethod
     def default(*, queue_size: int) -> 'QueueSettings':
@@ -382,6 +386,9 @@ class CallQueueSettings(ApiModel):
     maintain_queue_position_for_sim_ring_enabled: Optional[bool] = None
     #: Enable this setting to change the status of an agent to unavailable in case of bounced calls.
     force_agent_unavailable_on_bounced_enabled: Optional[bool] = None
+    play_tone_to_agent_for_barge_in_enabled: Optional[bool] = None
+    play_tone_to_agent_for_silent_monitoring_enabled: Optional[bool] = None
+    play_tone_to_agent_for_supervisor_coaching_enabled: Optional[bool] = None
 
 
 @dataclass(init=False)
