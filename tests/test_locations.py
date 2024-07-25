@@ -577,14 +577,14 @@ class TestUpdate(TestWithLocations):
                    if loc.address.address2 == 'whatever']
         if not targets:
             return
+
+        def location_update(location: Location) -> Location:
+            update = location.model_copy(deep=True)
+            update.address.address2 = None
+            return update
+
         await asyncio.gather(*[self.async_api.locations.update(location_id=loc.location_id,
-                                                               settings=Location(
-                                                                   address=LocationAddress(
-                                                                       address1=loc.address.address1,
-                                                                       address2=None,
-                                                                       city=loc.address.city,
-                                                                       state=loc.address.state,
-                                                                       postal_code=loc.address.postal_code)))
+                                                               settings=location_update(loc))
                                for loc in targets])
 
 
