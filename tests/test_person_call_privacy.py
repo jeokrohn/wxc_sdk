@@ -20,7 +20,7 @@ class TestRead(TestCaseWithUsers):
         """
         ps = self.async_api.person_settings.privacy
 
-        await asyncio.gather(*[ps.read(person_id=user.person_id) for user in self.users])
+        await asyncio.gather(*[ps.read(user.person_id) for user in self.users])
 
         print(f'Got privacy settings for {len(self.users)} users')
 
@@ -34,16 +34,16 @@ class TestUpdate(TestCaseWithUsers):
         Get target user
         """
         user = random.choice(self.users)
-        settings = self.api.person_settings.privacy.read(person_id=user.person_id)
+        settings = self.api.person_settings.privacy.read(user.person_id)
         try:
             yield user
         finally:
             # restore old settings
             # makes sure to clear list of monitored elements
             settings.monitoring_agents = settings.monitoring_agents or []
-            self.api.person_settings.privacy.configure(person_id=user.person_id, settings=settings)
+            self.api.person_settings.privacy.configure(user.person_id, settings=settings)
             settings.monitoring_agents = settings.monitoring_agents or None
-            restored = self.api.person_settings.privacy.read(person_id=user.person_id)
+            restored = self.api.person_settings.privacy.read(user.person_id)
             self.assertEqual(settings, restored)
 
     def test_001_toggle_aa_extension_dialing_enabled(self):
@@ -53,10 +53,10 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             priv = self.api.person_settings.privacy
             user: Person
-            before = priv.read(person_id=user.person_id)
+            before = priv.read(user.person_id)
             settings = Privacy(aa_extension_dialing_enabled=not before.aa_extension_dialing_enabled)
-            priv.configure(person_id=user.person_id, settings=settings)
-            after = priv.read(person_id=user.person_id)
+            priv.configure(user.person_id, settings=settings)
+            after = priv.read(user.person_id)
         self.assertEqual(settings.aa_extension_dialing_enabled, after.aa_extension_dialing_enabled)
         after.aa_extension_dialing_enabled = before.aa_extension_dialing_enabled
         self.assertEqual(before, after)
@@ -68,10 +68,10 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             priv = self.api.person_settings.privacy
             user: Person
-            before = priv.read(person_id=user.person_id)
+            before = priv.read(user.person_id)
             settings = Privacy(enable_phone_status_directory_privacy=not before.enable_phone_status_directory_privacy)
-            priv.configure(person_id=user.person_id, settings=settings)
-            after = priv.read(person_id=user.person_id)
+            priv.configure(user.person_id, settings=settings)
+            after = priv.read(user.person_id)
         self.assertEqual(settings.enable_phone_status_directory_privacy, after.enable_phone_status_directory_privacy)
         after.enable_phone_status_directory_privacy = before.enable_phone_status_directory_privacy
         self.assertEqual(before, after)
@@ -84,7 +84,7 @@ class TestUpdate(TestCaseWithUsers):
             # API shortcut
             priv = self.api.person_settings.privacy
             # get current settings
-            before = priv.read(person_id=user.person_id)
+            before = priv.read(user.person_id)
             present_ids = [agent.agent_id for agent in before.monitoring_agents or []]
             user_candidates = [user for user in self.users
                                if user.person_id not in present_ids]
@@ -97,10 +97,10 @@ class TestUpdate(TestCaseWithUsers):
                 monitoring_agents=(before.monitoring_agents or []) + new_agents)
 
             # update
-            priv.configure(person_id=user.person_id, settings=settings)
+            priv.configure(user.person_id, settings=settings)
 
             # how does it look like after the update?
-            after = priv.read(person_id=user.person_id)
+            after = priv.read(user.person_id)
 
         # all new user ids need to be present now
         after_agent_ids = set(agent.agent_id for agent in after.monitoring_agents)
@@ -131,7 +131,7 @@ class TestUpdate(TestCaseWithUsers):
             priv = self.api.person_settings.privacy
 
             # get current settings
-            before = priv.read(person_id=target_user.person_id)
+            before = priv.read(target_user.person_id)
             present_ids = [agent.agent_id for agent in before.monitoring_agents or []]
             user_candidates = [user for user in self.users
                                if user.person_id not in present_ids and user.person_id != target_user.person_id]
@@ -144,10 +144,10 @@ class TestUpdate(TestCaseWithUsers):
                 monitoring_agents=(before.monitoring_agents or []) + new_agents)
 
             # update
-            priv.configure(person_id=target_user.person_id, settings=settings)
+            priv.configure(target_user.person_id, settings=settings)
 
             # how does it look like after the update?
-            after = priv.read(person_id=target_user.person_id)
+            after = priv.read(target_user.person_id)
 
         decoded_agent_ids = list(map(lambda agent: base64.b64decode(agent.agent_id + '==').decode(),
                                      after.monitoring_agents))
