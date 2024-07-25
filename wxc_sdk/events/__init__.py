@@ -144,6 +144,7 @@ class EventData(ApiModel):
     #: telephony
     call_redirected_reason: Optional[str] = None
     created: Optional[datetime] = None
+    content_url: Optional[str] = None
 
 
 class ComplianceEvent(ApiModel):
