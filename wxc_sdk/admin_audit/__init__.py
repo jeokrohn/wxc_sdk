@@ -66,6 +66,7 @@ class AuditEventData(ApiModel):
     deleted_auth_code: Optional[Any] = None
     deleted_pattern_name: Optional[Any] = None
     deleted_pattern: Optional[Any] = None
+    deleted_settings: Optional[Any] = None
     device_id: Optional[Any] = None
     email_type: Optional[Any] = None
     enrollment_status: Optional[Any] = None
@@ -75,6 +76,7 @@ class AuditEventData(ApiModel):
     external_admin_email: Optional[Any] = None
     external_admin_org_name: Optional[Any] = None
     failed_reason: Optional[Any] = None
+    file_name: Optional[Any] = None
     job_name: Optional[Any] = None
     locale: Optional[Any] = None
     location_id: Optional[Any] = None
@@ -115,6 +117,7 @@ class AuditEventData(ApiModel):
     updated_fields: Optional[Any] = None
     updated_settings: Optional[Any] = None
     user_name: Optional[Any] = None
+    user_roles: Optional[Any] = None
     vendor_name: Optional[Any] = None
 
 
