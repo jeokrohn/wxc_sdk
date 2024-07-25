@@ -81,9 +81,12 @@ class TelephonyLocation(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
+        data = self.model_dump(mode='json', exclude_unset=True, by_alias=True,
                                exclude={'location_id', 'name', 'user_limit', 'default_domain',
-                                        'e911_setup_required', 'subscription_id'})
+                                        'e911_setup_required', 'subscription_id', 'carrier_account_id'})
+        if not self.connection:
+            data.pop('connection', None)
+        return data
 
 
 @dataclass(init=False)

@@ -653,9 +653,9 @@ class TestUpdateTelephony(TestCaseWithLog):
             restore = details.model_copy(deep=True)
             restore.connection = None
             if not restore.outside_dial_digit:
-                restore.outside_dial_digit = ''
+                restore.outside_dial_digit = None
             if not restore.routing_prefix:
-                restore.routing_prefix = ''
+                restore.routing_prefix = None
             await self.update_and_wait_for_job(location_id=target.location_id, settings=restore)
             restored = await self.async_api.telephony.location.details(location_id=target.location_id)
             self.assertEqual(details, restored)
