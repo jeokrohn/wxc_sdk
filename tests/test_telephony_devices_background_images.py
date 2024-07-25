@@ -29,7 +29,9 @@ class TestBackgroundImages(TestCaseWithLog):
                         if (name := f'test_{i:02}.png') not in names)
         result = self.api.telephony.devices.upload_background_image(device_id=target_device.device_id, file=bg_image,
                                                                     file_name=new_name)
-        print(json.dumps(result.model_dump(mode='json', by_alias=True), indent=2))
+        print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+        images = dapi.list_background_images()
+        print(json.dumps(images.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
 
     @async_test
     async def test_as_upload(self):
