@@ -17,7 +17,7 @@ class TestRead(TestCaseWithUsers):
         ps = self.api.person_settings
 
         with ThreadPoolExecutor() as pool:
-            list(pool.map(lambda user: ps.reset_vm_pin(person_id=user.person_id),
+            list(pool.map(lambda user: ps.reset_vm_pin(user.person_id),
                           self.users))
         print(f'reset VM PIN for {len(self.users)} users')
 
@@ -27,7 +27,7 @@ class TestRead(TestCaseWithUsers):
         set PIN for all users
         """
         vm_api = self.async_api.person_settings.voicemail
-        results = await asyncio.gather(*[vm_api.modify_passcode(person_id=user.person_id, passcode='184692')
+        results = await asyncio.gather(*[vm_api.modify_passcode(user.person_id, passcode='184692')
                                          for user in self.users],
                                        return_exceptions=True)
         err = None
