@@ -30,6 +30,7 @@ from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OwnerType
 from wxc_sdk.telephony.autoattendant import AutoAttendant
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.huntgroup import HuntGroup
+from wxc_sdk.telephony.jobs import JobExecutionStatus
 from wxc_sdk.telephony.location import TelephonyLocation, PSTNConnection, CallingLineId
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.paging import Paging
@@ -611,6 +612,18 @@ class TestUpdateTelephony(TestCaseWithLog):
     """
     locations: ClassVar[list[TelephonyLocation]] = None
 
+    async def update_and_wait_for_job(self, location_id: str, settings: Location):
+        batch_job_id = await self.async_api.telephony.location.update(location_id=location_id,
+                                                                      settings=settings)
+        if batch_job_id:
+            # wait for job to complete
+            while True:
+                job = await self.async_api.telephony.jobs.update_routing_prefix.status(job_id=batch_job_id)
+                if job.latest_execution_status == 'COMPLETED':
+                    break
+                await asyncio.sleep(5)
+        return
+
     @asynccontextmanager
     async def target_location(self) -> TelephonyLocation:
         """
@@ -643,8 +656,7 @@ class TestUpdateTelephony(TestCaseWithLog):
                 restore.outside_dial_digit = ''
             if not restore.routing_prefix:
                 restore.routing_prefix = ''
-            await self.async_api.telephony.location.update(location_id=target.location_id,
-                                                           settings=restore)
+            await self.update_and_wait_for_job(location_id=target.location_id, settings=restore)
             restored = await self.async_api.telephony.location.details(location_id=target.location_id)
             self.assertEqual(details, restored)
 
@@ -656,7 +668,7 @@ class TestUpdateTelephony(TestCaseWithLog):
         :param update:
         :param expected:
         """
-        await self.async_api.telephony.location.update(location_id=target.location_id, settings=update)
+        await self.update_and_wait_for_job(location_id=target.location_id, settings=update)
         after = await self.async_api.telephony.location.details(location_id=target.location_id)
         # ignore calling line id name in compare
         expected.calling_line_id.name = after.calling_line_id.name
@@ -669,7 +681,8 @@ class TestUpdateTelephony(TestCaseWithLog):
         """
         async with self.target_location() as target:
             target: TelephonyLocation
-            prefix = '8999'
+            prefixes = set(loc.routing_prefix for loc in self.locations)
+            prefix = next(p for i in range(1, 1000) if (p := f'8{i:03}') not in prefixes)
             update = TelephonyLocation(routing_prefix=prefix)
             expected = target.model_copy(deep=True)
             expected.routing_prefix = prefix
