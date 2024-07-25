@@ -47,6 +47,7 @@ Release history
 - feat: selective accept settings API for workspaces: :attr:`api.workspace_settings.selective_accept <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_accept>`
 - feat: priority alert settings API for workspaces: :attr:`api.workspace_settings.priority_alert <wxc_sdk.workspace_settings.WorkspaceSettingsApi.priority_alert>`
 - feat: selective forward settings API for workspaces: :attr:`api.workspace_settings.selective_forward <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_forward>`
+- feat: location PSTN settings API: :attr:`api.telephony.pstn <wxc_sdk.telephony.TelephonyApi.pstn>`
 
 1.20.0
 ------

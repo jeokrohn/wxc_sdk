@@ -1143,6 +1143,12 @@ The method name is a link to the method documentation.
         Get Local Gateway Dial Plan Usage for a Trunk
    * - :meth:`api.telephony.prem_pstn.trunk.validate_fqdn_and_domain <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.validate_fqdn_and_domain>`
         Validate Local Gateway FQDN and Domain for the organization trunks
+   * - :meth:`api.telephony.pstn.configure <wxc_sdk.telephony.pstn.PSTNApi.configure>`
+        Setup PSTN Connection for a Location
+   * - :meth:`api.telephony.pstn.list <wxc_sdk.telephony.pstn.PSTNApi.list>`
+        Retrieve PSTN Connection Options for a Location
+   * - :meth:`api.telephony.pstn.read <wxc_sdk.telephony.pstn.PSTNApi.read>`
+        Retrieve PSTN Connection for a Location
    * - :meth:`api.telephony.schedules.create <wxc_sdk.common.schedules.ScheduleApi.create>`
         Create a Schedule
    * - :meth:`api.telephony.schedules.delete_schedule <wxc_sdk.common.schedules.ScheduleApi.delete_schedule>`

@@ -24,6 +24,7 @@ Subpackages
    wxc_sdk.telephony.org_access_codes
    wxc_sdk.telephony.playlists
    wxc_sdk.telephony.prem_pstn
+   wxc_sdk.telephony.pstn
    wxc_sdk.telephony.supervisor
    wxc_sdk.telephony.virtual_line
 
