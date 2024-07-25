@@ -89,13 +89,16 @@ class TestUnknownCallTypes(PermissionsOutMixin):
         """
         determine which call types can be used in updates
         """
+        ignore_call_types = {'toll', 'local'}
         # get unknown call types by reading person outgoing permission settings
         with self.no_log():
             _, call_types = await self.get_permissions_and_unknown_call_types()
         call_types |= set(CallingPermissions.model_fields)
+        call_types -= ignore_call_types
         # pick a random user
         with self.target_user() as user:
             user: Person
+            print(f'testing with user "{user.display_name}"')
             po = self.api.person_settings.permissions_out
 
             # try updates with each individual unknown call type
@@ -107,17 +110,28 @@ class TestUnknownCallTypes(PermissionsOutMixin):
                 try:
                     po.configure(entity_id=user.person_id, settings=setting, drop_call_types={})
                 except RestError as e:
-                    if e.code == 25024:
+                    if e.code in {25321, 25024}:
+                        print(f'Can\'t update call type "{call_type}": {e}')
                         cant_update.add(call_type)
                     else:
                         raise
             after = po.read(entity_id=user.person_id)
         # after applying all the updates verify setting for all call types
-        self.assertTrue(all(call_type in cant_update or permission == ctp
-                            for call_type, permission in after.calling_permissions.__dict__.items()),
-                        'Some permissions not set')
-        # verify the expected set of un-settable call types
-        self.assertEqual({'casual', 'unknown', 'url_dialing'}, cant_update)
+        err = False
+        for call_type, permission in after.calling_permissions.__dict__.items():
+            if call_type in ignore_call_types:
+                continue
+            print(f'Call type "{call_type}": {permission}')
+            if call_type in cant_update:
+                print(f'  was not updated')
+                continue
+            if permission == ctp:
+                continue
+            err = True
+        self.assertFalse(err, 'Some permissions not set')
+        # some permissions can't be updated b/c we are in a trial org
+        cant_update -= {'premium_services_i', 'premium_services_ii', 'international'}
+        self.assertFalse(cant_update)
 
 
 class TestUpdate(PermissionsOutMixin):

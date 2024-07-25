@@ -29,8 +29,10 @@ class OutgoingPermissionCallType(str, Enum):
     call types for outgoing permissions
     """
     internal_call = 'INTERNAL_CALL'
+    # TODO: remove when CALL-336 is GA
     local = 'LOCAL'
     toll_free = 'TOLL_FREE'
+    # TODO: remove when CALL-336 is GA
     toll = 'TOLL'
     national = 'NATIONAL'
     international = 'INTERNATIONAL'
