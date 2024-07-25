@@ -30,6 +30,7 @@ from .paging import PagingApi
 from .playlists import PlayListApi
 from .pnc import PrivateNetworkConnectApi
 from .prem_pstn import PremisePstnApi
+from .pstn import PSTNApi
 from .supervisor import SupervisorApi
 from .virtual_line import VirtualLinesApi
 from .vm_rules import VoicemailRulesApi
@@ -372,11 +373,12 @@ class ConfigurationLevel(str, Enum):
     #: The applied services at the location level.
     location = 'LOCATION'
     #: The applied services at the user level.
-    user = 'USER'
+    # user = 'USER' - seems like this is actually PEOPLE?; issue # 178
     #: The applied services at the place level.
     place = 'PLACE'
     #: The applied services at the virtual line level.
     virtual_line = 'VIRTUAL_LINE'
+    people = 'PEOPLE'
 
 
 class CallInterceptDetailsPermission(str, Enum):
@@ -630,8 +632,9 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     permissions_out: OutgoingPermissionsApi
     pickup: CallPickupApi
     playlist: PlayListApi
-    prem_pstn: PremisePstnApi
     pnc: PrivateNetworkConnectApi
+    prem_pstn: PremisePstnApi
+    pstn: PSTNApi
     schedules: ScheduleApi
     supervisors: SupervisorApi
     virtual_lines: VirtualLinesApi
@@ -668,6 +671,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.playlist = PlayListApi(session=session)
         self.pnc = PrivateNetworkConnectApi(session=session)
         self.prem_pstn = PremisePstnApi(session=session)
+        self.pstn = PSTNApi(session=session)
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
         self.supervisors = SupervisorApi(session=session)
         self.virtual_lines = VirtualLinesApi(session=session)
