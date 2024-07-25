@@ -113,8 +113,8 @@ class TestOptional(TestCase):
         class Test(BaseModel):
             flag: Literal[True] = Field(default=True)
 
-        t1 = Test.model_validate({'flag': False})
-        foo = 1
+        with self.assertRaises(ValidationError) as exc:
+            t1 = Test.model_validate({'flag': False})
 
     def test_009_add_attribute_in_root_valdiator(self):
         class Att(BaseModel):
