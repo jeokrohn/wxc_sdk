@@ -2,6 +2,7 @@
 Test call bridge settings
 """
 import random
+from unittest import skip
 
 from tests.base import TestLocationsUsersWorkspacesVirtualLines
 from wxc_sdk.people import Person
@@ -23,6 +24,7 @@ class TestCallBridge(TestLocationsUsersWorkspacesVirtualLines):
         target: VirtualLine
         self.api.telephony.virtual_lines.call_bridge.read(target.id)
 
+    @skip('Redundant; tested in test_workspace_settings')
     def test_read_workspace(self):
         # TODO: promote workspace to professional before testing this
         target = random.choice(self.workspaces)
