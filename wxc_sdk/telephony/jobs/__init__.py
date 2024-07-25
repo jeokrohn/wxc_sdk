@@ -5,14 +5,14 @@ import json
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from pydantic import Field, TypeAdapter
 
+from ...api_child import ApiChild
 from ...base import ApiModel, enum_str
 from ...common import DeviceCustomization, ApplyLineKeyTemplateAction
 from ...rest import RestSession
-from ...api_child import ApiChild
 
 __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'JobErrorMessage', 'JobError',
            'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'NumberJob',
@@ -114,9 +114,7 @@ class StartJobResponse(ApiModel):
     #: Count of number of devices rebuilt.
     device_count: Optional[int] = None
     #: Job statistics.
-    counts: Optional[RoutingPrefixCounts] = None
-    #: Job statistics.
-    move_user_counts: Optional[MoveCounts] = Field(alias='counts', default=None)
+    counts: Optional[Union[RoutingPrefixCounts, MoveCounts]] = None
 
 
 class JobErrorMessage(ApiModel):
