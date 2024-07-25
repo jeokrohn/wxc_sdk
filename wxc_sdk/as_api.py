@@ -21459,8 +21459,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     permissions_out: AsOutgoingPermissionsApi
     pickup: AsCallPickupApi
     playlist: AsPlayListApi
-    prem_pstn: AsPremisePstnApi
     pnc: AsPrivateNetworkConnectApi
+    prem_pstn: AsPremisePstnApi
     schedules: AsScheduleApi
     supervisors: AsSupervisorApi
     virtual_lines: AsVirtualLinesApi

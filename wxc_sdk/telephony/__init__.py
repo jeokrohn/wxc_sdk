@@ -30,7 +30,6 @@ from .paging import PagingApi
 from .playlists import PlayListApi
 from .pnc import PrivateNetworkConnectApi
 from .prem_pstn import PremisePstnApi
-from .pstn import PSTNApi
 from .supervisor import SupervisorApi
 from .virtual_line import VirtualLinesApi
 from .vm_rules import VoicemailRulesApi
@@ -634,7 +633,6 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     playlist: PlayListApi
     pnc: PrivateNetworkConnectApi
     prem_pstn: PremisePstnApi
-    pstn: PSTNApi
     schedules: ScheduleApi
     supervisors: SupervisorApi
     virtual_lines: VirtualLinesApi
@@ -671,7 +669,6 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.playlist = PlayListApi(session=session)
         self.pnc = PrivateNetworkConnectApi(session=session)
         self.prem_pstn = PremisePstnApi(session=session)
-        self.pstn = PSTNApi(session=session)
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
         self.supervisors = SupervisorApi(session=session)
         self.virtual_lines = VirtualLinesApi(session=session)
