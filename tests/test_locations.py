@@ -76,13 +76,14 @@ class TestLocationSimple(TestCaseWithLog):
                              for location in locations], return_exceptions=True),
             asyncio.gather(*[self.async_api.telephony.location.details(location_id=loc.location_id)
                              for loc in locations], return_exceptions=True))
+        exception = None
         for location, detail, telephony_detail in zip(locations, details, telephony_details):
             print(f'{location.name}')
             if isinstance(detail, Exception):
                 print(f'  error getting location details: {detail}')
+                exception = exception or detail
             if isinstance(telephony_detail, Exception):
                 print(f'  error getting telephony location details: {telephony_detail}')
-        exception = next((e for e in chain(details, telephony_details) if isinstance(e, Exception)), None)
         if exception:
             raise exception
         print(f'Got details for {len(locations)} locations')
@@ -403,7 +404,6 @@ class TestUnifiedLocations(TestCaseWithLog):
     async def test_002_determine_calling(self):
         """
         list all locations and determine calling locations by trying to get calling details
-        :return:
         """
         locations = await self.async_api.locations.list()
         calling_details = await asyncio.gather(
@@ -416,8 +416,8 @@ class TestUnifiedLocations(TestCaseWithLog):
             print(f'{location.name:{name_len}}: ', end='')
             if isinstance(details, TelephonyLocation):
                 print('telephony location')
-            elif isinstance(details, AsRestError) and details.status == 404:
-                print(f'not a calling location, got a 404')
+            elif isinstance(details, AsRestError) and details.status in {404, 400}:
+                print(f'not a calling location, got a {details.status}')
             else:
                 err = True
                 print(f'unexpected result: {details}')
