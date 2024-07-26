@@ -199,8 +199,10 @@ class TestUpdate(TestCaseWithUsers):
         """
         with self.random_pg() as target:
             target: Paging
-            extensions = set(pg.extension for pg in self.pg_list
-                             if pg.extension and pg.location_id == target.location_id)
+            # existing extensions
+            with self.no_log():
+                extensions = set(ext for pn in self.api.telephony.phone_numbers(location_id=target.location_id)
+                                 if (ext := pn.extension))
             new_extension = next(ext for i in range(1000)
                                  if (ext := f'{5000 + i:03}') not in extensions)
 
@@ -211,8 +213,14 @@ class TestUpdate(TestCaseWithUsers):
                                              update=update)
             details = self.api.telephony.paging.details(location_id=target.location_id,
                                                         paging_id=target.paging_id)
+        # check the extension after the update
         self.assertEqual(new_extension, details.extension)
+        # updating the extension also updates the ESN if a routing prefix exists
+        if details.routing_prefix:
+            self.assertEqual(f'{details.routing_prefix}{new_extension}', details.esn)
+        # ignore some settings that are not part of the comparison
         details.extension = target.extension
+        details.esn = target.esn
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)

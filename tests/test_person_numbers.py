@@ -369,12 +369,13 @@ class TestCreateCallingUser(TestWithLocations):
             pn_value = updated_user.phone_numbers[0].value
 
             if telephony_location.routing_prefix:
-                self.assertEqual(f'{telephony_location.routing_prefix}{extension}', pn_value,
+                self.assertEqual(new_work_extension, pn_value,
                                  'wrong ESN')
             else:
-                self.assertEqual(extension, pn_value,
+                self.assertEqual(new_extension, pn_value,
                                  'wrong extension')
 
+            self.assertEqual(new_extension, updated_user.extension, 'wrong extension')
             # .. the phone number should be the primary number
             self.assertTrue(updated_user.phone_numbers[0].primary,
                             'phone number should be primary')

@@ -1,16 +1,18 @@
 """
 Test for workspaces API
 """
+import asyncio
 import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from unittest import skip
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
 from wxc_sdk.rest import RestError
 from wxc_sdk.workspaces import WorkspaceCalling, WorkspaceWebexCalling, WorkspaceSupportedDevices
-from tests.base import TestCaseWithLog, TestWithLocations
+from tests.base import TestCaseWithLog, TestWithLocations, TestWithProfessionalWorkspace, async_test
 from tests.testutil import available_extensions_gen, new_workspace_names, TEST_WORKSPACES_PREFIX, \
     create_workspace_with_webex_calling
 
@@ -47,47 +49,44 @@ class TestDetails(TestCaseWithLog):
         print(f'got details for {len(details)} workspaces')
 
 
-class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
+class TestOutgoingPermissionsAutoTransferNumbers(TestWithProfessionalWorkspace):
 
-    def test_001_get_all(self):
+    @async_test
+    async def test_001_get_all(self):
         """
         get outgoing permissions auto transfer numbers for all workspaces
         """
         wsa = self.api.workspaces
-        tna = self.api.workspace_settings.permissions_out.transfer_numbers
+        tna = self.async_api.workspace_settings.permissions_out.transfer_numbers
         targets = [ws for ws in wsa.list()
-                   if ws.calling == CallingType.webex]
+                   if ws.calling and ws.calling.type == CallingType.webex]
         if not targets:
             self.skipTest('Need some WxC enabled workspaces to run this test')
-        with ThreadPoolExecutor() as pool:
-            _ = list(pool.map(lambda ws: tna.read(entity_id=ws.workspace_id),
-                              targets))
+        tn_settings = await asyncio.gather(*[tna.read(entity_id=ws.workspace_id) for ws in targets],
+                                           return_exceptions=True)
+        err = None
+        for ws, settings in zip(targets, tn_settings):
+            ws: Workspace
+            print(f'workspace {ws.display_name}:')
+            if isinstance(settings, Exception):
+                print(f'  error: {settings}')
+                err = err or settings
+                continue
+            settings: AutoTransferNumbers
+            print(json.dumps(settings.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+            print()
+        if err:
+            raise err
         print(f'outgoing permissions auto transfer numbers for {len(targets)} workspaces')
 
     @contextmanager
     def target_ws_context(self, use_custom_enabled: bool = True) -> Workspace:
         """
-        pick a random workspace and make sure that the outgoing permission settings are restored
-
-        :return:
+        pick a workspace and make sure that the outgoing permission settings are restored
         """
         po = self.api.workspace_settings.permissions_out
-        targets = [ws for ws in self.api.workspaces.list()
-                   if ws.calling == CallingType.webex]
-        if not targets:
-            self.skipTest('Need some WxC enabled workspaces to run this test')
-        random.shuffle(targets)
-        # if enable == False then we need a workspace where custom_enabled is not set. Else setting it to False
-        # will clear all existing customer settings and we want to avoid that side effect of the test
-        po_settings = None
-        target_ws = next((ws for ws in targets
-                          if use_custom_enabled or
-                          not (po_settings := po.read(entity_id=ws.workspace_id)).use_custom_enabled),
-                         None)
-        if target_ws is None:
-            self.skipTest('No WxC enabled workspace with use_custom_enabled==False')
-        if po_settings is None:
-            po_settings = po.read(entity_id=target_ws.workspace_id)
+        target_ws = self.workspace
+        po_settings = po.read(entity_id=target_ws.workspace_id)
         try:
             if use_custom_enabled:
                 # enable custom settings: else auto transfer numbers can't be set
@@ -104,7 +103,6 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
     def test_002_update_wo_custom_enabled(self):
         """
         updating auto transfer numbers requires use_custom_enabled to be set
-        :return:
         """
         tna = self.api.workspace_settings.permissions_out.transfer_numbers
         with self.target_ws_context(use_custom_enabled=False) as target_ws:
@@ -147,10 +145,12 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
                 # verify update
                 updated = tna.read(entity_id=target_ws.workspace_id)
                 # number should be equal; ignore hyphens in number returned by API
-                self.assertEqual(transfer, updated.auto_transfer_number1.replace('-', ''))
+                updated_atn1 = updated.auto_transfer_number1
+                self.assertEqual(transfer, updated_atn1.replace('-', ''))
                 # other than that the updated numbers should be identical to the numbers before
                 updated.auto_transfer_number1 = numbers.auto_transfer_number1
                 self.assertEqual(numbers, updated)
+                self.assertEqual(transfer, updated_atn1, 'Wrong number format')
             finally:
                 # restore old settings
                 tna.configure(entity_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
@@ -159,7 +159,7 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
             # try
         # with
 
-    def test_002_update_one_number_no_effect_on_other_numbers(self):
+    def test_004_update_one_number_no_effect_on_other_numbers(self):
         """
         try to update auto transfer numbers for a workspace. Verify that updating a single number doesn't affect the
         other numbers
@@ -370,6 +370,7 @@ class TestCreate(TestWithLocations):
             # delete workspace again
             self.api.workspaces.delete_workspace(workspace_id=workspace.workspace_id)
 
+    @skip('Test ist not failing anymore but creates an invalid workspace')
     def test_005_no_calling_phones(self):
         """
         create workspace w/o calling for phones; this should not work

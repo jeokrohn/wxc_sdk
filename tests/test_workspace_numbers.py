@@ -14,7 +14,7 @@ class TestWorkspaceNumbers(TestCaseWithLog):
         Get numbers for all workspoces
         """
         workspaces = [ws for ws in await self.async_api.workspaces.list()
-                      if ws.calling == CallingType.webex]
+                      if ws.calling and ws.calling.type == CallingType.webex]
         if not workspaces:
             self.skipTest('No WxC enabled workspaces found. Can\'t run test.')
         numbers = await asyncio.gather(*[self.async_api.workspace_settings.numbers.read(workspace_id=ws.workspace_id)

@@ -9,7 +9,7 @@ from unittest import skip
 from wxc_sdk.person_settings.permissions_out import AutoTransferNumbers, CallTypePermission, Action, \
     OutgoingPermissions, CallingPermissions, DigitPattern
 from tests.base import TestWithLocations, TestCaseWithLog
-from wxc_sdk.telephony import OriginatorType
+from wxc_sdk.telephony import OriginatorType, ConfigurationLevel
 
 
 class TestPermOut(TestWithLocations):
@@ -91,7 +91,6 @@ class TestPermOut(TestWithLocations):
         # try
 
 
-@skip('Call routing verification tool is not meant to be used to validate outbound calling permissions')
 class TestDarmstadt(TestCaseWithLog):
     def test_national_call_from_darmstadt_blocked_at_user_level(self):
         # find location
@@ -105,7 +104,7 @@ class TestDarmstadt(TestCaseWithLog):
         user = self.api.people.details(calling_data=True, person_id=user.person_id)
         upa = self.api.person_settings.permissions_out
 
-        # clear all pattern baed permission setting at user level
+        # clear all pattern based permission setting at user level
         upa.digit_patterns.delete_all(entity_id=user.person_id)
         # block national level
         user_permissions_before = upa.read(entity_id=user.person_id)
@@ -116,19 +115,25 @@ class TestDarmstadt(TestCaseWithLog):
                               calling_permissions=CallingPermissions(
                                   national=CallTypePermission(action=Action.block,
                                                               transfer_enabled=False))))
-            user_permissions_after = upa.read(entity_id=user.person_id)
             # validate a call to +4961967739764 (should be blocked)
             result = self.api.telephony.test_call_routing(originator_id=user.person_id,
                                                           originator_type=OriginatorType.user,
-                                                          destination='+4961967739764')
+                                                          destination='+4961967739764', include_applied_services=True)
             print('Routing result:')
             print(json.dumps(result.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
             self.assertTrue(result.is_rejected, 'Call should be rejected')
+            # there should be one applied service
+            self.assertEqual(1, len(result.applied_services))
+            applied_service = result.applied_services[0]
+            self.assertIsNotNone(applied_service.outgoing_calling_plan_permissions_by_type)
+            ocp_by_type = applied_service.outgoing_calling_plan_permissions_by_type
+            self.assertEqual('NATIONAL', ocp_by_type.call_type)
+            self.assertEqual(Action.block, ocp_by_type.permission)
+            self.assertEqual(ConfigurationLevel.people, ocp_by_type.configuration_level)
         finally:
             upa.configure(entity_id=user.person_id,
                           settings=user_permissions_before)
-            user_permissions_restored = upa.read(entity_id=user.person_id)
-        ...
+        return
 
     def test_national_call_from_darmstadt_blocked_by_pattern_at_user_level(self):
         # find location
@@ -148,9 +153,10 @@ class TestDarmstadt(TestCaseWithLog):
         upa.digit_patterns.update_category_control_settings(entity_id=user.person_id, use_custom_digit_patterns=True)
         # make sure there is exactly one pattern
         upa.digit_patterns.delete_all(entity_id=user.person_id)
+        block_pattern = DigitPattern(name='block496196', pattern='+496196!', action=Action.block,
+                                     transfer_enabled=False)
         upa.digit_patterns.create(entity_id=user.person_id,
-                                  pattern=DigitPattern(name='block496196', pattern='+496196!', action=Action.block,
-                                                       transfer_enabled=False))
+                                  pattern=block_pattern)
         upa.digit_patterns.get_digit_patterns(entity_id=user.person_id)
 
         # save old permission settings
@@ -163,13 +169,23 @@ class TestDarmstadt(TestCaseWithLog):
             # validate a call to +4961967739764 (should be blocked)
             result = self.api.telephony.test_call_routing(originator_id=user.person_id,
                                                           originator_type=OriginatorType.user,
-                                                          destination='+4961967739764')
+                                                          destination='+4961967739764',
+                                                          include_applied_services=True)
             print('Routing result:')
             print(json.dumps(result.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
             self.assertTrue(result.is_rejected, 'Call should be rejected')
+            # there should be one applied service
+            self.assertEqual(1, len(result.applied_services))
+            applied_service = result.applied_services[0]
+            self.assertIsNotNone(applied_service.outgoing_calling_plan_permissions_by_digit_pattern)
+            ocp_by_dp = applied_service.outgoing_calling_plan_permissions_by_digit_pattern
+            self.assertEqual(ConfigurationLevel.people, ocp_by_dp.configuration_level)
+            self.assertEqual(Action.block, ocp_by_dp.permission)
+            self.assertEqual(block_pattern.name, ocp_by_dp.name)
+            self.assertEqual(block_pattern.pattern, ocp_by_dp.pattern)
         finally:
             upa.configure(entity_id=user.person_id,
                           settings=user_permissions_before)
             upa.digit_patterns.update_category_control_settings(entity_id=user.person_id,
                                                                 use_custom_digit_patterns=user_category_control)
-        ...
+        return

@@ -27,9 +27,11 @@ from pydantic import ValidationError, BaseModel, Field, model_validator, TypeAda
 from yaml import safe_load
 from yaml.scanner import ScannerError
 
+from tests.testutil import create_workspace_with_webex_calling
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
@@ -38,13 +40,13 @@ from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.tokens import Tokens
-from wxc_sdk.workspaces import Workspace, CallingType
+from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
 log = logging.getLogger(__name__)
 
 __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
            'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces', 'WithIntegrationTokens',
-           'TestLocationsUsersWorkspacesVirtualLines']
+           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithProfessionalWorkspace']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
@@ -720,3 +722,78 @@ class TestLocationsUsersWorkspacesVirtualLines(TestWithLocations, TestCaseWithUs
         if not all((self.workspaces, self.virtual_lines)):
             self.skipTest('No workspaces or virtual lines')
         super().setUp()
+
+
+@dataclass(init=False)
+class TestWithProfessionalWorkspace(TestWithLocations):
+    """
+    Tests for workspace settings using a temporary professional workspace
+    """
+    # temporary workspace with professional license
+    workspace: ClassVar[Workspace] = None
+    location: ClassVar[Location] = None
+
+    @classmethod
+    def create_temp_workspace(cls):
+        """
+        Create a temporary workspace with professional license
+        """
+        # get pro license
+        pro_license = next((lic
+                            for lic in cls.api.licenses.list()
+                            if lic.webex_calling_professional and lic.consumed_units < lic.total_units),
+                           None)
+        if pro_license:
+            pro_license: License
+            # create WS in random location
+            location = random.choice(cls.locations)
+            cls.location = location
+            workspace = create_workspace_with_webex_calling(api=cls.api,
+                                                            target_location=location,
+                                                            # workspace_location_id=wsl.id,
+                                                            supported_devices=WorkspaceSupportedDevices.phones,
+                                                            notes=f'temp location for professional workspace tests, '
+                                                                  f'location "{location.name}"',
+                                                            license=pro_license)
+            cls.workspace = workspace
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.create_temp_workspace()
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        if cls.workspace:
+            cls.api.workspaces.delete_workspace(cls.workspace.workspace_id)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.assertIsNotNone(self.workspace, 'No professional workspace created')
+
+    @contextmanager
+    def with_schedule(self) -> Schedule:
+        """
+        get or create a schedule for the test
+        """
+        with self.no_log():
+            schedules = list(self.api.telephony.schedules.list(self.workspace.location_id))
+        if False and schedules:
+            temp_schedule: Schedule = random.choice(schedules)
+            yield temp_schedule
+        else:
+            # create a temporary schedule for the test
+            print('creating temporary schedule for the test')
+            temp_schedule = Schedule.business('test schedule')
+            with self.no_log():
+                schedule_id = self.api.telephony.schedules.create(self.workspace.location_id, temp_schedule)
+            try:
+                yield temp_schedule
+            finally:
+                with self.no_log():
+                    print('deleting temporary schedule')
+                    self.api.telephony.schedules.delete_schedule(self.workspace.location_id,
+                                                                 schedule_type=ScheduleType.business_hours,
+                                                                 schedule_id=schedule_id)
+        return

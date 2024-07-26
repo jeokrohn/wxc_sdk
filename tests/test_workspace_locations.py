@@ -13,6 +13,7 @@ from wxc_sdk.workspace_locations import WorkspaceLocation
 
 class TestWorkspaceLocations(TestCaseWithLog):
 
+    @skip('Deprecated, moved to Locations')
     def test_001_list(self):
         """
         list workspace locations
@@ -20,6 +21,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         wsl = list(self.api.workspace_locations.list())
         print(f'Got {len(wsl)} workspace locations')
 
+    @skip('Deprecated, moved to Locations')
     def test_002_list_w_org_id(self):
         """
         list workspace locations
@@ -32,6 +34,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         print('Base64 decoded IDs:')
         print('\n'.join(base64.b64decode(f'{w.id}').decode() for w in wsl))
 
+    @skip('Deprecated, moved to Locations')
     def test_003_list_wrong_org_id(self):
         """
         list workspace locations for random org id
@@ -55,6 +58,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         wsl = create_random_wsl(api=self.api)
         print(f'Created new workplace location: {wsl}')
 
+    @skip('Deprecated, moved to Locations')
     def test_005_details(self):
         """
         Get details for all workspace locations
