@@ -87,6 +87,7 @@ class AuditEventData(ApiModel):
     new_org_default_enabled: Optional[Any] = None
     new_vendor_name: Optional[Any] = None
     numbers: Optional[Any] = None
+    numbers_updated: Optional[Any] = None
     offer_map: Optional[Any] = None
     old_org_default_enabled: Optional[Any] = None
     old_vendor_name: Optional[Any] = None
