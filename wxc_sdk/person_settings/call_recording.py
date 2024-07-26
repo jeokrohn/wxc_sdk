@@ -67,6 +67,12 @@ class StartStopAnnouncement(ApiModel):
     pstn_calls_enabled: Optional[bool] = None
 
 
+class CallRecordingAccessSettings(ApiModel):
+    view_and_play_recordings_enabled: Optional[bool] = None
+    download_recordings_enabled: Optional[bool] = None
+    delete_recordings_enabled: Optional[bool] = None
+
+
 class CallRecordingSetting(ApiModel):
     #: true if call recording is enabled.
     enabled: bool
@@ -89,6 +95,8 @@ class CallRecordingSetting(ApiModel):
     external_identifier: Optional[str] = None
     #: Call Recording starts and stops announcement settings.
     start_stop_announcement: Optional[StartStopAnnouncement] = None
+
+    call_recording_access_settings: Optional[CallRecordingAccessSettings] = None
 
     @staticmethod
     def default() -> 'CallRecordingSetting':

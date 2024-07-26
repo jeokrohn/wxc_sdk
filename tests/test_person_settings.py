@@ -16,6 +16,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming, Greeting
+from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 from wxc_sdk.person_settings.caller_id import CallerIdSelectedType, CallerId, ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.preferred_answer import PreferredAnswerResponse, PreferredAnswerEndpointType, \
     PreferredAnswerEndpoint
@@ -62,8 +63,17 @@ class TestRead(TestCaseWithUsers):
         read call recording settings for all users
         """
         results = self.execute_read_test(self.api.person_settings.call_recording.read)
-        for e in (r for r in results if isinstance(r, Exception)):
-            print(f'{e}')
+        for user, result in zip(self.users, results):
+            if isinstance(result, Exception):
+                continue
+            result: CallRecordingSetting
+            if result.call_recording_access_settings:
+                print(
+                    f'{user.display_name} has call recording access settings: {result.call_recording_access_settings}')
+
+        for u, e in ((u, r) for u, r in zip(self.users, results) if isinstance(r, Exception)):
+            u: Person
+            print(f'{u.display_name}: {e}')
         self.assertFalse(any(isinstance(r, Exception) for r in results))
 
     def test_005_read_caller_id(self):
