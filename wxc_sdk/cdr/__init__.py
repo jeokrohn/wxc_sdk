@@ -134,20 +134,39 @@ def space_separated_to_camel(name: str) -> str:
 
 
 def normalize_name(name: str) -> str:
+    """
+    normalize CDR field names
+    Example: Answer time -> answer_time
+
+    :meta private:
+    """
     return '_'.join(name.split()).lower()
+
+
+def names_and_values(data: dict) -> Generator[tuple[str, Optional[str]], None, None]:
+    """
+    Names and values for a CDR
+
+    :meta private:
+    """
+    for k, v in data.items():
+        if v in {'', 'NA'}:
+            v = None
+        yield normalize_name(k), v
 
 
 class CDR(ApiModel):
 
     @model_validator(mode='before')
-    def force_none(cls, values: dict):
+    @classmethod
+    def normalize_data(cls, data: dict):
         """
         Pop all empty strings so that they get caught by Optional[] and convert keys to proper attribute names
         :meta private:
         """
-        # get rid of all empty values and convert to snake_case
-        values = {normalize_name(k): v for k, v in values.items() if v != '' and v != 'NA'}
-        return values
+        # convert empty values to None and convert names to snail case
+        data = dict(names_and_values(data))
+        return data
 
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
     start_time: Optional[datetime] = None
@@ -446,6 +465,16 @@ class CDR(ApiModel):
     #:
     #: * The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
     final_remote_session_id: Optional[str] = Field(alias='final_remote_sessionid', default=None)
+    #: Displays the vendor’s name from whom the PSTN service was purchased for the respective country.
+    pstn_vendor_name: Optional[str] = None
+    #: Displays the regulated business entity registered for providing PSTN service in that particular country. The
+    #: field is exclusively for Cisco Calling Plans.
+    pstn_legal_entity: Optional[str] = None
+    #: Displays the Cisco Calling plan's org UUID. It is unique across different regions
+    pstn_vendor_org_id: Optional[str] = None
+    #: Represents an immutable Cisco defined UUID attribute for a PSTN provider, which uniquely identifies the entity
+    #: that has provided PSTN in that country.
+    pstn_provider_id: Optional[str] = None
 
 
 @dataclass(init=False)

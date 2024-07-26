@@ -51,6 +51,10 @@ Release history
 - feat: new attribute AutoTransferNumbers.use_custom_transfer_numbers
 - feat: new attribute CallRecordingSetting.call_recording_access_settings
 - fix: correct endpoint URL for :meth:`api.person_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
+- feat new CDR fields :attr:`pstn_vendor_name <wxc_sdk.cdr.CDR.pstn_vendor_name>`, :attr:`pstn_legal_entity <wxc_sdk.cdr.CDR.pstn_legal_entity>`, :attr:`pstn_vendor_org_id <wxc_sdk.cdr.CDR.pstn_vendor_org_id>`, :attr:`pstn_provider_id <wxc_sdk.cdr.CDR.pstn_provider_id>`
+- feat: improved CDR data handling: unset fields are now always deserialized to None values
+- fix: ZIP support for :meth:`api.reports.download <wxc_sdk.reports.ReportsApi.download>`
+
 
 1.20.0
 ------

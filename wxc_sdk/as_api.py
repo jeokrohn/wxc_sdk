@@ -6489,17 +6489,21 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
     API for person's available numbers
 
     Also used for virtual lines, workspaces
-    
+
     Available methods
-        | Method                                     | Virtual Lines | Workspaces | User |
-        |--------------------------------------------|---------------|------------|------|
-        | GET Call Forward Available Phone Numbers   | X             | X          | X    |
-        | GET ECBN Available Phone Numbers           | X             | X          | X    |
-        | GET Fax Message Available Phone Numbers    | X             |            | X    | 
-        | GET Available Phone Numbers                | X             | X          |      |
-        | Get Call Intercept Available Phone Numbers |               | X          | X    |
-        | GET Primary Available Phone Numbers        |               |            | X    |
-        | GET Secondary Available Phone Numbers      |               |            | X    |
+                
+        ========================================== ============= ==========  ====
+        Method                                     Virtual Lines Workspaces  User
+        ========================================== ============= ==========  ====
+        GET Call Forward Available Phone Numbers        X             X        X
+        GET ECBN Available Phone Numbers                X             X        X
+        GET Fax Message Available Phone Numbers         X                      X
+        GET Available Phone Numbers                     X             X
+        Get Call Intercept Available Phone Numbers                    X        X
+        GET Primary Available Phone Numbers                                    X    
+        GET Secondary Available Phone Numbers                                  X
+        ========================================== ============= ==========  ====
+
     """
 
     # lookup for allowed entities for each function
@@ -9751,13 +9755,7 @@ class AsReportsApi(AsApiChild, base='devices'):
         :return: list of dicts (one per row)
         :rtype: list[dict]
         """
-        headers = {'Authorization': f'Bearer {self.session.access_token}'}
-        async with self.session.get(url=url, headers=headers) as r:
-            r.raise_for_status()
-            lines = [line.decode(encoding='utf-8-sig') async for line in r.content]
-            reader = csv.DictReader(lines)
-            return list(reader)
-
+        raise NotImplementedError('async download not implemented; use sync call instead')
         
 
 

@@ -2,6 +2,8 @@
 Reports API
 """
 import csv
+import io
+import zipfile
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass
 from datetime import datetime, date
@@ -264,17 +266,21 @@ class ReportsApi(ApiChild, base='devices'):
         :return: list of dicts (one per row)
         :rtype: list[dict]
         """
-        headers = {'Authorization': f'Bearer {self.session.access_token}'}
-        async with self.session.get(url=url, headers=headers) as r:
-            r.raise_for_status()
-            lines = [line.decode(encoding='utf-8-sig') async for line in r.content]
-            reader = csv.DictReader(lines)
-            return list(reader)
-
+        raise NotImplementedError('async download not implemented; use sync call instead')
         '''
         headers = {'Authorization': f'Bearer {self.session.access_token}'}
         with self.session.get(url=url, stream=True, headers=headers) as r:
             r.raise_for_status()
-            lines = (line.decode(encoding='utf-8-sig') for line in r.iter_lines())
-            reader = csv.DictReader(lines)
-            yield from reader
+            # content is a ZIP file
+            zip_file_bytes = io.BytesIO(r.content)
+            with zipfile.ZipFile(zip_file_bytes, 'r') as zip_file:
+                # open 1st file
+                first_info = zip_file.infolist()[0]
+                with zip_file.open(first_info) as f:
+                    # read over UTF BOM
+                    f.read(3)
+                    text = io.TextIOWrapper(f, encoding='utf-8')
+                    lines = (line for line in text)
+                    reader = csv.DictReader(lines)
+                    yield from reader
+        return

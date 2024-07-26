@@ -55,17 +55,21 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
     API for person's available numbers
 
     Also used for virtual lines, workspaces
-    
+
     Available methods
-        | Method                                     | Virtual Lines | Workspaces | User |
-        |--------------------------------------------|---------------|------------|------|
-        | GET Call Forward Available Phone Numbers   | X             | X          | X    |
-        | GET ECBN Available Phone Numbers           | X             | X          | X    |
-        | GET Fax Message Available Phone Numbers    | X             |            | X    | 
-        | GET Available Phone Numbers                | X             | X          |      |
-        | Get Call Intercept Available Phone Numbers |               | X          | X    |
-        | GET Primary Available Phone Numbers        |               |            | X    |
-        | GET Secondary Available Phone Numbers      |               |            | X    |
+
+        ========================================== ============= ==========  ====
+        Method                                     Virtual Lines Workspaces  User
+        ========================================== ============= ==========  ====
+        GET Call Forward Available Phone Numbers        X             X        X
+        GET ECBN Available Phone Numbers                X             X        X
+        GET Fax Message Available Phone Numbers         X                      X
+        GET Available Phone Numbers                     X             X
+        Get Call Intercept Available Phone Numbers                    X        X
+        GET Primary Available Phone Numbers                                    X    
+        GET Secondary Available Phone Numbers                                  X
+        ========================================== ============= ==========  ====
+
     """
 
     # lookup for allowed entities for each function
