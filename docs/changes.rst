@@ -48,6 +48,7 @@ Release history
 - feat: priority alert settings API for workspaces: :attr:`api.workspace_settings.priority_alert <wxc_sdk.workspace_settings.WorkspaceSettingsApi.priority_alert>`
 - feat: selective forward settings API for workspaces: :attr:`api.workspace_settings.selective_forward <wxc_sdk.workspace_settings.WorkspaceSettingsApi.selective_forward>`
 - fix: Paging.routing_prefix instead of .routingPrefix
+- feat: new attribute AutoTransferNumbers.use_custom_transfer_numbers
 
 1.20.0
 ------

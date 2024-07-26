@@ -254,6 +254,8 @@ class AutoTransferNumbers(ApiModel):
     """
     Outgoing permission auto transfer numbers
     """
+    #: When `true`, use custom settings for the transfer numbers category of outgoing call permissions.
+    use_custom_transfer_numbers: Optional[bool] = None
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to
     #: this number
     auto_transfer_number1: Optional[str] = None
@@ -274,8 +276,10 @@ class AutoTransferNumbers(ApiModel):
         :return: auto transfer numbers with empty strings instead of None
         :rtype: :class:`AutoTransferNumbers`
         """
-        data = self.model_dump()
+        data = self.model_dump(by_alias=True)
         for k in data:
+            if not k.startswith('autoTransferNumber'):
+                continue
             data[k] = data[k] or ''
         return AutoTransferNumbers.model_validate(data)
 
