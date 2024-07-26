@@ -151,9 +151,9 @@ class TestUpdate(PermissionsOutMixin):
             after = po.read(entity_id=user.person_id)
         self.assertEqual(settings, after)
 
-    def test_002_toggle_local_transfer_enabled(self):
+    def test_002_toggle_national_transfer_enabled(self):
         """
-        toggle transfer_enabled for toll local calls
+        toggle transfer_enabled for national calls
         """
         with self.target_user() as user:
             po = self.api.person_settings.permissions_out
@@ -162,19 +162,21 @@ class TestUpdate(PermissionsOutMixin):
             settings: OutgoingPermissions = before.model_copy(deep=True)
             # enable custom settings
             settings.use_custom_enabled = True
+            settings.use_custom_permissions = True
             # toggle transfer enabled for toll calls
-            toll_transfer_enabled = not settings.calling_permissions.toll.transfer_enabled
-            print(f'Setting toll transfer enabled to {toll_transfer_enabled}')
-            settings.calling_permissions.toll.transfer_enabled = toll_transfer_enabled
-            print(f'Toll settings: {settings.calling_permissions.toll}')
+            national_transfer_enabled = not settings.calling_permissions.national.transfer_enabled
+            print(f'Setting national transfer enabled to {national_transfer_enabled}')
+            settings.calling_permissions.national.transfer_enabled = national_transfer_enabled
+            print(f'National settings: {settings.calling_permissions.national}')
             po.configure(entity_id=user.person_id, settings=settings)
             after = po.read(entity_id=user.person_id)
             self.assertTrue(after.use_custom_enabled)
-            self.assertEqual(toll_transfer_enabled, after.calling_permissions.toll.transfer_enabled,
-                             'Apparently permissions for call type local can\'t be set individually?')
+            self.assertTrue(after.use_custom_permissions)
+            self.assertEqual(national_transfer_enabled, after.calling_permissions.national.transfer_enabled,
+                             'Apparently permissions for call type national can\'t be set individually?')
             self.assertEqual(settings, after)
 
-    def test_003_local_transfer_enabled_false_all_call_types(self):
+    def test_003_transfer_enabled_false_all_call_types(self):
         """
         set transfer_enabled to False for all call types
         """
@@ -184,9 +186,11 @@ class TestUpdate(PermissionsOutMixin):
             before = po.read(entity_id=user.person_id)
             settings: OutgoingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = True
+            settings.use_custom_permissions = True
             for call_type in OutgoingPermissionCallType:
                 permissions = settings.calling_permissions.for_call_type(call_type)
-                permissions.transfer_enabled = False
+                if permissions is not None:
+                    permissions.transfer_enabled = False
             po.configure(entity_id=user.person_id, settings=settings)
             after = po.read(entity_id=user.person_id)
             self.assertEqual(settings, after)
@@ -201,9 +205,12 @@ class TestUpdate(PermissionsOutMixin):
             before = po.read(entity_id=user.person_id)
             settings: OutgoingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = True
+            settings.use_custom_permissions = True
             for call_type in OutgoingPermissionCallType:
                 permissions = settings.calling_permissions.for_call_type(call_type)
-                permissions.action = Action.block
+                if permissions is not None:
+                    permissions.transfer_enabled = False
+                    permissions.action = Action.block
             po.configure(entity_id=user.person_id, settings=settings)
             after = po.read(entity_id=user.person_id)
             self.assertEqual(settings, after)
@@ -222,6 +229,8 @@ class TestUpdate(PermissionsOutMixin):
                 settings.use_custom_enabled = True
                 settings.use_custom_permissions = True
                 permissions = settings.calling_permissions.for_call_type(call_type)
+                if permissions is None:
+                    continue
                 permissions.transfer_enabled = False
                 po.configure(entity_id=user.person_id, settings=settings)
                 after = po.read(entity_id=user.person_id)
@@ -233,6 +242,7 @@ class TestUpdate(PermissionsOutMixin):
                 else:
                     result = 'ok'
                 print(f'Setting transfer_enabled to False for call type "{call_type}": {result}')
+                # restoring old settings
                 po.configure(entity_id=user.person_id, settings=before)
         if last_error:
             raise last_error
