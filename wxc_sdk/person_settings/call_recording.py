@@ -112,8 +112,12 @@ class CallRecordingSetting(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+        data = self.model_dump(mode='json', exclude_unset=True, by_alias=True,
                                exclude={'service_provider', 'external_group', 'external_identifier'})
+        if self.notification and self.notification.notification_type == NotificationType.none:
+            # Read on API returns "None" but update has to be null
+            data['notification']['type'] = None
+        return data
 
 
 class CallRecordingApi(PersonSettingsApiChild):
