@@ -95,7 +95,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
             ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
             ('people', 'musicOnHold'): ('telephony/config/people', '/'),
         }
-        if selector == 'people' and self.feature == 'voicemail' and path == 'passcode':
+        if selector == 'people' and self.feature == 'voicemail' and path == '/passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
         selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))

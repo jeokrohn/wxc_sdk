@@ -50,6 +50,7 @@ Release history
 - fix: Paging.routing_prefix instead of .routingPrefix
 - feat: new attribute AutoTransferNumbers.use_custom_transfer_numbers
 - feat: new attribute CallRecordingSetting.call_recording_access_settings
+- fix: correct endpoint URL for :meth:`api.person_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
 
 1.20.0
 ------
