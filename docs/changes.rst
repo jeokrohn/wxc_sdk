@@ -1,5 +1,8 @@
 Release history
 ===============
+
+1.21.0
+------
 - feat: manage device background images
 
   * :meth:`api.telephony.devices.list_background_images <wxc_sdk.telephony.devices.TelephonyDevicesApi.list_background_images>`
@@ -53,7 +56,7 @@ Release history
 - fix: correct endpoint URL for :meth:`api.person_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
 - feat new CDR fields :attr:`pstn_vendor_name <wxc_sdk.cdr.CDR.pstn_vendor_name>`, :attr:`pstn_legal_entity <wxc_sdk.cdr.CDR.pstn_legal_entity>`, :attr:`pstn_vendor_org_id <wxc_sdk.cdr.CDR.pstn_vendor_org_id>`, :attr:`pstn_provider_id <wxc_sdk.cdr.CDR.pstn_provider_id>`
 - feat: improved CDR data handling: unset fields are now always deserialized to None values
-- fix: ZIP support for :meth:`api.reports.download <wxc_sdk.reports.ReportsApi.download>`
+- feat: ZIP support for :meth:`api.reports.download <wxc_sdk.reports.ReportsApi.download>`
 
 
 1.20.0

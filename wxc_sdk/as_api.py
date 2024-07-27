@@ -6491,7 +6491,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
     Also used for virtual lines, workspaces
 
     Available methods
-                
+
         ========================================== ============= ==========  ====
         Method                                     Virtual Lines Workspaces  User
         ========================================== ============= ==========  ====
