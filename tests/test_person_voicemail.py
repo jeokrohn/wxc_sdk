@@ -43,3 +43,12 @@ class VoicemailTests(TestCaseWithUsers):
 
         # there should be no difference
         self.assertEqual(settings, settings_after)
+
+    def test_003_reset_vm_pin(self):
+        """
+        reset voicemail pin of random user
+        """
+        # random user
+        target_user = random.choice(self.users)
+        apv = self.api.person_settings.voicemail
+        apv.reset_pin(target_user.person_id)

@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- fix: correct endpoint URL for :meth:`api.person_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
+
 1.21.0
 ------
 - feat: manage device background images

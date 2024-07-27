@@ -9297,7 +9297,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         :type content: Union[BufferedReader, str]
         :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
         :type upload_as: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :param greeting_key: 'uploadBusyGreeting' or 'uploadNoAnswerGreeting'
@@ -9339,7 +9339,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         :type content: Union[BufferedReader, str]
         :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
         :type upload_as: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
@@ -9367,7 +9367,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         :type content: Union[BufferedReader, str]
         :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
         :type upload_as: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+        :param org_id: Entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
@@ -9381,12 +9381,12 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         Modifying a entity's voicemail passcode requires a full administrator, user administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param entity_id: Modify voicemail passcode for this person.
+        :param entity_id: Modify voicemail passcode for this entity.
         :type entity_id: str
         :param passcode: Voicemail access passcode. The minimum length of the passcode is 6 and the maximum length is
             30.
         :type passcode: str
-        :param org_id: Modify voicemail passcode for a person in this organization.
+        :param org_id: Modify voicemail passcode for an entity in this organization.
         :type org_id: str
         :rtype: None
         """
@@ -9398,7 +9398,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         url = self.f_ep(entity_id, 'passcode')
         await super().put(url, params=params, json=body)
 
-    async def reset_pin(self, person_id: str, org_id: str = None):
+    async def reset_pin(self, entity_id: str, org_id: str = None):
         """
         Reset Voicemail PIN
 
@@ -9410,8 +9410,8 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         This API requires a full or user administrator or location administrator auth token with
         the`spark-admin:people_write` scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -9419,7 +9419,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.f_ep('actions/resetPin/invoke')
+        url = self.f_ep(entity_id, 'actions/resetPin/invoke')
         await super().post(url, params=params)
 
 
