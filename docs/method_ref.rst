@@ -434,7 +434,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
         Configure No Answer Voicemail Greeting for an entity
    * - :meth:`api.person_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
-        Modify a entity's voicemail passcode
+        Modify an entity's voicemail passcode
    * - :meth:`api.person_settings.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
         Read Voicemail Settings for an entity
    * - :meth:`api.person_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
@@ -1302,7 +1302,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.virtual_lines.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
         Configure No Answer Voicemail Greeting for an entity
    * - :meth:`api.telephony.virtual_lines.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
-        Modify a entity's voicemail passcode
+        Modify an entity's voicemail passcode
    * - :meth:`api.telephony.virtual_lines.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
         Read Voicemail Settings for an entity
    * - :meth:`api.telephony.virtual_lines.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`
@@ -1564,7 +1564,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.workspace_settings.voicemail.configure_no_answer_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_no_answer_greeting>`
         Configure No Answer Voicemail Greeting for an entity
    * - :meth:`api.workspace_settings.voicemail.modify_passcode <wxc_sdk.person_settings.voicemail.VoicemailApi.modify_passcode>`
-        Modify a entity's voicemail passcode
+        Modify an entity's voicemail passcode
    * - :meth:`api.workspace_settings.voicemail.read <wxc_sdk.person_settings.voicemail.VoicemailApi.read>`
         Read Voicemail Settings for an entity
    * - :meth:`api.workspace_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`

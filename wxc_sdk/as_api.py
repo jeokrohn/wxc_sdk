@@ -9376,9 +9376,9 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
 
     async def modify_passcode(self, entity_id: str, passcode: str, org_id: str = None):
         """
-        Modify a entity's voicemail passcode.
+        Modify an entity's voicemail passcode.
 
-        Modifying a entity's voicemail passcode requires a full administrator, user administrator or location
+        Modifying an entity's voicemail passcode requires a full administrator, user administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param entity_id: Modify voicemail passcode for this entity.
@@ -9402,7 +9402,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         """
         Reset Voicemail PIN
 
-        Reset a voicemail PIN for a person.
+        Reset a voicemail PIN for an entity.
 
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
         messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.

@@ -1,12 +1,30 @@
 [tool.poetry]
 name = "wxc_sdk"
-version = "1.21.0"
+version = "1.21.1"
 description = "SDK for Webex APIs with special focus on Webex Calling specific endpoints"
 license = 'MIT'
 authors = ["Johannes Krohn <jkrohn@cisco.com>"]
+maintainers = ["Johannes Krohn <jkrohn@cisco.com>"]
 readme = 'README.rst'
 homepage = 'https://github.com/jeokrohn/wxc_sdk'
 documentation = 'https://wxc-sdk.readthedocs.io'
+keywords = ['Webex', 'Webex Calling', 'Webex Teams', 'Webex Meetings', 'Webex Devices', 'Webex Control Hub',
+    'Webex Admin', 'Webex Site Admin', 'Webex Site', 'Webex Site Devices', 'Python', 'API', 'SDK']
+classifiers = ["Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Communications",
+    "Topic :: Communications :: Chat",
+    "Topic :: Communications :: Conferencing",
+    "Topic :: Communications :: Telephony"
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
