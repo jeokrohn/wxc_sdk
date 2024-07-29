@@ -131,7 +131,6 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens, Tes
     def test_list(self):
         # api = self.integration_api
         api = self.recording_service_api
-        # https://jira-eng-gpk2.cisco.com/jira/browse/WEBEX-38382ged2 should fix this
         recordings = list(api.converged_recordings.list())
         print(json.dumps(TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True),
                          indent=2))

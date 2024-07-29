@@ -1,8 +1,10 @@
+import base64
 import random
 from contextlib import contextmanager
 
 from tests.base import TestCaseWithLog
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import PatternAction
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction
 
@@ -39,6 +41,25 @@ class TestTelephonySupervisors(TestCaseWithLog):
         sapi = self.api.telephony.supervisors
         supervisors = list(sapi.available_supervisors())
         print(f'Got {len(supervisors)} supervisors')
+        dn_len = max(len(sup.display_name) for sup in supervisors)
+        for supervisor in supervisors:
+            decoded_id = base64.b64decode(f'{supervisor.id}==').decode()
+            print(f'{supervisor.display_name:{dn_len}} ({decoded_id})')
+
+        # determine set of VL UUIDs; we suspect that there are multiple supervisor types and some VLs are available
+        virtual_lines = list(self.api.telephony.virtual_lines.list())
+        virtual_line_uuid_set = set(webex_id_to_uuid(virtual_line.id) for virtual_line in virtual_lines)
+        vl_supervisors = [supervisor for supervisor in supervisors if
+                           webex_id_to_uuid(supervisor.id) in virtual_line_uuid_set]
+        if vl_supervisors:
+            print()
+            print('Based on their UUIDs, the following supervisors seem to be VLs:')
+            dn_len = max(len(sup.display_name) for sup in vl_supervisors)
+            print('\n'.join(f'{sup.display_name:{dn_len}} ({base64.b64decode(sup.id+"==").decode()})' for sup in vl_supervisors))
+        supervisor_types = set(base64.b64decode(f'{supervisor.id}==').decode().split('/')[-2]
+                               for supervisor in supervisors)
+        self.assertTrue(len(supervisor_types) > 1,
+                        'Expected multiple supervisor types (CALL-150914)')
 
     def test_supervisor_and_not_agent(self):
         """
