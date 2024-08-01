@@ -1,12 +1,13 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, Any
+from typing import Optional, Any, List
 
 from .forwarding import ForwardingApi, FeatureSelector
 from .hg_and_cq import HGandCQ, Policy
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..common import AlternateNumber
+from ..person_settings.available_numbers import AvailableNumber
 from ..rest import RestSession
 
 __all__ = ['NoAnswer', 'BusinessContinuity', 'HGCallPolicies', 'HuntGroup', 'HuntGroupApi']
@@ -152,7 +153,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         super().__init__(session=session)
         self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.huntgroups)
 
-    def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None) -> str:
+    def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None, path: str = None) -> str:
         """
         hunt group specific feature endpoint like /v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}
 
@@ -170,6 +171,8 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
             ep = self.session.ep(f'telephony/config/locations/{location_id}/huntGroups')
             if huntgroup_id:
                 ep = f'{ep}/{huntgroup_id}'
+            if path:
+                ep = f'{ep}/{path}'
             return ep
 
     def list(self, org_id: str = None, location_id: str = None, name: str = None,
@@ -311,3 +314,112 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         data = update.create_or_update()
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         self.put(url, data=data, params=params)
+
+    def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> Generator[AvailableNumber, None, None]:
+        """
+        Get Hunt Group Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    def alternate_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                          org_id: str = None,
+                                          **params) -> Generator[AvailableNumber, None, None]:
+        """
+        Get Hunt Group Alternate Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's alternate phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    def forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        owner_name: str = None, extension: str = None,
+                                        org_id: str = None,
+                                        **params) -> Generator[AvailableNumber, None, None]:
+        """
+        Get Hunt Group Call Forward Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's call forward number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)

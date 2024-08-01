@@ -587,8 +587,12 @@ The method name is a link to the method documentation.
         Upload a binary file to the announcement repository at organization or location level
    * - :meth:`api.telephony.announcements_repo.usage <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.usage>`
         Retrieves repository usage for announcements for an organization
+   * - :meth:`api.telephony.auto_attendant.alternate_available_phone_numbers <wxc_sdk.telephony.autoattendant.AutoAttendantApi.alternate_available_phone_numbers>`
+        Get Auto Attendant Alternate Available Phone Numbers
    * - :meth:`api.telephony.auto_attendant.by_name <wxc_sdk.telephony.autoattendant.AutoAttendantApi.by_name>`
         Get auto attendant info by name
+   * - :meth:`api.telephony.auto_attendant.call_forward_available_phone_numbers <wxc_sdk.telephony.autoattendant.AutoAttendantApi.call_forward_available_phone_numbers>`
+        Get Auto Attendant Call Forward Available Phone Numbers
    * - :meth:`api.telephony.auto_attendant.create <wxc_sdk.telephony.autoattendant.AutoAttendantApi.create>`
         Create an Auto Attendant
    * - :meth:`api.telephony.auto_attendant.delete_auto_attendant <wxc_sdk.telephony.autoattendant.AutoAttendantApi.delete_auto_attendant>`
@@ -597,6 +601,8 @@ The method name is a link to the method documentation.
         Get Details for an Auto Attendant
    * - :meth:`api.telephony.auto_attendant.list <wxc_sdk.telephony.autoattendant.AutoAttendantApi.list>`
         Read the List of Auto Attendants
+   * - :meth:`api.telephony.auto_attendant.primary_available_phone_numbers <wxc_sdk.telephony.autoattendant.AutoAttendantApi.primary_available_phone_numbers>`
+        Get Auto Attendant Primary Available Phone Numbers
    * - :meth:`api.telephony.auto_attendant.update <wxc_sdk.telephony.autoattendant.AutoAttendantApi.update>`
         Update an Auto Attendant
    * - :meth:`api.telephony.call_intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`
@@ -657,8 +663,12 @@ The method name is a link to the method documentation.
         Read the List of Call Park Extensions
    * - :meth:`api.telephony.callpark_extension.update <wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.update>`
         Update the designated Call Park Extension
+   * - :meth:`api.telephony.callqueue.alternate_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.alternate_available_phone_numbers>`
+        Get Call Queue Alternate Available Phone Numbers
    * - :meth:`api.telephony.callqueue.by_name <wxc_sdk.telephony.callqueue.CallQueueApi.by_name>`
         Get queue info by name
+   * - :meth:`api.telephony.callqueue.call_forward_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.call_forward_available_phone_numbers>`
+        Get Call Queue Call Forward Available Phone Numbers
    * - :meth:`api.telephony.callqueue.create <wxc_sdk.telephony.callqueue.CallQueueApi.create>`
         Create a Call Queue
    * - :meth:`api.telephony.callqueue.delete_queue <wxc_sdk.telephony.callqueue.CallQueueApi.delete_queue>`
@@ -669,6 +679,8 @@ The method name is a link to the method documentation.
         Get Call Queue Settings
    * - :meth:`api.telephony.callqueue.list <wxc_sdk.telephony.callqueue.CallQueueApi.list>`
         Read the List of Call Queues
+   * - :meth:`api.telephony.callqueue.primary_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.primary_available_phone_numbers>`
+        Get Call Queue Primary Available Phone Numbers
    * - :meth:`api.telephony.callqueue.update <wxc_sdk.telephony.callqueue.CallQueueApi.update>`
         Update a Call Queue
    * - :meth:`api.telephony.callqueue.update_call_queue_settings <wxc_sdk.telephony.callqueue.CallQueueApi.update_call_queue_settings>`
@@ -831,6 +843,8 @@ The method name is a link to the method documentation.
         Upload a Device Background Image
    * - :meth:`api.telephony.devices.validate_macs <wxc_sdk.telephony.devices.TelephonyDevicesApi.validate_macs>`
         Validate a list of MAC addresses
+   * - :meth:`api.telephony.huntgroup.alternate_available_phone_numbers <wxc_sdk.telephony.huntgroup.HuntGroupApi.alternate_available_phone_numbers>`
+        Get Hunt Group Alternate Available Phone Numbers
    * - :meth:`api.telephony.huntgroup.by_name <wxc_sdk.telephony.huntgroup.HuntGroupApi.by_name>`
         Get hunt group info by name
    * - :meth:`api.telephony.huntgroup.create <wxc_sdk.telephony.huntgroup.HuntGroupApi.create>`
@@ -839,8 +853,12 @@ The method name is a link to the method documentation.
         Delete a Hunt Group
    * - :meth:`api.telephony.huntgroup.details <wxc_sdk.telephony.huntgroup.HuntGroupApi.details>`
         Get Details for a Hunt Group
+   * - :meth:`api.telephony.huntgroup.forward_available_phone_numbers <wxc_sdk.telephony.huntgroup.HuntGroupApi.forward_available_phone_numbers>`
+        Get Hunt Group Call Forward Available Phone Numbers
    * - :meth:`api.telephony.huntgroup.list <wxc_sdk.telephony.huntgroup.HuntGroupApi.list>`
         Read the List of Hunt Groups
+   * - :meth:`api.telephony.huntgroup.primary_available_phone_numbers <wxc_sdk.telephony.huntgroup.HuntGroupApi.primary_available_phone_numbers>`
+        Get Hunt Group Primary Available Phone Numbers
    * - :meth:`api.telephony.huntgroup.update <wxc_sdk.telephony.huntgroup.HuntGroupApi.update>`
         Update a Hunt Group
    * - :meth:`api.telephony.jobs.apply_line_key_templates.apply <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.apply>`
@@ -901,22 +919,32 @@ The method name is a link to the method documentation.
         Get a List of Update Routing Prefix jobs
    * - :meth:`api.telephony.jobs.update_routing_prefix.status <wxc_sdk.telephony.jobs.UpdateRoutingPrefixJobsApi.status>`
         Get the job status of Update Routing Prefix job
+   * - :meth:`api.telephony.location.call_intercept_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.call_intercept_available_phone_numbers>`
+        Get Location Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.location.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
    * - :meth:`api.telephony.location.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`
         Shows Webex Calling details for a location, by ID
    * - :meth:`api.telephony.location.device_settings <wxc_sdk.telephony.location.TelephonyLocationApi.device_settings>`
         Get device override settings for a location
+   * - :meth:`api.telephony.location.ecbn_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.ecbn_available_phone_numbers>`
+        Get Location ECBN Available Phone Numbers
    * - :meth:`api.telephony.location.enable_for_calling <wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling>`
         Enable a location by adding it to Webex Calling
    * - :meth:`api.telephony.location.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
         Generates an example password using the effective password settings for the location
    * - :meth:`api.telephony.location.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         Lists Webex Calling locations for an organization with Webex Calling details
+   * - :meth:`api.telephony.location.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
+        Get the List of Phone Numbers Available for External Caller ID
+   * - :meth:`api.telephony.location.phone_numbers_for_a_location_with_given_criteria <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_for_a_location_with_given_criteria>`
+        Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.location.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Webex Calling details for a location, by ID
    * - :meth:`api.telephony.location.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
         Validate extensions for a specific location
+   * - :meth:`api.telephony.location.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
+        Get Webex Go Available Phone Numbers
    * - :meth:`api.telephony.location.intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`
         Put Location Intercept
    * - :meth:`api.telephony.location.intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
@@ -947,22 +975,32 @@ The method name is a link to the method documentation.
         Get Location Voicemail
    * - :meth:`api.telephony.location.voicemail.update <wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.update>`
         Get Location Voicemail
+   * - :meth:`api.telephony.locations.call_intercept_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.call_intercept_available_phone_numbers>`
+        Get Location Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.locations.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
    * - :meth:`api.telephony.locations.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`
         Shows Webex Calling details for a location, by ID
    * - :meth:`api.telephony.locations.device_settings <wxc_sdk.telephony.location.TelephonyLocationApi.device_settings>`
         Get device override settings for a location
+   * - :meth:`api.telephony.locations.ecbn_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.ecbn_available_phone_numbers>`
+        Get Location ECBN Available Phone Numbers
    * - :meth:`api.telephony.locations.enable_for_calling <wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling>`
         Enable a location by adding it to Webex Calling
    * - :meth:`api.telephony.locations.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
         Generates an example password using the effective password settings for the location
    * - :meth:`api.telephony.locations.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         Lists Webex Calling locations for an organization with Webex Calling details
+   * - :meth:`api.telephony.locations.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
+        Get the List of Phone Numbers Available for External Caller ID
+   * - :meth:`api.telephony.locations.phone_numbers_for_a_location_with_given_criteria <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_for_a_location_with_given_criteria>`
+        Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Webex Calling details for a location, by ID
    * - :meth:`api.telephony.locations.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
         Validate extensions for a specific location
+   * - :meth:`api.telephony.locations.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
+        Get Webex Go Available Phone Numbers
    * - :meth:`api.telephony.locations.intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`
         Put Location Intercept
    * - :meth:`api.telephony.locations.intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
@@ -1011,6 +1049,8 @@ The method name is a link to the method documentation.
         Get Details for a Paging Group
    * - :meth:`api.telephony.paging.list <wxc_sdk.telephony.paging.PagingApi.list>`
         Read the List of Paging Groups
+   * - :meth:`api.telephony.paging.primary_available_phone_numbers <wxc_sdk.telephony.paging.PagingApi.primary_available_phone_numbers>`
+        Get Paging Group Primary Available Phone Numbers
    * - :meth:`api.telephony.paging.update <wxc_sdk.telephony.paging.PagingApi.update>`
         Update the designated Paging Group
    * - :meth:`api.telephony.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
@@ -1317,12 +1357,16 @@ The method name is a link to the method documentation.
         Update the voicemail message(s) as unread for the user
    * - :meth:`api.telephony.voice_messaging.summary <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.summary>`
         Get a summary of the voicemail messages for the user
+   * - :meth:`api.telephony.voicemail_groups.available_phone_numbers <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.available_phone_numbers>`
+        Get Voicemail Group Available Phone Numbers
    * - :meth:`api.telephony.voicemail_groups.create <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.create>`
         Create new voicemail group for the given location for a customer
    * - :meth:`api.telephony.voicemail_groups.delete <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.delete>`
         Delete the designated voicemail group
    * - :meth:`api.telephony.voicemail_groups.details <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.details>`
         Retrieve voicemail group details for a location
+   * - :meth:`api.telephony.voicemail_groups.fax_message_available_phone_numbers <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.fax_message_available_phone_numbers>`
+        Get Voicemail Group Fax Message Available Phone Numbers
    * - :meth:`api.telephony.voicemail_groups.list <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.list>`
         List the voicemail group information for the organization
    * - :meth:`api.telephony.voicemail_groups.update <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.update>`
@@ -1331,6 +1375,8 @@ The method name is a link to the method documentation.
         Get Voicemail Rules
    * - :meth:`api.telephony.voicemail_rules.update <wxc_sdk.telephony.vm_rules.VoicemailRulesApi.update>`
         Update Voicemail Rules
+   * - :meth:`api.telephony.voiceportal.available_phone_numbers <wxc_sdk.telephony.voiceportal.VoicePortalApi.available_phone_numbers>`
+        Get VoicePortal Available Phone Numbers
    * - :meth:`api.telephony.voiceportal.passcode_rules <wxc_sdk.telephony.voiceportal.VoicePortalApi.passcode_rules>`
         Get VoicePortal Passcode Rule
    * - :meth:`api.telephony.voiceportal.read <wxc_sdk.telephony.voiceportal.VoicePortalApi.read>`

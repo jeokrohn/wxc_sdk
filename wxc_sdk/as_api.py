@@ -11853,7 +11853,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         super().__init__(session=session)
         self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.auto_attendants)
 
-    def _endpoint(self, *, location_id: str = None, auto_attendant_id: str = None) -> str:
+    def _endpoint(self, *, location_id: str = None, auto_attendant_id: str = None, path: str = None) -> str:
         """
         auto attendant specific feature endpoint like /v1/telephony/config/locations/{locationId}/autoAttendants/{
         auto_attendant_id}
@@ -11872,6 +11872,8 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
             ep = self.session.ep(f'telephony/config/locations/{location_id}/autoAttendants')
             if auto_attendant_id:
                 ep = f'{ep}/{auto_attendant_id}'
+            if path:
+                ep = f'{ep}/{path}'
             return ep
 
     def list_gen(self, org_id: str = None, location_id: str = None, name: str = None,
@@ -12039,6 +12041,228 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
         await self.delete(url, params=params)
+
+    def primary_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Auto Attendant Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the auto attendant's primary phone
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> List[AvailableNumber]:
+        """
+        Get Auto Attendant Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the auto attendant's primary phone
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def alternate_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                          org_id: str = None,
+                                          **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Auto Attendant Alternate Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the auto attendant's alternate number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def alternate_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                          org_id: str = None,
+                                          **params) -> List[AvailableNumber]:
+        """
+        Get Auto Attendant Alternate Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the auto attendant's alternate number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def call_forward_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                             owner_name: str = None, extension: str = None,
+                                             org_id: str = None,
+                                             **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Auto Attendant Call Forward Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the auto attendant's call forward
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def call_forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                             owner_name: str = None, extension: str = None,
+                                             org_id: str = None,
+                                             **params) -> List[AvailableNumber]:
+        """
+        Get Auto Attendant Call Forward Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the auto attendant's call forward
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
 
 class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
@@ -12935,7 +13159,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         self.announcement = AsAnnouncementApi(session=session)
         self.policy = AsCQPolicyApi(session=session)
 
-    def _endpoint(self, *, location_id: str = None, queue_id: str = None):
+    def _endpoint(self, *, location_id: str = None, queue_id: str = None, path: str = None):
         """
         Helper to get URL for API endpoints
 
@@ -12950,6 +13174,8 @@ class AsCallQueueApi(AsApiChild, base=''):
             ep = self.ep(f'telephony/config/locations/{location_id}/queues')
             if queue_id:
                 ep = f'{ep}/{queue_id}'
+            if path:
+                ep = f'{ep}/{path}'
             return ep
 
     @staticmethod
@@ -13289,6 +13515,224 @@ class AsCallQueueApi(AsApiChild, base=''):
         body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('telephony/config/queues/settings')
         await self.put(url, params=params, json=body)
+
+    def primary_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Call Queue Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the call queue's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`CallQueuePrimaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> List[AvailableNumber]:
+        """
+        Get Call Queue Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the call queue's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`CallQueuePrimaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def alternate_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                          org_id: str = None,
+                                          **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Call Queue Alternate Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the call queue's alternate phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def alternate_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                          org_id: str = None,
+                                          **params) -> List[AvailableNumber]:
+        """
+        Get Call Queue Alternate Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the call queue's alternate phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def call_forward_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                             owner_name: str = None, extension: str = None,
+                                             org_id: str = None,
+                                             **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Call Queue Call Forward Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the call queue's call forward number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def call_forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                             owner_name: str = None, extension: str = None,
+                                             org_id: str = None,
+                                             **params) -> List[AvailableNumber]:
+        """
+        Get Call Queue Call Forward Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the call queue's call forward number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
 
 class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
@@ -15299,7 +15743,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         super().__init__(session=session)
         self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.huntgroups)
 
-    def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None) -> str:
+    def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None, path: str = None) -> str:
         """
         hunt group specific feature endpoint like /v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}
 
@@ -15317,6 +15761,8 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
             ep = self.session.ep(f'telephony/config/locations/{location_id}/huntGroups')
             if huntgroup_id:
                 ep = f'{ep}/{huntgroup_id}'
+            if path:
+                ep = f'{ep}/{path}'
             return ep
 
     def list_gen(self, org_id: str = None, location_id: str = None, name: str = None,
@@ -15484,6 +15930,224 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         data = update.create_or_update()
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         await self.put(url, data=data, params=params)
+
+    def primary_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Hunt Group Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> List[AvailableNumber]:
+        """
+        Get Hunt Group Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def alternate_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                          org_id: str = None,
+                                          **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Hunt Group Alternate Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's alternate phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def alternate_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                          org_id: str = None,
+                                          **params) -> List[AvailableNumber]:
+        """
+        Get Hunt Group Alternate Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's alternate phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def forward_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                        owner_name: str = None, extension: str = None,
+                                        org_id: str = None,
+                                        **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Hunt Group Call Forward Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's call forward number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        owner_name: str = None, extension: str = None,
+                                        org_id: str = None,
+                                        **params) -> List[AvailableNumber]:
+        """
+        Get Hunt Group Call Forward Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the hunt group's call forward number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
 
 class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/devices/applyLineKeyTemplate'):
@@ -16957,7 +17621,7 @@ class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voic
 
 class AsPagingApi(AsApiChild, base='telephony/config'):
 
-    def _endpoint(self, *, location_id: str = None, paging_id: str = None) -> str:
+    def _endpoint(self, *, location_id: str = None, paging_id: str = None, path: str = None) -> str:
         """
         endpoint for paging group operation
 
@@ -16970,7 +17634,8 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         if location_id is None:
             return super().ep('paging')
         paging_id = paging_id and f'/{paging_id}' or ''
-        return super().ep(f'locations/{location_id}/paging{paging_id}')
+        path = path and f'/{path}' or ''
+        return super().ep(f'locations/{location_id}/paging{paging_id}{path}')
 
     def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None,
              org_id: str = None, **params) -> AsyncGenerator[Paging, None, None]:
@@ -17128,6 +17793,72 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         data = update.create_or_update()
         await self.put(url, data=data, params=params)
+
+    def primary_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Paging Group Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the paging group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> List[AvailableNumber]:
+        """
+        Get Paging Group Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the paging group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
 
 class AsPlayListApi(AsApiChild, base='telephony/config/announcements/playlists'):
@@ -20573,6 +21304,380 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         data = await self.get(url=url, params=params)
         return DeviceCustomization.model_validate(data)
 
+    def phone_numbers_available_for_external_caller_id_gen(self, location_id: str,
+                                                       phone_number: List[str] = None,
+                                                       owner_name: str = None, org_id: str = None,
+                                                       **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get the List of Phone Numbers Available for External Caller ID
+
+        Get the list of phone numbers available for external caller ID usage by a Webex Calling entity (such as a user,
+        virtual line, or workspace) within the specified location.
+        Numbers from the specified location are returned and cross location numbers are returned as well where the
+        number's location has the same country, PSTN provider, and zone (only applicable for India locations) as the
+        specified location.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve available external caller ID numbers for this location.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the provided list in the `phoneNumber` array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/externalCallerId/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def phone_numbers_available_for_external_caller_id(self, location_id: str,
+                                                       phone_number: List[str] = None,
+                                                       owner_name: str = None, org_id: str = None,
+                                                       **params) -> List[AvailableNumber]:
+        """
+        Get the List of Phone Numbers Available for External Caller ID
+
+        Get the list of phone numbers available for external caller ID usage by a Webex Calling entity (such as a user,
+        virtual line, or workspace) within the specified location.
+        Numbers from the specified location are returned and cross location numbers are returned as well where the
+        number's location has the same country, PSTN provider, and zone (only applicable for India locations) as the
+        specified location.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve available external caller ID numbers for this location.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the provided list in the `phoneNumber` array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/externalCallerId/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def phone_numbers_for_a_location_with_given_criteria_gen(self, location_id: str,
+                                                         phone_number: List[str] = None,
+                                                         owner_name: str = None, org_id: str = None,
+                                                         **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Available Phone Numbers for a Location with Given Criteria
+
+        List service and standard numbers that are available to be assigned as the location's main number.
+        These numbers are associated with the location specified in the request URL and can be active/inactive and
+        assigned to an owning entity or unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def phone_numbers_for_a_location_with_given_criteria(self, location_id: str,
+                                                         phone_number: List[str] = None,
+                                                         owner_name: str = None, org_id: str = None,
+                                                         **params) -> List[AvailableNumber]:
+        """
+        Get Available Phone Numbers for a Location with Given Criteria
+
+        List service and standard numbers that are available to be assigned as the location's main number.
+        These numbers are associated with the location specified in the request URL and can be active/inactive and
+        assigned to an owning entity or unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def webex_go_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                         org_id: str = None,
+                                         **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Webex Go Available Phone Numbers
+
+        List standard numbers that are available to be assigned as the webex go phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(f'{location_id}/webexGo/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def webex_go_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                         org_id: str = None,
+                                         **params) -> List[AvailableNumber]:
+        """
+        Get Webex Go Available Phone Numbers
+
+        List standard numbers that are available to be assigned as the webex go phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(f'{location_id}/webexGo/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def ecbn_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                     owner_name: str = None, org_id: str = None,
+                                     **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Location ECBN Available Phone Numbers
+
+        List standard numbers that are available to be assigned as the location's emergency callback number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/emergencyCallbackNumber/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def ecbn_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                     owner_name: str = None, org_id: str = None,
+                                     **params) -> List[AvailableNumber]:
+        """
+        Get Location ECBN Available Phone Numbers
+
+        List standard numbers that are available to be assigned as the location's emergency callback number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/emergencyCallbackNumber/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def call_intercept_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                               owner_name: str = None, org_id: str = None,
+                                               **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Location Call Intercept Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the location's call intercept number.
+        These numbers are associated with the location specified in the request URL and can be active/inactive and
+        assigned to an owning entity or unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`LocationAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/callIntercept/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def call_intercept_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                               owner_name: str = None, org_id: str = None,
+                                               **params) -> List[AvailableNumber]:
+        """
+        Get Location Call Intercept Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the location's call intercept number.
+        These numbers are associated with the location specified in the request URL and can be active/inactive and
+        assigned to an owning entity or unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`LocationAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/callIntercept/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
 
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     #: agent caller id Api
@@ -21204,6 +22309,74 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id, path='passcodeRules')
         return PasscodeRules.model_validate(await self.get(url, params=params))
 
+    def available_phone_numbers_gen(self, location_id: str, phone_number: list[str] = None,
+                                org_id: str = None,
+                                **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get VoicePortal Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the location voice portal's phone
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                org_id: str = None,
+                                **params) -> List[AvailableNumber]:
+        """
+        Get VoicePortal Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the location voice portal's phone
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
 
 class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
     """
@@ -21370,6 +22543,140 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         """
         url = self.ep(location_id, voicemail_group_id)
         await super().delete(url=url)
+
+    def fax_message_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                            org_id: str = None,
+                                            **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Voicemail Group Fax Message Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as a voicemail group's FAX message phone
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(location_id=location_id, path='faxMessage/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def fax_message_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                            org_id: str = None,
+                                            **params) -> List[AvailableNumber]:
+        """
+        Get Voicemail Group Fax Message Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as a voicemail group's FAX message phone
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(location_id=location_id, path='faxMessage/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    def available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                org_id: str = None,
+                                **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Voicemail Group Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as a voicemail group's phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                org_id: str = None,
+                                **params) -> List[AvailableNumber]:
+        """
+        Get Voicemail Group Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as a voicemail group's phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(location_id=location_id, path='availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
 
 class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):

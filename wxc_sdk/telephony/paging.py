@@ -4,7 +4,7 @@ Paging group API
 """
 import json
 from collections.abc import Generator
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import Field
 
@@ -13,6 +13,8 @@ from ..base import ApiModel, to_camel
 from ..common import UserType
 
 __all__ = ['PagingApi', 'Paging', 'PagingAgent']
+
+from ..person_settings.available_numbers import AvailableNumber
 
 
 class PagingAgent(ApiModel):
@@ -139,7 +141,7 @@ class Paging(ApiModel):
 
 class PagingApi(ApiChild, base='telephony/config'):
 
-    def _endpoint(self, *, location_id: str = None, paging_id: str = None) -> str:
+    def _endpoint(self, *, location_id: str = None, paging_id: str = None, path: str = None) -> str:
         """
         endpoint for paging group operation
 
@@ -152,7 +154,8 @@ class PagingApi(ApiChild, base='telephony/config'):
         if location_id is None:
             return super().ep('paging')
         paging_id = paging_id and f'/{paging_id}' or ''
-        return super().ep(f'locations/{location_id}/paging{paging_id}')
+        path = path and f'/{path}' or ''
+        return super().ep(f'locations/{location_id}/paging{paging_id}{path}')
 
     def list(self, location_id: str = None, name: str = None, phone_number: str = None,
              org_id: str = None, **params) -> Generator[Paging, None, None]:
@@ -279,3 +282,36 @@ class PagingApi(ApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         data = update.create_or_update()
         self.put(url, data=data, params=params)
+
+    def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                        org_id: str = None,
+                                        **params) -> Generator[AvailableNumber, None, None]:
+        """
+        Get Paging Group Primary Available Phone Numbers
+
+        List service and standard numbers that are available to be assigned as the paging group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self._endpoint(location_id=location_id, path='availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)

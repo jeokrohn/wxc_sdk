@@ -11,7 +11,6 @@ from wxc_sdk.rest import RestSession
 __all__ = ['AvailableNumber', 'AvailablePhoneNumberLicenseType', 'AvailableNumbersApi']
 
 
-
 class AvailableNumber(ApiModel):
     #: A unique identifier for the phone number.
     #: example: +12056350001
