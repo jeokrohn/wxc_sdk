@@ -57,6 +57,12 @@ class GetCallParkExtensionObject(ApiModel):
     #: The extension for the call park extension.
     #: example: 1415
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 12341415
+    esn: Optional[str] = None
     #: Unique name for the call park extension.
     #: example: 14159265
     name: Optional[str] = None
@@ -99,6 +105,12 @@ class GetUserNumberItemObject(ApiModel):
     #: Extension of a person or workspace.
     #: example: 8080
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 12348080
+    esn: Optional[str] = None
     #: Flag to indicate a primary phone.
     #: example: True
     primary: Optional[bool] = None
@@ -170,6 +182,12 @@ class ListCallParkExtensionObject(ApiModel):
     #: The extension for the call park extension.
     #: example: 1415
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 12341415
+    esn: Optional[str] = None
     #: A unique name for the call park extension.
     #: example: 14159265
     name: Optional[str] = None
@@ -546,8 +564,9 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/settings')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_call_park_extensions(self, extension: str = None, name: str = None, location_id: str = None,
-                                              location_name: str = None, order: str = None, org_id: str = None,
+    def read_the_list_of_call_park_extensions(self, location_id: str = None, extension: str = None,
+                                              location_name: str = None, name: str = None, order: str = None,
+                                              org_id: str = None,
                                               **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         Read the List of Call Park Extensions
@@ -561,14 +580,14 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_read`.
 
-        :param extension: Only return call park extensions with the matching extension.
-        :type extension: str
-        :param name: Only return call park extensions with the matching name.
-        :type name: str
         :param location_id: Only return call park extensions with matching location ID.
         :type location_id: str
+        :param extension: Only return call park extensions with the matching extension.
+        :type extension: str
         :param location_name: Only return call park extensions with the matching extension.
         :type location_name: str
+        :param name: Only return call park extensions with the matching name.
+        :type name: str
         :param order: Order the available agents according to the designated fields.  Available sort fields:
             `groupName`, `callParkExtension`, `callParkExtensionName`, `callParkExtensionExternalId`.
         :type order: str
@@ -578,14 +597,14 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        if extension is not None:
-            params['extension'] = extension
-        if name is not None:
-            params['name'] = name
         if location_id is not None:
             params['locationId'] = location_id
+        if extension is not None:
+            params['extension'] = extension
         if location_name is not None:
             params['locationName'] = location_name
+        if name is not None:
+            params['name'] = name
         if order is not None:
             params['order'] = order
         url = self.ep('callParkExtensions')

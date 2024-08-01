@@ -38,6 +38,8 @@ class GetCallRecordingObject(ApiModel):
     #: example: Dubber
     vendor_name: Optional[str] = None
     #: Url where can be found terms of service for the vendor.
+    #: 
+    #: **NOTE**: This is expected to be empty for Webex Recording Platform.
     #: example: https://www.dubber.net/terms
     terms_of_service_url: Optional[str] = None
 
@@ -53,6 +55,8 @@ class GetCallRecordingTermsOfServiceObject(ApiModel):
     #: example: True
     terms_of_service_enabled: Optional[bool] = None
     #: Url where can be found terms of service for the vendor.
+    #: 
+    #: **NOTE**: This is expected to be empty for Webex Recording Platform.
     #: example: https://www.dubber.net/terms
     terms_of_service_url: Optional[str] = None
 

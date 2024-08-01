@@ -19,9 +19,11 @@ __all__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRul
            'CreateForwardingRuleObjectForwardToSelection', 'FeaturesHuntGroupApi', 'GetForwardingRuleObject',
            'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
            'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
-           'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyCallForwardingObjectCallForwarding',
-           'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer',
-           'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject']
+           'HuntGroupCallForwardAvailableNumberObject', 'HuntGroupCallForwardAvailableNumberObjectOwner',
+           'HuntGroupPrimaryAvailableNumberObject', 'HuntPolicySelection', 'ListHuntGroupObject',
+           'ModifyCallForwardingObjectCallForwarding', 'NumberOwnerType', 'PostHuntGroupCallPolicyObject',
+           'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject',
+           'STATE', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -326,6 +328,12 @@ class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):
     #: Extension of person, workspace or virtual line.
     #: example: 1234
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 12341234
+    esn: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     #: example: 50
     weight: Optional[str] = None
@@ -398,6 +406,12 @@ class ListHuntGroupObject(ApiModel):
     #: Primary phone extension of the hunt group.
     #: example: 7781
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 12347781
+    esn: Optional[str] = None
     #: Whether or not the hunt group is enabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -411,6 +425,110 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
     selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesSet]] = None
+
+
+class STATE(str, Enum):
+    #: Phone number is in the active state.
+    active = 'ACTIVE'
+    #: Phone number is in the inactive state.
+    inactive = 'INACTIVE'
+
+
+class TelephonyType(str, Enum):
+    #: The object is a PSTN number.
+    pstn_number = 'PSTN_NUMBER'
+
+
+class HuntGroupPrimaryAvailableNumberObject(ApiModel):
+    #: A unique identifier for the PSTN phone number.
+    #: example: +12056350001
+    phone_number: Optional[str] = None
+    #: Phone number's state.
+    #: example: ACTIVE
+    state: Optional[STATE] = None
+    #: Indicates if the phone number is used as a location CLID.
+    #: example: True
+    is_main_number: Optional[bool] = None
+    #: Indicates if the phone number is a toll-free number.
+    #: example: True
+    toll_free_number: Optional[bool] = None
+    #: Indicates the telephony type for the number.
+    #: example: PSTN_NUMBER
+    telephony_type: Optional[TelephonyType] = None
+
+
+class NumberOwnerType(str, Enum):
+    #: PSTN phone number's owner is a workspace.
+    place = 'PLACE'
+    #: PSTN phone number's owner is a person.
+    people = 'PEOPLE'
+    #: PSTN phone number's owner is a Virtual Profile.
+    virtual_line = 'VIRTUAL_LINE'
+    #: PSTN phone number's owner is an auto-attendant.
+    auto_attendant = 'AUTO_ATTENDANT'
+    #: PSTN phone number's owner is a call queue.
+    call_queue = 'CALL_QUEUE'
+    #: PSTN phone number's owner is a group paging.
+    group_paging = 'GROUP_PAGING'
+    #: PSTN phone number's owner is a hunt group.
+    hunt_group = 'HUNT_GROUP'
+    #: PSTN phone number's owner is a voice messaging.
+    voice_messaging = 'VOICE_MESSAGING'
+    #: PSTN phone number's owner is a Single Number Reach.
+    office_anywhere = 'OFFICE_ANYWHERE'
+    #: PSTN phone number's owner is a Contact Center link.
+    contact_center_link = 'CONTACT_CENTER_LINK'
+    #: PSTN phone number's owner is a Contact Center adapter.
+    contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
+    #: PSTN phone number's owner is a route list.
+    route_list = 'ROUTE_LIST'
+    #: PSTN phone number's owner is a voicemail group.
+    voicemail_group = 'VOICEMAIL_GROUP'
+    #: PSTN phone number's owner is a collaborate bridge.
+    collaborate_bridge = 'COLLABORATE_BRIDGE'
+
+
+class HuntGroupCallForwardAvailableNumberObjectOwner(ApiModel):
+    #: Unique identifier of the owner to which PSTN Phone number is assigned.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
+    id: Optional[str] = None
+    #: Type of the PSTN phone number's owner.
+    #: example: PEOPLE
+    type: Optional[NumberOwnerType] = None
+    #: First name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE`
+    #: or `VIRTUAL_LINE`.
+    #: example: Test
+    first_name: Optional[str] = None
+    #: Last name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
+    #: example: Person
+    last_name: Optional[str] = None
+    #: Display name of the PSTN phone number's owner. This field will be present except when the owner `type` is
+    #: `PEOPLE` or `VIRTUAL_LINE`.
+    #: example: TestWorkSpace
+    display_name: Optional[str] = None
+
+
+class HuntGroupCallForwardAvailableNumberObject(ApiModel):
+    #: A unique identifier for the PSTN phone number.
+    #: example: +12056350001
+    phone_number: Optional[str] = None
+    #: Extension for a PSTN phone number.
+    #: example: 1235
+    extension: Optional[str] = None
+    #: Phone number's state.
+    #: example: ACTIVE
+    state: Optional[STATE] = None
+    #: Indicates if the phone number is used as a location CLID.
+    #: example: True
+    is_main_number: Optional[bool] = None
+    #: Indicates if the phone number is a toll-free number.
+    #: example: True
+    toll_free_number: Optional[bool] = None
+    #: Indicates the telephony type for the number.
+    #: example: PSTN_NUMBER
+    telephony_type: Optional[TelephonyType] = None
+    owner: Optional[HuntGroupCallForwardAvailableNumberObjectOwner] = None
 
 
 class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
@@ -944,3 +1062,112 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
         super().delete(url, params=params)
+
+    def get_hunt_group_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                                       org_id: str = None,
+                                                       **params) -> Generator[HuntGroupPrimaryAvailableNumberObject, None, None]:
+        """
+        Get Hunt Group Primary Available Phone Numbers
+
+        List PSTN numbers that are available to be assigned as the hunt group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`HuntGroupPrimaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(f'locations/{location_id}/huntGroups/availableNumbers')
+        return self.session.follow_pagination(url=url, model=HuntGroupPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_hunt_group_alternate_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                                         org_id: str = None,
+                                                         **params) -> Generator[HuntGroupPrimaryAvailableNumberObject, None, None]:
+        """
+        Get Hunt Group Alternate Available Phone Numbers
+
+        List PSTN numbers that are available to be assigned as the hunt group's alternate phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`HuntGroupPrimaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(f'locations/{location_id}/huntGroups/alternate/availableNumbers')
+        return self.session.follow_pagination(url=url, model=HuntGroupPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_hunt_group_call_forward_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                                            owner_name: str = None, extension: str = None,
+                                                            org_id: str = None,
+                                                            **params) -> Generator[HuntGroupCallForwardAvailableNumberObject, None, None]:
+        """
+        Get Hunt Group Call Forward Available Phone Numbers
+
+        List PSTN numbers that are available to be assigned as the hunt group's call forward number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`HuntGroupCallForwardAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'locations/{location_id}/huntGroups/callForwarding/availableNumbers')
+        return self.session.follow_pagination(url=url, model=HuntGroupCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)

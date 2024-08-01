@@ -12,7 +12,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['FeaturesPagingGroupApi', 'GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType',
-           'GetPagingGroupObject', 'ListPagingGroupObject']
+           'GetPagingGroupObject', 'ListPagingGroupObject', 'PagingGroupPrimaryAvailableNumberObject', 'STATE',
+           'TelephonyType']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):
@@ -41,9 +42,15 @@ class GetPagingGroupAgentObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Agent's extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
+    #: Agent's extension. Minimum length is 2. Maximum length is 10.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 7781
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 12347781
+    esn: Optional[str] = None
 
 
 class GetPagingGroupObject(ApiModel):
@@ -60,7 +67,7 @@ class GetPagingGroupObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: Paging group extension. Minimum length is 2. Maximum length is 10. Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
     extension: Optional[str] = None
@@ -99,10 +106,16 @@ class ListPagingGroupObject(ApiModel):
     #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: Paging group extension. Minimum length is 2. Maximum length is 10. Either `phoneNumber` or `extension` is
     #: mandatory.
     #: example: 7781
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 12347781
+    esn: Optional[str] = None
     #: Name of location for paging group.
     #: example: Alaska
     location_name: Optional[str] = None
@@ -111,6 +124,36 @@ class ListPagingGroupObject(ApiModel):
     location_id: Optional[str] = None
     #: Flag to indicate toll free number.
     toll_free_number: Optional[bool] = None
+
+
+class STATE(str, Enum):
+    #: Phone number is in the active state.
+    active = 'ACTIVE'
+    #: Phone number is in the inactive state.
+    inactive = 'INACTIVE'
+
+
+class TelephonyType(str, Enum):
+    #: The object is a PSTN number.
+    pstn_number = 'PSTN_NUMBER'
+
+
+class PagingGroupPrimaryAvailableNumberObject(ApiModel):
+    #: A unique identifier for the PSTN phone number.
+    #: example: +12056350001
+    phone_number: Optional[str] = None
+    #: Phone number's state.
+    #: example: ACTIVE
+    state: Optional[STATE] = None
+    #: Indicates if the phone number is used as a location CLID.
+    #: example: True
+    is_main_number: Optional[bool] = None
+    #: Indicates if the phone number is a toll-free number.
+    #: example: True
+    toll_free_number: Optional[bool] = None
+    #: Indicates the telephony type for the number.
+    #: example: PSTN_NUMBER
+    telephony_type: Optional[TelephonyType] = None
 
 
 class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
@@ -188,7 +231,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either
             `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
-        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or
+        :param extension: Paging group extension. Minimum length is 2. Maximum length is 10.  Either `phoneNumber` or
             `extension` is mandatory.
         :type extension: str
         :param language_code: Language code.
@@ -325,7 +368,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either
             `phoneNumber` or `extension` is mandatory.
         :type phone_number: str
-        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or
+        :param extension: Paging group extension. Minimum length is 2. Maximum length is 10.  Either `phoneNumber` or
             `extension` is mandatory.
         :type extension: str
         :param language_code: Language code.
@@ -372,3 +415,36 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
             body['targets'] = targets
         url = self.ep(f'locations/{location_id}/paging/{paging_id}')
         super().put(url, params=params, json=body)
+
+    def get_paging_group_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                                         org_id: str = None,
+                                                         **params) -> Generator[PagingGroupPrimaryAvailableNumberObject, None, None]:
+        """
+        Get Paging Group Primary Available Phone Numbers
+
+        List PSTN numbers that are available to be assigned as the paging group's primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`PagingGroupPrimaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(f'locations/{location_id}/paging/availableNumbers')
+        return self.session.follow_pagination(url=url, model=PagingGroupPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
