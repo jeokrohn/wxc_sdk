@@ -22,19 +22,14 @@ class AvailableCallerIdType(str, Enum):
 
 class AgentCallerId(ApiModel):
     #: Call queue or hunt group's unique identifier.
-    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUVVFVUUvMjE3ZDU3YmEtOTMxYi00ZjczLTk1Y2EtOGY3MWFhYzc4MTE5
     id: Optional[str] = None
     #: Member is of type `CALL_QUEUE` or `HUNT_GROUP`
-    #: example: CALL_QUEUE
     type: Optional[AvailableCallerIdType] = None
     #: Call queue or hunt group's name.
-    #: example: TestCallQueue
     name: Optional[str] = None
     #: When not null, it is call queue or hunt group's phone number.
-    #: example: +441234200090
     phone_number: Optional[str] = None
     #: When not null, it is call queue or hunt group's extension number.
-    #: example: 6001
     extension: Optional[str] = None
 
 

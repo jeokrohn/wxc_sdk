@@ -16,7 +16,6 @@ class MusicOnHold(ApiModel):
     #: music on hold is turned off for the user. In both cases, music on hold will not be played.
     moh_location_enabled: Optional[bool] = None
     #: Greeting type for the person.
-    #: example: DEFAULT
     greeting: Optional[Greeting] = None
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
     audio_announcement_file: Optional[AnnAudioFile] = None

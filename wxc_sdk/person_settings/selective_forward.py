@@ -20,13 +20,10 @@ class SelectiveForwardCriteria(SelectiveCriteria):
 
 class SelectiveForward(ApiModel):
     #: `true` if the Selective Forward feature is enabled.
-    #: example: True
     enabled: Optional[bool] = None
     #: Enter the phone number to forward calls to during this schedule.
-    #: example: +1934898988
     default_phone_number_to_forward: Optional[str] = None
     #: When `true`, enables a ring reminder for such calls.
-    #: example: True
     ring_reminder_enabled: Optional[bool] = None
     #: Enables forwarding for all calls to voicemail. This option is only available for internal phone numbers or
     #: extensions.

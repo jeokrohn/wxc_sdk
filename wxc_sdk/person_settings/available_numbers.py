@@ -13,33 +13,24 @@ __all__ = ['AvailableNumber', 'AvailablePhoneNumberLicenseType', 'AvailableNumbe
 
 class AvailableNumber(ApiModel):
     #: A unique identifier for the phone number.
-    #: example: +12056350001
     phone_number: Optional[str] = None
     #: Extension for a PSTN phone number.
-    #: example: 1235
     extension: Optional[str] = None
     #: Phone number's state.
-    #: example: ACTIVE
     state: Optional[NumberState] = None
     #: Indicates if the phone number is used as a location CLID.
-    #: example: True
     is_main_number: Optional[bool] = None
     #: Indicates if the phone number is a toll-free number.
-    #: example: True
     toll_free_number: Optional[bool] = None
     #: Indicates the telephony type for the number.
-    #: example: PSTN_NUMBER
     telephony_type: Optional[str] = None
     #: Mobile Network for the number if the number's `telephonyType` is `MOBILE_NUMBER`.
-    #: example: mobileNetwork
     mobile_network: Optional[str] = None
     #: Routing Profile for the number if the number's `telephonyType` is `MOBILE_NUMBER`.
-    #: example: AttRtPf
     routing_profile: Optional[str] = None
     #: Indicates if the phone number is a service number. Service numbers are intended to be high-volume regular phone
     #: numbers (non-mobile, non toll-free numbers). If `true` the `phoneNumber` is a service number; otherwise, it is
     #: a standard number.
-    #: example: True
     is_service_number: Optional[bool] = None
     owner: Optional[NumberOwner] = None
 
