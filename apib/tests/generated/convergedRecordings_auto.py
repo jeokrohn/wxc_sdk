@@ -366,13 +366,16 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         The recordings can belong to an org user, a virtual line, or a workspace, but the destination user should only
         be a valid org user.
 
-        * If only the 'ownerEmail' is provided, it indicates that all recordings owned by the "ownerEmail" will be
-        reassigned.
+        * Either `ownerEmail` or `recordingIds` or both must be provided.
 
-        * If only the 'recordingIds' are provided, it indicates that these 'recordingIds' will be reassigned.
+        * If `recordingIds` is empty but `ownerEmail` is provided, all recordings owned by the `ownerEmail` are
+        reassigned to `reassignOwnerEmail`.
 
-        * If both the 'ownerEmail' and 'recordingIds' are provided, only the recordingIds belonging to the provided
-        'ownerEmail' will be reassigned.
+        * If `recordingIds` is provided and `ownerEmail` is also provided, only the recordings specified by
+        `recordingIds` that are owned by `ownerEmail` are reassigned to `reassignOwnerEmail`.
+
+        * If `ownerEmail` is empty but `recordingIds` is provided, the recordings specified by `recordingIds` are
+        reassigned to `reassignOwnerEmail` regardless of the current owner.
 
         The `spark-admin:recordings_write` scope is required to reassign recordings.
 
