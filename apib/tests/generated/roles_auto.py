@@ -27,15 +27,14 @@ class RolesApi(ApiChild, base='roles'):
     """
     Roles
     
-    A persona for an authenticated user, corresponding to a set of privileges within an organization. This roles
-    resource can be accessed only by an admin and shows only roles relevant to an admin.
+    A persona for an authenticated user, corresponding to a set of privileges within an organization.
     """
 
     def list_roles(self) -> list[Role]:
         """
         List Roles
 
-        List all roles.
+        List all roles. Must be called by an admin user.
 
         :rtype: list[Role]
         """
