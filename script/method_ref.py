@@ -27,7 +27,7 @@ ROW_TEMPLATE = """
    * - :meth:`{method} <{class_path}>`
         {doc}"""
 
-IGNORE_METHODS = {'ep'}
+IGNORE_METHODS = {'ep', 'f_ep'}
 
 
 def is_base_attr(*, base, name, attr):

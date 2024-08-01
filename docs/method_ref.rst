@@ -267,8 +267,6 @@ The method name is a link to the method documentation.
         Modify Agent's Caller ID Information
    * - :meth:`api.person_settings.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
         Retrieve Agent's Caller ID Information
-   * - :meth:`api.person_settings.app_shared_line.f_ep <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.f_ep>`
-        :meta private:
    * - :meth:`api.person_settings.app_shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
         Get Shared-Line Appearance Members
    * - :meth:`api.person_settings.app_shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>`
@@ -287,8 +285,6 @@ The method name is a link to the method documentation.
         Get Call Intercept Available Phone Numbers
    * - :meth:`api.person_settings.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
         Get ECBN Available Phone Numbers
-   * - :meth:`api.person_settings.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
-        Get endpoint URL
    * - :meth:`api.person_settings.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
         Get Fax Message Available Phone Numbers
    * - :meth:`api.person_settings.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
@@ -1249,8 +1245,6 @@ The method name is a link to the method documentation.
         Get Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.virtual_lines.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
         Get ECBN Available Phone Numbers
-   * - :meth:`api.telephony.virtual_lines.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
-        Get endpoint URL
    * - :meth:`api.telephony.virtual_lines.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
         Get Fax Message Available Phone Numbers
    * - :meth:`api.telephony.virtual_lines.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
@@ -1429,8 +1423,6 @@ The method name is a link to the method documentation.
         Get Call Intercept Available Phone Numbers
    * - :meth:`api.workspace_settings.available_numbers.ecbn <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.ecbn>`
         Get ECBN Available Phone Numbers
-   * - :meth:`api.workspace_settings.available_numbers.f_ep <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.f_ep>`
-        Get endpoint URL
    * - :meth:`api.workspace_settings.available_numbers.fax_message <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.fax_message>`
         Get Fax Message Available Phone Numbers
    * - :meth:`api.workspace_settings.available_numbers.primary <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.primary>`
