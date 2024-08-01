@@ -4,6 +4,7 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass
+from itertools import chain
 from operator import attrgetter
 from re import match
 from typing import ClassVar
@@ -22,6 +23,28 @@ CQ_MANY = 100
 
 # TODO: add tests for new group call management features
 # TODO: add tests for call queue policies
+
+class TestAvailableAgents(TestWithLocations):
+
+    def test_available_agents(self):
+        """
+        get available agents for 1st calling location
+        :return:
+        """
+        location = self.locations[0]
+        available_agents = list(self.api.telephony.callqueue.available_agents(location_id=location.location_id))
+        # some agents seem to have agent type None
+        agent: AvailableAgent
+        agents_with_type_none = [agent for agent in available_agents
+                                 if agent.type is None]
+        agent_types = set(agent.type for agent in available_agents)
+        esn_set = set(chain.from_iterable((number.esn for number in agent.numbers) for agent in available_agents))
+        err = False
+        if not esn_set:
+            print('No ESNs found')
+            err = True
+        self.assertTrue(None not in agent_types, 'None in agent types')
+        self.assertFalse(err, 'No ESNs found')
 
 class TestList(TestCaseWithLog):
 

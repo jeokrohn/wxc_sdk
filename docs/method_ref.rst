@@ -661,6 +661,8 @@ The method name is a link to the method documentation.
         Update the designated Call Park Extension
    * - :meth:`api.telephony.callqueue.alternate_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.alternate_available_phone_numbers>`
         Get Call Queue Alternate Available Phone Numbers
+   * - :meth:`api.telephony.callqueue.available_agents <wxc_sdk.telephony.callqueue.CallQueueApi.available_agents>`
+        Get Call Queue Available Agents
    * - :meth:`api.telephony.callqueue.by_name <wxc_sdk.telephony.callqueue.CallQueueApi.by_name>`
         Get queue info by name
    * - :meth:`api.telephony.callqueue.call_forward_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.call_forward_available_phone_numbers>`

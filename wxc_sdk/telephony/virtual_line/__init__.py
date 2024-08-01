@@ -6,7 +6,7 @@ from pydantic import TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel
-from ...common import PrimaryOrShared, AssignedDectNetwork
+from ...common import PrimaryOrShared, AssignedDectNetwork, UserNumber
 from ...locations import LocationAddress
 from ...person_settings import TelephonyDevice, AvailableNumbersApi
 from ...person_settings.agent_caller_id import AgentCallerIdApi
@@ -25,21 +25,8 @@ from ...person_settings.privacy import PrivacyApi
 from ...person_settings.push_to_talk import PushToTalkApi
 from ...person_settings.voicemail import VoicemailApi
 
-__all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineNumber', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber',
+__all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber',
            'VirtualLineDevices']
-
-
-class VirtualLineNumber(ApiModel):
-    #: Virtual Line external.  Either `external` or `extension` is mandatory.
-    external: Optional[str] = None
-    #: Virtual Line extension.  Either `external` or `extension` is mandatory.
-    extension: Optional[str] = None
-    #: Routing prefix of location.
-    routing_prefix: Optional[str] = None
-    #: Routing prefix + extension of a person or workspace.
-    esn: Optional[str] = None
-    #: Number is Primary or Alternative Number.
-    primary: Optional[bool] = None
 
 
 class VirtualLineLocation(ApiModel):
@@ -71,7 +58,7 @@ class VirtualLine(ApiModel):
     #: `customExternalCallerIdName` for virtual line.
     custom_external_caller_id_name: Optional[str] = None
     #: Calling details of virtual line.
-    number: Optional[VirtualLineNumber] = None
+    number: Optional[UserNumber] = None
     #: Location details of virtual line.
     location: Optional[VirtualLineLocation] = None
     #: Number of devices assigned to a virtual line.

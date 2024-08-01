@@ -21,7 +21,8 @@ Release history
   * :meth:`api.telephony.voicemail_groups.available_phone_numbers <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.available_phone_numbers>`
   * :meth:`api.telephony.voicemail_groups.fax_message_available_phone_numbers <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.fax_message_available_phone_numbers>`
   * :meth:`api.telephony.voiceportal.available_phone_numbers <wxc_sdk.telephony.voiceportal.VoicePortalApi.available_phone_numbers>`
- 
+- new endpoint: :meth:`api.telephony.callqueue.available_agents <wxc_sdk.telephony.callqueue.CallQueueApi.available_agents>`
+
 1.21.1
 ------
 - fix: correct endpoint URL for :meth:`api.person_settings.voicemail.reset_pin <wxc_sdk.person_settings.voicemail.VoicemailApi.reset_pin>`

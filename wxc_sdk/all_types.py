@@ -139,9 +139,10 @@ from wxc_sdk.telephony.call_routing.translation_pattern import TranslationPatter
 from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallParkRecall, CallParkSettings, \
     LocationCallParkSettings, RecallHuntGroup
 from wxc_sdk.telephony.callpickup import CallPickup, PickupNotificationType
-from wxc_sdk.telephony.callqueue import AudioSource, CQRoutingType, CallBounce, CallQueue, CallQueueCallPolicies, \
-    CallQueueSettings, ComfortMessageBypass, ComfortMessageSetting, DistinctiveRing, MohMessageSetting, \
-    OverflowAction, OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, WelcomeMessageSetting
+from wxc_sdk.telephony.callqueue import AudioSource, AvailableAgent, CQRoutingType, CallBounce, CallQueue, \
+    CallQueueCallPolicies, CallQueueSettings, ComfortMessageBypass, ComfortMessageSetting, DistinctiveRing, \
+    MohMessageSetting, OverflowAction, OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, \
+    WelcomeMessageSetting
 from wxc_sdk.telephony.callqueue.announcement import Announcement
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward, \
     HolidayService, NightService, ScheduleLevel, StrandedCalls, StrandedCallsAction
@@ -186,7 +187,7 @@ from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, Outboun
     ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction, SupervisorAgentStatus
 from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices, VirtualLineLocation, \
-    VirtualLineNumber, VirtualLineNumberPhoneNumber
+    VirtualLineNumberPhoneNumber
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits, \
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, VoiceMailRules
 from wxc_sdk.telephony.voice_messaging import MessageSummary, VoiceMailPartyInformation, VoiceMessageDetails
@@ -213,20 +214,20 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'AudioCodecPriority', 'AudioConnectionOptions', 'AudioConnectionType', 'AudioSource', 'AudioType',
            'AuditEvent', 'AuditEventData', 'AuthCode', 'AuthCodeLevel', 'AuthCodes', 'Authorization',
            'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
-           'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers', 'AvailableCallerIdType',
-           'AvailableMember', 'AvailableNumber', 'AvailablePhoneNumberLicenseType', 'AvailableRecallHuntGroup',
-           'Background', 'BackgroundImage', 'BackgroundImageColor', 'BackgroundImages', 'BackgroundSelection',
-           'BacklightTimer', 'BacklightTimer68XX78XX', 'BargeSettings', 'BaseStationDetail', 'BaseStationResponse',
-           'BaseStationResult', 'BaseStationsResponse', 'BehaviorType', 'BlockContiguousSequences',
-           'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BluetoothMode', 'BluetoothSetting', 'BreakoutSession',
-           'BulkErrorResponse', 'BulkMethod', 'BulkOperation', 'BulkResponse', 'BulkResponseOperation',
-           'BusinessContinuity', 'CCSnippet', 'CDR', 'CDRCallType', 'CDRClientType', 'CDRDirection',
-           'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason', 'CDRUserType', 'CPActionType',
-           'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType', 'CallBounce', 'CallBridgeSetting',
-           'CallForwardExpandedSoftKey', 'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon',
-           'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType', 'CallForwardingPerson',
-           'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers', 'CallInfo',
-           'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallPark', 'CallParkExtension',
+           'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers', 'AvailableAgent',
+           'AvailableCallerIdType', 'AvailableMember', 'AvailableNumber', 'AvailablePhoneNumberLicenseType',
+           'AvailableRecallHuntGroup', 'Background', 'BackgroundImage', 'BackgroundImageColor', 'BackgroundImages',
+           'BackgroundSelection', 'BacklightTimer', 'BacklightTimer68XX78XX', 'BargeSettings', 'BaseStationDetail',
+           'BaseStationResponse', 'BaseStationResult', 'BaseStationsResponse', 'BehaviorType',
+           'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BluetoothMode',
+           'BluetoothSetting', 'BreakoutSession', 'BulkErrorResponse', 'BulkMethod', 'BulkOperation', 'BulkResponse',
+           'BulkResponseOperation', 'BusinessContinuity', 'CCSnippet', 'CDR', 'CDRCallType', 'CDRClientType',
+           'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason', 'CDRUserType',
+           'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType', 'CallBounce',
+           'CallBridgeSetting', 'CallForwardExpandedSoftKey', 'CallForwarding', 'CallForwardingAlways',
+           'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType',
+           'CallForwardingPerson', 'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers',
+           'CallInfo', 'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallPark', 'CallParkExtension',
            'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueCallPolicies',
            'CallQueueSettings', 'CallRecordingInfo', 'CallRecordingSetting', 'CallRecordingTermsOfService',
            'CallSourceInfo', 'CallSourceType', 'CallState', 'CallType', 'CallTypePermission', 'CallerId',
@@ -334,15 +335,15 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
            'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState',
            'VirtualExtensionDestination', 'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation',
-           'VirtualLineNumber', 'VirtualLineNumberPhoneNumber', 'VlanSetting', 'VoiceMailPartyInformation',
-           'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage',
-           'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup',
-           'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings',
-           'VoicemailTransferToNumber', 'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'WebexGroup',
-           'WebexGroupMeta', 'WebexGroupOwner', 'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook',
-           'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource',
-           'WebhookStatus', 'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork',
-           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail',
-           'WorkspaceIndoorNavigation', 'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers',
-           'WorkspacePersonalizationTaskResponse', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper',
-           'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'VirtualLineNumberPhoneNumber', 'VlanSetting', 'VoiceMailPartyInformation', 'VoiceMailRules',
+           'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
+           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
+           'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
+           'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner',
+           'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook', 'WebhookCreate', 'WebhookEvent',
+           'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting',
+           'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceType', 'Workspace',
+           'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail', 'WorkspaceIndoorNavigation',
+           'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse',
+           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1',
+           'to_camel', 'webex_id_to_uuid']

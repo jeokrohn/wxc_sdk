@@ -13734,6 +13734,94 @@ class AsCallQueueApi(AsApiChild, base=''):
         url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
+    def available_agents_gen(self, location_id: str, name: str = None, phone_number: str = None,
+                                        order: str = None, org_id: str = None,
+                                        **params) -> AsyncGenerator[AvailableAgent, None, None]:
+        """
+        Get Call Queue Available Agents
+
+        List all available users, workspaces, or virtual lines that can be assigned as call queue agents.
+
+        Available agents are users (excluding users with Webex Calling Standard license), workspaces, or virtual lines
+        that can be assigned to a call queue.
+        Calls from the call queue are routed to assigned agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID of the call queue. Temporary mandatory query parameter, used for
+            performance reasons only and not a filter.
+        :type location_id: str
+        :param name: Search based on name (user first and last name combination).
+        :type name: str
+        :param phone_number: Search based on number or extension.
+        :type phone_number: str
+        :param order: Order the available agents according to the designated fields. Up to three comma-separated sort
+            order fields may be specified. Available sort fields are: `userId`, `fname`, `firstname`, `lname`,
+            `lastname`, `dn`, and `extension`. Sort order can be added together with each field using a hyphen, `-`.
+            Available sort orders are: `asc`, and `desc`.
+        :type order: str
+        :param org_id: List available agents for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgentObject` instances
+        """
+        params['locationId'] = location_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep('telephony/config/queues/agents/availableAgents')
+        return self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents', params=params)
+
+    async def available_agents(self, location_id: str, name: str = None, phone_number: str = None,
+                                        order: str = None, org_id: str = None,
+                                        **params) -> List[AvailableAgent]:
+        """
+        Get Call Queue Available Agents
+
+        List all available users, workspaces, or virtual lines that can be assigned as call queue agents.
+
+        Available agents are users (excluding users with Webex Calling Standard license), workspaces, or virtual lines
+        that can be assigned to a call queue.
+        Calls from the call queue are routed to assigned agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID of the call queue. Temporary mandatory query parameter, used for
+            performance reasons only and not a filter.
+        :type location_id: str
+        :param name: Search based on name (user first and last name combination).
+        :type name: str
+        :param phone_number: Search based on number or extension.
+        :type phone_number: str
+        :param order: Order the available agents according to the designated fields. Up to three comma-separated sort
+            order fields may be specified. Available sort fields are: `userId`, `fname`, `firstname`, `lname`,
+            `lastname`, `dn`, and `extension`. Sort order can be added together with each field using a hyphen, `-`.
+            Available sort orders are: `asc`, and `desc`.
+        :type order: str
+        :param org_id: List available agents for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgentObject` instances
+        """
+        params['locationId'] = location_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep('telephony/config/queues/agents/availableAgents')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents', params=params)]
+
 
 class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
     """
