@@ -123,14 +123,13 @@ class RoomsApi(ApiChild, base='rooms'):
                    datetime] = None, to_: Union[str, datetime] = None, sort_by: ListRoomsSortBy = None,
                    **params) -> Generator[Room, None, None]:
         """
-        List rooms.
+        List Rooms
 
-        The `title` of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer
-        lists 1:1 rooms, the "other" person cannot be determined. This means that the room's title may not be filled
-        in. Please use the `memberships API
+        List rooms to which the authenticated user belongs to.
+
+        The `title` of the room for 1:1 rooms will be the display name of the other person. Please use the
+        `memberships API
         <https://developer.webex.com/docs/api/v1/memberships>`_ to list the people in the space.
-
-        By default, lists rooms to which the authenticated user belongs.
 
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
@@ -159,7 +158,7 @@ class RoomsApi(ApiChild, base='rooms'):
         if team_id is not None:
             params['teamId'] = team_id
         if type is not None:
-            params['type'] = type
+            params['type'] = enum_str(type)
         if org_public_spaces is not None:
             params['orgPublicSpaces'] = str(org_public_spaces).lower()
         if from_ is not None:
@@ -173,12 +172,12 @@ class RoomsApi(ApiChild, base='rooms'):
             to_ = dt_iso_str(to_)
             params['to'] = to_
         if sort_by is not None:
-            params['sortBy'] = sort_by
+            params['sortBy'] = enum_str(sort_by)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Room, item_key='items', params=params)
 
-    def create_a_room(self, title: str, team_id: str = None, classification_id: str = None, is_locked: str = None,
-                      is_public: str = None, description: str = None, is_announcement_only: str = None) -> Room:
+    def create_a_room(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None,
+                      is_public: bool = None, description: str = None, is_announcement_only: bool = None) -> Room:
         """
         Create a Room
 
@@ -201,14 +200,14 @@ class RoomsApi(ApiChild, base='rooms'):
         :param classification_id: The `classificationId` for the room.
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
-        :type is_locked: str
+        :type is_locked: bool
         :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
             room. When `true` the `description` must be filled in.
-        :type is_public: str
+        :type is_public: bool
         :param description: The description of the space.
         :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
-        :type is_announcement_only: str
+        :type is_announcement_only: bool
         :rtype: :class:`Room`
         """
         body = dict()
@@ -236,7 +235,10 @@ class RoomsApi(ApiChild, base='rooms'):
 
         Shows details for a room, by ID.
 
-        The `title` of the room for 1:1 rooms will be the display name of the other person.
+        The `title` of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer
+        lists 1:1 rooms, the "other" person cannot be determined. This means that the room's title may not be filled
+        in and instead shows "Empty Title". Please use the `memberships API
+        <https://developer.webex.com/docs/api/v1/memberships>`_ to list the other person in the space.
 
         Specify the room ID in the `roomId` parameter in the URI.
 
@@ -268,8 +270,8 @@ class RoomsApi(ApiChild, base='rooms'):
         return r
 
     def update_a_room(self, room_id: str, title: str, classification_id: str = None, team_id: str = None,
-                      is_locked: str = None, is_public: str = None, description: str = None,
-                      is_announcement_only: str = None, is_read_only: str = None) -> Room:
+                      is_locked: bool = None, is_public: bool = None, description: str = None,
+                      is_announcement_only: bool = None, is_read_only: bool = None) -> Room:
         """
         Update a Room
 
@@ -292,17 +294,17 @@ class RoomsApi(ApiChild, base='rooms'):
             team. Assignment between teams is unsupported.
         :type team_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
-        :type is_locked: str
+        :type is_locked: bool
         :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
             room. When `true` the `description` must be filled in.
-        :type is_public: str
+        :type is_public: bool
         :param description: The description of the space.
         :type description: str
         :param is_announcement_only: Sets the space into Announcement Mode or clears the Anouncement Mode (`false`)
-        :type is_announcement_only: str
+        :type is_announcement_only: bool
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new
             information exchanges in this space, while maintaing historical data.
-        :type is_read_only: str
+        :type is_read_only: bool
         :rtype: :class:`Room`
         """
         body = dict()
