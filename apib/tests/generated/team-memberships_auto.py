@@ -69,7 +69,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         return self.session.follow_pagination(url=url, model=TeamMembership, item_key='items', params=params)
 
     def create_a_team_membership(self, team_id: str, person_id: str = None, person_email: str = None,
-                                 is_moderator: str = None) -> TeamMembership:
+                                 is_moderator: bool = None) -> TeamMembership:
         """
         Create a Team Membership
 
@@ -82,7 +82,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param person_email: The email address of the person.
         :type person_email: str
         :param is_moderator: Whether or not the participant is a team moderator.
-        :type is_moderator: str
+        :type is_moderator: bool
         :rtype: :class:`TeamMembership`
         """
         body = dict()
@@ -115,7 +115,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         r = TeamMembership.model_validate(data)
         return r
 
-    def update_a_team_membership(self, membership_id: str, is_moderator: str) -> TeamMembership:
+    def update_a_team_membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
         """
         Update a Team Membership
 
@@ -126,7 +126,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
         :param is_moderator: Whether or not the participant is a team moderator.
-        :type is_moderator: str
+        :type is_moderator: bool
         :rtype: :class:`TeamMembership`
         """
         body = dict()
