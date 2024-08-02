@@ -32,6 +32,10 @@ class TestTelephonySupervisors(TestCaseWithLog):
         """
         sapi = self.api.telephony.supervisors
         agents = list(sapi.available_agents())
+        types = set(agent.type for agent in agents)
+        print(f'Agent types: {", ".join(str(t) for t in types)}')
+        self.assertFalse(any(agent.type for agent in agents), 'Undocumented attribute "type" in agent')
+        self.assertTrue(all(agent.type is None for agent in agents), 'Agent "type" not needed any more?')
         print(f'Got {len(agents)} agents')
 
     def test_available_supervisors(self):
@@ -50,12 +54,13 @@ class TestTelephonySupervisors(TestCaseWithLog):
         virtual_lines = list(self.api.telephony.virtual_lines.list())
         virtual_line_uuid_set = set(webex_id_to_uuid(virtual_line.id) for virtual_line in virtual_lines)
         vl_supervisors = [supervisor for supervisor in supervisors if
-                           webex_id_to_uuid(supervisor.id) in virtual_line_uuid_set]
+                          webex_id_to_uuid(supervisor.id) in virtual_line_uuid_set]
         if vl_supervisors:
             print()
             print('Based on their UUIDs, the following supervisors seem to be VLs:')
             dn_len = max(len(sup.display_name) for sup in vl_supervisors)
-            print('\n'.join(f'{sup.display_name:{dn_len}} ({base64.b64decode(sup.id+"==").decode()})' for sup in vl_supervisors))
+            print('\n'.join(
+                f'{sup.display_name:{dn_len}} ({base64.b64decode(sup.id + "==").decode()})' for sup in vl_supervisors))
         supervisor_types = set(base64.b64decode(f'{supervisor.id}==').decode().split('/')[-2]
                                for supervisor in supervisors)
         self.assertTrue(len(supervisor_types) > 1,

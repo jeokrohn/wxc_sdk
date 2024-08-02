@@ -28,6 +28,7 @@ class AgentOrSupervisor(ApiModel):
     routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person.
     esn: Optional[str] = None
+    type: Optional[str]
     #: Number of agents managed by supervisor. A supervisor must manage at least one agent.
     agent_count: Optional[int] = None
 
