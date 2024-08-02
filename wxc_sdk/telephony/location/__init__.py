@@ -352,10 +352,10 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/externalCallerId/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def phone_numbers_for_a_location_with_given_criteria(self, location_id: str,
-                                                         phone_number: List[str] = None,
-                                                         owner_name: str = None, org_id: str = None,
-                                                         **params) -> Generator[AvailableNumber, None, None]:
+    def phone_numbers(self, location_id: str,
+                      phone_number: List[str] = None,
+                      owner_name: str = None, org_id: str = None,
+                      **params) -> Generator[AvailableNumber, None, None]:
         """
         Get Available Phone Numbers for a Location with Given Criteria
 

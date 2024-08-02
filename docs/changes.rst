@@ -15,7 +15,7 @@ Release history
   * :meth:`api.telephony.location.call_intercept_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.call_intercept_available_phone_numbers>`
   * :meth:`api.telephony.location.ecbn_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.ecbn_available_phone_numbers>`
   * :meth:`api.telephony.location.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
-  * :meth:`api.telephony.location.phone_numbers_for_a_location_with_given_criteria <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_for_a_location_with_given_criteria>`
+  * :meth:`api.telephony.location.phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers>`
   * :meth:`api.telephony.location.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
   * :meth:`api.telephony.paging.primary_available_phone_numbers <wxc_sdk.telephony.paging.PagingApi.primary_available_phone_numbers>`
   * :meth:`api.telephony.voicemail_groups.available_phone_numbers <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.available_phone_numbers>`
@@ -23,6 +23,7 @@ Release history
   * :meth:`api.telephony.voiceportal.available_phone_numbers <wxc_sdk.telephony.voiceportal.VoicePortalApi.available_phone_numbers>`
 - new endpoint: :meth:`api.telephony.callqueue.available_agents <wxc_sdk.telephony.callqueue.CallQueueApi.available_agents>`
 - new API: :attr:`api.telephony.ms_teams <wxc_sdk.telephony.TelephonyApi.ms_teams>`
+- new parameter subscription_id for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
 
 1.21.1
 ------

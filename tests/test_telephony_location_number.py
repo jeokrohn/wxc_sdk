@@ -1,11 +1,18 @@
+import asyncio
+import functools
+from collections.abc import Callable
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from random import choice
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import us_location_info, available_tns, LocationInfo
+from wxc_sdk.as_rest import AsRestError
+from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import NumberState
+from wxc_sdk.locations import Location
+from wxc_sdk.person_settings.available_numbers import AvailableNumber
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberType
 
@@ -148,3 +155,114 @@ class TestAddExisting(NumberTest):
         self.assertEqual(409, rest_error.exception.response.status_code)
         self.assertEqual(8363, rest_error.exception.code)
         self.assertEqual(25223, rest_error.exception.detail.error_code)
+
+
+@dataclass(init=False)
+class TestAvailable(TestWithLocations):
+    validated_owners: ClassVar[set[str]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.validated_owner_ids = set()
+
+    async def validate_owners(self, numbers: list[AvailableNumber], location_id: str):
+        """
+        Validate owners of numbers with owner
+        """
+        validators = {'PEOPLE': self.async_api.people.details,
+                      'AUTO_ATTENDANT': functools.partial(self.async_api.telephony.auto_attendant.details,
+                                                          location_id),
+                      'CALL_QUEUE': functools.partial(self.async_api.telephony.callqueue.details,
+                                                      location_id),
+                      'VIRTUAL_LINE': self.async_api.telephony.virtual_lines.details}
+
+        async def validate_owner(number: AvailableNumber):
+            """
+            Validate owner of one number
+            """
+            if not number.owner:
+                return
+            owner_type = number.owner.owner_type
+            owner_id = number.owner.owner_id
+
+            # figure out the validator for the owner type
+            validator = validators.get(owner_type, None)
+            if not validator:
+                raise ValueError(f'No validator for owner type "{owner_type}"')
+
+            if owner_id in self.validated_owner_ids:
+                # already validated or validating this owner
+                return
+            # note that we are validating this owner
+            self.validated_owner_ids.add(owner_id)
+
+            try:
+                await validator(owner_id)
+            except AsRestError as e:
+                print(f'Error validating owner "{owner_type}/{owner_id}/{webex_id_to_uuid(owner_id)}": {e}')
+                raise
+            return
+
+        results = await asyncio.gather(*[validate_owner(number)
+                                         for number in numbers],
+                                       return_exceptions=True)
+        err = next((r for r in results if isinstance(r, Exception)),
+                   None)
+        return err
+
+    async def for_all_locations(self, call: Callable, raise_error: bool = True):
+        """
+        Execute one number list method for all calling locations
+        """
+        results = await asyncio.gather(*[call(location_id=location.location_id) for location in self.locations],
+                                       return_exceptions=True)
+        err = None
+        validate_tasks = []
+        for location, result in zip(self.locations, results):
+            location: Location
+            if isinstance(result, Exception):
+                print(f'{call.__name__}:!!! Error for location "{location.name}": {result}')
+                err = err or result
+                continue
+            print(f'{call.__name__}: Location "{location.name}": {len(result)}')
+            result: list[AvailableNumber]
+            try:
+                if any(r.location for r in result):
+                    print('Undocumented attribute "location" in result')
+                    err = err or ValueError('Undocumented attribute "location" in result')
+            except AttributeError:
+                pass
+            validate_tasks.append(self.validate_owners(numbers=result, location_id=location.location_id))
+        if validate_tasks:
+            validate_results = await asyncio.gather(*validate_tasks, return_exceptions=True)
+            err = err or next((r for r in validate_results if isinstance(r, Exception)), None)
+
+        if raise_error and err:
+            raise err
+        return err
+
+    @async_test
+    async def test_external_caller_id(self):
+        """
+        Get phone numbers available for external caller id
+        """
+        lapi = self.async_api.telephony.location
+        await self.for_all_locations(lapi.phone_numbers_available_for_external_caller_id)
+
+    @async_test
+    async def test_all_available_phone_numbers(self):
+        """
+        Test all available phone number methods for all locations
+        """
+        lapi = self.async_api.telephony.location
+        methods = [lapi.phone_numbers_available_for_external_caller_id,
+                   lapi.phone_numbers,
+                   lapi.webex_go_available_phone_numbers,
+                   lapi.ecbn_available_phone_numbers,
+                   lapi.call_intercept_available_phone_numbers]
+        results = await asyncio.gather(*[self.for_all_locations(method, raise_error=True) for method in methods],
+                                       return_exceptions=True)
+        err = next((r for r in results if isinstance(r, Exception)), None)
+        if err:
+            raise err

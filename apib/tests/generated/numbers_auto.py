@@ -245,6 +245,12 @@ class NumberObject(ApiModel):
     #: Extension for a phone number.
     #: example: 000
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person or workspace.
+    #: example: 1234000
+    esn: Optional[str] = None
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[str] = None
@@ -275,6 +281,8 @@ class NumberTypeOptions(str, Enum):
     tollfree = 'TOLLFREE'
     #: Indicates a normal Direct Inward Dial (DID) PSTN number.
     did = 'DID'
+    #: Indicates a mobile number.
+    mobile = 'MOBILE'
 
 
 class NumberStateOptions(str, Enum):
@@ -388,32 +396,41 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
     def add_phone_numbers_to_a_location(self, location_id: str, phone_numbers: list[str],
                                         number_type: NumberTypeOptions = None, state: NumberStateOptions = None,
-                                        org_id: str = None):
+                                        subscription_id: str = None, org_id: str = None):
         """
         Add Phone Numbers to a location
 
         Adds a specified set of phone numbers to a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format. Active phone numbers are in service.
+        must follow the E.164 format. Active phone numbers are in service.
 
         Adding a phone number to a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         <br/>
 
-        <div><Callout type="warning">This API is only supported for non-integrated PSTN connection types of Local
-        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco PSTN or Integrated CCP because backend data issues may occur.</Callout></div>
+        <div><Callout type="warning">This API is only supported for adding DID and Toll-free numbers to non-integrated
+        PSTN connection types such as Local Gateway (LGW) and Non-integrated CPP. It should never be used for
+        locations with integrated PSTN connection types like Cisco Calling Plans or Integrated CCP because backend
+        data issues may occur.
+        </Callout></div>
+
+        <div><Callout type="warning">Mobile numbers can be added to any location that has PSTN connection setup. Only
+        20 mobile numbers can be added per request.
+        </Callout></div>
 
         :param location_id: LocationId to which numbers should be added.
         :type location_id: str
         :param phone_numbers: List of phone numbers that need to be added.
         :type phone_numbers: list[str]
-        :param number_type: Type of the number.
+        :param number_type: Type of the number. Required for `MOBILE` number type.
         :type number_type: NumberTypeOptions
-        :param state: Reflects the state of the number. By default the state of a number is `ACTIVE`.
+        :param state: Reflects the state of the number. By default, the state of a number is set to `ACTIVE` for DID
+            and toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
         :type state: NumberStateOptions
+        :param subscription_id: Reflects the `subscriptionId` to be used for mobile number order.
+        :type subscription_id: str
         :param org_id: Organization of the Route Group.
         :type org_id: str
         :rtype: None
@@ -427,6 +444,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
             body['numberType'] = enum_str(number_type)
         if state is not None:
             body['state'] = enum_str(state)
+        if subscription_id is not None:
+            body['subscriptionId'] = subscription_id
         url = self.ep(f'locations/{location_id}/numbers')
         super().post(url, params=params, json=body)
 
@@ -437,7 +456,9 @@ class NumbersApi(ApiChild, base='telephony/config'):
         Activate the specified set of phone numbers in a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format. Active phone numbers are in service.
+        must follow the E.164 format. Active phone numbers are in service.
+
+        A mobile number is activated when assigned to a user. This API will not activate mobile numbers.
 
         Activating a phone number in a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
@@ -446,7 +467,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <div><Callout type="warning">This API is only supported for non-integrated PSTN connection types of Local
         Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco PSTN or Integrated CCP because backend data issues may occur.</Callout></div>
+        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.</Callout></div>
 
         :param location_id: `LocationId` to which numbers should be added.
         :type location_id: str
@@ -470,8 +491,9 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         Remove the specified set of phone numbers from a location for an organization.
 
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format. Active phone numbers are in service.
+        Phone numbers must follow the E.164 format.
+
+        Removing a mobile number may require more time depending on mobile carrier capabilities.
 
         Removing a phone number from a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
@@ -480,7 +502,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <div><Callout type="warning">This API is only supported for non-integrated PSTN connection types of Local
         Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco PSTN or Integrated CCP because backend data issues may occur.</Callout></div>
+        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.</Callout></div>
 
         :param location_id: `LocationId` to which numbers should be added.
         :type location_id: str
@@ -506,8 +528,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
         response.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format for all countries, except for the United States, which can also follow the National
-        format. Active phone numbers are in service.
+        must follow the E.164 format for all countries, except for the United States, which can also follow the
+        National format. Active phone numbers are in service.
 
         Validating a phone number in an organization requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
@@ -663,8 +685,13 @@ class NumbersApi(ApiChild, base='telephony/config'):
         """
         Initiate Move Number Jobs
 
-        Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
-        actions internally, only MOVE is supported publicly.
+        Starts the numbers move from one location to another location.
+
+        **Notes**
+        Although jobs can do both MOVE and DELETE actions internally, only MOVE is supported publicly.
+        Although the `numbers` field is an array we currently can only move a single number with each request.
+        Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
+        progress the API call will receive a `409` http status code.
 
         <br/>
 
@@ -682,8 +709,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <br/>
 
-        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move from Cisco PSTN to a location with
-        Cloud Connected PSTN.
+        For example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling
+        Plan to a location with Cloud Connected PSTN.
 
         <br/>
 
@@ -729,7 +756,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         """
         Pause the Manage Numbers Job
 
-        Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+        Pause the running Manage Numbers Job. A paused job can be resumed.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -749,7 +776,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         """
         Resume the Manage Numbers Job
 
-        Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+        Resume the paused Manage Numbers Job. A paused job can be resumed.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -763,24 +790,6 @@ class NumbersApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/resume/invoke')
-        super().post(url, params=params)
-
-    def abandon_the_manage_numbers_job(self, job_id: str = None, org_id: str = None):
-        """
-        Abandon the Manage Numbers Job.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param job_id: Abandon the Manage Numbers job for this `jobId`.
-        :type job_id: str
-        :param org_id: Abandon the Manage Numbers job for this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke')
         super().post(url, params=params)
 
     def list_manage_numbers_job_errors(self, job_id: str = None, org_id: str = None,

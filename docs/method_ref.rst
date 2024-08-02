@@ -933,10 +933,10 @@ The method name is a link to the method documentation.
         Generates an example password using the effective password settings for the location
    * - :meth:`api.telephony.location.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         Lists Webex Calling locations for an organization with Webex Calling details
+   * - :meth:`api.telephony.location.phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers>`
+        Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.location.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
         Get the List of Phone Numbers Available for External Caller ID
-   * - :meth:`api.telephony.location.phone_numbers_for_a_location_with_given_criteria <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_for_a_location_with_given_criteria>`
-        Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.location.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Webex Calling details for a location, by ID
    * - :meth:`api.telephony.location.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
@@ -958,11 +958,11 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.moh.update <wxc_sdk.telephony.location.moh.LocationMoHApi.update>`
         Get Music On Hold
    * - :meth:`api.telephony.location.number.activate <wxc_sdk.telephony.location.numbers.LocationNumbersApi.activate>`
-        Activate the specified set of phone numbers in a location for an organization
+        Activate Phone Numbers in a location
    * - :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
-        Adds a specified set of phone numbers to a location for an organization
+        Add Phone Numbers to a location
    * - :meth:`api.telephony.location.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
-        Remove the specified set of phone numbers from a location for an organization
+        Remove phone numbers from a location
    * - :meth:`api.telephony.location.receptionist_contacts_directory.create <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create>`
         Creates a new Receptionist Contact Directory for a location
    * - :meth:`api.telephony.location.receptionist_contacts_directory.delete <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.delete>`
@@ -989,10 +989,10 @@ The method name is a link to the method documentation.
         Generates an example password using the effective password settings for the location
    * - :meth:`api.telephony.locations.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         Lists Webex Calling locations for an organization with Webex Calling details
+   * - :meth:`api.telephony.locations.phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers>`
+        Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.locations.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
         Get the List of Phone Numbers Available for External Caller ID
-   * - :meth:`api.telephony.locations.phone_numbers_for_a_location_with_given_criteria <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_for_a_location_with_given_criteria>`
-        Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Webex Calling details for a location, by ID
    * - :meth:`api.telephony.locations.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
@@ -1014,11 +1014,11 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.moh.update <wxc_sdk.telephony.location.moh.LocationMoHApi.update>`
         Get Music On Hold
    * - :meth:`api.telephony.locations.number.activate <wxc_sdk.telephony.location.numbers.LocationNumbersApi.activate>`
-        Activate the specified set of phone numbers in a location for an organization
+        Activate Phone Numbers in a location
    * - :meth:`api.telephony.locations.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
-        Adds a specified set of phone numbers to a location for an organization
+        Add Phone Numbers to a location
    * - :meth:`api.telephony.locations.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
-        Remove the specified set of phone numbers from a location for an organization
+        Remove phone numbers from a location
    * - :meth:`api.telephony.locations.receptionist_contacts_directory.create <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create>`
         Creates a new Receptionist Contact Directory for a location
    * - :meth:`api.telephony.locations.receptionist_contacts_directory.delete <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.delete>`

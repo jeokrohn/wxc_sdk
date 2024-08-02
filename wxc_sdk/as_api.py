@@ -20951,29 +20951,38 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         return self.ep(f'{location_id}/numbers{path}')
 
     async def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
-            state: NumberState = NumberState.inactive, org_id: str = None):
+                  state: NumberState = NumberState.inactive, subscription_id: str = None, org_id: str = None):
         """
+        Add Phone Numbers to a location
+
         Adds a specified set of phone numbers to a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format. Active phone numbers are in service.
+        must follow the E.164 format. Active phone numbers are in service.
 
-        Adding a phone number to a location requires a full administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
+        Adding a phone number to a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
-        WARNING: This API is only supported for non-integrated PSTN connection types of Local
-        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco PSTN or Integrated CCP because backend data issues may occur.
+        This API is only supported for adding DID and Toll-free numbers to non-integrated
+        PSTN connection types such as Local Gateway (LGW) and Non-integrated CPP. It should never be used for
+        locations with integrated PSTN connection types like Cisco Calling Plans or Integrated CCP because backend
+        data issues may occur.
+
+        Mobile numbers can be added to any location that has PSTN connection setup. Only
+        20 mobile numbers can be added per request.
 
         :param location_id: LocationId to which numbers should be added.
         :type location_id: str
         :param phone_numbers: List of phone numbers that need to be added.
         :type phone_numbers: list[str]
-        :param number_type: Type of the number.
+        :param number_type: Type of the number. Required for `MOBILE` number type.
         :type number_type: TelephoneNumberType
-        :param state: State of the phone numbers.
-        :type state: :class:`wxc_sdk.common.NumberState`
-        :param org_id: Organization to manage
+        :param state: Reflects the state of the number. By default, the state of a number is set to `ACTIVE` for DID
+            and toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
+        :type state: NumberState
+        :param subscription_id: Reflects the `subscriptionId` to be used for mobile number order.
+        :type subscription_id: str
+        :param org_id: Organization to manage.
         :type org_id: str
         """
         url = self._url(location_id)
@@ -20984,23 +20993,28 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
             body['numberType'] = enum_str(number_type)
         if state is not None:
             body['state'] = enum_str(state)
+        if subscription_id is not None:
+            body['subscriptionId'] = subscription_id
 
         await self.post(url=url, params=params, json=body)
 
     async def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
+        Activate Phone Numbers in a location
+
         Activate the specified set of phone numbers in a location for an organization.
 
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features.
-        Phone numbers must follow E.164 format for all countries, except for the United States, which can also
-        follow the National format. Active phone numbers are in service.
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow the E.164 format. Active phone numbers are in service.
 
-        Activating a phone number in a location requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        A mobile number is activated when assigned to a user. This API will not activate mobile numbers.
 
-        WARNING: This API is only supported for non-integrated PSTN connection types of Local
+        Activating a phone number in a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        This API is only supported for non-integrated PSTN connection types of Local
         Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco PSTN or Integrated CCP because backend data issues may occur.
+        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.
 
         :param location_id: LocationId in which numbers should be activated.
         :type location_id: str
@@ -21016,18 +21030,20 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
 
     async def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
+        Remove phone numbers from a location
+
         Remove the specified set of phone numbers from a location for an organization.
 
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow E.164 format for all countries, except for the United States, which can also follow the National
-        format. Active phone numbers are in service.
+        Phone numbers must follow the E.164 format.
 
-        Removing a phone number from a location requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Removing a mobile number may require more time depending on mobile carrier capabilities.
 
-        WARNING: This API is only supported for non-integrated PSTN connection types of Local
+        Removing a phone number from a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        This API is only supported for non-integrated PSTN connection types of Local
         Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco PSTN or Integrated CCP because backend data issues may occur.
+        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.
 
         :param location_id: LocationId from which numbers should be removed.
         :type location_id: str
@@ -21541,10 +21557,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/externalCallerId/availableNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
-    def phone_numbers_for_a_location_with_given_criteria_gen(self, location_id: str,
-                                                         phone_number: List[str] = None,
-                                                         owner_name: str = None, org_id: str = None,
-                                                         **params) -> AsyncGenerator[AvailableNumber, None, None]:
+    def phone_numbers_gen(self, location_id: str,
+                      phone_number: List[str] = None,
+                      owner_name: str = None, org_id: str = None,
+                      **params) -> AsyncGenerator[AvailableNumber, None, None]:
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
@@ -21580,10 +21596,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    async def phone_numbers_for_a_location_with_given_criteria(self, location_id: str,
-                                                         phone_number: List[str] = None,
-                                                         owner_name: str = None, org_id: str = None,
-                                                         **params) -> List[AvailableNumber]:
+    async def phone_numbers(self, location_id: str,
+                      phone_number: List[str] = None,
+                      owner_name: str = None, org_id: str = None,
+                      **params) -> List[AvailableNumber]:
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
