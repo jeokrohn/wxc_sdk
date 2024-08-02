@@ -43,6 +43,7 @@ from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsRes
     DeviceCustomization, IdAndName, OwnerType, NumberOwner
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.common import ApiSelector
+from ..person_settings.msteams import OrgMSTeamsSettingApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi, Action
 from ..rest import RestSession
 
@@ -622,6 +623,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     #: location specific settings
     location: TelephonyLocationApi
     locations: TelephonyLocationApi
+    ms_teams: OrgMSTeamsSettingApi
     #: organisation access codes
     organisation_access_codes: OrganisationAccessCodesApi
     #: organisation voicemail settings
@@ -661,6 +663,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.jobs = JobsApi(session=session)
         self.location = TelephonyLocationApi(session=session)
         self.locations = self.location
+        self.ms_teams = OrgMSTeamsSettingApi(session=session)
         self.organisation_access_codes = OrganisationAccessCodesApi(session=session)
         self.organisation_voicemail = OrganisationVoicemailSettingsAPI(session=session)
         self.paging = PagingApi(session=session)
@@ -948,8 +951,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
-        -announcement-languages
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
         """
         url = self.ep('announcementLanguages')
         data = super().get(url=url)

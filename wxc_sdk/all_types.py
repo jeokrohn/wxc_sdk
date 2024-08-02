@@ -88,7 +88,7 @@ from wxc_sdk.person_settings.forwarding import CallForwardingAlways, CallForward
     CallForwardingPerson, PersonForwardingSetting
 from wxc_sdk.person_settings.moh import MusicOnHold
 from wxc_sdk.person_settings.monitoring import MonitoredElement, MonitoredElementMember, Monitoring
-from wxc_sdk.person_settings.msteams import MSTeamsSettings, SettingsObject
+from wxc_sdk.person_settings.msteams import MSTeamsSettings, OrgMSTeamsSettings, SettingsObject
 from wxc_sdk.person_settings.numbers import PersonNumbers, PersonPhoneNumber, UpdatePersonNumbers, \
     UpdatePersonPhoneNumber
 from wxc_sdk.person_settings.permissions_in import ExternalTransfer, IncomingPermissions
@@ -281,9 +281,9 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation', 'NoteType', 'Notification',
            'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob',
            'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType',
-           'OfficeNumber', 'OnboardingMethod', 'OrgComplianceAnnouncement', 'OrganisationVoicemailSettings',
-           'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType', 'OutboundProxy',
-           'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
+           'OfficeNumber', 'OnboardingMethod', 'OrgComplianceAnnouncement', 'OrgMSTeamsSettings',
+           'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
+           'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
            'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst', 'Participant',
            'ParticipantState', 'PasscodeRules', 'PatchMeetingBody', 'PatchMeetingResponse', 'PatchUserOperation',

@@ -1029,6 +1029,10 @@ The method name is a link to the method documentation.
         Get Location Voicemail
    * - :meth:`api.telephony.locations.voicemail.update <wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.update>`
         Get Location Voicemail
+   * - :meth:`api.telephony.ms_teams.configure <wxc_sdk.person_settings.msteams.OrgMSTeamsSettingApi.configure>`
+        Update an Organization's MS Teams Setting
+   * - :meth:`api.telephony.ms_teams.read <wxc_sdk.person_settings.msteams.OrgMSTeamsSettingApi.read>`
+        Get an Organization's MS Teams Settings
    * - :meth:`api.telephony.organisation_access_codes.create <wxc_sdk.telephony.org_access_codes.OrganisationAccessCodesApi.create>`
         Create Access Codes for an Organisation
    * - :meth:`api.telephony.organisation_access_codes.delete <wxc_sdk.telephony.org_access_codes.OrganisationAccessCodesApi.delete>`

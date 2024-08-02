@@ -22,6 +22,7 @@ Release history
   * :meth:`api.telephony.voicemail_groups.fax_message_available_phone_numbers <wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.fax_message_available_phone_numbers>`
   * :meth:`api.telephony.voiceportal.available_phone_numbers <wxc_sdk.telephony.voiceportal.VoicePortalApi.available_phone_numbers>`
 - new endpoint: :meth:`api.telephony.callqueue.available_agents <wxc_sdk.telephony.callqueue.CallQueueApi.available_agents>`
+- new API: :attr:`api.telephony.ms_teams <wxc_sdk.telephony.TelephonyApi.ms_teams>`
 
 1.21.1
 ------

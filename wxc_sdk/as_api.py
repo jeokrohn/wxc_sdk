@@ -67,21 +67,22 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
            'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
            'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrganisationAccessCodesApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
-           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
-           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
-           'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
-           'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi',
-           'AsSelectiveForwardApi', 'AsSelectiveRejectApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI',
-           'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
-           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
-           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
-           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi',
+           'AsPersonSettingsApiChild', 'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi',
+           'AsPriorityAlertApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi',
+           'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
+           'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
+           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
+           'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi', 'AsSelectiveForwardApi', 'AsSelectiveRejectApi',
+           'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI', 'AsSupervisorApi', 'AsTeamMembershipsApi',
+           'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi',
+           'AsTranslationPatternsApi', 'AsTrunkApi', 'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi',
+           'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi',
+           'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi',
+           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi',
+           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -17543,6 +17544,76 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         await self.put(ep, params=params, data=data)
 
 
+class AsOrgMSTeamsSettingApi(AsApiChild, base='telephony/config/settings/msTeams'):
+    """
+    Client Call Settings
+
+    Client Call Settings supports reading and writing of Webex Calling client settings for a specific organization.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+
+    async def read(self, org_id: str = None) -> OrgMSTeamsSettings:
+        """
+        Get an Organization's MS Teams Settings
+
+        Get organization MS Teams settings.
+
+        At an organization level, MS Teams settings allow access to viewing the `HIDE WEBEX APP` and `PRESENCE SYNC`
+        settings.
+
+        To retrieve an organization's MS Teams settings requires a full or read-only administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve MS Teams settings for the organization.
+        :type org_id: str
+        :rtype: :class:`OrgMSTeamsSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = OrgMSTeamsSettings.model_validate(data)
+        return r
+
+    async def configure(self, setting_name: str, value: bool,
+                  org_id: str = None):
+        """
+        Update an Organization's MS Teams Setting
+
+        Update an MS Teams setting.
+
+        MS Teams setting can be updated at the organization level.
+
+        Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param setting_name: The enum value, either `HIDE_WEBEX_APP` or `PRESENCE_SYNC`, for the respective
+            `settingName` to be updated.
+        :type setting_name: SettingsObjectSettingName
+        :param value: The boolean value, either `true` or `false`, for the respective `settingName` to be updated.
+        :type value: bool
+        :param org_id: Update MS Teams setting value for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['settingName'] = setting_name
+        body['value'] = value
+        url = self.ep()
+        await super().put(url, params=params, json=body)
+
+
 class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPermission/accessCodes'):
     """
     Viewing an organisation requires a full, user or read-only administrator auth token with a scope
@@ -22843,6 +22914,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     #: location specific settings
     location: AsTelephonyLocationApi
     locations: AsTelephonyLocationApi
+    ms_teams: AsOrgMSTeamsSettingApi
     #: organisation access codes
     organisation_access_codes: AsOrganisationAccessCodesApi
     #: organisation voicemail settings
@@ -22882,6 +22954,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
         self.locations = self.location
+        self.ms_teams = AsOrgMSTeamsSettingApi(session=session)
         self.organisation_access_codes = AsOrganisationAccessCodesApi(session=session)
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
@@ -23271,8 +23344,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
-        -announcement-languages
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
         """
         url = self.ep('announcementLanguages')
         data = await super().get(url=url)

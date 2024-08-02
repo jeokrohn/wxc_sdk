@@ -90,7 +90,7 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         if person_org_id is not None:
             params['personOrgId'] = person_org_id
         if status is not None:
-            params['status'] = status
+            params['status'] = enum_str(status)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ResourceGroupMembership, item_key='items', params=params)
 
