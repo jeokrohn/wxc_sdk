@@ -39,6 +39,8 @@ class AvailableNumber(ApiModel):
 class AvailablePhoneNumberLicenseType(str, Enum):
     var_standard = 'VAR_STANDARD'
     var_basic = 'VAR_BASIC'
+    webex_calling_professional = 'Webex Calling Professional'
+    webex_calling_standard = 'Webex Calling Standard'
 
 
 class AvailableNumbersApi(ApiChild, base='telephony/config'):

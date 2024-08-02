@@ -2671,10 +2671,10 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         return r
 
     def configure_a_virtual_line_s_privacy_settings(self, virtual_line_id: str,
-                                                    aa_extension_dialing_enabled: str = None,
-                                                    aa_naming_dialing_enabled: str = None,
-                                                    enable_phone_status_directory_privacy: str = None,
-                                                    enable_phone_status_pickup_barge_in_privacy: str = None,
+                                                    aa_extension_dialing_enabled: bool = None,
+                                                    aa_naming_dialing_enabled: bool = None,
+                                                    enable_phone_status_directory_privacy: bool = None,
+                                                    enable_phone_status_pickup_barge_in_privacy: bool = None,
                                                     monitoring_agents: list[str] = None, org_id: str = None):
         """
         Configure a Virtual Line's Privacy Settings
@@ -2690,14 +2690,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
         :param aa_extension_dialing_enabled: When `true` auto attendant extension dialing is enabled.
-        :type aa_extension_dialing_enabled: str
+        :type aa_extension_dialing_enabled: bool
         :param aa_naming_dialing_enabled: When `true` auto attendant dialing by first or last name is enabled.
-        :type aa_naming_dialing_enabled: str
+        :type aa_naming_dialing_enabled: bool
         :param enable_phone_status_directory_privacy: When `true` phone status directory privacy is enabled.
-        :type enable_phone_status_directory_privacy: str
+        :type enable_phone_status_directory_privacy: bool
         :param enable_phone_status_pickup_barge_in_privacy: When `true` privacy is enforced for call pickup and
             barge-in. Only members specified by `monitoringAgents` can pickup or barge-in on the call.
-        :type enable_phone_status_pickup_barge_in_privacy: str
+        :type enable_phone_status_pickup_barge_in_privacy: bool
         :param monitoring_agents: List of monitoring person IDs.
         :type monitoring_agents: list[str]
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another

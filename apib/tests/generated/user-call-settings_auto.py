@@ -1782,8 +1782,8 @@ class GetMessageSummaryResponse(ApiModel):
 
 
 class GetPersonPrimaryAvailablePhoneNumbersLicenseType(str, Enum):
-    var_standard = 'VAR_STANDARD'
-    var_basic = 'VAR_BASIC'
+    webex_calling_professional = 'Webex Calling Professional'
+    webex_calling_standard = 'Webex Calling Standard'
 
 
 class UserCallSettingsApi(ApiChild, base=''):
@@ -2165,6 +2165,9 @@ class UserCallSettingsApi(ApiChild, base=''):
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:people_write` scope.
 
+        <div><Callout type="warning">A person with a Webex Calling Standard license is eligible for the Call Recording
+        feature only when the Call Recording vendor is Webex.</Callout></div>
+
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
@@ -2199,6 +2202,9 @@ class UserCallSettingsApi(ApiChild, base=''):
 
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:people_write` scope.
+
+        <div><Callout type="warning">A person with a Webex Calling Standard license is eligible for the Call Recording
+        feature only when the Call Recording vendor is Webex.</Callout></div>
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -3146,29 +3152,11 @@ class UserCallSettingsApi(ApiChild, base=''):
         r = JobDetailsResponseById.model_validate(data)
         return r
 
-    def abandon_the_move_users_job(self, job_id: str, org_id: str = None):
-        """
-        Abandon the Move Users Job.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param job_id: Abandon the Move Users job for this `jobId`.
-        :type job_id: str
-        :param org_id: Abandon the Move Users job for this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}/actions/abandon/invoke')
-        super().post(url, params=params)
-
     def pause_the_move_users_job(self, job_id: str, org_id: str = None):
         """
         Pause the Move Users Job
 
-        Pause the running Move Users Job. A paused job can be resumed or abandoned.
+        Pause the running Move Users Job. A paused job can be resumed.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -3599,10 +3587,10 @@ class UserCallSettingsApi(ApiChild, base=''):
         r = PrivacyGet.model_validate(data)
         return r
 
-    def configure_a_person_s_privacy_settings(self, person_id: str, aa_extension_dialing_enabled: str = None,
-                                              aa_naming_dialing_enabled: str = None,
-                                              enable_phone_status_directory_privacy: str = None,
-                                              enable_phone_status_pickup_barge_in_privacy: str = None,
+    def configure_a_person_s_privacy_settings(self, person_id: str, aa_extension_dialing_enabled: bool = None,
+                                              aa_naming_dialing_enabled: bool = None,
+                                              enable_phone_status_directory_privacy: bool = None,
+                                              enable_phone_status_pickup_barge_in_privacy: bool = None,
                                               monitoring_agents: list[str] = None, org_id: str = None):
         """
         Configure a person's Privacy Settings
@@ -3618,14 +3606,14 @@ class UserCallSettingsApi(ApiChild, base=''):
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param aa_extension_dialing_enabled: When `true` auto attendant extension dialing is enabled.
-        :type aa_extension_dialing_enabled: str
+        :type aa_extension_dialing_enabled: bool
         :param aa_naming_dialing_enabled: When `true` auto attendant dailing by first or last name is enabled.
-        :type aa_naming_dialing_enabled: str
+        :type aa_naming_dialing_enabled: bool
         :param enable_phone_status_directory_privacy: When `true` phone status directory privacy is enabled.
-        :type enable_phone_status_directory_privacy: str
+        :type enable_phone_status_directory_privacy: bool
         :param enable_phone_status_pickup_barge_in_privacy: When `true` privacy is enforced for call pickup and
             barge-in. Only members specified by `monitoringAgents` can pickup or barge-in on the call.
-        :type enable_phone_status_pickup_barge_in_privacy: str
+        :type enable_phone_status_pickup_barge_in_privacy: bool
         :param monitoring_agents: List of monitoring person IDs.
         :type monitoring_agents: list[str]
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
@@ -4803,8 +4791,8 @@ class UserCallSettingsApi(ApiChild, base=''):
         :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
             array.
         :type phone_number: list[str]
-        :param license_type: This is used to search numbers according to the person's `licenseType` to which the number
-            will be assigned. Possible input values
+        :param license_type: Used to search numbers according to the person's `licenseType` to which the number will be
+            assigned.
         :type license_type: GetPersonPrimaryAvailablePhoneNumbersLicenseType
         :param org_id: List numbers for this organization.
         :type org_id: str

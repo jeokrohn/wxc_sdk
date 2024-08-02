@@ -17,6 +17,7 @@ from wxc_sdk.common import PatternAction, RingPattern, OwnerType
 from wxc_sdk.licenses import LicenseRequest, LicenseProperties
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
+from wxc_sdk.person_settings.available_numbers import AvailablePhoneNumberLicenseType
 from wxc_sdk.person_settings.numbers import UpdatePersonNumbers, UpdatePersonPhoneNumber, PersonNumbers
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberType
@@ -493,3 +494,11 @@ class TestUpdate(TestCaseWithUsers):
             self.assertIsNone(pn.extension)
             self.assertEqual(tn, pn.direct_number)
             self.assertEqual(ring_pattern, pn.ring_pattern)
+
+
+class TestAvailableNumbers(TestCaseWithUsers):
+    @async_test
+    async def test_primary_license_type(self):
+        api = self.async_api.person_settings.available_numbers
+        await asyncio.gather(*[api.primary(license_type=lt) for
+                               lt in AvailablePhoneNumberLicenseType])
