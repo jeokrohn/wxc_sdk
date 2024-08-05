@@ -79,10 +79,14 @@ class RoomsApi(ApiChild, base='rooms'):
              **params) -> Generator[Room, None, None]:
         """
         List rooms.
+
         The title of the room for 1:1 rooms will be the display name of the other person.
         By default, lists rooms to which the authenticated user belongs.
+
         Long result sets will be split into pages.
+
         Known Limitations:
+
         The underlying database does not support natural sorting by lastactivity and will only sort on limited set of
         results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces
         this can result in anomalies such as spaces that have had recent activity not being returned in the results

@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AgentAction', 'AvailableSupervisorsListObject', 'BetaFeaturesCallQueueWithSupervisorsApi',
-           'GetSupervisorDetailsResponse', 'ListSupervisorAgentObject', 'ListSupervisorAgentStatusObject',
-           'ListSupervisorObject', 'PostPersonPlaceVirtualLineSupervisorObject',
-           'PutPersonPlaceVirtualLineAgentObject']
+__all__ = ['AgentAction', 'AvailableAgentListObject', 'AvailableSupervisorsListObject',
+           'BetaFeaturesCallQueueWithSupervisorsApi', 'GetSupervisorDetailsResponse', 'ListSupervisorAgentObject',
+           'ListSupervisorAgentStatusObject', 'ListSupervisorObject', 'PostPersonPlaceVirtualLineSupervisorObject',
+           'PutPersonPlaceVirtualLineAgentObject', 'UserType']
 
 
 class ListSupervisorObject(ApiModel):
@@ -79,7 +79,8 @@ class AvailableSupervisorsListObject(ApiModel):
 
 class ListSupervisorAgentObject(ApiModel):
     #: ID of person, workspace or virtual line. **WARNING**: The `id` returned is always of type `PEOPLE` even if the
-    #: agent is a workspace or virtual line. The `type` of the agent `id` will be corrected in a future release.
+    #: agent is a workspace or virtual line. The `type` of the agent `id` can be found by using GET available agents
+    #: api with agent name as a query param. The `type` of the agent `id` will be corrected in a future release.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85NTA4OTc4ZC05YmFkLTRmYWEtYTljNC0wOWQ4NWQ4ZmRjZTY
     id: Optional[str] = None
     #: Last name of the agent.
@@ -126,6 +127,46 @@ class ListSupervisorAgentStatusObject(ApiModel):
     #: Detailed message for the status.
     #: example: [Error 6612] Agent 9508978d-9bad-4faa-a9c4-09d85d8fdce6 is already assigned to the supervisor.
     message: Optional[str] = None
+
+
+class UserType(str, Enum):
+    #: Associated type is a person.
+    people = 'PEOPLE'
+    #: Associated type is a workspace.
+    place = 'PLACE'
+    #: Associated type is a virtual line.
+    virtual_line = 'VIRTUAL_LINE'
+
+
+class AvailableAgentListObject(ApiModel):
+    #: A unique identifier for the agent. **WARNING**: The `id` returned is always of type `PEOPLE` even if the agent
+    #: is a workspace or virtual line. The `type` of the agent `id` will be corrected in a future release.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80YzVlODRhMS0wZmEwLTQzNDAtODVkZC1mMzM1ZGQ4MTkxMmI
+    id: Optional[str] = None
+    #: First name of the agent.
+    #: example: Adam
+    first_name: Optional[str] = None
+    #: Last name of the agent.
+    #: example: Sandler
+    last_name: Optional[str] = None
+    #: (string, optional) - Display name of the agent.
+    #: example: Adam Sandler
+    display_name: Optional[str] = None
+    #: Primary phone number of the agent.
+    #: example: +19845550200
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the agent.
+    #: example: 20
+    extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 34543
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person.
+    #: example: 345430020
+    esn: Optional[str] = None
+    #: Type of the person, workspace or virtual line.
+    #: example: PEOPLE
+    type: Optional[UserType] = None
 
 
 class GetSupervisorDetailsResponse(ApiModel):
@@ -237,7 +278,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/s
         url = self.ep(f'{supervisor_id}')
         super().delete(url, params=params)
 
-    def delete_bulk_supervisors(self, supervisors_id: list[str], delete_all: bool = None, org_id: str = None):
+    def delete_bulk_supervisors(self, supervisor_ids: list[str], delete_all: bool = None, org_id: str = None):
         """
         Delete Bulk supervisors
 
@@ -247,9 +288,10 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/s
 
         Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param supervisors_id: Array of supervisors IDs to be deleted.
-        :type supervisors_id: list[str]
-        :param delete_all: If present the items array is ignored and all items in the context are deleted.
+        :param supervisor_ids: Array of supervisors IDs to be deleted.
+        :type supervisor_ids: list[str]
+        :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
+            deleted. **WARNING**: This will remove all supervisors from the organization.
         :type delete_all: bool
         :param org_id: Delete supervisors in bulk for this organization.
         :type org_id: str
@@ -259,7 +301,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/s
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['supervisorsId'] = supervisors_id
+        body['supervisorIds'] = supervisor_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
         url = self.ep()
@@ -309,7 +351,10 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/s
         Get details of a specific supervisor as well as the associated agents for an organization.
 
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
-        over calls that their assigned agents are currently handling.
+        over calls that their assigned agents are currently handling. The agent `id` returned is always of type
+        `PEOPLE` even if the agent is a workspace or virtual line. The `type` of the agent `id` can be found by using
+        GET available agents api with agent name as a query param. The `type` of the agent `id` will be corrected in a
+        future release.
 
         Requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
@@ -382,7 +427,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/s
         return r
 
     def list_available_agents(self, name: str = None, phone_number: str = None, order: str = None, org_id: str = None,
-                              **params) -> Generator[AvailableSupervisorsListObject, None, None]:
+                              **params) -> Generator[AvailableAgentListObject, None, None]:
         """
         List Available Agents
 
@@ -402,7 +447,7 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/s
         :type order: str
         :param org_id: List of agents in a supervisor's list for this organization.
         :type org_id: str
-        :return: Generator yielding :class:`AvailableSupervisorsListObject` instances
+        :return: Generator yielding :class:`AvailableAgentListObject` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -413,4 +458,4 @@ class BetaFeaturesCallQueueWithSupervisorsApi(ApiChild, base='telephony/config/s
         if order is not None:
             params['order'] = order
         url = self.ep('availableAgents')
-        return self.session.follow_pagination(url=url, model=AvailableSupervisorsListObject, item_key='agents', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableAgentListObject, item_key='agents', params=params)

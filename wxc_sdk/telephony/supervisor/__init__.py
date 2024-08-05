@@ -5,7 +5,7 @@ from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-from wxc_sdk.common import PatternAction
+from wxc_sdk.common import PatternAction, UserType
 
 __all__ = ['SupervisorApi', 'IdAndAction',
            'SupervisorAgentStatus',
@@ -28,7 +28,8 @@ class AgentOrSupervisor(ApiModel):
     routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person.
     esn: Optional[str] = None
-    type: Optional[str]
+    #: Type of the person, workspace or virtual line.
+    type: Optional[UserType] = None
     #: Number of agents managed by supervisor. A supervisor must manage at least one agent.
     agent_count: Optional[int] = None
 
@@ -148,7 +149,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         super().delete(url, params=params)
 
-    def delete_bulk(self, supervisors_id: List[str], delete_all: bool = None, org_id: str = None):
+    def delete_bulk(self, supervisors_ids: List[str], delete_all: bool = None, org_id: str = None):
         """
         Delete Bulk supervisors
 
@@ -158,9 +159,10 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
 
         Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param supervisors_id: Array of supervisors IDs to be deleted.
-        :type supervisors_id: list[str]
-        :param delete_all: If present the items array is ignored and all items in the context are deleted.
+        :param supervisors_ids: Array of supervisors IDs to be deleted.
+        :type supervisors_ids: list[str]
+        :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
+            deleted. **WARNING**: This will remove all supervisors from the organization.
         :type delete_all: bool
         :param org_id: Delete supervisors in bulk for this organization.
         :type org_id: str
@@ -170,7 +172,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['supervisorsId'] = supervisors_id
+        body['supervisorsIds'] = supervisors_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
         url = self.ep()

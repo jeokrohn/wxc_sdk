@@ -5523,7 +5523,9 @@ class AsMessagesApi(AsApiChild, base='messages'):
              before_message: str = None, **params) -> AsyncGenerator[Message, None, None]:
         """
         Lists all messages in a room.  Each message will include content attachments if present.
+
         The list sorts the messages in descending order by creation date.
+
         Long result sets will be split into pages.
 
         :param room_id: List messages in a room, by ID.
@@ -5557,7 +5559,9 @@ class AsMessagesApi(AsApiChild, base='messages'):
              before_message: str = None, **params) -> List[Message]:
         """
         Lists all messages in a room.  Each message will include content attachments if present.
+
         The list sorts the messages in descending order by creation date.
+
         Long result sets will be split into pages.
 
         :param room_id: List messages in a room, by ID.
@@ -9916,10 +9920,14 @@ class AsRoomsApi(AsApiChild, base='rooms'):
              **params) -> AsyncGenerator[Room, None, None]:
         """
         List rooms.
+
         The title of the room for 1:1 rooms will be the display name of the other person.
         By default, lists rooms to which the authenticated user belongs.
+
         Long result sets will be split into pages.
+
         Known Limitations:
+
         The underlying database does not support natural sorting by lastactivity and will only sort on limited set of
         results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces
         this can result in anomalies such as spaces that have had recent activity not being returned in the results
@@ -9962,10 +9970,14 @@ class AsRoomsApi(AsApiChild, base='rooms'):
              **params) -> List[Room]:
         """
         List rooms.
+
         The title of the room for 1:1 rooms will be the display name of the other person.
         By default, lists rooms to which the authenticated user belongs.
+
         Long result sets will be split into pages.
+
         Known Limitations:
+
         The underlying database does not support natural sorting by lastactivity and will only sort on limited set of
         results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces
         this can result in anomalies such as spaces that have had recent activity not being returned in the results
@@ -19770,7 +19782,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         await super().delete(url, params=params)
 
-    async def delete_bulk(self, supervisors_id: List[str], delete_all: bool = None, org_id: str = None):
+    async def delete_bulk(self, supervisors_ids: List[str], delete_all: bool = None, org_id: str = None):
         """
         Delete Bulk supervisors
 
@@ -19780,9 +19792,10 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
 
         Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param supervisors_id: Array of supervisors IDs to be deleted.
-        :type supervisors_id: list[str]
-        :param delete_all: If present the items array is ignored and all items in the context are deleted.
+        :param supervisors_ids: Array of supervisors IDs to be deleted.
+        :type supervisors_ids: list[str]
+        :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
+            deleted. **WARNING**: This will remove all supervisors from the organization.
         :type delete_all: bool
         :param org_id: Delete supervisors in bulk for this organization.
         :type org_id: str
@@ -19792,7 +19805,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['supervisorsId'] = supervisors_id
+        body['supervisorsIds'] = supervisors_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
         url = self.ep()
@@ -20951,7 +20964,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         return self.ep(f'{location_id}/numbers{path}')
 
     async def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
-                  state: NumberState = NumberState.inactive, subscription_id: str = None, org_id: str = None):
+            state: NumberState = NumberState.inactive, subscription_id: str = None, org_id: str = None):
         """
         Add Phone Numbers to a location
 

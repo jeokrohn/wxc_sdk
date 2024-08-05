@@ -121,7 +121,9 @@ class MessagesApi(ApiChild, base='messages'):
              before_message: str = None, **params) -> Generator[Message, None, None]:
         """
         Lists all messages in a room.  Each message will include content attachments if present.
+
         The list sorts the messages in descending order by creation date.
+
         Long result sets will be split into pages.
 
         :param room_id: List messages in a room, by ID.

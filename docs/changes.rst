@@ -24,6 +24,7 @@ Release history
 - new endpoint: :meth:`api.telephony.callqueue.available_agents <wxc_sdk.telephony.callqueue.CallQueueApi.available_agents>`
 - new API: :attr:`api.telephony.ms_teams <wxc_sdk.telephony.TelephonyApi.ms_teams>`
 - new parameter subscription_id for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
+- break: parameter name supervisor_id changed to supervisor_ids for :meth:`api.telephony.supervisors.delete_bulk <wxc_sdk.telephony.supervisor.SupervisorApi.delete_bulk>`
 
 1.21.1
 ------
