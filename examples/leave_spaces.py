@@ -93,8 +93,7 @@ async def as_main():
     args = parser.parse_args()
 
     load_dotenv()
-    token = args.token
-    token = token or os.getenv('WEBEX_ACCESS_TOKEN')
+    token = args.token or os.getenv('WEBEX_ACCESS_TOKEN')
     if not token:
         print('No token provided and WEBEX_ACCESS_TOKEN not set in environment', file=sys.stderr)
         exit(1)
@@ -157,11 +156,6 @@ async def as_main():
             await leave_spaces(api, (space for space, _ in validated_leave))
 
 
-def main():
-    logging.basicConfig(level=logging.INFO)
-    asyncio.run(as_main())
-    return
-
-
 if __name__ == '__main__':
-    main()
+    logging.basicConfig(level=logging.DEBUG)
+    asyncio.run(as_main())
