@@ -305,6 +305,29 @@ Source: |logout_users.py|_
 .. literalinclude:: ../examples/logout_users.py
     :linenos:
 
+Leave spaces with no activity in the last n days
+-------------------------------------------------
+
+Leave spaces w/o recent activity.
+
+    | usage: leave_spaces.py [-h] [--days DAYS] [--token TOKEN] [--no_test] [--no_messages]
+    | 
+    | leave spaces with no activity
+    | 
+    | options:
+    |   -h, --help            show this help message and exit
+    |   --days DAYS, -d DAYS  days since last activity
+    |   --token TOKEN         Personal access token to use. If not provided script will try to read token
+    |                         from WEBEX_ACCESS_TOKEN environment variable.
+    |   --no_test             Don't test; actually leave the spaces
+    |   --no_messages         Only leave spaces that have no messages
+
+Source: |leave_spaces.py|_
+
+.. |leave_spaces.py| replace:: ``leave_spaces.py``
+
+.. literalinclude:: ../examples/leave_spaces.py
+    :linenos:
 
 
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
@@ -325,6 +348,7 @@ Source: |logout_users.py|_
 .. _catch_tns.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/catch_tns.py
 .. _room_devices.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/room_devices.py
 .. _logout_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/logout_users.py
+.. _leave_spaces.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/leave_spaces.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
