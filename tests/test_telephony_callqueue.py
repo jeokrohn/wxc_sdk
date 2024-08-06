@@ -46,6 +46,7 @@ class TestAvailableAgents(TestWithLocations):
         self.assertTrue(None not in agent_types, 'None in agent types')
         self.assertFalse(err, 'No ESNs found')
 
+
 class TestList(TestCaseWithLog):
 
     def test_001_list_all(self):

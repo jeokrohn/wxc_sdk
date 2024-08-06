@@ -30,7 +30,6 @@ from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OwnerType
 from wxc_sdk.telephony.autoattendant import AutoAttendant
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.huntgroup import HuntGroup
-from wxc_sdk.telephony.jobs import JobExecutionStatus
 from wxc_sdk.telephony.location import TelephonyLocation, PSTNConnection, CallingLineId
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.paging import Paging

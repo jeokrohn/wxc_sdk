@@ -208,7 +208,7 @@ class SeqRingTest(TestWithProfessionalWorkspace):
         api = self.tapi
         before = api.read(self.workspace.workspace_id)
         self.assertEqual(0, len(before.criteria))
-        phone_numbers = ['+4961007739765', '+4961007739766']
+        phone_numbers = ['+4961007739765', '+4961007739766', '+14085550123']
         criteria = SequentialRingCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                           phone_numbers=phone_numbers,
                                           anonymous_callers_enabled=False,
@@ -376,6 +376,9 @@ class SeqRingTest(TestWithProfessionalWorkspace):
                                     continue_if_base_location_is_busy_enabled=True,
                                     calls_to_voicemail_enabled=False,
                                     phone_numbers=[SequentialRingNumber(phone_number='+4961009764',
+                                                                        answer_confirmation_required_enabled=True,
+                                                                        number_of_rings=3),
+                                                   SequentialRingNumber(phone_number='+14085550123',
                                                                         answer_confirmation_required_enabled=True,
                                                                         number_of_rings=3)])
             api.configure(self.workspace.workspace_id, update)
