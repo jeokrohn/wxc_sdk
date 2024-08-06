@@ -567,7 +567,7 @@ class CallQueueApi(ApiChild, base=''):
         params = org_id and {'orgId': org_id} or {}
         cq_data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = self.post(url, data=cq_data, params=params)
+        data = self.post(url, json=cq_data, params=params)
         return data['id']
 
     def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
@@ -696,7 +696,7 @@ class CallQueueApi(ApiChild, base=''):
             raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
-        self.put(url=url, data=cq_data, params=params)
+        self.put(url=url, json=cq_data, params=params)
 
     def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettings:
         """

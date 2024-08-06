@@ -17,7 +17,7 @@ __all__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRul
            'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
            'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
            'CreateForwardingRuleObjectForwardToSelection', 'FeaturesHuntGroupApi', 'GetForwardingRuleObject',
-           'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity',
+           'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusyRedirect',
            'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
            'HuntGroupCallForwardAvailableNumberObject', 'HuntGroupCallForwardAvailableNumberObjectOwner',
            'HuntGroupPrimaryAvailableNumberObject', 'HuntPolicySelection', 'ListHuntGroupObject',
@@ -196,7 +196,7 @@ class PostHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: Number of rings before call will be forwarded if unanswered and `nextAgentEnabled` is true.
     #: example: 3
     next_agent_rings: Optional[int] = None
-    #: If true, forwards unanswered calls to the destination after the number of rings occurs.
+    #: If `true`, forwards unanswered calls to the destination after the number of rings occurs.
     forward_enabled: Optional[bool] = None
     #: Number of rings before forwarding calls if `forwardEnabled` is true.
     #: example: 15
@@ -209,35 +209,47 @@ class PostHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     destination_voicemail_enabled: Optional[bool] = None
 
 
-class GetHuntGroupCallPolicyObjectBusinessContinuity(ApiModel):
-    #: Divert calls when unreachable, unanswered calls divert to a defined phone number. This could apply to phone
-    #: calls that aren't answered due to a network outage, or all agents of the hunt group are busy and the Advance
-    #: when the busy option is also enabled. For persons only using a mobile device, calls won't be diverted, if there
-    #: is a network outage.
+class GetHuntGroupCallPolicyObjectBusyRedirect(ApiModel):
+    #: If `true`, calls are diverted to a defined phone number when all agents are busy, or when the hunt group busy
+    #: status is set to busy.
     #: example: True
     enabled: Optional[bool] = None
-    #: Destination for Business Continuity.
+    #: Destination for busy redirect.
     #: example: 2225551212
     destination: Optional[str] = None
-    #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if
-    #: the destination is an internal phone number and that number has the voicemail service enabled.
+    #: The enabled or disabled state of sending diverted incoming calls to the `destination` number's voicemail if the
+    #: `destination` is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
 class PostHuntGroupCallPolicyObject(ApiModel):
-    #: Call routing policy to use to dispatch calls to agents.
+    #: Call routing policy used to dispatch calls to agents.
     #: example: UNIFORM
     policy: Optional[HuntPolicySelection] = None
-    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring agents when they're on a
-    #: call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is
-    #: advanced to them, then the call will wait until that hunt group agent isn't busy.
+    #: If `false`, then the option is treated as "Advance when busy". The hunt group won't ring agents when they're on
+    #: a call and advances to the next agent. If a hunt group agent has call waiting enabled and the call is advanced
+    #: to them, the call waits until that hunt group agent isn't busy.
     #: example: True
     waiting_enabled: Optional[bool] = None
+    #: If `true`, the hunt group busy status will be set to busy. All new calls will get busy treatment. If
+    #: `busyRedirect` is enabled, the calls are routed to the destination specified in `busyRedirect`.
+    #: example: True
+    group_busy_enabled: Optional[bool] = None
+    #: If true, agents can change the hunt group busy status.
+    #: example: True
+    allow_members_to_control_group_busy_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
     no_answer: Optional[PostHuntGroupCallPolicyObjectNoAnswer] = None
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
-    #: reason, such as power outage, failed Internet connection, or wiring problem.
-    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
+    #: Settings for sending calls to a specified destination when all agents are busy or when the hunt group busy
+    #: status is set to busy.
+    busy_redirect: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
+    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
+    #: reason, such as a power outage, failed internet connection, or wiring problem.
+    business_continuity_redirect: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
+    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
+    #: reason, such as a power outage, failed internet connection, or wiring problem. The `businessContinuity` object
+    #: is deprecated and will be removed in the future.
+    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
 
 
 class PostPersonPlaceVirtualLineHuntGroupObject(ApiModel):
@@ -280,7 +292,7 @@ class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: Number of rings before call will be forwarded if unanswered and `nextAgentEnabled` is true.
     #: example: 3
     next_agent_rings: Optional[int] = None
-    #: If true, forwards unanswered calls to the destination after the number of rings occurs.
+    #: If `true`, forwards unanswered calls to the destination after the number of rings occurs.
     forward_enabled: Optional[bool] = None
     #: Destination if `forwardEnabled` is True.
     #: example: 2225551212
@@ -291,25 +303,39 @@ class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 15
     system_max_number_of_rings: Optional[int] = None
-    #: If destinationVoicemailEnabled is true, enables and disables sending incoming to destination number's voicemail
-    #: if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: If `destinationVoicemailEnabled` is true, enables and disables sending incoming to destination number's
+    #: voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
 class GetHuntGroupCallPolicyObject(ApiModel):
-    #: Call routing policy to use to dispatch calls to agents.
+    #: Call routing policy used to dispatch calls to agents.
     #: example: UNIFORM
     policy: Optional[HuntPolicySelection] = None
-    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring `agents` when they're on
-    #: a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is
-    #: advanced to them, then the call will wait until that hunt group agent isn't busy.
+    #: If `false`, then the option is treated as "Advance when busy". The hunt group won't ring agents when they're on
+    #: a call and advances to the next agent. If a hunt group agent has call waiting enabled and the call is advanced
+    #: to them, the call waits until that hunt group agent isn't busy.
     #: example: True
     waiting_enabled: Optional[bool] = None
+    #: When `true`, the hunt group busy status will be set to busy. All new calls will get busy treatment. If
+    #: `busyRedirect` is enabled, the calls are routed to the destination specified in `busyRedirect`.
+    #: example: True
+    group_busy_enabled: Optional[bool] = None
+    #: When `true`, agents can change the hunt group busy status.
+    #: example: True
+    allow_members_to_control_group_busy_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
     no_answer: Optional[GetHuntGroupCallPolicyObjectNoAnswer] = None
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
-    #: reason, such as power outage, failed Internet connection, or wiring problem.
-    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
+    #: Settings for sending calls to a specified destination when all agents are busy or when the hunt group busy
+    #: status is set to busy.
+    busy_redirect: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
+    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
+    #: reason, such as a power outage, failed internet connection, or wiring problem.
+    business_continuity_redirect: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
+    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
+    #: reason, such as a power outage, failed internet connection, or wiring problem. The `businessContinuity` object
+    #: is deprecated and will be removed in the future.
+    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
 
 
 class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):

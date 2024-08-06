@@ -139,14 +139,16 @@ class HGandCQ(ApiModel):
                          {'__all__':
                               {'toll_free_number': True}}}}
 
-    def create_or_update(self) -> str:
+    def create_or_update(self) -> dict:
         """
-        Get JSON for create or update call
+        Get data for create or update call
 
-        :return: JSON
+        :meta private:
+        :return: data
         :rtype: str
         """
-        return self.model_dump_json(exclude=self.exclude_update_or_create())
+        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
+                               exclude=self.exclude_update_or_create())
 
 
 class Policy(str, Enum):

@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional, Any, List
@@ -12,6 +13,8 @@ from ..rest import RestSession
 
 __all__ = ['NoAnswer', 'BusinessContinuity', 'HGCallPolicies', 'HuntGroup', 'HuntGroupApi']
 
+log = logging.getLogger(__name__)
+
 
 class NoAnswer(ApiModel):
     """
@@ -21,7 +24,7 @@ class NoAnswer(ApiModel):
     next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and nextAgentEnabled is true.
     next_agent_rings: Optional[int] = None
-    #: If true, forwards unanswered calls to the destination after the number of rings occurs.
+    #: If `true`, forwards unanswered calls to the destination after the number of rings occurs.
     forward_enabled: Optional[bool] = None
     #: Destination if forward_enabled is True.
     destination: Optional[str] = None
@@ -44,16 +47,8 @@ class NoAnswer(ApiModel):
 
 
 class BusinessContinuity(ApiModel):
-    """
-    Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
-    reason, such as power outage, failed Internet connection, or wiring problem
-    """
-    #: Divert calls when unreachable, unanswered calls divert to a defined phone number. This could apply to phone
-    #: calls that aren't answered due to a network outage, or all agents of the hunt group are busy and the Advance
-    #: when the busy option is also enabled. For persons only using a mobile device, calls won't be diverted, if there
-    #: is a network outage.
     enabled: Optional[bool] = None
-    #: Destination for Business Continuity.
+    #: Destination
     destination: Optional[str] = None
     #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if
     #: the destination is an internal phone number and that number has the voicemail service enabled.
@@ -75,10 +70,22 @@ class HGCallPolicies(ApiModel):
     #: a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is
     #: advanced to them, then the call will wait until that hunt group agent isn’t busy.
     waiting_enabled: Optional[bool] = None
+    #: If `true`, the hunt group busy status will be set to busy. All new calls will get busy treatment. If
+    #: `busyRedirect` is enabled, the calls are routed to the destination specified in `busyRedirect`.
+    group_busy_enabled: Optional[bool] = None
+    #: If true, agents can change the hunt group busy status.
+    allow_members_to_control_group_busy_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
     no_answer: Optional[NoAnswer] = None
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for
-    #: any reason, such as power outage, failed Internet connection, or wiring problem.
+    #: Settings for sending calls to a specified destination when all agents are busy or when the hunt group busy
+    #: status is set to busy.
+    busy_redirect: Optional[BusinessContinuity] = None
+    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
+    #: reason, such as a power outage, failed internet connection, or wiring problem.
+    business_continuity_redirect: Optional[BusinessContinuity] = None
+    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
+    #: reason, such as a power outage, failed internet connection, or wiring problem. The `businessContinuity` object
+    #: is deprecated and will be removed in the future.
     business_continuity: Optional[BusinessContinuity] = None
 
     @staticmethod
@@ -86,7 +93,8 @@ class HGCallPolicies(ApiModel):
         return HGCallPolicies(policy=Policy.circular,
                               waiting_enabled=False,
                               no_answer=NoAnswer.default(),
-                              business_continuity=BusinessContinuity.default())
+                              busy_redirect=BusinessContinuity.default(),
+                              business_continuity_redirect=BusinessContinuity.default())
 
 
 class HuntGroup(HGandCQ):
@@ -140,6 +148,20 @@ class HuntGroup(HGandCQ):
         return HuntGroup(name=name,
                          phone_number=phone_number,
                          extension=extension)
+
+    def create_or_update(self) -> dict:
+        """
+        Get data for create or update
+
+        :meta private:
+        """
+        try:
+            if self.call_policies.business_continuity:
+                log.warning('business_continuity is deprecated and will be removed in the future')
+        except AttributeError:
+            pass
+        data = super().create_or_update()
+        return data
 
 
 @dataclass(init=False)
@@ -237,7 +259,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         settings.call_policies = settings.call_policies or HGCallPolicies().default()
         data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = self.post(url, data=data, params=params)
+        data = self.post(url, json=data, params=params)
         return data['id']
 
     def delete_huntgroup(self, location_id: str, huntgroup_id: str, org_id: str = None):
@@ -313,7 +335,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         params = org_id and {'orgId': org_id} or None
         data = update.create_or_update()
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
-        self.put(url, data=data, params=params)
+        self.put(url, json=data, params=params)
 
     def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
                                         org_id: str = None,

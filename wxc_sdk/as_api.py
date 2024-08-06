@@ -13350,7 +13350,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         params = org_id and {'orgId': org_id} or {}
         cq_data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = await self.post(url, data=cq_data, params=params)
+        data = await self.post(url, json=cq_data, params=params)
         return data['id']
 
     async def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
@@ -13479,7 +13479,7 @@ class AsCallQueueApi(AsApiChild, base=''):
             raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
-        await self.put(url=url, data=cq_data, params=params)
+        await self.put(url=url, json=cq_data, params=params)
 
     async def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettings:
         """
@@ -15954,7 +15954,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         settings.call_policies = settings.call_policies or HGCallPolicies().default()
         data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = await self.post(url, data=data, params=params)
+        data = await self.post(url, json=data, params=params)
         return data['id']
 
     async def delete_huntgroup(self, location_id: str, huntgroup_id: str, org_id: str = None):
@@ -16030,7 +16030,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         params = org_id and {'orgId': org_id} or None
         data = update.create_or_update()
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
-        await self.put(url, data=data, params=params)
+        await self.put(url, json=data, params=params)
 
     def primary_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
                                         org_id: str = None,

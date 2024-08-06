@@ -25,6 +25,18 @@ Release history
 - new API: :attr:`api.telephony.ms_teams <wxc_sdk.telephony.TelephonyApi.ms_teams>`
 - new parameter subscription_id for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
 - break: parameter name supervisor_id changed to supervisor_ids for :meth:`api.telephony.supervisors.delete_bulk <wxc_sdk.telephony.supervisor.SupervisorApi.delete_bulk>`
+- feat: support for hunt group busy status
+
+    New attributes:
+
+        * :attr:`HGCallPolicies.group_busy_enabled <wxc_sdk.telephony.huntgroup.HGCallPolicies.group_busy_enabled>`
+        * :attr:`HGCallPolicies.allow_members_to_control_group_busy_enabled <wxc_sdk.telephony.huntgroup.HGCallPolicies.allow_members_to_control_group_busy_enabled>`
+        * :attr:`HGCallPolicies.busy_redirect <wxc_sdk.telephony.huntgroup.HGCallPolicies.busy_redirect>`
+        * :attr:`HGCallPolicies.business_continuity_redirect <wxc_sdk.telephony.huntgroup.HGCallPolicies.business_continuity_redirect>`
+
+    Deprecated:
+
+        * :attr:`HGCallPolicies.business_continuity <wxc_sdk.telephony.huntgroup.HGCallPolicies.business_continuity>`
 
 1.21.1
 ------

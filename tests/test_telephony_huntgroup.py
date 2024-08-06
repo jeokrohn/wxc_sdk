@@ -43,6 +43,12 @@ class TestList(TestCaseWithLog):
             if isinstance(detail, Exception):
                 err = err or detail
                 print(f'{hg.name}/{hg.location_name}: {detail}')
+            detail: HuntGroup
+            if detail.address_agents is not None:
+                print(f'{hg.name}/{hg.location_name}: unknown attribute address_agents set')
+                err = err or ValueError('address_agents set')
+        if all(not isinstance(detail, HuntGroup) or detail.address_agents is None for detail in details):
+            print('undocumented address_agents attribute not set any more; remove from class definition')
         if err:
             raise err
         print(f'Got details for {len(details)} hunt groups')
@@ -80,10 +86,16 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         # creat new hg
         new_hg_id = hapi.create(location_id=target_location.location_id,
                                 settings=settings)
-
-        # and get details of new queue using the queue id
-        details = hapi.details(location_id=target_location.location_id, huntgroup_id=new_hg_id)
-        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
+        try:
+            # and get details of new queue using the queue id
+            details = hapi.details(location_id=target_location.location_id, huntgroup_id=new_hg_id)
+            print(json.dumps(json.loads(details.model_dump_json()), indent=2))
+            self.assertTrue(details.address_agents is None, 'Undocumented address_agents attribute')
+            self.assertTrue(details.address_agents is not None,
+                            'Undocumented address_agents attribute is gone; remove from class')
+        finally:
+            # delete the new hunt group
+            hapi.delete_huntgroup(location_id=target_location.location_id, huntgroup_id=new_hg_id)
 
     def test_002_duplicate_hg(self):
         """
