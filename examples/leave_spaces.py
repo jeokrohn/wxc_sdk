@@ -82,7 +82,7 @@ async def as_main():
     # parse args
     parser = ArgumentParser(description='leave spaces with no activity')
     parser.add_argument('--days', '-d', type=int, required=False, default=3 * 365,
-                        help='days since last activity')
+                        help=f'days since last activity; default: {3 * 365}')
     parser.add_argument('--token', type=str, required=False,
                         help='Personal access token to use. If not provided script will try to read token from '
                              'WEBEX_ACCESS_TOKEN environment variable.')
@@ -90,6 +90,8 @@ async def as_main():
                         help='Don\'t test; actually leave the spaces')
     parser.add_argument('--no_messages', action='store_true', required=False,
                         help='Only leave spaces that have no messages')
+    parser.add_argument('--keep', '-k', type=str, required=False,
+                        help='file with list of spaces to keep')
     args = parser.parse_args()
 
     load_dotenv()
@@ -99,7 +101,25 @@ async def as_main():
         exit(1)
     cutoff = datetime.utcnow() - timedelta(days=args.days)
     cutoff = cutoff.replace(tzinfo=timezone.utc)
+    if args.keep:
+        try:
+            with open(args.keep, mode='r') as f:
+                keep = set(l.strip() for l in f if l)
+        except FileNotFoundError:
+            print(f'file "{args.keep}" not found', file=sys.stderr)
+            exit(1)
+    else:
+        keep = set()
     async with AsWebexSimpleApi(tokens=token, concurrent_requests=100) as api:
+        # check token
+        try:
+            await api.people.me()
+        except AsRestError as e:
+            if e.status == 401:
+                print(f'Token seems to be invalid: {e}', file=sys.stderr)
+                exit(1)
+            raise
+
         print('Listing spaces and teams...')
         spaces, teams_list = await asyncio.gather(api.rooms.list(max=1000), api.teams.list())
         # we can't leave direct spaces anyway; so ignore them from the start
@@ -124,6 +144,11 @@ async def as_main():
             team: Team
             if space.team_id and (team := teams.get(space.team_id, None)) and space.title == team.name:
                 print(f'Don\'t leave general space "{space.title}" of Team "{team.name}"')
+                continue
+
+            # don't leave spaces in keep file
+            if space.title.strip() in keep:
+                print(f'Don\'t leave space "{space.title}", found space name in keep file')
                 continue
 
             # if only spaces with no messages should be considered and we have a message in the space then don't leave
