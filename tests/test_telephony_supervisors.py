@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from tests.base import TestCaseWithLog
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import PatternAction
+from wxc_sdk.common import PatternAction, UserType
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction
 
 
@@ -34,8 +34,6 @@ class TestTelephonySupervisors(TestCaseWithLog):
         agents = list(sapi.available_agents())
         types = set(agent.type for agent in agents)
         print(f'Agent types: {", ".join(str(t) for t in types)}')
-        self.assertFalse(any(agent.type for agent in agents), 'Undocumented attribute "type" in agent')
-        self.assertTrue(all(agent.type is None for agent in agents), 'Agent "type" not needed any more?')
         print(f'Got {len(agents)} agents')
 
     def test_available_supervisors(self):
@@ -80,7 +78,7 @@ class TestTelephonySupervisors(TestCaseWithLog):
         print(f'Got {len(supervisors)} available supervisors')
         print(f'Got {len(supervisor_not_agent)} available supervisors that are not agents')
 
-    def test_create(self):
+    def test_create(self, vl_agent: bool = False):
         """
         create a supervisor with a single agent
         """
@@ -95,9 +93,14 @@ class TestTelephonySupervisors(TestCaseWithLog):
         print(f'New Supervisor: {supervisor.display_name}')
 
         # pick an agent
-        if not agents_and_supervisors.available_agents:
+        if vl_agent:
+            available_agents = [agent for agent in agents_and_supervisors.available_agents
+                                if agent.type == UserType.virtual_line]
+        else:
+            available_agents = agents_and_supervisors.available_agents
+        if not available_agents:
             self.skipTest('No available agents')
-        agent = random.choice(agents_and_supervisors.available_agents)
+        agent = random.choice(available_agents)
 
         # create supervisor with that agent
         sapi.create(id=supervisor.id, agents=[agent.id])
@@ -107,7 +110,9 @@ class TestTelephonySupervisors(TestCaseWithLog):
 
             # make sure the agent is in there
             self.assertEqual(1, len(details))
-            self.assertEqual(agent.id, details[0].id)
+            self.assertEqual(agent.id, details[0].id,
+                             f'agent ID mismatch, expected {base64.b64decode(agent.id + "==").decode()}, actual '
+                             f'{base64.b64decode(details[0].id + "==").decode()}')
 
             # list supervisors and make sure we see the supervisor we created
             supervisor_list = list(sapi.list())
@@ -125,6 +130,12 @@ class TestTelephonySupervisors(TestCaseWithLog):
             sapi.delete(supervisor_id=supervisor.id)
             list_after_delete = list(sapi.list())
             self.assertIsNone(next((sup for sup in list_after_delete if sup.id == supervisor.id), None))
+
+    def test_create_with_vl_as_agent(self):
+        """
+        create a supervisor with a single agent; the agent is a VL
+        """
+        self.test_create(vl_agent=True)
 
     @contextmanager
     def assign_unassign(self):
@@ -168,8 +179,8 @@ class TestTelephonySupervisors(TestCaseWithLog):
             agents: list[AgentOrSupervisor]
 
             # remove 1st agent and add 3rd agent
-            print(f'Removing agent: {agents[0].display_name}')
-            print(f'Adding agent: {agents[2].display_name}')
+            print(f'Removing agent: {agents[0].display_name}, {base64.b64decode(agents[0].id + "==").decode()}')
+            print(f'Adding agent: {agents[2].display_name}, {base64.b64decode(agents[2].id + "==").decode()}')
             sapi.assign_un_assign_agents(supervisor_id=supervisor.id,
                                          agents=[IdAndAction(id=agents[0].id,
                                                              action=PatternAction.delete),
@@ -178,6 +189,9 @@ class TestTelephonySupervisors(TestCaseWithLog):
 
             # verify that the agent list is updated accordingly
             details = list(sapi.details(supervisor.id))
+            print('Agents after update:')
+            print('\n'.join(f'{a.display_name}, {base64.b64decode(a.id + "==").decode()}' for a in details))
+
             self.assertEqual(set(a.id for a in agents[1:]),
                              set(a.id for a in details),
                              'agent list mismatch after update')
