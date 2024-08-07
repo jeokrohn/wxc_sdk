@@ -6,7 +6,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['PSTNServiceType', 'PSTNConnectionOption', 'PSTNApi']
+__all__ = ['PSTNServiceType', 'PSTNConnectionOption', 'PSTNType', 'PSTNApi']
 
 
 class PSTNServiceType(str, Enum):
@@ -26,15 +26,28 @@ class PSTNServiceType(str, Enum):
     mobile_numbers = 'MOBILE_NUMBERS'
 
 
+class PSTNType(str, Enum):
+    #: PSTN connection type for a premises-based connection.
+    local_gateway = 'LOCAL_GATEWAY'
+    #: PSTN connection type for a Non-Integrated Cloud Connected PSTN connection.
+    non_integrated_ccp = 'NON_INTEGRATED_CCP'
+    #: PSTN connection type for an Integrated Cloud Connected PSTN connection. Updating the location with this
+    #: connection type is currently not supported using the API.
+    integrated_ccp = 'INTEGRATED_CCP'
+    #: PSTN connection type for a Cisco PSTN connection. Updating the location with this connection type is currently
+    #: not supported using the API.
+    cisco_pstn = 'CISCO_PSTN'
+
+
 class PSTNConnectionOption(ApiModel):
     #: A unique identifier for the connection.
-    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUElDS1VQL1kyRnNiRkJwWTJ0MWNERT0
     id: Optional[str] = None
     #: The display name of the PSTN connection.
-    #: example: Premises-based PSTN
     display_name: Optional[str] = None
     #: The PSTN services available for this connection.
     pstn_services: Optional[list[PSTNServiceType]] = None
+    #: The PSTN connection type set for the location.
+    pstn_connection_type: Optional[PSTNType] = None
 
 
 class PSTNApi(ApiChild, base='telephony/pstn/locations'):

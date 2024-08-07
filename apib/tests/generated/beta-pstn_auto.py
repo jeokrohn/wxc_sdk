@@ -11,14 +11,14 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['BetaPSTNApi', 'ConnectionOptionsResponse', 'PSTNServiceType']
+__all__ = ['BetaPSTNApi', 'ConnectionOptionsResponse', 'PSTNServiceType', 'PSTNType']
 
 
 class PSTNServiceType(str, Enum):
     #: PSTN service type for geographic numbers.
     geographic_numbers = 'GEOGRAPHIC_NUMBERS'
     #: PSTN service type for toll-free numbers.
-    toll_free_numbers = 'TOLL_FREE_NUMBERS'
+    tollfree_numbers = 'TOLLFREE_NUMBERS'
     #: PSTN service type for business texting.
     business_texting = 'BUSINESS_TEXTING'
     #: PSTN service type for contact center services.
@@ -31,6 +31,19 @@ class PSTNServiceType(str, Enum):
     mobile_numbers = 'MOBILE_NUMBERS'
 
 
+class PSTNType(str, Enum):
+    #: PSTN connection type for a premises-based connection.
+    local_gateway = 'LOCAL_GATEWAY'
+    #: PSTN connection type for a Non-Integrated Cloud Connected PSTN connection.
+    non_integrated_ccp = 'NON_INTEGRATED_CCP'
+    #: PSTN connection type for an Integrated Cloud Connected PSTN connection. Updating the location with this
+    #: connection type is currently not supported using the API.
+    integrated_ccp = 'INTEGRATED_CCP'
+    #: PSTN connection type for a Cisco PSTN connection. Updating the location with this connection type is currently
+    #: not supported using the API.
+    cisco_pstn = 'CISCO_PSTN'
+
+
 class ConnectionOptionsResponse(ApiModel):
     #: A unique identifier for the connection.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUElDS1VQL1kyRnNiRkJwWTJ0MWNERT0
@@ -40,6 +53,8 @@ class ConnectionOptionsResponse(ApiModel):
     display_name: Optional[str] = None
     #: The PSTN services available for this connection.
     pstn_services: Optional[list[PSTNServiceType]] = None
+    #: The PSTN connection type set for the location.
+    pstn_connection_type: Optional[PSTNType] = None
 
 
 class BetaPSTNApi(ApiChild, base='telephony/pstn/locations'):

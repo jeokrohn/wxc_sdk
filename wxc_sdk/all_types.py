@@ -184,7 +184,7 @@ from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList, R
     UpdateNumbersResponse
 from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, OutboundProxy, ResponseStatus, \
     ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
-from wxc_sdk.telephony.pstn import PSTNConnectionOption, PSTNServiceType
+from wxc_sdk.telephony.pstn import PSTNConnectionOption, PSTNServiceType, PSTNType
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction, SupervisorAgentStatus
 from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices, VirtualLineLocation, \
     VirtualLineNumber, VirtualLineNumberPhoneNumber
@@ -285,8 +285,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType', 'OutboundProxy',
            'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
-           'PSTNConnection', 'PSTNConnectionOption', 'PSTNServiceType', 'PTTConnectionType', 'Paging', 'PagingAgent',
-           'ParkedAgainst', 'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody',
+           'PSTNConnection', 'PSTNConnectionOption', 'PSTNServiceType', 'PSTNType', 'PTTConnectionType', 'Paging',
+           'PagingAgent', 'ParkedAgainst', 'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody',
            'PatchMeetingResponse', 'PatchUserOperation', 'PatchUserOperationOp', 'PatternAction', 'PatternAndAction',
            'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress', 'PersonForwardingSetting',
            'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType',
