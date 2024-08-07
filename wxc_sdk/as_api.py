@@ -20791,7 +20791,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
             must_close = False
             # an existing reader
             if not file_name:
-                raise ValueError('upload_as is required')
+                raise ValueError('file_name is required')
         encoder = MultipartEncoder({'fileName': file_name,
                                     'file': (file_name, file, f'image/{file_name.split(".")[-1].lower()}')})
         try:
