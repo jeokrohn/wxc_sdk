@@ -27,6 +27,9 @@ def read_api_blueprint(path: str) -> dict:
     output, error = process.communicate()
 
     error = error.decode().strip()
+    if error and error != 'OK.':
+        print(f'error: {error}', file=sys.stderr)
+        raise RuntimeError(f'error: {error}')
     # print the output
     try:
         data = json.loads(output)
