@@ -37,6 +37,7 @@ Release history
     Deprecated:
 
         * :attr:`HGCallPolicies.business_continuity <wxc_sdk.telephony.huntgroup.HGCallPolicies.business_continuity>`
+- feat: location PSTN settings API: :attr:`api.telephony.pstn <wxc_sdk.telephony.TelephonyApi.pstn>`
 
 1.21.1
 ------
