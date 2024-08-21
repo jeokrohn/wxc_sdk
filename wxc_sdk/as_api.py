@@ -5370,11 +5370,19 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
 class AsMembershipApi(AsApiChild, base='memberships'):
     """
-    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in
-    or create memberships to invite someone to a room. Compliance Officers can now also list memberships for
-    personEmails where the CO is not part of the room.
-    Memberships can also be updated to make someone a moderator, or deleted, to remove someone from the room.
-    Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
+    Manipulating Team Memberships as a Compliance Officer
+
+    As a Compliance Officer, you can indirectly manage the memberships of a team to which you do not belong.
+    Individuals added to the team's general space are automatically considered team members. Therefore, you can
+    utilize your standard privilege of adding individuals to a space or room by adding them to the team's general
+    space.
+
+    The team ID contains the general room ID with a different prefix. To locate the general room ID of a team, you need
+    to decode and recode the team ID using the new prefix. Below is a command-line example for this process. Note that
+    the final sed replacement is used to remove padding characters.
+
+    Example: echo "Y2lzY29zcGFyazovL3VzL1RFQU0vYjQ5ODhmODAtN2QzMS0xMWVkLTk4Y2MtNWY5MTFhZWU1OTA0" | base64 -d | sed
+    's/TEAM/ROOM/' | base64 | sed 's/\=.//'
     """
 
     def list_gen(self, room_id: str = None, person_id: str = None, person_email: str = None,
@@ -21536,27 +21544,26 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
 
     async def update(self, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
         """
-        Get Location Voicemail
+        Update Location Voicemail
 
-        Retrieve voicemail settings for a specific location.
+        Update the voicemail settings for a specific location.
 
-        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
+        Location voicemail settings allows you to enable voicemail transcription for a specific location.
 
-        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
+        Updating a location's voicemail settings requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
-
-        :param location_id: Retrieve access codes details for this location.
+        :param location_id: Update voicemail settings for this location.
         :type location_id: str
         :param settings: new settings
         :type settings: :class:`LocationVoiceMailSettings`
-        :param org_id: Retrieve access codes details for a customer location in this organization
+        :param org_id: Update voicemail settings for this organization.
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = settings.model_dump_json()
-        await self.put(url, params=params, data=body)
+        body = settings.update()
+        await self.put(url, params=params, json=body)
 
 
 class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/locations'):

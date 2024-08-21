@@ -16,6 +16,14 @@ class LocationVoiceMailSettings(ApiModel):
     #: Set to true to enable voicemail transcription.
     voicemail_transcription_enabled: Optional[bool] = None
 
+    def update(self)->dict:
+        """
+        Data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True)
+
 
 class LocationVoicemailSettingsApi(ApiChild, base='telephony/config/locations'):
     """
@@ -65,24 +73,23 @@ class LocationVoicemailSettingsApi(ApiChild, base='telephony/config/locations'):
 
     def update(self, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
         """
-        Get Location Voicemail
+        Update Location Voicemail
 
-        Retrieve voicemail settings for a specific location.
+        Update the voicemail settings for a specific location.
 
-        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
+        Location voicemail settings allows you to enable voicemail transcription for a specific location.
 
-        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
+        Updating a location's voicemail settings requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
-
-        :param location_id: Retrieve access codes details for this location.
+        :param location_id: Update voicemail settings for this location.
         :type location_id: str
         :param settings: new settings
         :type settings: :class:`LocationVoiceMailSettings`
-        :param org_id: Retrieve access codes details for a customer location in this organization
+        :param org_id: Update voicemail settings for this organization.
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = settings.model_dump_json()
-        self.put(url, params=params, data=body)
+        body = settings.update()
+        self.put(url, params=params, json=body)

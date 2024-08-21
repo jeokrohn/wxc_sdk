@@ -990,7 +990,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.voicemail.read <wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.read>`
         Get Location Voicemail
    * - :meth:`api.telephony.location.voicemail.update <wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.update>`
-        Get Location Voicemail
+        Update Location Voicemail
    * - :meth:`api.telephony.locations.call_intercept_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.call_intercept_available_phone_numbers>`
         Get Location Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.locations.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
@@ -1054,7 +1054,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.voicemail.read <wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.read>`
         Get Location Voicemail
    * - :meth:`api.telephony.locations.voicemail.update <wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.update>`
-        Get Location Voicemail
+        Update Location Voicemail
    * - :meth:`api.telephony.ms_teams.configure <wxc_sdk.person_settings.msteams.OrgMSTeamsSettingApi.configure>`
         Update an Organization's MS Teams Setting
    * - :meth:`api.telephony.ms_teams.read <wxc_sdk.person_settings.msteams.OrgMSTeamsSettingApi.read>`
