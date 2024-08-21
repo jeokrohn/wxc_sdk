@@ -16432,13 +16432,17 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         """
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
         irrespective of its status.
+
         The public API only supports initiating jobs which move numbers between locations.
+
         Via Control Hub they can initiate both the move and delete, so this listing can show both.
-        This API requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
+        :return: Generator yielding :class:`NumberJob` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -16449,42 +16453,77 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         """
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
         irrespective of its status.
+
         The public API only supports initiating jobs which move numbers between locations.
+
         Via Control Hub they can initiate both the move and delete, so this listing can show both.
-        This API requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
+        :return: Generator yielding :class:`NumberJob` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('manageNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=NumberJob, params=params)]
 
-    async def initiate_job(self, operation: str, target_location_id: str,
-                     number_list: List[NumberItem]) -> NumberJob:
+    async def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
+                     number_usage_type: str = None) -> NumberJob:
         """
-        Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
-        actions internally, only MOVE is supported publicly.
-        In order to move a number,
-        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move from Cisco PSTN to a location
-        with Cloud Connected PSTN.
+        Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
+        `NUMBER_USAGE_CHANGE`.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        **Notes**
+        Although the job can internally perform the `DELETE` action, only the `MOVE` and `NUMBER_USAGE_CHANGE`
+        operations are publicly supported.
+
+        Although the `numbers` field is an array, we currently only support a single number with each request.
+
+        Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
+        progress the API call will receive a `409` http status code.
+
+        In order to move a number,
+
+            * The number must be unassigned.
+            * Both locations must have the same PSTN Connection Type.
+            * Both locations must have the same PSTN Provider.
+            * Both locations have to be in the same country.
+
+        For example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling
+        Plan to a location with Cloud Connected PSTN.
+
+        In order to change the number usage,
+
+            * The number must be unassigned.
+            * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
+            * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
 
         :param operation: Indicates the kind of operation to be carried out.
         :type operation: str
-        :param target_location_id: The target location within organization where the unassigned numbers will be moved
-            from the source location.
-        :type target_location_id: str
-        :param number_list: Indicates the numbers to be moved from source to target locations.
+        :param number_list: Numbers on which to execute the operation.
         :type number_list: list[NumberItem]
+        :param target_location_id: Mandatory for a `MOVE` operation. The target location within organization where the
+            unassigned numbers will be moved from the source location.
+        :type target_location_id: str
+        :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
+        :type number_usage_type: str
+        :rtype: :class:`NumberJob`
         """
-        body = InitiateMoveNumberJobsBody(operation=operation,
-                                          target_location_id=target_location_id,
-                                          number_list=number_list)
+        body = dict()
+        body['operation'] = operation
+        if target_location_id is not None:
+            body['targetLocationId'] = target_location_id
+        if number_usage_type is not None:
+            body['numberUsageType'] = number_usage_type
+        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True,
+                                                                       exclude_none=True)
         url = self.ep('manageNumbers')
-        data = await super().post(url=url, data=body.model_dump_json())
+        data = await super().post(url=url, json=body)
         return NumberJob.model_validate(data)
 
     async def status(self, job_id: str = None) -> NumberJob:
@@ -20964,6 +21003,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         return self.ep(f'{location_id}/numbers{path}')
 
     async def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
+            number_usage_type: NumberUsageType = None,
             state: NumberState = NumberState.inactive, subscription_id: str = None, org_id: str = None):
         """
         Add Phone Numbers to a location
@@ -20990,6 +21030,8 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         :type phone_numbers: list[str]
         :param number_type: Type of the number. Required for `MOBILE` number type.
         :type number_type: TelephoneNumberType
+        :param number_usage_type: Type of usage expected for the number.
+        :type number_usage_type: NumberUsageType
         :param state: Reflects the state of the number. By default, the state of a number is set to `ACTIVE` for DID
             and toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
         :type state: NumberState
@@ -21004,6 +21046,8 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         body['phoneNumbers'] = phone_numbers
         if number_type is not None:
             body['numberType'] = enum_str(number_type)
+        if number_usage_type is not None:
+            body['numberUsageType'] = enum_str(number_usage_type)
         if state is not None:
             body['state'] = enum_str(state)
         if subscription_id is not None:
@@ -21053,6 +21097,8 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
 
         Removing a phone number from a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
+
+        A location's main number cannot be removed.
 
         This API is only supported for non-integrated PSTN connection types of Local
         Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection

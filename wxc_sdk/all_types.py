@@ -172,7 +172,7 @@ from wxc_sdk.telephony.jobs import ApplyLineKeyTemplateJobDetails, ErrorMessageO
 from wxc_sdk.telephony.location import CallingLineId, PSTNConnection, TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
-from wxc_sdk.telephony.location.numbers import TelephoneNumberType
+from wxc_sdk.telephony.location.numbers import NumberUsageType, TelephoneNumberType
 from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 from wxc_sdk.telephony.organisation_vm import OrganisationVoicemailSettings, OrganisationVoicemailSettingsAPI
 from wxc_sdk.telephony.paging import Paging, PagingAgent
@@ -281,7 +281,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation', 'NoteType', 'Notification',
            'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob',
            'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType',
-           'OfficeNumber', 'OnboardingMethod', 'OrgComplianceAnnouncement', 'OrgMSTeamsSettings',
+           'NumberUsageType', 'OfficeNumber', 'OnboardingMethod', 'OrgComplianceAnnouncement', 'OrgMSTeamsSettings',
            'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
            'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',

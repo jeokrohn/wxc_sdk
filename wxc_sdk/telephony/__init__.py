@@ -103,6 +103,8 @@ class NumberListPhoneNumber(ApiModel):
     routing_profile: Optional[str] = None
     location: IdAndName
     owner: Optional[NumberOwner] = None
+    #: Phone number is a service number.
+    is_service_number: Optional[bool] = None
 
 
 class NumberType(str, Enum):

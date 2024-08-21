@@ -880,7 +880,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`
         Lists all error details of Manage Numbers job
    * - :meth:`api.telephony.jobs.manage_numbers.initiate_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.initiate_job>`
-        Starts the numbers move from one location to another location
+        Starts the execution of an operation on a set of numbers
    * - :meth:`api.telephony.jobs.manage_numbers.list <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list>`
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
    * - :meth:`api.telephony.jobs.manage_numbers.pause <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.pause>`

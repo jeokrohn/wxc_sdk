@@ -293,6 +293,8 @@ class NumberJob(ApiModel):
     job_execution_status: Optional[list[JobExecutionStatus]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
+    #: Most recent exit code of the job at the time of invocation.
+    latest_execution_exit_code: Optional[str] = None
     #: Indicates operation type that was carried out.
     operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
@@ -349,42 +351,77 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         """
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
         irrespective of its status.
+
         The public API only supports initiating jobs which move numbers between locations.
+
         Via Control Hub they can initiate both the move and delete, so this listing can show both.
-        This API requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
+        :return: Generator yielding :class:`NumberJob` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('manageNumbers')
         return self.session.follow_pagination(url=url, model=NumberJob, params=params)
 
-    def initiate_job(self, operation: str, target_location_id: str,
-                     number_list: List[NumberItem]) -> NumberJob:
+    def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
+                     number_usage_type: str = None) -> NumberJob:
         """
-        Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
-        actions internally, only MOVE is supported publicly.
-        In order to move a number,
-        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move from Cisco PSTN to a location
-        with Cloud Connected PSTN.
+        Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
+        `NUMBER_USAGE_CHANGE`.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        **Notes**
+        Although the job can internally perform the `DELETE` action, only the `MOVE` and `NUMBER_USAGE_CHANGE`
+        operations are publicly supported.
+
+        Although the `numbers` field is an array, we currently only support a single number with each request.
+
+        Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
+        progress the API call will receive a `409` http status code.
+
+        In order to move a number,
+
+            * The number must be unassigned.
+            * Both locations must have the same PSTN Connection Type.
+            * Both locations must have the same PSTN Provider.
+            * Both locations have to be in the same country.
+
+        For example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling
+        Plan to a location with Cloud Connected PSTN.
+
+        In order to change the number usage,
+
+            * The number must be unassigned.
+            * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
+            * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
 
         :param operation: Indicates the kind of operation to be carried out.
         :type operation: str
-        :param target_location_id: The target location within organization where the unassigned numbers will be moved
-            from the source location.
-        :type target_location_id: str
-        :param number_list: Indicates the numbers to be moved from source to target locations.
+        :param number_list: Numbers on which to execute the operation.
         :type number_list: list[NumberItem]
+        :param target_location_id: Mandatory for a `MOVE` operation. The target location within organization where the
+            unassigned numbers will be moved from the source location.
+        :type target_location_id: str
+        :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
+        :type number_usage_type: str
+        :rtype: :class:`NumberJob`
         """
-        body = InitiateMoveNumberJobsBody(operation=operation,
-                                          target_location_id=target_location_id,
-                                          number_list=number_list)
+        body = dict()
+        body['operation'] = operation
+        if target_location_id is not None:
+            body['targetLocationId'] = target_location_id
+        if number_usage_type is not None:
+            body['numberUsageType'] = number_usage_type
+        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True,
+                                                                       exclude_none=True)
         url = self.ep('manageNumbers')
-        data = super().post(url=url, data=body.model_dump_json())
+        data = super().post(url=url, json=body)
         return NumberJob.model_validate(data)
 
     def status(self, job_id: str = None) -> NumberJob:

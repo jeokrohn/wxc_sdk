@@ -18,15 +18,16 @@ __all__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject',
            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasState', 'ItemObject', 'JobExecutionStatusObject',
            'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
            'NumberObjectLocation', 'NumberObjectOwner', 'NumberOwnerType', 'NumberState', 'NumberStateOptions',
-           'NumberTypeOptions', 'NumbersApi', 'StartJobResponse', 'Status', 'StepExecutionStatusesObject',
-           'TelephonyType', 'ValidateNumbersResponse']
+           'NumberTypeOptions', 'NumberUsageTypeOptions', 'NumbersApi', 'StartJobResponse',
+           'StartJobResponseLatestExecutionExitCode', 'Status', 'StepExecutionStatusesObject', 'TelephonyType',
+           'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
-    #: The source location of the numbers to be moved.
+    #: The source location of the numbers on which to execute the operation.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzUyMjNiYmVkLTQyYzktNDU0ZC1hMWYzLTdmYWQ1Y2M3ZTZlMw
     location_id: Optional[str] = None
-    #: Indicates the numbers to be moved from one location to another location.
+    #: The numbers on which to execute the operation.
     numbers: Optional[list[str]] = None
 
 
@@ -119,6 +120,19 @@ class JobExecutionStatusObject1(ApiModel):
     time_elapsed: Optional[str] = None
 
 
+class StartJobResponseLatestExecutionExitCode(str, Enum):
+    #: Job is in progress.
+    unknown = 'UNKNOWN'
+    #: Job has completed successfully.
+    completed = 'COMPLETED'
+    #: Job has failed.
+    failed = 'FAILED'
+    #: Job has been stopped.
+    stopped = 'STOPPED'
+    #: Job has completed with errors.
+    completed_with_errors = 'COMPLETED_WITH_ERRORS'
+
+
 class StartJobResponse(ApiModel):
     #: Job name.
     name: Optional[str] = None
@@ -141,6 +155,9 @@ class StartJobResponse(ApiModel):
     job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
+    #: Most recent exit code of the job at the time of invocation.
+    #: example: COMPLETED
+    latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
     #: Indicates operation type that was carried out.
     operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
@@ -274,6 +291,9 @@ class NumberObject(ApiModel):
     toll_free_number: Optional[bool] = None
     location: Optional[NumberObjectLocation] = None
     owner: Optional[NumberObjectOwner] = None
+    #: Phone number is a service number.
+    #: example: True
+    is_service_number: Optional[bool] = None
 
 
 class NumberTypeOptions(str, Enum):
@@ -283,6 +303,13 @@ class NumberTypeOptions(str, Enum):
     did = 'DID'
     #: Indicates a mobile number.
     mobile = 'MOBILE'
+
+
+class NumberUsageTypeOptions(str, Enum):
+    #: Indicates standard/user number usage (default).
+    none_ = 'NONE'
+    #: Indicates the number will be used in high-volume service, for example, Contact Center.
+    service = 'SERVICE'
 
 
 class NumberStateOptions(str, Enum):
@@ -328,6 +355,9 @@ class JobIdResponseObject(ApiModel):
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
+    #: Most recent exit code of the job at the time of invocation.
+    #: example: COMPLETED
+    latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
     #: Indicates the operation type that was carried out.
     operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
@@ -395,8 +425,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
     """
 
     def add_phone_numbers_to_a_location(self, location_id: str, phone_numbers: list[str],
-                                        number_type: NumberTypeOptions = None, state: NumberStateOptions = None,
-                                        subscription_id: str = None, org_id: str = None):
+                                        number_type: NumberTypeOptions = None,
+                                        number_usage_type: NumberUsageTypeOptions = None,
+                                        state: NumberStateOptions = None, subscription_id: str = None,
+                                        org_id: str = None):
         """
         Add Phone Numbers to a location
 
@@ -426,6 +458,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type phone_numbers: list[str]
         :param number_type: Type of the number. Required for `MOBILE` number type.
         :type number_type: NumberTypeOptions
+        :param number_usage_type: Type of usage expected for the number.
+        :type number_usage_type: NumberUsageTypeOptions
         :param state: Reflects the state of the number. By default, the state of a number is set to `ACTIVE` for DID
             and toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
         :type state: NumberStateOptions
@@ -442,6 +476,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
         body['phoneNumbers'] = phone_numbers
         if number_type is not None:
             body['numberType'] = enum_str(number_type)
+        if number_usage_type is not None:
+            body['numberUsageType'] = enum_str(number_usage_type)
         if state is not None:
             body['state'] = enum_str(state)
         if subscription_id is not None:
@@ -497,6 +533,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         Removing a phone number from a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
+
+        A location's main number cannot be removed.
 
         <br/>
 
@@ -680,23 +718,26 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep('jobs/numbers/manageNumbers')
         return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items', params=params)
 
-    def initiate_move_number_jobs(self, operation: str, target_location_id: str,
-                                  number_list: list[NumberItem]) -> StartJobResponse:
+    def initiate_number_jobs(self, operation: str, number_list: list[NumberItem], target_location_id: str = None,
+                             number_usage_type: str = None) -> StartJobResponse:
         """
-        Initiate Move Number Jobs
+        Initiate Number Jobs
 
-        Starts the numbers move from one location to another location.
+        Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
+        `NUMBER_USAGE_CHANGE`.
+        <br/>
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        <br/>
 
         **Notes**
-        Although jobs can do both MOVE and DELETE actions internally, only MOVE is supported publicly.
-        Although the `numbers` field is an array we currently can only move a single number with each request.
+        Although the job can internally perform the `DELETE` action, only the `MOVE` and `NUMBER_USAGE_CHANGE`
+        operations are publicly supported.
+        Although the `numbers` field is an array, we currently only support a single number with each request.
         Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
         progress the API call will receive a `409` http status code.
 
         <br/>
-
         In order to move a number,
-
         <br/>
 
         * The number must be unassigned.
@@ -714,20 +755,33 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <br/>
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        In order to change the number usage,
+
+        <br/>
+
+        * The number must be unassigned.
+
+        * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
+
+        * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
 
         :param operation: Indicates the kind of operation to be carried out.
         :type operation: str
-        :param target_location_id: The target location within organization where the unassigned numbers will be moved
-            from the source location.
-        :type target_location_id: str
-        :param number_list: Indicates the numbers to be moved from source to target locations.
+        :param number_list: Numbers on which to execute the operation.
         :type number_list: list[NumberItem]
+        :param target_location_id: Mandatory for a `MOVE` operation. The target location within organization where the
+            unassigned numbers will be moved from the source location.
+        :type target_location_id: str
+        :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
+        :type number_usage_type: str
         :rtype: :class:`StartJobResponse`
         """
         body = dict()
         body['operation'] = operation
-        body['targetLocationId'] = target_location_id
+        if target_location_id is not None:
+            body['targetLocationId'] = target_location_id
+        if number_usage_type is not None:
+            body['numberUsageType'] = number_usage_type
         body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('jobs/numbers/manageNumbers')
         data = super().post(url, json=body)

@@ -3,7 +3,7 @@ from ...base import enum_str
 from ...common import NumberState
 from ...base import SafeEnum as Enum
 
-__all__ = ['TelephoneNumberType', 'LocationNumbersApi']
+__all__ = ['TelephoneNumberType', 'NumberUsageType', 'LocationNumbersApi']
 
 
 class TelephoneNumberType(str, Enum):
@@ -13,6 +13,13 @@ class TelephoneNumberType(str, Enum):
     did = 'DID'
     #: Indicates a mobile number.
     mobile = 'MOBILE'
+
+
+class NumberUsageType(str, Enum):
+    #: Indicates standard/user number usage (default).
+    none_ = 'NONE'
+    #: Indicates the number will be used in high-volume service, for example, Contact Center.
+    service = 'SERVICE'
 
 
 class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
@@ -25,6 +32,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         return self.ep(f'{location_id}/numbers{path}')
 
     def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
+            number_usage_type: NumberUsageType = None,
             state: NumberState = NumberState.inactive, subscription_id: str = None, org_id: str = None):
         """
         Add Phone Numbers to a location
@@ -51,6 +59,8 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         :type phone_numbers: list[str]
         :param number_type: Type of the number. Required for `MOBILE` number type.
         :type number_type: TelephoneNumberType
+        :param number_usage_type: Type of usage expected for the number.
+        :type number_usage_type: NumberUsageType
         :param state: Reflects the state of the number. By default, the state of a number is set to `ACTIVE` for DID
             and toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
         :type state: NumberState
@@ -65,6 +75,8 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         body['phoneNumbers'] = phone_numbers
         if number_type is not None:
             body['numberType'] = enum_str(number_type)
+        if number_usage_type is not None:
+            body['numberUsageType'] = enum_str(number_usage_type)
         if state is not None:
             body['state'] = enum_str(state)
         if subscription_id is not None:
@@ -114,6 +126,8 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
 
         Removing a phone number from a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
+
+        A location's main number cannot be removed.
 
         This API is only supported for non-integrated PSTN connection types of Local
         Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
