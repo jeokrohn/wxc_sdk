@@ -20,6 +20,7 @@ from .calls import CallsApi
 from .conference import ConferenceControlsApi
 from .dect_devices import DECTDevicesApi
 from .devices import TelephonyDevicesApi
+from .emergency_services import OrgEmergencyServicesApi
 from .huntgroup import HuntGroupApi
 from .jobs import JobsApi
 from .location import TelephonyLocationApi
@@ -619,6 +620,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     call_recording: CallRecordingSettingsApi
     conference: ConferenceControlsApi
     dect_devices: DECTDevicesApi
+    #: emergency services
+    emergency_services: OrgEmergencyServicesApi
     #: WxC device operations
     devices: TelephonyDevicesApi
     huntgroup: HuntGroupApi
@@ -663,6 +666,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.conference = ConferenceControlsApi(session=session)
         self.dect_devices = DECTDevicesApi(session=session)
         self.devices = TelephonyDevicesApi(session=session)
+        self.emergency_services = OrgEmergencyServicesApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
         self.jobs = JobsApi(session=session)
         self.location = TelephonyLocationApi(session=session)

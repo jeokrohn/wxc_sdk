@@ -4,6 +4,7 @@ from typing import Optional, List
 
 from pydantic import Field
 
+from .emergency_services import LocationEmergencyServicesApi
 from .intercept import LocationInterceptApi
 from .internal_dialing import InternalDialingApi
 from .moh import LocationMoHApi
@@ -92,6 +93,8 @@ class TelephonyLocation(ApiModel):
 
 @dataclass(init=False)
 class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
+    #: emergency services
+    emergency_services: LocationEmergencyServicesApi
     #: call intercept settings
     intercept: LocationInterceptApi
     #: internal dialing settings
@@ -107,6 +110,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
+        self.emergency_services = LocationEmergencyServicesApi(session=session)
         self.intercept = LocationInterceptApi(session=session)
         self.internal_dialing = InternalDialingApi(session=session)
         self.moh = LocationMoHApi(session=session)

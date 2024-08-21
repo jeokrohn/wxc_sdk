@@ -6,6 +6,14 @@ wxc\_sdk.telephony.location package
    :undoc-members:
    :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   wxc_sdk.telephony.location.emergency_services
+
 Submodules
 ----------
 

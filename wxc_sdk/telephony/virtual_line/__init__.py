@@ -17,6 +17,7 @@ from ...person_settings.call_waiting import CallWaitingApi
 from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
 from ...person_settings.common import ApiSelector
+from ...person_settings.ecbn import UserEmergencyServicesApi
 from ...person_settings.forwarding import PersonForwardingApi
 from ...person_settings.moh import MusicOnHoldApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
@@ -112,6 +113,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     call_waiting: CallWaitingApi
     #: caller id settings
     caller_id: CallerIdApi
+    #: ECBN settings
+    ecbn: UserEmergencyServicesApi
     #: forwarding settings
     forwarding: PersonForwardingApi
     #: music on hold settings
@@ -137,6 +140,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.ecbn = UserEmergencyServicesApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)

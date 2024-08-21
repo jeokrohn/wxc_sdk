@@ -27,6 +27,7 @@ Submodules
    wxc_sdk.person_settings.calling_behavior
    wxc_sdk.person_settings.common
    wxc_sdk.person_settings.dnd
+   wxc_sdk.person_settings.ecbn
    wxc_sdk.person_settings.exec_assistant
    wxc_sdk.person_settings.forwarding
    wxc_sdk.person_settings.hoteling
