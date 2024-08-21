@@ -376,12 +376,11 @@ class AppliedServiceTranslationPattern(ApiModel):
 class ConfigurationLevel(str, Enum):
     #: The applied services at the location level.
     location = 'LOCATION'
-    #: The applied services at the user level.
-    # user = 'USER' - seems like this is actually PEOPLE?; issue # 178
     #: The applied services at the place level.
     place = 'PLACE'
     #: The applied services at the virtual line level.
     virtual_line = 'VIRTUAL_LINE'
+    #: The applied services at the people level.
     people = 'PEOPLE'
 
 
