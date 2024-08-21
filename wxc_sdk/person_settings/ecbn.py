@@ -24,6 +24,8 @@ class ECBNEffectiveLevel(str, Enum):
     location_ecbn = 'LOCATION_ECBN'
     #: A location’s main number that is suitable for when the location has a single building with a single floor.
     location_number = 'LOCATION_NUMBER'
+    #: Assigned number of a user or workspace in the location.
+    location_member_number = 'LOCATION_MEMBER_NUMBER'
     #: When no other option is selected.
     none_ = 'NONE'
 

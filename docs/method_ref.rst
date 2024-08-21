@@ -947,8 +947,12 @@ The method name is a link to the method documentation.
         Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.location.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
         Get the List of Phone Numbers Available for External Caller ID
+   * - :meth:`api.telephony.location.read_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.read_ecbn>`
+        Get a Location Emergency callback number
    * - :meth:`api.telephony.location.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Webex Calling details for a location, by ID
+   * - :meth:`api.telephony.location.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
+        Update a Location Emergency callback number
    * - :meth:`api.telephony.location.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
         Validate extensions for a specific location
    * - :meth:`api.telephony.location.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
@@ -1007,8 +1011,12 @@ The method name is a link to the method documentation.
         Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.locations.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
         Get the List of Phone Numbers Available for External Caller ID
+   * - :meth:`api.telephony.locations.read_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.read_ecbn>`
+        Get a Location Emergency callback number
    * - :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Webex Calling details for a location, by ID
+   * - :meth:`api.telephony.locations.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
+        Update a Location Emergency callback number
    * - :meth:`api.telephony.locations.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
         Validate extensions for a specific location
    * - :meth:`api.telephony.locations.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`

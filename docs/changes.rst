@@ -43,6 +43,10 @@ Release history
 - feat: new API, user ECBN settings :attr:`api.person_settings.ecbn <wxc_sdk.person_settings.PersonSettingsApi.ecbn>`
 - feat: new API, virtual line ECBN settings :attr:`api.telephony.virtual_lines.ecbn <wxc_sdk.telephony.virtual_line.VirtualLinesApi.ecbn>`
 - feat: new API, workspace ECBN settings :attr:`api.workspace_settings.ecbn <wxc_sdk.workspace_settings.WorkspaceSettingsApi.ecbn>`
+- feat: new methods:
+
+   * :meth:`api.telephony.locations.read_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.read_ecbn>`
+   * :meth:`api.telephony.locations.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
 
 1.21.1
 ------

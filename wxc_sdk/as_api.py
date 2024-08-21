@@ -21894,6 +21894,61 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.session.ep(f'{location_id}/actions/modifyAnnouncementLanguage/invoke')
         await self.put(url, json=body, params=params)
 
+    async def read_ecbn(self, location_id: str,
+                  org_id: str = None) -> LocationECBN:
+        """
+        Get a Location Emergency callback number
+
+        Get location emergency callback number.
+
+        * To retrieve location callback number requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Update location attributes for this location.
+        :type location_id: str
+        :param org_id: Update location attributes for this organization.
+        :type org_id: str
+        :rtype: :class:`LocationECBN`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/features/emergencyCallbackNumber')
+        data = await super().get(url, params=params)
+        r = LocationECBN.model_validate(data)
+        return r
+
+    async def update_ecbn(self, location_id: str, selected: CallBackSelected,
+                    location_member_id: str = None, org_id: str = None):
+        """
+        Update a Location Emergency callback number
+
+        Update details for a location emergency callback number.
+
+        * Updating a location callback number requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Update location attributes for this location.
+        :type location_id: str
+        :param selected: Selected number type to configure emergency call back.
+        :type selected: CallBackSelected
+        :param location_member_id: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is
+            selected.
+        :type location_member_id: str
+        :param org_id: Update location attributes for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['selected'] = enum_str(selected)
+        if location_member_id is not None:
+            body['locationMemberId'] = location_member_id
+        url = self.ep(f'{location_id}/features/emergencyCallbackNumber')
+        await super().put(url, params=params, json=body)
+
     async def device_settings(self, location_id: str, org_id: str = None) -> DeviceCustomization:
         """
         Get device override settings for a location.

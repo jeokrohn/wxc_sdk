@@ -12,13 +12,17 @@ from .numbers import LocationNumbersApi
 from .receptionist_contacts import ReceptionistContactsDirectoryApi
 from .vm import LocationVoicemailSettingsApi
 from ...api_child import ApiChild
-from ...base import ApiModel, to_camel
-from ...common import ValidateExtensionsResponse, RouteType, DeviceCustomization
+from ...base import ApiModel, to_camel, enum_str
+from ...base import SafeEnum as Enum
+from ...common import ValidateExtensionsResponse, RouteType, DeviceCustomization, UserType
 from ...locations import Location
 from ...person_settings.available_numbers import AvailableNumber
+from ...person_settings.ecbn import ECBNEffectiveLevel, ECBNQuality
 from ...rest import RestSession
 
-__all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'TelephonyLocationApi']
+__all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation',
+           'CallBackSelected', 'LocationECBNLocation', 'LocationECBNLocationMember', 'LocationECBN',
+           'TelephonyLocationApi']
 
 
 class CallingLineId(ApiModel):
@@ -89,6 +93,56 @@ class TelephonyLocation(ApiModel):
         if not self.connection:
             data.pop('connection', None)
         return data
+
+
+class CallBackSelected(str, Enum):
+    #: Location TN.
+    location_number = 'LOCATION_NUMBER'
+    #: Assigned number of a user or workspace in the location.
+    location_member_number = 'LOCATION_MEMBER_NUMBER'
+
+
+class LocationECBNLocation(ApiModel):
+    #: The location DN.
+    phone_number: Optional[str] = None
+    #: The name of the location.
+    name: Optional[str] = None
+    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
+    #: fallback rules as necessary.
+    effective_level: Optional[ECBNEffectiveLevel] = None
+    #: Location calling line ID (CLID) number. Avaliable only when number is present and quality would be invalid.
+    effective_value: Optional[str] = None
+    #: Used to represent whether a number is a recommended ECBN.
+    quality: Optional[ECBNQuality] = None
+
+
+class LocationECBNLocationMember(ApiModel):
+    #: The member DN.
+    phone_number: Optional[str] = None
+    #: The member first name.
+    first_name: Optional[str] = None
+    #: The member last name. Always contains `.` if the member is a place.
+    last_name: Optional[str] = None
+    #: Member ID of user/place within the location.
+    member_id: Optional[str] = None
+    #: Member Type.
+    member_type: Optional[UserType] = None
+    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
+    #: fallback rules as necessary.
+    effective_level: Optional[ECBNEffectiveLevel] = None
+    #: Location CLID number. Avaliable only when number is present and quality would be invalid.
+    effective_value: Optional[str] = None
+    #: Used to represent whether a number is a recommended ECBN.
+    quality: Optional[ECBNQuality] = None
+
+
+class LocationECBN(ApiModel):
+    #: Data relevant to this location.
+    location_info: Optional[LocationECBNLocation] = None
+    #: Data relevant to the user/place (member) selected for ECBN.
+    location_member_info: Optional[LocationECBNLocationMember] = None
+    #: Selected number type to configure emergency call back.
+    selected: Optional[CallBackSelected] = None
 
 
 @dataclass(init=False)
@@ -298,6 +352,61 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
             body['serviceEnabled'] = service_enabled
         url = self.session.ep(f'{location_id}/actions/modifyAnnouncementLanguage/invoke')
         self.put(url, json=body, params=params)
+
+    def read_ecbn(self, location_id: str,
+                  org_id: str = None) -> LocationECBN:
+        """
+        Get a Location Emergency callback number
+
+        Get location emergency callback number.
+
+        * To retrieve location callback number requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Update location attributes for this location.
+        :type location_id: str
+        :param org_id: Update location attributes for this organization.
+        :type org_id: str
+        :rtype: :class:`LocationECBN`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/features/emergencyCallbackNumber')
+        data = super().get(url, params=params)
+        r = LocationECBN.model_validate(data)
+        return r
+
+    def update_ecbn(self, location_id: str, selected: CallBackSelected,
+                    location_member_id: str = None, org_id: str = None):
+        """
+        Update a Location Emergency callback number
+
+        Update details for a location emergency callback number.
+
+        * Updating a location callback number requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Update location attributes for this location.
+        :type location_id: str
+        :param selected: Selected number type to configure emergency call back.
+        :type selected: CallBackSelected
+        :param location_member_id: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is
+            selected.
+        :type location_member_id: str
+        :param org_id: Update location attributes for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['selected'] = enum_str(selected)
+        if location_member_id is not None:
+            body['locationMemberId'] = location_member_id
+        url = self.ep(f'{location_id}/features/emergencyCallbackNumber')
+        super().put(url, params=params, json=body)
 
     def device_settings(self, location_id: str, org_id: str = None) -> DeviceCustomization:
         """
