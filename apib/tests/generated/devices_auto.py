@@ -183,8 +183,8 @@ class DevicesApi(ApiChild, base='devices'):
     * Adding, updating, or deleting all devices in an organization requires an administrator auth token with the
     `spark-admin:devices_write` scope.
     
-    * Generating an activation code requires an auth token with the `identity:placeonetimepassword_create` and
-    `spark-admin:devices_write` scopes.
+    * Generating an activation code requires an auth token with the `spark-admin:devices_write` scope, and one of the
+    `identity:placeonetimepassword_create` or `identity:one_time_password` scopes.
     """
 
     def list_devices(self, display_name: str = None, person_id: str = None, workspace_id: str = None,
@@ -397,8 +397,9 @@ class DevicesApi(ApiChild, base='devices'):
         Create a Device Activation Code
 
         Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by
-        `personId`. This requires an auth token with the `identity:placeonetimepassword_create` and
-        `spark-admin:devices_write` scopes.
+        `personId`. This requires an auth token with the `spark-admin:devices_write` scope, and either
+        `identity:placeonetimepassword_create` (allows creating activation codes for workspaces only) or
+        `identity:one_time_password` (allows creating activation codes for workspaces or persons).
 
         * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
         calling type to `freeCalling`.
@@ -418,7 +419,8 @@ class DevicesApi(ApiChild, base='devices'):
         :type workspace_id: str
         :param person_id: The ID of the person who will own the device once activated.
         :type person_id: str
-        :param model: The model of the device being created.
+        :param model: The model of the device being created. The corresponding device model display name sometimes
+            called the product name, can also be used to specify the model.
         :type model: str
         :param org_id: The organization associated with the activation code generated. If left empty, the organization
             associated with the caller will be used.
@@ -463,7 +465,8 @@ class DevicesApi(ApiChild, base='devices'):
 
         :param mac: The MAC address of the device being created.
         :type mac: str
-        :param model: The model of the device being created.
+        :param model: The model of the device being created. The corresponding device model display name sometimes
+            called the product name, can also be used to specify the model.
         :type model: str
         :param workspace_id: The ID of the workspace where the device will be created.
         :type workspace_id: str
