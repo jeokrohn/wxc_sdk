@@ -5,7 +5,7 @@ from pydantic import Field
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['UserEmergencyServicesApi', 'CallBackMemberType', 'ECBNQuality',
+__all__ = ['ECBNApi', 'CallBackMemberType', 'ECBNQuality',
            'ECBNDependencies', 'PersonECBN',
            'ECBNDefault', 'PersonECBNDirectLine',
            'ECBNLocationMember', 'ECBNEffectiveLevel',
@@ -170,7 +170,7 @@ class ECBNDependencies(ApiModel):
     dependent_member_count: Optional[int] = None
 
 
-class UserEmergencyServicesApi(PersonSettingsApiChild):
+class ECBNApi(PersonSettingsApiChild):
     """
     Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
     numbers, such as extension-only users, must be set up with accurate Emergency Callback Numbers (ECBN) to enable
@@ -187,9 +187,9 @@ class UserEmergencyServicesApi(PersonSettingsApiChild):
     def read(self, entity_id: str,
              org_id: str = None) -> PersonECBN:
         """
-        Get a Person's Emergency Callback Number
+        Get an entity's Emergency Callback Number
 
-        Retrieve a person's emergency callback number settings. Also applies to workspaces and virtual lines.
+        Retrieve an entity's emergency callback number settings. Also applies to workspaces and virtual lines.
 
         Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
         numbers, such as extension-only users, must be set up with accurate Emergency Callback Numbers (ECBN) and
@@ -197,12 +197,12 @@ class UserEmergencyServicesApi(PersonSettingsApiChild):
         ECBN for their location or be assigned another specific telephone number from that location for emergency
         purposes.
 
-        To retrieve a person's callback number requires a full, user or read-only administrator or location
+        To retrieve an entity's callback number requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
-        :param entity_id: Unique identifier for the person, virtual line, or workspace
+        :param entity_id: Unique identifier for the entity, virtual line, or workspace
         :type entity_id: str
-        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
@@ -220,9 +220,9 @@ class UserEmergencyServicesApi(PersonSettingsApiChild):
                   selected: SelectedECBN,
                   location_member_id: str = None, org_id: str = None):
         """
-        Update a Person's Emergency Callback Number.
+        Update an entity's Emergency Callback Number.
 
-        Update a person's emergency callback number settings. Also applies to workspaces and virtual lines.
+        Update an entity's emergency callback number settings. Also applies to workspaces and virtual lines.
 
         Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
         numbers, such as extension-only users, must be set up with accurate Emergency Callback Numbers (ECBN) to
@@ -232,14 +232,14 @@ class UserEmergencyServicesApi(PersonSettingsApiChild):
         To update an emergency callback number requires a full, location, user, or read-only administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
-        :param entity_id: Unique identifier for the person, virtual line, or workspace.
+        :param entity_id: Unique identifier for the entity, virtual line, or workspace.
         :type entity_id: str
         :param selected: The source from which the emergency calling line ID (CLID) is selected for an actual emergency
             call.
         :type selected: SelectedECBN
         :param location_member_id: Member ID of person/workspace/virtual line within the location.
         :type location_member_id: str
-        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
@@ -258,9 +258,9 @@ class UserEmergencyServicesApi(PersonSettingsApiChild):
     def dependencies(self, entity_id: str,
                      org_id: str = None) -> ECBNDependencies:
         """
-        Retrieve A Person's Emergency Callback Number Dependencies
+        Retrieve an entity's Emergency Callback Number Dependencies
 
-        Retrieve Emergency Callback Number dependencies for a person. Also applies to workspaces and virtual lines.
+        Retrieve Emergency Callback Number dependencies for an entity. Also applies to workspaces and virtual lines.
 
         Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
         numbers, such as extension-only users, must be set up with accurate Emergency Call Back Numbers (ECBN) to

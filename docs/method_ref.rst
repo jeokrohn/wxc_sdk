@@ -327,6 +327,12 @@ The method name is a link to the method documentation.
         Configure Do Not Disturb Settings for an entity
    * - :meth:`api.person_settings.dnd.read <wxc_sdk.person_settings.dnd.DndApi.read>`
         Read Do Not Disturb Settings for an entity
+   * - :meth:`api.person_settings.ecbn.configure <wxc_sdk.person_settings.ecbn.ECBNApi.configure>`
+        Update an entity's Emergency Callback Number
+   * - :meth:`api.person_settings.ecbn.dependencies <wxc_sdk.person_settings.ecbn.ECBNApi.dependencies>`
+        Retrieve an entity's Emergency Callback Number Dependencies
+   * - :meth:`api.person_settings.ecbn.read <wxc_sdk.person_settings.ecbn.ECBNApi.read>`
+        Get an entity's Emergency Callback Number
    * - :meth:`api.person_settings.exec_assistant.configure <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.configure>`
         Modify Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.exec_assistant.read <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.read>`
@@ -841,6 +847,10 @@ The method name is a link to the method documentation.
         Upload a Device Background Image
    * - :meth:`api.telephony.devices.validate_macs <wxc_sdk.telephony.devices.TelephonyDevicesApi.validate_macs>`
         Validate a list of MAC addresses
+   * - :meth:`api.telephony.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.read_emergency_call_notification>`
+        Get an Organization Emergency Call Notification
+   * - :meth:`api.telephony.emergency_services.update_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_emergency_call_notification>`
+        Update an organization emergency call notification
    * - :meth:`api.telephony.huntgroup.alternate_available_phone_numbers <wxc_sdk.telephony.huntgroup.HuntGroupApi.alternate_available_phone_numbers>`
         Get Hunt Group Alternate Available Phone Numbers
    * - :meth:`api.telephony.huntgroup.by_name <wxc_sdk.telephony.huntgroup.HuntGroupApi.by_name>`
@@ -943,6 +953,10 @@ The method name is a link to the method documentation.
         Validate extensions for a specific location
    * - :meth:`api.telephony.location.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
         Get Webex Go Available Phone Numbers
+   * - :meth:`api.telephony.location.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.location.emergency_services.LocationEmergencyServicesApi.read_emergency_call_notification>`
+        Get a Location Emergency Call Notification
+   * - :meth:`api.telephony.location.emergency_services.update_emergency_call_notification <wxc_sdk.telephony.location.emergency_services.LocationEmergencyServicesApi.update_emergency_call_notification>`
+        Update a location emergency call notification
    * - :meth:`api.telephony.location.intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`
         Put Location Intercept
    * - :meth:`api.telephony.location.intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
@@ -999,6 +1013,10 @@ The method name is a link to the method documentation.
         Validate extensions for a specific location
    * - :meth:`api.telephony.locations.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
         Get Webex Go Available Phone Numbers
+   * - :meth:`api.telephony.locations.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.location.emergency_services.LocationEmergencyServicesApi.read_emergency_call_notification>`
+        Get a Location Emergency Call Notification
+   * - :meth:`api.telephony.locations.emergency_services.update_emergency_call_notification <wxc_sdk.telephony.location.emergency_services.LocationEmergencyServicesApi.update_emergency_call_notification>`
+        Update a location emergency call notification
    * - :meth:`api.telephony.locations.intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`
         Put Location Intercept
    * - :meth:`api.telephony.locations.intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
@@ -1291,6 +1309,12 @@ The method name is a link to the method documentation.
         Configure a Caller ID Settings
    * - :meth:`api.telephony.virtual_lines.caller_id.read <wxc_sdk.person_settings.caller_id.CallerIdApi.read>`
         Retrieve Caller ID Settings
+   * - :meth:`api.telephony.virtual_lines.ecbn.configure <wxc_sdk.person_settings.ecbn.ECBNApi.configure>`
+        Update an entity's Emergency Callback Number
+   * - :meth:`api.telephony.virtual_lines.ecbn.dependencies <wxc_sdk.person_settings.ecbn.ECBNApi.dependencies>`
+        Retrieve an entity's Emergency Callback Number Dependencies
+   * - :meth:`api.telephony.virtual_lines.ecbn.read <wxc_sdk.person_settings.ecbn.ECBNApi.read>`
+        Get an entity's Emergency Callback Number
    * - :meth:`api.telephony.virtual_lines.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
         Configure an Entity's Call Forwarding Settings
    * - :meth:`api.telephony.virtual_lines.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
@@ -1479,6 +1503,12 @@ The method name is a link to the method documentation.
         Configure Do Not Disturb Settings for an entity
    * - :meth:`api.workspace_settings.dnd.read <wxc_sdk.person_settings.dnd.DndApi.read>`
         Read Do Not Disturb Settings for an entity
+   * - :meth:`api.workspace_settings.ecbn.configure <wxc_sdk.person_settings.ecbn.ECBNApi.configure>`
+        Update an entity's Emergency Callback Number
+   * - :meth:`api.workspace_settings.ecbn.dependencies <wxc_sdk.person_settings.ecbn.ECBNApi.dependencies>`
+        Retrieve an entity's Emergency Callback Number Dependencies
+   * - :meth:`api.workspace_settings.ecbn.read <wxc_sdk.person_settings.ecbn.ECBNApi.read>`
+        Get an entity's Emergency Callback Number
    * - :meth:`api.workspace_settings.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
         Configure an Entity's Call Forwarding Settings
    * - :meth:`api.workspace_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`

@@ -17,7 +17,7 @@ from ..person_settings.call_waiting import CallWaitingApi
 from ..person_settings.caller_id import CallerIdApi
 from ..person_settings.common import ApiSelector
 from ..person_settings.dnd import DndApi
-from ..person_settings.ecbn import UserEmergencyServicesApi
+from ..person_settings.ecbn import ECBNApi
 from ..person_settings.forwarding import PersonForwardingApi
 from ..person_settings.monitoring import MonitoringApi
 from ..person_settings.moh import MusicOnHoldApi
@@ -56,7 +56,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     caller_id: CallerIdApi
     dnd: DndApi
     devices: WorkspaceDevicesApi
-    ecbn: UserEmergencyServicesApi
+    ecbn: ECBNApi
     forwarding: PersonForwardingApi
     monitoring: MonitoringApi
     music_on_hold: MusicOnHoldApi
@@ -85,7 +85,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.workspace)
         self.devices = WorkspaceDevicesApi(session=session)
         self.dnd = DndApi(session=session, selector=ApiSelector.workspace)
-        self.ecbn = UserEmergencyServicesApi(session=session, selector=ApiSelector.workspace)
+        self.ecbn = ECBNApi(session=session, selector=ApiSelector.workspace)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.workspace)
         self.monitoring = MonitoringApi(session=session, selector=ApiSelector.workspace)
         self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.workspace)

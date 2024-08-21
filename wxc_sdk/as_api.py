@@ -59,30 +59,30 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi',
            'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
            'AsConvergedRecordingsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi',
-           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi',
+           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi',
            'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi',
            'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
-           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
-           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
-           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgMSTeamsSettingApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi', 'AsPreferredAnswerApi',
-           'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi',
-           'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
-           'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
-           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
-           'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi', 'AsSelectiveForwardApi', 'AsSelectiveRejectApi',
-           'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI', 'AsSupervisorApi', 'AsTeamMembershipsApi',
-           'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi',
-           'AsTranslationPatternsApi', 'AsTrunkApi', 'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi',
-           'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi',
-           'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi',
-           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi',
-           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgEmergencyServicesApi',
+           'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI',
+           'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
+           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
+           'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
+           'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi',
+           'AsSelectiveForwardApi', 'AsSelectiveRejectApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI',
+           'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
+           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
+           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -6177,6 +6177,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'callBridge'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'callPolicies'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'doNotDisturb'): ('telephony/config/workspaces', '/'),
+            ('workspaces', 'emergencyCallbackNumber'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'musicOnHold'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'outgoingPermission/digitPatterns'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'privacy'): ('telephony/config/workspaces', '/'),
@@ -6190,6 +6191,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
+            ('people', 'emergencyCallbackNumber'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
@@ -7665,6 +7667,121 @@ class AsDndApi(AsPersonSettingsApiChild):
         ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
         await self.put(ep, params=params, data=dnd_settings.model_dump_json())
+
+
+class AsECBNApi(AsPersonSettingsApiChild):
+    """
+    Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
+    numbers, such as extension-only users, must be set up with accurate Emergency Callback Numbers (ECBN) to enable
+    them to make emergency calls. These users can either utilize the default ECBN for their location or be assigned
+    another specific telephone number from that location for emergency purposes.
+
+    Viewing these settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`. Modifying these settings requires a full administrator auth token with a
+    scope of `spark-admin:telephony_config_write`.
+    """
+
+    feature = 'emergencyCallbackNumber'
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> PersonECBN:
+        """
+        Get an entity's Emergency Callback Number
+
+        Retrieve an entity's emergency callback number settings. Also applies to workspaces and virtual lines.
+
+        Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
+        numbers, such as extension-only users, must be set up with accurate Emergency Callback Numbers (ECBN) and
+        Emergency Service Addresses to enable them to make emergency calls. These users can either utilize the default
+        ECBN for their location or be assigned another specific telephone number from that location for emergency
+        purposes.
+
+        To retrieve an entity's callback number requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the entity, virtual line, or workspace
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`PersonECBN`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = PersonECBN.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str,
+                  selected: SelectedECBN,
+                  location_member_id: str = None, org_id: str = None):
+        """
+        Update an entity's Emergency Callback Number.
+
+        Update an entity's emergency callback number settings. Also applies to workspaces and virtual lines.
+
+        Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
+        numbers, such as extension-only users, must be set up with accurate Emergency Callback Numbers (ECBN) to
+        enable them to make emergency calls. These users can either utilize the default ECBN for their location or be
+        assigned another specific telephone number from that location for emergency purposes.
+
+        To update an emergency callback number requires a full, location, user, or read-only administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param entity_id: Unique identifier for the entity, virtual line, or workspace.
+        :type entity_id: str
+        :param selected: The source from which the emergency calling line ID (CLID) is selected for an actual emergency
+            call.
+        :type selected: SelectedECBN
+        :param location_member_id: Member ID of person/workspace/virtual line within the location.
+        :type location_member_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['selected'] = enum_str(selected)
+        if location_member_id is not None:
+            body['locationMemberId'] = location_member_id
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+    async def dependencies(self, entity_id: str,
+                     org_id: str = None) -> ECBNDependencies:
+        """
+        Retrieve an entity's Emergency Callback Number Dependencies
+
+        Retrieve Emergency Callback Number dependencies for an entity. Also applies to workspaces and virtual lines.
+
+        Emergency Callback Configurations can be enabled at the organization level, Users without individual telephone
+        numbers, such as extension-only users, must be set up with accurate Emergency Call Back Numbers (ECBN) to
+        enable them to make emergency calls. These users can either utilize the default ECBN for their location or be
+        assigned another specific telephone number from that location for emergency purposes.
+
+        Retrieving the dependencies requires a full, user or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person, virtual line, or workspace
+        :type entity_id: str
+        :param org_id: Retrieve Emergency Callback Number attributes for this organization.
+        :type org_id: str
+        :rtype: :class:`ECBNDependencies`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, 'dependencies')
+        data = await super().get(url, params=params)
+        r = ECBNDependencies.model_validate(data)
+        return r
 
 
 class AsExecAssistantApi(AsPersonSettingsApiChild):
@@ -9456,6 +9573,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     calling_behavior: AsCallingBehaviorApi
     #: Do Not Disturb Settings for a Person
     dnd: AsDndApi
+    #: ECBN settings
+    ecbn: AsECBNApi
     #: Executive Assistant Settings for a Person
     exec_assistant: AsExecAssistantApi
     #: Forwarding Settings for a Person
@@ -9494,13 +9613,14 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.appservices = AsAppServicesApi(session=session)
         self.available_numbers = AsAvailableNumbersApi(session=session)
         self.barge = AsBargeApi(session=session)
-        self.dnd = AsDndApi(session=session)
         self.call_bridge = AsCallBridgeApi(session=session)
         self.call_intercept = AsCallInterceptApi(session=session)
         self.call_recording = AsCallRecordingApi(session=session)
         self.call_waiting = AsCallWaitingApi(session=session)
         self.calling_behavior = AsCallingBehaviorApi(session=session)
         self.caller_id = AsCallerIdApi(session=session)
+        self.dnd = AsDndApi(session=session)
+        self.ecbn = AsECBNApi(session=session)
         self.exec_assistant = AsExecAssistantApi(session=session)
         self.forwarding = AsPersonForwardingApi(session=session)
         self.hoteling = AsHotelingApi(session=session)
@@ -17595,6 +17715,73 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         await self.put(ep, params=params, data=data)
 
 
+class AsOrgEmergencyServicesApi(AsApiChild, base='telephony/config/emergencyCallNotification'):
+    """
+    Organization Call Settings with Emergency Services
+
+    Emergency Call Notifications can be enabled at the organization level, allowing specified email addresses to
+    receive email notifications when an emergency call is made. To comply with U.S. Public Law 115-127, also known as
+    Kari’s Law, any call that's made from within your organization to emergency services must generate an email
+    notification.
+
+    Viewing these organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`. Modifying these organization settings requires a full administrator auth
+    token with a scope of `spark-admin:telephony_config_write`.
+    """
+
+    async def read_emergency_call_notification(self, org_id: str = None) -> OrgEmergencyCallNotification:
+        """
+        Get an Organization Emergency Call Notification
+
+        Get organization emergency call notification.
+
+        Emergency Call Notifications can be enabled at the organization level, allowing specified email addresses to
+        receive email notifications when an emergency call is made. To comply with U.S. Public Law 115-127, also known
+        as Kari’s Law, any call that's made from within your organization to emergency services must generate an email
+        notification.
+
+        To retrieve organization call notifications requires a full, user or read-only administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve Emergency Call Notification attributes for the organization.
+        :type org_id: str
+        :rtype: :class:`OrgEmergencyCallNotification`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = OrgEmergencyCallNotification.model_validate(data)
+        return r
+
+    async def update_emergency_call_notification(self, setting: OrgEmergencyCallNotification, org_id: str = None):
+        """
+        Update an organization emergency call notification.
+
+        Once settings are enabled at the organization level, the configured email address will receive emergency call
+        notifications for all locations.
+
+        Emergency Call Notifications can be enabled at the organization level, allowing specified email addresses to
+        receive email notifications when an emergency call is made. To comply with U.S. Public Law 115-127, also known
+        as Kari’s Law, any call that's made from within your organization to emergency services must generate an email
+        notification.
+
+        To update organization call notification requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param setting: updated settings
+        :type setting: OrgEmergencyCallNotification
+        :param org_id: Update Emergency Call Notification attributes for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = setting.update()
+        url = self.ep()
+        await super().put(url, params=params, json=body)
+
+
 class AsOrgMSTeamsSettingApi(AsApiChild, base='telephony/config/settings/msTeams'):
     """
     Client Call Settings
@@ -21033,6 +21220,81 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         await self.put(url=url, params=params, data=data)
 
 
+class AsLocationEmergencyServicesApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Emergency Call Notifications can be enabled at the organization level, allowing specified email addresses to
+    receive email notifications when an emergency call is made. Once activated at the organization level, individual
+    locations can configure this setting to direct notifications to specific email addresses. To comply with U.S.
+    Public Law 115-127, also known as Kari’s Law, any call that's made from within your organization to emergency
+    services must generate an email notification.
+
+    Viewing these organization settings requires a full or read-only administrator auth token with a scope
+    of `spark-admin:telephony_config_read`. Modifying these organization settings requires a full administrator auth
+    token with a scope of `spark-admin:telephony_config_write`.
+    """
+
+    async def read_emergency_call_notification(self, location_id: str,
+                                                   org_id: str = None) -> LocationEmergencyCallNotification:
+        """
+        Get a Location Emergency Call Notification
+
+        Get location emergency call notification.
+
+        Emergency Call Notifications can be enabled at the organization level, allowing specified email addresses to
+        receive email notifications when an emergency call is made. Once activated at the organization level,
+        individual locations can configure this setting to direct notifications to specific email addresses. To comply
+        with U.S. Public Law 115-127, also known as Kari’s Law, any call that's made from within your organization to
+        emergency services must generate an email notification.
+
+        To retrieve location call notifications requires a full, user or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve Emergency Call Notification attributes for this location.
+        :type location_id: str
+        :param org_id: Retrieve Emergency Call Notification attributes for the location in this organization.
+        :type org_id: str
+        :rtype: :class:`LocationEmergencyCallNotification`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/emergencyCallNotification')
+        data = await super().get(url, params=params)
+        r = LocationEmergencyCallNotification.model_validate(data)
+        return r
+
+    async def update_emergency_call_notification(self, location_id: str, setting: LocationEmergencyCallNotification,
+                                           org_id: str = None):
+        """
+        Update a location emergency call notification.
+
+        Once settings enabled at the organization level, the configured email address will receive emergency call
+        notifications for all locations; for specific location customization, users can navigate to Management >
+        Locations, select the Calling tab, and update the Emergency Call Notification settings.
+
+        Emergency Call Notifications can be enabled at the organization level, allowing specified email addresses to
+        receive email notifications when an emergency call is made. Once activated at the organization level,
+        individual locations can configure this setting to direct notifications to specific email addresses. To comply
+        with U.S. Public Law 115-127, also known as Kari’s Law, any call that's made from within your organization to
+        emergency services must generate an email notification.
+
+        To update location call notification requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Update Emergency Call Notification attributes for this location.
+        :type location_id: str
+        :param setting: new settings
+        :type setting: LocationEmergencyCallNotification
+        :param org_id: Update Emergency Call Notification attributes for a location in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = setting.update()
+        url = self.ep(f'{location_id}/emergencyCallNotification')
+        await super().put(url, params=params, json=body)
+
+
 class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
     """
     Location Music on Hold API
@@ -21405,6 +21667,8 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
 
 
 class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
+    #: emergency services
+    emergency_services: AsLocationEmergencyServicesApi
     #: call intercept settings
     intercept: AsLocationInterceptApi
     #: internal dialing settings
@@ -21420,6 +21684,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.emergency_services = AsLocationEmergencyServicesApi(session=session)
         self.intercept = AsLocationInterceptApi(session=session)
         self.internal_dialing = AsInternalDialingApi(session=session)
         self.moh = AsLocationMoHApi(session=session)
@@ -22039,6 +22304,8 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     call_waiting: AsCallWaitingApi
     #: caller id settings
     caller_id: AsCallerIdApi
+    #: ECBN settings
+    ecbn: AsECBNApi
     #: forwarding settings
     forwarding: AsPersonForwardingApi
     #: music on hold settings
@@ -22064,6 +22331,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.ecbn = AsECBNApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = AsIncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
@@ -23091,6 +23359,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     call_recording: AsCallRecordingSettingsApi
     conference: AsConferenceControlsApi
     dect_devices: AsDECTDevicesApi
+    #: emergency services
+    emergency_services: AsOrgEmergencyServicesApi
     #: WxC device operations
     devices: AsTelephonyDevicesApi
     huntgroup: AsHuntGroupApi
@@ -23135,6 +23405,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.conference = AsConferenceControlsApi(session=session)
         self.dect_devices = AsDECTDevicesApi(session=session)
         self.devices = AsTelephonyDevicesApi(session=session)
+        self.emergency_services = AsOrgEmergencyServicesApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
         self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
@@ -25366,6 +25637,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     caller_id: AsCallerIdApi
     dnd: AsDndApi
     devices: AsWorkspaceDevicesApi
+    ecbn: AsECBNApi
     forwarding: AsPersonForwardingApi
     monitoring: AsMonitoringApi
     music_on_hold: AsMusicOnHoldApi
@@ -25394,6 +25666,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.workspace)
         self.devices = AsWorkspaceDevicesApi(session=session)
         self.dnd = AsDndApi(session=session, selector=ApiSelector.workspace)
+        self.ecbn = AsECBNApi(session=session, selector=ApiSelector.workspace)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.workspace)
         self.monitoring = AsMonitoringApi(session=session, selector=ApiSelector.workspace)
         self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.workspace)

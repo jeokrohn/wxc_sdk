@@ -18,7 +18,7 @@ from .callbridge import CallBridgeApi
 from .caller_id import CallerIdApi
 from .calling_behavior import CallingBehaviorApi
 from .dnd import DndApi
-from .ecbn import UserEmergencyServicesApi
+from .ecbn import ECBNApi
 from .exec_assistant import ExecAssistantApi
 from .forwarding import PersonForwardingApi
 from .hoteling import HotelingApi
@@ -143,7 +143,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     #: Do Not Disturb Settings for a Person
     dnd: DndApi
     #: ECBN settings
-    ecbn: UserEmergencyServicesApi
+    ecbn: ECBNApi
     #: Executive Assistant Settings for a Person
     exec_assistant: ExecAssistantApi
     #: Forwarding Settings for a Person
@@ -189,7 +189,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.calling_behavior = CallingBehaviorApi(session=session)
         self.caller_id = CallerIdApi(session=session)
         self.dnd = DndApi(session=session)
-        self.ecbn = UserEmergencyServicesApi(session=session)
+        self.ecbn = ECBNApi(session=session)
         self.exec_assistant = ExecAssistantApi(session=session)
         self.forwarding = PersonForwardingApi(session=session)
         self.hoteling = HotelingApi(session=session)
