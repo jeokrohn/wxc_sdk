@@ -1531,6 +1531,8 @@ The method name is a link to the method documentation.
         Retrieve Music On Hold Settings for a Person, virtual line, or workspace
    * - :meth:`api.workspace_settings.numbers.read <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read>`
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization
+   * - :meth:`api.workspace_settings.numbers.update <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.update>`
+        Assign or Unassign numbers associated with a specific workspace
    * - :meth:`api.workspace_settings.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
         Configure incoming permissions settings
    * - :meth:`api.workspace_settings.permissions_in.read <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.read>`

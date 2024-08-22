@@ -61,7 +61,7 @@
 | Retrieve Selective Reject Criteria for a Workspace              | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}                    |
 | Create Selective Reject Criteria for a Workspace                | X    | POST https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria                        |
 | Modify Selective Reject Criteria for a Workspace                | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}                    |
-| Assign or Unassign numbers associated with a specific workspace |      | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/numbers                                          |
+| Assign or Unassign numbers associated with a specific workspace | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/numbers                                          |
 | Delete Selective Reject Criteria for a Workspace                | X    | DELETE https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveReject/criteria/{id}                 |
 | Retrieve Selective Accept Settings for a Workspace              | X    | GET https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept                                  |
 | Modify Selective Accept Settings for a Workspace                | X    | PUT https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/selectiveAccept                                  |

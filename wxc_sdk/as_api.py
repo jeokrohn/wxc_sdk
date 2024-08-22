@@ -6526,7 +6526,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         GET Available Phone Numbers                     X             X
         Get Call Intercept Available Phone Numbers                    X        X
         GET Primary Available Phone Numbers                                    X    
-        GET Secondary Available Phone Numbers                                  X
+        GET Secondary Available Phone Numbers                         X        X
         ========================================== ============= ==========  ====
 
     """
@@ -6538,7 +6538,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
                 '': {'virtualLines', 'workspaces'},
                 'callIntercept': {'workspaces', 'people'},
                 'primary': {'people'},
-                'secondary': {'people'}}
+                'secondary': {'people', 'workspaces'}}
 
     def __init__(self, *, session: AsRestSession, selector: ApiSelector = ApiSelector.person):
         super().__init__(session=session)
@@ -25723,6 +25723,48 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         url = self.ep(workspace_id=workspace_id)
         data = await self.get(url=url, params=params)
         return TypeAdapter(WorkspaceNumbers).validate_python(data)
+
+    async def update(self, workspace_id: str,
+               phone_numbers: list[UpdateWorkspacePhoneNumber],
+               distinctive_ring_enabled: bool = None,
+               org_id: str = None):
+        """
+        Assign or Unassign numbers associated with a specific workspace
+
+        Assign or unassign alternate phone numbers associated with a specific workspace.
+
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow the E.164 format for all countries, except for the United States, which can also follow the
+        National format. Active phone numbers are in service.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write` to
+        update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param phone_numbers: List of phone numbers that are assigned to a person.
+        :type phone_numbers: list[UpdateWorkspacePhoneNumber]
+        :param distinctive_ring_enabled: Enables a distinctive ring pattern for the person.
+        :type distinctive_ring_enabled: bool
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if distinctive_ring_enabled is not None:
+            body['distinctiveRingEnabled'] = distinctive_ring_enabled
+        body['phoneNumbers'] = TypeAdapter(list[UpdateWorkspacePhoneNumber]).dump_python(phone_numbers, mode='json',
+                                                                                         by_alias=True,
+                                                                                         exclude_none=True)
+        url = self.session.ep(f'telephony/config/workspaces/{workspace_id}/numbers')
+        await super().put(url, params=params, json=body)
 
 
 @dataclass(init=False)

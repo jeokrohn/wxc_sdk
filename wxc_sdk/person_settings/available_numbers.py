@@ -59,7 +59,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         GET Available Phone Numbers                     X             X
         Get Call Intercept Available Phone Numbers                    X        X
         GET Primary Available Phone Numbers                                    X    
-        GET Secondary Available Phone Numbers                                  X
+        GET Secondary Available Phone Numbers                         X        X
         ========================================== ============= ==========  ====
 
     """
@@ -71,7 +71,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
                 '': {'virtualLines', 'workspaces'},
                 'callIntercept': {'workspaces', 'people'},
                 'primary': {'people'},
-                'secondary': {'people'}}
+                'secondary': {'people', 'workspaces'}}
 
     def __init__(self, *, session: RestSession, selector: ApiSelector = ApiSelector.person):
         super().__init__(session=session)

@@ -54,6 +54,7 @@ Release history
    * :meth:`api.workspace_settings.monitoring.configure <wxc_sdk.person_settings.monitoring.MonitoringApi.configure>`
    * :meth:`api.workspace_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
 - feat: new parameter service_number in :meth:`api.telephony.phone_numbers <wxc_sdk.telephony.TelephonyApi.phone_numbers>`
+- feat: new method :meth:`api.workspace_settings.numbers.update <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.update>`
 
 1.21.1
 ------

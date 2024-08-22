@@ -206,7 +206,7 @@ from wxc_sdk.webhook import Webhook, WebhookCreate, WebhookEvent, WebhookEventDa
     WebhookResource, WebhookStatus
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
 from wxc_sdk.workspace_personalization import WorkspacePersonalizationTaskResponse
-from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
+from wxc_sdk.workspace_settings.numbers import UpdateWorkspacePhoneNumber, WorkspaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, HotdeskingStatus, \
     SupportAndConfiguredInfo, WorkSpaceType, Workspace, WorkspaceCalling, WorkspaceCallingHybridCalling, \
     WorkspaceEmail, WorkspaceIndoorNavigation, WorkspaceSupportedDevices, WorkspaceWebexCalling
@@ -341,21 +341,21 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'Type', 'UCMProfile', 'UnansweredCalls', 'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody',
            'UpdateMeetingInviteeBody', 'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse',
            'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody',
-           'UpdateTranscriptSnippetBody', 'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase',
-           'UserLicensesResponse', 'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType', 'UserTypeObject',
-           'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
-           'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
-           'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState',
-           'VirtualExtensionDestination', 'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation',
-           'VirtualLineNumberPhoneNumber', 'VlanSetting', 'VoiceMailPartyInformation', 'VoiceMailRules',
-           'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
-           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
-           'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
-           'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner',
-           'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook', 'WebhookCreate', 'WebhookEvent',
-           'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting',
-           'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceType', 'Workspace',
-           'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail', 'WorkspaceIndoorNavigation',
-           'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse',
-           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1',
-           'to_camel', 'webex_id_to_uuid']
+           'UpdateTranscriptSnippetBody', 'UpdateWorkspacePhoneNumber', 'UsageRouteLists', 'UsageType',
+           'UsbPortsObject', 'UserAddress', 'UserBase', 'UserLicensesResponse', 'UserManager', 'UserNumber',
+           'UserPhoneNumber', 'UserType', 'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState',
+           'ValidateExtensionsResponse', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState',
+           'ValidatePhoneNumbersResponse', 'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn',
+           'VideoOptions', 'VideoState', 'VirtualExtensionDestination', 'VirtualLine', 'VirtualLineDevices',
+           'VirtualLineLocation', 'VirtualLineNumberPhoneNumber', 'VlanSetting', 'VoiceMailPartyInformation',
+           'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage',
+           'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup',
+           'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings',
+           'VoicemailTransferToNumber', 'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'WebexGroup',
+           'WebexGroupMeta', 'WebexGroupOwner', 'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook',
+           'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource',
+           'WebhookStatus', 'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork',
+           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail',
+           'WorkspaceIndoorNavigation', 'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers',
+           'WorkspacePersonalizationTaskResponse', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper',
+           'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
