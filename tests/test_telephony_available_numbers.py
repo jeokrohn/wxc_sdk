@@ -1,5 +1,6 @@
 import asyncio
 from dataclasses import dataclass
+from typing import ClassVar
 
 from tests.base import TestCaseWithLog, async_test, TestCaseWithUsers
 from wxc_sdk.telephony.virtual_line import VirtualLine
@@ -24,7 +25,7 @@ class TestUser(TestCaseWithUsers):
                                               for user in self.users])
 
     @async_test
-    async def test_ecbn(self):
+    async def test_fax(self):
         api = self.async_api.person_settings.available_numbers
         number_lists = await asyncio.gather(*[api.fax_message(entity_id=user.person_id)
                                               for user in self.users])
@@ -32,9 +33,10 @@ class TestUser(TestCaseWithUsers):
     @async_test
     async def test_available(self):
         api = self.async_api.person_settings.available_numbers
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as exc:
             number_lists = await asyncio.gather(*[api.available(entity_id=user.person_id)
                                                   for user in self.users])
+        print(f'got expected:{exc.exception}')
 
     @async_test
     async def test_call_intercept(self):
@@ -57,7 +59,7 @@ class TestUser(TestCaseWithUsers):
 
 @dataclass(init=False)
 class TestWorkspace(TestCaseWithLog):
-    workspaces: list[Workspace] = None
+    workspaces: ClassVar[list[Workspace]]
 
     @classmethod
     def setUpClass(cls):
@@ -76,38 +78,45 @@ class TestWorkspace(TestCaseWithLog):
         number_lists = await asyncio.gather(*[api.call_forward(entity_id=workspace.workspace_id)
                                               for workspace in self.workspaces])
 
+    @async_test
     async def test_ecbn(self):
         api = self.async_api.workspace_settings.available_numbers
         number_lists = await asyncio.gather(*[api.ecbn(entity_id=workspace.workspace_id)
                                               for workspace in self.workspaces])
 
+    @async_test
     async def test_fax(self):
         api = self.async_api.workspace_settings.available_numbers
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as exc:
             number_lists = await asyncio.gather(*[api.fax_message(entity_id=workspace.workspace_id)
                                                   for workspace in self.workspaces])
+        print(f'got expected:{exc.exception}')
 
+    @async_test
     async def test_available(self):
         api = self.async_api.workspace_settings.available_numbers
         number_lists = await asyncio.gather(*[api.available(entity_id=workspace.workspace_id)
                                               for workspace in self.workspaces])
 
+    @async_test
     async def test_intercept(self):
         api = self.async_api.workspace_settings.available_numbers
         number_lists = await asyncio.gather(*[api.call_intercept(entity_id=workspace.workspace_id)
                                               for workspace in self.workspaces])
 
+    @async_test
     async def test_primary(self):
         api = self.async_api.workspace_settings.available_numbers
-        with self.assertRaises(ValueError):
-            number_lists = await asyncio.gather(*[api.fax_message(entity_id=workspace.workspace_id)
+        with self.assertRaises(ValueError) as exc:
+            number_lists = await asyncio.gather(*[api.primary(entity_id=workspace.workspace_id)
                                                   for workspace in self.workspaces])
+        print(f'got expected:{exc.exception}')
 
+    @async_test
     async def test_secondary(self):
         api = self.async_api.workspace_settings.available_numbers
-        with self.assertRaises(ValueError):
-            number_lists = await asyncio.gather(*[api.secondary(entity_id=workspace.workspace_id)
-                                                  for workspace in self.workspaces])
+        number_lists = await asyncio.gather(*[api.secondary(entity_id=workspace.workspace_id)
+                                              for workspace in self.workspaces])
 
 
 @dataclass(init=False)
@@ -131,13 +140,13 @@ class TestVirtualLines(TestCaseWithLog):
                                               for vl in self.virtual_lines])
 
     @async_test
-    async def ecbn(self):
+    async def test_ecbn(self):
         api = self.async_api.telephony.virtual_lines.available_numbers
         number_lists = await asyncio.gather(*[api.ecbn(entity_id=vl.id)
                                               for vl in self.virtual_lines])
 
     @async_test
-    async def test_cfwd(self):
+    async def test_fax(self):
         api = self.async_api.telephony.virtual_lines.available_numbers
         number_lists = await asyncio.gather(*[api.fax_message(entity_id=vl.id)
                                               for vl in self.virtual_lines])
@@ -148,14 +157,26 @@ class TestVirtualLines(TestCaseWithLog):
         number_lists = await asyncio.gather(*[api.available(entity_id=vl.id)
                                               for vl in self.virtual_lines])
 
+    @async_test
+    async def test_intercept(self):
+        api = self.async_api.telephony.virtual_lines.available_numbers
+        with self.assertRaises(ValueError) as exc:
+            number_lists = await asyncio.gather(*[api.call_intercept(entity_id=vl.id)
+                                                  for vl in self.virtual_lines])
+        print(f'got expected:{exc.exception}')
+
+    @async_test
     async def test_primary(self):
         api = self.async_api.telephony.virtual_lines.available_numbers
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as exc:
             number_lists = await asyncio.gather(*[api.primary(entity_id=vl.id)
                                                   for vl in self.virtual_lines])
+        print(f'got expected:{exc.exception}')
 
+    @async_test
     async def test_secondary(self):
         api = self.async_api.telephony.virtual_lines.available_numbers
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as exc:
             number_lists = await asyncio.gather(*[api.secondary(entity_id=vl.id)
                                                   for vl in self.virtual_lines])
+        print(f'got expected:{exc.exception}')
