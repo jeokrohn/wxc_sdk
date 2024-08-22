@@ -5,7 +5,7 @@ from typing import Optional, Union
 from dateutil.parser import isoparse
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['RecordingFormat', 'RecordingServiceType', 'RecordingStatus', 'Recording', 'RecordingsApi']
@@ -40,10 +40,9 @@ class RecordingStatus(str, Enum):
     available = 'available'
     #: Recording has been moved to the recycle bin.
     deleted = 'deleted'
-    #: Recording has been purged from the recycle bin. Please note that only a compliance officer can access recordings
-    #: with a `purged` status.
+    #: Recording has been purged from the recycle bin. Only applies if the user calling the API is a Compliance Officer
+    #: and `meetingId` is specified.
     purged = 'purged'
-    none_ = 'none'
 
 
 class TemporaryDirectDownloadLinks(ApiModel):
@@ -98,8 +97,6 @@ class Recording(ApiModel):
     download_url: Optional[str] = None
     #: The playback link for recording.
     playback_url: Optional[str] = None
-    #: The recording's password.
-    password: Optional[str] = None
     format: Optional[RecordingFormat] = None
     #: The service type for the recording.
     service_type: Optional[RecordingServiceType] = None
@@ -205,7 +202,9 @@ class RecordingsApi(ApiChild, base=''):
             service-type.
         :type service_type: RecordingServiceType
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
-            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin. The
+            `purged` status only applies if the user calling the API is a Compliance Officer and `meetingId` is
+            specified.
         :type status: ListRecordingsStatus
         :return: Generator yielding :class:`RecordingObject` instances
         """
@@ -230,11 +229,11 @@ class RecordingsApi(ApiChild, base=''):
         if topic is not None:
             params['topic'] = topic
         if format_ is not None:
-            params['format'] = format_
+            params['format'] = enum_str(format_)
         if service_type is not None:
-            params['serviceType'] = service_type
+            params['serviceType'] = enum_str(service_type)
         if status is not None:
-            params['status'] = status
+            params['status'] = enum_str(status)
         url = self.ep('recordings')
         return self.session.follow_pagination(url=url, model=Recording, item_key='items', params=params)
 
@@ -294,8 +293,9 @@ class RecordingsApi(ApiChild, base=''):
         :type format_: RecordingsFormat
         :param service_type: The service type for recordings. If specified, the API filters recordings by service type.
         :type service_type: RecordingServiceType
-        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
-            Otherwise, if specified as `deleted`, retrieves recordings that have been moved to the recycle bin.
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available. If
+            specified as `deleted`, retrieves recordings that have been moved to the recycle bin. Otherwise, if
+            specified as `purged`, retrieves recordings that have been purged from the recycle bin.
         :type status: ListRecordingsStatus
         :return: Generator yielding :class:`RecordingObjectForAdminAndCO` instances
         """
@@ -318,11 +318,11 @@ class RecordingsApi(ApiChild, base=''):
         if topic is not None:
             params['topic'] = topic
         if format_ is not None:
-            params['format'] = format_
+            params['format'] = enum_str(format_)
         if service_type is not None:
-            params['serviceType'] = service_type
+            params['serviceType'] = enum_str(service_type)
         if status is not None:
-            params['status'] = status
+            params['status'] = enum_str(status)
         url = self.ep('admin/recordings')
         return self.session.follow_pagination(url=url, model=Recording, item_key='items',
                                               params=params)
@@ -334,6 +334,10 @@ class RecordingsApi(ApiChild, base=''):
         Retrieves details for a recording with a specified recording ID.
 
         Only recordings of meetings hosted by or shared with the authenticated user may be retrieved.
+
+        The `temporaryDirectDownloadLinks` of a recording which are retrieved by the `Get Recording Details
+        <https://developer.webex.com/docs/api/v1/recordings/get-recording-details>`_ API are
+        still available to Compliance Officers even if the recording has been deleted.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
