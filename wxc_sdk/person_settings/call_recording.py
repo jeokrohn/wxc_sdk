@@ -68,9 +68,14 @@ class StartStopAnnouncement(ApiModel):
 
 
 class CallRecordingAccessSettings(ApiModel):
+    #: When `true`, the person can view and play call recordings.
     view_and_play_recordings_enabled: Optional[bool] = None
+    #: When `true`, the person can download call recordings.
     download_recordings_enabled: Optional[bool] = None
+    #: When `true`, the person can delete call recordings.
     delete_recordings_enabled: Optional[bool] = None
+    #: When `true`, the person can share call recordings.
+    share_recordings_enabled: Optional[bool] = None
 
 
 class CallRecordingSetting(ApiModel):
@@ -95,7 +100,7 @@ class CallRecordingSetting(ApiModel):
     external_identifier: Optional[str] = None
     #: Call Recording starts and stops announcement settings.
     start_stop_announcement: Optional[StartStopAnnouncement] = None
-
+    #: Settings related to call recording access.
     call_recording_access_settings: Optional[CallRecordingAccessSettings] = None
 
     @staticmethod
