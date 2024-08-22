@@ -93,6 +93,9 @@ class TemporaryDirectDownloadLink(ApiModel):
     #: The download link for recording audio file without HTML page rendering in browser or HTTP redirect.  Expires 3
     #: hours after the API request.
     audio_download_link: Optional[str] = None
+    #: The download link for recording transcript file without HTML page rendering in browser or HTTP redirect.
+    #: Expires 3 hours after the API request.
+    transcript_download_link: Optional[str] = None
     #: The date and time when `recordingDownloadLink`, `audioDownloadLink`, and `transcriptDownloadLink` expire in
     #: `ISO 8601
     #: <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
