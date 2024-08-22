@@ -26,15 +26,12 @@ class WorkspaceNumbers(ApiModel):
 
 class UpdateWorkspacePhoneNumber(ApiModel):
     #: If `true` marks the phone number as primary.
-    #: example: True
     primary: Optional[bool] = None
     #: Either 'ADD' to add phone numbers or 'DELETE' to remove phone numbers.
     action: Optional[PatternAction] = None
     #: Phone numbers that are assigned.
-    #: example: +12145553567
     direct_number: Optional[str] = None
     #: Extension that is assigned.
-    #: example: 1234
     extension: Optional[str] = None
     #: Ring Pattern of this number.
     ring_pattern: Optional[RingPattern] = None
