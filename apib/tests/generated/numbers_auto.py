@@ -40,6 +40,8 @@ class CountObject(ApiModel):
     numbers_moved: Optional[int] = None
     #: Indicates the total number of phone numbers failed.
     numbers_failed: Optional[int] = None
+    #: Count of phone numbers for which usage changed.
+    numbers_usage_changed: Optional[int] = None
 
 
 class ErrorMessageObject(ApiModel):
@@ -274,10 +276,10 @@ class NumberObject(ApiModel):
     #: Type of phone number.
     #: example: PRIMARY
     phone_number_type: Optional[str] = None
-    #: Indicates if the phone number is used as location CLID.
+    #: If `true`, the phone number is used as location CLID.
     #: example: True
     main_number: Optional[bool] = None
-    #: Indicates Telephony type for the number.
+    #: The telephony type for the number.
     #: example: MOBILE_NUMBER
     included_telephony_types: Optional[TelephonyType] = None
     #: Mobile Network for the number if the number is MOBILE_NUMBER.
@@ -286,14 +288,14 @@ class NumberObject(ApiModel):
     #: Routing Profile for the number if the number is MOBILE_NUMBER.
     #: example: AttRtPf
     routing_profile: Optional[str] = None
-    #: Indicates if a phone number is a toll free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    location: Optional[NumberObjectLocation] = None
-    owner: Optional[NumberObjectOwner] = None
-    #: Phone number is a service number.
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number.
     #: example: True
     is_service_number: Optional[bool] = None
+    location: Optional[NumberObjectLocation] = None
+    owner: Optional[NumberObjectOwner] = None
 
 
 class NumberTypeOptions(str, Enum):
@@ -601,16 +603,18 @@ class NumbersApi(ApiChild, base='telephony/config'):
                                                                    toll_free_numbers: bool = None,
                                                                    restricted_non_geo_numbers: bool = None,
                                                                    included_telephony_types: list[TelephonyType] = None,
-                                                                   org_id: str = None,
+                                                                   service_number: bool = None, org_id: str = None,
                                                                    **params) -> Generator[NumberObject, None, None]:
         """
         Get Phone Numbers for an Organization with Given Criterias
 
         List all the phone numbers for the given organization along with the status and owner (if any).
 
-        Numbers can be either PSTN numbers or mobile numbers.
-        Phone numbers can be associated with a specific location, active/inactive and assigned/unassigned.
-        The owner of a PSTN Number is the person, workspace, or feature to which the number is assigned.
+        Numbers can be standard, service, or mobile. Both standard and service numbers are PSTN numbers.
+        Service numbers are considered as high-utilization or high-concurrency phone numbers and can be assigned to
+        features like auto-attendants, call queues, and hunt groups.
+        Phone numbers can be linked to a specific location, be active or inactive, and be assigned or unassigned.
+        The owner of a number is the person, workspace, or feature to which the number is assigned.
         Only a person can own a mobile number.
 
         Retrieving this list requires a full or read-only administrator or location administrator auth token with a
@@ -656,6 +660,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
             By default, if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
             input values are PSTN_NUMBER or MOBILE_NUMBER.
         :type included_telephony_types: list[TelephonyType]
+        :param service_number: Returns the list of service phone numbers.
+        :type service_number: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: Generator yielding :class:`NumberObject` instances
@@ -692,6 +698,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
             params['restrictedNonGeoNumbers'] = str(restricted_non_geo_numbers).lower()
         if included_telephony_types is not None:
             params['includedTelephonyTypes'] = included_telephony_types
+        if service_number is not None:
+            params['serviceNumber'] = str(service_number).lower()
         url = self.ep('numbers')
         return self.session.follow_pagination(url=url, model=NumberObject, item_key='phoneNumbers', params=params)
 
@@ -730,9 +738,12 @@ class NumbersApi(ApiChild, base='telephony/config'):
         <br/>
 
         **Notes**
-        Although the job can internally perform the `DELETE` action, only the `MOVE` and `NUMBER_USAGE_CHANGE`
-        operations are publicly supported.
-        Although the `numbers` field is an array, we currently only support a single number with each request.
+        <br/>
+        Although the job can internally perform the `DELETE` & `ACTIVATE` actions, only the `MOVE` and
+        `NUMBER_USAGE_CHANGE` operations are publicly supported.
+
+        Although the `numbers` field is an array, we currently only support a single number with each request for
+        `MOVE` operation type and change of usage type of up to 1000 numbers per request.
         Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
         progress the API call will receive a `409` http status code.
 
@@ -764,6 +775,13 @@ class NumbersApi(ApiChild, base='telephony/config'):
         * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
 
         * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
+
+        <br/>
+
+        For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
+        Service number, or the other way around.
+
+        <br/>
 
         :param operation: Indicates the kind of operation to be carried out.
         :type operation: str

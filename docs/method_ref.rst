@@ -554,7 +554,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.phone_number_details <wxc_sdk.telephony.TelephonyApi.phone_number_details>`
         get summary (counts) of phone numbers
    * - :meth:`api.telephony.phone_numbers <wxc_sdk.telephony.TelephonyApi.phone_numbers>`
-        Get Phone Numbers for an Organization with given criteria
+        Get Phone Numbers for an Organization with Given Criterias
    * - :meth:`api.telephony.read_list_of_announcement_languages <wxc_sdk.telephony.TelephonyApi.read_list_of_announcement_languages>`
         List all languages supported by Webex Calling for announcements and voice prompts
    * - :meth:`api.telephony.route_choices <wxc_sdk.telephony.TelephonyApi.route_choices>`

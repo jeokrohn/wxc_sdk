@@ -103,10 +103,10 @@ class NumberListPhoneNumber(ApiModel):
     mobile_network: Optional[str] = None
     #: Routing Profile for the number if number is MOBILE_NUMBER.
     routing_profile: Optional[str] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number.
+    is_service_number: Optional[bool] = None
     location: IdAndName
     owner: Optional[NumberOwner] = None
-    #: Phone number is a service number.
-    is_service_number: Optional[bool] = None
 
 
 class NumberType(str, Enum):
@@ -696,16 +696,22 @@ class TelephonyApi(ApiChild, base='telephony/config'):
                       state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
                       restricted_non_geo_numbers: bool = None,
                       included_telephony_type: TelephonyType = None,
+                      service_number: bool = None,
                       org_id: str = None, **params) -> Generator[NumberListPhoneNumber, None, None]:
         """
-        Get Phone Numbers for an Organization with given criteria.
+        Get Phone Numbers for an Organization with Given Criterias
 
         List all the phone numbers for the given organization along with the status and owner (if any).
 
-        PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
-        The owner is the person, workspace, or feature to which the number is assigned.
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Numbers can be standard, service, or mobile. Both standard and service numbers are PSTN numbers.
+        Service numbers are considered as high-utilization or high-concurrency phone numbers and can be assigned to
+        features like auto-attendants, call queues, and hunt groups.
+        Phone numbers can be linked to a specific location, be active or inactive, and be assigned or unassigned.
+        The owner of a number is the person, workspace, or feature to which the number is assigned.
+        Only a person can own a mobile number.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Return the list of phone numbers for this location within the given organization.
         :type location_id: str
@@ -744,6 +750,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
             By default if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
             input values are PSTN_NUMBER, MOBILE_NUMBER.
         :type included_telephony_type: TelephonyType
+        :param service_number: Returns the list of service phone numbers.
+        :type service_number: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances

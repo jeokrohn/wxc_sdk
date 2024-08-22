@@ -268,6 +268,7 @@ class MoveNumberCounts(ApiModel):
     #: Indicates the total number of phone numbers failed.
     numbers_failed: Optional[int] = None
     numbers_activated: Optional[int] = None
+    #: Count of phone numbers for which usage changed.
     numbers_usage_changed: Optional[int] = None
 
 
@@ -400,6 +401,9 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
             * The number must be unassigned.
             * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
             * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
+
+        For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
+        Service number, or the other way around.
 
         :param operation: Indicates the kind of operation to be carried out.
         :type operation: str
