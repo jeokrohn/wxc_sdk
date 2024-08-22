@@ -13,31 +13,31 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel',
            'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType',
-           'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGetCallForwarding',
-           'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType',
-           'CallQueueCallForwardAvailableNumberObject', 'CallQueueCallForwardAvailableNumberObjectOwner',
-           'CallQueueHolidaySchedulesObject', 'CallQueueHolidaySchedulesObjectScheduleLevel',
-           'CallQueuePrimaryAvailableNumberObject', 'CallQueueQueueSettingsGetObject',
-           'CallQueueQueueSettingsGetObjectComfortMessage', 'CallQueueQueueSettingsGetObjectComfortMessageBypass',
-           'CallQueueQueueSettingsGetObjectMohMessage', 'CallQueueQueueSettingsGetObjectMohMessageNormalSource',
-           'CallQueueQueueSettingsGetObjectOverflow', 'CallQueueQueueSettingsGetObjectOverflowAction',
-           'CallQueueQueueSettingsGetObjectOverflowGreeting', 'CallQueueQueueSettingsGetObjectWaitMessage',
-           'CallQueueQueueSettingsGetObjectWaitMessageWaitMode', 'CallQueueQueueSettingsGetObjectWelcomeMessage',
-           'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
-           'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
-           'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-           'CreateForwardingRuleObjectForwardToSelection', 'FeaturesCallQueueApi', 'GetAnnouncementFileInfo',
-           'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
-           'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueForcedForwardObject',
-           'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject',
-           'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
+           'AvailableAgentObject', 'CallForwardRulesGet', 'CallForwardRulesSet',
+           'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
+           'CallForwardingNumbers', 'CallForwardingNumbersType', 'CallQueueCallForwardAvailableNumberObject',
+           'CallQueueCallForwardAvailableNumberObjectOwner', 'CallQueueHolidaySchedulesObject',
+           'CallQueueHolidaySchedulesObjectScheduleLevel', 'CallQueuePrimaryAvailableNumberObject',
+           'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage',
+           'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage',
+           'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
+           'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting',
+           'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode',
+           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateCallQueueObjectCallingLineIdPolicy',
+           'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers',
+           'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo',
+           'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection',
+           'FeaturesCallQueueApi', 'GetAnnouncementFileInfo', 'GetCallQueueCallPolicyObject',
+           'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
+           'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
+           'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
            'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject',
            'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType',
-           'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'LocationObject', 'MediaType',
-           'ModifyCallForwardingObjectCallForwarding', 'ModifyPersonPlaceVirtualLineCallQueueObject',
-           'NumberOwnerType', 'PostPersonPlaceVirtualLineCallQueueObject', 'RingPatternObject', 'STATE',
-           'TelephonyType']
+           'GetUserNumberItemObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject',
+           'LocationObject', 'MediaType', 'ModifyCallForwardingObjectCallForwarding',
+           'ModifyPersonPlaceVirtualLineCallQueueObject', 'NumberOwnerType',
+           'PostPersonPlaceVirtualLineCallQueueObject', 'RingPatternObject', 'STATE', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -915,15 +915,19 @@ class CallQueuePrimaryAvailableNumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[STATE] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates if the phone number is a toll-free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
 
 
 class NumberOwnerType(str, Enum):
@@ -988,16 +992,55 @@ class CallQueueCallForwardAvailableNumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[STATE] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates if the phone number is a toll-free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
     owner: Optional[CallQueueCallForwardAvailableNumberObjectOwner] = None
+
+
+class GetUserNumberItemObject(ApiModel):
+    #: Phone number of a person, workspace or virtual line.
+    #: example: +19075552859
+    external: Optional[str] = None
+    #: Extension of a person, workspace or virtual line.
+    #: example: 8080
+    extension: Optional[str] = None
+
+
+class AvailableAgentObject(ApiModel):
+    #: ID of a person, workspace or virtual line.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80NDVkMzMzMC1mNjE3LTExZWItOWQyZS01NzViODE3ZGE1NmE
+    id: Optional[str] = None
+    #: Last name of a person, workspace or virtual line.
+    #: example: Brown
+    last_name: Optional[str] = None
+    #: First name of a person, workspace or virtual line.
+    #: example: John
+    first_name: Optional[str] = None
+    #: Display name of a person, workspace or virtual line.
+    #: example: johnBrown
+    display_name: Optional[str] = None
+    #: Type of the person, workspace or virtual line.
+    #: example: PEOPLE
+    type: Optional[GetPersonPlaceVirtualLineCallQueueObjectType] = None
+    #: Email of a person, workspace or virtual line.
+    #: example: john.brown@example.com
+    email: Optional[str] = None
+    #: Person has the CX Essentials license.
+    #: example: True
+    has_cx_essentials: Optional[bool] = None
+    #: List of phone numbers of a person, workspace or virtual line.
+    numbers: Optional[list[GetUserNumberItemObject]] = None
 
 
 class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
@@ -1797,9 +1840,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Updating call queue night service details requires a full administrator or location administrator auth token
         with a scope of `spark-admin:telephony_config_write`.
 
-        :param location_id: Retrieve settings for a call queue in this location.
+        :param location_id: Update settings for a call queue in this location.
         :type location_id: str
-        :param queue_id: Retrieve settings for the call queue night service with this identifier.
+        :param queue_id: Update settings for the call queue night service with this identifier.
         :type queue_id: str
         :param night_service_enabled: Enable or disable call queue night service routing policy.
         :type night_service_enabled: bool
@@ -1831,7 +1874,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel
         :param manual_audio_files: List Of pre-configured Audio Files.
         :type manual_audio_files: list[AudioAnnouncementFileFeatureGetObject]
-        :param org_id: Retrieve call queue night service settings from this organization.
+        :param org_id: Update call queue night service settings from this organization.
         :type org_id: str
         :rtype: None
         """
@@ -2023,7 +2066,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         """
         Get Call Queue Primary Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as the call queue's primary phone number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's primary phone
+        number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -2056,7 +2100,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         """
         Get Call Queue Alternate Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as the call queue's alternate phone number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's alternate
+        phone number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -2090,7 +2135,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         """
         Get Call Queue Call Forward Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as the call queue's call forward number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's call forward
+        number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         assigned to an owning entity.
 
@@ -2125,3 +2171,47 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['extension'] = extension
         url = self.ep(f'locations/{location_id}/queues/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=CallQueueCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_call_queue_available_agents(self, location_id: str, name: str = None, phone_number: str = None,
+                                        order: str = None, org_id: str = None,
+                                        **params) -> Generator[AvailableAgentObject, None, None]:
+        """
+        Get Call Queue Available Agents
+
+        List all available users, workspaces, or virtual lines that can be assigned as call queue agents.
+
+        Available agents are users (excluding users with Webex Calling Standard license), workspaces, or virtual lines
+        that can be assigned to a call queue.
+        Calls from the call queue are routed to assigned agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID of the call queue. Temporary mandatory query parameter, used for
+            performance reasons only and not a filter.
+        :type location_id: str
+        :param name: Search based on name (user first and last name combination).
+        :type name: str
+        :param phone_number: Search based on number or extension.
+        :type phone_number: str
+        :param order: Order the available agents according to the designated fields. Up to three comma-separated sort
+            order fields may be specified. Available sort fields are: `userId`, `fname`, `firstname`, `lname`,
+            `lastname`, `dn`, and `extension`. Sort order can be added together with each field using a hyphen, `-`.
+            Available sort orders are: `asc`, and `desc`.
+        :type order: str
+        :param org_id: List available agents for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgentObject` instances
+        """
+        params['locationId'] = location_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep('queues/agents/availableAgents')
+        return self.session.follow_pagination(url=url, model=AvailableAgentObject, item_key='agents', params=params)

@@ -28,9 +28,8 @@ class AvailableNumber(ApiModel):
     mobile_network: Optional[str] = None
     #: Routing Profile for the number if the number's `telephonyType` is `MOBILE_NUMBER`.
     routing_profile: Optional[str] = None
-    #: Indicates if the phone number is a service number. Service numbers are intended to be high-volume regular phone
-    #: numbers (non-mobile, non toll-free numbers). If `true` the `phoneNumber` is a service number; otherwise, it is
-    #: a standard number.
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
     is_service_number: Optional[bool] = None
     location: Optional[IdAndName] = None
     owner: Optional[NumberOwner] = None

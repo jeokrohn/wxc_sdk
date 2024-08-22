@@ -13677,7 +13677,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         """
         Get Call Queue Primary Available Phone Numbers
 
-        List service and standard numbers that are available to be assigned as the call queue's primary phone number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's primary phone
+        number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -13710,7 +13712,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         """
         Get Call Queue Primary Available Phone Numbers
 
-        List service and standard numbers that are available to be assigned as the call queue's primary phone number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's primary phone
+        number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -13743,7 +13747,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         """
         Get Call Queue Alternate Available Phone Numbers
 
-        List service and standard numbers that are available to be assigned as the call queue's alternate phone number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's alternate
+        phone number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -13776,7 +13782,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         """
         Get Call Queue Alternate Available Phone Numbers
 
-        List service and standard numbers that are available to be assigned as the call queue's alternate phone number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's alternate
+        phone number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -13810,7 +13818,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         """
         Get Call Queue Call Forward Available Phone Numbers
 
-        List service and standard numbers that are available to be assigned as the call queue's call forward number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's call forward
+        number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         assigned to an owning entity.
 
@@ -13853,7 +13863,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         """
         Get Call Queue Call Forward Available Phone Numbers
 
-        List service and standard numbers that are available to be assigned as the call queue's call forward number.
+        List the service and standard PSTN numbers that are available to be assigned as the call queue's call forward
+        number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         assigned to an owning entity.
 
