@@ -346,9 +346,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.hoteling.read <wxc_sdk.person_settings.hoteling.HotelingApi.read>`
         Read Hoteling Settings for a Person
    * - :meth:`api.person_settings.monitoring.configure <wxc_sdk.person_settings.monitoring.MonitoringApi.configure>`
-        Configure Call Waiting Settings for a Person
+        Modify an entity's Monitoring Settings
    * - :meth:`api.person_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
-        Retrieve a Person's Monitoring Settings
+        Retrieve an entity's Monitoring Settings
    * - :meth:`api.person_settings.ms_teams.configure <wxc_sdk.person_settings.msteams.MSTeamsSettingApi.configure>`
         Configure a Person's MS Teams Setting
    * - :meth:`api.person_settings.ms_teams.read <wxc_sdk.person_settings.msteams.MSTeamsSettingApi.read>`
@@ -1522,9 +1522,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.workspace_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
         Retrieve an entity's Call Forwarding Settings
    * - :meth:`api.workspace_settings.monitoring.configure <wxc_sdk.person_settings.monitoring.MonitoringApi.configure>`
-        Configure Call Waiting Settings for a Person
+        Modify an entity's Monitoring Settings
    * - :meth:`api.workspace_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
-        Retrieve a Person's Monitoring Settings
+        Retrieve an entity's Monitoring Settings
    * - :meth:`api.workspace_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
         Configure Music On Hold Settings for a Personvirtual line, or workspace
    * - :meth:`api.workspace_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`

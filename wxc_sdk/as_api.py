@@ -8028,55 +8028,59 @@ class AsMSTeamsSettingApi(AsApiChild, base='telephony/config/people'):
 
 class AsMonitoringApi(AsPersonSettingsApiChild):
     """
-    API for person's call monitoring settings
+    API for person's call monitoring settings, also used for workspaces
     """
 
     feature = 'monitoring'
 
-    async def read(self, person_id: str, org_id: str = None) -> Monitoring:
+    async def read(self, entity_id: str, org_id: str = None) -> Monitoring:
         """
-        Retrieve a Person's Monitoring Settings
+        Retrieve an entity's Monitoring Settings
 
-        Retrieves the monitoring settings of the person, which shows specified people, places or, call park
-        extensions under monitoring. Monitors the line status which indicates if a person or place is on a call and
-        if  a call has been parked on that extension.
+        Retrieves the monitoring settings of the entity, which shows specified people, places, virtual lines or call
+        park extensions that are being monitored.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
+        parked on that extension.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:people_read`.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization in which the entity resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :return: monitoring settings
         :rtype: :class:`Monitoring`
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
         return Monitoring.model_validate(data)
 
-    async def configure(self, person_id: str, settings: Monitoring, org_id: str = None):
+    async def configure(self, entity_id: str, settings: Monitoring, org_id: str = None):
         """
-        Configure Call Waiting Settings for a Person
+        Modify an entity's Monitoring Settings
 
-        Configure a Person's Call Waiting Settings
+        Modifies the monitoring settings of the entity.
 
-        With this feature, a person can place an active call on hold and answer an incoming call. When enabled,
-        while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore
-        the call.
+        Monitors the line status of specified people, places, virtual lines or call park extension. The line status
+        indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full or user administrator or location administrator auth token with the
+        `spark-admin:people_write` scope.
 
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
         :param settings: settings for update
         :type settings: :class:`Monitoring`
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id)
+        ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = {}
         if settings.call_park_notification_enabled is not None:

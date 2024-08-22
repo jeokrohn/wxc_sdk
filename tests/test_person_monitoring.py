@@ -34,7 +34,7 @@ class TestRead(TestCaseWithUsers):
         ps = self.api.person_settings
 
         with ThreadPoolExecutor() as pool:
-            monitoring_settings = list(pool.map(lambda user: ps.monitoring.read(person_id=user.person_id),
+            monitoring_settings = list(pool.map(lambda user: ps.monitoring.read(entity_id=user.person_id),
                                                 self.users))
         print(f'Got monitoring details for {len(self.users)} users')
         with_elements = [(user, ms) for user, ms in zip(self.users, monitoring_settings)
@@ -135,7 +135,7 @@ class TestUpdate(TestCaseWithUsers):
         Get target user
         """
         user = random.choice(self.users)
-        settings = self.api.person_settings.monitoring.read(person_id=user.person_id)
+        settings = self.api.person_settings.monitoring.read(entity_id=user.person_id)
         print('Before')
         print_monitoring(user=user, monitoring=settings)
         try:
@@ -144,9 +144,9 @@ class TestUpdate(TestCaseWithUsers):
             # restore old settings
             # makes sure to clear list of monitored elements
             settings.monitored_elements = settings.monitored_elements or []
-            self.api.person_settings.monitoring.configure(person_id=user.person_id, settings=settings)
+            self.api.person_settings.monitoring.configure(entity_id=user.person_id, settings=settings)
             settings.monitored_elements = settings.monitored_elements or None
-            restored = self.api.person_settings.monitoring.read(person_id=user.person_id)
+            restored = self.api.person_settings.monitoring.read(entity_id=user.person_id)
             self.assertEqual(settings, restored)
 
     def test_001_toggle_notifications(self):
@@ -156,10 +156,10 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             mon = self.api.person_settings.monitoring
             user: Person
-            before = mon.read(person_id=user.person_id)
+            before = mon.read(entity_id=user.person_id)
             settings = Monitoring(call_park_notification_enabled=not before.call_park_notification_enabled)
-            mon.configure(person_id=user.person_id, settings=settings)
-            after = mon.read(person_id=user.person_id)
+            mon.configure(entity_id=user.person_id, settings=settings)
+            after = mon.read(entity_id=user.person_id)
             print_monitoring(user=user, monitoring=after)
         self.assertEqual(settings.call_park_notification_enabled, after.call_park_notification_enabled)
         after.call_park_notification_enabled = before.call_park_notification_enabled
@@ -173,7 +173,7 @@ class TestUpdate(TestCaseWithUsers):
             # API shortcut
             mon = self.api.person_settings.monitoring
             # get current settings
-            before = mon.read(person_id=user.person_id)
+            before = mon.read(entity_id=user.person_id)
             # get some CPE ids to add
             temp_cpe = TempCPE(api=self.api)
             with temp_cpe.generate_cpes(cpes_present=before.monitored_cpes, cpe_count=8) as new_cpe_ids:
@@ -184,10 +184,10 @@ class TestUpdate(TestCaseWithUsers):
                     monitored_elements=(before.monitored_elements or []) + new_monitoring_elements)
 
                 # update
-                mon.configure(person_id=user.person_id, settings=settings)
+                mon.configure(entity_id=user.person_id, settings=settings)
 
                 # how does it look like after the update?
-                after = mon.read(person_id=user.person_id)
+                after = mon.read(entity_id=user.person_id)
                 print_monitoring(user=user, monitoring=after)
             # with
         # with
@@ -210,7 +210,7 @@ class TestUpdate(TestCaseWithUsers):
 
             mon = self.api.person_settings.monitoring
             # get current settings
-            before = mon.read(person_id=user.person_id)
+            before = mon.read(entity_id=user.person_id)
             present_ids = [m.member_id for m in before.monitored_members]
             user_candidates = [uc for uc in self.users
                                if uc.person_id not in present_ids and uc.person_id != user.person_id]
@@ -225,10 +225,10 @@ class TestUpdate(TestCaseWithUsers):
                 monitored_elements=(before.monitored_elements or []) + new_monitoring_elements)
 
             # update
-            mon.configure(person_id=user.person_id, settings=settings)
+            mon.configure(entity_id=user.person_id, settings=settings)
 
             # how does it look like after the update?
-            after = mon.read(person_id=user.person_id)
+            after = mon.read(entity_id=user.person_id)
             print_monitoring(user=user, monitoring=after)
 
         # all new user ids need to be present now
@@ -248,7 +248,7 @@ class TestUpdate(TestCaseWithUsers):
             # API shortcut
             mon = self.api.person_settings.monitoring
             # get current settings
-            before = mon.read(person_id=user.person_id)
+            before = mon.read(entity_id=user.person_id)
             present_ids = [m.member_id for m in before.monitored_members]
             user_candidates = [user for user in self.users
                                if user.person_id not in present_ids]
@@ -261,10 +261,10 @@ class TestUpdate(TestCaseWithUsers):
                 monitored_elements=(before.monitored_elements or []) + new_monitoring_elements)
 
             # update
-            mon.configure(person_id=user.person_id, settings=settings)
+            mon.configure(entity_id=user.person_id, settings=settings)
 
             # how does it look like after the update?
-            after = mon.read(person_id=user.person_id)
+            after = mon.read(entity_id=user.person_id)
             print_monitoring(user=user, monitoring=after)
 
         decoded_user_ids = list(map(lambda member: base64.b64decode(member.member_id + '==').decode(),
