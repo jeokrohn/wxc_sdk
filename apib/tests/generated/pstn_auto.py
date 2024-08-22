@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['ConnectionOptionsResponse', 'PSTNApi', 'PSTNServiceType', 'PSTNType']
+__all__ = ['ConnectionOptionsResponse', 'ConnectionResponse', 'PSTNApi', 'PSTNServiceType', 'PSTNType']
 
 
 class PSTNServiceType(str, Enum):
@@ -31,6 +31,17 @@ class PSTNServiceType(str, Enum):
     mobile_numbers = 'MOBILE_NUMBERS'
 
 
+class ConnectionOptionsResponse(ApiModel):
+    #: A unique identifier for the connection.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUElDS1VQL1kyRnNiRkJwWTJ0MWNERT0
+    id: Optional[str] = None
+    #: The display name of the PSTN connection.
+    #: example: Premises-based PSTN
+    display_name: Optional[str] = None
+    #: The PSTN services available for this connection.
+    pstn_services: Optional[list[PSTNServiceType]] = None
+
+
 class PSTNType(str, Enum):
     #: PSTN connection type for a premises-based connection.
     local_gateway = 'LOCAL_GATEWAY'
@@ -44,7 +55,7 @@ class PSTNType(str, Enum):
     cisco_pstn = 'CISCO_PSTN'
 
 
-class ConnectionOptionsResponse(ApiModel):
+class ConnectionResponse(ApiModel):
     #: A unique identifier for the connection.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUElDS1VQL1kyRnNiRkJwWTJ0MWNERT0
     id: Optional[str] = None
@@ -139,8 +150,7 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         url = self.ep(f'{location_id}/connection')
         super().put(url, params=params, json=body)
 
-    def retrieve_pstn_connection_for_a_location(self, location_id: str,
-                                                org_id: str = None) -> ConnectionOptionsResponse:
+    def retrieve_pstn_connection_for_a_location(self, location_id: str, org_id: str = None) -> ConnectionResponse:
         """
         Retrieve PSTN Connection for a Location
 
@@ -155,12 +165,12 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         :type location_id: str
         :param org_id: Retrieve PSTN location connection details for this organization.
         :type org_id: str
-        :rtype: :class:`ConnectionOptionsResponse`
+        :rtype: :class:`ConnectionResponse`
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/connection')
         data = super().get(url, params=params)
-        r = ConnectionOptionsResponse.model_validate(data)
+        r = ConnectionResponse.model_validate(data)
         return r
