@@ -253,6 +253,7 @@ class TestUpdate(TestCaseWithUsers):
             user_candidates = [user for user in self.users
                                if user.person_id not in present_ids]
             to_add = random.sample(user_candidates, 3)
+            print(f'Trying to add monitoring for: {", ".join(u.display_name for u in to_add)}')
 
             # ths is what we want to add
             new_monitoring_elements = [user.person_id
