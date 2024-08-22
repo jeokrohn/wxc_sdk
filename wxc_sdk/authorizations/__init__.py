@@ -26,6 +26,8 @@ class Authorization(ApiModel):
     application_id: Optional[str]
     #: The name of the Integration.
     application_name: Optional[str]
+    #: The person Id of the user. Can be used in the /people API.
+    person_id: Optional[str] = None
     #: The unique oAuth client id.
     client_id: Optional[str]
     #: The date and time the authorization was created.

@@ -31,6 +31,9 @@ class Authorization(ApiModel):
     #: The name of the Integration.
     #: example: Developer Portal
     application_name: Optional[str] = None
+    #: The person Id of the user. Can be used in the /people API.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9lYjIyYjNiZC03NGNiLTRjMjktYjA3Zi1lYWQwMmU1NjgyZDI
+    person_id: Optional[str] = None
     #: The unique oAuth client id.
     #: example: C80fb9c7096bd8474627317ee1d7a817eff372ca9c9cee3ce43c3ea3e8d1511ec
     client_id: Optional[str] = None
