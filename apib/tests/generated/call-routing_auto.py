@@ -843,6 +843,9 @@ class Trunk(ApiModel):
     in_use: Optional[bool] = None
     #: Trunk Type associated with the trunk.
     trunk_type: Optional[TrunkType] = None
+    #: Flag to indicate if the trunk is restricted to a dedicated instance.
+    #: example: True
+    is_restricted_to_dedicated_instance: Optional[bool] = None
 
 
 class TrunkGet(ApiModel):
@@ -897,6 +900,9 @@ class TrunkGet(ApiModel):
     #: Max Concurrent call. Required to create a static certificate based trunk.
     #: example: 1000
     max_concurrent_calls: Optional[int] = None
+    #: Flag to indicate if the trunk is restricted to a dedicated instance.
+    #: example: True
+    is_restricted_to_dedicated_instance: Optional[bool] = None
 
 
 class TrunkTypeWithDeviceType(ApiModel):

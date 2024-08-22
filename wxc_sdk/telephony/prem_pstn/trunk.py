@@ -23,11 +23,17 @@ class TrunkType(str, Enum):
 
 
 class Trunk(ApiModel):
+    #: Unique identifier for the trunk.
     trunk_id: str = Field(alias='id')
+    #: A unique name for the trunk.
     name: str
+    #: Location associated with the trunk.
     location: IdAndName
+    #: Trunk in use flag.
     in_use: bool
+    #: Trunk Type associated with the trunk.
     trunk_type: TrunkType
+    #: Flag to indicate if the trunk is restricted to a dedicated instance.
     is_restricted_to_dedicated_instance: bool
 
 
@@ -93,12 +99,18 @@ class TrunkDetail(ApiModel):
     otg_dtg_id: str
     #: The Line/Port identifies a device endpoint in standalone mode or a SIPURI public identity in IMS mode.
     line_port: str
+    #: Locations using trunk.
     locations_using_trunk: list[IdAndName]
+    #: User ID.
     pilot_user_id: str
+    #: Contains the body of the HTTP response received following the request to Console API and will not be set if the
+    #: response has no body.
     outbound_proxy: Any
     #: User's authentication service information.
     sip_authentication_user_name: str
+    #: Device status.
     status: DeviceStatus
+    #: Error codes.
     error_codes: list[str] = Field(default_factory=list)
     #: Present partial error/warning status information included when the http response is 206.
     response_status: list[ResponseStatus]
@@ -116,6 +128,7 @@ class TrunkDetail(ApiModel):
     port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
     max_concurrent_calls: int
+    #: Flag to indicate if the trunk is restricted to a dedicated instance.
     is_restricted_to_dedicated_instance: Optional[bool] = False
 
 
