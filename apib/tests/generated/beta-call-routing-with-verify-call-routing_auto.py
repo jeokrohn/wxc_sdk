@@ -52,8 +52,8 @@ class TranslationPattern(ApiModel):
 class ConfigurationLevelType(str, Enum):
     #: The applied services at the location level.
     location = 'LOCATION'
-    #: The applied services at the user level.
-    user = 'USER'
+    #: The applied services at the people level.
+    people = 'PEOPLE'
     #: The applied services at the place level.
     place = 'PLACE'
     #: The applied services at the virtual line level.
@@ -69,7 +69,7 @@ class CallInterceptDetailsPermission(str, Enum):
 
 class CallInterceptDetails(ApiModel):
     #: The level from which the configuration is applied.
-    #: example: USER
+    #: example: PEOPLE
     configuration_level: Optional[ConfigurationLevelType] = None
     #: The choices that indicate call intercept permissions.
     #: example: TRANSFER
@@ -139,7 +139,7 @@ class CallingPlanReason(str, Enum):
 
 class OutgoingCallingPlanPermissionsByType(ApiModel):
     #: The level from which the configuration is applied.
-    #: example: USER
+    #: example: PEOPLE
     configuration_level: Optional[ConfigurationLevelType] = None
     #: Designates the action to be taken for each call type and if transferring the call type is allowed.
     #: example: INTERNAL_CALL
@@ -160,7 +160,7 @@ class OutgoingCallingPlanPermissionsByType(ApiModel):
 
 class OutgoingCallingPlanPermissionsByDigitPattern(ApiModel):
     #: The level from which the configuration is applied.
-    #: example: USER
+    #: example: PEOPLE
     configuration_level: Optional[ConfigurationLevelType] = None
     #: Name given to a digit pattern.
     #: example: DPattern
