@@ -974,7 +974,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.moh.read <wxc_sdk.telephony.location.moh.LocationMoHApi.read>`
         Get Music On Hold
    * - :meth:`api.telephony.location.moh.update <wxc_sdk.telephony.location.moh.LocationMoHApi.update>`
-        Get Music On Hold
+        Update Music On Hold
    * - :meth:`api.telephony.location.number.activate <wxc_sdk.telephony.location.numbers.LocationNumbersApi.activate>`
         Activate Phone Numbers in a location
    * - :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
@@ -1038,7 +1038,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.moh.read <wxc_sdk.telephony.location.moh.LocationMoHApi.read>`
         Get Music On Hold
    * - :meth:`api.telephony.locations.moh.update <wxc_sdk.telephony.location.moh.LocationMoHApi.update>`
-        Get Music On Hold
+        Update Music On Hold
    * - :meth:`api.telephony.locations.number.activate <wxc_sdk.telephony.location.numbers.LocationNumbersApi.activate>`
         Activate Phone Numbers in a location
    * - :meth:`api.telephony.locations.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`

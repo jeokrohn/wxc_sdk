@@ -99,22 +99,21 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
 
     def update(self, location_id: str, settings: LocationMoHSetting, org_id: str = None):
         """
-        Get Music On Hold
+        Update Music On Hold
 
-        Retrieve the location's music on hold settings.
+        Update the location's music on hold settings.
 
-        Location's music on hold settings allows you to play music when a call is placed on hold or parked.
+        Location music on hold settings allows you to play music when a call is placed on hold or parked.
 
-        Retrieving location's music on hold settings requires a full, user or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
+        Updating a location's music on hold settings requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
-        :param location_id: Retrieve access codes details for this location.
+        :param location_id: Update music on hold settings for this location.
         :type location_id: str
         :param settings: new settings
         :type settings: :class:`LocationMoHSetting`
-        :param org_id: Retrieve access codes details for a customer location in this organization
+        :param org_id: Update music on hold settings for this organization.
         :type org_id: str
-        :return: list of :class:`wxc_sdk.common.CallPark`
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
