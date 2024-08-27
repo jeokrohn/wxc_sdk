@@ -185,6 +185,10 @@ class DevicesApi(ApiChild, base='devices'):
     
     * Generating an activation code requires an auth token with the `spark-admin:devices_write` scope, and one of the
     `identity:placeonetimepassword_create` or `identity:one_time_password` scopes.
+    
+    These APIs cannot be used with Cisco 98xx devices that are not yet Webex
+    Aware. Use Webex Control Hub to managed these devices.
+    
     """
 
     def list_devices(self, display_name: str = None, person_id: str = None, workspace_id: str = None,

@@ -981,22 +981,25 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
 
 class AsDevicesApi(AsApiChild, base='devices'):
     """
-    Devices represent cloud-registered Webex RoomOS devices or IP Phones. Devices may be associated with Workspaces
-    or People.
+    Devices
+
+    Devices represent cloud-registered Webex RoomOS devices and Webex Calling phones. Devices may be associated with
+    `Workspaces
+    <https://developer.webex.com/docs/api/v1/workspaces>`_.
 
     The following scopes are required for performing the specified actions:
 
-    Searching and viewing details for devices requires an auth token with the spark:devices_read scope.
+    * Searching and viewing details for devices requires an auth token with the `spark:devices_read` scope.
+    * Updating or deleting your devices requires an auth token with the `spark:devices_write` scope.
+    * Viewing the list of all devices in an organization requires an administrator auth token with the
+      `spark-admin:devices_read` scope.
+    * Adding, updating, or deleting all devices in an organization requires an administrator auth token with the
+      `spark-admin:devices_write` scope.
+    * Generating an activation code requires an auth token with the `spark-admin:devices_write` scope, and one of the
+      `identity:placeonetimepassword_create` or `identity:one_time_password` scopes.
 
-    Updating or deleting your devices requires an auth token with the spark:devices_write scope.
-
-    Viewing the list of all devices in an organization requires an administrator auth token with
-    the spark-admin:devices_read scope.
-
-    Adding, updating, or deleting all devices in an organization requires an administrator auth token with
-    the spark-admin:devices_write scope.
-
-    Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
+    These APIs cannot be used with Cisco 98xx devices that are not yet Webex
+    Aware. Use Webex Control Hub to manage these devices.
     """
 
     #: device jobs Api
