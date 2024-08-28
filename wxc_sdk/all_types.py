@@ -128,8 +128,8 @@ from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServi
     CallInterceptDetails, CallInterceptDetailsPermission, CallSourceInfo, CallSourceType, CallingPlanReason, \
     ConfigurationLevel, DestinationType, DeviceManagedBy, DeviceManufacturer, DeviceSettingsConfiguration, \
     EmergencyDestination, FeatureAccessCodeDestination, HostedFeatureDestination, HostedUserDestination, \
-    LocationAndNumbers, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberType, \
-    OnboardingMethod, OriginatorType, OutgoingCallingPlanPermissionsByDigitPattern, \
+    LocationAndNumbers, MoHConfig, MoHTheme, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, \
+    NumberType, OnboardingMethod, OriginatorType, OutgoingCallingPlanPermissionsByDigitPattern, \
     OutgoingCallingPlanPermissionsByType, PbxUserDestination, PstnNumberDestination, RouteListDestination, \
     ServiceType, SupportedDevice, SupportedDevices, SupportsLogCollection, TelephonyType, TestCallRoutingResult, \
     TranslationPatternConfigurationLevel, TrunkDestination, UCMProfile, VirtualExtensionDestination
@@ -288,15 +288,16 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'MeetingDevice', 'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService', 'MeetingState',
            'MeetingTelephony', 'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData',
            'MenuKey', 'Message', 'MessageAttachment', 'MessageSummary', 'MessagesData', 'MetaObjectResourceType',
-           'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember', 'Monitoring',
-           'MoveCounts', 'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization',
-           'MppVlanDevice', 'Multicast', 'MusicOnHold', 'NameObject', 'NetworkConnectionType', 'NetworkType',
-           'NightService', 'NoAnswer', 'NoiseCancellation', 'NoteType', 'Notification', 'NotificationRepeat',
-           'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber',
-           'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType', 'NumberUsageType', 'OfficeNumber',
-           'OnboardingMethod', 'OrgComplianceAnnouncement', 'OrgEmergencyCallNotification', 'OrgMSTeamsSettings',
-           'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
-           'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
+           'MoHConfig', 'MoHTheme', 'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember',
+           'MonitoredMember', 'Monitoring', 'MoveCounts', 'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails',
+           'MoveUsersList', 'MppCustomization', 'MppVlanDevice', 'Multicast', 'MusicOnHold', 'NameObject',
+           'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation', 'NoteType',
+           'Notification', 'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberItem',
+           'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState',
+           'NumberType', 'NumberUsageType', 'OfficeNumber', 'OnboardingMethod', 'OrgComplianceAnnouncement',
+           'OrgEmergencyCallNotification', 'OrgMSTeamsSettings', 'OrganisationVoicemailSettings',
+           'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType', 'OutboundProxy',
+           'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
            'PSTNConnection', 'PSTNConnectionOption', 'PSTNServiceType', 'PSTNType', 'PTTConnectionType', 'Paging',
            'PagingAgent', 'ParkedAgainst', 'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody',

@@ -3,7 +3,7 @@ Telephony types and API (location and organisation settings)
 """
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Literal
 
 from pydantic import Field, TypeAdapter, field_validator
 
@@ -60,7 +60,8 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
            'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
            'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
-           'SupportedDevice', 'AnnouncementLanguage', 'SupportedDevices', 'TelephonyApi', 'SupportsLogCollection']
+           'SupportedDevice', 'AnnouncementLanguage', 'SupportedDevices', 'TelephonyApi', 'SupportsLogCollection',
+           'MoHTheme', 'MoHConfig']
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -610,7 +611,6 @@ class SupportedDevice(ApiModel):
     supports_hotline_enabled: Optional[bool] = None
 
 
-
 class AnnouncementLanguage(ApiModel):
     #: Language name.
     name: Optional[str] = None
@@ -621,6 +621,19 @@ class AnnouncementLanguage(ApiModel):
 class SupportedDevices(ApiModel):
     upgrade_channel_list: Optional[list[str]] = None
     devices: Optional[list[SupportedDevice]] = None
+
+
+class MoHTheme(str, Enum):
+    #: Legacy MoH Theme
+    LEGACY = 'LEGACY'
+    #: Opus MoH Theme
+    OPUS = 'OPUS'
+
+
+class MoHConfig(ApiModel):
+    #: Default org level Music on Hold option, can be one of two options: Choose between Opus Number 1
+    #: (Music On Hold used in other Cisco products like UCM) and existing legacy Music On Hold.
+    default_org_moh: MoHTheme
 
 
 @dataclass(init=False)
@@ -996,3 +1009,39 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         url = self.ep('announcementLanguages')
         data = super().get(url=url)
         return TypeAdapter(list[AnnouncementLanguage]).validate_python(data["languages"])
+
+    def read_moh(self, org_id: str = None) -> MoHConfig:
+        """
+        Get the organization Music on Hold configuration
+
+        Retrieve the organization's Music on Hold settings.
+
+        :param org_id: Retrieve Music on Hold settings for this organization.
+        :type org_id: str
+        :rtype: MoHConfig
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('moh/settings')
+        data = super().get(url, params=params)
+        return MoHConfig.model_validate(data)
+
+    def update_moh(self, settings: MoHConfig, org_id: str = None):
+        """
+        Update the organization Music on Hold configuration
+
+        Update the organization's Music on Hold settings.
+
+        :param settings: Music on Hold settings
+        :type settings: MoHConfig
+        :param org_id: Patch Music on Hold for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep('moh/settings')
+        super().put(url, params=params, json=body)

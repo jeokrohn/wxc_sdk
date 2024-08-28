@@ -23999,6 +23999,42 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         data = await super().get(url=url)
         return TypeAdapter(list[AnnouncementLanguage]).validate_python(data["languages"])
 
+    async def read_moh(self, org_id: str = None) -> MoHConfig:
+        """
+        Get the organization Music on Hold configuration
+
+        Retrieve the organization's Music on Hold settings.
+
+        :param org_id: Retrieve Music on Hold settings for this organization.
+        :type org_id: str
+        :rtype: MoHConfig
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('moh/settings')
+        data = await super().get(url, params=params)
+        return MoHConfig.model_validate(data)
+
+    async def update_moh(self, settings: MoHConfig, org_id: str = None):
+        """
+        Update the organization Music on Hold configuration
+
+        Update the organization's Music on Hold settings.
+
+        :param settings: Music on Hold settings
+        :type settings: MoHConfig
+        :param org_id: Patch Music on Hold for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep('moh/settings')
+        await super().put(url, params=params, json=body)
+
 
 class AsWebhookApi(AsApiChild, base='webhooks'):
     """

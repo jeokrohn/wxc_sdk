@@ -281,8 +281,47 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
             body['defaultVoicemailPinEnabled'] = default_voicemail_pin_enabled
         if default_voicemail_pin is not None:
             body['defaultVoicemailPin'] = default_voicemail_pin
-        body['expirePasscode'] = loads(expire_passcode.model_dump_json())
-        body['changePasscode'] = loads(change_passcode.model_dump_json())
-        body['blockPreviousPasscodes'] = loads(block_previous_passcodes.model_dump_json())
+        body['expirePasscode'] = expire_passcode.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['changePasscode'] = change_passcode.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['blockPreviousPasscodes'] = block_previous_passcodes.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('voicemail/rules')
+        super().put(url, params=params, json=body)
+
+    def get_the_organization_music_on_hold_configuration(self, org_id: str = None) -> str:
+        """
+        Get the organization Music on Hold configuration
+
+        Retrieve the organization's Music on Hold settings.
+
+        :param org_id: Retrieve Music on Hold settings for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('moh/settings')
+        data = super().get(url, params=params)
+        r = data['defaultOrgMoh']
+        return r
+
+    def update_the_organization_music_on_hold_configuration(self, default_org_moh: str, org_id: str = None):
+        """
+        Update the organization Music on Hold configuration
+
+        Update the organization's Music on Hold settings.
+
+        :param default_org_moh: Default org level Music on Hold option, can be one of two options: Choose between Opus
+            Number 1 (Music On Hold used in other Cisco products like UCM) and existing legacy Music On Hold.
+        :type default_org_moh: str
+        :param org_id: Patch Music on Hold for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['defaultOrgMoh'] = default_org_moh
+        url = self.ep('moh/settings')
         super().put(url, params=params, json=body)

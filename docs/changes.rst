@@ -67,6 +67,13 @@ Release history
     signature change:
 
        * :meth:`api.telephony.devices.preview_apply_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.preview_apply_line_key_template>`
+- feat: organization MoH settings
+
+   * :meth:`api.telephony.read_moh <wxc_sdk.telephony.TelephonyApi.read_moh>`
+        Get the organization Music on Hold configuration
+   * :meth:`api.telephony.update_moh <wxc_sdk.telephony.TelephonyApi.update_moh>`
+        Update the organization Music on Hold configuration
+
 
 1.21.1
 ------

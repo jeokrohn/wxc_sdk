@@ -559,6 +559,8 @@ The method name is a link to the method documentation.
         Get Phone Numbers for an Organization with Given Criterias
    * - :meth:`api.telephony.read_list_of_announcement_languages <wxc_sdk.telephony.TelephonyApi.read_list_of_announcement_languages>`
         List all languages supported by Webex Calling for announcements and voice prompts
+   * - :meth:`api.telephony.read_moh <wxc_sdk.telephony.TelephonyApi.read_moh>`
+        Get the organization Music on Hold configuration
    * - :meth:`api.telephony.route_choices <wxc_sdk.telephony.TelephonyApi.route_choices>`
         List all Routes for the organization
    * - :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
@@ -567,6 +569,8 @@ The method name is a link to the method documentation.
         Test Call Routing
    * - :meth:`api.telephony.ucm_profiles <wxc_sdk.telephony.TelephonyApi.ucm_profiles>`
         Read the List of UC Manager Profiles
+   * - :meth:`api.telephony.update_moh <wxc_sdk.telephony.TelephonyApi.update_moh>`
+        Update the organization Music on Hold configuration
    * - :meth:`api.telephony.validate_extensions <wxc_sdk.telephony.TelephonyApi.validate_extensions>`
         Validate the List of Extensions
    * - :meth:`api.telephony.validate_phone_numbers <wxc_sdk.telephony.TelephonyApi.validate_phone_numbers>`
