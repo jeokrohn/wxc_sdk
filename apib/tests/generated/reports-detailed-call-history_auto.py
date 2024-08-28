@@ -499,6 +499,28 @@ class CDR(ApiModel):
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     #: example: 47f0d0c2-f05a-44cc-870d-7a3daf859c6c
     user_uuid: Optional[str] = Field(alias='User UUID', default=None)
+    #: Displays the name of the vendor from which one has purchased PSTN service for a specific country. For example:
+    #: 
+    #: - If purchased from Cisco PSTN, the field would display "Cisco Calling Plans"
+    #: 
+    #: - If purchased from Cisco Cloud Connected PSTN Partners, the field would list names such as "Tata",
+    #: "IntelePeer", "KDDI", etc.
+    #: example: Cisco Calling Plans
+    pstn_vendor_name: Optional[str] = Field(alias='PSTN Vendor Name', default=None)
+    #: This field shows the regulated business entity registered to provide PSTN service in a particular country. It is
+    #: exclusively used for Cisco Calling Plans.
+    #: 
+    #: - Note: The name of the regulated entity may vary within a region and across different regions.
+    #: example: Broadsoft Adaption LLC
+    pstn_legal_entity: Optional[str] = Field(alias='PSTN Legal Entity', default=None)
+    #: This field displays the organization's Universal Unique Identifier (UUID) for Cisco Calling Plans, which is
+    #: unique across various regions.
+    #: example: 0b43a1a8-2efd-4892-b301-e7a5a6d2c884
+    pstn_vendor_org_id: Optional[str] = Field(alias='PSTN Vendor Org ID', default=None)
+    #: This field represents an immutable UUID, as defined by Cisco, for a PSTN provider partner. It uniquely
+    #: identifies the entity that has provided PSTN service in that country.
+    #: example: e8e730a0-ee04-4df4-90a6-b7072aec9062
+    pstn_provider_id: Optional[str] = Field(alias='PSTN Provider ID', default=None)
 
 
 class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):

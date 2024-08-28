@@ -435,34 +435,23 @@ class CDR(ApiModel):
     release_time: Optional[datetime] = None
     #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
     #: Remote Session ID.
-    #:
     #: * The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
-    #:
     #: * It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
     #:   compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
-    #:
     #: * The Local SessionID is generated from the Originating user agent.
-    #:
     #: * The Remote SessionID is generated from the Terminating user agent.
-    #:
     #: * The Final Local Session ID has the value of the Local Session ID at the end of the call.
-    #:
     #: * The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
     final_local_session_id: Optional[str] = Field(alias='final_local_sessionid', default=None)
     #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
     #: Remote Session ID.
     #:
     #: * The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
-    #:
     #: * It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
     #:   compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
-    #:
     #: * The Local SessionID is generated from the Originating user agent.
-    #:
     #: * The Remote SessionID is generated from the Terminating user agent.
-    #:
     #: * The Final Local Session ID has the value of the Local Session ID at the end of the call.
-    #:
     #: * The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
     final_remote_session_id: Optional[str] = Field(alias='final_remote_sessionid', default=None)
     #: Displays the vendor’s name from whom the PSTN service was purchased for the respective country.
