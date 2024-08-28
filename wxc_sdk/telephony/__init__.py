@@ -42,7 +42,7 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, plus1, enum_str
 from ..base import SafeEnum as Enum
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
-    DeviceCustomization, IdAndName, OwnerType, NumberOwner
+    DeviceCustomization, IdAndName, OwnerType, NumberOwner, DeviceType
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.common import ApiSelector
 from ..person_settings.msteams import OrgMSTeamsSettingApi
@@ -59,8 +59,8 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'TranslationPatternConfigurationLevel', 'AppliedServiceTranslationPattern', 'ConfigurationLevel',
            'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
            'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
-           'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
-           'SupportedDevice', 'AnnouncementLanguage', 'SupportedDevices', 'TelephonyApi']
+           'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
+           'SupportedDevice', 'AnnouncementLanguage', 'SupportedDevices', 'TelephonyApi', 'SupportsLogCollection']
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -505,14 +505,6 @@ class TestCallRoutingResult(ApiModel):
     applied_services: Optional[list[AppliedService]] = None
 
 
-class DeviceType(str, Enum):
-    mpp = 'MPP'
-    ata = 'ATA'
-    generic_sip = 'GENERIC_SIP'
-    esim = 'ESIM'
-    desk_phone = 'DESK_PHONE'
-
-
 class DeviceManufacturer(str, Enum):
     cisco = 'CISCO'
     third_party = 'THIRD_PARTY'
@@ -539,6 +531,15 @@ class DeviceSettingsConfiguration(str, Enum):
     none_ = 'NONE'
 
 
+class SupportsLogCollection(str, Enum):
+    #: Devices which does not support log collection.
+    none_ = 'NONE'
+    #: Devices which supports Cisco PRT log collection.
+    cisco_prt = 'CISCO_PRT'
+    #: Devices which supports Cisco RoomOS log collection.
+    cisco_roomos = 'CISCO_ROOMOS'
+
+
 class SupportedDevice(ApiModel):
     #: Model name of the device.
     model: str
@@ -562,6 +563,8 @@ class SupportedDevice(ApiModel):
     kem_support_enabled: bool
     #: Module count.
     kem_module_count: Optional[int] = None
+    #: Enables / disables Kem lines support.
+    kem_lines_support_enabled: Optional[bool] = None
     #: Key expansion module type of the device.
     kem_module_type: Optional[list[str]] = None
     #: Enables / Disables the upgrade channel.
@@ -578,14 +581,34 @@ class SupportedDevice(ApiModel):
     allow_configure_ports_enabled: Optional[bool] = None
     #: Enables / disables customizable line label.
     customizable_line_label_enabled: Optional[bool] = None
+    #: Enables / disables support line port reordering.
+    supports_line_port_reordering_enabled: Optional[bool] = None
+    #: Enables / disables port number support.
+    port_number_support_enabled: Optional[bool] = None
+    #: Enables / disables T.38.
+    t38_enabled: Optional[bool] = None
+    #: Enables / disables call declined.
+    call_declined_enabled: Optional[bool] = None
     #: Supports touch screen on device.
     touch_screen_phone: Optional[bool] = None
-    supports_line_port_reordering_enabled: Optional[bool] = None
-    port_number_support_enabled: Optional[bool] = None
-    t38_enabled: Optional[bool] = None
-    call_declined_enabled: Optional[bool] = None
+    #: Number of line key buttons for a device.
+    number_of_line_key_buttons: Optional[int] = None
     #: Device settings configuration.
     device_settings_configuration: Optional[DeviceSettingsConfiguration] = None
+    number_of_primary_display_configured_lines: Optional[int] = None
+    #: Enables / disables hoteling host.
+    allow_hoteling_host_enabled: Optional[bool] = None
+    #: Device log collection configuration.
+    supports_log_collection: Optional[SupportsLogCollection] = None
+    #: Enables / disables apply changes.
+    supports_apply_changes_enabled: Optional[bool] = None
+    #: Enables / disables configure lines.
+    allow_configure_lines_enabled: Optional[bool] = None
+    #: Enables / disables configure phone settings.
+    allow_configure_phone_settings_enabled: Optional[bool] = None
+    #: Enables / disables hotline support.
+    supports_hotline_enabled: Optional[bool] = None
+
 
 
 class AnnouncementLanguage(ApiModel):
@@ -931,10 +954,10 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
     def supported_devices(self, org_id: str = None) -> SupportedDevices:
         """
-        Gets the list of supported devices for an organization location.
+        Gets the list of supported devices for an organization.
 
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: List supported devices for an organization
         :return: List of supported devices
@@ -967,7 +990,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
+        -announcement-languages
         """
         url = self.ep('announcementLanguages')
         data = super().get(url=url)

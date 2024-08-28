@@ -27,7 +27,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
-           'AssignedDectNetwork', 'DevicePlatform']
+           'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType']
 
 
 class IdOnly(ApiModel):
@@ -422,6 +422,19 @@ class VoicemailCopyOfMessage(VoicemailEnabled):
     """
     #: Email address to which the new voicemail audio will be sent.
     email_id: Optional[str] = None
+
+
+class DeviceType(str, Enum):
+    #: Cisco Multiplatform Phone
+    mpp = 'MPP'
+    #: Analog Telephone Adapters
+    ata = 'ATA'
+    #: GENERIC Session Initiation Protocol
+    generic_sip = 'GENERIC_SIP'
+    #: Esim Supported Webex Go
+    esim = 'ESIM'
+    #: Desk Phone
+    desk_phone = 'DESK_PHONE'
 
 
 class AudioCodecPriority(ApiModel):
@@ -853,6 +866,26 @@ class BackgroundImageColor(str, Enum):
     violet_light = 'VIOLET_LIGHT'
 
 
+class Multicast(ApiModel):
+    #: Specify the multicast group URL and listening port.
+    #: example: 224.0.0.0:22
+    host_and_port: Optional[str] = None
+    #: Specify whether the multicast group URL has an XML application URL.
+    #: example: True
+    has_xml_app_url: Optional[bool] = None
+    #: Specify the timeout for the XML application.
+    #: example: 10
+    xml_app_timeout: Optional[int] = None
+
+
+class EnhancedMulticast(ApiModel):
+    #: Specify the URL for the XML application.
+    #: example: http://127.0.0.1:8080/
+    xml_app_url: Optional[str] = None
+    #: Specify up to 10 multicast group URLs each with a unique listening port, an XML application URL, and a timeout.
+    multicast_list: Optional[list[Multicast]] = None
+
+
 class MppCustomization(CommonDeviceCustomization):
     """
     settings that are applicable to MPP devices.
@@ -888,6 +921,8 @@ class MppCustomization(CommonDeviceCustomization):
     mpp_user_web_access_enabled: bool
     #: Select up to 10 Multicast Group URLs (each with a unique Listening Port).
     multicast: Optional[list[str]] = None
+    #: Specify the enhanced multicast settings for the MPP device.
+    enhanced_multicast: Optional[EnhancedMulticast] = None
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
     off_hook_timer: int
     #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
@@ -946,10 +981,10 @@ class MppCustomization(CommonDeviceCustomization):
     background_image8875: Optional[BackgroundImageColor] = None
     #: Specify the use of the backlight feature on 6800 nad 7800 series devices.
     backlight_timer_68xx78xx: Optional[BacklightTimer68XX78XX] = Field(alias='backlightTimer68XX78XX', default=None)
+    #: Enable/disable monitoring for MPP non-primary device.
+    allow_monitor_lines_enabled: Optional[bool] = None
     #: Enable/disable SIP media streams to go directly between phones on the same local network.
     ice_enabled: Optional[bool] = None
-    #: TODO undocumented
-    allow_monitor_lines_enabled: Optional[bool] = None
 
     # !!
     # #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.

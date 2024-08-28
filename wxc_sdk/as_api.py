@@ -9608,7 +9608,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     hoteling: AsHotelingApi
     #: Person's Monitoring Settings
     monitoring: AsMonitoringApi
-    #; MS Teams settings
+    # ; MS Teams settings
     ms_teams: AsMSTeamsSettingApi
     #: music on hold settings
     music_on_hold: AsMusicOnHoldApi
@@ -9689,7 +9689,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         """
         Get all devices for a person.
 
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        This requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param person_id: Person to retrieve devices for
         :type person_id: str
@@ -9702,6 +9703,35 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = await self.get(url=url, params=params)
         return DeviceList.model_validate(data)
+
+    async def modify_hoteling_settings_primary_devices(self, person_id: str, hoteling: Hoteling,
+                                                 org_id: str = None):
+        """
+        Modify Hoteling Settings for a Person's Primary Devices
+
+        Modify hoteling login configuration on a person's Webex Calling Devices which are in effect when the device is
+        the user's primary device and device type is PRIMARY. To view the current hoteling login settings, see the
+        `hoteling` field in `Get Person Devices
+        <https://developer.webex.com/docs/api/v1/device-call-settings/get-person-devices>`_.
+
+        Modifying devices for a person requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param person_id: ID of the person associated with the device.
+        :type person_id: str
+        :param hoteling: Modify person Device Hoteling Setting.
+        :type hoteling: Hoteling
+        :param org_id: Organization to which the person belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['hoteling'] = hoteling.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/people/{person_id}/devices/settings/hoteling')
+        await super().put(url, params=params, json=body)
 
 
 class AsReportsApi(AsApiChild, base='devices'):
@@ -15238,6 +15268,26 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
     of `spark-admin:telephony_config_write`.
     """
 
+    async def device_type_list(self, org_id: str = None) -> list[DectDevice]:
+        """
+        Read the DECT device type list
+
+        Get DECT device type list with base stations and line ports supported count. This is a static list.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :type org_id: str
+        :rtype: list[DectDevice]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('devices/dectNetworks/supportedDevices')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[DectDevice]).validate_python(data['devices'])
+        return r
+
     async def create_dect_network(self, location_id: str, name: str, display_name: str, model: DECTNetworkModel,
                             default_access_code_enabled: bool, default_access_code: str,
                             org_id: str = None) -> str:
@@ -16421,8 +16471,10 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
 
         Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
+
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
+
         This API allows users to apply a line key template or apply factory default Line Key settings to devices in a
         set of locations or across all locations in the organization.
 
@@ -20442,13 +20494,16 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         """
         Get Webex Calling Device Details
 
+        Not supported for Webex for Government (FedRAMP)
+
         Retrieves Webex Calling device details that include information needed for third-party device management.
 
-        Webex calling devices are associated with a specific user Workspace or Virtual Line.
+        Webex calling devices are associated with a specific user Workspace or Virtual Line. Webex Calling devices
+        share the location with the entity that owns them.
 
-        Webex Calling devices share the location with the entity that owns them.
+        Person or workspace to which the device is assigned. Its fields point to a primary line/port of the device.
 
-        This API requires a full, location, user, or read-only admin auth token with the scope of
+        Requires a full, location, user, or read-only admin auth token with the scope of
         `spark-admin:telephony_config_read`.
 
         :param device_id: Unique identifier for the device.
@@ -20464,6 +20519,33 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         data = await super().get(url, params=params)
         r = TelephonyDeviceDetails.model_validate(data)
         return r
+
+    async def update_third_party_device(self, device_id: str, sip_password: str, org_id: str = None):
+        """
+        Update Third Party Device
+
+        Not supported for Webex for Government (FedRAMP)
+
+        Modify a device's `sipPassword`.
+
+        Updating `sipPassword` on the device requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param sip_password: Password to be updated.
+        :type sip_password: str
+        :param org_id: ID of the organization in which the device resides.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['sipPassword'] = sip_password
+        url = self.ep(f'devices/{device_id}')
+        await super().put(url, params=params, json=body)
 
     async def members(self, device_id: str, org_id: str = None) -> DeviceMembersResponse:
         """
@@ -20693,23 +20775,6 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
         await self.put(url=url, params=params, data=body)
 
-    async def dect_devices(self, org_id: str = None) -> list[DectDevice]:
-        """
-        Read the DECT device type list
-
-        Get DECT device type list with base stations and line ports supported count. This is a static list.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param org_id:
-        :return:
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep('devices/dects/supportedDevices')
-        data = await self.get(url=url, params=params)
-        return TypeAdapter(list[DectDevice]).validate_python(data['devices'])
-
     async def validate_macs(self, macs: list[str], org_id: str = None) -> MACValidationResponse:
         """
         Validate a list of MAC addresses.
@@ -20870,12 +20935,12 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         await super().delete(url, params=params)
 
-    async def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
-                                        location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
+    async def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str,
+                                        location_ids: list[str] = None,
+                                        exclude_devices_with_custom_layout: bool = None,
                                         include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-                                        more_shared_appearances_enabled: bool = None,
-                                        few_shared_appearances_enabled: bool = None,
-                                        more_monitor_appearances_enabled: bool = None, org_id: str = None) -> int:
+                                        advisory_types: LineKeyTemplateAdvisoryTypes = None,
+                                        org_id: str = None) -> int:
         """
         Preview Apply Line Key Template
 
@@ -20893,7 +20958,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         `spark-admin:telephony_config_write`.
 
         :param action: Line key Template action to perform.
-        :type action: ApplyLineKeyTemplateAction
+        :type action: PostApplyLineKeyTemplateRequestAction
         :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
         :type template_id: str
         :param location_ids: Used to search for devices only in the given locations.
@@ -20904,14 +20969,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         :type include_device_tags: list[str]
         :param exclude_device_tags: Exclude devices with these tags.
         :type exclude_device_tags: list[str]
-        :param more_shared_appearances_enabled: Refine search by warnings for More shared appearances than shared
-            users.
-        :type more_shared_appearances_enabled: bool
-        :param few_shared_appearances_enabled: Refine search by warnings for Fewer shared appearances than shared
-            users.
-        :type few_shared_appearances_enabled: bool
-        :param more_monitor_appearances_enabled: Refine search by warnings for more monitor appearances than monitors.
-        :type more_monitor_appearances_enabled: bool
+        :param advisory_types: Refine search with advisories.
+        :type advisory_types: LineKeyTemplateAdvisoryTypes
         :param org_id: Preview Line Key Template for this organization.
         :type org_id: str
         :rtype: int
@@ -20921,8 +20980,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['action'] = enum_str(action)
-        if template_id is not None:
-            body['templateId'] = template_id
+        body['templateId'] = template_id
         if location_ids is not None:
             body['locationIds'] = location_ids
         if exclude_devices_with_custom_layout is not None:
@@ -20931,12 +20989,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
             body['includeDeviceTags'] = include_device_tags
         if exclude_device_tags is not None:
             body['excludeDeviceTags'] = exclude_device_tags
-        if more_shared_appearances_enabled is not None:
-            body['moreSharedAppearancesEnabled'] = more_shared_appearances_enabled
-        if few_shared_appearances_enabled is not None:
-            body['fewSharedAppearancesEnabled'] = few_shared_appearances_enabled
-        if more_monitor_appearances_enabled is not None:
-            body['moreMonitorAppearancesEnabled'] = more_monitor_appearances_enabled
+        if advisory_types is not None:
+            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('devices/actions/previewApplyLineKeyTemplate/invoke')
         data = await super().post(url, params=params, json=body)
         r = data['deviceCount']
@@ -21204,6 +21258,32 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep('devices/backgroundImages')
         data = await super().delete(url, params=params, json=body)
         r = DeleteDeviceBackgroundImagesResponse.model_validate(data)
+        return r
+
+    async def user_devices_count(self, person_id: str, org_id: str = None) -> UserDeviceCount:
+        """
+        Get User Devices Count
+
+        Get the total device and application count for a person.
+
+        The device count can be used to determine if more devices can be added for users with a device count limit. For
+        example, users with standard calling licenses can only have one physical device.
+
+        This requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Person for whom to retrieve the device count.
+        :type person_id: str
+        :param org_id: Organization to which the person belongs.
+        :type org_id: str
+        :rtype: :class:`UserDeviceCount`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/devices/count')
+        data = await super().get(url, params=params)
+        r = UserDeviceCount.model_validate(data)
         return r
 
 
@@ -23874,10 +23954,10 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     async def supported_devices(self, org_id: str = None) -> SupportedDevices:
         """
-        Gets the list of supported devices for an organization location.
+        Gets the list of supported devices for an organization.
 
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: List supported devices for an organization
         :return: List of supported devices
@@ -23910,7 +23990,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
+        -announcement-languages
         """
         url = self.ep('announcementLanguages')
         data = await super().get(url=url)

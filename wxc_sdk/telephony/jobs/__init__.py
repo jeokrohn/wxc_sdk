@@ -84,6 +84,8 @@ class StartJobResponse(ApiModel):
     name: Optional[str] = None
     #: Unique identifier of the job.
     id: str
+    #: Job type.
+    job_type: Optional[str] = None
     #: Unique identifier to track the flow of HTTP requests.
     tracking_id: str
     #: Unique identifier to identify which user has run the job.
@@ -99,6 +101,8 @@ class StartJobResponse(ApiModel):
     job_execution_status: list[JobExecutionStatus]
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, or FAILED) of the job at the time of invocation.
     latest_execution_status: str
+    #: Most recent exit code of the job at the time of invocation.
+    latest_execution_exit_code: Optional[str] = None
     #: indicates if all the devices within this location will be customized with new requested customizations(if set to
     #: true) or will be overridden with the one at organization level (if set to false or any other value). This field
     #: has no effect when the job is being triggered at organization level.
@@ -542,6 +546,8 @@ class ApplyLineKeyTemplateJobDetails(ApiModel):
     #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of
     #: invocation.
     latest_execution_status: Optional[str] = None
+    #: Most recent exit code of the job at the time of invocation.
+    latest_execution_exit_code: Optional[str] = None
     #: Indicates the progress of the job.
     percentage_complete: Optional[int] = None
     #: Number of job steps completed.
@@ -563,8 +569,10 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
 
         Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
+
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
+
         This API allows users to apply a line key template or apply factory default Line Key settings to devices in a
         set of locations or across all locations in the organization.
 
@@ -907,6 +915,8 @@ class MoveUserJobDetails(ApiModel):
     #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of
     #: invocation.
     latest_execution_status: Optional[str] = None
+    #: Most recent exit code of the job at the time of invocation.
+    latest_execution_exit_code: Optional[str] = None
     #: Job statistics.
     counts: Optional[MoveCounts] = None
     #: Reference ID for the file that holds the errors and impacts.

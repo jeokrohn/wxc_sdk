@@ -8,7 +8,7 @@ from time import sleep
 from tests.base import TestCaseWithLog, async_test, TestWithLocations
 from wxc_sdk.common import ApplyLineKeyTemplateAction, OwnerType
 from wxc_sdk.devices import Device, ProductType
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, SupportedDevice
+from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, SupportedDevices
 from wxc_sdk.telephony.devices import LineKeyTemplate, ProgrammableLineKey, LineKeyType
 
 
@@ -49,11 +49,11 @@ class TestLineKeyTemplate(TestCaseWithLog):
             self.async_api.devices.list(product_type=ProductType.phone),
             self.async_api.telephony.devices.list_line_key_templates())
         extensions: list[NumberListPhoneNumber]
-        supported: list[SupportedDevice]
+        supported: list[SupportedDevices]
         devices: list[Device]
         lkts: list[LineKeyTemplate]
 
-        model_8865 = next(d.model for d in supported if '8865' in d.model)
+        model_8865 = next(d.model for d in supported.devices if '8865' in d.model)
         lkt_name = next(name
                         for i in range(1, 100)
                         if (name := f'test 8865 {i:03}') not in set(lkt.template_name

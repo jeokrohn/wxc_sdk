@@ -259,6 +259,8 @@ The method name is a link to the method documentation.
         Update details for a person, by ID
    * - :meth:`api.person_settings.devices <wxc_sdk.person_settings.PersonSettingsApi.devices>`
         Get all devices for a person
+   * - :meth:`api.person_settings.modify_hoteling_settings_primary_devices <wxc_sdk.person_settings.PersonSettingsApi.modify_hoteling_settings_primary_devices>`
+        Modify Hoteling Settings for a Person's Primary Devices
    * - :meth:`api.person_settings.reset_vm_pin <wxc_sdk.person_settings.PersonSettingsApi.reset_vm_pin>`
         Reset Voicemail PIN
    * - :meth:`api.person_settings.agent_caller_id.available_caller_ids <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_caller_ids>`
@@ -560,7 +562,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.route_choices <wxc_sdk.telephony.TelephonyApi.route_choices>`
         List all Routes for the organization
    * - :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
-        Gets the list of supported devices for an organization location
+        Gets the list of supported devices for an organization
    * - :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>`
         Test Call Routing
    * - :meth:`api.telephony.ucm_profiles <wxc_sdk.telephony.TelephonyApi.ucm_profiles>`
@@ -785,6 +787,8 @@ The method name is a link to the method documentation.
         Delete specific DECT Network Handset Details
    * - :meth:`api.telephony.dect_devices.delete_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handsets>`
         Delete multiple handsets
+   * - :meth:`api.telephony.dect_devices.device_type_list <wxc_sdk.telephony.dect_devices.DECTDevicesApi.device_type_list>`
+        Read the DECT device type list
    * - :meth:`api.telephony.dect_devices.handset_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.handset_details>`
         Get Specific DECT Network Handset Details
    * - :meth:`api.telephony.dect_devices.list_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_base_stations>`
@@ -805,8 +809,6 @@ The method name is a link to the method documentation.
         Search members that can be assigned to the device
    * - :meth:`api.telephony.devices.create_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.create_line_key_template>`
         Create a Line Key Template
-   * - :meth:`api.telephony.devices.dect_devices <wxc_sdk.telephony.devices.TelephonyDevicesApi.dect_devices>`
-        Read the DECT device type list
    * - :meth:`api.telephony.devices.delete_background_images <wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_background_images>`
         Delete Device Background Images
    * - :meth:`api.telephony.devices.delete_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.delete_line_key_template>`
@@ -841,10 +843,14 @@ The method name is a link to the method documentation.
         Modify member details on the device
    * - :meth:`api.telephony.devices.update_person_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_person_device_settings>`
         Update Device Settings for a Person
+   * - :meth:`api.telephony.devices.update_third_party_device <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_third_party_device>`
+        Update Third Party Device
    * - :meth:`api.telephony.devices.update_workspace_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_workspace_device_settings>`
         Update Device Settings for a Workspace
    * - :meth:`api.telephony.devices.upload_background_image <wxc_sdk.telephony.devices.TelephonyDevicesApi.upload_background_image>`
         Upload a Device Background Image
+   * - :meth:`api.telephony.devices.user_devices_count <wxc_sdk.telephony.devices.TelephonyDevicesApi.user_devices_count>`
+        Get User Devices Count
    * - :meth:`api.telephony.devices.validate_macs <wxc_sdk.telephony.devices.TelephonyDevicesApi.validate_macs>`
         Validate a list of MAC addresses
    * - :meth:`api.telephony.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.read_emergency_call_notification>`

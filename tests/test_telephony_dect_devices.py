@@ -10,12 +10,14 @@ from itertools import chain
 from operator import attrgetter
 from typing import NamedTuple
 
+from pydantic import TypeAdapter
+
 from tests.base import TestWithLocations, async_test
 from wxc_sdk.common import UserType
 from wxc_sdk.locations import Location
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.dect_devices import DECTNetworkModel, DECTNetworkDetail, BaseStationResponse, \
-    BaseStationsResponse, DECTHandsetItem
+    BaseStationsResponse, DECTHandsetItem, DectDevice
 from wxc_sdk.telephony.devices import AvailableMember
 from wxc_sdk.telephony.virtual_line import VirtualLine
 
@@ -26,6 +28,16 @@ class TestDECTNetwork(NamedTuple):
 
 
 class TestDectDevices(TestWithLocations):
+
+    def test_device_types(self):
+        """
+        Read the DECT device type list
+        """
+        api = self.api.telephony.dect_devices
+        device_types = api.device_type_list()
+        print(f'found {len(device_types)} DECT device types')
+        print(json.dumps(TypeAdapter(list[DectDevice]).dump_python(device_types,
+                                                                   mode='json', by_alias=True), indent=2))
 
     @contextmanager
     def create_test_dect_network(self, keep: bool = False) -> TestDECTNetwork:

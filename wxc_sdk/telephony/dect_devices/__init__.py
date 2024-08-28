@@ -11,7 +11,7 @@ from wxc_sdk.telephony.devices import AvailableMember
 
 __all__ = ['DECTNetworkModel', 'DECTNetworkDetail', 'BaseStationResult', 'BaseStationResponse', 'BaseStationsResponse',
            'DECTHandsetLine', 'Handset', 'BaseStationDetail', 'DECTHandsetItem', 'DECTHandsetList', 'UsageType',
-           'DECTDevicesApi']
+           'DectDevice', 'DECTDevicesApi']
 
 
 class DECTNetworkModel(str, Enum):
@@ -170,6 +170,19 @@ class UsageType(str, Enum):
     shared_line = 'SHARED_LINE'
 
 
+class DectDevice(ApiModel):
+    #: Model name of the device.
+    model: str
+    #: Display name of the device.
+    display_name: str
+    #: Indicates number of base stations.
+    number_of_base_stations: int
+    #: Indicates number of port lines,
+    number_of_line_ports: int
+    #: Indicates number of supported registrations.
+    number_of_registrations_supported: int
+
+
 class DECTDevicesApi(ApiChild, base='telephony/config'):
     """
     DECT Devices Settings
@@ -186,6 +199,26 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
     Adding and modifying these DECT settings requires a full administrator auth token with a scope
     of `spark-admin:telephony_config_write`.
     """
+
+    def device_type_list(self, org_id: str = None) -> list[DectDevice]:
+        """
+        Read the DECT device type list
+
+        Get DECT device type list with base stations and line ports supported count. This is a static list.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :type org_id: str
+        :rtype: list[DectDevice]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('devices/dectNetworks/supportedDevices')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[DectDevice]).validate_python(data['devices'])
+        return r
 
     def create_dect_network(self, location_id: str, name: str, display_name: str, model: DECTNetworkModel,
                             default_access_code_enabled: bool, default_access_code: str,

@@ -24,7 +24,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.person_settings import DeviceList, TelephonyDevice
 from wxc_sdk.telephony import DeviceManagedBy
 from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember, \
-    MACValidationResponse, DeviceLayout, LayoutMode, ProgrammableLineKey, LineKeyType
+    MACValidationResponse, DeviceLayout, LayoutMode, ProgrammableLineKey, LineKeyType, UserDeviceCount
 from wxc_sdk.telephony.jobs import StartJobResponse
 from wxc_sdk.workspaces import Workspace, CallingType
 
@@ -76,6 +76,23 @@ class UserDevices(TestCaseWithLog):
                                          for user in users])
         devices: list[TelephonyDevice]
         print(f'Got devices for {len(devices)} users')
+
+    @async_test
+    async def test_002_device_counts(self):
+        """
+        get device counts for all users
+        """
+        users = calling_users(api=self.api)
+        api = self.async_api.telephony.devices
+        device_counts = await asyncio.gather(*[api.user_devices_count(person_id=user.person_id)
+                                               for user in users])
+        print(f'Got device counts for {len(device_counts)} users')
+        for user, device_count in zip(users, device_counts):
+            user: Person
+            device_count: UserDeviceCount
+            print(f'{user.display_name}')
+            print(json.dumps(device_count.model_dump(mode='json', by_alias=True, exclude_none=True), indent=2))
+            print()
 
 
 class ValidateMac(TestCaseWithLog):
@@ -325,6 +342,7 @@ class TestDeviceLayout(TestCaseWithLog):
         """
         Try to set a speed dial foa given phone
         """
+
         @contextmanager
         def temp_phone():
             with self.no_log():

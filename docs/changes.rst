@@ -55,6 +55,18 @@ Release history
    * :meth:`api.workspace_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
 - feat: new parameter service_number in :meth:`api.telephony.phone_numbers <wxc_sdk.telephony.TelephonyApi.phone_numbers>`
 - feat: new method :meth:`api.workspace_settings.numbers.update <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.update>`
+- feat: full coverage for all device call settings endpoints
+
+    new endpoints:
+
+       * :meth:`api.person_settings.modify_hoteling_settings_primary_devices <wxc_sdk.person_settings.PersonSettingsApi.modify_hoteling_settings_primary_devices>`
+       * :meth:`api.telephony.dect_devices.device_type_list <wxc_sdk.telephony.dect_devices.DECTDevicesApi.device_type_list>`, deprecated api.telephony.devices.dect_devices
+       * :meth:`api.telephony.devices.update_third_party_device <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_third_party_device>`
+       * :meth:`api.telephony.devices.user_devices_count <wxc_sdk.telephony.devices.TelephonyDevicesApi.user_devices_count>`
+
+    signature change:
+
+       * :meth:`api.telephony.devices.preview_apply_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.preview_apply_line_key_template>`
 
 1.21.1
 ------

@@ -10,19 +10,20 @@ from typing import Optional, Union, Any
 from pydantic import TypeAdapter, Field, field_validator, field_serializer
 from requests_toolbelt import MultipartEncoder
 
+from ..jobs import LineKeyTemplateAdvisoryTypes
 from ...api_child import ApiChild
 from ...base import ApiModel, plus1, to_camel, enum_str
 from ...base import SafeEnum as Enum
 from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName, \
     ApplyLineKeyTemplateAction
 
-__all__ = ['DectDevice', 'MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
+__all__ = ['MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
            'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi', 'LineKeyType', 'ProgrammableLineKey',
            'LineKeyTemplate', 'TelephonyDeviceDetails', 'ActivationState', 'TelephonyDeviceOwner',
            'TelephonyDeviceProxy', 'LayoutMode', 'KemModuleType', 'KemKey', 'DeviceLayout', 'DeviceSettings',
            'BackgroundImage', 'BackgroundImages', 'DeleteImageRequestObject',
            'DeleteImageResponseSuccessObjectResult', 'DeleteImageResponseSuccessObject',
-           'DeleteDeviceBackgroundImagesResponse']
+           'DeleteDeviceBackgroundImagesResponse', 'UserDeviceCount']
 
 
 class ActivationState(str, Enum):
@@ -49,8 +50,6 @@ class TelephonyDeviceProxy(ApiModel):
 class TelephonyDeviceDetails(ApiModel):
     #: Manufacturer of the device.
     manufacturer: Optional[str] = None
-    owner: Optional[TelephonyDeviceOwner] = None
-    proxy: Optional[TelephonyDeviceProxy] = None
     #: Device manager(s).
     managed_by: Optional[str] = None
     #: A unique identifier for the device.
@@ -68,19 +67,10 @@ class TelephonyDeviceDetails(ApiModel):
     description: Optional[list[str]] = None
     #: Enabled / disabled status of the upgrade channel.
     upgrade_channel_enabled: Optional[bool] = None
+    owner: Optional[TelephonyDeviceOwner] = None
+    proxy: Optional[TelephonyDeviceProxy] = None
 
 
-class DectDevice(ApiModel):
-    #: Model name of the device.
-    model: str
-    #: Display name of the device.
-    display_name: str
-    #: Indicates number of base stations.
-    number_of_base_stations: int
-    #: Indicates number of port lines,
-    number_of_line_ports: int
-    #: Indicates number of supported registrations.
-    number_of_registrations_supported: int
 
 
 class MemberCommon(ApiModel):
@@ -207,6 +197,8 @@ class LineKeyType(str, Enum):
     shared_line = 'SHARED_LINE'
     #: Enables User and Call Park monitoring.
     monitor = 'MONITOR'
+    #: Enables the configure layout feature in Control Hub to set call park extension implicitly.
+    call_park_extension = 'CALL_PARK_EXTENSION'
     #: Allows users to reach a telephone number, extension or a SIP URI.
     speed_dial = 'SPEED_DIAL'
     #: An open key will automatically take the configuration of a monitor button starting with the first open key.
@@ -374,6 +366,17 @@ class DeleteDeviceBackgroundImagesResponse(ApiModel):
     count: Optional[int] = None
 
 
+class UserDeviceCount(ApiModel):
+    #: The total count of devices associated with the user as a sum of:
+    #:
+    #: - Count of total primary physical devices.
+    #: - Count of Webex-Team system device endpoints.
+    #: - Count of 1 for any or all applications present.
+    total_device_count: Optional[int] = None
+    #: The total count of applications associated with the user.
+    applications_count: Optional[int] = None
+
+
 class TelephonyDevicesApi(ApiChild, base='telephony/config'):
     """
     Telephony devices API
@@ -383,13 +386,16 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         """
         Get Webex Calling Device Details
 
+        Not supported for Webex for Government (FedRAMP)
+
         Retrieves Webex Calling device details that include information needed for third-party device management.
 
-        Webex calling devices are associated with a specific user Workspace or Virtual Line.
+        Webex calling devices are associated with a specific user Workspace or Virtual Line. Webex Calling devices
+        share the location with the entity that owns them.
 
-        Webex Calling devices share the location with the entity that owns them.
+        Person or workspace to which the device is assigned. Its fields point to a primary line/port of the device.
 
-        This API requires a full, location, user, or read-only admin auth token with the scope of
+        Requires a full, location, user, or read-only admin auth token with the scope of
         `spark-admin:telephony_config_read`.
 
         :param device_id: Unique identifier for the device.
@@ -405,6 +411,33 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         data = super().get(url, params=params)
         r = TelephonyDeviceDetails.model_validate(data)
         return r
+
+    def update_third_party_device(self, device_id: str, sip_password: str, org_id: str = None):
+        """
+        Update Third Party Device
+
+        Not supported for Webex for Government (FedRAMP)
+
+        Modify a device's `sipPassword`.
+
+        Updating `sipPassword` on the device requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param sip_password: Password to be updated.
+        :type sip_password: str
+        :param org_id: ID of the organization in which the device resides.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['sipPassword'] = sip_password
+        url = self.ep(f'devices/{device_id}')
+        super().put(url, params=params, json=body)
 
     def members(self, device_id: str, org_id: str = None) -> DeviceMembersResponse:
         """
@@ -603,23 +636,6 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
         self.put(url=url, params=params, data=body)
 
-    def dect_devices(self, org_id: str = None) -> list[DectDevice]:
-        """
-        Read the DECT device type list
-
-        Get DECT device type list with base stations and line ports supported count. This is a static list.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param org_id:
-        :return:
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep('devices/dects/supportedDevices')
-        data = self.get(url=url, params=params)
-        return TypeAdapter(list[DectDevice]).validate_python(data['devices'])
-
     def validate_macs(self, macs: list[str], org_id: str = None) -> MACValidationResponse:
         """
         Validate a list of MAC addresses.
@@ -780,12 +796,12 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         super().delete(url, params=params)
 
-    def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
-                                        location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
+    def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str,
+                                        location_ids: list[str] = None,
+                                        exclude_devices_with_custom_layout: bool = None,
                                         include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-                                        more_shared_appearances_enabled: bool = None,
-                                        few_shared_appearances_enabled: bool = None,
-                                        more_monitor_appearances_enabled: bool = None, org_id: str = None) -> int:
+                                        advisory_types: LineKeyTemplateAdvisoryTypes = None,
+                                        org_id: str = None) -> int:
         """
         Preview Apply Line Key Template
 
@@ -803,7 +819,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         `spark-admin:telephony_config_write`.
 
         :param action: Line key Template action to perform.
-        :type action: ApplyLineKeyTemplateAction
+        :type action: PostApplyLineKeyTemplateRequestAction
         :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
         :type template_id: str
         :param location_ids: Used to search for devices only in the given locations.
@@ -814,14 +830,8 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         :type include_device_tags: list[str]
         :param exclude_device_tags: Exclude devices with these tags.
         :type exclude_device_tags: list[str]
-        :param more_shared_appearances_enabled: Refine search by warnings for More shared appearances than shared
-            users.
-        :type more_shared_appearances_enabled: bool
-        :param few_shared_appearances_enabled: Refine search by warnings for Fewer shared appearances than shared
-            users.
-        :type few_shared_appearances_enabled: bool
-        :param more_monitor_appearances_enabled: Refine search by warnings for more monitor appearances than monitors.
-        :type more_monitor_appearances_enabled: bool
+        :param advisory_types: Refine search with advisories.
+        :type advisory_types: LineKeyTemplateAdvisoryTypes
         :param org_id: Preview Line Key Template for this organization.
         :type org_id: str
         :rtype: int
@@ -831,8 +841,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['action'] = enum_str(action)
-        if template_id is not None:
-            body['templateId'] = template_id
+        body['templateId'] = template_id
         if location_ids is not None:
             body['locationIds'] = location_ids
         if exclude_devices_with_custom_layout is not None:
@@ -841,12 +850,8 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
             body['includeDeviceTags'] = include_device_tags
         if exclude_device_tags is not None:
             body['excludeDeviceTags'] = exclude_device_tags
-        if more_shared_appearances_enabled is not None:
-            body['moreSharedAppearancesEnabled'] = more_shared_appearances_enabled
-        if few_shared_appearances_enabled is not None:
-            body['fewSharedAppearancesEnabled'] = few_shared_appearances_enabled
-        if more_monitor_appearances_enabled is not None:
-            body['moreMonitorAppearancesEnabled'] = more_monitor_appearances_enabled
+        if advisory_types is not None:
+            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('devices/actions/previewApplyLineKeyTemplate/invoke')
         data = super().post(url, params=params, json=body)
         r = data['deviceCount']
@@ -1114,4 +1119,30 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep('devices/backgroundImages')
         data = super().delete(url, params=params, json=body)
         r = DeleteDeviceBackgroundImagesResponse.model_validate(data)
+        return r
+
+    def user_devices_count(self, person_id: str, org_id: str = None) -> UserDeviceCount:
+        """
+        Get User Devices Count
+
+        Get the total device and application count for a person.
+
+        The device count can be used to determine if more devices can be added for users with a device count limit. For
+        example, users with standard calling licenses can only have one physical device.
+
+        This requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Person for whom to retrieve the device count.
+        :type person_id: str
+        :param org_id: Organization to which the person belongs.
+        :type org_id: str
+        :rtype: :class:`UserDeviceCount`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/devices/count')
+        data = super().get(url, params=params)
+        r = UserDeviceCount.model_validate(data)
         return r

@@ -36,7 +36,7 @@ from .voicemail import VoicemailApi
 from ..api_child import ApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
-from ..common import UserType, PrimaryOrShared, IdAndName
+from ..common import UserType, PrimaryOrShared, IdAndName, DeviceType
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 
@@ -85,6 +85,8 @@ class TelephonyDevice(ApiModel):
     description: list[str]
     #: Identifier for device model.
     model: str
+    #: Identifier for device model type.
+    type: Optional[DeviceType] = Field(alias='modelType', default=None)
     #: MAC address of device.
     mac: Optional[str] = None
     #: IP address of device.
@@ -152,7 +154,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     hoteling: HotelingApi
     #: Person's Monitoring Settings
     monitoring: MonitoringApi
-    #; MS Teams settings
+    # ; MS Teams settings
     ms_teams: MSTeamsSettingApi
     #: music on hold settings
     music_on_hold: MusicOnHoldApi
@@ -232,7 +234,8 @@ class PersonSettingsApi(ApiChild, base='people'):
         """
         Get all devices for a person.
 
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        This requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param person_id: Person to retrieve devices for
         :type person_id: str
@@ -245,3 +248,32 @@ class PersonSettingsApi(ApiChild, base='people'):
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = self.get(url=url, params=params)
         return DeviceList.model_validate(data)
+
+    def modify_hoteling_settings_primary_devices(self, person_id: str, hoteling: Hoteling,
+                                                 org_id: str = None):
+        """
+        Modify Hoteling Settings for a Person's Primary Devices
+
+        Modify hoteling login configuration on a person's Webex Calling Devices which are in effect when the device is
+        the user's primary device and device type is PRIMARY. To view the current hoteling login settings, see the
+        `hoteling` field in `Get Person Devices
+        <https://developer.webex.com/docs/api/v1/device-call-settings/get-person-devices>`_.
+
+        Modifying devices for a person requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param person_id: ID of the person associated with the device.
+        :type person_id: str
+        :param hoteling: Modify person Device Hoteling Setting.
+        :type hoteling: Hoteling
+        :param org_id: Organization to which the person belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['hoteling'] = hoteling.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/people/{person_id}/devices/settings/hoteling')
+        super().put(url, params=params, json=body)
