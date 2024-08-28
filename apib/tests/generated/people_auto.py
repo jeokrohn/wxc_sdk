@@ -12,7 +12,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'PeopleApi', 'Person', 'PersonAddresses',
-           'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonStatus', 'PersonType']
+           'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonSipAddresses', 'PersonSipAddressesType',
+           'PersonStatus', 'PersonType']
 
 
 class PersonPhoneNumbersType(str, Enum):
@@ -34,6 +35,9 @@ class PersonPhoneNumbers(ApiModel):
     #: The phone number.
     #: example: +1 408 526 7209
     value: Optional[str] = None
+    #: Primary number for the person.
+    #: example: True
+    primary: Optional[bool] = None
 
 
 class PersonAddresses(ApiModel):
@@ -55,6 +59,26 @@ class PersonAddresses(ApiModel):
     #: The user's postal or zip code.
     #: example: 99212
     postal_code: Optional[str] = None
+
+
+class PersonSipAddressesType(str, Enum):
+    #: Personal room address.
+    personal_room = 'personal-room'
+    #: Enterprise address.
+    enterprise = 'enterprise'
+    #: Cloud calling address.
+    cloud_calling = 'cloud-calling'
+
+
+class PersonSipAddresses(ApiModel):
+    #: The type of SIP address.
+    #: example: personal-room
+    type: Optional[PersonSipAddressesType] = None
+    #: The SIP address.
+    #: example: testuser5@mycompany.webex.com
+    value: Optional[str] = None
+    #: Primary SIP address of the person.
+    primary: Optional[bool] = None
 
 
 class PersonStatus(str, Enum):
@@ -158,15 +182,11 @@ class Person(ApiModel):
     #: <https://help.webex.com/nkzs6wl/>`_.
     #: example: 2015-10-18T14:26:16.028Z
     last_activity: Optional[datetime] = None
-    #: One or several site names where this user has a role (host or attendee)
+    #: One or several site names where this user has a role (host or attendee).
     #: example: ['mysite.webex.com#attendee']
     site_urls: Optional[list[str]] = None
-    #: The user's sip addresses.
-    #: 
-    #: `{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}` (array[object]) - The
-    #: user's SIP addresses. Read-only.
-    #: example: ['{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}']
-    sip_addresses: Optional[list[str]] = None
+    #: The user's SIP addresses. Read-only.
+    sip_addresses: Optional[list[PersonSipAddresses]] = None
     #: Identifier for intra-domain federation with other XMPP based messenger systems.
     #: example: user@example.com
     xmpp_federation_jid: Optional[str] = None
@@ -211,7 +231,7 @@ class PeopleApi(ApiChild, base='people'):
     2.0](https://developer.webex.com/docs/api/v1/scim2-user) protocol, which is
     used for user and group management, provisioning, and maintenance. Developers
     are advised to use this API instead of the people API, due to its higher
-    performance and readily available connectors. Users created via SCIM can be
+    performance and readily available connectors. Users created via SCIM should be
     licensed using the /licenses API, even in large quantities, using the new
     [PATCH method](https://developer.webex.com/docs/api/v1/licenses/assign-
     licenses-to-users).
