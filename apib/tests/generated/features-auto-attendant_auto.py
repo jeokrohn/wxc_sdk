@@ -676,8 +676,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             body['nameDialing'] = enum_str(name_dialing)
         if time_zone is not None:
             body['timeZone'] = time_zone
-        body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
-        body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+        body['businessHoursMenu'] = business_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['afterHoursMenu'] = after_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -769,9 +769,9 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if time_zone is not None:
             body['timeZone'] = time_zone
         if business_hours_menu is not None:
-            body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+            body['businessHoursMenu'] = business_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         if after_hours_menu is not None:
-            body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+            body['afterHoursMenu'] = after_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url, params=params, json=body)
 
@@ -853,7 +853,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['callForwarding'] = loads(call_forwarding.model_dump_json())
+        body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
         super().put(url, params=params, json=body)
 
@@ -918,10 +918,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             body['businessSchedule'] = business_schedule
         if holiday_schedule is not None:
             body['holidaySchedule'] = holiday_schedule
-        body['forwardTo'] = loads(forward_to.model_dump_json())
-        body['callsFrom'] = loads(calls_from.model_dump_json())
+        body['forwardTo'] = forward_to.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['callsFrom'] = calls_from.model_dump(mode='json', by_alias=True, exclude_none=True)
         if calls_to is not None:
-            body['callsTo'] = loads(calls_to.model_dump_json())
+            body['callsTo'] = calls_to.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1027,11 +1027,11 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         if holiday_schedule is not None:
             body['holidaySchedule'] = holiday_schedule
         if forward_to is not None:
-            body['forwardTo'] = loads(forward_to.model_dump_json())
+            body['forwardTo'] = forward_to.model_dump(mode='json', by_alias=True, exclude_none=True)
         if calls_from is not None:
-            body['callsFrom'] = loads(calls_from.model_dump_json())
+            body['callsFrom'] = calls_from.model_dump(mode='json', by_alias=True, exclude_none=True)
         if calls_to is not None:
-            body['callsTo'] = loads(calls_to.model_dump_json())
+            body['callsTo'] = calls_to.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']

@@ -400,7 +400,7 @@ class ContactCenterApi(ApiChild, base='contactCenter'):
         :rtype: :class:`ListCapturesResponse`
         """
         body = dict()
-        body['query'] = loads(query.model_dump_json())
+        body['query'] = query.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('captures/query')
         data = super().post(url, json=body)
         r = ListCapturesResponse.model_validate(data)

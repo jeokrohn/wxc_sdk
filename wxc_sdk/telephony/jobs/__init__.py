@@ -613,7 +613,7 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
         if exclude_device_tags is not None:
             body['excludeDeviceTags'] = exclude_device_tags
         if advisory_types is not None:
-            body['advisoryTypes'] = json.loads(advisory_types.model_dump_json())
+            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep()
         data = super().post(url, params=params, json=body)
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)

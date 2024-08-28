@@ -316,7 +316,7 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
             body['lastName'] = last_name
         if time_zone is not None:
             body['timeZone'] = time_zone
-        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['callPolicies'] = call_policies.model_dump(mode='json', by_alias=True, exclude_none=True)
         if use_hosted_agent_enabled is not None:
             body['useHostedAgentEnabled'] = use_hosted_agent_enabled
         if use_policy_server_enabled is not None:
@@ -440,7 +440,7 @@ class BetaFeaturesHuntGroupWithConfigureOnpremPhoneNumbersApi(ApiChild, base='te
         if time_zone is not None:
             body['timeZone'] = time_zone
         if call_policies is not None:
-            body['callPolicies'] = loads(call_policies.model_dump_json())
+            body['callPolicies'] = call_policies.model_dump(mode='json', by_alias=True, exclude_none=True)
         if use_policy_server_enabled is not None:
             body['usePolicyServerEnabled'] = use_policy_server_enabled
         body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)

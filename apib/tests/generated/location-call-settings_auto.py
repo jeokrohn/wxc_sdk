@@ -746,7 +746,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         body['timeZone'] = time_zone
         body['preferredLanguage'] = preferred_language
         body['announcementLanguage'] = announcement_language
-        body['address'] = loads(address.model_dump_json())
+        body['address'] = address.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('locations')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -829,8 +829,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['announcementLanguage'] = announcement_language
-        body['callingLineId'] = loads(calling_line_id.model_dump_json())
-        body['connection'] = loads(connection.model_dump_json())
+        body['callingLineId'] = calling_line_id.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['connection'] = connection.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['externalCallerIdName'] = external_caller_id_name
         body['pAccessNetworkInfo'] = p_access_network_info
         body['outsideDialDigit'] = outside_dial_digit
@@ -1141,7 +1141,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             body['callParkEnabled'] = call_park_enabled
         body['greeting'] = enum_str(greeting)
         if audio_file is not None:
-            body['audioFile'] = loads(audio_file.model_dump_json())
+            body['audioFile'] = audio_file.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/musicOnHold')
         super().put(url, params=params, json=body)
 

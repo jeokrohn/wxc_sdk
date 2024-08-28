@@ -451,7 +451,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
             body['phoneNumber'] = phone_number
         body['firstName'] = first_name
         body['lastName'] = last_name
-        body['passcode'] = loads(passcode.model_dump_json())
+        body['passcode'] = passcode.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/voicePortal')
         super().put(url, params=params, json=body)
 
@@ -628,11 +628,11 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
             body['greeting'] = enum_str(greeting)
         if greeting_description is not None:
             body['greetingDescription'] = greeting_description
-        body['messageStorage'] = loads(message_storage.model_dump_json())
-        body['notifications'] = loads(notifications.model_dump_json())
-        body['faxMessage'] = loads(fax_message.model_dump_json())
-        body['transferToNumber'] = loads(transfer_to_number.model_dump_json())
-        body['emailCopyOfMessage'] = loads(email_copy_of_message.model_dump_json())
+        body['messageStorage'] = message_storage.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['notifications'] = notifications.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
         super().put(url, params=params, json=body)
 
@@ -699,11 +699,11 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
             body['lastName'] = last_name
         body['passcode'] = passcode
         body['languageCode'] = language_code
-        body['messageStorage'] = loads(message_storage.model_dump_json())
-        body['notifications'] = loads(notifications.model_dump_json())
-        body['faxMessage'] = loads(fax_message.model_dump_json())
-        body['transferToNumber'] = loads(transfer_to_number.model_dump_json())
-        body['emailCopyOfMessage'] = loads(email_copy_of_message.model_dump_json())
+        body['messageStorage'] = message_storage.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['notifications'] = notifications.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/voicemailGroups')
         data = super().post(url, params=params, json=body)
         r = data['id']

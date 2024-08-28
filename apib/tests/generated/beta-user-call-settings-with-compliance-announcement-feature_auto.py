@@ -192,10 +192,10 @@ class BetaUserCallSettingsWithComplianceAnnouncementFeatureApi(ApiChild, base='p
         if start_stop_announcement_enabled is not None:
             body['startStopAnnouncementEnabled'] = start_stop_announcement_enabled
         if notification is not None:
-            body['notification'] = loads(notification.model_dump_json())
+            body['notification'] = notification.model_dump(mode='json', by_alias=True, exclude_none=True)
         if repeat is not None:
-            body['repeat'] = loads(repeat.model_dump_json())
+            body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
         if start_stop_announcement is not None:
-            body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
+            body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{person_id}/features/callRecording')
         super().put(url, params=params, json=body)

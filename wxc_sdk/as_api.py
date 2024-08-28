@@ -8865,7 +8865,7 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.model_dump_json())
+        data = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if settings.monitoring_agents is not None:
             id_list = []
             for ma in settings.monitoring_agents:
@@ -8997,7 +8997,7 @@ class AsReceptionistApi(AsPersonSettingsApiChild):
             raise ValueError('when setting members enabled has to be True')
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.model_dump_json())
+        data = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if settings.monitored_members is not None:
             id_list = []
             for me in settings.monitored_members:
@@ -16517,7 +16517,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         if exclude_device_tags is not None:
             body['excludeDeviceTags'] = exclude_device_tags
         if advisory_types is not None:
-            body['advisoryTypes'] = json.loads(advisory_types.model_dump_json())
+            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep()
         data = await super().post(url, params=params, json=body)
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
@@ -17686,7 +17686,7 @@ class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = {'accessCodes': [json.loads(ac.model_dump_json()) for ac in access_codes]}
+        body = {'accessCodes': [ac.model_dump(mode='json', by_alias=True, exclude_none=True) for ac in access_codes]}
         await self.post(url, json=body, params=params)
 
     async def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],

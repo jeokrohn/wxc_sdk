@@ -137,7 +137,7 @@ class BetaFeaturesLocationCallSettingsWithPlaylistApi(ApiChild, base='telephony/
             body['callParkEnabled'] = call_park_enabled
         body['greeting'] = enum_str(greeting)
         if audio_file is not None:
-            body['audioFile'] = loads(audio_file.model_dump_json())
+            body['audioFile'] = audio_file.model_dump(mode='json', by_alias=True, exclude_none=True)
         if playlist_id is not None:
             body['playlistId'] = playlist_id
         url = self.ep(f'{location_id}/musicOnHold')

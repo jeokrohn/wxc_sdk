@@ -2266,7 +2266,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         if device_model is not None:
             params['deviceModel'] = device_model
         body = dict()
-        body['customizations'] = loads(customizations.model_dump_json())
+        body['customizations'] = customizations.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['customEnabled'] = custom_enabled
         url = self.ep(f'devices/{device_id}/settings')
         super().put(url, params=params, json=body)
@@ -2398,7 +2398,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['hoteling'] = loads(hoteling.model_dump_json())
+        body['hoteling'] = hoteling.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/devices/settings/hoteling')
         super().put(url, params=params, json=body)
 
@@ -2792,7 +2792,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         if exclude_device_tags is not None:
             body['excludeDeviceTags'] = exclude_device_tags
         if advisory_types is not None:
-            body['advisoryTypes'] = loads(advisory_types.model_dump_json())
+            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('jobs/devices/applyLineKeyTemplate')
         data = super().post(url, params=params, json=body)
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
@@ -3000,7 +3000,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         if location_customizations_enabled is not None:
             body['locationCustomizationsEnabled'] = location_customizations_enabled
         if customizations is not None:
-            body['customizations'] = loads(customizations.model_dump_json())
+            body['customizations'] = customizations.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('jobs/devices/callDeviceSettings')
         data = super().post(url, params=params, json=body)
         r = StartJobResponse.model_validate(data)

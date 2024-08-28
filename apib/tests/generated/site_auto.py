@@ -203,10 +203,10 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
         :rtype: :class:`GetMeetingConfigurationCommonSettingObject`
         """
         body = dict()
-        body['siteOptions'] = loads(site_options.model_dump_json())
-        body['defaultSchedulerOptions'] = loads(default_scheduler_options.model_dump_json())
-        body['scheduleMeetingOptions'] = loads(schedule_meeting_options.model_dump_json())
-        body['securityOptions'] = loads(security_options.model_dump_json())
+        body['siteOptions'] = site_options.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['defaultSchedulerOptions'] = default_scheduler_options.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['scheduleMeetingOptions'] = schedule_meeting_options.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['securityOptions'] = security_options.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep()
         data = super().patch(url, json=body)
         r = GetMeetingConfigurationCommonSettingObject.model_validate(data)

@@ -82,7 +82,7 @@ class ReceptionistApi(PersonSettingsApiChild):
             raise ValueError('when setting members enabled has to be True')
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.model_dump_json())
+        data = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if settings.monitored_members is not None:
             id_list = []
             for me in settings.monitored_members:

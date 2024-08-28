@@ -308,7 +308,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['recall'] = loads(recall.model_dump_json())
+        body['recall'] = recall.model_dump(mode='json', by_alias=True, exclude_none=True)
         if agents is not None:
             body['agents'] = agents
         if park_on_agents_enabled is not None:
@@ -419,7 +419,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         if name is not None:
             body['name'] = name
         if recall is not None:
-            body['recall'] = loads(recall.model_dump_json())
+            body['recall'] = recall.model_dump(mode='json', by_alias=True, exclude_none=True)
         if agents is not None:
             body['agents'] = agents
         if park_on_agents_enabled is not None:
@@ -558,9 +558,9 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         if call_park_recall is not None:
-            body['callParkRecall'] = loads(call_park_recall.model_dump_json())
+            body['callParkRecall'] = call_park_recall.model_dump(mode='json', by_alias=True, exclude_none=True)
         if call_park_settings is not None:
-            body['callParkSettings'] = loads(call_park_settings.model_dump_json())
+            body['callParkSettings'] = call_park_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/callParks/settings')
         super().put(url, params=params, json=body)
 

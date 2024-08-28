@@ -204,7 +204,7 @@ class LocationsApi(ApiChild, base='locations'):
         body['timeZone'] = time_zone
         body['preferredLanguage'] = preferred_language
         body['announcementLanguage'] = announcement_language
-        body['address'] = loads(address.model_dump_json())
+        body['address'] = address.model_dump(mode='json', by_alias=True, exclude_none=True)
         if latitude is not None:
             body['latitude'] = latitude
         if longitude is not None:
@@ -256,7 +256,7 @@ class LocationsApi(ApiChild, base='locations'):
         if preferred_language is not None:
             body['preferredLanguage'] = preferred_language
         if address is not None:
-            body['address'] = loads(address.model_dump_json())
+            body['address'] = address.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{location_id}')
         super().put(url, params=params, json=body)
 

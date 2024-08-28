@@ -430,12 +430,12 @@ class BetaFeaturesHuntGroupWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if time_zone is not None:
             body['timeZone'] = time_zone
         if call_policies is not None:
-            body['callPolicies'] = loads(call_policies.model_dump_json())
+            body['callPolicies'] = call_policies.model_dump(mode='json', by_alias=True, exclude_none=True)
         if agents is not None:
             body['agents'] = TypeAdapter(list[PostPersonPlaceObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if enabled is not None:
             body['enabled'] = enabled
         if department is not None:
-            body['department'] = loads(department.model_dump_json())
+            body['department'] = department.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)

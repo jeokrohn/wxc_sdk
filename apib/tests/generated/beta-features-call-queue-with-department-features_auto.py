@@ -471,15 +471,15 @@ class BetaFeaturesCallQueueWithDepartmentFeaturesApi(ApiChild, base='telephony/c
         if extension is not None:
             body['extension'] = extension
         if alternate_number_settings is not None:
-            body['alternateNumberSettings'] = loads(alternate_number_settings.model_dump_json())
+            body['alternateNumberSettings'] = alternate_number_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if call_policies is not None:
-            body['callPolicies'] = loads(call_policies.model_dump_json())
-        body['queueSettings'] = loads(queue_settings.model_dump_json())
+            body['callPolicies'] = call_policies.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['queueSettings'] = queue_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if allow_call_waiting_for_agents_enabled is not None:
             body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
         if agents is not None:
             body['agents'] = TypeAdapter(list[PostPersonPlaceObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if department is not None:
-            body['department'] = loads(department.model_dump_json())
+            body['department'] = department.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().put(url, params=params, json=body)

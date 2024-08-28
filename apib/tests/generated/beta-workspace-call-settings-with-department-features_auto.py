@@ -105,6 +105,6 @@ class BetaWorkspaceCallSettingsWithDepartmentFeaturesApi(ApiChild, base='telepho
             params['orgId'] = org_id
         body = dict()
         if department is not None:
-            body['department'] = loads(department.model_dump_json())
+            body['department'] = department.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{workspace_id}')
         super().put(url, params=params, json=body)

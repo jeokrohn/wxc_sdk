@@ -131,7 +131,7 @@ class DeviceMember(MemberCommon):
 
     @staticmethod
     def from_available(available: 'AvailableMember') -> 'DeviceMember':
-        data = json.loads(available.model_dump_json())
+        data = available.model_dump(mode='json', by_alias=True, exclude_none=True)
         return DeviceMember.model_validate(data)
 
 

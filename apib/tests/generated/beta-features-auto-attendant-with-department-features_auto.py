@@ -373,10 +373,10 @@ class BetaFeaturesAutoAttendantWithDepartmentFeaturesApi(ApiChild, base='telepho
         if time_zone is not None:
             body['timeZone'] = time_zone
         if business_hours_menu is not None:
-            body['businessHoursMenu'] = loads(business_hours_menu.model_dump_json())
+            body['businessHoursMenu'] = business_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         if after_hours_menu is not None:
-            body['afterHoursMenu'] = loads(after_hours_menu.model_dump_json())
+            body['afterHoursMenu'] = after_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         if department is not None:
-            body['department'] = loads(department.model_dump_json())
+            body['department'] = department.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url, params=params, json=body)

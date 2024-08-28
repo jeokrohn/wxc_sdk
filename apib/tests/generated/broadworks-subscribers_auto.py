@@ -467,7 +467,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         if timezone is not None:
             body['timezone'] = timezone
         if customer_info is not None:
-            body['customerInfo'] = loads(customer_info.model_dump_json())
+            body['customerInfo'] = customer_info.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('validate')
         data = super().post(url, json=body)
         r = SubscriberProvisioningPrecheckResponse.model_validate(data)

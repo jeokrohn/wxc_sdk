@@ -157,10 +157,12 @@ class Parameter:
             yield f"{indent}body['{self.name}'] = enum_str({self.python_name})"
             return
         if self.python_type == self.referenced_class:
-            yield f"{indent}body['{self.name}'] = loads({self.python_name}.model_dump_json())"
+            # body['{name}'] = {python_name}.model_dump(mode='json', by_alias=True, exclude_none=True)
+            yield (f"{indent}body['{self.name}'] = {self.python_name}.model_dump(mode='json', "
+                   f"by_alias=True, exclude_none=True)")
             return
-        yield f"{indent}body['{self.name}'] = TypeAdapter({self.python_type}).dump_python({self.python_name}, " \
-              f"mode='json', by_alias=True, exclude_none=True)"
+        yield (f"{indent}body['{self.name}'] = TypeAdapter({self.python_type}).dump_python({self.python_name}, "
+               f"mode='json', by_alias=True, exclude_none=True)")
 
 
 class SourceIO(StringIO):

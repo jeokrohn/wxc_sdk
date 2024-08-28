@@ -678,7 +678,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             body['lastName'] = last_name
         if time_zone is not None:
             body['timeZone'] = time_zone
-        body['callPolicies'] = loads(call_policies.model_dump_json())
+        body['callPolicies'] = call_policies.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         body['enabled'] = enabled
         if hunt_group_caller_id_for_outgoing_calls_enabled is not None:
@@ -823,7 +823,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if time_zone is not None:
             body['timeZone'] = time_zone
         if call_policies is not None:
-            body['callPolicies'] = loads(call_policies.model_dump_json())
+            body['callPolicies'] = call_policies.model_dump(mode='json', by_alias=True, exclude_none=True)
         if agents is not None:
             body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if enabled is not None:
@@ -885,7 +885,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         if call_forwarding is not None:
-            body['callForwarding'] = loads(call_forwarding.model_dump_json())
+            body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
         super().put(url, params=params, json=body)
 
@@ -948,9 +948,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if business_schedule is not None:
             body['businessSchedule'] = business_schedule
         if forward_to is not None:
-            body['forwardTo'] = loads(forward_to.model_dump_json())
-        body['callsFrom'] = loads(calls_from.model_dump_json())
-        body['callsTo'] = loads(calls_to.model_dump_json())
+            body['forwardTo'] = forward_to.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['callsFrom'] = calls_from.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['callsTo'] = calls_to.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1054,11 +1054,11 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         if business_schedule is not None:
             body['businessSchedule'] = business_schedule
         if forward_to is not None:
-            body['forwardTo'] = loads(forward_to.model_dump_json())
+            body['forwardTo'] = forward_to.model_dump(mode='json', by_alias=True, exclude_none=True)
         if calls_from is not None:
-            body['callsFrom'] = loads(calls_from.model_dump_json())
+            body['callsFrom'] = calls_from.model_dump(mode='json', by_alias=True, exclude_none=True)
         if calls_to is not None:
-            body['callsTo'] = loads(calls_to.model_dump_json())
+            body['callsTo'] = calls_to.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']

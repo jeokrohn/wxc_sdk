@@ -82,7 +82,7 @@ class PrivacyApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.model_dump_json())
+        data = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if settings.monitoring_agents is not None:
             id_list = []
             for ma in settings.monitoring_agents:
