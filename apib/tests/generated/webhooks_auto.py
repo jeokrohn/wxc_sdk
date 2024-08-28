@@ -15,35 +15,39 @@ __all__ = ['Webhook', 'WebhookEvent', 'WebhookResource', 'WebhookStatus', 'Webho
 
 
 class WebhookResource(str, Enum):
-    #: The `Attachment Actions
+    #: `Attachment Actions
     #: <https://developer.webex.com/docs/api/v1/attachment-actions>`_ resource.
     attachment_actions = 'attachmentActions'
-    #: The `Memberships
+    #: `Memberships
     #: <https://developer.webex.com/docs/api/v1/memberships>`_ resource.
     memberships = 'memberships'
-    #: The `Messages
+    #: `Messages
     #: <https://developer.webex.com/docs/api/v1/messages>`_ resource.
     messages = 'messages'
-    #: The `Rooms
+    #: `Rooms
     #: <https://developer.webex.com/docs/api/v1/rooms>`_ resource.
     rooms = 'rooms'
-    #: The `Meetings
+    #: `Meetings
     #: <https://developer.webex.com/docs/api/v1/meetings>`_ resource.
     meetings = 'meetings'
-    #: The `Recordings
+    #: `Recordings
     #: <https://developer.webex.com/docs/api/v1/recordings>`_ resource.
     recordings = 'recordings'
-    #: The `CallRecordings
+    #: `CallRecordings
     #: <https://developer.webex.com/docs/api/v1/converged-recordings>`_ resource.
     converged_recordings = 'convergedRecordings'
-    #: The `Meeting Participants
+    #: `Meeting Participants
     #: <https://developer.webex.com/docs/api/v1/meeting-participants>`_ resource.
     meeting_participants = 'meetingParticipants'
-    #: The `Meeting Transcripts
+    #: `Meeting Transcripts
     #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_ resource.
     meeting_transcripts = 'meetingTranscripts'
+    #: Performance counter for a dedicated instance.
+    uc_counters = 'uc_counters'
     #: Service App authorization notification.
     service_app = 'serviceApp'
+    #: Admin Batch Jobs notification.
+    admin_batch_jobs = 'adminBatchJobs'
 
 
 class WebhookEvent(str, Enum):
@@ -67,12 +71,14 @@ class WebhookEvent(str, Enum):
     authorized = 'authorized'
     #: A Service App was deauthorized.
     deauthorized = 'deauthorized'
+    #: Status of admin batch job was changed.
+    status_changed = 'statusChanged'
 
 
 class WebhookStatus(str, Enum):
-    #: The webhook is active.
+    #: Webhook is active.
     active = 'active'
-    #: The webhook is inactive.
+    #: Webhook is inactive.
     inactive = 'inactive'
 
 
@@ -83,31 +89,31 @@ class Webhook(ApiModel):
     #: A user-friendly name for the webhook.
     #: example: My Awesome Webhook
     name: Optional[str] = None
-    #: The URL that receives POST requests for each event.
+    #: URL that receives POST requests for each event.
     #: example: https://example.com/mywebhook
     target_url: Optional[str] = None
-    #: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
+    #: Resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     #: example: messages
     resource: Optional[WebhookResource] = None
-    #: The event type for the webhook.
+    #: Event type for the webhook.
     #: example: created
     event: Optional[WebhookEvent] = None
-    #: The filter that defines the webhook scope.
+    #: Filter that defines the webhook scope.
     #: example: roomId=Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
     filter: Optional[str] = None
-    #: The secret used to generate payload signature.
+    #: Secret used to generate payload signature.
     #: example: 86dacc007724d8ea666f88fc77d918dad9537a15
     secret: Optional[str] = None
-    #: The status of the webhook. Use `active` to reactivate a disabled webhook.
+    #: Status of the webhook. Use `active` to reactivate a disabled webhook.
     #: example: active
     status: Optional[WebhookStatus] = None
-    #: The date and time the webhook was created.
+    #: Date and time the webhook was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
     #: Specify `org` when creating an org/admin level webhook. Supported for `meetings`, `recordings`,
     #: `convergedRecordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`,
-    #: `rooms`, and `messaging` (for Compliance Officers and messages with file attachments only - see
-    #: `inline file DLP
+    #: `rooms`, `messaging` and `adminBatchJobs`  (for Compliance Officers and messages with file attachments only -
+    #: see `inline file DLP
     #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     #: example: org
     owned_by: Optional[str] = None
@@ -163,23 +169,23 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param name: A user-friendly name for the webhook.
         :type name: str
-        :param target_url: The URL that receives POST requests for each event.
+        :param target_url: URL that receives POST requests for each event.
         :type target_url: str
-        :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource
-            the webhook is for.
+        :param resource: Resource type for the webhook. Creating a webhook requires 'read' scope on the resource the
+            webhook is for.
         :type resource: WebhookResource
-        :param event: The event type for the webhook.
+        :param event: Event type for the webhook.
         :type event: WebhookEvent
-        :param filter: The filter that defines the webhook scope. See `Filtering Webhooks
-            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information. Please
-            note that if a filter of `hostEmail` or `hostUserId` is specified, `ownedBy` must be set to `org`.
+        :param filter: Filter that defines the webhook scope. See `Filtering Webhooks
+            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information. Please note
+            that if a filter of `hostEmail` or `hostUserId` is specified, `ownedBy` must be set to `org`.
         :type filter: str
-        :param secret: The secret used to generate payload signature.
+        :param secret: Secret used to generate payload signature.
         :type secret: str
         :param owned_by: Specify `org` when creating an org/admin level webhook. Supported for `meetings`,
             `recordings`, `convergedRecordings`,`meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`,
-            `controlHubAlerts`, `rooms`, and `messaging` (for Compliance Officers and messages with file attachments
-            only - see `inline file DLP
+            `controlHubAlerts`, `rooms`, `messaging` and `adminBatchJobs` (for Compliance Officers and messages with
+            file attachments only - see `inline file DLP
             <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
         :type owned_by: str
         :rtype: :class:`Webhook`
@@ -233,17 +239,17 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type webhook_id: str
         :param name: A user-friendly name for the webhook.
         :type name: str
-        :param target_url: The URL that receives POST requests for each event.
+        :param target_url: URL that receives POST requests for each event.
         :type target_url: str
-        :param secret: The secret used to generate payload signature.
+        :param secret: Secret used to generate payload signature.
         :type secret: str
         :param owned_by: Specify `org` when creating an org/admin level webhook. Supported for `meetings`,
             `recordings`, `convergedRecordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`,
-            `controlHubAlerts`, `rooms`, and `messaging` (for Compliance Officers and messages with file attachments
-            only - see `inline file DLP
+            `controlHubAlerts`, `rooms`, `messaging` and `adminBatchJobs`  (for Compliance Officers and messages with
+            file attachments only - see `inline file DLP
             <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
         :type owned_by: str
-        :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
+        :param status: Status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: WebhookStatus
         :rtype: :class:`Webhook`
         """

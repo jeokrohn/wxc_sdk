@@ -40,6 +40,9 @@ class WebhookEventType(str, Enum):
     authorized = 'authorized'
     #: A Service App was deauthorized.
     deauthorized = 'deauthorized'
+    #: Status of admin batch job was changed.
+    status_changed = 'statusChanged'
+
 
     all = 'all'
 
@@ -79,6 +82,10 @@ class WebhookResource(str, Enum):
     service_app = 'serviceApp'
     telephony_calls = 'telephony_calls'
     telephony_mwi = 'telephony_mwi'
+    #: Performance counter for a dedicated instance.
+    uc_counters = 'uc_counters'
+    #: Admin Batch Jobs notification.
+    admin_batch_jobs = 'adminBatchJobs'
     all = 'all'
 
 
@@ -96,7 +103,9 @@ class WebhookCreate(ApiModel):
 
 
 class WebhookStatus(str, Enum):
+    #: Webhook is active.
     active = 'active'
+    #: Webhook is inactive.
     inactive = 'inactive'
 
 
@@ -105,27 +114,27 @@ class Webhook(ApiModel):
     webhook_id: Optional[str] = Field(alias='id', default=None)
     #: A user-friendly name for the webhook.
     name: str
-    #: The URL that receives POST requests for each event.
+    #: URL that receives POST requests for each event.
     target_url: str
-    #: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
+    #: Resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     resource: Optional[WebhookResource] = None
-    #: The event type for the Webhook.
+    #: Event type for the Webhook.
     event: Optional[WebhookEventType] = None
-    #: The filter that defines the webhook scope.
+    #: Filter that defines the webhook scope.
     filter: Optional[str] = None
-    #: The secret used to generate payload signature.
+    #: Secret used to generate payload signature.
     secret: Optional[str] = None
-    #: The status of the webhook. Use active to reactivate a disabled webhook.
+    #: Status of the webhook. Use active to reactivate a disabled webhook.
     status: WebhookStatus
-    #: The date and time the webhook was created.
+    #: Date and time the webhook was created.
     created: datetime.datetime
     org_id: Optional[str] = None
     created_by: Optional[str] = None
     app_id: Optional[str] = None
     #: Specify `org` when creating an org/admin level webhook. Supported for `meetings`, `recordings`,
     #: `convergedRecordings`, `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`,
-    #: `rooms`, and `messaging` (for Compliance Officers and messages with file attachments only - see
-    #: `inline file DLP
+    #: `rooms`, `messaging` and `adminBatchJobs`  (for Compliance Officers and messages with file attachments only -
+    #: see `inline file DLP
     #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     owned_by: Optional[str] = None
 
