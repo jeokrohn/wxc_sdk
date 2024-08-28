@@ -2137,9 +2137,9 @@ class UserCallSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         body = dict()
         if call_forwarding is not None:
-            body['callForwarding'] = loads(call_forwarding.model_dump_json())
+            body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         if business_continuity is not None:
-            body['businessContinuity'] = loads(business_continuity.model_dump_json())
+            body['businessContinuity'] = business_continuity.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/callForwarding')
         super().put(url, params=params, json=body)
 
@@ -2211,9 +2211,9 @@ class UserCallSettingsApi(ApiChild, base=''):
         if enabled is not None:
             body['enabled'] = enabled
         if incoming is not None:
-            body['incoming'] = loads(incoming.model_dump_json())
+            body['incoming'] = incoming.model_dump(mode='json', by_alias=True, exclude_none=True)
         if outgoing is not None:
-            body['outgoing'] = loads(outgoing.model_dump_json())
+            body['outgoing'] = outgoing.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/intercept')
         super().put(url, params=params, json=body)
 
@@ -2333,11 +2333,11 @@ class UserCallSettingsApi(ApiChild, base=''):
         if start_stop_announcement_enabled is not None:
             body['startStopAnnouncementEnabled'] = start_stop_announcement_enabled
         if notification is not None:
-            body['notification'] = loads(notification.model_dump_json())
+            body['notification'] = notification.model_dump(mode='json', by_alias=True, exclude_none=True)
         if repeat is not None:
-            body['repeat'] = loads(repeat.model_dump_json())
+            body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
         if start_stop_announcement is not None:
-            body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
+            body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/callRecording')
         super().put(url, params=params, json=body)
 
@@ -3377,7 +3377,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         if greeting is not None:
             body['greeting'] = enum_str(greeting)
         if audio_announcement_file is not None:
-            body['audioAnnouncementFile'] = loads(audio_announcement_file.model_dump_json())
+            body['audioAnnouncementFile'] = audio_announcement_file.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'telephony/config/people/{person_id}/musicOnHold')
         super().put(url, params=params, json=body)
 
@@ -4161,7 +4161,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         if all_day_enabled is not None:
             body['allDayEnabled'] = all_day_enabled
         if recurrence is not None:
-            body['recurrence'] = loads(recurrence.model_dump_json())
+            body['recurrence'] = recurrence.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -4232,7 +4232,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         if all_day_enabled is not None:
             body['allDayEnabled'] = all_day_enabled
         if recurrence is not None:
-            body['recurrence'] = loads(recurrence.model_dump_json())
+            body['recurrence'] = recurrence.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
@@ -4453,19 +4453,19 @@ class UserCallSettingsApi(ApiChild, base=''):
         if enabled is not None:
             body['enabled'] = enabled
         if send_all_calls is not None:
-            body['sendAllCalls'] = loads(send_all_calls.model_dump_json())
+            body['sendAllCalls'] = send_all_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
         if send_busy_calls is not None:
-            body['sendBusyCalls'] = loads(send_busy_calls.model_dump_json())
+            body['sendBusyCalls'] = send_busy_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
         if send_unanswered_calls is not None:
-            body['sendUnansweredCalls'] = loads(send_unanswered_calls.model_dump_json())
-        body['notifications'] = loads(notifications.model_dump_json())
-        body['transferToNumber'] = loads(transfer_to_number.model_dump_json())
+            body['sendUnansweredCalls'] = send_unanswered_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['notifications'] = notifications.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
         if email_copy_of_message is not None:
-            body['emailCopyOfMessage'] = loads(email_copy_of_message.model_dump_json())
+            body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
         if message_storage is not None:
-            body['messageStorage'] = loads(message_storage.model_dump_json())
+            body['messageStorage'] = message_storage.model_dump(mode='json', by_alias=True, exclude_none=True)
         if fax_message is not None:
-            body['faxMessage'] = loads(fax_message.model_dump_json())
+            body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/voicemail')
         super().put(url, params=params, json=body)
 
