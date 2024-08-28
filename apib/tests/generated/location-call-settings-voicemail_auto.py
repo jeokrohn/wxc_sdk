@@ -295,15 +295,19 @@ class VoicePortalAvailableNumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[STATE] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates if the phone number is a toll-free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
 
 
 class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
@@ -734,7 +738,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         """
         Get Voicemail Group Fax Message Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as a voicemail group's FAX message phone number.
+        List the standard and service PSTN numbers that are available to be assigned as a voicemail group's FAX message
+        phone number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -767,7 +772,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         """
         Get Voicemail Group Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as a voicemail group's phone number.
+        List the service and standard PSTN numbers that are available to be assigned as a voicemail group's phone
+        number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -800,7 +806,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         """
         Get VoicePortal Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as the location voice portal's phone number.
+        List the service and standard PSTN numbers that are available to be assigned as the location voice portal's
+        phone number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 

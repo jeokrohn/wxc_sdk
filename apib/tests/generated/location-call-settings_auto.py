@@ -20,9 +20,9 @@ __all__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLeve
            'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
            'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject',
            'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'JobExecutionStatus',
-           'ListLocationObject', 'LocationAvailableNumberObject', 'LocationCallSettingsApi',
-           'LocationECBNAvailableNumberObject', 'LocationECBNAvailableNumberObjectOwner', 'LocationObject',
-           'LocationPUTResponse', 'NumberObject', 'NumberObjectOwner', 'NumberOwnerType',
+           'ListLocationObject', 'LocationAvailableNumberObject', 'LocationCallInterceptAvailableNumberObject',
+           'LocationCallSettingsApi', 'LocationECBNAvailableNumberObject', 'LocationECBNAvailableNumberObjectOwner',
+           'LocationObject', 'LocationPUTResponse', 'NumberObject', 'NumberObjectOwner', 'NumberOwnerType',
            'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse',
            'PostValidateExtensionResponseStatus', 'RouteIdentity', 'RouteType', 'State', 'StepExecutionStatuses',
            'TelephonyType', 'WebexGoAvailableNumberObject']
@@ -535,6 +535,10 @@ class NumberObject(ApiModel):
     is_main_number: Optional[bool] = None
     #: Flag to indicate if the number is toll free.
     toll_free_number: Optional[bool] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
     #: The details of this number's location.
     location: Optional[LocationObject] = None
     owner: Optional[NumberObjectOwner] = None
@@ -552,70 +556,108 @@ class LocationAvailableNumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[State] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates if the phone number is a toll-free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
     owner: Optional[NumberObjectOwner] = None
 
 
 class WebexGoAvailableNumberObject(ApiModel):
-    #: A unique identifier for the PSTN phone number.
+    #: A unique identifier for the phone number.
     #: example: +12056350001
     phone_number: Optional[str] = None
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[State] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
 
 
 class LocationECBNAvailableNumberObjectOwner(ApiModel):
-    #: Unique identifier of the owner to which PSTN Phone number is assigned.
+    #: Unique identifier of the owner to which phone number is assigned.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
-    #: Type of the PSTN phone number's owner.
+    #: Type of the phone number's owner.
     #: example: PEOPLE
     type: Optional[CallBackMemberType] = None
-    #: First name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE`
-    #: or `VIRTUAL_LINE`.
+    #: First name of the phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     #: example: Test
     first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: Last name of the phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     #: example: Person
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PLACE`.
+    #: Display name of the phone number's owner. This field will be present only when the owner `type` is `PLACE`.
     #: example: TestWorkSpace
     display_name: Optional[str] = None
 
 
 class LocationECBNAvailableNumberObject(ApiModel):
-    #: A unique identifier for the PSTN phone number.
+    #: A unique identifier for the phone number.
     #: example: +12056350001
     phone_number: Optional[str] = None
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[State] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates if the phone number is a toll-free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
     owner: Optional[LocationECBNAvailableNumberObjectOwner] = None
+
+
+class LocationCallInterceptAvailableNumberObject(ApiModel):
+    #: A unique identifier for the phone number.
+    #: example: +12056350001
+    phone_number: Optional[str] = None
+    #: Extension for phone number.
+    #: example: 1235
+    extension: Optional[str] = None
+    #: Phone number's state.
+    #: example: ACTIVE
+    state: Optional[State] = None
+    #: If `true`, the phone number is used as a location CLID.
+    #: example: True
+    is_main_number: Optional[bool] = None
+    #: If `true`, the phone number is a toll-free number.
+    #: example: True
+    toll_free_number: Optional[bool] = None
+    #: The telephony type for the number.
+    #: example: PSTN_NUMBER
+    telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
+    owner: Optional[NumberObjectOwner] = None
 
 
 class LocationCallSettingsApi(ApiChild, base='telephony/config'):
@@ -1275,7 +1317,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
-        List PSTN numbers that are available to be assigned as the location's main number.
+        List the service and standard PSTN numbers that are available to be assigned as the location's main number.
         These numbers are associated with the location specified in the request URL and can be active/inactive and
         assigned to an owning entity or unassigned.
 
@@ -1313,7 +1355,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         """
         Get Webex Go Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as the webex go phone number.
+        List standard numbers that are available to be assigned as the webex go phone number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -1346,7 +1388,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         """
         Get Location ECBN Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as the location's emergency callback number.
+        List standard numbers that are available to be assigned as the location's emergency callback number.
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         assigned to an owning entity.
 
@@ -1377,3 +1419,47 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             params['ownerName'] = owner_name
         url = self.ep(f'locations/{location_id}/emergencyCallbackNumber/availableNumbers')
         return self.session.follow_pagination(url=url, model=LocationECBNAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_location_call_intercept_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                                            owner_name: str = None, extension: str = None,
+                                                            org_id: str = None,
+                                                            **params) -> Generator[LocationCallInterceptAvailableNumberObject, None, None]:
+        """
+        Get Location Call Intercept Available Phone Numbers
+
+        List the service and standard PSTN numbers that are available to be assigned as the location's call intercept
+        number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`LocationCallInterceptAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'locations/{location_id}/callIntercept/availableNumbers')
+        return self.session.follow_pagination(url=url, model=LocationCallInterceptAvailableNumberObject, item_key='phoneNumbers', params=params)

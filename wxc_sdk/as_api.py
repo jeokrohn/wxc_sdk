@@ -7040,6 +7040,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         Available for: user, workspace
 
         List service and standard numbers that are available to be assigned as call intercept number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         assigned to an owning entity.
 
@@ -7084,6 +7085,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         Available for: user, workspace
 
         List service and standard numbers that are available to be assigned as call intercept number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         assigned to an owning entity.
 
