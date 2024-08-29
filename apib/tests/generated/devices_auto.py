@@ -187,7 +187,7 @@ class DevicesApi(ApiChild, base='devices'):
     `identity:placeonetimepassword_create` or `identity:one_time_password` scopes.
     
     These APIs cannot be used with Cisco 98xx devices that are not yet Webex
-    Aware. Use Webex Control Hub to managed these devices.
+    Aware. Use Webex Control Hub to manage these devices.
     
     """
 
