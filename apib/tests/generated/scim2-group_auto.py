@@ -277,7 +277,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         body['displayName'] = display_name
         body['externalId'] = external_id
         body['members'] = TypeAdapter(list[GroupMemberObject]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{org_id}/v2/Groups')
         data = super().post(url, json=body)
         r = GetGroupResponse.model_validate(data)
@@ -562,7 +562,7 @@ class SCIM2GroupsApi(ApiChild, base='identity/scim'):
         body['displayName'] = display_name
         body['externalId'] = external_id
         body['members'] = TypeAdapter(list[GroupMemberObject]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump_json())
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:Group'] = urn_scim_schemas_extension_cisco_webexidentity_2_0_group.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         data = super().put(url, json=body)
         r = GetGroupResponse.model_validate(data)
