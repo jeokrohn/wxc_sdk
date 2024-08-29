@@ -59,7 +59,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         GET Fax Message Available Phone Numbers         X                      X
         GET Available Phone Numbers                     X             X
         Get Call Intercept Available Phone Numbers                    X        X
-        GET Primary Available Phone Numbers                                    X    
+        GET Primary Available Phone Numbers                                    X
         GET Secondary Available Phone Numbers                         X        X
         ========================================== ============= ==========  ====
 
@@ -86,9 +86,9 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
     def f_ep(self, available_for: str = None, entity_id: str = None) -> str:
         """
         Get endpoint URL
-        
+
         :meta private:
-        :param available_for: selector, something like callForwarding, faxMessage, ... 
+        :param available_for: selector, something like callForwarding, faxMessage, ...
         :param entity_id: entity id if needed
         :return: url
         """
@@ -119,7 +119,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param location_id: Return the list of phone numbers for this location within the given organization. The
@@ -193,7 +193,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the entity.
@@ -228,7 +228,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the entity.
@@ -349,7 +349,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the person.

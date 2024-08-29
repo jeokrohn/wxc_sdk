@@ -2,13 +2,12 @@
 MoH API for locations
 
 """
-import json
-from typing import Union, Optional
+from typing import Optional
 
 from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
-from ...common import AuthCode, AnnAudioFile, IdAndName
+from ...common import AnnAudioFile, IdAndName
 
 __all__ = ['LocationMoHGreetingType', 'LocationMoHSetting', 'LocationMoHApi']
 

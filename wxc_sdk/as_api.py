@@ -6266,7 +6266,7 @@ class AsAgentCallerIdApi(AsPersonSettingsApiChild):
         Each agent will be able to set their outgoing Caller ID as either the Call Queue's Caller ID, Hunt Group's
         Caller ID or their own configured Caller ID.
 
-        This API requires a full admin or read-only administrator or location administrator auth token with a scope 
+        This API requires a full admin or read-only administrator or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace
@@ -6529,7 +6529,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         GET Fax Message Available Phone Numbers         X                      X
         GET Available Phone Numbers                     X             X
         Get Call Intercept Available Phone Numbers                    X        X
-        GET Primary Available Phone Numbers                                    X    
+        GET Primary Available Phone Numbers                                    X
         GET Secondary Available Phone Numbers                         X        X
         ========================================== ============= ==========  ====
 
@@ -6556,9 +6556,9 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
     def f_ep(self, available_for: str = None, entity_id: str = None) -> str:
         """
         Get endpoint URL
-        
+
         :meta private:
-        :param available_for: selector, something like callForwarding, faxMessage, ... 
+        :param available_for: selector, something like callForwarding, faxMessage, ...
         :param entity_id: entity id if needed
         :return: url
         """
@@ -6589,7 +6589,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param location_id: Return the list of phone numbers for this location within the given organization. The
@@ -6632,7 +6632,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param location_id: Return the list of phone numbers for this location within the given organization. The
@@ -6738,7 +6738,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the entity.
@@ -6772,7 +6772,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the entity.
@@ -6807,7 +6807,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the entity.
@@ -6851,7 +6851,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the entity.
@@ -7048,7 +7048,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the person.
@@ -7093,7 +7093,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
 
-        Retrieving this list requires a full, read-only or location administrator auth token with a scope 
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the person.
@@ -10607,10 +10607,10 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         r = SearchGroupResponse.model_validate(data)
         return r
 
-    async def search_all_gen(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str 
-    = None,
+    async def search_all_gen(self, org_id: str, filter: str = None, excluded_attributes: str = None,
+                             attributes: str= None,
                              count: int = None, sort_by: str = None, sort_order: str = None,
-                             include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup, 
+                             include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup,
                              None, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
@@ -11050,50 +11050,49 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
 
             .. list-table::
                :header-rows: 1
-
-               * - **Attributes**   
-                 - **Operators**   
-               * - **SCIM Core**   
-                 - ----   
-               * - `id`   
-                 - eq   
-               * - `userName`   
-                 - eq sw ew   
-               * - `name.familyName`   
-                 - eq sw ew   
-               * - `name.givenName`   
-                 - eq sw   
-               * - `name.middleName`   
-                 - eq sw   
-               * - `name.formatted`   
-                 - eq sw   
-               * - `displayName`   
-                 - eq sw ew   
-               * - `nickName`   
-                 - eq sw ew   
-               * - `emails.display`   
-                 - eq sw ew   
-               * - `emails.value`   
-                 - eq sw ew   
-               * - `phoneNumbers.value`   
-                 - eq sw ew   
-               * - `phoneNumbers.display`   
-                 - eq sw ew   
-               * - **Enterprise Extensions**   
-                 - ----   
-               * - `employeeNumber`   
-                 - eq sw ew   
-               * - `costCenter`   
-                 - eq sw ew   
-               * - `organization`   
-                 - eq sw ew   
-               * - `division`   
-                 - eq sw ew   
-               * - `department`   
-                 - eq sw ew      
-               * - `manager.value`   
-                 - eq   
-               * - `manager.displayName`   
+               * - **Attributes**
+                 - **Operators**
+               * - **SCIM Core**
+                 - ----
+               * - `id`
+                 - eq
+               * - `userName`
+                 - eq sw ew
+               * - `name.familyName`
+                 - eq sw ew
+               * - `name.givenName`
+                 - eq sw
+               * - `name.middleName`
+                 - eq sw
+               * - `name.formatted`
+                 - eq sw
+               * - `displayName`
+                 - eq sw ew
+               * - `nickName`
+                 - eq sw ew
+               * - `emails.display`
+                 - eq sw ew
+               * - `emails.value`
+                 - eq sw ew
+               * - `phoneNumbers.value`
+                 - eq sw ew
+               * - `phoneNumbers.display`
+                 - eq sw ew
+               * - **Enterprise Extensions**
+                 - ----
+               * - `employeeNumber`
+                 - eq sw ew
+               * - `costCenter`
+                 - eq sw ew
+               * - `organization`
+                 - eq sw ew
+               * - `division`
+                 - eq sw ew
+               * - `department`
+                 - eq sw ew
+               * - `manager.value`
+                 - eq
+               * - `manager.displayName`
                  - eq sw ew
 
         :type filter: str
@@ -21403,7 +21402,7 @@ class AsLocationEmergencyServicesApi(AsApiChild, base='telephony/config/location
     """
 
     async def read_emergency_call_notification(self, location_id: str,
-                                                   org_id: str = None) -> LocationEmergencyCallNotification:
+                                         org_id: str = None) -> LocationEmergencyCallNotification:
         """
         Get a Location Emergency Call Notification
 
@@ -24763,7 +24762,7 @@ class AsPriorityAlertApi(AsPersonSettingsApiChild):
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.update()
-        url = self.f_ep(entity_id, f'criteria')
+        url = self.f_ep(entity_id, 'criteria')
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -25137,7 +25136,7 @@ class AsSelectiveForwardApi(AsPersonSettingsApiChild):
             params['orgId'] = org_id
         body = settings.update()
 
-        url = self.f_ep(entity_id, f'criteria')
+        url = self.f_ep(entity_id, 'criteria')
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -25512,7 +25511,7 @@ class AsSequentialRingApi(AsPersonSettingsApiChild):
             params['orgId'] = org_id
         body = settings.update()
 
-        url = self.f_ep(entity_id, f'criteria')
+        url = self.f_ep(entity_id, 'criteria')
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -25715,7 +25714,7 @@ class AsSimRingApi(AsPersonSettingsApiChild):
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.update()
-        url = self.f_ep(entity_id, f'criteria')
+        url = self.f_ep(entity_id, 'criteria')
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r

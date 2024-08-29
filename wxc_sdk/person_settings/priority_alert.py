@@ -21,7 +21,7 @@ class PriorityAlert(ApiModel):
     def update(self) -> dict:
         """
         Data for update
-        
+
         :meta private
         """
         return self.model_dump(mode='json', by_alias=True, exclude_none=True,
@@ -161,7 +161,7 @@ class PriorityAlertApi(PersonSettingsApiChild):
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.update()
-        url = self.f_ep(entity_id, f'criteria')
+        url = self.f_ep(entity_id, 'criteria')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r

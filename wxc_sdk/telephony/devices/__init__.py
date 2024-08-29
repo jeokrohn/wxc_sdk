@@ -1,7 +1,6 @@
 """
 Telephony devices
 """
-import json
 import os
 from collections.abc import Generator
 from io import BufferedReader
@@ -98,7 +97,6 @@ class MemberCommon(ApiModel):
     allow_call_decline_enabled: Optional[bool] = Field(default=True)
     location: Optional[IdAndName] = None
     license_type: Optional[UserLicenseType] = None
-
 
     @field_validator('phone_number', mode='before')
     def e164(cls, v):

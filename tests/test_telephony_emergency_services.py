@@ -52,7 +52,7 @@ class TestEmergencyServices(TestWithLocations):
                 print(f'  !!Error: {setting}')
                 err = err or setting
                 continue
-            setting: v
+            setting: LocationEmergencyCallNotification
             print('\n'.join(f'  {line}'
                             for line in json.dumps(setting.model_dump(mode='json',
                                                                       by_alias=True),

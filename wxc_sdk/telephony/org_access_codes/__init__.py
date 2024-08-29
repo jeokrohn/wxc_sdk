@@ -1,8 +1,6 @@
 from collections.abc import Generator
 from typing import List
 
-from pydantic import TypeAdapter
-
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.common import AuthCode
 

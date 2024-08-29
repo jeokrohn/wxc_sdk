@@ -3,7 +3,6 @@ Access codes API for locations
 
 Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
 """
-import json
 from typing import Union
 
 from pydantic import TypeAdapter

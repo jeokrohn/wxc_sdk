@@ -1,7 +1,6 @@
 """
 user privacy API
 """
-import json
 from typing import Optional, Union
 
 from .common import PersonSettingsApiChild

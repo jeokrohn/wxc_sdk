@@ -18,7 +18,7 @@ class OrgEmergencyCallNotification(ApiModel):
     #: example: callback@gmail.com
     email_address: Optional[str] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
 
         :meta private:

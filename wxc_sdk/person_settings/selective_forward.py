@@ -173,7 +173,7 @@ class SelectiveForwardApi(PersonSettingsApiChild):
             params['orgId'] = org_id
         body = settings.update()
 
-        url = self.f_ep(entity_id, f'criteria')
+        url = self.f_ep(entity_id, 'criteria')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r

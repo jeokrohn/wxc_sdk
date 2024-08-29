@@ -1,6 +1,5 @@
 from collections.abc import Generator
 from datetime import datetime
-from json import loads
 from typing import Optional
 
 from pydantic import Field, TypeAdapter
@@ -349,10 +348,10 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         :return:
         """
         '''async
-    async def search_all_gen(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str 
-    = None,
+    async def search_all_gen(self, org_id: str, filter: str = None, excluded_attributes: str = None,
+                             attributes: str= None,
                              count: int = None, sort_by: str = None, sort_order: str = None,
-                             include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup, 
+                             include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup,
                              None, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}

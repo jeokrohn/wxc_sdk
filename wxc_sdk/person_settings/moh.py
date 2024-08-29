@@ -1,6 +1,6 @@
 from typing import Optional
 
-from wxc_sdk.base import enum_str, ApiModel
+from wxc_sdk.base import ApiModel
 from wxc_sdk.common import Greeting, AnnAudioFile
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
@@ -20,7 +20,7 @@ class MusicOnHold(ApiModel):
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
     audio_announcement_file: Optional[AnnAudioFile] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
         Data for update
 

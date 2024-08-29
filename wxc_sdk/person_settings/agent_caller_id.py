@@ -114,7 +114,7 @@ class AgentCallerIdApi(PersonSettingsApiChild):
         Each agent will be able to set their outgoing Caller ID as either the Call Queue's Caller ID, Hunt Group's
         Caller ID or their own configured Caller ID.
 
-        This API requires a full admin or read-only administrator or location administrator auth token with a scope 
+        This API requires a full admin or read-only administrator or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace
@@ -125,7 +125,7 @@ class AgentCallerIdApi(PersonSettingsApiChild):
         data = super().get(url)
         r = AgentCallerId.model_validate(data['selectedCallerId'])
         return r
-        
+
     def configure(self, entity_id: str, selected_caller_id: str = None):
         """
         Modify Agent's Caller ID Information.

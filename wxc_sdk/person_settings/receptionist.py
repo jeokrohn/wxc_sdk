@@ -2,7 +2,6 @@
 Receptionist client settings API
 """
 
-import json
 from typing import Optional, Union
 
 from pydantic import Field

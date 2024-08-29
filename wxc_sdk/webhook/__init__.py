@@ -43,7 +43,6 @@ class WebhookEventType(str, Enum):
     #: Status of admin batch job was changed.
     status_changed = 'statusChanged'
 
-
     all = 'all'
 
 
@@ -160,7 +159,7 @@ class WebhookEventDataForbid(ApiModel):
     _registry: ClassVar = dict()
 
     class Config:
-        extra = Extra.forbid
+        extra = 'forbid'
 
     def __init_subclass__(cls: 'WebhookEventDataForbid', **kwargs):
         """

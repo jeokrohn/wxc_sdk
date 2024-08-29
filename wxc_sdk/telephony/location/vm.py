@@ -16,7 +16,7 @@ class LocationVoiceMailSettings(ApiModel):
     #: Set to true to enable voicemail transcription.
     voicemail_transcription_enabled: Optional[bool] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
         Data for update
 

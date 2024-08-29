@@ -3,7 +3,7 @@ Telephony types and API (location and organisation settings)
 """
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, Literal
+from typing import Optional
 
 from pydantic import Field, TypeAdapter, field_validator
 

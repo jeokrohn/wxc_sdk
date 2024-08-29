@@ -225,7 +225,7 @@ class Person(ApiModelWithErrors):
         return next((number for number in self.phone_numbers
                      if number.value.startswith('+')), None)
 
-    def create_update(self)->dict:
+    def create_update(self) -> dict:
         """
         Date for create() and udpate()
 

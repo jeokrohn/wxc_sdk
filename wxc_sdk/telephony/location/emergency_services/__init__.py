@@ -32,7 +32,7 @@ class LocationEmergencyCallNotification(ApiModel):
     #: All locations at organization level
     customer: Optional[LocationCallNotificationOrganization] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
         Date for update
 
@@ -55,7 +55,7 @@ class LocationEmergencyServicesApi(ApiChild, base='telephony/config/locations'):
     """
 
     def read_emergency_call_notification(self, location_id: str,
-                                                   org_id: str = None) -> LocationEmergencyCallNotification:
+                                         org_id: str = None) -> LocationEmergencyCallNotification:
         """
         Get a Location Emergency Call Notification
 
