@@ -12,9 +12,9 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['ActivationStates', 'BetaDeviceCallSettingsWithDeviceSettingsConfigurationPhase3Api', 'Compression',
-           'DeviceLayout', 'ErrorMessageObject', 'ErrorObject', 'GetThirdPartyDeviceObject', 'ItemObject',
-           'JobExecutionStatusObject', 'KEMKeys', 'KemModuleType', 'LatestExecutionStatus', 'LayoutMode',
-           'LineKeyType', 'ProgrammableLineKeys', 'RebuildPhonesJob', 'StepExecutionStatusesObject']
+           'ErrorMessageObject', 'ErrorObject', 'GetThirdPartyDeviceObject', 'GetThirdPartyDeviceObjectOwner',
+           'GetThirdPartyDeviceObjectProxy', 'ItemObject', 'JobExecutionStatusObject', 'LatestExecutionStatus',
+           'RebuildPhonesJob', 'StepExecutionStatusesObject']
 
 
 class StepExecutionStatusesObject(ApiModel):
@@ -157,90 +157,6 @@ class ItemObject(ApiModel):
     error: Optional[ErrorObject] = None
 
 
-class LayoutMode(str, Enum):
-    #: Default layout mode when a new device is added.
-    default = 'DEFAULT'
-    #: Enables a device to have its custom layout.
-    custom = 'CUSTOM'
-
-
-class LineKeyType(str, Enum):
-    #: User's primary extension. This is the default assignment for Line Key Index 1 and cannot be modified.
-    primary_line = 'PRIMARY_LINE'
-    #: Shows the appearance of other users on the owner's phone.
-    shared_line = 'SHARED_LINE'
-    #: Enables User and Call Park monitoring.
-    monitor = 'MONITOR'
-    #: Allows users to reach a telephone number, extension, or SIP URI.
-    speed_dial = 'SPEED_DIAL'
-    #: An open key will automatically take the configuration of a monitor button starting with the first open key.
-    #: These buttons are also usable by the user to configure speed dial numbers on these keys.
-    open = 'OPEN'
-    #: Button not usable but reserved for future features.
-    closed = 'CLOSED'
-
-
-class ProgrammableLineKeys(ApiModel):
-    #: The index starts from 1 representing the first key on the left side of the phone.
-    #: example: 2
-    line_key_index: Optional[int] = None
-    #: Action performed when the Line Key is pressed.
-    #: example: SPEED_DIAL
-    line_key_type: Optional[LineKeyType] = None
-    #: Applicable only when the kemKeyType is `SPEED_DIAL`.
-    #: example: Help Line
-    line_key_label: Optional[str] = None
-    #: Applicable only when the kemKeyType is `SPEED_DIAL`. Value must be a valid Telephone Number, Ext, or SIP URI
-    #: (format: `user@host` limited to `A-Z,a-z,0-9,-_ .+` for user and host).
-    #: example: 5646
-    line_key_value: Optional[str] = None
-
-
-class KemModuleType(str, Enum):
-    #: Extension module has 14 line keys that can be configured.
-    kem_14_keys = 'KEM_14_KEYS'
-    #: Extension module has 18 line keys that can be configured.
-    kem_18_keys = 'KEM_18_KEYS'
-    #: Extension module has 20 line keys that can be configured.
-    kem_20_keys = 'KEM_20_KEYS'
-
-
-class KEMKeys(ApiModel):
-    #: An index representing a KEM Module. The Index starts from 1 representing the first KEM Module.
-    #: example: 1
-    kem_module_index: Optional[int] = None
-    #: An index representing a KEM Key. The Index starts from 1 representing the first key on the left side of the
-    #: phone.
-    #: example: 1
-    kem_key_index: Optional[int] = None
-    #: The action that would be performed when the KEM Key is pressed.
-    #: example: SPEED_DIAL
-    kem_key_type: Optional[LineKeyType] = None
-    #: Applicable only when the kemKeyType is `SPEED_DIAL`.
-    #: example: Office
-    kem_key_label: Optional[str] = None
-    #: Applicable only when the kemKeyType is `SPEED_DIAL`. Value must be a valid Telephone Number, Ext, or SIP URI
-    #: (format: `user@host` limited to `A-Z,a-z,0-9,-_ .+` for user and host).
-    #: example: 213457
-    kem_key_value: Optional[str] = None
-
-
-class DeviceLayout(ApiModel):
-    #: Defines the layout mode of the device, i.e. DEFAULT or CUSTOM.
-    #: example: CUSTOM
-    layout_mode: Optional[LayoutMode] = None
-    #: If `true`, user customization is enabled..
-    #: example: True
-    user_reorder_enabled: Optional[bool] = None
-    #: Contains a mapping of Line Keys and their corresponding actions.
-    line_keys: Optional[list[ProgrammableLineKeys]] = None
-    #: Type of KEM module.
-    #: example: KEM_14_KEYS
-    kem_module_type: Optional[KemModuleType] = None
-    #: Contains a mapping of KEM Keys and their corresponding actions.
-    kem_keys: Optional[list[KEMKeys]] = None
-
-
 class Compression(str, Enum):
     #: Minimize data use during compression.
     on = 'ON'
@@ -248,12 +164,27 @@ class Compression(str, Enum):
     off = 'OFF'
 
 
+class GetThirdPartyDeviceObjectOwner(ApiModel):
+    #: SIP authentication user name for the owner of the device.
+    #: example: 392829
+    sip_user_name: Optional[str] = None
+    #: Identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode.
+    #: example: lg1_sias10_cpapi16004_LGU@64941297.int10.bcld.webex.com
+    line_port: Optional[str] = None
+
+
+class GetThirdPartyDeviceObjectProxy(ApiModel):
+    #: Outgoing server which the phone should use for all SIP requests. Not set if the response has no body.
+    #: example: hs17.hosted-int.bcld.webex.com
+    outbound_proxy: Optional[str] = None
+
+
 class ActivationStates(str, Enum):
-    #: Indicates a device is activating using an activation code.
+    #: Device is activating using an activation code.
     activating = 'activating'
-    #: Indicates a device has been activated using an activation code.
+    #: Device has been activated using an activation code.
     activated = 'activated'
-    #: Indicates a device has not been activated using an activation code.
+    #: Device has not been activated using an activation code.
     deactivated = 'deactivated'
 
 
@@ -261,18 +192,9 @@ class GetThirdPartyDeviceObject(ApiModel):
     #: Manufacturer of the device.
     #: example: THIRD_PARTY
     manufacturer: Optional[str] = None
-    #: Identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode.
-    #: example: lg1_sias10_cpapi16004_LGU@64941297.int10.bcld.webex.com
-    line_port: Optional[str] = None
-    #: Outgoing server which the phone should use for all SIP requests. Not set if the response has no body.
-    #: example: hs17.hosted-int.bcld.webex.com
-    outbound_proxy: Optional[str] = None
     #: Device manager(s).
     #: example: CUSTOMER
     managed_by: Optional[str] = None
-    #: SIP authentication user name for the owner of the device.
-    #: example: 392829
-    sip_user_name: Optional[str] = None
     #: A unique identifier for the device.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9ERVZJQ0UvNTEwMUIwN0ItNEY4Ri00RUY3LUI1NjUtREIxOUM3QjcyM0Y3
     id: Optional[str] = None
@@ -287,14 +209,16 @@ class GetThirdPartyDeviceObject(ApiModel):
     model: Optional[str] = None
     #: Activation state of the device. This field is only populated for a device added by a unique activation code
     #: generated by Control Hub for use with Webex.
-    #: example: ACTIVATED
+    #: example: activated
     activation_state: Optional[ActivationStates] = None
     #: Comma-separated array of tags used to describe the device.
     #: example: ['device description']
-    descriptions: Optional[list[str]] = None
+    description: Optional[list[str]] = None
     #: Enabled / disabled status of the upgrade channel.
     #: example: True
     upgrade_channel_enabled: Optional[bool] = None
+    owner: Optional[GetThirdPartyDeviceObjectOwner] = None
+    proxy: Optional[GetThirdPartyDeviceObjectProxy] = None
 
 
 class BetaDeviceCallSettingsWithDeviceSettingsConfigurationPhase3Api(ApiChild, base='telephony/config'):
@@ -409,11 +333,12 @@ class BetaDeviceCallSettingsWithDeviceSettingsConfigurationPhase3Api(ApiChild, b
 
         Retrieves Webex Calling device details that include information needed for third-party device management.
 
-        Webex calling devices are associated with a specific user Workspace or Virtual Line.
+        Webex calling devices are associated with a specific user Workspace or Virtual Line. Webex Calling devices
+        share the location with the entity that owns them.
 
-        Webex Calling devices share the location with the entity that owns them.
+        Person or workspace to which the device is assigned. Its fields point to a primary line/port of the device.
 
-        This API requires a full, location, user, or read-only admin auth token with the scope of
+        Requires a full, location, user, or read-only admin auth token with the scope of
         `spark-admin:telephony_config_read`.
 
         :param device_id: Unique identifier for the device.
@@ -429,78 +354,6 @@ class BetaDeviceCallSettingsWithDeviceSettingsConfigurationPhase3Api(ApiChild, b
         data = super().get(url, params=params)
         r = GetThirdPartyDeviceObject.model_validate(data)
         return r
-
-    def get_device_layout_by_device_id(self, device_id: str, org_id: str = None) -> DeviceLayout:
-        """
-        Get Device Layout by Device ID
-
-        Get layout information of a device by device ID in an organization.
-
-        Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
-        Modules (KEM) with the existing configured line members and the user’s monitoring list.
-
-        This API requires a full or location administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param device_id: Get device layout for this device ID.
-        :type device_id: str
-        :param org_id: Retrieve a device layout for the device in this organization.
-        :type org_id: str
-        :rtype: :class:`DeviceLayout`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'devices/{device_id}/layout')
-        data = super().get(url, params=params)
-        r = DeviceLayout.model_validate(data)
-        return r
-
-    def modify_device_layout_by_device_id(self, device_id: str, layout_mode: LayoutMode,
-                                          line_keys: list[ProgrammableLineKeys], user_reorder_enabled: bool = None,
-                                          kem_module_type: KemModuleType = None, kem_keys: list[KEMKeys] = None,
-                                          org_id: str = None):
-        """
-        Modify Device Layout by Device ID
-
-        Modify the layout of a device by device ID in an organization.
-
-        Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
-        Modules (KEM) with the existing configured line members and the user’s monitoring list.
-
-        This API requires a full or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        :param device_id: Modify device layout for this device ID.
-        :type device_id: str
-        :param layout_mode: Defines the layout mode of the device, i.e. DEFAULT or CUSTOM.
-        :type layout_mode: LayoutMode
-        :param line_keys: Contains a mapping of Line Keys and their corresponding actions.
-        :type line_keys: list[ProgrammableLineKeys]
-        :param user_reorder_enabled: If `true`, user customization is enabled..
-        :type user_reorder_enabled: bool
-        :param kem_module_type: Type of KEM module.
-        :type kem_module_type: KemModuleType
-        :param kem_keys: Contains a mapping of KEM Keys and their corresponding actions.
-        :type kem_keys: list[KEMKeys]
-        :param org_id: Modify a device layout for the device in this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['layoutMode'] = enum_str(layout_mode)
-        if user_reorder_enabled is not None:
-            body['userReorderEnabled'] = user_reorder_enabled
-        body['lineKeys'] = TypeAdapter(list[ProgrammableLineKeys]).dump_python(line_keys, mode='json', by_alias=True, exclude_none=True)
-        if kem_module_type is not None:
-            body['kemModuleType'] = enum_str(kem_module_type)
-        if kem_keys is not None:
-            body['kemKeys'] = TypeAdapter(list[KEMKeys]).dump_python(kem_keys, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'devices/{device_id}/layout')
-        super().put(url, params=params, json=body)
 
     def get_device_settings_for_a_person(self, person_id: str, org_id: str = None) -> Compression:
         """
