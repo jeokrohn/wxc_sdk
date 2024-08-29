@@ -408,19 +408,19 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         if sip_address is not None:
             body['sipAddress'] = sip_address
         if calling is not None:
-            body['calling'] = loads(calling.model_dump_json())
+            body['calling'] = calling.model_dump(mode='json', by_alias=True, exclude_none=True)
         if calendar is not None:
-            body['calendar'] = loads(calendar.model_dump_json())
+            body['calendar'] = calendar.model_dump(mode='json', by_alias=True, exclude_none=True)
         if notes is not None:
             body['notes'] = notes
         if hotdesking_status is not None:
             body['hotdeskingStatus'] = enum_str(hotdesking_status)
         if device_hosted_meetings is not None:
-            body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
+            body['deviceHostedMeetings'] = device_hosted_meetings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if supported_devices is not None:
             body['supportedDevices'] = enum_str(supported_devices)
         if indoor_navigation is not None:
-            body['indoorNavigation'] = loads(indoor_navigation.model_dump_json())
+            body['indoorNavigation'] = indoor_navigation.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep()
         data = super().post(url, json=body)
         r = Workspace.model_validate(data)
@@ -529,19 +529,19 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         if type is not None:
             body['type'] = enum_str(type)
         if calendar is not None:
-            body['calendar'] = loads(calendar.model_dump_json())
+            body['calendar'] = calendar.model_dump(mode='json', by_alias=True, exclude_none=True)
         if sip_address is not None:
             body['sipAddress'] = sip_address
         if calling is not None:
-            body['calling'] = loads(calling.model_dump_json())
+            body['calling'] = calling.model_dump(mode='json', by_alias=True, exclude_none=True)
         if notes is not None:
             body['notes'] = notes
         if hotdesking_status is not None:
             body['hotdeskingStatus'] = enum_str(hotdesking_status)
         if device_hosted_meetings is not None:
-            body['deviceHostedMeetings'] = loads(device_hosted_meetings.model_dump_json())
+            body['deviceHostedMeetings'] = device_hosted_meetings.model_dump(mode='json', by_alias=True, exclude_none=True)
         if indoor_navigation is not None:
-            body['indoorNavigation'] = loads(indoor_navigation.model_dump_json())
+            body['indoorNavigation'] = indoor_navigation.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{workspace_id}')
         data = super().put(url, json=body)
         r = Workspace.model_validate(data)
