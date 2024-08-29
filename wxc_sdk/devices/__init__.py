@@ -259,7 +259,7 @@ class DevicesApi(ApiChild, base='devices'):
         params = org_id and {'orgId': org_id} or None
         super().delete(url=url, params=params)
 
-    def modify_device_tags(self, device_id: str, op: TagOp, value: List[str], org_id: str = None) -> Device:
+    def modify_device_tags(self, device_id: str, op: TagOp, value: List[str] = None, org_id: str = None) -> Device:
         """
         Modify Device Tags
 
@@ -277,8 +277,9 @@ class DevicesApi(ApiChild, base='devices'):
         :rtype: Device
         """
         body = {'op': op.value if isinstance(op, TagOp) else op,
-                'path': 'tags',
-                'value': value}
+                'path': 'tags'}
+        if value is not None:
+            body['value'] = value
         url = self.ep(device_id)
         params = org_id and {'orgId': org_id} or None
         data = self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')

@@ -1167,7 +1167,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         params = org_id and {'orgId': org_id} or None
         await super().delete(url=url, params=params)
 
-    async def modify_device_tags(self, device_id: str, op: TagOp, value: List[str], org_id: str = None) -> Device:
+    async def modify_device_tags(self, device_id: str, op: TagOp, value: List[str] = None, org_id: str = None) -> Device:
         """
         Modify Device Tags
 
@@ -1185,8 +1185,9 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :rtype: Device
         """
         body = {'op': op.value if isinstance(op, TagOp) else op,
-                'path': 'tags',
-                'value': value}
+                'path': 'tags'}
+        if value is not None:
+            body['value'] = value
         url = self.ep(device_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')

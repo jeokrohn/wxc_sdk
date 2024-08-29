@@ -1,6 +1,7 @@
 import asyncio
 import json
 import uuid
+from contextlib import contextmanager
 from itertools import chain
 from random import choice
 from unittest import skip
@@ -149,30 +150,72 @@ class TestDevice(TestCaseWithLog):
                                          for device in devices])
         print(f'Got details for {len(details)} devices')
 
-    def test_005_patch_tags(self):
-        """
-        try to patch tags
-        """
+    @contextmanager
+    def device_for_tag_test(self) -> Device:
         with self.no_log():
             devices = list(self.api.devices.list())
         if not devices:
             self.skipTest('No devices')
         target = choice(devices)
         target = self.api.devices.details(device_id=target.device_id)
-        tags = target.tags
-        new_tags = [str(uuid.uuid4()) for _ in range(3)]
-        self.api.devices.modify_device_tags(device_id=target.device_id,
-                                            op=TagOp.add, value=new_tags)
-        details = self.api.devices.details(device_id=target.device_id)
-        tags_after = details.tags
         try:
-            self.assertEqual(set(tags + new_tags), set(tags_after))
+            yield target
         finally:
+            self.api.devices.modify_device_tags(device_id=target.device_id, op=TagOp.replace, value=target.tags)
+            after = self.api.devices.details(device_id=target.device_id)
+            self.assertEqual(target.tags, after.tags, 'tags not correctly reset')
+
+    def test_005_add_tags(self):
+        """
+        try to patch tags
+        """
+        with self.device_for_tag_test() as target:
+            target: Device
+            tags = target.tags
+            # add three random tags
+            new_tags = [str(uuid.uuid4()) for _ in range(3)]
             self.api.devices.modify_device_tags(device_id=target.device_id,
-                                                op=TagOp.remove,
-                                                value=new_tags)
+                                                op=TagOp.add, value=new_tags)
             details = self.api.devices.details(device_id=target.device_id)
-            self.assertEqual(tags, details.tags)
+            tags_after = details.tags
+            self.assertEqual(set(tags + new_tags), set(tags_after), 'tags not added')
+
+    def test_006_remove_tags(self):
+        with self.device_for_tag_test() as target:
+            target: Device
+            tags = target.tags
+            # add three random tags
+            new_tags = [str(uuid.uuid4()) for _ in range(3)]
+            self.api.devices.modify_device_tags(device_id=target.device_id,
+                                                op=TagOp.add, value=new_tags)
+            details = self.api.devices.details(device_id=target.device_id)
+            tags_after = details.tags
+            self.assertEqual(set(tags + new_tags), set(tags_after), 'tags not added')
+            # try to remove one of the tags
+            self.api.devices.modify_device_tags(device_id=target.device_id,
+                                                op=TagOp.remove)
+            details = self.api.devices.details(device_id=target.device_id)
+            tags_after = details.tags
+            self.assertFalse(tags_after, 'tags not (correctly) removed')
+
+    def test_007_replace_tags(self):
+        with self.device_for_tag_test() as target:
+            target: Device
+            tags = target.tags
+            # add three random tags
+            new_tags = [str(uuid.uuid4()) for _ in range(3)]
+            self.api.devices.modify_device_tags(device_id=target.device_id,
+                                                op=TagOp.add, value=new_tags)
+            details = self.api.devices.details(device_id=target.device_id)
+            tags_after = details.tags
+            self.assertEqual(set(tags + new_tags), set(tags_after), 'tags not added')
+
+            # replace tags with some other tags
+            new_tags = [str(uuid.uuid4()) for _ in range(3)]
+            self.api.devices.modify_device_tags(device_id=target.device_id,
+                                                op=TagOp.replace, value=new_tags)
+            details = self.api.devices.details(device_id=target.device_id)
+            self.assertEqual(set(new_tags), set(details.tags), 'tags not (correctly) replaced')
 
 
 class CreateDevice(TestWithLocations):
