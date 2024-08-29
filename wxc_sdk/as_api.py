@@ -20983,7 +20983,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         await super().delete(url, params=params)
 
-    async def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str,
+    async def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
                                         location_ids: list[str] = None,
                                         exclude_devices_with_custom_layout: bool = None,
                                         include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
@@ -21028,7 +21028,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['action'] = enum_str(action)
-        body['templateId'] = template_id
+        if template_id is not None:
+            body['templateId'] = template_id
         if location_ids is not None:
             body['locationIds'] = location_ids
         if exclude_devices_with_custom_layout is not None:
@@ -23823,7 +23824,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         """
         get summary (counts) of phone numbers
 
-        :param org_id: detaild for numbers in this organization.
+        :param org_id: details for numbers in this organization.
         :type org_id: str
         :return: phone number details
         :rtype: :class:`NumberDetails`

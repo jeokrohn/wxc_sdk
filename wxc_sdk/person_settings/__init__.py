@@ -85,8 +85,9 @@ class TelephonyDevice(ApiModel):
     description: list[str]
     #: Identifier for device model.
     model: str
+    type: Optional[PrimaryOrShared] = None
     #: Identifier for device model type.
-    type: Optional[DeviceType] = Field(alias='modelType', default=None)
+    mod_type: DeviceType = Field(alias='modelType', default=None)
     #: MAC address of device.
     mac: Optional[str] = None
     #: IP address of device.

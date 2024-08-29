@@ -10,7 +10,7 @@ from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import us_location_info, available_tns, LocationInfo
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import NumberState
+from wxc_sdk.common import NumberState, OwnerType
 from wxc_sdk.locations import Location
 from wxc_sdk.person_settings.available_numbers import AvailableNumber
 from wxc_sdk.rest import RestError
@@ -170,12 +170,17 @@ class TestAvailable(TestWithLocations):
         """
         Validate owners of numbers with owner
         """
+
         validators = {'PEOPLE': self.async_api.people.details,
                       'AUTO_ATTENDANT': functools.partial(self.async_api.telephony.auto_attendant.details,
                                                           location_id),
                       'CALL_QUEUE': functools.partial(self.async_api.telephony.callqueue.details,
                                                       location_id),
-                      'VIRTUAL_LINE': self.async_api.telephony.virtual_lines.details}
+                      'VIRTUAL_LINE': self.async_api.telephony.virtual_lines.details,
+                      'PAGING_GROUP': functools.partial(self.async_api.telephony.paging.details, location_id),
+                      'HUNT_GROUP': functools.partial(self.async_api.telephony.huntgroup.details, location_id),
+                      'PLACE': self.async_api.workspaces.details,
+                      }
 
         async def validate_owner(number: AvailableNumber):
             """
@@ -185,6 +190,10 @@ class TestAvailable(TestWithLocations):
                 return
             owner_type = number.owner.owner_type
             owner_id = number.owner.owner_id
+
+            if owner_type == OwnerType.voice_messaging:
+                # voice messaging is not validated
+                return
 
             # figure out the validator for the owner type
             validator = validators.get(owner_type, None)
@@ -227,12 +236,6 @@ class TestAvailable(TestWithLocations):
                 continue
             print(f'{call.__name__}: Location "{location.name}": {len(result)}')
             result: list[AvailableNumber]
-            try:
-                if any(r.location for r in result):
-                    print('Undocumented attribute "location" in result')
-                    err = err or ValueError('Undocumented attribute "location" in result')
-            except AttributeError:
-                pass
             validate_tasks.append(self.validate_owners(numbers=result, location_id=location.location_id))
         if validate_tasks:
             validate_results = await asyncio.gather(*validate_tasks, return_exceptions=True)

@@ -31,6 +31,7 @@ class AvailableNumber(ApiModel):
     #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
     #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
     is_service_number: Optional[bool] = None
+    #: The details of this number's location.
     location: Optional[IdAndName] = None
     owner: Optional[NumberOwner] = None
 

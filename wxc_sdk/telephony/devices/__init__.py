@@ -15,7 +15,7 @@ from ...api_child import ApiChild
 from ...base import ApiModel, plus1, to_camel, enum_str
 from ...base import SafeEnum as Enum
 from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName, \
-    ApplyLineKeyTemplateAction
+    ApplyLineKeyTemplateAction, UserLicenseType
 
 __all__ = ['MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
            'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi', 'LineKeyType', 'ProgrammableLineKey',
@@ -71,8 +71,6 @@ class TelephonyDeviceDetails(ApiModel):
     proxy: Optional[TelephonyDeviceProxy] = None
 
 
-
-
 class MemberCommon(ApiModel):
     #: Unique identifier for the member.
     member_id: str = Field(alias='id')
@@ -99,6 +97,8 @@ class MemberCommon(ApiModel):
     #: to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     allow_call_decline_enabled: Optional[bool] = Field(default=True)
     location: Optional[IdAndName] = None
+    license_type: Optional[UserLicenseType] = None
+
 
     @field_validator('phone_number', mode='before')
     def e164(cls, v):
@@ -796,7 +796,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         super().delete(url, params=params)
 
-    def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str,
+    def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
                                         location_ids: list[str] = None,
                                         exclude_devices_with_custom_layout: bool = None,
                                         include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
@@ -841,7 +841,8 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['action'] = enum_str(action)
-        body['templateId'] = template_id
+        if template_id is not None:
+            body['templateId'] = template_id
         if location_ids is not None:
             body['locationIds'] = location_ids
         if exclude_devices_with_custom_layout is not None:

@@ -49,7 +49,7 @@ class TestLineKeyTemplate(TestCaseWithLog):
             self.async_api.devices.list(product_type=ProductType.phone),
             self.async_api.telephony.devices.list_line_key_templates())
         extensions: list[NumberListPhoneNumber]
-        supported: list[SupportedDevices]
+        supported: SupportedDevices
         devices: list[Device]
         lkts: list[LineKeyTemplate]
 
@@ -72,12 +72,11 @@ class TestLineKeyTemplate(TestCaseWithLog):
 
 
 class TestPreviewApply(TestWithLocations):
-    @async_test
-    async def test_preview_apply_default_template(self):
+    def test_preview_apply_default_template(self):
         """
         try to apply a line key template
         """
-        devices = await self.async_api.devices.list(product_type=ProductType.phone)
+        devices = list(self.api.devices.list(product_type=ProductType.phone))
         if not devices:
             self.skipTest('No MPP devices')
 

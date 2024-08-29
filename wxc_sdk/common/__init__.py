@@ -27,7 +27,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
-           'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType']
+           'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType']
 
 
 class IdOnly(ApiModel):
@@ -58,6 +58,19 @@ class UserType(str, Enum):
     people = 'PEOPLE'
     place = 'PLACE'
     virtual_line = 'VIRTUAL_LINE'
+
+
+class UserLicenseType(str, Enum):
+    #: Member is a Webex Calling standard user
+    basic_user = 'BASIC_USER'
+    #: Member is a Webex Calling professional user
+    professional_user = 'PROFESSIONAL_USER'
+    #: Member is a Webex Calling Common area workspace
+    workspace = 'WORKSPACE'
+    #: Member is a Webex Calling professional workspace
+    professional_workspace = 'PROFESSIONAL_WORKSPACE'
+    #: Member is a Webex Calling virtual line
+    virtual_profile = 'VIRTUAL_PROFILE'
 
 
 class UserBase(ApiModel):

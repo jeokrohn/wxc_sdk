@@ -130,6 +130,7 @@ class NumberDetails(ApiModel):
     total: Optional[int] = None
     #: Count of phone numbers of type `MOBILE_NUMBER` only without `PSTN_NUMBER` and extension.
     mobile_number: Optional[int] = None
+    service_number: Optional[int] = None
 
 
 class UCMProfile(ApiModel):
@@ -813,7 +814,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         """
         get summary (counts) of phone numbers
 
-        :param org_id: detaild for numbers in this organization.
+        :param org_id: details for numbers in this organization.
         :type org_id: str
         :return: phone number details
         :rtype: :class:`NumberDetails`

@@ -305,6 +305,7 @@ class TestUpdate(TestWithQueues):
         details.extension = target.extension
         details.location_id = target.location_id
         details.location_name = target.location_name
+        details.esn = target.esn
         self.assertEqual(target, details)
 
     def test_002_update_name(self):

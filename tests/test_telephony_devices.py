@@ -38,13 +38,6 @@ class TestSupportedDevices(TestCaseWithLog):
         print(f'Got {len(supported_devices.devices)} supported devices')
         print('\n'.join(f'{sd}' for sd in supported_devices.devices))
 
-    def test_002_dect_device_types(self):
-        """
-        DECT devices
-        """
-        devices = self.api.telephony.devices.dect_devices()
-        print(devices)
-
 
 class DeviceSettings(TestWithLocations):
     def test_001_org_level(self):

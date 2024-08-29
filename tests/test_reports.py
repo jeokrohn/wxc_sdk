@@ -89,6 +89,8 @@ class TestReports(TestCaseWithLog):
         details = self.api.reports.details(report_id=latest.id)
         url = latest.download_url
         cdrs = list(CallingCDR.from_dicts(self.api.reports.download(url=url)))
+        if not cdrs:
+            self.skipTest('No CDRs')
         print(f'CDR report, start {details.start_date.isoformat()}, end {details.end_date.isoformat()}, '
               f'created {details.created.isoformat()}')
         print(f'{len(cdrs)} records, 1st call {min(r.start_time for r in cdrs).isoformat()}, '

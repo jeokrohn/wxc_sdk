@@ -103,6 +103,10 @@ class WebexUser(ApiModel):
     train_site_names: Optional[list[str]] = None
     # TODO: undocumented
     managed_sites: Optional[list[dict]] = None
+    # TODO: undocumented
+    teams_cluster_id: Optional[str] = None
+    # TODO: undocumented
+    avatar_sync_enabled: Optional[bool] = None
 
 
 class UserTypeObject(str, Enum):
