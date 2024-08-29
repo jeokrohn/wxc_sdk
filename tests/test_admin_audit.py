@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from operator import attrgetter
 
 from inflection import underscore
 
@@ -16,10 +17,12 @@ class TestAdminAudit(TestCaseWithLog):
         from_ = datetime.utcnow() - timedelta(days=364)
         to_ = datetime.utcnow()
         events = list(self.api.admin_audit.list_events(org_id=org_id, from_=from_, to_=to_))
+        events.sort(key=attrgetter('created'))
         print(f'Got {len(events)} events')
         extras = dict()
         for event in events:
             data = event.data
+            print(f'{event.created}: {data.action_text}')
             extra = data.model_extra
 
             if not extra:
