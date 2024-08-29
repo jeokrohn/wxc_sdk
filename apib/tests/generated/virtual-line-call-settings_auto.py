@@ -1018,12 +1018,16 @@ class VirtualLineFaxMessageAvailableNumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[STATE] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
 
 
 class NumberOwnerType(str, Enum):
@@ -1088,54 +1092,62 @@ class VirtualLineCallForwardAvailableNumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[STATE] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates if the phone number is a toll-free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
     owner: Optional[VirtualLineCallForwardAvailableNumberObjectOwner] = None
 
 
 class VirtualLineECBNAvailableNumberObjectOwner(ApiModel):
-    #: Unique identifier of the owner to which PSTN Phone number is assigned.
+    #: Unique identifier of the owner to which phone number is assigned.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
-    #: Type of the PSTN phone number's owner.
+    #: Type of the phone number's owner.
     #: example: PEOPLE
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
-    #: First name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE`
-    #: or `VIRTUAL_LINE`.
+    #: First name of the phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     #: example: Test
     first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: Last name of the phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     #: example: Person
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PLACE`.
+    #: Display name of the phone number's owner. This field will be present only when the owner `type` is `PLACE`.
     #: example: TestWorkSpace
     display_name: Optional[str] = None
 
 
 class VirtualLineECBNAvailableNumberObject(ApiModel):
-    #: A unique identifier for the PSTN phone number.
+    #: A unique identifier for the phone number.
     #: example: +12056350001
     phone_number: Optional[str] = None
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[STATE] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If `true`, the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates if the phone number is a toll-free number.
+    #: If `true`, the phone number is a toll-free number.
     #: example: True
     toll_free_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[TelephonyType] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    #: example: True
+    is_service_number: Optional[bool] = None
     owner: Optional[VirtualLineECBNAvailableNumberObjectOwner] = None
 
 
@@ -1304,11 +1316,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         if record_voicemail_enabled is not None:
             body['recordVoicemailEnabled'] = record_voicemail_enabled
         if notification is not None:
-            body['notification'] = loads(notification.model_dump_json())
+            body['notification'] = notification.model_dump(mode='json', by_alias=True, exclude_none=True)
         if repeat is not None:
-            body['repeat'] = loads(repeat.model_dump_json())
+            body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
         if start_stop_announcement is not None:
-            body['startStopAnnouncement'] = loads(start_stop_announcement.model_dump_json())
+            body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/callRecording')
         super().put(url, params=params, json=body)
 
@@ -1327,9 +1339,9 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Creating a virtual line requires a full or user administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
-        :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 64.
+        :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
         :type first_name: str
-        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 64.
+        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 30.
         :type last_name: str
         :param location_id: ID of location for virtual line.
         :type location_id: str
@@ -1342,10 +1354,10 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             or `extension` is mandatory.
         :type extension: str
         :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
-            length is 1. Maximum length is 64.
+            length is 1. Maximum length is 30.
         :type caller_id_last_name: str
         :param caller_id_first_name: First name used in the Calling Line ID and for dial-by-name functions. Minimum
-            length is 1. Maximum length is 128.
+            length is 1. Maximum length is 30.
         :type caller_id_first_name: str
         :param caller_id_number: Phone number to appear as the CLID for all calls. Minimum length is 1. Maximum length
             is 23.
@@ -1866,9 +1878,9 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             params['orgId'] = org_id
         body = dict()
         if call_forwarding is not None:
-            body['callForwarding'] = loads(call_forwarding.model_dump_json())
+            body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         if business_continuity is not None:
-            body['businessContinuity'] = loads(business_continuity.model_dump_json())
+            body['businessContinuity'] = business_continuity.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/callForwarding')
         super().put(url, params=params, json=body)
 
@@ -2077,9 +2089,9 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         if enabled is not None:
             body['enabled'] = enabled
         if incoming is not None:
-            body['incoming'] = loads(incoming.model_dump_json())
+            body['incoming'] = incoming.model_dump(mode='json', by_alias=True, exclude_none=True)
         if outgoing is not None:
-            body['outgoing'] = loads(outgoing.model_dump_json())
+            body['outgoing'] = outgoing.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/intercept')
         super().put(url, params=params, json=body)
 
@@ -2269,19 +2281,19 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         if enabled is not None:
             body['enabled'] = enabled
         if send_all_calls is not None:
-            body['sendAllCalls'] = loads(send_all_calls.model_dump_json())
+            body['sendAllCalls'] = send_all_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
         if send_busy_calls is not None:
-            body['sendBusyCalls'] = loads(send_busy_calls.model_dump_json())
+            body['sendBusyCalls'] = send_busy_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
         if send_unanswered_calls is not None:
-            body['sendUnansweredCalls'] = loads(send_unanswered_calls.model_dump_json())
-        body['notifications'] = loads(notifications.model_dump_json())
-        body['transferToNumber'] = loads(transfer_to_number.model_dump_json())
+            body['sendUnansweredCalls'] = send_unanswered_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['notifications'] = notifications.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
         if email_copy_of_message is not None:
-            body['emailCopyOfMessage'] = loads(email_copy_of_message.model_dump_json())
+            body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
         if message_storage is not None:
-            body['messageStorage'] = loads(message_storage.model_dump_json())
+            body['messageStorage'] = message_storage.model_dump(mode='json', by_alias=True, exclude_none=True)
         if fax_message is not None:
-            body['faxMessage'] = loads(fax_message.model_dump_json())
+            body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['announcementLanguageCode'] = announcement_language_code
         url = self.ep(f'{virtual_line_id}/voicemail')
         super().put(url, params=params, json=body)
@@ -2375,6 +2387,30 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         url = self.ep(f'{virtual_line_id}/voicemail/actions/resetPin/invoke')
         super().post(url, params=params)
 
+    def modify_a_virtual_line_s_voicemail_passcode(self, virtual_line_id: str, passcode: str, org_id: str = None):
+        """
+        Modify a virtual line's voicemail passcode.
+
+        Modifying a virtual line's voicemail passcode requires a full administrator, user administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param virtual_line_id: Modify voicemail passcode for this virtual line.
+        :type virtual_line_id: str
+        :param passcode: Voicemail access passcode. The minimum length of the passcode is 6 and the maximum length is
+            30.
+        :type passcode: str
+        :param org_id: Modify voicemail passcode for a virtual line in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['passcode'] = passcode
+        url = self.ep(f'{virtual_line_id}/voicemail/passcode')
+        super().put(url, params=params, json=body)
+
     def retrieve_music_on_hold_settings_for_a_virtual_line(self, virtual_line_id: str,
                                                            org_id: str = None) -> GetMusicOnHoldObject:
         """
@@ -2443,7 +2479,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         if greeting is not None:
             body['greeting'] = enum_str(greeting)
         if audio_announcement_file is not None:
-            body['audioAnnouncementFile'] = loads(audio_announcement_file.model_dump_json())
+            body['audioAnnouncementFile'] = audio_announcement_file.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/musicOnHold')
         super().put(url, params=params, json=body)
 
@@ -2729,7 +2765,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         """
         Get Virtual Line Fax Message Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as a virtual line's FAX message number.
+        List standard numbers that are available to be assigned as a virtual line's FAX message number.
         These numbers are associated with the location of the virtual line specified in the request URL, can be active
         or inactive, and are unassigned.
 
@@ -2762,7 +2798,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         """
         Get Virtual Line Call Forward Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as a virtual line's call forward number.
+        List the service and standard PSTN numbers that are available to be assigned as a virtual line's call forward
+        number.
         These numbers are associated with the location of the virtual line specified in the request URL, can be active
         or inactive, and are assigned to an owning entity.
 
@@ -2803,7 +2840,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         """
         Get Virtual Line Available Phone Numbers
 
-        List PSTN numbers that are available to be assigned as a virtual line's phone number.
+        List standard numbers that are available to be assigned as a virtual line's phone number.
         By default, this API returns unassigned numbers from all locations. To select the suitable number for
         assignment, ensure the virtual line's location ID is provided as the `locationId` request parameter.
 
@@ -2838,7 +2875,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         """
         Get Virtual Line ECBN Available Phone Numbers
 
-        List PSTN numbers that can be assigned as a virtual line's call forward number.
+        List standard numbers that can be assigned as a virtual line's call forward number.
         These numbers are associated with the location of the virtual line specified in the request URL, can be active
         or inactive, and are assigned to an owning entity.
 
@@ -2868,3 +2905,47 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             params['ownerName'] = owner_name
         url = self.ep(f'{virtual_line_id}/emergencyCallbackNumber/availableNumbers')
         return self.session.follow_pagination(url=url, model=VirtualLineECBNAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_virtual_line_call_intercept_available_phone_numbers(self, virtual_line_id: str,
+                                                                phone_number: list[str] = None,
+                                                                owner_name: str = None, extension: str = None,
+                                                                org_id: str = None,
+                                                                **params) -> Generator[VirtualLineCallForwardAvailableNumberObject, None, None]:
+        """
+        Get Virtual Line Call Intercept Available Phone Numbers
+
+        List the service and standard PSTN numbers that are available to be assigned as a virtual line's call intercept
+        number.
+        These numbers are associated with the location of the virtual line specified in the request URL, can be active
+        or inactive, and are assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`VirtualLineCallForwardAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'{virtual_line_id}/callIntercept/availableNumbers')
+        return self.session.follow_pagination(url=url, model=VirtualLineCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
