@@ -129,7 +129,6 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens, Tes
         cls.integration_api = WebexSimpleApi(tokens=cls.integration_tokens)
 
     def test_list(self):
-        # api = self.integration_api
         api = self.recording_service_api
         recordings = list(api.converged_recordings.list())
         print(json.dumps(TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True),
@@ -138,5 +137,7 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens, Tes
     def test_metadata(self):
         api = self.integration_api
         recordings = list(api.converged_recordings.list())
+        if not recordings:
+            self.skipTest('No recordings found')
         meta = api.converged_recordings.metadata(recordings[0].id)
         print(json.dumps(meta.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
