@@ -22,7 +22,7 @@ copyright = '2024, Johannes Krohn'
 author = 'Johannes Krohn'
 
 # The full version, including alpha/beta/rc tags
-release = '1.21.1'
+release = '1.22.0'
 
 # -- General configuration ---------------------------------------------------
 

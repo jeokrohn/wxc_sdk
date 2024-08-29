@@ -1,6 +1,9 @@
 Release history
 ===============
 
+1.22.0
+------
+
 - feat: new available number endpoints:
 
   * :meth:`api.telephony.auto_attendant.alternate_available_phone_numbers <wxc_sdk.telephony.autoattendant.AutoAttendantApi.alternate_available_phone_numbers>`
