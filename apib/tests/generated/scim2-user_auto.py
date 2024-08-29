@@ -527,13 +527,13 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         body['externalId'] = external_id
         body['displayName'] = display_name
         body['nickName'] = nick_name
-        body['name'] = loads(name.model_dump_json())
+        body['name'] = name.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['phoneNumbers'] = TypeAdapter(list[PutUserPhoneNumbers]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
         body['photos'] = TypeAdapter(list[PhotoObject]).dump_python(photos, mode='json', by_alias=True, exclude_none=True)
         body['addresses'] = TypeAdapter(list[PutUserAddresses]).dump_python(addresses, mode='json', by_alias=True, exclude_none=True)
         body['emails'] = TypeAdapter(list[EmailObject]).dump_python(emails, mode='json', by_alias=True, exclude_none=True)
-        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
+        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{org_id}/v2/Users')
         data = super().post(url, json=body)
         r = GetUserResponse.model_validate(data)
@@ -635,8 +635,34 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
         "0ae87ade-8c8a-4952-af08-318798958d0c"
 
-        - More filter patterns, please check <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2">
-        filtering </a>.
+        - More filter patterns, please check `filtering
+        <https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2>`_.
+
+        | **Attributes** | **Operators** |
+        |-----|-----|
+        | **SCIM Core**
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        | ---- |
+        | `id` | eq |
+        | `userName` | eq sw ew |
+        | `name.familyName` | eq sw ew |
+        | `name.givenName` | eq sw |
+        | `name.middleName` | eq sw |
+        | `name.formatted` | eq sw |
+        | `displayName` | eq sw ew |
+        | `nickName` | eq sw ew |
+        | `emails.display` | eq sw ew |
+        | `emails.value` | eq sw ew |
+        | `phoneNumbers.value` | eq sw ew |
+        | `phoneNumbers.display` | eq sw ew |
+        | **Enterprise Extensions** | ---- |
+        | `employeeNumber` | eq sw ew |
+        | `costCenter` | eq sw ew |
+        | `organization` | eq sw ew |
+        | `division` | eq sw ew |
+        | `department` | eq sw ew |
+        | `manager.value` | eq |
+        | `manager.displayName` | eq sw ew |
         :type filter: str
         :param attributes: A multi-valued list of strings indicating the names of resource attributes to return in the
             response, likes 'userName,department,emails'. It supports the SCIM id
@@ -822,8 +848,8 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         body['photos'] = TypeAdapter(list[PhotoObject]).dump_python(photos, mode='json', by_alias=True, exclude_none=True)
         body['addresses'] = TypeAdapter(list[PutUserAddresses]).dump_python(addresses, mode='json', by_alias=True, exclude_none=True)
         body['emails'] = TypeAdapter(list[EmailObject]).dump_python(emails, mode='json', by_alias=True, exclude_none=True)
-        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = loads(urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump_json())
-        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = loads(urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump_json())
+        body['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'] = urn_ietf_params_scim_schemas_extension_enterprise_2_0_user.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['urn:scim:schemas:extension:cisco:webexidentity:2.0:User'] = urn_scim_schemas_extension_cisco_webexidentity_2_0_user.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().put(url, json=body)
         r = GetUserResponse.model_validate(data)

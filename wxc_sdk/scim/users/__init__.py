@@ -468,6 +468,54 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
               "0ae87ade-8c8a-4952-af08-318798958d0c"
             - More filter patterns, please check https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2"
 
+            .. list-table::
+               :header-rows: 1
+
+               * - **Attributes**   
+                 - **Operators**   
+               * - **SCIM Core**   
+                 - ----   
+               * - `id`   
+                 - eq   
+               * - `userName`   
+                 - eq sw ew   
+               * - `name.familyName`   
+                 - eq sw ew   
+               * - `name.givenName`   
+                 - eq sw   
+               * - `name.middleName`   
+                 - eq sw   
+               * - `name.formatted`   
+                 - eq sw   
+               * - `displayName`   
+                 - eq sw ew   
+               * - `nickName`   
+                 - eq sw ew   
+               * - `emails.display`   
+                 - eq sw ew   
+               * - `emails.value`   
+                 - eq sw ew   
+               * - `phoneNumbers.value`   
+                 - eq sw ew   
+               * - `phoneNumbers.display`   
+                 - eq sw ew   
+               * - **Enterprise Extensions**   
+                 - ----   
+               * - `employeeNumber`   
+                 - eq sw ew   
+               * - `costCenter`   
+                 - eq sw ew   
+               * - `organization`   
+                 - eq sw ew   
+               * - `division`   
+                 - eq sw ew   
+               * - `department`   
+                 - eq sw ew      
+               * - `manager.value`   
+                 - eq   
+               * - `manager.displayName`   
+                 - eq sw ew
+
         :type filter: str
         :param attributes: A multi-valued list of strings indicating the names of resource attributes to return in the
             response, like 'userName,department,emails'. It supports the SCIM id
