@@ -55,7 +55,7 @@ class DECTNetworkDetail(ApiModel):
         """
         return self.model_dump(mode='json',
                                exclude_none=True,
-                               include={'display_name', 'default_access_code_enabled', 'default_access_code'})
+                               include={'name', 'display_name', 'default_access_code_enabled', 'default_access_code'})
 
 
 class BaseStationResult(ApiModel):
@@ -220,8 +220,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DectDevice]).validate_python(data['devices'])
         return r
 
-    def create_dect_network(self, location_id: str, name: str, display_name: str, model: DECTNetworkModel,
-                            default_access_code_enabled: bool, default_access_code: str,
+    def create_dect_network(self, location_id: str, name: str, model: DECTNetworkModel,
+                            default_access_code_enabled: bool, default_access_code: str, display_name: str = None,
                             org_id: str = None) -> str:
         """
         Create a DECT Network
@@ -236,9 +236,6 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :param name: Name of the DECT network. Min and max length supported for the DECT network name are 1 and 40
             respectively.
         :type name: str
-        :param display_name: Add a default name (11 characters max) to display for all handsets. If left blank, the
-            default name will be an indexed number followed by the DECT network name.
-        :type display_name: str
         :param model: Select a device model type depending on the number of base stations and handset lines needed in
             the DECT network.
         :type model: DECTNetworkModel
@@ -250,6 +247,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :param default_access_code: If `defaultAccessCodeEnabled` is set to true, then provide a default access code
             that needs to be a 4-numeric digit. The access code should be unique to the DECT network for the location.
         :type default_access_code: str
+        :param display_name: Add a default name (11 characters max) to display for all handsets. If left blank, the
+            default name will be an indexed number followed by the DECT network name.
+        :type display_name: str
         :param org_id: Create a DECT network in this organization
         :type org_id: str
         :rtype: str
@@ -259,7 +259,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['name'] = name
-        body['displayName'] = display_name
+        if display_name is not None:
+            body['displayName'] = display_name
         body['model'] = enum_str(model)
         body['defaultAccessCodeEnabled'] = default_access_code_enabled
         body['defaultAccessCode'] = default_access_code
@@ -394,9 +395,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        body = settings.model_dump(mode='json', by_alias=True,
-                                   include={'name', 'display_name', 'default_access_code_enabled',
-                                            'default_access_code'})
+        body = settings.update()
         url = self.ep(f'locations/{settings.location.id}/dectNetworks/{settings.id}')
         super().put(url, params=params, json=body)
 
@@ -420,9 +419,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
+        params = org_id and {'orgId': org_id} or None
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
         super().delete(url, params=params)
 
