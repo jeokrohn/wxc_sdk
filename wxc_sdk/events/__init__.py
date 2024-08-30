@@ -201,7 +201,7 @@ class EventsApi(ApiChild, base='events'):
         if resource is not None:
             params['resource'] = enum_str(resource)
         if type_ is not None:
-            params['type'] = enum_str(type)
+            params['type'] = enum_str(type_)
         if actor_id is not None:
             params['actorId'] = actor_id
         if has_attachments is not None:

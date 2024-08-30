@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- fix: correct handling of type\_ parameter in :meth:`api.events.list <wxc_sdk.events.EventsApi.list>`
+
 1.22.0
 ------
 
