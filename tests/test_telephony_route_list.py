@@ -138,6 +138,30 @@ class TestCreate(TestCaseWithLog):
                 print(f'deleting route list: "{rl_name}"')
                 self.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=rl_id)
 
+    def test_002_create_two_route_lists_in_one_location(self):
+        """
+        Create two route lists in the same location
+        """
+        location = self.get_target_location()
+        with self.get_route_group(location=location) as rg_id:
+            rg_id: str
+            # get a name for the new route list
+            new_rl_names = (name for i in range(1, 100)
+                           if (name := f'{location.name} {i:02}') not in set(rl.name for rl in self.route_lists))
+            rl_names = [next(new_rl_names) for _ in range(2)]
+            rl_ids = []
+            try:
+                for rl_name in rl_names:
+                    print(f'creating route list: "{rl_name}"')
+                    rl_id = self.api.telephony.prem_pstn.route_list.create(name=rl_name,
+                                                                           location_id=location.location_id,
+                                                                           rg_id=rg_id)
+                    rl_ids.append(rl_id)
+            finally:
+                for rl_id, rl_name in zip(rl_ids, rl_names):
+                    print(f'deleting route list: "{rl_name}"')
+                    self.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=rl_id)
+
 
 class TestDetail(TestCaseWithLog):
     def test_001_detail_all(self):
