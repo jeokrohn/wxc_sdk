@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from functools import reduce
 from itertools import chain
 from json import dumps, loads
+from operator import attrgetter
 from random import shuffle, choice, randint
 from typing import ClassVar, Optional, Union, NamedTuple
 from unittest import skip
@@ -43,6 +44,7 @@ class DpContext:
     location: Location = field(init=False)
     location_users: list[Person] = field(init=False)
     trunk: TrunkDetail = field(init=False)
+    trunk_wo_dp: TrunkDetail = field(init=False)
     dial_plan: DialPlan = field(init=False)
     prem_pattern: str = field(init=False)
     prem_numbers: list[str] = field(init=False)
@@ -51,10 +53,25 @@ class DpContext:
     _used_numbers: set[str] = field(init=False, default_factory=set)
     _avail_generators: dict[str, Generator[str, None, None]] = field(init=False, default_factory=dict)
 
+    def print_context(self):
+        def user_info(user: Person) -> str:
+            numbers = ', '.join(f'{n.number_type}={n.value}' for n in user.phone_numbers)
+            return f'    {user.display_name} ({numbers})'
+
+        print('Dial Plan Context:')
+        print(f'  Location: {self.location.name}')
+        print(f'  Location Users:')
+        print('\n'.join(user_info(user) for user in sorted(self.location_users, key=attrgetter("display_name"))))
+        print(f'  Trunk: {self.trunk.name}')
+        print(f'  Dial Plan: {self.dial_plan.name}')
+        print(f'  Premises Pattern: {self.prem_pattern}')
+        print(f'  Premises Numbers: {", ".join(self.prem_numbers)}')
+        print(f'  PSTN Number: {self.pstn_number}')
+        print()
+
     def __post_init__(self):
         """
         actually set the context
-        :return:
         """
         with self.test.no_log():
             users = self.test.calling_users
@@ -64,18 +81,23 @@ class DpContext:
                                        defaultdict(list))
             # pick a random location
             location_id = choice(list(users_by_location))
+
             # get location details
             self.location = self.test.api.locations.details(location_id=location_id)
             self.location_users = users_by_location[location_id]
 
-            # create a trunk in that location
-            trunk_name = self.available_trunk_name(location_name=self.location.name)
-            pwd = self.test.api.telephony.location.generate_password(location_id=location_id)
-            print(f'Creating trunk "{trunk_name}" in location "{self.location.name}"')
-            trunk_id = self.test.api.telephony.prem_pstn.trunk.create(name=trunk_name,
-                                                                      location_id=location_id,
-                                                                      password=pwd)
-            self.trunk = self.test.api.telephony.prem_pstn.trunk.details(trunk_id=trunk_id)
+            def create_trunk():
+                # create a trunk in that location
+                trunk_name = self.available_trunk_name(location_name=self.location.name)
+                pwd = self.test.api.telephony.location.generate_password(location_id=location_id)
+                print(f'Creating trunk "{trunk_name}" in location "{self.location.name}"')
+                trunk_id = self.test.api.telephony.prem_pstn.trunk.create(name=trunk_name,
+                                                                          location_id=location_id,
+                                                                          password=pwd)
+                return self.test.api.telephony.prem_pstn.trunk.details(trunk_id=trunk_id)
+
+            self.trunk = create_trunk()
+            self.trunk_wo_dp = create_trunk()
 
             # create a dial plan using that trunk as destination
             dial_plans = list(self.test.api.telephony.prem_pstn.dial_plan.list())
@@ -83,9 +105,11 @@ class DpContext:
                            if (name := f'{self.location.name} {i:02}') not in set(dp.name for dp in dial_plans))
 
             # we also need an E.164 number that is not part of any dial plan and not a WxC TN
+
             # all WxC numbers
             self._numbers = set(
                 n.phone_number for n in self.test.api.telephony.phone_numbers(number_type=NumberType.number))
+
             # and then update with patterns from dial plans
             with ThreadPoolExecutor() as pool:
                 self._used_numbers.update(n for n in chain.from_iterable(
@@ -99,10 +123,14 @@ class DpContext:
 
             print(f'Creating dial plan "{dp_name}" with pattern "{self.prem_pattern}"')
             dp_id = self.test.api.telephony.prem_pstn.dial_plan.create(name=dp_name,
-                                                                       route_id=trunk_id,
+                                                                       route_id=self.trunk.trunk_id,
                                                                        route_type=RouteType.trunk,
                                                                        dial_patterns=[self.prem_pattern]).dial_plan_id
             self.dial_plan = self.test.api.telephony.prem_pstn.dial_plan.details(dial_plan_id=dp_id)
+            patterns = list(self.test.api.telephony.prem_pstn.dial_plan.patterns(dial_plan_id=dp_id))
+            self.test.assertEqual({self.prem_pattern}, set(p for p in patterns),
+                                  f'failed to create dial plan with premises pattern {self.prem_pattern}')
+            self.print_context()
 
     def available_trunk_name(self, location_name: str) -> str:
         """
@@ -195,6 +223,8 @@ class DpContext:
             self.test.api.telephony.prem_pstn.dial_plan.delete_dial_plan(dial_plan_id=self.dial_plan.dial_plan_id)
             print(f'Deleting trunk "{self.trunk.name}"')
             self.test.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=self.trunk.trunk_id)
+            print(f'Deleting trunk "{self.trunk_wo_dp.name}"')
+            self.test.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=self.trunk_wo_dp.trunk_id)
 
 
 @dataclass(init=False)
@@ -326,8 +356,10 @@ class ToUserWithTN(TestCallRouting):
                                                         phone_numbers=[new_tn],
                                                         state=NumberState.active)
                 print(f'Added new TN {new_tn} to location "{cls.target_location.location.name}"')
+
                 # create a new random user
                 new_user = (await random_users(api=api, user_count=1))[0]
+
                 # noinspection PyArgumentList
                 new_person = await api.people.create(
                     settings=Person(emails=[new_user.email],
@@ -336,12 +368,13 @@ class ToUserWithTN(TestCallRouting):
                                     last_name=new_user.name.last))
                 print(f'Added new user "{new_person.display_name}({new_person.emails[0]})"')
                 cls.target_user = new_person
+
                 # enable the user for calling, and add TN to user
                 licenses = await api.licenses.list()
                 basic_calling_license = next((lic for lic in licenses
                                               if lic.webex_calling_basic))
                 new_person.licenses.append(basic_calling_license.license_id)
-                new_person.phone_numbers = [PhoneNumber(number_type=PhoneNumberType.work, value=new_tn[2:])]
+                new_person.phone_numbers = [PhoneNumber(type=PhoneNumberType.work, value=new_tn[2:])]
                 await api.people.update(person=new_person, calling_data=True)
             return
 
@@ -359,7 +392,7 @@ class ToUserWithTN(TestCallRouting):
                 if cls.target_tn:
                     await api.telephony.location.number.remove(location_id=cls.target_location.location.location_id,
                                                                phone_numbers=[cls.target_tn])
-                    print(f'removed TN {cls.target_tn} to from "{cls.target_location.location.name}"')
+                    print(f'removed TN {cls.target_tn} from "{cls.target_location.location.name}"')
 
         asyncio.run(cleanup())
         super().tearDownClass()
@@ -542,10 +575,9 @@ class TestUsersAndTrunks(TestCallRouting):
                 print('No other issues other than wrong location id format')
                 raise
 
-    def test_005_trunk_prem_to_user_extension(self):
+    def test_002_trunk_prem_to_user_extension(self):
         """
         Call from a trunk to an extension with +E.164 caller ID of a prem user is expected to work
-        :return:
         """
         with self.assert_dial_plan_context() as ctx:
             ctx: DpContext
@@ -559,7 +591,8 @@ class TestUsersAndTrunks(TestCallRouting):
             test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
                                                                originator_type=OriginatorType.trunk,
                                                                destination=called.extension,
-                                                               originator_number=originator)
+                                                               originator_number=originator,
+                                                               include_applied_services=True)
             self.print_result(result=test_result)
             # before testing we ignore the location id in the hosted user destination
             # we already know that this is broken
@@ -588,7 +621,31 @@ class TestUsersAndTrunks(TestCallRouting):
             ),
                 test_result)
 
-    def test_006_trunk_pstn_to_user_extension(self):
+    def test_003_trunk_prem_to_user_extension_from_trunk_wo_dp(self):
+        """
+        Call from a trunk to an extension with +E.164 caller ID of a prem user is expected to work, but only if the
+        call comes from a trunk which is a DP destination
+        """
+        with self.assert_dial_plan_context() as ctx:
+            ctx: DpContext
+            users_w_extension = [u for u in ctx.location_users if u.extension]
+            called = choice(users_w_extension)
+            originator = choice(ctx.prem_numbers)
+            print(f'Call from trunk "{ctx.trunk_wo_dp.name}" from "{originator}" to "{called.extension}"')
+            print(f'trunk location: {ctx.trunk_wo_dp.location.name}')
+            internal_dialing = self.api.telephony.location.internal_dialing.read(location_id=ctx.location.location_id)
+            print(f'trunk location internal dialing: {internal_dialing}')
+            with self.assertRaises(RestError) as exc:
+                test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
+                                                                   originator_type=OriginatorType.trunk,
+                                                                   destination=called.extension,
+                                                                   originator_number=originator,
+                                                                   include_applied_services=True)
+            rest_error: RestError = exc.exception
+            print(f'got expected RestError: {rest_error.code}: {rest_error.description}')
+            self.assertEqual(111602, rest_error.code)
+
+    def test_004_trunk_pstn_to_user_extension(self):
         """
         Call from a trunk to an extension with caller ID of a PSTN number is expected to fail
         """
@@ -608,7 +665,7 @@ class TestUsersAndTrunks(TestCallRouting):
                              f'in standard mode',
                              rest_error.description)
 
-    def test_007_trunk_ext_to_user_ext_unknown_extension_routing_enabled(self):
+    def test_004_trunk_ext_to_user_ext_unknown_extension_routing_enabled(self):
         """
         Call from a trunk with extension as caller id to a user's extension should work
         """
@@ -618,8 +675,10 @@ class TestUsersAndTrunks(TestCallRouting):
             called = choice(users_w_extension)
             # make sure that unknown extension routing is enabled with "our" trunk as destination
             with self.no_log():
+                # save internal dialing before
                 internal_dialing_before = self.api.telephony.location.internal_dialing.read(
                     location_id=ctx.location.location_id)
+                # .. and temporarily enable unknown extension routing
                 self.api.telephony.location.internal_dialing.update(
                     location_id=ctx.location.location_id,
                     update=InternalDialing(enable_unknown_extension_route_policy=True,
@@ -644,7 +703,7 @@ class TestUsersAndTrunks(TestCallRouting):
                     self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
                                                                         update=internal_dialing_before)
 
-    def test_008_trunk_ext_to_user_ext_unknown_extension_routing_disabled(self):
+    def test_005_trunk_ext_to_user_ext_unknown_extension_routing_disabled(self):
         """
         Call from a trunk with extension as caller id to a user's extension should fail
         """
@@ -654,10 +713,10 @@ class TestUsersAndTrunks(TestCallRouting):
             called = choice(users_w_extension)
             # make sure that unknown extension routing is enabled with "our" trunk as destination
             with self.no_log():
-                # read internal dialing settigs of location (need to restore old settings after test)
+                # read internal dialing settings of location (need to restore old settings after test)
                 internal_dialing_before = self.api.telephony.location.internal_dialing.read(
                     location_id=ctx.location.location_id)
-                # enable unknown extension dialing; destination is the trunk we just created
+                # temporarily disable unknown extension dialing
                 self.api.telephony.location.internal_dialing.update(
                     location_id=ctx.location.location_id,
                     update=InternalDialing(enable_unknown_extension_route_policy=False))
@@ -679,7 +738,43 @@ class TestUsersAndTrunks(TestCallRouting):
                     self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
                                                                         update=internal_dialing_before)
 
-    def test_009_trunk_to_trunk_from_prem_e164(self):
+    def test_006_trunk_ext_to_user_ext_unknown_extension_routing_enabled_from_trunk_not_set_for_uer(self):
+        """
+        Call from a trunk with extension as caller id to a user's extension should work
+        but only if the incoming trunk is configured as destination for unknown extension routing
+        """
+        with self.assert_dial_plan_context() as ctx:
+            ctx: DpContext
+            users_w_extension = [u for u in ctx.location_users if u.extension]
+            called = choice(users_w_extension)
+            # make sure that unknown extension routing is enabled with "our" trunk as destination
+            with self.no_log():
+                # save internal dialing before
+                internal_dialing_before = self.api.telephony.location.internal_dialing.read(
+                    location_id=ctx.location.location_id)
+                # .. and temporarily enable unknown extension routing
+                self.api.telephony.location.internal_dialing.update(
+                    location_id=ctx.location.location_id,
+                    update=InternalDialing(enable_unknown_extension_route_policy=True,
+                                           unknown_extension_route_identity=RouteIdentity(
+                                               route_id=ctx.trunk.trunk_id,
+                                               route_type=RouteType.trunk)))
+            try:
+                with self.assertRaises(RestError) as exc:
+                    test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
+                                                                       originator_type=OriginatorType.trunk,
+                                                                       destination=called.extension,
+                                                                       originator_number='1234')
+                rest_error: RestError = exc.exception
+                print(f'got expected RestError: {rest_error.code}: {rest_error.description}')
+                self.assertEqual(111602, rest_error.code)
+            finally:
+                # restore internal dialing settings
+                with self.no_log():
+                    self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
+                                                                        update=internal_dialing_before)
+
+    def test_007_trunk_to_trunk_from_prem_e164(self):
         """
         Call from trunk to trunk (match on e164 pattern). Caller is E.164 based on DP match
         :return:
@@ -766,8 +861,8 @@ class TestUsersAndTrunks(TestCallRouting):
                     with self.no_log():
                         self.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=trunk_id)
 
-    @TestCallRouting.async_test
-    async def test_010_user_to_trunk_international(self):
+    @async_test
+    async def test_008_user_to_trunk_international(self):
         """
         Calling international destination matching a dial plan pattern using various dialing habits
         """
