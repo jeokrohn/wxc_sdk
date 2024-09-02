@@ -133,6 +133,9 @@ class TestCreate(TestCaseWithLog):
                 details = self.api.telephony.prem_pstn.route_list.details(rl_id=rl_id)
                 self.assertEqual(location.location_id, details.location.id)
                 self.assertEqual(rg_id, details.route_group.id)
+                # new list has to be in list of route lists
+                rl_list = list(self.api.telephony.prem_pstn.route_list.list())
+                self.assertIsNotNone(next((rl for rl in rl_list if rl.name == rl_name), None))
             finally:
                 # clean up: delete the route list again
                 print(f'deleting route list: "{rl_name}"')

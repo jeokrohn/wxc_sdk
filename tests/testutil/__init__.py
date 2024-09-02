@@ -6,6 +6,7 @@ import os
 import random
 from collections import defaultdict
 from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import date
 from functools import reduce
@@ -27,6 +28,7 @@ from wxc_sdk.common.schedules import ScheduleType, Schedule, Event
 from wxc_sdk.licenses import LicenseRequest, LicenseProperties, License
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
+from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
@@ -37,6 +39,7 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'create_calling_user', 'create_random_calling_user']
 
 from wxc_sdk.telephony.devices import MACState
+from wxc_sdk.telephony.location import TelephonyLocation
 
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace, WorkspaceCalling, CallingType, WorkspaceWebexCalling, \
@@ -162,6 +165,7 @@ def available_extensions(*, api: WebexSimpleApi, location_id: str, ext_requested
 @dataclass
 class LocationInfo:
     location: Location
+    tel_location: TelephonyLocation
     main_number: str
     numbers: list[NumberListPhoneNumber]
 
@@ -176,6 +180,18 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
     """
     us_locations = [loc for loc in api.locations.list()
                     if loc.address.country == 'US']
+
+    def safe_tel_location_details(location_id: str)->Optional[TelephonyLocation]:
+        try:
+            return api.telephony.location.details(location_id)
+        except RestError:
+            return None
+    with ThreadPoolExecutor() as pool:
+        tel_locations = list(pool.map(safe_tel_location_details, (loc.location_id for loc in us_locations)))
+
+    # only consider locations with telephony
+    us_locations, tel_locations = zip(*((loc, tel_loc) for loc, tel_loc in zip(us_locations, tel_locations)
+                                        if tel_loc))
     numbers = list(api.telephony.phone_numbers(number_type=NumberType.number))
     # group numbers by location id
     numbers_by_location: dict[str, list[NumberListPhoneNumber]] = defaultdict(list)
@@ -183,7 +199,7 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
         numbers_by_location[number.location.id].append(number)
     # collect results
     result = []
-    for loc in us_locations:
+    for loc, tel_loc in zip(us_locations, tel_locations):
         # get numbers for this location; maybe there are none
         loc_numbers = numbers_by_location.get(loc.location_id)
         if loc_numbers is None:
@@ -196,7 +212,8 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
         if not main_number:
             # skip locations w/o main number
             continue
-        result.append(LocationInfo(location=loc, main_number=main_number.phone_number, numbers=loc_numbers))
+        result.append(LocationInfo(location=loc, tel_location=tel_loc, main_number=main_number.phone_number,
+                                   numbers=loc_numbers))
     return result
 
 

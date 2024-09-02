@@ -30,7 +30,8 @@ TO_DELETE = re.compile(
 DRY_RUN = False
 
 
-def filtered(targets, name_getter=None, alternate_matches: Union[Pattern, str] = None):
+def filtered(targets, name_getter=None, alternate_matches: Union[Pattern, str] = None,
+             only_alternate: bool = False):
     def default_name_getter(item):
         return item.name
 
@@ -41,7 +42,7 @@ def filtered(targets, name_getter=None, alternate_matches: Union[Pattern, str] =
 
     for t in targets:
         name = name_getter(t)
-        if alternate_matches and alternate_matches.match(name) or TO_DELETE.match(name):
+        if alternate_matches and alternate_matches.match(name) or not only_alternate and TO_DELETE.match(name):
             yield t
         else:
             print(f'Keeping {t.__class__.__name__}({name})')
@@ -239,6 +240,33 @@ async def main():
             list(pool.map(lambda g: api.telephony.voicemail_groups.delete(location_id=g.location_id,
                                                                           voicemail_group_id=g.group_id),
                           groups))
+        # route lists
+        route_lists = list(filtered(api.telephony.prem_pstn.route_list.list(),
+                                    alternate_matches=r'.+ \d{2}$', only_alternate=True))
+        if not DRY_RUN:
+            list(pool.map(lambda rl: api.telephony.prem_pstn.route_list.delete_route_list(rl.rl_id),
+                          route_lists))
+
+        # dial plans
+        dial_plans = list(filtered(api.telephony.prem_pstn.dial_plan.list(),
+                                   alternate_matches=r'.+ \d{2}$', only_alternate=True))
+        if not DRY_RUN:
+            list(pool.map(lambda dp: api.telephony.prem_pstn.dial_plan.delete_dial_plan(dial_plan_id=dp.dial_plan_id),
+                          dial_plans))
+
+        # route groups
+        route_groups = list(filtered(api.telephony.prem_pstn.route_group.list(),
+                                     alternate_matches=r'.+ \d{2}$', only_alternate=True))
+        if not DRY_RUN:
+            list(pool.map(lambda rg: api.telephony.prem_pstn.route_group.delete_route_group(rg.rg_id),
+                          route_groups))
+
+        # trunks
+        trunks = list(filtered(api.telephony.prem_pstn.trunk.list(),
+                               alternate_matches=r'.+ \d{2}$', only_alternate=True))
+        if not DRY_RUN:
+            list(pool.map(lambda t: api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=t.trunk_id),
+                          trunks))
 
         # inactive unused numbers
         numbers = [number

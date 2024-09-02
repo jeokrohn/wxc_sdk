@@ -20,7 +20,7 @@ from tests.testutil import calling_users, us_location_info, LocationInfo, availa
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState
+from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState, PatternAction
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
@@ -35,6 +35,8 @@ from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
+from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup, RGTrunk
+from wxc_sdk.telephony.prem_pstn.route_list import RouteList, NumberAndAction
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
 
@@ -227,9 +229,176 @@ class DpContext:
             self.test.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=self.trunk_wo_dp.trunk_id)
 
 
+@dataclass
+class RLTestContext:
+    test: 'TestCallRouting'
+    # for RL tests
+    location: Optional[Location] = field(init=False)
+    trunk: Optional[TrunkDetail] = field(init=False)
+    rg: Optional[RouteGroup] = field(init=False)
+    rl: Optional[RouteList] = field(init=False)
+    test_tns: Optional[list[str]] = field(init=False)
+    # for RL tests, in dp_context location
+    rg1: Optional[RouteGroup] = field(init=False)
+    rg2: Optional[RouteGroup] = field(init=False)
+    rl1: Optional[RouteList] = field(init=False)
+    rl2: Optional[RouteList] = field(init=False)
+    test_tns1: Optional[list[str]] = field(init=False)
+
+    def __post_init__(self):
+        """
+        Actually set the context
+        """
+        try:
+            # with self.test.no_log():
+            # pick another location
+            locations = [loc for loc in self.test.locations
+                         if loc.location_id != self.test.dp_context.location.location_id]
+            location: Location = choice(locations)
+            self.location = location
+            print(f'Picked location "{location.name}" for RL test')
+
+            # add 2 TNs in each location
+            #   * the location in the dial plan context
+            self.test_tns1 = self.add_test_tns(location=self.test.dp_context.location)
+            #   * and the other location
+            self.test_tns = self.add_test_tns(location=location)
+
+            # in other location create:
+            #   * a trunk
+            #   * a RG
+            #   * a RL with the two TNs pointing to the RG
+            self.trunk, self.rg, self.rl = self.create_test_rl(location=self.location,
+                                                               tn_list=self.test_tns)
+            # in test location we already have to trunks
+            # in that location create
+            #   * two RGs
+            #   * two RLs with one TN each pointing to one of the RGs
+            _, self.rg1, self.rl1 = self.create_test_rl(location=self.test.dp_context.location,
+                                                        tn_list=self.test_tns1[:1],
+                                                        trunk=self.test.dp_context.trunk)
+            _, self.rg2, self.rl2 = self.create_test_rl(location=self.test.dp_context.location,
+                                                        tn_list=self.test_tns1[1:],
+                                                        trunk=self.test.dp_context.trunk_wo_dp)
+        except RestError as e:
+            print(f'Failed to set up RL test context: {e}')
+            self.cleanup()
+            raise
+        return
+
+    def cleanup(self):
+        """
+        clean up the stuff we created
+        """
+        with self.test.no_log():
+            if self.rl1:
+                self.test.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=self.rl1.rl_id)
+                print(f'Deleted route list "{self.rl1.name}"')
+                self.rl1 = None
+            if self.rl2:
+                self.test.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=self.rl2.rl_id)
+                print(f'Deleted route list "{self.rl2.name}"')
+                self.rl2 = None
+            if self.rg1:
+                self.test.api.telephony.prem_pstn.route_group.delete_route_group(rg_id=self.rg1.rg_id)
+                print(f'Deleted route group "{self.rg1.name}"')
+                self.rg1 = None
+            if self.rg2:
+                self.test.api.telephony.prem_pstn.route_group.delete_route_group(rg_id=self.rg2.rg_id)
+                print(f'Deleted route group "{self.rg2.name}"')
+                self.rg2 = None
+            if self.test_tns1:
+                self.test.api.telephony.location.number.remove(location_id=self.test.dp_context.location.location_id,
+                                                               phone_numbers=self.test_tns1)
+                print(f'Removed TNs {", ".join(self.test_tns1)} from location "{self.test.dp_context.location.name}"')
+                self.test_tns1 = None
+            if self.rl:
+                self.test.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=self.rl.rl_id)
+                print(f'Deleted route list "{self.rl.name}"')
+                self.rl = None
+            if self.rg:
+                self.test.api.telephony.prem_pstn.route_group.delete_route_group(rg_id=self.rg.rg_id)
+                print(f'Deleted route group "{self.rg.name}"')
+                self.rg = None
+            if self.trunk:
+                self.test.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=self.trunk.trunk_id)
+                print(f'Deleted trunk "{self.trunk.name}"')
+                self.trunk = None
+            if self.test_tns:
+                self.test.api.telephony.location.number.remove(location_id=self.location.location_id,
+                                                               phone_numbers=self.test_tns)
+                print(f'Removed TNs {", ".join(self.test_tns)} from location "{self.location.name}"')
+                self.test_tns = None
+        return
+
+    def add_test_tns(self, location: Location) -> list[str]:
+        """
+        add 2 TNs to a location
+        :return: list of new TNs
+        """
+        existing_tns = (n.phone_number
+                        for n in self.test.api.telephony.phone_numbers(location_id=location.location_id,
+                                                                       number_type=NumberType.number))
+        prefix = next(existing_tns)[:5]
+
+        tns = available_tns(api=self.test.api, tns_requested=2, tn_prefix=prefix)
+        self.test.api.telephony.location.number.add(location_id=location.location_id, phone_numbers=tns,
+                                                    state=NumberState.active)
+        print(f'Added TNs {", ".join(tns)} to location "{location.name}"')
+        return tns
+
+    def create_test_rg(self, location: Location, trunk: TrunkDetail) -> RouteGroup:
+        """
+        create a RG in a location with a trunk
+        :return: RG
+        """
+        rg_names = set(rg.name for rg in self.test.api.telephony.prem_pstn.route_group.list())
+        rg_name = next(name for i in range(1, 100) if (name := f'{location.name} {i:02}') not in rg_names)
+        rg = RouteGroup(name=rg_name, local_gateways=[RGTrunk(id=trunk.trunk_id, location_id=location.location_id,
+                                                              priority=1)])
+        rg_id = self.test.api.telephony.prem_pstn.route_group.create(route_group=rg)
+        rg = self.test.api.telephony.prem_pstn.route_group.details(rg_id=rg_id)
+        rg.rg_id = rg_id
+        print(f'Created route group "{rg_name}" with trunk "{trunk.name}" in location "{location.name}"')
+        return rg
+
+    def create_test_rl(self, location: Location, tn_list: list[str],
+                       trunk: TrunkDetail = None) -> tuple[TrunkDetail, RouteGroup, RouteList]:
+        """
+        create a RG and a RL in a location and add TNs to route list
+        If no existing trunk is passed, also create a trunk
+        :return: trunk, RG, RL
+        """
+        if trunk is None:
+            trunks = self.test.api.telephony.prem_pstn.trunk.list(location_name=location.name)
+            existing_trunk_names = set(t.name for t in trunks)
+            trunk_name = next(name
+                              for i in range(1, 100)
+                              if (name := f'{location.name} {i:02}') not in existing_trunk_names)
+            password = self.test.api.telephony.location.generate_password(location_id=location.location_id)
+            trunk_id = self.test.api.telephony.prem_pstn.trunk.create(name=trunk_name, location_id=location.location_id,
+                                                                      password=password)
+            trunk = self.test.api.telephony.prem_pstn.trunk.details(trunk_id=trunk_id)
+            print(f'Created trunk "{trunk_name}" in location "{location.name}"')
+        rg = self.create_test_rg(location=location, trunk=trunk)
+        rl_names = set(rl.name for rl in self.test.api.telephony.prem_pstn.route_list.list())
+        rl_name = next(name for i in range(2, 100) if (name := f'{location.name} {i:02}') not in rl_names)
+        rl_id = self.test.api.telephony.prem_pstn.route_list.create(name=rl_name, location_id=location.location_id,
+                                                                    rg_id=rg.rg_id)
+        rl = self.test.api.telephony.prem_pstn.route_list.details(rl_id=rl_id)
+        self.test.api.telephony.prem_pstn.route_list.update_numbers(rl_id=rl_id,
+                                                                    numbers=[NumberAndAction(number=tn,
+                                                                                             action=PatternAction.add)
+                                                                             for tn in tn_list])
+        print(f'Created route list "{rl_name}" with RG "{rg.name}" and TNs {", ".join(tn_list)} in location '
+              f'"{location.name}"')
+        return trunk, rg, rl
+
+
 @dataclass(init=False)
 class TestCallRouting(TestCaseWithLog):
     dp_context: ClassVar[Optional[DpContext]] = field(default=None)
+    rl_context: ClassVar[Optional[RLTestContext]] = field(default=None)
     _calling_users: ClassVar[list[Person]] = field(default=None)
     _location_infos: ClassVar[Optional[list[LocationInfo]]] = field(default=None)
 
@@ -237,11 +406,15 @@ class TestCallRouting(TestCaseWithLog):
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.dp_context = None
+        cls.rl_context = None
         cls._location_infos = None
         cls._calling_users = None
 
     @classmethod
     def tearDownClass(cls) -> None:
+        # clean up stuff for rl_tests
+        if cls.rl_context:
+            cls.rl_context.cleanup()
         if cls.dp_context:
             cls.dp_context.cleanup()
         super().tearDownClass()
@@ -255,7 +428,10 @@ class TestCallRouting(TestCaseWithLog):
 
     @property
     def locations(self) -> list[Location]:
-        return [li.location for li in self.location_infos]
+        return [li.location
+                for li in self.location_infos
+                if li.tel_location.connection and li.tel_location.connection.type in {RouteType.trunk,
+                                                                                      RouteType.route_group}]
 
     @property
     def calling_users(self) -> list[Person]:
@@ -282,6 +458,16 @@ class TestCallRouting(TestCaseWithLog):
         if self.dp_context is None:
             self.__class__.dp_context = DpContext(test=self)
         yield self.dp_context
+
+    @contextmanager
+    def prepare_rl_test(self):
+        """
+        """
+        with self.assert_dial_plan_context():
+            if self.rl_context is None:
+                self.__class__.rl_context = RLTestContext(test=self)
+            yield
+        return
 
     @staticmethod
     def print_result(*, result: TestCallRoutingResult):
@@ -621,6 +807,14 @@ class TestUsersAndTrunks(TestCallRouting):
             ),
                 test_result)
 
+    @contextmanager
+    def raises_inbound_PSTN_call_from_unknown_number(self):
+        with self.assertRaises(RestError) as exc:
+            yield
+        rest_error: RestError = exc.exception
+        self.assertEqual(111602, rest_error.code)
+        print(f'got expected RestError: {rest_error.code}: {rest_error.description}')
+
     def test_003_trunk_prem_to_user_extension_from_trunk_wo_dp(self):
         """
         Call from a trunk to an extension with +E.164 caller ID of a prem user is expected to work, but only if the
@@ -635,15 +829,12 @@ class TestUsersAndTrunks(TestCallRouting):
             print(f'trunk location: {ctx.trunk_wo_dp.location.name}')
             internal_dialing = self.api.telephony.location.internal_dialing.read(location_id=ctx.location.location_id)
             print(f'trunk location internal dialing: {internal_dialing}')
-            with self.assertRaises(RestError) as exc:
+            with self.raises_inbound_PSTN_call_from_unknown_number():
                 test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
                                                                    originator_type=OriginatorType.trunk,
                                                                    destination=called.extension,
                                                                    originator_number=originator,
                                                                    include_applied_services=True)
-            rest_error: RestError = exc.exception
-            print(f'got expected RestError: {rest_error.code}: {rest_error.description}')
-            self.assertEqual(111602, rest_error.code)
 
     def test_004_trunk_pstn_to_user_extension(self):
         """
@@ -654,16 +845,11 @@ class TestUsersAndTrunks(TestCallRouting):
             users_w_extension = [u for u in ctx.location_users if u.extension]
             called = choice(users_w_extension)
             # the test is expected to fail
-            with self.assertRaises(RestError) as exc:
+            with self.raises_inbound_PSTN_call_from_unknown_number():
                 self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
                                                      originator_type=OriginatorType.trunk,
                                                      destination=called.extension,
                                                      originator_number=ctx.pstn_number)
-            rest_error: RestError = exc.exception
-            self.assertEqual(111602, rest_error.code)
-            self.assertEqual(f'This call is an inbound PSTN call from unknown number {ctx.pstn_number} '
-                             f'in standard mode',
-                             rest_error.description)
 
     def test_004_trunk_ext_to_user_ext_unknown_extension_routing_enabled(self):
         """
@@ -721,16 +907,12 @@ class TestUsersAndTrunks(TestCallRouting):
                     location_id=ctx.location.location_id,
                     update=InternalDialing(enable_unknown_extension_route_policy=False))
             try:
-                with self.assertRaises(RestError) as exc:
+                with self.raises_inbound_PSTN_call_from_unknown_number():
                     self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
                                                          originator_type=OriginatorType.trunk,
                                                          destination=called.extension,
                                                          originator_number='1234')
-                rest_error: RestError = exc.exception
-                self.assertEqual(111602, rest_error.code)
-                self.assertEqual(f'This call is an inbound PSTN call from unknown number 1234 '
-                                 f'in standard mode',
-                                 rest_error.description)
+
 
             finally:
                 # restore internal dialing settings
@@ -760,14 +942,11 @@ class TestUsersAndTrunks(TestCallRouting):
                                                route_id=ctx.trunk.trunk_id,
                                                route_type=RouteType.trunk)))
             try:
-                with self.assertRaises(RestError) as exc:
+                with self.raises_inbound_PSTN_call_from_unknown_number():
                     test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
                                                                        originator_type=OriginatorType.trunk,
                                                                        destination=called.extension,
                                                                        originator_number='1234')
-                rest_error: RestError = exc.exception
-                print(f'got expected RestError: {rest_error.code}: {rest_error.description}')
-                self.assertEqual(111602, rest_error.code)
             finally:
                 # restore internal dialing settings
                 with self.no_log():
@@ -902,6 +1081,71 @@ class TestUsersAndTrunks(TestCallRouting):
             self.assertTrue(all(r.destination_type == DestinationType.pbx_user and r.pbx_user and
                                 r.pbx_user.dial_plan_id == ctx.dial_plan.dial_plan_id
                                 for r in results))
+
+    # RL tests
+    def test_009_trunk_to_ext_rl_wrong_location(self):
+        """
+        Call from trunk to ESN, +E.164 caller id matching a RL pattern in wrong location
+        """
+        with self.prepare_rl_test():
+            users_w_extension = [u for u in self.dp_context.location_users if u.extension]
+            called = choice(users_w_extension)
+            called: Person
+            print(f'Called: {called.display_name}({called.extension})')
+            originator = self.rl_context.test_tns[0]
+            originator_id = self.dp_context.trunk.trunk_id
+            print(f'Call from trunk "{self.dp_context.trunk.name}" from "{originator}" to "{called.extension}"')
+            with self.raises_inbound_PSTN_call_from_unknown_number():
+                self.api.telephony.test_call_routing(originator_id=originator_id,
+                                                     originator_type=OriginatorType.trunk,
+                                                     destination=called.extension,
+                                                     originator_number=originator,
+                                                     include_applied_services=True)
+
+    def test_010_trunk_to_ext_rl_match(self):
+        """
+        Call from trunk to ext, +E.164 caller id matching RL pattern pointing to incoming trunk via RG
+        """
+        with self.prepare_rl_test():
+            users_w_extension = [u for u in self.dp_context.location_users if u.extension]
+            called = choice(users_w_extension)
+            called: Person
+            print(f'Called: {called.display_name}({called.extension})')
+            originator = self.rl_context.test_tns1[0]
+            originator_id = self.dp_context.trunk.trunk_id
+            print(f'Call from trunk "{self.rl_context.trunk.name}" from "{originator}" to "{called.extension}"')
+            result = self.api.telephony.test_call_routing(originator_id=originator_id,
+                                                          originator_type=OriginatorType.trunk,
+                                                          destination=called.extension,
+                                                          originator_number=originator,
+                                                          include_applied_services=True)
+            self.print_result(result=result)
+            self.assertFalse(result.is_rejected)
+            self.assertEqual(CallSourceType.route_list, result.call_source_info.call_source_type)
+            self.assertEqual(called.extension, result.routing_address)
+            self.assertEqual(DestinationType.hosted_agent, result.destination_type)
+            self.assertEqual(called.person_id, result.hosted_user.hu_id)
+
+    def test_011_trunk_to_ext_rl_match_wrong_trunk(self):
+        """
+        call from trunk to ext, +E.164 caller id matching RL pattern pointing to different trunk but in same location
+        """
+        with self.prepare_rl_test():
+            users_w_extension = [u for u in self.dp_context.location_users if u.extension]
+            called = choice(users_w_extension)
+            called: Person
+            print(f'Called: {called.display_name}({called.extension})')
+            originator = self.rl_context.test_tns1[1]
+            originator_id = self.dp_context.trunk.trunk_id
+            print(f'Call from trunk "{self.dp_context.trunk.name}" from "{originator}" to "{called.extension}"')
+            with self.raises_inbound_PSTN_call_from_unknown_number():
+                self.api.telephony.test_call_routing(originator_id=originator_id,
+                                                     originator_type=OriginatorType.trunk,
+                                                     destination=called.extension,
+                                                     originator_number=originator,
+                                                     include_applied_services=True)
+
+
 
 
 @dataclass
