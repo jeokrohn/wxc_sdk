@@ -20,7 +20,7 @@ from tests.testutil import calling_users, us_location_info, LocationInfo, availa
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState, PatternAction
+from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState, PatternAction, OwnerType
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
@@ -694,28 +694,29 @@ class TestUsersAndTrunks(TestCallRouting):
         """
         User A calls user B by dialing user B's extension
         """
-        # only consider calling users with extensions
-        users = [user for user in self.calling_users
-                 if user.extension]
+        tel_location_ids = set(loc.location_id for loc in self.locations)
 
-        # group users by location
-        users_by_location: dict[str, list[Person]] = reduce(
-            lambda r, user: r[user.location_id].append(user) or r, users,
-            defaultdict(list))
+        # numbers owned by users
+        numbers = (n for n in self.api.telephony.phone_numbers(owner_type=OwnerType.people)
+                   if n.extension and n.location.id in tel_location_ids)
+        user_ids_by_location: dict[str, set[str]] = reduce(
+            lambda r, number: r[number.location.id].add(number.owner.owner_id) or r,
+            numbers,
+            defaultdict(set))
 
         # pick random location from locations with at least two users
         try:
-            location_id = choice([lid for lid, users in users_by_location.items()
+            location_id = choice([lid for lid, users in user_ids_by_location.items()
                                   if len(users) > 1])
         except IndexError:
             location_id = None
             self.skipTest('Need at least two users with extensions in the same location to run this test')
 
         # pick two random users within location
-        location_users = users_by_location[location_id]
-        shuffle(location_users)
-        calling = location_users[0]
-        called = location_users[1]
+        location_user_ids = list(user_ids_by_location[location_id])
+        shuffle(location_user_ids)
+        calling, called = await asyncio.gather(*[self.async_api.people.details(person_id=pid, calling_data=True)
+                                                 for pid in location_user_ids[:2]])
         location = next(loc for loc in self.locations if loc.location_id == location_id)
 
         # test and verify routing
@@ -1144,8 +1145,6 @@ class TestUsersAndTrunks(TestCallRouting):
                                                      destination=called.extension,
                                                      originator_number=originator,
                                                      include_applied_services=True)
-
-
 
 
 @dataclass
