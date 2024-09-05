@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -5,9 +6,11 @@ from dataclasses import dataclass, field
 from random import choice
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, async_test
 from tests.testutil import us_location_info, LocationInfo
+from wxc_sdk.common import RouteType
 from wxc_sdk.locations import Location
+from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import OwnerType, NumberListPhoneNumber, NumberType
 from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup, RGTrunk
 from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList
@@ -150,7 +153,7 @@ class TestCreate(TestCaseWithLog):
             rg_id: str
             # get a name for the new route list
             new_rl_names = (name for i in range(1, 100)
-                           if (name := f'{location.name} {i:02}') not in set(rl.name for rl in self.route_lists))
+                            if (name := f'{location.name} {i:02}') not in set(rl.name for rl in self.route_lists))
             rl_names = [next(new_rl_names) for _ in range(2)]
             rl_ids = []
             try:
@@ -312,3 +315,46 @@ class DeleteAll(TestCaseWithLog):
         with ThreadPoolExecutor() as pool:
             list(pool.map(lambda rl: self.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=rl.rl_id),
                           route_lists))
+
+
+class UnlistedRLs(TestCaseWithLog):
+
+    @async_test
+    async def test_unlisted(self):
+        """
+        Some RLs seem to not be listed; but the name still exists
+        """
+        rl_name_template = '{name} {i:02}'
+        calling_locations = list(self.api.telephony.location.list())
+        calling_locations = await asyncio.gather(
+            *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in calling_locations])
+        calling_locations = [loc for loc in calling_locations
+                             if loc.connection and loc.connection.type in {RouteType.trunk, RouteType.route_group}]
+        route_group = next((rg for rg in self.api.telephony.prem_pstn.route_group.list()), None)
+        if route_group is None:
+            self.skipTest('No route group to test with')
+        max_index_to_test = 2
+        err = None
+        for test_index in range(1, max_index_to_test + 1):
+            for location in calling_locations:
+                rl_name = rl_name_template.format(name=location.name, i=test_index)
+                try:
+                    print(f'Creating "{rl_name}"')
+                    rl_id = self.api.telephony.prem_pstn.route_list.create(name=rl_name,
+                                                                           location_id=location.location_id,
+                                                                           rg_id=route_group.rg_id)
+                except RestError as e:
+                    err = err or e
+                    if e.code == 27601:
+                        print(f'Route list "{rl_name}" already exists')
+                    else:
+                        print(f'Error creating "{rl_name}": {e}')
+                else:
+                    # delete the RL again
+                    print(f'Deleting "{rl_name}"')
+                    self.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=rl_id)
+            # for location
+        # for test_index
+        if err:
+            raise err
+        return

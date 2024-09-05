@@ -27,7 +27,7 @@ from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import OriginatorType, DestinationType, NumberType, CallSourceType, TestCallRoutingResult, \
     HostedFeatureDestination, ServiceType, HostedUserDestination, CallSourceInfo, PbxUserDestination, \
-    NumberListPhoneNumber
+    NumberListPhoneNumber, TranslationPatternConfigurationLevel, NumberListPhoneNumberType
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantMenu
 from wxc_sdk.telephony.call_routing.translation_pattern import TranslationPattern, TranslationPatternLevel
 from wxc_sdk.telephony.callqueue import CallQueue
@@ -1687,7 +1687,7 @@ TPValidator = Callable[[TranslationPattern], None]
 
 class TestTranslationPattern(TestCallRouting):
     """
-    Tests for translation patterns
+    Tests for translation pattern manaagement
     """
 
     @staticmethod
@@ -1911,3 +1911,88 @@ class TestTranslationPattern(TestCallRouting):
                     print(f'  No delete request found')
 
         self.assertEqual(len(list_before), len(list_after), 'Some TPs not deleted')
+
+
+@dataclass(init=False, repr=False)
+class UserCalls(TestCaseWithLog):
+    """
+    Call routing tests for calls from users to specific destinations
+    """
+    locations: ClassVar[list[TelephonyLocation]]
+    user_numbers: ClassVar[list[NumberListPhoneNumber]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        locations = list(cls.api.telephony.location.list())
+        with ThreadPoolExecutor() as pool:
+            locations = list(pool.map(cls.api.telephony.location.details,
+                                      (loc.location_id for loc in locations)))
+        numbers = list(cls.api.telephony.phone_numbers(owner_type=OwnerType.people))
+        cls.user_numbers = numbers
+        locations_with_users = {n.location.id for n in numbers}
+        locations: list[TelephonyLocation]
+        cls.locations = [loc for loc in locations
+                         if (loc.connection and loc.connection.type in {RouteType.trunk, RouteType.route_group} and
+                             loc.outside_dial_digit == '9' and loc.location_id in locations_with_users)]
+
+    def setUp(self) -> None:
+        if not self.locations:
+            self.skipTest('No locations with trunk or route group and outside dial digit "9"')
+        super().setUp()
+
+    def test_odd9_match_tp_after_odd_removal(self):
+        """
+        with ODD "9" configured, a TP 123 gets matched when dialing 9123
+        """
+        location: TelephonyLocation = choice(self.locations)
+        print(f'testing in location "{location.name}"')
+        tp_list = list(self.api.telephony.call_routing.tp.list(limit_to_location_id=location.location_id))
+        tp = next((tp for tp in tp_list if tp.matching_pattern == '123'), None)
+        if tp is None:
+            # create temp TP
+            tp_names = {tp.name
+                        for tp in tp_list}
+            tp_name = next((name for
+                            i in range(1, 100)
+                            if (name := f'{location.name} {i:02}') not in tp_names))
+
+            tp = TranslationPattern(name=tp_name, matching_pattern='123', replacement_pattern='99999999999')
+            print(f'Creating temp TP "{tp.name}"')
+            tp_id = self.api.telephony.call_routing.tp.create(tp, location_id=location.location_id)
+        else:
+            print(f'Using existing TP "{tp.name}"')
+            tp_id = None
+        try:
+            # pick a user in the locations
+            users_in_location = {n.owner.owner_id for n in self.user_numbers if n.location.id == location.location_id}
+            user_id = choice(list(users_in_location))
+            user = self.api.people.details(user_id, calling_data=True)
+
+            # get primary number for user
+            user_number = next(n
+                               for n in self.user_numbers
+                               if (n.owner.owner_id == user_id and
+                                   (not n.phone_number or
+                                    n.phone_number_type == NumberListPhoneNumberType.primary)))
+            print(f'User: {user.display_name}({user_number.extension}/{user_number.phone_number})')
+
+            result = self.api.telephony.test_call_routing(originator_id=user_id, originator_type=OriginatorType.user,
+                                                          destination='9123', include_applied_services=True)
+
+            # we don't care whether 6the call routes successfully or not; we only care if the TP is applied
+            self.assertIsNotNone(result.applied_services, 'No applied services')
+            applied_service = result.applied_services[0]
+            self.assertIsNotNone(applied_service.translation_pattern, 'No applied TP')
+            applied_tp = applied_service.translation_pattern
+            self.assertEqual(TranslationPatternConfigurationLevel.location, applied_tp.configuration_level,
+                             'Level not location')
+            self.assertEqual(tp.matching_pattern, applied_tp.matching_pattern,
+                             'Matching pattern not correct')
+            self.assertEqual(tp.replacement_pattern, applied_tp.replacement_pattern,
+                             'Replacement pattern not correct')
+        finally:
+            # delete temp TP
+            if tp_id is not None:
+                print(f'Deleting temp TP "{tp.name}"')
+                self.api.telephony.call_routing.tp.delete(translation_id=tp_id, location_id=location.location_id)

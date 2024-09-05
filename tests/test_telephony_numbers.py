@@ -48,11 +48,11 @@ class TestNumbers(TestCaseWithLog):
 
 class TestNumberConsistency(TestCaseWithUsers):
     def test_number_consistency(self):
-        numbers = self.api.telephony.phone_numbers(number_type=NumberType.number, owner_type=OwnerType.people)
+        numbers = self.api.telephony.phone_numbers(owner_type=OwnerType.people)
         locations = {loc.location_id:loc for loc in self.api.locations.list()}
         err = False
         for number in numbers:
-            print(f'number: {number.phone_number}')
+            print(f'number: {number.phone_number}/{number.extension}')
             # owner has to be a person
             if not number.owner:
                 print(' - no owner')

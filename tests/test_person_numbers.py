@@ -2,17 +2,23 @@
 Test for person numbers
 """
 import asyncio
+import functools
 import json
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager, asynccontextmanager
 from dataclasses import dataclass, field
+from functools import reduce
+from operator import attrgetter
 from random import choice
 from time import sleep
 from typing import ClassVar
 
-from tests.base import TestCaseWithUsers, async_test, TestWithLocations
+from tests.base import TestCaseWithUsers, async_test, TestWithLocations, TestCaseWithLog
 from tests.testutil import LocationInfo, us_location_info, available_tns, random_users, as_available_tns, \
     get_calling_license, available_extensions
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import PatternAction, RingPattern, OwnerType
 from wxc_sdk.licenses import LicenseRequest, LicenseProperties
 from wxc_sdk.locations import Location
@@ -20,7 +26,7 @@ from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
 from wxc_sdk.person_settings.available_numbers import AvailablePhoneNumberLicenseType
 from wxc_sdk.person_settings.numbers import UpdatePersonNumbers, UpdatePersonPhoneNumber, PersonNumbers
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony import NumberType
+from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.location import TelephonyLocation
 
 
@@ -502,3 +508,76 @@ class TestAvailableNumbers(TestCaseWithUsers):
         api = self.async_api.person_settings.available_numbers
         await asyncio.gather(*[api.primary(license_type=lt) for
                                lt in AvailablePhoneNumberLicenseType])
+
+
+@dataclass(init=False)
+class TestUserLocationConsistency(TestCaseWithLog):
+    numbers: ClassVar[list[NumberListPhoneNumber]]
+    numbers_by_owner_id: ClassVar[dict[str, list[NumberListPhoneNumber]]]
+    users: ClassVar[dict[str, Person]]
+    locations: ClassVar[dict[str, Location]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.numbers = list(cls.api.telephony.phone_numbers(owner_type=OwnerType.people))
+        cls.numbers_by_owner_id = reduce(lambda acc, n: acc[n.owner.owner_id].append(n) or acc,
+                                         cls.numbers, defaultdict(list))
+        # get all users that have numbers
+        owner_ids = {n.owner.owner_id for n in cls.numbers}
+        with ThreadPoolExecutor() as pool:
+            users = list(pool.map(functools.partial(cls.api.people.details, calling_data=True), owner_ids))
+        cls.users = {u.person_id: u for u in users}
+        cls.locations = {l.location_id: l for l in cls.api.locations.list()}
+
+    """
+    See if location information at the user level is consistent with location info on primary numbers of users
+    """
+    @staticmethod
+    def user_str(u: Person) -> str:
+        return f'{u.display_name}({u.emails[0]})'
+
+    def test_single_location_per_user_in_numbers(self):
+        """
+        Make sure that all number owned by a user are in the same location
+        """
+        location_ids_by_owner_id: dict[str, set[str]] = reduce(
+            lambda acc, n: acc[n.owner.owner_id].add(n.location.id) or acc,
+            self.numbers, defaultdict(set))
+
+        user_len = max(len(self.user_str(user)) for user in self.users.values())
+        for user_id in sorted(location_ids_by_owner_id, key=lambda k: self.users[k].display_name):
+            user = self.users[user_id]
+            numbers = self.numbers_by_owner_id[user_id]
+            location_ids = location_ids_by_owner_id[user_id]
+            print(f'{self.user_str(user):{user_len}}: {len(numbers)} number(s) in location(s) '
+                  f'{", ".join(self.locations[l].name for l in location_ids)}')
+            self.assertEqual(location_ids, {n.location.id for n in numbers}, 'Inconsistent location IDs')
+            self.assertEqual(1, len(location_ids), 'User has numbers in multiple locations')
+
+    def test_consistent_location_in_user_info(self):
+        err = None
+        user_len = max(len(self.user_str(user)) for user in self.users.values())
+        for user in sorted(self.users.values(), key=attrgetter('display_name')):
+            try:
+                user_location = self.locations[user.location_id]
+            except KeyError as e:
+                print(f'{self.user_str(user):{user_len}}: location not found, id: '
+                      f'{user.location_id}/{webex_id_to_uuid(user.location_id)}')
+                err = err or e
+                continue
+            numbers = self.numbers_by_owner_id[user.person_id]
+            # use the 1st location id. Technically, if a user has multiple numbers, they should all be in the same
+            # location (see other test)
+            number_location_id = next(n.location.id for n in numbers)
+            if number_location_id == user.location_id:
+                continue
+            number_location = self.locations[number_location_id]
+            print(f'{self.user_str(user):{user_len}}: '
+                  f'user location: "{user_location.name}", number location: "{number_location.name}"')
+            try:
+                self.assertEqual(user_location, number_location, 'Different location information')
+            except AssertionError as e:
+                err = err or e
+        if err:
+            raise err
