@@ -617,7 +617,7 @@ class SimRingTest(TestWithProfessionalWorkspace):
                              do_not_ring_if_on_call_enabled=True,
                              criterias_enabled=True,
                              phone_numbers=[SimRingNumber(phone_number='+4961009764',
-                                                          answer_confirmation_enabled=True)])
+                                                          answer_confirmation_required_enabled=True)])
             api.configure(self.workspace.workspace_id, update)
             after = api.read(self.workspace.workspace_id)
 

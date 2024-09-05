@@ -1,5 +1,7 @@
 from typing import Optional
 
+from pydantic import model_validator
+
 from wxc_sdk.base import ApiModel
 from wxc_sdk.common.selective import SelectiveCriteria, SelectiveCrit
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
@@ -16,7 +18,31 @@ class SimRingNumber(ApiModel):
     #: Phone number set as the sequential number.
     phone_number: Optional[str] = None
     #: When set to `true` the called party is required to press 1 on the keypad to receive the call.
-    answer_confirmation_enabled: Optional[bool] = None
+    answer_confirmation_required_enabled: Optional[bool] = None
+
+    @model_validator(mode='before')
+    def remove_answer_confirmation_enabled(cls, data):
+        """
+        Remove answer_confirmation_enabled from data
+
+        August 30, 2024
+
+        Breaking Change
+
+        For consistency with other APIs, we will be renaming the field answerConfirmationEnabled to
+        answerConfirmationRequiredEnabled within the simultaneous ring settings for the Workspace API. This modification
+        affects the GET and UPDATE endpoints. The change will take effect on October 11, 2024. Throughout the transition
+        period, both fields will be accessible in the payload for GET and MODIFY operations.
+
+        TODO: remove this validator after October 11, 2024
+
+        :meta private:
+        :param data:
+        :return:
+        """
+        data.pop('answer_confirmation_enabled', None)
+        data.pop('answerConfirmationEnabled', None)
+        return data
 
 
 class SimRing(ApiModel):
