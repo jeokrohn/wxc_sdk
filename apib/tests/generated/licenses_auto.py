@@ -39,6 +39,11 @@ class License(ApiModel):
     #: Total number of license units consumed.
     #: example: 5
     consumed_units: Optional[int] = None
+    #: Total number of license units consumed by users.
+    #: example: 5
+    consumed_by_users: Optional[int] = None
+    #: Total number of license units consumed by workspaces.
+    consumed_by_workspaces: Optional[int] = None
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
     #: example: Sub-hydraOct26a
     subscription_id: Optional[str] = None
@@ -85,6 +90,11 @@ class LicensewithUsers(ApiModel):
     #: Total number of license units consumed.
     #: example: 5
     consumed_units: Optional[int] = None
+    #: Total number of license units consumed by users.
+    #: example: 5
+    consumed_by_users: Optional[int] = None
+    #: Total number of license units consumed by workspaces.
+    consumed_by_workspaces: Optional[int] = None
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
     #: example: Sub-hydraOct26a
     subscription_id: Optional[str] = None

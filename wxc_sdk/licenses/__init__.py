@@ -43,7 +43,9 @@ class License(ApiModel):
     total_units: int
     #: Total number of license units consumed.
     consumed_units: int
+    #: Total number of license units consumed by users.
     consumed_by_users: Optional[int] = None
+    #: Total number of license units consumed by workspaces.
     consumed_by_workspaces: Optional[int] = None
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
     subscription_id: Optional[str] = None

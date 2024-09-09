@@ -42,4 +42,5 @@ class TestLicense(TestCaseWithLog):
             if isinstance(user_list, Exception):
                 print(f'{user_list}')
                 continue
-            print(f'{len(user_list)} users')
+            print(f'{len(user_list)} users: '
+                  f'{", ".join(u.display_name for u in sorted(user_list, key=attrgetter("display_name")))}')
