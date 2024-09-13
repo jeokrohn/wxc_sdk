@@ -330,6 +330,30 @@ Source: |leave_spaces.py|_
     :linenos:
 
 
+Provision location level access codes from a CSV file
+-----------------------------------------------------
+
+Provision location level access codes from a CSV file
+
+    | usage: access_codes.py [-h] [--token TOKEN] csv_file
+    |
+    | Provision location level access codes from a CSV file
+    |
+    | positional arguments:
+    |   csv_file       CSV file with access codes
+    |
+    | options:
+    |   -h, --help     show this help message and exit
+    |   --token TOKEN  API token
+
+Source: |access_codes.py|_
+
+.. |access_codes.py| replace:: ``access_codes.py``
+
+.. literalinclude:: ../examples/access_codes.py
+    :linenos:
+
+
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _"Integrations" page on developer.cisco.com: https://developer.webex.com/docs/integrations
 
@@ -349,6 +373,7 @@ Source: |leave_spaces.py|_
 .. _room_devices.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/room_devices.py
 .. _logout_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/logout_users.py
 .. _leave_spaces.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/leave_spaces.py
+.. _access_codes.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/access_codes.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
