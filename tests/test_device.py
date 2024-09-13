@@ -6,11 +6,12 @@ from itertools import chain
 from random import choice
 from unittest import skip
 
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_mac_address, calling_users, create_workspace_with_webex_calling
 from wxc_sdk.devices import TagOp, Device
+from wxc_sdk.telephony import DeviceManagedBy
 from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
 
@@ -148,6 +149,7 @@ class TestDevice(TestCaseWithLog):
             self.skipTest('No devices')
         details = await asyncio.gather(*[self.async_api.devices.details(device_id=device.device_id)
                                          for device in devices])
+        print(json.dumps(TypeAdapter(list[Device]).dump_python(details, mode='json', by_alias=True), indent=2))
         print(f'Got details for {len(details)} devices')
 
     @contextmanager
@@ -330,6 +332,31 @@ class CreateDevice(TestWithLocations):
                                                         workspace_id=target.workspace_id,
                                                         model='DMS Cisco 8851')
         print(json.dumps(json.loads(result.model_dump_json()), indent=2))
+
+    def test_005_mac_workspace_3rd_party(self):
+        """
+        Add generic 3rd party device by mac for a workspace
+        """
+
+        # get an available MAC address
+        mac = next(available_mac_address(api=self.api))
+
+        target = self.get_or_create_calling_workspace_wo_devices()
+
+        # create password
+        tel_locations = list(self.api.telephony.locations.list())
+        password = self.api.telephony.location.generate_password(location_id=tel_locations[0].location_id)
+
+        print(f'Trying to create an MPP with mac {mac} for workspace: {target.display_name}, {password=}')
+
+        # add device by MAC
+        result = self.api.devices.create_by_mac_address(mac=mac,
+                                                        workspace_id=target.workspace_id,
+                                                        model='Generic IPPhone Customer Managed',
+                                                        password=password)
+        print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+        details = self.api.telephony.devices.details(device_id=result.device_id)
+        print(json.dumps(details.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
 
 
 @skip

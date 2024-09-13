@@ -358,7 +358,7 @@ class DevicesApi(ApiChild, base='devices'):
         if model is not None:
             body['model'] = model
         if password is not None:
-            body.password = password
+            body['password'] = password
         url = self.ep()
         data = super().post(url=url, json=body, params=params)
         return Device.model_validate(data)

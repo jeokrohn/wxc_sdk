@@ -2,6 +2,7 @@ Release history
 ===============
 
 - fix: correct handling of type\_ parameter in :meth:`api.events.list <wxc_sdk.events.EventsApi.list>`
+- fix: corrected handling of password parameter in `api.devices.create_by_mac_address <wxc_sdk.devices.DevicesApi.create_by_mac_address>`
 
 1.22.0
 ------
