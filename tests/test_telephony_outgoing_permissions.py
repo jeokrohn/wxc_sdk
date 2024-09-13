@@ -4,7 +4,6 @@ test cases for location outgoing permission settings
 import json
 from concurrent.futures import ThreadPoolExecutor
 import random
-from unittest import skip
 
 from wxc_sdk.person_settings.permissions_out import AutoTransferNumbers, CallTypePermission, Action, \
     OutgoingPermissions, CallingPermissions, DigitPattern

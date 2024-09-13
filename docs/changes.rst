@@ -1,8 +1,11 @@
 Release history
 ===============
 
+1.22.1
+------
 - fix: correct handling of type\_ parameter in :meth:`api.events.list <wxc_sdk.events.EventsApi.list>`
 - fix: corrected handling of password parameter in `api.devices.create_by_mac_address <wxc_sdk.devices.DevicesApi.create_by_mac_address>`
+- fix: pydantic incompatibility with typing-extensions 4.12.0
 
 1.22.0
 ------
