@@ -162,6 +162,11 @@ class TelephonyCall(ApiModel):
     recording_state: Optional[RecordingState] = None
     #: The date and time the call was disconnected
     disconnected: Optional[datetime.datetime] = None
+    #: Indicates whether the call is capable of using the `mute
+    #: <https://developer.webex.com/docs/api/v1/call-controls/mute>`_ and `unmute
+    mute_capable: Optional[bool] = None
+    #: Indicates whether the call is currently muted.
+    muted: Optional[bool] = None
 
 
 class TelephonyEventData(WebhookEventData, TelephonyCall):
@@ -244,6 +249,18 @@ class CallInfo(ApiModel):
 
 
 class CallsApi(ApiChild, base='telephony/calls'):
+    """
+    Call Controls
+
+    Call Control APIs in support of Webex Calling. All `GET` commands require the `spark:calls_read` scope while all
+    other commands require the `spark:calls_write` scope.
+
+    **Notes:**
+
+    - These APIs support 3rd Party Call Control only.
+    - The Call Control APIs are only for use by Webex Calling Multi Tenant users and not applicable for users hosted on
+      UCM, including Dedicated Instance users.
+    """
 
     def dial(self, destination: str) -> DialResponse:
         """
@@ -577,7 +594,8 @@ class CallsApi(ApiChild, base='telephony/calls'):
         """
         Mute
 
-        Mute a call.
+        Mute a call. This API can only be used for a call that reports itself as mute capable via the muteCapable field
+        in the call details.
 
         :param call_id: The call identifier of the call to mute.
         :type call_id: str
@@ -592,7 +610,8 @@ class CallsApi(ApiChild, base='telephony/calls'):
         """
         Unmute
 
-        Unmute a call.
+        Unmute a call. This API can only be used for a call that reports itself as mute capable via the muteCapable
+        field in the call details.
 
         :param call_id: The call identifier of the call to unmute.
         :type call_id: str

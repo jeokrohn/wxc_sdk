@@ -181,6 +181,11 @@ class Call(ApiModel):
     #: The call's current recording state. Only present when the user's call recording has been invoked during the life
     #: of the call.
     recording_state: Optional[RecordingStateEnum] = None
+    #: Indicates whether the call is capable of using the `mute
+    #: <https://developer.webex.com/docs/api/v1/call-controls/mute>`_ and `unmute
+    mute_capable: Optional[bool] = None
+    #: Indicates whether the call is currently muted.
+    muted: Optional[bool] = None
 
 
 class CallHistoryRecordTypeEnum(str, Enum):
@@ -226,12 +231,15 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
     """
     Call Controls
     
-    Call Control APIs in support of Webex Calling.
+    Call Control APIs in support of Webex Calling. All `GET` commands require the `spark:calls_read` scope while all
+    other commands require the `spark:calls_write` scope.
     
-    All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
-    scope.
+    **Notes:**
     
-    **NOTE**: These APIs support 3rd Party Call Control only.
+    - These APIs support 3rd Party Call Control only.
+    
+    - The Call Control APIs are only for use by Webex Calling Multi Tenant users and not applicable for users hosted on
+    UCM, including Dedicated Instance users.
     """
 
     def dial(self, destination: str, endpoint_id: str = None) -> DialResponse:
@@ -349,6 +357,38 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body = dict()
         body['callId'] = call_id
         url = self.ep('resume')
+        super().post(url, json=body)
+
+    def mute(self, call_id: str):
+        """
+        Mute
+
+        Mute a call. This API can only be used for a call that reports itself as mute capable via the muteCapable field
+        in the call details.
+
+        :param call_id: The call identifier of the call to mute.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('mute')
+        super().post(url, json=body)
+
+    def unmute(self, call_id: str):
+        """
+        Unmute
+
+        Unmute a call. This API can only be used for a call that reports itself as mute capable via the muteCapable
+        field in the call details.
+
+        :param call_id: The call identifier of the call to unmute.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('unmute')
         super().post(url, json=body)
 
     def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):

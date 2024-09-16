@@ -14751,6 +14751,18 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
 
 
 class AsCallsApi(AsApiChild, base='telephony/calls'):
+    """
+    Call Controls
+
+    Call Control APIs in support of Webex Calling. All `GET` commands require the `spark:calls_read` scope while all
+    other commands require the `spark:calls_write` scope.
+
+    **Notes:**
+
+    - These APIs support 3rd Party Call Control only.
+    - The Call Control APIs are only for use by Webex Calling Multi Tenant users and not applicable for users hosted on
+      UCM, including Dedicated Instance users.
+    """
 
     async def dial(self, destination: str) -> DialResponse:
         """
@@ -15110,7 +15122,8 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         """
         Mute
 
-        Mute a call.
+        Mute a call. This API can only be used for a call that reports itself as mute capable via the muteCapable field
+        in the call details.
 
         :param call_id: The call identifier of the call to mute.
         :type call_id: str
@@ -15125,7 +15138,8 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         """
         Unmute
 
-        Unmute a call.
+        Unmute a call. This API can only be used for a call that reports itself as mute capable via the muteCapable
+        field in the call details.
 
         :param call_id: The call identifier of the call to unmute.
         :type call_id: str
