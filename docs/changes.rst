@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new API: :attr:`api.org_contacts <wxc_sdk.WebexSimpleApi.org_contacts>`
+
 1.22.1
 ------
 - fix: correct handling of type\_ parameter in :meth:`api.events.list <wxc_sdk.events.EventsApi.list>`

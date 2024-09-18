@@ -239,6 +239,20 @@ The method name is a link to the method documentation.
         Lists all messages in a room
    * - :meth:`api.messages.list_direct <wxc_sdk.messages.MessagesApi.list_direct>`
         List all messages in a 1:1 (direct) room
+   * - :meth:`api.org_contacts.bulk_create_or_update <wxc_sdk.org_contacts.OrganizationContactsApi.bulk_create_or_update>`
+        Bulk Create or Update Contacts
+   * - :meth:`api.org_contacts.bulk_delete <wxc_sdk.org_contacts.OrganizationContactsApi.bulk_delete>`
+        Bulk Delete Contacts
+   * - :meth:`api.org_contacts.create <wxc_sdk.org_contacts.OrganizationContactsApi.create>`
+        Create a Contact
+   * - :meth:`api.org_contacts.delete <wxc_sdk.org_contacts.OrganizationContactsApi.delete>`
+        Delete a Contact
+   * - :meth:`api.org_contacts.get <wxc_sdk.org_contacts.OrganizationContactsApi.get>`
+        Get a Contact
+   * - :meth:`api.org_contacts.list <wxc_sdk.org_contacts.OrganizationContactsApi.list>`
+        List Contacts
+   * - :meth:`api.org_contacts.update <wxc_sdk.org_contacts.OrganizationContactsApi.update>`
+        Update a Contact
    * - :meth:`api.organizations.delete <wxc_sdk.organizations.OrganizationApi.delete>`
         Delete Organization
    * - :meth:`api.organizations.details <wxc_sdk.organizations.OrganizationApi.details>`

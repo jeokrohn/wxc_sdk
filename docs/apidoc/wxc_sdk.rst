@@ -29,6 +29,7 @@ Subpackages
    wxc_sdk.meetings
    wxc_sdk.memberships
    wxc_sdk.messages
+   wxc_sdk.org_contacts
    wxc_sdk.organizations
    wxc_sdk.people
    wxc_sdk.person_settings

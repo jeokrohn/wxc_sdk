@@ -6,6 +6,7 @@ import random
 import re
 import uuid
 from dataclasses import dataclass
+from json import JSONDecodeError
 from time import sleep
 from typing import Optional, ClassVar
 from unittest import skip
@@ -15,7 +16,7 @@ from dotenv import load_dotenv
 from pydantic import TypeAdapter
 from test_helper.randomuser import User
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
+from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers, WithIntegrationTokens
 from tests.testutil import random_users, available_extensions_gen
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
@@ -23,6 +24,8 @@ from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import OwnerType
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import LicenseRequest, LicenseRequestOperation, LicenseProperties
+from wxc_sdk.org_contacts import Contact, PrimaryContactMethod, ContactEmail, EmailType, ContactPhoneNumber, \
+    ContactAddress
 from wxc_sdk.people import Person, PhoneNumberType
 from wxc_sdk.scim.bulk import BulkOperation, BulkMethod
 from wxc_sdk.scim.groups import ScimGroup, ScimGroupMember
@@ -239,15 +242,15 @@ class TestScimRead(TestWithScimToken):
         self.assertFalse(err, f'{err}/{len(users_with_uris)} SCIMv2 users are missing SIP addresses')
 
 
-class TestScimCreate(TestWithScimToken):
+def us_e164(tn: str) -> str:
+    """
+    Convert formatted US phone numbers to regular +E.164 numbers
+    """
+    tn, _ = re.subn('[^0-9]', '', tn)
+    return f'+1{tn}'
 
-    @staticmethod
-    def us_e164(tn: str) -> str:
-        """
-        Convert formatted US phone numbers to regular +E.164 numbers
-        """
-        tn, _ = re.subn('[^0-9]', '', tn)
-        return f'+1{tn}'
+
+class TestScimCreate(TestWithScimToken):
 
     def scim_user_from_random_user(self, new_user: User) -> ScimUser:
         """
@@ -261,9 +264,9 @@ class TestScimCreate(TestWithScimToken):
             emails=[EmailObject(value=new_user.email, type=EmailObjectType.work, primary=True)],
             user_type=UserTypeObject.user, external_id=f'test_{uuid.uuid4()}',
             phone_numbers=[
-                UserPhoneNumber(value=self.us_e164(new_user.phone), type=ScimPhoneNumberType.work,
+                UserPhoneNumber(value=us_e164(new_user.phone), type=ScimPhoneNumberType.work,
                                 display=new_user.phone, primary=True),
-                UserPhoneNumber(value=self.us_e164(new_user.cell), type=ScimPhoneNumberType.mobile,
+                UserPhoneNumber(value=us_e164(new_user.cell), type=ScimPhoneNumberType.mobile,
                                 display=new_user.cell, primary=False)],
             addresses=[
                 UserAddress(type='work',
@@ -751,8 +754,6 @@ class TestScimGroups(TestWithScimToken):
         print(f'{len(members)} members')
         print(json.dumps(TypeAdapter(list[ScimGroupMember]).dump_python(members, mode='json', by_alias=True), indent=2))
 
-        foo = 1
-
     @async_test
     async def test_as_members_all(self):
         """
@@ -764,4 +765,170 @@ class TestScimGroups(TestWithScimToken):
         print(f'{len(members)} members')
         print(json.dumps(TypeAdapter(list[ScimGroupMember]).dump_python(members, mode='json', by_alias=True), indent=2))
 
-        foo = 1
+
+class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
+    """
+    tests for org contacts
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.int_api = WebexSimpleApi(tokens=cls.integration_tokens)
+
+    def contact_from_random_user(self, new_user: User, address_as_str: bool = True) -> Contact:
+        """
+        Create a SCIMv2 user object from random user data
+        """
+        contact = Contact(
+            display_name=new_user.display_name,
+            first_name=new_user.name.first,
+            last_name=new_user.name.last,
+            company_name='Test Company',
+            title='',
+
+            primary_contact_method=PrimaryContactMethod.phone,
+            emails=[ContactEmail(value=new_user.email, type=EmailType.work, primary=True)],
+            phone_numbers=[
+                ContactPhoneNumber(value=us_e164(new_user.phone), type=ScimPhoneNumberType.work,
+                                   primary=True),
+                ContactPhoneNumber(value=us_e164(new_user.cell), type=ScimPhoneNumberType.mobile)],
+            source='CH'
+        )
+        if address_as_str:
+            contact.address = (f'{new_user.location.street.number} {new_user.location.street.name}, '
+                               f'{new_user.location.postcode} {new_user.location.city}')
+        else:
+            contact.address_info = ContactAddress(city=new_user.location.city, country=new_user.location.country,
+                                                  state=new_user.location.state,
+                                                  street=f'{new_user.location.street.number} '
+                                                         f'{new_user.location.street.name}',
+                                                  zip_code=str(new_user.location.postcode))
+        return contact
+
+    @async_test
+    async def test_001_create_single_contact_address_as_str(self):
+        """
+        create a contact and provide address as string
+        """
+        with self.no_log():
+            new_user = \
+                (await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell']))[0]
+        contact = self.contact_from_random_user(new_user)
+        api = self.int_api.org_contacts
+        org_id = webex_id_to_uuid(self.me.org_id)
+        created = api.create(org_id=org_id,
+                             contact=contact)
+        print('Created contact:')
+        print(json.dumps(created.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
+        self.assertEqual(contact.address, created.address)
+        self.assertIsNone(created.address_info)
+
+    @async_test
+    async def test_002_create_single_contact_address_info(self):
+        """
+        create a contact and provide address as ContactAddress in address_info
+        """
+        with self.no_log():
+            new_user = \
+                (await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell']))[0]
+        contact = self.contact_from_random_user(new_user, address_as_str=False)
+        api = self.int_api.org_contacts
+        org_id = webex_id_to_uuid(self.me.org_id)
+        created = api.create(org_id=org_id,
+                             contact=contact)
+        print('Created contact:')
+        print(json.dumps(created.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
+        self.assertTrue(created.address)
+        try:
+            deserialized_address = json.loads(created.address)
+        except JSONDecodeError:
+            self.fail('Address not JSON')
+        address = ContactAddress.model_validate(deserialized_address)
+        self.assertEqual(created.address_info, address)
+
+    @async_test
+    async def test_003_create_bulk_20(self):
+        """
+        Create 100 contacts in bulk
+        """
+        org_id = webex_id_to_uuid(self.me.org_id)
+        api = self.int_api.org_contacts
+        with self.no_log():
+            new_users = await random_users(api=self.async_api, user_count=20, inc=['name', 'location', 'phone', 'cell'])
+        contacts = list(map(self.contact_from_random_user, new_users))
+        result = api.bulk_create_or_update(org_id=org_id, contacts=contacts)
+        print(json.dumps(result.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
+
+    @async_test
+    async def test_004_create_bulk_with_errors(self):
+        """
+        Create 100 contacts in bulk
+        """
+        org_id = webex_id_to_uuid(self.me.org_id)
+        api = self.int_api.org_contacts
+        with self.no_log():
+            new_users = await random_users(api=self.async_api, user_count=2,
+                                           inc=['name', 'location', 'phone', 'cell'])
+        contacts = [self.contact_from_random_user(user, address_as_str=False)
+                    for user in new_users]
+        err_contact = Contact(display_name='foo')
+        contacts.append(err_contact)
+        result = api.bulk_create_or_update(org_id=org_id, contacts=contacts)
+        print(json.dumps(result.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
+        self.assertEqual(2, sum(1 for r in result.contacts if r is not None))
+        self.assertEqual(1, len(result.failed_contacts))
+        self.assertEqual(2, result.failed_contacts[0].id)
+
+    def test_005_list(self):
+        """
+        List contacts
+        """
+        org_id = webex_id_to_uuid(self.me.org_id)
+        contacts = list(self.int_api.org_contacts.list(org_id=org_id))
+        print(f'Got {len(contacts)} contacts')
+
+    def test_006_list_pagination(self):
+        """
+        List contacts and check whether pagination works
+        """
+        limit = 5
+        org_id = webex_id_to_uuid(self.me.org_id)
+        contacts = list(self.int_api.org_contacts.list(org_id=org_id, limit=limit))
+        requests = list(self.requests())
+        first_body = requests[0].response_body
+        contacts = TypeAdapter(list[Contact]).validate_python(first_body['result'])
+        print(f'Got {len(contacts)} contacts')
+        if len(contacts) == first_body['total']:
+            self.skipTest('Not enough contacts to run test')
+        self.assertEqual(limit, len(contacts))
+        self.assertTrue(len(requests) > 1, 'No pagination')
+
+    def test_007_delete_contact(self):
+        """
+        delete a contact
+        """
+        org_id = webex_id_to_uuid(self.me.org_id)
+        api = self.int_api.org_contacts
+        contacts = [contact for contact in api.list(org_id=org_id)
+                    if contact.company_name == 'Test Company']
+        target = random.choice(contacts)
+        before = list(api.list(org_id=org_id, keyword=target.display_name))
+        self.assertTrue(len(before) > 0, 'Contact not found')
+        print(f'Deleting contact: {target.display_name}')
+        api.delete(org_id=org_id, contact_id=target.contact_id)
+        after = list(api.list(org_id=org_id, keyword=target.display_name))
+        self.assertEqual(len(before) - 1, len(after), 'Contact not deleted')
+
+    def test_008_bulk_delete(self):
+        """
+        Bulk delete test contacts
+        """
+        org_id = webex_id_to_uuid(self.me.org_id)
+        api = self.int_api.org_contacts
+        while True:
+            contacts = [contact for contact in api.list(org_id=org_id)
+                        if contact.company_name == 'Test Company']
+            if not contacts:
+                break
+            api.bulk_delete(org_id=org_id, object_ids=[contact.contact_id for contact in contacts])

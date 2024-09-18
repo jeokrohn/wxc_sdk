@@ -20,6 +20,7 @@ from .locations import LocationsApi
 from .meetings import MeetingsApi
 from .memberships import MembershipApi
 from .messages import MessagesApi
+from .org_contacts import OrganizationContactsApi
 from .organizations import OrganizationApi
 from .people import PeopleApi
 from .person_settings import PersonSettingsApi
@@ -85,6 +86,8 @@ class WebexSimpleApi:
     membership: MembershipApi
     #: Messages API :class:`messages.MessagesApi`
     messages: MessagesApi
+    #: org contacts API :class:`org_contacts.OrganizationContactsApi`
+    org_contacts: OrganizationContactsApi
     #: organization settings API
     organizations: OrganizationApi
     #: Person settings API :class:`person_settings.PersonSettingsApi`
@@ -157,6 +160,7 @@ class WebexSimpleApi:
         self.meetings = MeetingsApi(session=session)
         self.membership = MembershipApi(session=session)
         self.messages = MessagesApi(session=session)
+        self.org_contacts = OrganizationContactsApi(session=session)
         self.organizations = OrganizationApi(session=session)
         self.person_settings = PersonSettingsApi(session=session)
         self.people = PeopleApi(session=session)

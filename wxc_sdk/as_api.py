@@ -69,8 +69,8 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
            'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgEmergencyServicesApi',
            'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI',
-           'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
-           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
+           'AsOrganizationApi', 'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
@@ -784,9 +784,9 @@ class AsDeviceConfigurationsApi(AsApiChild, base='deviceConfigurations'):
     The Device Configurations API allows developers to view and modify configurations on Webex Rooms devices, as well as
     other devices that use the configuration service.
 
-    Viewing the list of all device configurations in an organization requires an administrator auth token with the
-    spark-admin:devices_read scope. Adding, updating, or deleting configurations for devices in an organization requires
-    an administrator auth token with both the spark-admin:devices_write and the spark-admin:devices_read scope.
+    Viewing the list of all device configurations in an organization requires an administrator auth token with
+    the spark-admin:devices_read scope. Adding, updating, or deleting configurations for devices in an organization
+    requires an administrator auth token with both the spark-admin:devices_write and the spark-admin:devices_read scope.
     """
 
     async def list(self, device_id: str, key: str = None) -> DeviceConfigurationResponse:
@@ -5842,6 +5842,241 @@ class AsOrganizationApi(AsApiChild, base='organizations'):
         """
         url = self.ep(org_id)
         await super().delete(url=url)
+
+
+class AsOrganizationContactsApi(AsApiChild, base='contacts/organizations'):
+    """
+    Organization Contacts
+
+    Organizational contacts are entities that can be created, imported, or synchronized with Webex. Searching and
+    viewing contacts require an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of `Identity:contact` or `Identity:SCIM`, while adding,
+    updating, and removing contacts in your Organization requires an administrator auth token with the
+    `Identity:contact` or `Identity:SCIM` scope. An admin can only operate on the contacts list for his org or a
+    managed org.
+
+    **Note**:
+
+    * `broadworks-connector` entitled callers are limited to org contacts with either source=`CH` or
+      source=`Webex4Broadworks`, while non-entitled callers are limited to source=`CH`.
+
+    * The `orgId` used in the path for this API are the org UUIDs. They follow a xxxx-xxxx-xxxx-xxxx pattern. If you
+      have an orgId in base64 encoded format (starting with Y2.....) you need to base64 decode the id and extract the
+      UUID from the slug, before you use it in your API call.
+    """
+
+    async def create(self, org_id: str, contact: Contact) -> Contact:
+        """
+        Create a Contact
+
+        Creating a new contact for a given organization requires an org admin role.
+
+        At least one of the following body parameters: `phoneNumbers`, `emails`, `sipAddresses` is required to create a
+        new contact for source "CH",
+        `displayName` is required to create a new contact for source "Webex4Broadworks".
+
+        Use the optional `groupIds` field to add group IDs in an array within the organisation contact. This will
+        become a group contact.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contact: The contact to create.
+        :type contact: Contact
+        :rtype: None
+        """
+        body = contact.create()
+        body['schemas'] = 'urn:cisco:codev:identity:contact:core:1.0'
+        url = self.ep(f'{org_id}/contacts')
+        data = await super().post(url, json=body)
+        return Contact.model_validate(data)
+
+    async def get(self, org_id: str, contact_id: str) -> Contact:
+        """
+        Get a Contact
+
+        Shows details for an organization contact by ID.
+        Specify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId`
+        parameter in the URI.
+
+        **NOTE**:
+        The `orgId` used in the path for this API are the org UUIDs. They follow a xxxx-xxxx-xxxx-xxxx pattern. If you
+        have an orgId in base64 encoded format (starting with Y2.....) you need to base64 decode the id and extract
+        the UUID from the slug, before you use it in your API call.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contact_id: The contact ID.
+        :type contact_id: str
+        :rtype: :class:`Contact`
+        """
+        url = self.ep(f'{org_id}/contacts/{contact_id}')
+        data = await super().get(url)
+        r = Contact.model_validate(data)
+        return r
+
+    async def update(self, org_id: str, contact_id: str, update: Contact):
+        """
+        Update a Contact
+
+        Update details for contact by ID. Only an admin can update a contact.
+        Specify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId`
+        parameter in the URI.
+
+        Use the optional `groupIds` field to update the group IDs by changing the existing array. You can add or remove
+        one or all groups. To remove all associated groups, pass an empty array in the `groupIds` field.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contact_id: The contact ID.
+        :type contact_id: str
+        :param update: the update
+        :type update: Contact
+        :rtype: None
+        """
+        body = update.create()
+        url = self.ep(f'{org_id}/contacts/{contact_id}')
+        await super().patch(url, json=body)
+
+    async def delete(self, org_id: str, contact_id: str):
+        """
+        Delete a Contact
+
+        Remove a contact from the organization. Only an admin can remove a contact.
+
+        Specify the organization ID in the `orgId` parameter in the URI, and specify the contact ID in the `contactId`
+        parameter in the URI.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contact_id: The contact ID.
+        :type contact_id: str
+        :rtype: None
+        """
+        url = self.ep(f'{org_id}/contacts/{contact_id}')
+        await super().delete(url)
+
+    def list_gen(self, org_id: str, keyword: str = None, source: str = None, limit: int = None,
+             group_ids: list[str] = None) -> AsyncGenerator[Contact, None, None]:
+        """
+        List Contacts
+
+        List contacts in the organization. The default limit is `100`.
+
+        `keyword` can be the value of "displayName", "firstName", "lastName", "email". An empty string of `keyword`
+        means get all contacts.
+
+        `groupIds` is a comma separated list group IDs. Results are filtered based on those group IDs.
+
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param org_id: The organization ID.
+        :type org_id: str
+        :param keyword: List contacts with a keyword.
+        :type keyword: str
+        :param source: List contacts with source.
+        :type source: str
+        :param limit: Limit the maximum number of contact in the response.
+        + Default: 100
+        :type limit: int
+        :param group_ids: Filter contacts based on groups.
+        :type group_ids: list[str]
+        """
+        params = {}
+        if keyword is not None:
+            params['keyword'] = keyword
+        if source is not None:
+            params['source'] = source
+        if limit is not None:
+            params['limit'] = limit
+        if group_ids is not None:
+            params['groupIds'] = ','.join(group_ids)
+        url = self.ep(f'{org_id}/contacts/search')
+        return self.session.follow_pagination(url, params=params, item_key='result', model=Contact)
+
+    async def list(self, org_id: str, keyword: str = None, source: str = None, limit: int = None,
+             group_ids: list[str] = None) -> List[Contact]:
+        """
+        List Contacts
+
+        List contacts in the organization. The default limit is `100`.
+
+        `keyword` can be the value of "displayName", "firstName", "lastName", "email". An empty string of `keyword`
+        means get all contacts.
+
+        `groupIds` is a comma separated list group IDs. Results are filtered based on those group IDs.
+
+        Long result sets will be split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        :param org_id: The organization ID.
+        :type org_id: str
+        :param keyword: List contacts with a keyword.
+        :type keyword: str
+        :param source: List contacts with source.
+        :type source: str
+        :param limit: Limit the maximum number of contact in the response.
+        + Default: 100
+        :type limit: int
+        :param group_ids: Filter contacts based on groups.
+        :type group_ids: list[str]
+        """
+        params = {}
+        if keyword is not None:
+            params['keyword'] = keyword
+        if source is not None:
+            params['source'] = source
+        if limit is not None:
+            params['limit'] = limit
+        if group_ids is not None:
+            params['groupIds'] = ','.join(group_ids)
+        url = self.ep(f'{org_id}/contacts/search')
+        return [o async for o in self.session.follow_pagination(url, params=params, item_key='result', model=Contact)]
+
+    async def bulk_create_or_update(self, org_id: str, contacts: List[Contact]) -> BulkResponse:
+        """
+        Bulk Create or Update Contacts
+
+        Create or update contacts in bulk. Update an existing contact by specifying the contact ID in the `contactId`
+        parameter in the request body.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param contacts: Contains a list of contacts to be created/updated.
+        :type contacts: list[BulkCreateContact]
+        :rtype: None
+        """
+        body = dict()
+        body['schemas'] = 'urn:cisco:codev:identity:contact:core:1.0'
+        body['contacts'] = TypeAdapter(list[Contact]).dump_python(contacts, mode='json', by_alias=True,
+                                                                  exclude_unset=True)
+        url = self.ep(f'{org_id}/contacts/bulk')
+        data = await super().post(url, json=body)
+        return BulkResponse.model_validate(data)
+
+    async def bulk_delete(self, org_id: str, object_ids: List[str]):
+        """
+        Bulk Delete Contacts
+
+        Delete contacts in bulk.
+
+        :param org_id: Webex Identity assigned organization identifier for the user's organization or the organization
+            he manages.
+        :type org_id: str
+        :param object_ids: List of UUIDs for the contacts.
+        :type object_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        body['schemas'] = 'urn:cisco:codev:identity:contact:core:1.0'
+        body['objectIds'] = object_ids
+        url = self.ep(f'{org_id}/contacts/bulk/delete')
+        await super().post(url, json=body)
 
 
 class AsPeopleApi(AsApiChild, base='people'):
@@ -26352,6 +26587,8 @@ class AsWebexSimpleApi:
     membership: AsMembershipApi
     #: Messages API :class:`AsMessagesApi`
     messages: AsMessagesApi
+    #: org contacts API :class:`AsOrganizationContactsApi`
+    org_contacts: AsOrganizationContactsApi
     #: organization settings API
     organizations: AsOrganizationApi
     #: Person settings API :class:`AsPersonSettingsApi`
@@ -26424,6 +26661,7 @@ class AsWebexSimpleApi:
         self.meetings = AsMeetingsApi(session=session)
         self.membership = AsMembershipApi(session=session)
         self.messages = AsMessagesApi(session=session)
+        self.org_contacts = AsOrganizationContactsApi(session=session)
         self.organizations = AsOrganizationApi(session=session)
         self.person_settings = AsPersonSettingsApi(session=session)
         self.people = AsPeopleApi(session=session)
