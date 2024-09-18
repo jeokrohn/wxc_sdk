@@ -442,6 +442,6 @@ class RestSession(Session):
                     # we go w/ the first return value that is a list
                     item_key = next((k for k, v in data.items()
                                      if isinstance(v, list)))
-            items = data.get(item_key)
+            items = data.get(item_key, [])
             for item in items:
                 yield model(item)
