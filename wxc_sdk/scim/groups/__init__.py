@@ -93,7 +93,7 @@ class GroupMeta(ApiModel):
 
 class ScimGroup(ApiModel):
     #: Input JSON schemas.
-    schemas: Optional[list[str]] = None
+    schemas: Optional[list[str]] = Field(repr=False, default=None)
     #: A human-readable name for the group.
     display_name: Optional[str] = None
     #: A unique identifier for the group.

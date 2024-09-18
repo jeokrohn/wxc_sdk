@@ -16,9 +16,10 @@ from itertools import chain, zip_longest
 from re import Pattern
 from typing import Union
 
-from tests.base import get_tokens
+from tests.base import get_tokens, WithIntegrationTokens
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import NumberState
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern
@@ -69,6 +70,11 @@ async def main():
         print('Failed to get tokens', file=sys.stderr)
         exit(1)
     api = WebexSimpleApi(tokens=tokens)
+    int_tokens = WithIntegrationTokens.get_integration_tokens()
+    if not int_tokens:
+        print('Failed to get integration tokens', file=sys.stderr)
+        exit(1)
+
     # get calling locations
     locations = list(api.locations.list())
     async with AsWebexSimpleApi(tokens=tokens) as as_api:
@@ -320,6 +326,23 @@ async def main():
         print(f'Deleting {len(teams)} teams')
         if not DRY_RUN:
             list(pool.map(lambda team: api.teams.delete(team_id=team.id), teams))
+
+        # SCIM users
+        scim_api = WebexSimpleApi(tokens=int_tokens)
+        me = api.people.me()
+        org_id = webex_id_to_uuid(me.org_id)
+        scim_users = [u for u in scim_api.scim.users.search_all(org_id=org_id)
+                      if u.external_id]
+        print(f'Deleting {len(scim_users)} SCIM users')
+        if not DRY_RUN:
+            list(pool.map(lambda u: scim_api.scim.users.delete(org_id=org_id, user_id=u.id), scim_users))
+
+        # SCIM groups
+        scim_groups = [g for g in scim_api.scim.groups.search_all(org_id=org_id)
+                       if g.external_id]
+        print(f'Deleting {len(scim_groups)} SCIM groups')
+        if not DRY_RUN:
+            list(pool.map(lambda g: scim_api.scim.groups.delete(org_id=org_id, group_id=g.id), scim_groups))
 
     async with AsWebexSimpleApi(tokens=tokens) as as_api:
         # workspace locations

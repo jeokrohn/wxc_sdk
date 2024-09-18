@@ -248,7 +248,7 @@ class ScimValueDisplayRef(ApiModel):
 
 class ScimUser(ApiModel):
     #: Input JSON schemas.
-    schemas: Optional[list[str]] = None
+    schemas: Optional[list[str]] = Field(repr=False, default=None)
     #: Webex Identity assigned user identifier.
     id: Optional[str] = None
     #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
