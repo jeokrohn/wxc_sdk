@@ -843,9 +843,9 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         Change device settings across organization or locations jobs.
 
         Performs bulk and asynchronous processing for all types of device settings initiated by organization and system
-        admins in a stateful persistent manner. This job will modify the requested device settings across all the
-        devices. Whenever a location ID is specified in the request, it will modify the requested device settings only
-        for the devices that are part of the provided location within an organization.
+        admins in a stateful persistent manner. This job will modify the requested device settings across all
+        non-customized devices. Whenever a location ID is specified in the request, it will modify the requested
+        device settings only for non-customized devices that are part of the provided location within an organization.
 
         Returns a unique job ID which can then be utilized further to retrieve status and errors for the same.
 
@@ -15336,6 +15336,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         """
         Read the DECT device type list
 
+        Not supported for Webex for Government (FedRAMP).
+
         Get DECT device type list with base stations and line ports supported count. This is a static list.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope of
@@ -17424,6 +17426,8 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
         """
         Rebuild Phones Configuration
 
+        Not supported for Webex for Government (FedRAMP)
+
         Rebuild all phone configurations for the specified location.
 
         Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
@@ -17451,6 +17455,8 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
         """
         List Rebuild Phones Jobs
 
+        Not supported for Webex for Government (FedRAMP)
+
         Get the list of all Rebuild Phones jobs in an organization.
 
         Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
@@ -17473,6 +17479,8 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
     async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
         """
         Get the Job Status of a Rebuild Phones Job
+
+        Not supported for Webex for Government (FedRAMP)
 
         Get the details of a rebuild phones job by its job ID.
 
@@ -17499,6 +17507,8 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
         """
         Get Job Errors for a Rebuild Phones Job
 
+        Not supported for Webex for Government (FedRAMP)
+
         Get errors for a rebuild phones job in an organization.
 
         Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
@@ -17521,6 +17531,8 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
     async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
         """
         Get Job Errors for a Rebuild Phones Job
+
+        Not supported for Webex for Government (FedRAMP)
 
         Get errors for a rebuild phones job in an organization.
 
@@ -22865,7 +22877,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{virtual_line_id}/dects')
+        url = self.ep(f'{virtual_line_id}/dectNetworks')
         data = await super().get(url, params=params)
         r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r

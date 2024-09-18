@@ -73,9 +73,9 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
     The Device Configurations API allows developers to view and modify configurations on Webex Rooms devices, as well as
     other devices that use the configuration service.
 
-    Viewing the list of all device configurations in an organization requires an administrator auth token with the
-    spark-admin:devices_read scope. Adding, updating, or deleting configurations for devices in an organization requires
-    an administrator auth token with both the spark-admin:devices_write and the spark-admin:devices_read scope.
+    Viewing the list of all device configurations in an organization requires an administrator auth token with
+    the spark-admin:devices_read scope. Adding, updating, or deleting configurations for devices in an organization
+    requires an administrator auth token with both the spark-admin:devices_write and the spark-admin:devices_read scope.
     """
 
     def list(self, device_id: str, key: str = None) -> DeviceConfigurationResponse:

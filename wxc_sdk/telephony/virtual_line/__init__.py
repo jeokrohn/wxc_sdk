@@ -439,7 +439,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{virtual_line_id}/dects')
+        url = self.ep(f'{virtual_line_id}/dectNetworks')
         data = super().get(url, params=params)
         r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r

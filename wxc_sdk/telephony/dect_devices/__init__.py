@@ -204,6 +204,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         """
         Read the DECT device type list
 
+        Not supported for Webex for Government (FedRAMP).
+
         Get DECT device type list with base stations and line ports supported count. This is a static list.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope of

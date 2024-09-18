@@ -100,13 +100,6 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
     """
     Device Configurations
     
-    The Device Configurations functionality and API endpoints described here are
-    currently pre-release features which are not available to all Webex users. If
-    you have any questions, or if you need help, please contact the Webex
-    Developer Support team at devsupport@webex.com.
-    
-    
-    
     The Device Configurations API allows developers to view and modify configurations on Webex Rooms devices, as well
     as other devices that use the configuration service.
     

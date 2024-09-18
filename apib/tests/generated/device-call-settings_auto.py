@@ -2890,6 +2890,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         """
         Read the DECT device type list - Deprecated
 
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+
         <div><Callout type="warning">The REST path for this API has changed to [GET
         /telephony/config/devices/dectNetworks/supportedDevices{?orgId}]. The use of this old REST path is deprecated
         and will be decommissioned on October 10, 2024. Please start using it for all future projects.</Callout></div>
@@ -2913,6 +2915,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     def read_the_dect_device_type_list(self, org_id: str = None) -> list[DectDeviceList]:
         """
         Read the DECT device type list
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
 
         Get DECT device type list with base stations and line ports supported count. This is a static list.
 
@@ -2965,9 +2969,9 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         Change device settings across organization or locations jobs.
 
         Performs bulk and asynchronous processing for all types of device settings initiated by organization and system
-        admins in a stateful persistent manner. This job will modify the requested device settings across all the
-        devices. Whenever a location ID is specified in the request, it will modify the requested device settings only
-        for the devices that are part of the provided location within an organization.
+        admins in a stateful persistent manner. This job will modify the requested device settings across all
+        non-customized devices. Whenever a location ID is specified in the request, it will modify the requested
+        device settings only for non-customized devices that are part of the provided location within an organization.
 
         Returns a unique job ID which can then be utilized further to retrieve status and errors for the same.
 
@@ -3141,6 +3145,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         """
         Rebuild Phones Configuration
 
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP)</Callout></div>.
+
         Rebuild all phone configurations for the specified location.
 
         Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
@@ -3168,6 +3174,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         """
         List Rebuild Phones Jobs
 
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP)</Callout></div>.
+
         Get the list of all Rebuild Phones jobs in an organization.
 
         Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
@@ -3190,6 +3198,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     def get_the_job_status_of_a_rebuild_phones_job(self, job_id: str, org_id: str = None) -> RebuildPhonesJob:
         """
         Get the Job Status of a Rebuild Phones Job
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP)</Callout></div>.
 
         Get the details of a rebuild phones job by its job ID.
 
@@ -3215,6 +3225,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     def get_job_errors_for_a_rebuild_phones_job(self, job_id: str, org_id: str = None) -> list[ItemObject]:
         """
         Get Job Errors for a Rebuild Phones Job
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP)</Callout></div>.
 
         Get errors for a rebuild phones job in an organization.
 
