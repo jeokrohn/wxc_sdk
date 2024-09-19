@@ -13,7 +13,7 @@ from wxc_sdk.scim.users import ScimPhoneNumberType
 __all__ = ['ContactPhoneNumber', 'Contact', 'Meta', 'OrganizationContactsApi',
            'ContactEmail', 'EmailType', 'ContactIm',
            'ContactImType', 'UpdateContactPhoneNumbers',
-           'PrimaryContactMethod', 'ContactSipAddress']
+           'PrimaryContactMethod', 'ContactSipAddress', 'ContactAddress']
 
 
 class PrimaryContactMethod(str, Enum):

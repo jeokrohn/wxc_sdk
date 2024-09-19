@@ -1,3 +1,9 @@
+"""
+* SCIM users
+* SCIM groups
+* SCIM bulk operations
+* organization contacts
+"""
 import asyncio
 import base64
 import json
@@ -6,6 +12,7 @@ import random
 import re
 import uuid
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from functools import reduce
 from json import JSONDecodeError
@@ -26,6 +33,7 @@ from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import OwnerType
+from wxc_sdk.groups import Group
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import LicenseRequest, LicenseRequestOperation, LicenseProperties
 from wxc_sdk.org_contacts import Contact, PrimaryContactMethod, ContactEmail, EmailType, ContactPhoneNumber, \
@@ -37,6 +45,15 @@ from wxc_sdk.scim.users import ScimUser, NameObject, EmailObject, EmailObjectTyp
     ScimPhoneNumberType, UserAddress, PatchUserOperation, PatchUserOperationOp
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.tokens import Tokens
+
+TEST_GROUPS = 'Test Group'
+
+
+def external_id() -> str:
+    """
+    Create a random external id
+    """
+    return f'test_{uuid.uuid4()}'
 
 
 def get_tokens() -> Optional[Tokens]:
@@ -796,25 +813,13 @@ class TestScimGroups(TestWithScimToken):
         print(f'{len(members)} members')
         print(json.dumps(TypeAdapter(list[ScimGroupMember]).dump_python(members, mode='json', by_alias=True), indent=2))
 
-
-class TestUsersAndGroups(TestScimCreate):
-    """
-    Tests for SCIM users and groups
-    """
-
-    TEST_GROUPS = 'Test Group'
-
-    @staticmethod
-    def external_id() -> str:
-        return f'test_{uuid.uuid4()}'
-
     def test_create_group(self):
         """
         create a group
         """
         api = self.api.scim
         new_group = api.groups.create(org_id=self.org_id, group=ScimGroup(display_name='Test Group',
-                                                                          external_id=self.external_id()))
+                                                                          external_id=external_id()))
         print(json.dumps(new_group.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         groups = list(api.groups.search_all(org_id=self.org_id))
         groups_by_usage: dict[str, list[ScimGroup]] = reduce(
@@ -828,14 +833,59 @@ class TestUsersAndGroups(TestScimCreate):
         """
         api = self.api.scim
         groups = [group for group in api.groups.search_all(org_id=self.org_id)
-                  if group.display_name.startswith(self.TEST_GROUPS) and group.external_id]
+                  if group.display_name.startswith(TEST_GROUPS) and group.external_id]
         if not groups:
             self.skipTest('No test groups')
         target = random.choice(groups)
         api.groups.delete(org_id=self.org_id, group_id=target.id)
         after = [group for group in api.groups.search_all(org_id=self.org_id)
-                 if group.display_name.startswith(self.TEST_GROUPS)]
+                 if group.display_name.startswith(TEST_GROUPS)]
         self.assertEqual(len(groups) - 1, len(after), 'Group not deleted')
+
+    def test_scim_wx_group_consistency(self):
+        """
+        Check consistency between SCIM groups and Webex groups
+        """
+        scim_groups: dict[str, ScimGroup] = {group.id: group
+                                             for group in self.api.scim.groups.search_all(org_id=self.org_id,
+                                                                                          include_members=True)}
+        # bsse46 decoded webex group ids are something like:
+        # ciscospark://us/SCIM_GROUP/3a137ef5-d527-4576-8445-eb394e66d2b4:36818b6f-ef07-43d1-b76f-ced79ab2e3e7
+        # .. where the 1st UUID seems to correspond to SCIM group id and the 2nd is the org id
+        wx_groups = list(self.test_api.groups.list())
+        with ThreadPoolExecutor() as pool:
+            wx_groups = list(pool.map(lambda group: self.test_api.groups.details(group.group_id, include_members=True),
+                                      wx_groups))
+        webex_groups: dict[str, Group] = {webex_id_to_uuid(group.group_id).split(':')[0]: group
+                                          for group in wx_groups}
+        scim_not_in_webex = set(scim_groups.keys()) - set(webex_groups.keys())
+        webex_not_in_scim = set(webex_groups.keys()) - set(scim_groups.keys())
+
+        # we expect all scim groups to be in Webex ... with the exception of the "All Org Users" group
+        self.assertEqual(1, len(scim_not_in_webex))
+        scim_id = next(iter(scim_not_in_webex))
+        self.assertEqual('All Org Users', scim_groups[scim_id].display_name)
+
+        # we expect all Webex groups to be in SCIM
+        self.assertFalse(webex_not_in_scim,
+                         f'Webex groups not in SCIM: '
+                         f'{", ".join(webex_groups[id].display_name for id in webex_not_in_scim)}')
+        # now look at member consistency
+        for group_uuid, wx_group in webex_groups.items():
+            scim_group = scim_groups.get(group_uuid)
+            wx_members = wx_group.members or list()
+            scim_members = scim_group.members or list()
+            self.assertEqual(len(wx_members), len(scim_members))
+            scim_member_ids = {member.value for member in scim_members}
+            wx_member_ids = {webex_id_to_uuid(member.member_id) for member in wx_members}
+            self.assertEqual(scim_member_ids, wx_member_ids)
+        return
+
+
+class TestUsersAndGroups(TestScimCreate):
+    """
+    Tests for SCIM users and groups
+    """
 
     def user_and_group_consistency(self):
         # get all users and groups
@@ -917,8 +967,8 @@ class TestUsersAndGroups(TestScimCreate):
                 users_for_groups[g].append(user)
         async with AsWebexSimpleApi(tokens=self.api.access_token) as as_api:
             tasks = [as_api.scim.groups.create(org_id=self.org_id,
-                                               group=ScimGroup(display_name=f'{self.TEST_GROUPS} {uuid.uuid4()}',
-                                                               external_id=self.external_id(),
+                                               group=ScimGroup(display_name=f'{TEST_GROUPS} {uuid.uuid4()}',
+                                                               external_id=external_id(),
                                                                members=[ScimGroupMember(value=scim_user.id,
                                                                                         type='user')
                                                                         for scim_user in users_for_groups[i]]))
@@ -934,7 +984,8 @@ class TestUsersAndGroups(TestScimCreate):
                 if i == 5:
                     raise err
                 sleep(5)
-        self.assertEqual(0, err_round, f'Inconsistencies found in round {err_round}')
+        if err_round:
+            self.fail(f'Inconsistencies found in round {err_round}')
 
     def test_remove_user_from_group_by_updating_group(self):
         """
