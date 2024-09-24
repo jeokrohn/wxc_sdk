@@ -1996,3 +1996,130 @@ class UserCalls(TestCaseWithLog):
             if tp_id is not None:
                 print(f'Deleting temp TP "{tp.name}"')
                 self.api.telephony.call_routing.tp.delete(translation_id=tp_id, location_id=location.location_id)
+
+
+@dataclass(init=False)
+class Test911(TestCaseWithLog):
+    """
+    Validate 911 calling options
+
+    Various dialing habits:
+    - 911
+    - 9911
+    - 1911
+    - 91911
+
+    - W/ and w/o ODD
+    - mandatory ODD and non-mandatory ODD
+    """
+
+    location: ClassVar[Location]
+    user: ClassVar[Person]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        # pick a US location and a user in that location
+        # .. start with a list of numbers
+        numbers = list(cls.api.telephony.phone_numbers())
+
+        # US locations: locations with main number starting with +1
+        us_locations = set(n.location.id
+                           for n in numbers
+                           if n.main_number and n.phone_number.startswith('+1'))
+
+        # locations with users: locations with numbers that have users as owners
+        locations_with_users = set(n.location.id
+                                   for n in numbers
+                                   if n.owner and n.owner.owner_type == OwnerType.people)
+        # only consider locations in the US that actually have users
+        locations = [loc for loc in cls.api.telephony.location.list()
+                     if loc.location_id in us_locations & locations_with_users]
+
+        # pick a location
+        cls.location = choice(locations)
+        print(f'Using location "{cls.location.name}"')
+
+        # pick user in that location
+        user_ids = set(n.owner.owner_id
+                       for n in numbers
+                       if (n.location.id == cls.location.location_id and
+                           n.owner and n.owner.owner_type == OwnerType.people))
+        cls.user = cls.api.people.details(choice(list(user_ids)))
+        print(f'Using user "{cls.user.display_name}"')
+
+    @classmethod
+    def tearDownClass(cls):
+        # restore ODD Configuration
+        restore = TelephonyLocation(**cls.location.model_dump(mode='json', by_alias=True,
+                                                              include={'outside_dial_digit',
+                                                                       'enforce_outside_dial_digit'}))
+        cls.api.telephony.location.update(cls.location.location_id, settings=restore)
+        super().tearDownClass()
+
+    def prep_odd(self, odd: Optional[str], mandatory: bool):
+        """
+        Set ODD configuration
+        """
+        settings = TelephonyLocation(outside_dial_digit=odd)
+        if odd is None:
+            mandatory = None
+        if mandatory is not None:
+            settings.enforce_outside_dial_digit = mandatory
+        self.api.telephony.location.update(self.location.location_id,
+                                           settings=settings)
+
+    def test_911(self):
+        test_cases: tuple[
+            tuple[
+                tuple[Optional[str], Optional[bool]],
+                tuple[str, bool]]] = (
+            # no ODD
+            ((None, None), (('', True),
+                            ('9', False),
+                            ('1', True),
+                            ('91', False),
+                            )),
+            # ODD, not mandatory
+            (('9', False), (('', True),
+                            ('9', True),
+                            ('1', True),
+                            ('91', True)
+                            )),
+            # ODD, mandatory
+            (('9', True), (('', True),
+                           ('9', True),
+                           ('1', True),
+                           ('91', True)
+                           ))
+        )
+        err = None
+        for test_case in test_cases:
+            (odd, mandatory), cases = test_case
+            print(f'Testing with ODD: {odd}, mandatory: {mandatory}')
+            self.prep_odd(odd=odd, mandatory=mandatory)
+            for prefix, expected in cases:
+                for emergency in ('911', '933'):
+                    dialing = f'{prefix}{emergency}'
+                    print(f'  Testing dialing {dialing:5} ', end='')
+                    result = self.api.telephony.test_call_routing(originator_id=self.user.person_id,
+                                                                  originator_type=OriginatorType.user,
+                                                                  destination=dialing)
+                    print(f'- {"rejected" if result.is_rejected else "routed  "} '
+                          f'- routing address: {result.routing_address:5}, '
+                          f'destination type: {result.destination_type}',
+                          end='')
+                    routed_as_911 = not result.is_rejected and result.destination_type == DestinationType.emergency
+                    try:
+                        self.assertEqual(expected, routed_as_911,
+                                         'Unexpected outcome')
+                        print(' - OK')
+                    except AssertionError as e:
+                        print(' - FAIL')
+                        err = err or e
+                # for emergency
+            # for prefix
+        # for test_case in test_cases
+        if err:
+            raise err
+        return
