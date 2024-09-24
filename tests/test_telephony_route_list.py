@@ -335,9 +335,14 @@ class UnlistedRLs(TestCaseWithLog):
             self.skipTest('No route group to test with')
         max_index_to_test = 2
         err = None
+        existing_rls = list(self.api.telephony.prem_pstn.route_list.list())
+        existing_rl_names = set(f'{rl.location_id}/{rl.name}' for rl in existing_rls)
         for test_index in range(1, max_index_to_test + 1):
             for location in calling_locations:
                 rl_name = rl_name_template.format(name=location.name, i=test_index)
+                if f'{location.location_id}/{rl_name}' in existing_rl_names:
+                    print(f'Route list "{rl_name}" already exists')
+                    continue
                 try:
                     print(f'Creating "{rl_name}"')
                     rl_id = self.api.telephony.prem_pstn.route_list.create(name=rl_name,
