@@ -2075,22 +2075,34 @@ class Test911(TestCaseWithLog):
                 tuple[Optional[str], Optional[bool]],
                 tuple[str, bool]]] = (
             # no ODD
-            ((None, None), (('', True),
-                            ('9', False),
-                            ('1', True),
-                            ('91', False),
+            ((None, None), (('911', True),
+                            ('933', True),
+                            ('9911', False),
+                            ('9933', False),
+                            ('1911', True),
+                            ('1933', False),    # 1933 is handled differently than 1911
+                            ('91911', False),
+                            ('91933', False),
                             )),
             # ODD, not mandatory
-            (('9', False), (('', True),
-                            ('9', True),
-                            ('1', True),
-                            ('91', True)
+            (('9', False), (('911', True),
+                            ('933', True),
+                            ('9911', True),
+                            ('9933', True),
+                            ('1911', True),
+                            ('1933', False),    # 1933 is handled differently than 1911
+                            ('91911', True),
+                            ('91933', False),   # 1933 is handled differently than 1911
                             )),
             # ODD, mandatory
-            (('9', True), (('', True),
-                           ('9', True),
-                           ('1', True),
-                           ('91', True)
+            (('9', True), (('911', True),
+                           ('933', True),
+                           ('9911', True),
+                           ('9933', True),
+                           ('1911', True),
+                           ('1933', False),     # 1933 is handled differently than 1911
+                           ('91911', True),
+                           ('91933', False),    # 1933 is handled differently than 1911
                            ))
         )
         err = None
@@ -2098,27 +2110,24 @@ class Test911(TestCaseWithLog):
             (odd, mandatory), cases = test_case
             print(f'Testing with ODD: {odd}, mandatory: {mandatory}')
             self.prep_odd(odd=odd, mandatory=mandatory)
-            for prefix, expected in cases:
-                for emergency in ('911', '933'):
-                    dialing = f'{prefix}{emergency}'
-                    print(f'  Testing dialing {dialing:5} ', end='')
-                    result = self.api.telephony.test_call_routing(originator_id=self.user.person_id,
-                                                                  originator_type=OriginatorType.user,
-                                                                  destination=dialing)
-                    print(f'- {"rejected" if result.is_rejected else "routed  "} '
-                          f'- routing address: {result.routing_address:5}, '
-                          f'destination type: {result.destination_type}',
-                          end='')
-                    routed_as_911 = not result.is_rejected and result.destination_type == DestinationType.emergency
-                    try:
-                        self.assertEqual(expected, routed_as_911,
-                                         'Unexpected outcome')
-                        print(' - OK')
-                    except AssertionError as e:
-                        print(' - FAIL')
-                        err = err or e
-                # for emergency
-            # for prefix
+            for dialing, expected in cases:
+                print(f'  Testing dialing {dialing:5} ', end='')
+                result = self.api.telephony.test_call_routing(originator_id=self.user.person_id,
+                                                              originator_type=OriginatorType.user,
+                                                              destination=dialing)
+                print(f'- {"rejected" if result.is_rejected else "routed  "} '
+                      f'- routing address: {result.routing_address:5}, '
+                      f'destination type: {result.destination_type}',
+                      end='')
+                routed_as_911 = not result.is_rejected and result.destination_type == DestinationType.emergency
+                try:
+                    self.assertEqual(expected, routed_as_911,
+                                     'Unexpected outcome')
+                    print(' - OK')
+                except AssertionError as e:
+                    print(' - FAIL')
+                    err = err or e
+            # for dialing, expected in cases
         # for test_case in test_cases
         if err:
             raise err
