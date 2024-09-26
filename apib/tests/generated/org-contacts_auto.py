@@ -11,11 +11,11 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['BulkCreateContacts', 'ContactPhoneNumbers', 'ContactResponse', 'Meta', 'OrganizationContactsApi',
-           'SearchResponse', 'UpdateContactEmails', 'UpdateContactEmailsType', 'UpdateContactIms',
-           'UpdateContactImsType', 'UpdateContactPhoneNumbers', 'UpdateContactPhoneNumbersType',
-           'UpdateContactPrimaryContactMethod', 'UpdateContactSipAddresses', 'UpdateContactSipAddressesType',
-           'UpdateContactSource']
+__all__ = ['BulkCreateContacts', 'BulkCreateResponse', 'BulkCreateResponseFailedContacts', 'ContactPhoneNumbers',
+           'ContactResponse', 'Meta', 'OrganizationContactsApi', 'SearchResponse', 'UpdateContactEmails',
+           'UpdateContactEmailsType', 'UpdateContactIms', 'UpdateContactImsType', 'UpdateContactPhoneNumbers',
+           'UpdateContactPhoneNumbersType', 'UpdateContactPrimaryContactMethod', 'UpdateContactSipAddresses',
+           'UpdateContactSipAddressesType', 'UpdateContactSource']
 
 
 class UpdateContactPrimaryContactMethod(str, Enum):
@@ -227,6 +227,28 @@ class ContactResponse(ApiModel):
     group_ids: Optional[list[str]] = None
 
 
+class BulkCreateResponseFailedContacts(ApiModel):
+    #: Bulk ID of the contact object that failed creation.
+    #: example: 2
+    id: Optional[str] = None
+    #: Error message for the contact creation failure.
+    #: example: Source null is not supported by organization, only sources [CH] are allowed
+    error_message: Optional[str] = None
+    #: HTTP Response code for the contact creation failure.
+    #: example: 403
+    error_code: Optional[int] = None
+
+
+class BulkCreateResponse(ApiModel):
+    #: Array of contact successfully created.
+    contacts: Optional[list[ContactResponse]] = None
+    #: Array of contacts that failed creation.
+    failed_contacts: Optional[list[BulkCreateResponseFailedContacts]] = None
+    #: Organization ID in which the contacts were created.
+    #: example: 36818b6f-ef07-43d1-b76f-ced79ab2e3e7
+    org_id: Optional[str] = None
+
+
 class SearchResponse(ApiModel):
     #: An array of contact objects.
     result: Optional[list[ContactResponse]] = None
@@ -266,7 +288,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
                          primary_contact_method: UpdateContactPrimaryContactMethod, source: UpdateContactSource,
                          emails: list[UpdateContactEmails], phone_numbers: list[ContactPhoneNumbers],
                          sip_addresses: list[UpdateContactSipAddresses], ims: list[UpdateContactIms],
-                         group_ids: list[str]):
+                         group_ids: list[str]) -> ContactResponse:
         """
         Create a Contact
 
@@ -313,7 +335,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         :type ims: list[UpdateContactIms]
         :param group_ids: Groups associated with the contact.
         :type group_ids: list[str]
-        :rtype: None
+        :rtype: :class:`ContactResponse`
         """
         body = dict()
         body['schemas'] = schemas
@@ -332,7 +354,9 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         body['ims'] = TypeAdapter(list[UpdateContactIms]).dump_python(ims, mode='json', by_alias=True, exclude_none=True)
         body['groupIds'] = group_ids
         url = self.ep(f'{org_id}/contacts')
-        super().post(url, json=body)
+        data = super().post(url, json=body)
+        r = ContactResponse.model_validate(data)
+        return r
 
     def get_a_contact(self, org_id: str, contact_id: str) -> ContactResponse:
         """
@@ -493,7 +517,8 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         r = SearchResponse.model_validate(data)
         return r
 
-    def bulk_create_or_update_contacts(self, org_id: str, schemas: str, contacts: list[BulkCreateContacts]):
+    def bulk_create_or_update_contacts(self, org_id: str, schemas: str,
+                                       contacts: list[BulkCreateContacts]) -> BulkCreateResponse:
         """
         Bulk Create or Update Contacts
 
@@ -507,13 +532,15 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         :type schemas: str
         :param contacts: Contains a list of contacts to be created/updated.
         :type contacts: list[BulkCreateContacts]
-        :rtype: None
+        :rtype: :class:`BulkCreateResponse`
         """
         body = dict()
         body['schemas'] = schemas
         body['contacts'] = TypeAdapter(list[BulkCreateContacts]).dump_python(contacts, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{org_id}/contacts/bulk')
-        super().post(url, json=body)
+        data = super().post(url, json=body)
+        r = BulkCreateResponse.model_validate(data)
+        return r
 
     def bulk_delete_contacts(self, org_id: str, schemas: str, object_ids: list[str]):
         """

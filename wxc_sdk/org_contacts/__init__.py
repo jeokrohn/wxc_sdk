@@ -151,15 +151,21 @@ class Contact(ApiModel):
 
 
 class BulkFailed(ApiModel):
-    id: Optional[int]
-    error_code: Optional[str]
-    error_message: Optional[str]
+    #: Bulk ID of the contact object that failed creation.
+    id: Optional[str] = None
+    #: Error message for the contact creation failure.
+    error_message: Optional[str] = None
+    #: HTTP Response code for the contact creation failure.
+    error_code: Optional[int] = None
     status_code: Optional[int]
 
 
 class BulkResponse(ApiModel):
+    #: Array of contact successfully created.
     contacts: list[Optional[Contact]]
+    #: Array of contacts that failed creation.
     failed_contacts: list[BulkFailed]
+    #: Organization ID in which the contacts were created.
     org_id: str
 
 
