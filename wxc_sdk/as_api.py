@@ -24382,21 +24382,44 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         """
         Creates a webhook.
 
+        To learn more about how to create and use webhooks, see The `Webhooks Guide
+        <https://developer.webex.com/docs/api/guides/webhooks>`_.
+
         :param name: A user-friendly name for the webhook.
+        :type name: str
         :param target_url: The URL that receives POST requests for each event.
+        :type target_url: str
         :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource
             the webhook is for.
+        :type resource: WebhookResource
         :param event: The event type for the webhook.
-        :param filter: The filter that defines the webhook scope.
+        :type event: WebhookEvent
+        :param filter: Filter that defines the webhook scope. See `Filtering Webhooks
+            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information. Please note
+            that if a filter of `hostEmail`, `hostUserId`, `ownerEmail` or `ownerId` is specified, `ownedBy` must be
+            set to `org`.
+        :type filter: str
         :param secret: The secret used to generate payload signature.
-        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings and
-            meetingParticipants resources for now.
-
+        :param secret: str
+        :param owned_by: Specify `org` when creating an org/admin level webhook. Supported for `meetings`,
+            `recordings`, `convergedRecordings`,`meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`,
+            `controlHubAlerts`, `rooms`, `messaging` and `adminBatchJobs` (for Compliance Officers and messages with
+            file attachments only - see `inline file DLP
+            <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
+        :param owned_by: str
         :return: the new webhook
         """
-        params = {to_camel(param): value for i, (param, value) in enumerate(locals().items())
-                  if i and value is not None}
-        body = json.loads(WebhookCreate(**params).model_dump_json())
+        body = dict()
+        body['name'] = name
+        body['targetUrl'] = target_url
+        body['resource'] = enum_str(resource)
+        body['event'] = enum_str(event)
+        if filter is not None:
+            body['filter'] = filter
+        if secret is not None:
+            body['secret'] = secret
+        if owned_by is not None:
+            body['ownedBy'] = owned_by
         ep = self.ep()
         data = await self.post(ep, json=body)
         result = Webhook.model_validate(data)
