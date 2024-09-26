@@ -16,13 +16,16 @@ __all__ = ['ActionOnRouteList', 'AppliedServices', 'CallDestinationType', 'CallI
            'CallingPermissionAction', 'CallingPlanReason', 'ConfigurationLevelType', 'Customer', 'DeviceStatus',
            'DeviceType', 'DialPattern', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidateResult',
            'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'Emergency', 'FeatureAccessCode', 'HostedAgent',
-           'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount', 'LocalGateways', 'NumberStatus',
-           'OriginatorType', 'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByTypeCallType',
-           'PbxUser', 'PstnNumber', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType',
-           'RouteGroup', 'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
+           'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount', 'LocalGateways',
+           'LocationTranslationPatternGet', 'NumberStatus', 'OriginatorType',
+           'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
+           'OutgoingCallingPlanPermissionsByTypeCallType', 'PbxUser', 'PstnNumber',
+           'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup',
+           'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
            'RouteListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ServiceType',
-           'TestCallRoutingPostResponse', 'TranslationPattern', 'TranslationPatternConfigurationLevel', 'Trunk',
-           'TrunkGet', 'TrunkType', 'TrunkTypeWithDeviceType', 'VirtualExtension', 'VirtualExtensionRange']
+           'TestCallRoutingPostResponse', 'TranslationPattern', 'TranslationPatternConfigurationLevel',
+           'TranslationPatternItem', 'Trunk', 'TrunkGet', 'TrunkType', 'TrunkTypeWithDeviceType', 'VirtualExtension',
+           'VirtualExtensionRange']
 
 
 class ActionOnRouteList(str, Enum):
@@ -170,6 +173,29 @@ class OutgoingCallingPlanPermissionsByType(ApiModel):
     number: Optional[str] = None
 
 
+class OutgoingCallingPlanPermissionsByDigitPattern(ApiModel):
+    #: The level from which the configuration is applied.
+    #: example: PEOPLE
+    configuration_level: Optional[ConfigurationLevelType] = None
+    #: Name given to a digit pattern.
+    #: example: DPattern
+    name: Optional[str] = None
+    #: Action to be performed on the input number that matches with the digit pattern.
+    #: example: ALLOW
+    permission: Optional[CallingPermissionAction] = None
+    #: example: +14157279300
+    transfer_number: Optional[str] = None
+    #: Pattern for the digit pattern.
+    #: example: +91!
+    pattern: Optional[str] = None
+    #: The reason for the result reported for a non-standard OCP service.
+    #: example: FRAUD_CONTAINMENT
+    reason: Optional[CallingPlanReason] = None
+    #: A transfer number is present in case of a transfer to another number.
+    #: example: +14157279300
+    number: Optional[str] = None
+
+
 class AppliedServices(ApiModel):
     #: Returns the details of the Translation Pattern if applied.
     translation_pattern: Optional[TranslationPattern] = None
@@ -177,6 +203,8 @@ class AppliedServices(ApiModel):
     intercept_details: Optional[CallInterceptDetails] = None
     #: Returns the details of permissions by type configuration if applied under OCP.
     outgoing_calling_plan_permissions_by_type: Optional[OutgoingCallingPlanPermissionsByType] = None
+    #: Returns the details of the digit pattern configuration if applied under OCP.
+    outgoing_calling_plan_permissions_by_digit_pattern: Optional[OutgoingCallingPlanPermissionsByDigitPattern] = None
 
 
 class CallSourceType(str, Enum):
@@ -504,6 +532,21 @@ class LocalGateways(ApiModel):
     priority: Optional[int] = None
 
 
+class LocationTranslationPatternGet(ApiModel):
+    #: Unique identifier for a translation pattern.
+    #: example: Y2lzY29zcGFyazovL3VzL0RJR0lUX1BBVFRFUk5TLzg3NGRjMjM1LTgwNTktNGM4OC05ZjU5LTRiNjdkZDJhZTZjMg
+    id: Optional[str] = None
+    #: A name given to a translation pattern for a location.
+    #: example: CHNHelpDesk
+    name: Optional[str] = None
+    #: A matching pattern given to a translation pattern for a location.
+    #: example: +91[2-7]XX21
+    matching_pattern: Optional[str] = None
+    #: A replacement pattern given to a translation pattern for a location.
+    #: example: +91352133
+    replacement_pattern: Optional[str] = None
+
+
 class NumberStatus(str, Enum):
     invalid = 'INVALID'
     duplicate = 'DUPLICATE'
@@ -819,6 +862,26 @@ class TestCallRoutingPostResponse(ApiModel):
     #: Returned if any origin is configured with intercept details, outgoing permissions by type, or translation
     #: pattern.
     applied_services: Optional[list[AppliedServices]] = None
+
+
+class TranslationPatternItem(ApiModel):
+    #: Unique identifier for a translation pattern.
+    #: example: Y2lzY29zcGFyazovL3VzL0RJR0lUX1BBVFRFUk5TLzg3NGRjMjM1LTgwNTktNGM4OC05ZjU5LTRiNjdkZDJhZTZjMg
+    id: Optional[str] = None
+    #: Name given to a translation pattern for an organization.
+    #: example: CHNHelpDesk
+    name: Optional[str] = None
+    #: Matching pattern given to a translation pattern for an organization.
+    #: example: +91[2-7]XX21
+    matching_pattern: Optional[str] = None
+    #: Replacement pattern given to a translation pattern for an organization.
+    #: example: +91352133
+    replacement_pattern: Optional[str] = None
+    #: Level at which the translation pattern is created. The level can either be `Organization` or `Location`.
+    #: example: Location
+    level: Optional[str] = None
+    #: Location details for the translation pattern when the level is `Location`.
+    location: Optional[Customer] = None
 
 
 class TrunkType(str, Enum):
@@ -2173,3 +2236,314 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             params['name'] = ','.join(name)
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageCallToExtension')
         return self.session.follow_pagination(url=url, model=Customer, item_key='locations', params=params)
+
+    def create_a_translation_pattern_for_an_organization(self, name: str, matching_pattern: str,
+                                                         replacement_pattern: str, org_id: str = None) -> str:
+        """
+        Create a Translation Pattern for an Organization
+
+        Create a translation pattern for a given organization.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param name: Name given to a translation pattern for an organization.
+        :type name: str
+        :param matching_pattern: Matching pattern given to a translation pattern for an organization.
+        :type matching_pattern: str
+        :param replacement_pattern: Replacement pattern given to a translation pattern for an organization.
+        :type replacement_pattern: str
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['matchingPattern'] = matching_pattern
+        body['replacementPattern'] = replacement_pattern
+        url = self.ep('callRouting/translationPatterns')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def retrieve_the_list_of_translation_patterns(self, limit_to_location_id: str = None,
+                                                  limit_to_org_level_enabled: str = None, order: str = None,
+                                                  name: str = None, matching_pattern: str = None, org_id: str = None,
+                                                  **params) -> Generator[TranslationPatternItem, None, None]:
+        """
+        Retrieve the list of Translation Patterns
+
+        Retrieve a list of translation patterns for a given organization.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: str
+        :param order: Sort the list of translation patterns according to translation pattern name, ascending or
+            descending.
+        :type order: str
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = limit_to_org_level_enabled
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep('callRouting/translationPatterns')
+        return self.session.follow_pagination(url=url, model=TranslationPatternItem, item_key='translationPatterns', params=params)
+
+    def retrieve_a_specific_translation_pattern_for_an_organization(self, translation_id: str,
+                                                                    org_id: str = None) -> LocationTranslationPatternGet:
+        """
+        Retrieve a specific Translation Pattern for an Organization
+
+        Retrieve the details of a translation pattern for a given organization.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param translation_id: Retrieve the translation pattern with the matching ID.
+        :type translation_id: str
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: :class:`LocationTranslationPatternGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'callRouting/translationPatterns/{translation_id}')
+        data = super().get(url, params=params)
+        r = LocationTranslationPatternGet.model_validate(data)
+        return r
+
+    def modify_a_specific_translation_pattern_for_an_organization(self, translation_id: str, name: str = None,
+                                                                  matching_pattern: str = None,
+                                                                  replacement_pattern: str = None,
+                                                                  org_id: str = None):
+        """
+        Modify a specific Translation Pattern for an Organization
+
+        Modify a translation pattern for a given organization.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param translation_id: Modify translation pattern with the matching ID.
+        :type translation_id: str
+        :param name: Name given to a translation pattern for an organization.
+        :type name: str
+        :param matching_pattern: Matching pattern given to a translation pattern for an organization.
+        :type matching_pattern: str
+        :param replacement_pattern: Replacement pattern given to a translation pattern for an organization.
+        :type replacement_pattern: str
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if name is not None:
+            body['name'] = name
+        if matching_pattern is not None:
+            body['matchingPattern'] = matching_pattern
+        if replacement_pattern is not None:
+            body['replacementPattern'] = replacement_pattern
+        url = self.ep(f'callRouting/translationPatterns/{translation_id}')
+        super().put(url, params=params, json=body)
+
+    def delete_a_specific_translation_pattern(self, translation_id: str, org_id: str = None):
+        """
+        Delete a specific Translation Pattern
+
+        Delete a translation pattern for a given organization.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param translation_id: Delete a translation pattern with the matching ID.
+        :type translation_id: str
+        :param org_id: ID of the organization containing the translation pattern.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'callRouting/translationPatterns/{translation_id}')
+        super().delete(url, params=params)
+
+    def create_a_translation_pattern_for_a_location(self, location_id: str, name: str, matching_pattern: str,
+                                                    replacement_pattern: str, org_id: str = None) -> str:
+        """
+        Create a Translation Pattern for a Location
+
+        Create a translation pattern for a given location.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param name: A name given to a translation pattern for a location.
+        :type name: str
+        :param matching_pattern: A matching pattern given to a translation pattern for a location.
+        :type matching_pattern: str
+        :param replacement_pattern: A replacement pattern given to a translation pattern for a location.
+        :type replacement_pattern: str
+        :param org_id: Only admin users of another organization (such as partners) may use this parameter since the
+            default is the same organization as the token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['matchingPattern'] = matching_pattern
+        body['replacementPattern'] = replacement_pattern
+        url = self.ep(f'locations/{location_id}/callRouting/translationPatterns')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def retrieve_a_specific_translation_pattern_for_a_location(self, location_id: str, translation_id: str,
+                                                               org_id: str = None) -> LocationTranslationPatternGet:
+        """
+        Retrieve a specific Translation Pattern for a Location
+
+        Retrieve a specific translation pattern for a given location.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param translation_id: Unique identifier for the translation pattern.
+        :type translation_id: str
+        :param org_id: Only admin users of another organization (such as partners) may use this parameter since the
+            default is the same organization as the token used to access API.
+        :type org_id: str
+        :rtype: :class:`LocationTranslationPatternGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callRouting/translationPatterns/{translation_id}')
+        data = super().get(url, params=params)
+        r = LocationTranslationPatternGet.model_validate(data)
+        return r
+
+    def modify_a_specific_translation_pattern_for_a_location(self, location_id: str, translation_id: str,
+                                                             name: str = None, matching_pattern: str = None,
+                                                             replacement_pattern: str = None, org_id: str = None):
+        """
+        Modify a specific Translation Pattern for a Location
+
+        Modify a specific translation pattern for a given location.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param translation_id: Unique identifier for the translation pattern.
+        :type translation_id: str
+        :param name: A name given to a translation pattern for a location.
+        :type name: str
+        :param matching_pattern: A matching pattern given to a translation pattern for a location.
+        :type matching_pattern: str
+        :param replacement_pattern: A replacement pattern given to a translation pattern for a location.
+        :type replacement_pattern: str
+        :param org_id: Only admin users of another organization (such as partners) may use this parameter since the
+            default is the same organization as the token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if name is not None:
+            body['name'] = name
+        if matching_pattern is not None:
+            body['matchingPattern'] = matching_pattern
+        if replacement_pattern is not None:
+            body['replacementPattern'] = replacement_pattern
+        url = self.ep(f'locations/{location_id}/callRouting/translationPatterns/{translation_id}')
+        super().put(url, params=params, json=body)
+
+    def delete_a_specific_translation_pattern_for_a_location(self, location_id: str, translation_id: str,
+                                                             org_id: str = None):
+        """
+        Delete a specific Translation Pattern for a Location
+
+        Delete a specific translation pattern for a given location.
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only. See `this article
+        <https://help.webex.com/en-us/article/nib9o6h/Translation-patterns-for-outbound-calls>`_ for details about the translation pattern syntax.
+
+        Requires a full administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param translation_id: Unique identifier for the translation pattern.
+        :type translation_id: str
+        :param org_id: Only admin users of another organization (such as partners) may use this parameter since the
+            default is the same organization as the token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callRouting/translationPatterns/{translation_id}')
+        super().delete(url, params=params)
