@@ -65,8 +65,8 @@ from wxc_sdk.meetings.transcripts import DeleteTranscriptBody, Transcript, Trans
 from wxc_sdk.memberships import Membership, MembershipsData
 from wxc_sdk.messages import AdaptiveCard, AdaptiveCardAction, AdaptiveCardBody, Message, MessageAttachment, \
     MessagesData
-from wxc_sdk.org_contacts import Contact, ContactEmail, ContactIm, ContactImType, ContactPhoneNumber, \
-    ContactSipAddress, EmailType, Meta, PrimaryContactMethod, UpdateContactPhoneNumbers
+from wxc_sdk.org_contacts import Contact, ContactAddress, ContactEmail, ContactIm, ContactImType, \
+    ContactPhoneNumber, ContactSipAddress, EmailType, Meta, PrimaryContactMethod, UpdateContactPhoneNumbers
 from wxc_sdk.organizations import Organization
 from wxc_sdk.people import PeopleStatus, Person, PersonAddress, PersonType, PhoneNumber, PhoneNumberType, \
     SipAddress, SipType
@@ -247,8 +247,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason',
            'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization', 'ComplianceEvent',
            'Component', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceState', 'ConferenceTypeEnum',
-           'ConfigurationLevel', 'ConnectionStatus', 'Contact', 'ContactEmail', 'ContactIm', 'ContactImType',
-           'ContactPhoneNumber', 'ContactSipAddress', 'ConvergedRecording', 'ConvergedRecordingMeta',
+           'ConfigurationLevel', 'ConnectionStatus', 'Contact', 'ContactAddress', 'ContactEmail', 'ContactIm',
+           'ContactImType', 'ContactPhoneNumber', 'ContactSipAddress', 'ConvergedRecording', 'ConvergedRecordingMeta',
            'ConvergedRecordingWithDirectDownloadLinks', 'CreateInviteesItem', 'CreateMeetingBody',
            'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
            'CustomizedQuestionForCreateMeeting', 'DECTHandsetItem', 'DECTHandsetLine', 'DECTHandsetList',

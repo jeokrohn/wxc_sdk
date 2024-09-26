@@ -68,7 +68,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
     # lookup for allowed entities for each function
     existing = {'callForwarding': {'virtualLines', 'workspaces', 'people'},
                 'emergencyCallbackNumber': {'virtualLines', 'workspaces', 'people'},
-                'faxMessage': {'virtualLines', 'people'},
+                'faxMessage': {'virtualLines', 'people', 'workspaces'},
                 '': {'virtualLines', 'workspaces'},
                 'callIntercept': {'workspaces', 'people'},
                 'primary': {'people'},
@@ -109,6 +109,8 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
                 **params) -> Generator[AvailableNumber, None, None]:
         """
         Get Person Primary Available Phone Numbers
+
+        Available for: user
 
         List numbers that are available to be assigned as a person's primary phone number.
         By default, this API returns standard and mobile numbers from all locations that are unassigned. The parameters
@@ -152,6 +154,8 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         """
         Get Person Secondary Available Phone Numbers
 
+        Available for: user, workspace
+
         List standard numbers that are available to be assigned as a person's secondary phone number.
         These numbers are associated with the location of the person specified in the request URL, can be active or
         inactive, and are unassigned.
@@ -184,7 +188,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         """
         Get Fax Message Available Phone Numbers
 
-        Available for: user, virtual line
+        Available for: user, virtual line, workspace
 
         List standard numbers that are available to be assigned as a FAX message number.
         These numbers are associated with the location of the person specified in the request URL, can be active or
