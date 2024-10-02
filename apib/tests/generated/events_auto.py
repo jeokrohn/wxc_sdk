@@ -206,8 +206,8 @@ class EventsApi(ApiChild, base='events'):
         :type actor_id: str
         :param from_: List events which occurred after a specific date and time.
         :type from_: Union[str, datetime]
-        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
-            future, lists events up to the present.
+        :param to_: List events that occurred before a specific date and time. If not specified, events up to the
+            present time will be listed. Cannot be set to a future date relative to the current time.
         :type to_: Union[str, datetime]
         :return: Generator yielding :class:`Event` instances
         """

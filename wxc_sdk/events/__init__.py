@@ -174,7 +174,7 @@ class EventsApi(ApiChild, base='events'):
     spark-compliance:events_read scope. See the Compliance Guide for more information.
     """
 
-    def list(self, has_attachments: bool = None, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
+    def list(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
              from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
              **params) -> Generator[ComplianceEvent, None, None]:
         """
@@ -183,9 +183,6 @@ class EventsApi(ApiChild, base='events'):
         Long result sets will be split into `pages
         <https://developer.webex.com/docs/basics#pagination>`_.
 
-        :param has_attachments: If enabled, filters message events to only those that contain the `attachments`
-            attribute.
-        :type has_attachments: bool
         :param resource: List events with a specific resource type.
         :type resource: EventResource
         :param type_: List events with a specific event type.
@@ -194,8 +191,8 @@ class EventsApi(ApiChild, base='events'):
         :type actor_id: str
         :param from_: List events which occurred after a specific date and time.
         :type from_: str
-        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
-            future, lists events up to the present.
+        :param to_: List events that occurred before a specific date and time. If not specified, events up to the
+            present time will be listed. Cannot be set to a future date relative to the current time.
         :type to_: str
         """
         if resource is not None:
@@ -204,8 +201,6 @@ class EventsApi(ApiChild, base='events'):
             params['type'] = enum_str(type_)
         if actor_id is not None:
             params['actorId'] = actor_id
-        if has_attachments is not None:
-            params['hasAttachments'] = str(has_attachments).lower()
         if from_ is not None:
             if isinstance(from_, str):
                 from_ = isoparse(from_)
