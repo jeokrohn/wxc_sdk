@@ -246,10 +246,6 @@ class PostHuntGroupCallPolicyObject(ApiModel):
     #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
     #: reason, such as a power outage, failed internet connection, or wiring problem.
     business_continuity_redirect: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
-    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
-    #: reason, such as a power outage, failed internet connection, or wiring problem. The `businessContinuity` object
-    #: is deprecated and will be removed in the future.
-    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
 
 
 class PostPersonPlaceVirtualLineHuntGroupObject(ApiModel):
@@ -332,10 +328,6 @@ class GetHuntGroupCallPolicyObject(ApiModel):
     #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
     #: reason, such as a power outage, failed internet connection, or wiring problem.
     business_continuity_redirect: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
-    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
-    #: reason, such as a power outage, failed internet connection, or wiring problem. The `businessContinuity` object
-    #: is deprecated and will be removed in the future.
-    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusyRedirect] = None
 
 
 class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):

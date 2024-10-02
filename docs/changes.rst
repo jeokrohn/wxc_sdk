@@ -2,6 +2,7 @@ Release history
 ===============
 
 - feat: new API: :attr:`api.org_contacts <wxc_sdk.WebexSimpleApi.org_contacts>`
+- break: deprecated HGCallPolicies.business_continuity, use :attr:`HGCallPolicies.business_continuity_redirect <wxc_sdk.telephony.huntgroup.HGCallPolicies.business_continuity_redirect>` instead
 
 1.22.1
 ------

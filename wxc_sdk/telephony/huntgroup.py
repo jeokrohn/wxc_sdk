@@ -83,10 +83,6 @@ class HGCallPolicies(ApiModel):
     #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
     #: reason, such as a power outage, failed internet connection, or wiring problem.
     business_continuity_redirect: Optional[BusinessContinuity] = None
-    #: Settings for sending calls to a specified destination if the phone is not connected to the network for any
-    #: reason, such as a power outage, failed internet connection, or wiring problem. The `businessContinuity` object
-    #: is deprecated and will be removed in the future.
-    business_continuity: Optional[BusinessContinuity] = None
 
     @staticmethod
     def default() -> 'HGCallPolicies':
@@ -155,11 +151,6 @@ class HuntGroup(HGandCQ):
 
         :meta private:
         """
-        try:
-            if self.call_policies.business_continuity:
-                log.warning('business_continuity is deprecated and will be removed in the future')
-        except AttributeError:
-            pass
         data = super().create_or_update()
         return data
 
