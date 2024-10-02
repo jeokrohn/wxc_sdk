@@ -325,12 +325,13 @@ class UnlistedRLs(TestCaseWithLog):
         Some RLs seem to not be listed; but the name still exists
         """
         rl_name_template = '{name} {i:02}'
-        calling_locations = list(self.api.telephony.location.list())
-        calling_locations = await asyncio.gather(
-            *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in calling_locations])
-        calling_locations = [loc for loc in calling_locations
-                             if loc.connection and loc.connection.type in {RouteType.trunk, RouteType.route_group}]
-        route_group = next((rg for rg in self.api.telephony.prem_pstn.route_group.list()), None)
+        with self.no_log():
+            calling_locations = list(self.api.telephony.location.list())
+            calling_locations = await asyncio.gather(
+                *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in calling_locations])
+            calling_locations = [loc for loc in calling_locations
+                                 if loc.connection and loc.connection.type in {RouteType.trunk, RouteType.route_group}]
+            route_group = next((rg for rg in self.api.telephony.prem_pstn.route_group.list()), None)
         if route_group is None:
             self.skipTest('No route group to test with')
         max_index_to_test = 2
