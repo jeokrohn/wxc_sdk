@@ -972,6 +972,12 @@ class PythonClassRegistry:
                     array_element_type = 'string'
                 else:
                     array_element_type = value.content[0].element
+                    el_content = value.content[0].content
+                    if (array_element_type == 'string' and el_content and isinstance(el_content, str) and
+                            re.match(r'^\w+: ', el_content)):
+                        raise ValueError(
+                            f'{class_name}.{name}: is this really an array of strings or are we missing an (object) '
+                            f'definition?')
                 if array_element_type == 'string':
                     python_type = 'list[str]'
                     sample = ", ".join(f"'{c.content}'" for c in value.content if c.content is not None)
