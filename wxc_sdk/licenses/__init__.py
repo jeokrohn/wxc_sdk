@@ -11,7 +11,7 @@ from typing import Optional, List
 from pydantic import Field, TypeAdapter
 
 from ..api_child import ApiChild
-from ..base import ApiModel
+from ..base import ApiModel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
 __all__ = ['SiteType', 'License', 'LicensesApi', 'LicenseUser', 'LicenseUserType', 'LicenseRequestOperation',
@@ -81,6 +81,29 @@ class License(ApiModel):
         is this a Webex Calling workspace license
         """
         return self.name == 'Webex Calling - Workspaces'
+
+    @property
+    def cx_essentials(self) -> bool:
+        """
+        is this a Customer Experience Essentials license
+        """
+        return self.name == 'Customer Experience - Essential'
+
+    @property
+    def lic_type(self) -> str:
+        """
+        base64 decoded license id looks something like this:
+        <org uuid>:<lic type>_<lic uuid>
+        """
+        return webex_id_to_uuid(self.license_id).split(':')[-1].split('_')[0]
+
+    @property
+    def lic_uuid(self) -> str:
+        """
+        base64 decoded license id looks something like this:
+        <org uuid>:<lic type>_<lic uuid>
+        """
+        return webex_id_to_uuid(self.license_id).split(':')[-1].split('_')[1]
 
 
 class LicenseUserType(str, Enum):

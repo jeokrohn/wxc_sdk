@@ -1,4 +1,6 @@
 import asyncio
+import base64
+import uuid
 from operator import attrgetter
 from typing import Union
 
@@ -44,3 +46,61 @@ class TestLicense(TestCaseWithLog):
                 continue
             print(f'{len(user_list)} users: '
                   f'{", ".join(u.display_name for u in sorted(user_list, key=attrgetter("display_name")))}')
+
+    def test_license_id_format(self):
+        """
+        Check if license id is in expected format
+        base64 decoded license id looks something like this:
+        <org uuid>:<lic type>_<lic uuid>
+        """
+        def is_uuid(s: str) -> bool:
+            try:
+                uuid.UUID(s, version=4)
+            except ValueError:
+                return False
+            return True
+
+        me = self.api.people.me()
+        org_id = webex_id_to_uuid(me.org_id)
+        err = None
+        licenses = list(self.api.licenses.list())
+        name_len = max(len(lic.name) for lic in licenses)
+        for lic in licenses:
+            lic_id = lic.license_id
+            decoded = base64.b64decode(lic_id + "==").decode().split('/')[-1]
+            print(f'{lic.name:{name_len}}/{decoded}: ', end='')
+            try:
+                left, right = decoded.split(':')
+            except ValueError as e:
+                print(f'Error: {e}')
+                err = err or e
+                continue
+            try:
+                self.assertEqual(org_id, left, 'Org id mismatch')
+            except AssertionError as e:
+                print(f'Org id mismatch: {left} != {org_id}')
+                err = err or e
+                continue
+            try:
+                lic_type, lic_id = right.split('_')[:2]
+            except ValueError as e:
+                print(f'Error: {e}')
+                err = err or e
+                continue
+            print(f'{lic_type}/{lic_id} ', end='')
+            try:
+                self.assertTrue(is_uuid(lic_id), 'Right part is not a UUID')
+            except AssertionError as e:
+                print(f'Right part ({lic_id}) is not a UUID')
+                err = err or e
+                continue
+            try:
+                self.assertEqual(lic_type, lic.lic_type, 'License type mismatch')
+                self.assertEqual(lic_id, lic.lic_uuid, 'License id mismatch')
+            except AssertionError as e:
+                print(f'License type/id mismatch: {lic_type}/{lic_id} != {lic.lic_type}/{lic.lic_uuid}')
+                err = err or e
+                continue
+            print('OK')
+        if err:
+            raise err
