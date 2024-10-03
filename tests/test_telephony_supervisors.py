@@ -35,6 +35,8 @@ class TestTelephonySupervisors(TestCaseWithLog):
         types = set(agent.type for agent in agents)
         print(f'Agent types: {", ".join(str(t) for t in types)}')
         print(f'Got {len(agents)} agents')
+        for agent in agents:
+            print(f'{agent.display_name}, {base64.b64decode(agent.id + "==").decode()}')
 
     def test_available_supervisors(self):
         """
