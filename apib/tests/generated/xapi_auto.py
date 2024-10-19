@@ -95,7 +95,7 @@ class XAPIApi(ApiChild, base='xapi'):
     <https://developer.webex.com/docs/api/guides/device-developers-guide>`_.
     """
 
-    def query_status(self, device_id: str, name: str) -> QueryStatusResponse:
+    def query_status(self, device_id: str, name: list[str]) -> QueryStatusResponse:
         """
         Query Status
 
@@ -107,15 +107,16 @@ class XAPIApi(ApiChild, base='xapi'):
 
         :param device_id: The unique identifier for the Webex RoomOS Device.
         :type device_id: str
-        :param name: Status expression used to query the Webex RoomOS Device. See the
+        :param name: A list of status expressions used to query the Webex RoomOS Device. See the
             `xAPI section of the Device Developers Guide
-            <https://developer.webex.com/docs/api/guides/device-developers-guide#xapi>`_ for a description of status expressions.
-        :type name: str
+            <https://developer.webex.com/docs/api/guides/device-developers-guide#xapi>`_ for a description of status expressions. A request can contain
+            at most 10 different status expressions.
+        :type name: list[str]
         :rtype: :class:`QueryStatusResponse`
         """
         params = {}
         params['deviceId'] = device_id
-        params['name'] = name
+        params['name'] = ','.join(name)
         url = self.ep('status')
         data = super().get(url, params=params)
         r = QueryStatusResponse.model_validate(data)

@@ -47,6 +47,7 @@ Subpackages
    wxc_sdk.workspace_personalization
    wxc_sdk.workspace_settings
    wxc_sdk.workspaces
+   wxc_sdk.xapi
 
 Submodules
 ----------

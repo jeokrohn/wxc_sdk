@@ -46,6 +46,8 @@ __all__ = ['WebexSimpleApi']
 
 __version__ = '1.22.1'
 
+from .xapi import XApi
+
 log = logging.getLogger(__name__)
 
 
@@ -122,6 +124,8 @@ class WebexSimpleApi:
     workspace_personalization: WorkspacePersonalizationApi
     #: Workspace setting API :class:`workspace_settings.WorkspaceSettingsApi`
     workspace_settings: WorkspaceSettingsApi
+    #: XAPI API :class:`xapi.XApi`
+    xapi: XApi
     #: :class:`rest.RestSession` used for all API requests
     session: RestSession
 
@@ -178,6 +182,7 @@ class WebexSimpleApi:
         self.workspace_locations = WorkspaceLocationApi(session=session)
         self.workspace_personalization = WorkspacePersonalizationApi(session=session)
         self.workspace_settings = WorkspaceSettingsApi(session=session)
+        self.xapi = XApi(session=session)
         self.session = session
 
     @property
