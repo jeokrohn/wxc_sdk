@@ -47,6 +47,7 @@ class Agent(UserBase):
     #: Indicates the join status of the agent for this queue. Only for call queues
     join_enabled: Optional[bool] = None
     location: Optional[IdAndName] = None
+    has_cx_essentials: Optional[bool] = None
 
     @property
     def cpapi_id(self) -> str:

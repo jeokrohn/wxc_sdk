@@ -4,6 +4,7 @@ from typing import Optional, List
 
 from pydantic import Field
 
+from .agents import CallQueueAgentsApi
 from .announcement import AnnouncementApi
 from .policies import CQPolicyApi
 from ..forwarding import ForwardingApi, FeatureSelector
@@ -310,6 +311,8 @@ class CallQueue(HGandCQ):
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
     #: Specifies the department information.
     department: Optional[IdAndName] = None
+    #: Denotes if the call queue has Customer Experience Essentials license.
+    has_cx_essentials: Optional[bool] = None
 
     @staticmethod
     def exclude_update_or_create() -> dict:
@@ -417,12 +420,14 @@ class CallQueueApi(ApiChild, base=''):
     """
     Call Queue APÍ
     """
+    agents: CallQueueAgentsApi
     forwarding: ForwardingApi
     announcement: AnnouncementApi
     policy: CQPolicyApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
+        self.agents = CallQueueAgentsApi(session=session)
         self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AnnouncementApi(session=session)
         self.policy = CQPolicyApi(session=session)
@@ -476,8 +481,10 @@ class CallQueueApi(ApiChild, base=''):
                          {'overflow':
                               {'is_transfer_number_set': True}}})
 
-    def list(self, location_id: str = None, name: str = None, phone_number: str = None, department_id: str = None,
-             department_name: str = None, org_id: str = None, **params) -> Generator[CallQueue, None, None]:
+    def list(self, location_id: str = None, name: str = None, phone_number: str = None,
+             department_id: str = None, department_name: str = None,
+             has_cx_essentials: bool = None, org_id: str = None,
+             **params) -> Generator[CallQueue, None, None]:
         """
         Read the List of Call Queues
         List all Call Queues for the organization.
@@ -491,39 +498,54 @@ class CallQueueApi(ApiChild, base=''):
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param location_id: Only return call queues with matching location ID.
+        :param location_id: Returns the list of call queues in this location.
         :type location_id: str
-        :param name: Only return call queues with the matching name.
+        :param name: Returns only the call queues matching the given name.
         :type name: str
-        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :param phone_number: Returns only the call queues matching the given primary phone number or extension.
         :type phone_number: str
-        :param department_id: Return only call queues with the matching departmentId.
+        :param department_id: Returns only call queues matching the given department ID.
         :type department_id: str
-        :param department_name: Return only call queues with the matching departmentName.
+        :param department_name: Returns only call queues matching the given department name.
         :type department_name: str
-        :param org_id: List call queues for this organization
+        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :type has_cx_essentials: bool
+        :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
-        :param params: dict of additional parameters passed directly to endpoint
-        :type params: dict
         :return: yields :class:`CallQueue` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if department_id is not None:
+            params['departmentId'] = department_id
+        if department_name is not None:
+            params['departmentName'] = department_name
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallQueue, params=params)
 
-    def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
+    def by_name(self, name: str, location_id: str = None, has_cx_essentials: bool = None,
+                org_id: str = None) -> Optional[CallQueue]:
         """
         Get queue info by name
 
         :param location_id:
+        :param has_cx_essentials:
         :param name:
         :param org_id:
         :return:
         """
-        return next((cq for cq in self.list(location_id=location_id, org_id=org_id, name=name)
+        return next((cq for cq in self.list(location_id=location_id, has_cx_essentials=has_cx_essentials,
+                                            org_id=org_id, name=name)
                      if cq.name == name), None)
 
     def create(self, location_id: str, settings: CallQueue, org_id: str = None) -> str:
@@ -595,31 +617,41 @@ class CallQueueApi(ApiChild, base=''):
         params = org_id and {'orgId': org_id} or None
         self.delete(url=url, params=params)
 
-    def details(self, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
+    def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None,
+                org_id: str = None) -> CallQueue:
         """
         Get Details for a Call Queue
         Retrieve Call Queue details.
 
-        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
-        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
-        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
-        to reach users assigned to the call queue. Call queues are also assigned anvinternal extension, which can be
-        dialed internally to reach users assigned to the call queue.
+        Call queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are
+        unavailable.
+        Queued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead
+        number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue. Call queues are also
+        assigned an internal extension,
+        which can be dialed internally to reach the users assigned to the call queue.
 
-        Retrieving call queue details requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
-        :param location_id: Retrieve settings for a call queue in this location
+        :param location_id: Retrieves the details of a call queue in this location.
         :type location_id: str
-        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :param queue_id: Retrieves the details of call queue with this identifier.
         :type queue_id: str
-        :param org_id: Retrieve call queue settings from this organization.
+        :param has_cx_essentials: Must be set to `true`, to view the details of a call queue with Customer Experience
+            Essentials license. This can otherwise be omited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Retrieves the details of a call queue in this organization.
         :type org_id: str
         :return: call queue details
         :rtype: :class:`CallQueue`
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
-        params = {'orgId': org_id} if org_id is not None else {}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         data = self.get(url, params=params)
         result = CallQueue.model_validate(data)
         result.location_id = location_id

@@ -6,6 +6,14 @@ wxc\_sdk.telephony.callqueue package
    :undoc-members:
    :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   wxc_sdk.telephony.callqueue.agents
+
 Submodules
 ----------
 
