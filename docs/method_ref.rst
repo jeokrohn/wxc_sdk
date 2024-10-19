@@ -1695,3 +1695,9 @@ The method name is a link to the method documentation.
         List Workspaces
    * - :meth:`api.workspaces.update <wxc_sdk.workspaces.WorkspacesApi.update>`
         Updates details for a workspace by ID
+   * - :meth:`api.xapi.execute_command <wxc_sdk.xapi.XApi.execute_command>`
+        Execute Command
+   * - :meth:`api.xapi.query_status <wxc_sdk.xapi.XApi.query_status>`
+        Query Status
+   * - :meth:`api.xapi.system_unit_boot <wxc_sdk.xapi.XApi.system_unit_boot>`
+        Reboot the device
