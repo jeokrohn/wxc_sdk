@@ -179,10 +179,11 @@ class TestCaseWithTokens(TestCase):
         cls.tokens = tokens
         if tokens:
             cls.api = WebexSimpleApi(tokens=tokens)
-            cls.me = cls.api.people.me()
             if cls.proxy:
                 cls.api.session.proxies = {'http': 'http://localhost:9090', 'https': 'http://localhost:9090'}
                 cls.api.session.verify = False
+            cls.me = cls.api.people.me()
+
         else:
             cls.api = None
 
