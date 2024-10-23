@@ -22,7 +22,7 @@ from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 from wxc_sdk.person_settings.caller_id import ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.forwarding import CallForwardingAlways
-from wxc_sdk.person_settings.permissions_out import OutgoingPermissions, Action, CallTypePermission
+from wxc_sdk.person_settings.permissions_out import OutgoingPermissions, Action, CallTypePermission, DigitPattern
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices
 
@@ -696,3 +696,24 @@ class TestPagination(VirtualLineTest):
             vl_list_paginated = list(vl_api.list(max=4))
         # both lists should be equal
         self.assertEqual(vl_list, vl_list_paginated)
+
+class TestOutgoingCallPermissions(TestWithTemporaryVirtualLine):
+    """
+
+    """
+    def test_read_and_create_patterns(self):
+        api = self.api.telephony.virtual_lines.permissions_out
+        patterns = api.read(entity_id=self.target.id)
+        patterns: OutgoingPermissions
+        # add a new pattern
+        # clear all pattern baed permission setting at user level
+        category_control = api.digit_patterns.get_digit_patterns(
+            entity_id=self.target.id).use_custom_digit_patterns
+        api.digit_patterns.update_category_control_settings(entity_id=self.target.id, use_custom_digit_patterns=True)
+        # make sure there is exactly one pattern
+        api.digit_patterns.delete_all(entity_id=self.target.id)
+        block_pattern = DigitPattern(name='block496196', pattern='+496196!', action=Action.block,
+                                     transfer_enabled=False)
+        api.digit_patterns.create(entity_id=self.target.id,
+                                  pattern=block_pattern)
+        api.digit_patterns.get_digit_patterns(entity_id=self.target.id)
