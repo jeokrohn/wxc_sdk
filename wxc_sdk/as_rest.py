@@ -4,17 +4,22 @@ REST session for Webex API requests
 import asyncio
 import json as json_mod
 import logging
+import ssl
 import urllib.parse
 import uuid
 from asyncio import Semaphore
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Callable
+from dataclasses import dataclass
 from functools import wraps
 from io import TextIOBase, StringIO
 from json import JSONDecodeError
 from time import perf_counter_ns
-from typing import Tuple, Type, Optional, Any
+from typing import Tuple, Type, Optional, Any, Union
 
-from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo
+import aiohttp
+from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo, TraceConfig, \
+    TraceRequestStartParams, TraceRequestEndParams, TraceResponseChunkReceivedParams
+from aiohttp.tracing import TraceRequestHeadersSentParams
 from aiohttp.typedefs import LooseHeaders
 from pydantic import ValidationError
 
@@ -104,16 +109,14 @@ class AsRestError(ClientResponseError):
         # TODO: implement equivalent to __init__ in sync implementation
 
 
-def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
-                     json=None, file: TextIOBase = None, dump_log: logging.Logger = None,
-                     diff_ns: int = None):
+def as_dump_response(*, response: ClientResponse, response_data=None, request_body: str = None, file: TextIOBase = None,
+                     dump_log: logging.Logger = None, diff_ns: int = None):
     """
     Dump response object to log file
 
     :param response: HTTP request response
     :param response_data:
-    :param data:
-    :param json:
+    :param request_body:
     :param file: stream to dump to
     :type file: TextIOBase
     :param dump_log: logger to dump to
@@ -145,13 +148,7 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
         print(f'  {k}: {v}', file=output)
 
     # request body
-    body_str = ''
-    if isinstance(data, dict):
-        body_str = str(urllib.parse.quote_plus(urllib.parse.urlencode(data)))
-    elif isinstance(data, str):
-        body_str = data
-    elif json:
-        body_str = json_mod.dumps(json)
+    body_str = request_body
 
     if body_str:
         print('  --- body ---', file=output)
@@ -225,6 +222,22 @@ def retry_request(func):
     return wrapper
 
 
+# Callback for response logging
+# callbacks get called with the response object, request body(str), request content type (str), response body, and the
+# time the request took
+AsRestResponseCallBack = Callable[[ClientResponse, str, str, dict, int], None]
+
+
+# as_dump_response(response=response, data=data, json=json, response_data=response_data, diff_ns=diff_ns)
+#
+
+def _dump_response_callback(response: ClientResponse, request_body: str, request_ct: str, response_data: str,
+                            diff_ns: int):
+    as_dump_response(response=response, request_body=request_body, response_data=response_data,
+                     diff_ns=diff_ns)
+
+
+@dataclass(init=False)
 class AsRestSession(ClientSession):
     """
     REST session used for API requests:
@@ -235,11 +248,90 @@ class AsRestSession(ClientSession):
     #: base URL for all Webex API requests
     BASE = 'https://webexapis.com/v1'
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True):
-        super().__init__()
+    # Bearer token(s) for this session
+    _tokens: Tokens
+    # semaphore for rate limiting
+    _sem: Semaphore
+    # retry on 429?
+    retry_429: bool
+    # registry of response callbacks
+    _response_callback_registry: dict[str, AsRestResponseCallBack]
+    _proxy: str
+    _ssl: Union[bool, aiohttp.Fingerprint, ssl.SSLContext]
+
+    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True,
+                 trace_configs: list[TraceConfig] = None, proxy_url: str = None,
+                 ssl: Union[bool, aiohttp.Fingerprint, ssl.SSLContext] = None, **kwargs):
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
         self.retry_429 = retry_429
+        self._response_callback_registry = dict()
+        self.register_response_callback(_dump_response_callback)
+        self._proxy = proxy_url
+        self._ssl = ssl
+
+        # setup trace config
+        trace_configs = trace_configs or []
+        #
+        # tc = TraceConfig()
+        # tc.on_request_start.append(self._on_request_start)
+        # tc._on_request_end.append(self._on_request_end)
+        # tc._on_request_headers_sent.append(self._on_request_headers_sent)
+        # tc._on_response_chunk_received.append(self._on_response_chunk_received)
+        # trace_configs.append(tc)
+        super().__init__(trace_configs=trace_configs, **kwargs)
+
+    # async def _on_request_start(self, session, trace_config_ctx, params: TraceRequestStartParams):
+    #     log.debug(f'Request {params.method} {params.url}')
+    #
+    # async def _on_request_end(self, session, trace_config_ctx, params: TraceRequestEndParams):
+    #     log.debug(f'Request {params.method} {params.url} done')
+    #
+    # async def _on_request_headers_sent(self, session, trace_config_ctx, params: TraceRequestHeadersSentParams):
+    #     log.debug(f'Request {params.method} {params.url} headers sent')
+    #
+    # async def _on_response_chunk_received(self, session, trace_config_ctx, params: TraceResponseChunkReceivedParams):
+    #     log.debug(f'Request {params.method} {params.url} chunk received')
+
+    def register_response_callback(self, callback: AsRestResponseCallBack) -> str:
+        """
+        Register a response callback
+
+        Registered response callbacks are called with the response object and the time the request took for all
+        responses. This can be used for logging or other purposes.
+
+        :param callback: callback to register
+        :return: callback ID
+        """
+        id = str(uuid.uuid4())
+        self._response_callback_registry[id] = callback
+        return id
+
+    def _dispatch_to_response_callbacks(self, response: ClientResponse, request_data: Union[str, dict],
+                                        request_json: dict,
+                                        response_data: Union[str, dict], diff_ns: int):
+        # request body
+        body_str = ''
+        body_ct = ''
+        if isinstance(request_data, dict):
+            body_str = str(urllib.parse.quote_plus(urllib.parse.urlencode(request_data)))
+            body_ct = 'application/x-www-form-urlencoded'
+        elif isinstance(request_data, str):
+            body_str = request_data
+            body_ct = 'text/plain'
+        elif request_json:
+            body_str = json_mod.dumps(request_json)
+            body_ct = 'application/json;charset=utf-8'
+        for callback in self._response_callback_registry.values():
+            callback(response, body_str, body_ct, response_data, diff_ns)
+
+    def unregister_response_callback(self, id: str):
+        """
+        Unregister a response callback
+
+        :param id: callback ID
+        """
+        self._response_callback_registry.pop(id, None)
 
     def ep(self, path: str = None):
         """
@@ -291,7 +383,8 @@ class AsRestSession(ClientSession):
         # the event is cleared if any task hit a 429
         start = perf_counter_ns()
         async with self.request(method, url=url, headers=request_headers,
-                                data=data, json=json, **kwargs) as response:
+                                data=data, json=json, proxy=self._proxy, ssl=self._ssl,
+                                **kwargs) as response:
             # get response body as text or dict (parsed JSON)
             ct = response.headers.get('Content-Type')
             if not ct:
@@ -304,7 +397,11 @@ class AsRestSession(ClientSession):
             else:
                 response_data = await response.text()
             diff_ns = perf_counter_ns() - start
-            as_dump_response(response=response, data=data, json=json, response_data=response_data, diff_ns=diff_ns)
+
+            # relay response to all registered callbacks
+            self._dispatch_to_response_callbacks(response=response, request_data=data, request_json=json,
+                                                 response_data=response_data,
+                                                 diff_ns=diff_ns)
             try:
                 response.raise_for_status()
             except ClientResponseError as error:

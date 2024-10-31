@@ -6,11 +6,12 @@ import logging
 import time
 import uuid
 from collections.abc import Generator
-from functools import wraps
+from dataclasses import dataclass
+from functools import wraps, partial
 from io import TextIOBase, StringIO
 from json import JSONDecodeError
 from threading import Semaphore
-from typing import Tuple, Type, Optional
+from typing import Tuple, Type, Optional, ClassVar, Callable
 from urllib.parse import parse_qsl
 
 from pydantic import BaseModel, ValidationError, Field
@@ -238,23 +239,69 @@ def retry_request(func):
     return wrapper
 
 
+# Callback for response logging
+# callbacks get called with the response object and the time the request took
+RestResponseCallBack = Callable[[Response, int], None]
+
+def _dump_response_callback(response: Response, diff_ns: int):
+    dump_response(response, diff_ns=diff_ns)
+
+@dataclass(init=False, repr=False)
 class RestSession(Session):
     """
     REST session used for API requests:
-            * includes an Authorization header in reach request
-            * implements retries on 429
-            * loads deserializes JSON data if needed
+        * includes an Authorization header in reach request
+        * implements retries on 429
+        * loads deserializes JSON data if needed
     """
     #: base URL for all Webex API requests
-    BASE = 'https://webexapis.com/v1'
+    BASE: ClassVar[str] = 'https://webexapis.com/v1'
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True):
+    # Bearer token(s) for this session
+    _tokens: Tokens
+    # semaphore for rate limiting
+    _sem: Semaphore
+    # retry on 429?
+    retry_429: bool
+    # registry of response callbacks
+    _response_callback_registry: dict[str, RestResponseCallBack]
+
+    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True, proxy_url: str = None,
+                 verify: bool = None):
         super().__init__()
         self.mount('http://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self.mount('https://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
         self.retry_429 = retry_429
+        self._response_callback_registry = dict()
+        self.register_response_callback(_dump_response_callback)
+        if proxy_url:
+            self.proxies = {'http': proxy_url, 'https': proxy_url}
+        if verify is not None:
+            self.verify = verify
+
+    def register_response_callback(self, callback: RestResponseCallBack) -> str:
+        """
+        Register a response callback
+
+        Registered response callbacks are called with the response object and the time the request took for all
+        responses. This can be used for logging or other purposes.
+
+        :param callback: callback to register
+        :return: callback ID
+        """
+        id = str(uuid.uuid4())
+        self._response_callback_registry[id] = callback
+        return id
+
+    def unregister_response_callback(self, id: str):
+        """
+        Unregister a response callback
+
+        :param id: callback ID
+        """
+        self._response_callback_registry.pop(id, None)
 
     def ep(self, path: str = None):
         """
@@ -307,7 +354,9 @@ class RestSession(Session):
         response = self.request(method, url=url, headers=request_headers, **kwargs)
         diff_ns = time.perf_counter_ns() - start
         try:
-            dump_response(response, diff_ns=diff_ns)
+            # relay response to all registered callbacks
+            for callback in self._response_callback_registry.values():
+                callback(response, diff_ns)
             try:
                 response.raise_for_status()
             except HTTPError as error:

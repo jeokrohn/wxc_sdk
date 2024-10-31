@@ -26741,7 +26741,8 @@ class AsWebexSimpleApi:
     #: :class:`AsRestSession` used for all API requests
     session: AsRestSession
 
-    def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10, retry_429: bool = True):
+    def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10, retry_429: bool = True,
+                 **kwargs):
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
@@ -26760,7 +26761,8 @@ class AsWebexSimpleApi:
                                  'WEBEX_ACCESS_TOKEN environment variable')
             tokens = Tokens(access_token=tokens)
 
-        session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429)
+        session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429,
+                              **kwargs)
         self.admin_audit = AsAdminAuditEventsApi(session=session)
         self.attachment_actions = AsAttachmentActionsApi(session=session)
         self.authorizations = AsAuthorizationsApi(session=session)
