@@ -373,13 +373,13 @@ class AsRestSession(ClientSession):
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
         :rtype:
         """
-        request_headers = {'authorization': f'Bearer {self._tokens.access_token}',
-                           'content-type': 'application/json;charset=utf-8',
+        request_headers = {'Authorization': f'Bearer {self._tokens.access_token}',
+                           'Content-Type': 'application/json;charset=utf-8',
                            'TrackingID': f'SIMPLE_{uuid.uuid4()}'}
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         if content_type:
-            request_headers['content-type'] = content_type
+            request_headers['Content-Type'] = content_type
         # the event is cleared if any task hit a 429
         start = perf_counter_ns()
         async with self.request(method, url=url, headers=request_headers,

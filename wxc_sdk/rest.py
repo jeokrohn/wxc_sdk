@@ -155,7 +155,7 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
     request_body = response.request.body
     if request_body:
         print('  --- body ---', file=output)
-        ct = response.request.headers.get('content-type').lower()
+        ct = response.request.headers.get('Content-Type').lower()
         if ct.startswith('application/json'):
             for line in json.dumps(json.loads(request_body), indent=2).splitlines():
                 print(f'  {line}', file=output)
@@ -343,13 +343,13 @@ class RestSession(Session):
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
         :rtype:
         """
-        request_headers = {'authorization': f'Bearer {self._tokens.access_token}',
-                           'content-type': 'application/json;charset=utf-8',
+        request_headers = {'Authorization': f'Bearer {self._tokens.access_token}',
+                           'Content-Type': 'application/json;charset=utf-8',
                            'TrackingID': f'SIMPLE_{uuid.uuid4()}'}
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         if content_type:
-            request_headers['content-type'] = content_type
+            request_headers['Content-Type'] = content_type
         start = time.perf_counter_ns()
         response = self.request(method, url=url, headers=request_headers, **kwargs)
         diff_ns = time.perf_counter_ns() - start
