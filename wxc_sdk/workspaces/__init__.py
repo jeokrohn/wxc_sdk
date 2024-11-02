@@ -184,23 +184,27 @@ class Workspace(ApiModel):
     #: Indoor navigation configuration.
     indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
 
-    def update_or_create(self, for_update: bool = False) -> str:
+    def update_or_create(self, for_update: bool = False) -> dict:
         """
         JSON for update or create
 
         :meta private:
         """
         # supported device cannot be changed later
-        return self.model_dump_json(exclude={'workspace_id': True,
-                                             'org_id': True,
-                                             'sip_address': True,
-                                             'created': True,
-                                             'hybrid_calling': True,
-                                             # only include workspace_location_id if no location_id is given
-                                             # location_id is the preferred/new way of setting the location
-                                             'workspace_location_id': not (self.workspace_location_id
-                                                                           and not self.location_id),
-                                             'supported_devices': for_update})
+        return self.model_dump(mode='json',
+                               exclude_unset=True,
+                               exclude_none=True,
+                               by_alias=True,
+                               exclude={'workspace_id': True,
+                                        'org_id': True,
+                                        'sip_address': True,
+                                        'created': True,
+                                        'hybrid_calling': True,
+                                        # only include workspace_location_id if no location_id is given
+                                        # location_id is the preferred/new way of setting the location
+                                        'workspace_location_id': not (self.workspace_location_id
+                                                                      and not self.location_id),
+                                        'supported_devices': for_update})
 
     @staticmethod
     def create(*, display_name: str) -> 'Workspace':
@@ -358,7 +362,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             settings.org_id = org_id
         data = settings.update_or_create()
         url = self.ep()
-        data = self.post(url, data=data)
+        data = self.post(url, json=data)
         return Workspace.model_validate(data)
 
     def details(self, workspace_id) -> Workspace:
@@ -415,7 +419,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(workspace_id)
         j_data = settings.update_or_create(for_update=True)
-        data = self.put(url, data=j_data)
+        data = self.put(url, json=j_data)
         return Workspace.model_validate(data)
 
     def delete_workspace(self, workspace_id):
