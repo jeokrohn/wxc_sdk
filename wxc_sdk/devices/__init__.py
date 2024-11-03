@@ -101,6 +101,7 @@ class Device(ApiModel):
     sip_user_name: Optional[str] = None
     #: The device platform.
     device_platform: Optional[DevicePlatform] = None
+    lifecycle: Optional[str] = None
 
     @model_validator(mode='before')
     def pop_place_id(cls, values):
