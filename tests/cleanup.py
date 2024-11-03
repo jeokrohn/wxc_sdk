@@ -21,6 +21,7 @@ from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import NumberState
+from wxc_sdk.har_writer import HarWriter
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
@@ -75,15 +76,17 @@ async def main():
         print('Failed to get integration tokens', file=sys.stderr)
         exit(1)
 
+    log_name = f'{os.path.splitext(__file__)[0]}.log'
+    har_writer = HarWriter(log_name.replace('.log', '.har'), api)
+
     # get calling locations
     locations = list(api.locations.list())
     async with AsWebexSimpleApi(tokens=tokens) as as_api:
+        har_writer.register_as_webex_api(as_api)
         details = await asyncio.gather(*[as_api.telephony.location.details(location_id=loc.location_id)
                                          for loc in locations], return_exceptions=True)
     locations = [loc for loc, detail in zip(locations, details)
                  if not isinstance(detail, Exception)]
-
-    log_name = f'{os.path.splitext(__file__)[0]}.log'
 
     fmt = logging.Formatter(fmt='%(asctime)s %(threadName)s %(message)s')
     fmt.converter = time.gmtime
@@ -345,6 +348,7 @@ async def main():
             list(pool.map(lambda g: scim_api.scim.groups.delete(org_id=org_id, group_id=g.id), scim_groups))
 
     async with AsWebexSimpleApi(tokens=tokens) as as_api:
+        har_writer.register_as_webex_api(as_api)
         # workspace locations
         # we can only delete workspace locations which are not enabled for calling
         if False:
@@ -395,6 +399,7 @@ async def main():
         await asyncio.gather(*[remove_ocp_patterns(user)
                                for user in users],
                              return_exceptions=True)
+    har_writer.close()
 
 
 if __name__ == '__main__':

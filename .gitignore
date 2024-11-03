@@ -166,3 +166,4 @@ cython_debug/
 /tests/recording_service_app.yml
 /tests/test_integration.env
 /tests/test_integration.yml
+/tests/cleanup.har
