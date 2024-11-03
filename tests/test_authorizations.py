@@ -26,7 +26,8 @@ class AuthTest(TestCaseWithLog):
             print(f'{user.display_name}', end='')
             if isinstance(authorizations, Exception):
                 err = err or authorizations
-                print(f'{authorizations}')
+                print(f' - {authorizations}')
+                continue
             authorizations: list[Authorization]
             print()
             print('\n'.join(f'  {auth.type}, {auth.application_name}' for auth in authorizations))
