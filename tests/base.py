@@ -31,6 +31,7 @@ from tests.testutil import create_workspace_with_webex_calling
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.base import ApiModel
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.har_writer import HarWriter
 from wxc_sdk.integration import Integration
@@ -211,6 +212,7 @@ class TestCaseWithTokens(TestCase):
 
     def setUp(self) -> None:
         self.assertTrue(self.tokens and self.api, 'Failed to obtain tokens')
+        self.assertEqual(ApiModel.Config.extra, 'forbid', 'API_MODEL_ALLOW_EXTRA must be set to "forbid"')
         random.seed()
 
 
