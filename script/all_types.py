@@ -54,7 +54,9 @@ def main():
                'wxc_sdk.rest',
                'wxc_sdk.as_rest',
                'wxc_sdk.as_api',
-               'wxc_sdk.all_types']
+               'wxc_sdk.all_types',
+               'wxc_sdk.as_mpe',
+               'wxc_sdk.har_writer.har']
     err = False
     for module_name in module_names:
         if module_name in to_skip:

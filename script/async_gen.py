@@ -37,31 +37,12 @@ from aiohttp import FormData
 from pydantic import TypeAdapter
 
 from wxc_sdk.all_types import *
+from wxc_sdk.as_mpe import MultipartEncoder
 from wxc_sdk.as_rest import AsRestSession
 from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 log = logging.getLogger(__name__)
-
-
-class MultipartEncoder(FormData):
-    \"""
-    Compatibility class for requests toolbelt MultipartEncoder
-    \"""
-
-    def __init__(self, body):
-        super().__init__()
-        for name, value in body.items():
-            if isinstance(value, str):
-                self.add_field(name, value)
-            elif isinstance(value, tuple):
-                self.add_field(name, value=value[1], content_type=value[2], filename=value[0])
-            else:
-                raise NotImplementedError
-
-    @property
-    def content_type(self) -> str:
-        return self._writer.content_type
 
 
 # there seems to be a problem with getting too many users with calling data at the same time
