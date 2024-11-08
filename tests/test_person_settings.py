@@ -12,15 +12,16 @@ from operator import attrgetter
 from typing import Callable
 
 from wxc_sdk.base import to_camel
+from wxc_sdk.common import Greeting, OwnerType
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
-from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming, Greeting
+from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming
 from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 from wxc_sdk.person_settings.caller_id import CallerIdSelectedType, CallerId, ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.preferred_answer import PreferredAnswerResponse, PreferredAnswerEndpointType, \
     PreferredAnswerEndpoint
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OwnerType
+from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from tests.base import TestCaseWithUsers, gather, async_test
 
 
