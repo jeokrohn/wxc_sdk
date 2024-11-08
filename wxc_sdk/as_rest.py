@@ -17,9 +17,7 @@ from time import perf_counter_ns
 from typing import Tuple, Type, Optional, Any, Union
 
 import aiohttp
-from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo, TraceConfig, \
-    TraceRequestStartParams, TraceRequestEndParams, TraceResponseChunkReceivedParams
-from aiohttp.tracing import TraceRequestHeadersSentParams
+from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo, TraceConfig
 from aiohttp.typedefs import LooseHeaders
 from pydantic import ValidationError
 
@@ -313,12 +311,22 @@ class AsRestSession(ClientSession):
         # request body
         body_str = ''
         body_ct = ''
+
+        def is_multipart(data):
+            try:
+                return data.is_multipart
+            except AttributeError:
+                return False
         if isinstance(request_data, dict):
             body_str = str(urllib.parse.quote_plus(urllib.parse.urlencode(request_data)))
             body_ct = 'application/x-www-form-urlencoded'
         elif isinstance(request_data, str):
             body_str = request_data
             body_ct = 'text/plain'
+        elif is_multipart(request_data):
+            body_str = request_data
+            # noinspection PyUnresolvedReferences
+            body_ct = request_data.content_type
         elif request_json:
             body_str = json_mod.dumps(request_json)
             body_ct = 'application/json;charset=utf-8'
