@@ -93,6 +93,7 @@ class CDRRelatedReason(str, Enum):
     call_retrieve = 'CallRetrieve'
     deflection = 'Deflection'
     directed_call_pickup = 'DirectedCallPickup'
+    call_forward_mode_based = 'CallForwardModeBased'
 
 
 class CDRUserType(str, Enum):

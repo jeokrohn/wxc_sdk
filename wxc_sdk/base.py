@@ -1,11 +1,13 @@
 import base64
 import logging
+import os
 import sys
 from datetime import datetime
 from typing import Optional, Union
 
 from aenum import Enum, extend_enum
 from dateutil import tz
+from flask.cli import load_dotenv
 from pydantic import BaseModel, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
@@ -73,6 +75,8 @@ def to_camel(s: str) -> str:
     """
     return ''.join(w.title() if i else w for i, w in enumerate(s.split('_')))
 
+load_dotenv()
+API_MODEL_ALLOW_EXTRA = os.getenv('API_MODEL_ALLOW_EXTRA', 'allow')
 
 class ApiModel(BaseModel):
     """
@@ -84,7 +88,7 @@ class ApiModel(BaseModel):
         populate_by_name = True
         #: set to 'forbid' if run in unittest to catch schema issues during tests
         #: else set to 'allow'
-        extra = 'forbid' if 'unittest' in sys.modules or 'pytest' in sys.modules else 'allow'
+        extra = API_MODEL_ALLOW_EXTRA
         # store values instead of enum types
         use_enum_values = True
 

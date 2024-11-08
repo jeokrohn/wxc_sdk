@@ -31,7 +31,9 @@ from tests.testutil import create_workspace_with_webex_calling
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.base import ApiModel
 from wxc_sdk.common.schedules import Schedule, ScheduleType
+from wxc_sdk.har_writer import HarWriter
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
@@ -153,6 +155,19 @@ class TestCaseWithTokens(TestCase):
 
     # use proxy for all requests; only works for sync API calls
     proxy: ClassVar[bool] = False
+    proxy_url: ClassVar[str] = 'http://localhost:9090'
+
+    def setup_async(self):
+        """
+        Anchor for pre async test actions
+        """
+        pass
+
+    def shutdown_async(self):
+        """
+        Anchor for post async test actions
+        """
+        pass
 
     @staticmethod
     def async_test(as_test):
@@ -164,9 +179,15 @@ class TestCaseWithTokens(TestCase):
         @wraps(as_test)
         def run_async_test(test_self: TestCaseWithTokens):
             async def prepare_and_run():
-                async with AsWebexSimpleApi(tokens=test_self.tokens) as async_api:
+                if test_self.proxy:
+                    proxy = test_self.proxy_url
+                else:
+                    proxy = None
+                async with AsWebexSimpleApi(tokens=test_self.tokens, proxy_url=proxy, ssl=False) as async_api:
                     test_self.async_api = async_api
+                    test_self.setup_async()
                     await as_test(test_self)
+                    test_self.shutdown_async()
 
             asyncio.run(prepare_and_run())
 
@@ -178,17 +199,20 @@ class TestCaseWithTokens(TestCase):
         tokens = get_tokens()
         cls.tokens = tokens
         if tokens:
-            cls.api = WebexSimpleApi(tokens=tokens)
             if cls.proxy:
-                cls.api.session.proxies = {'http': 'http://localhost:9090', 'https': 'http://localhost:9090'}
-                cls.api.session.verify = False
+                proxy_url = cls.proxy_url
+                verify = False
+            else:
+                proxy_url = None
+                verify = None
+            cls.api = WebexSimpleApi(tokens=tokens, proxy_url=proxy_url, verify=verify)
             cls.me = cls.api.people.me()
-
         else:
             cls.api = None
 
     def setUp(self) -> None:
         self.assertTrue(self.tokens and self.api, 'Failed to obtain tokens')
+        self.assertEqual(ApiModel.Config.extra, 'forbid', 'API_MODEL_ALLOW_EXTRA must be set to "forbid"')
         random.seed()
 
 
@@ -432,6 +456,10 @@ class TestCaseWithLog(TestCaseWithTokens):
     file_log_handler: logging.Handler = field(default=None)
     record_log_handler: RecordHandler = field(default=None)
 
+    # write HAR file as well?
+    with_har: ClassVar[bool] = True
+    har_writer: HarWriter = field(default=None)
+
     rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest', 'webexteamsasyncapi.rest']
 
     def setUp(self) -> None:
@@ -449,6 +477,10 @@ class TestCaseWithLog(TestCaseWithTokens):
         self.file_log_handler = file_handler
 
         self.record_log_handler = RecordHandler(level=logging.DEBUG)
+
+        # also create a HAR file?
+        if self.with_har:
+            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api)
 
         # enable debug logging on the REST loggers
         for rest_logger_name in self.rest_logger_names:
@@ -468,9 +500,20 @@ class TestCaseWithLog(TestCaseWithTokens):
                 rest_logger.removeHandler(self.file_log_handler)
                 rest_logger.removeHandler(self.record_log_handler)
 
+            if self.har_writer:
+                self.har_writer.close()
+                self.har_writer = None
+
             self.file_log_handler.close()
             self.file_log_handler = None
             self.record_log_handler.close()
+
+    def setup_async(self):
+        """
+        when running async test also register the async API with an existing HAR writer
+        """
+        if self.har_writer:
+            self.har_writer.register_as_webex_api(self.async_api)
 
     @contextmanager
     def no_log(self, keep: bool = False):
@@ -485,11 +528,19 @@ class TestCaseWithLog(TestCaseWithTokens):
         if self.file_log_handler:
             old_level = self.file_log_handler.level
             self.file_log_handler.setLevel(logging.INFO)
+
+        if self.har_writer:
+            har_active_before = self.har_writer.active
+            self.har_writer.active = False
+        else:
+            har_active_before = None
         try:
             yield
         finally:
             if old_level:
                 self.file_log_handler.setLevel(old_level)
+            if har_active_before is not None:
+                self.har_writer.active = har_active_before
 
     @contextmanager
     def with_log(self):
@@ -498,11 +549,20 @@ class TestCaseWithLog(TestCaseWithTokens):
         """
         old_level = self.file_log_handler.level
         self.file_log_handler.setLevel(logging.DEBUG)
+
+        if self.har_writer:
+            har_active_before = self.har_writer.active
+            self.har_writer.active = True
+        else:
+            har_active_before = None
+
         try:
             yield
         finally:
             if self.file_log_handler:
                 self.file_log_handler.setLevel(old_level)
+            if har_active_before is not None:
+                self.har_writer.active = har_active_before
 
     def requests(self, method: str = None,
                  url_filter: Union[str, re.Pattern] = None) -> Generator[LoggedRequest, None, None]:
