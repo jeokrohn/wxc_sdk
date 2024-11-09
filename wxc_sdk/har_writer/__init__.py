@@ -61,8 +61,9 @@ class HarWriter:
 
         :param reg_id: registration id
         """
-        unregister_callback = self._unregister_callbacks[reg_id]
-        unregister_callback(reg_id)
+        unregister_callback = self._unregister_callbacks.pop(reg_id, None)
+        if unregister_callback is not None:
+            unregister_callback(reg_id)
 
     def register_webex_api(self, api: WebexSimpleApi) -> str:
         """
