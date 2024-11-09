@@ -3,7 +3,6 @@ import logging
 import urllib.parse
 from collections.abc import Callable
 from dataclasses import dataclass
-from functools import partial
 from io import TextIOBase
 from typing import Union
 
@@ -35,10 +34,10 @@ class HarWriter:
     _must_close: bool
     #: HAR log
     _har: HAR
-    #: callables to unregister callbacks
-    _unregister_callbacks: list[Callable]
+    #: dictionary of unregister callbacks indexed by registration id
+    _unregister_callbacks: dict[tuple[str, Callable]]
 
-    def __init__(self, path: Union[str, TextIOBase], api: Union[WebexSimpleApi, AsWebexSimpleApi],
+    def __init__(self, path: Union[str, TextIOBase], api: Union[None, WebexSimpleApi, AsWebexSimpleApi],
                  with_authorization: bool = False):
         self.active = True
         self.with_authorization = with_authorization
@@ -49,30 +48,42 @@ class HarWriter:
             self._iostream = path
             self._must_close = False
         self._har = HAR(log=HARLog(version='1.2', creator=HARCreator(name='wxc_sdk', version=wxc_sdk.__version__)))
-        self._unregister_callbacks = []
+        self._unregister_callbacks = dict()
         # register request/response hooks
         if isinstance(api, WebexSimpleApi):
             self.register_webex_api(api)
-        else:
-            raise NotImplementedError('only WebexSimpleApi is supported')
+        elif isinstance(api, AsWebexSimpleApi):
+            self.register_as_webex_api(api)
 
-    def register_webex_api(self, api: WebexSimpleApi):
+    def unregister_api(self, reg_id: str):
+        """
+        unregister an API using an id returned by register_webex_api(), or register_as_webex_api()
+
+        :param reg_id: registration id
+        """
+        unregister_callback = self._unregister_callbacks[reg_id]
+        unregister_callback(reg_id)
+
+    def register_webex_api(self, api: WebexSimpleApi) -> str:
+        """
+        Register response callback for WebexSimpleApi
+
+        returns a registration id that can be used to unregister an API via unregister_api()
+        :param api:
+        """
+        reg_id = api.session.register_response_callback(self._on_webex_response)
+        self._unregister_callbacks[reg_id] = api.session.unregister_response_callback
+        return reg_id
+
+    def register_as_webex_api(self, api: AsWebexSimpleApi) -> str:
         """
         Register response callback for WebexSimpleApi
 
         :param api:
         """
-        id = api.session.register_response_callback(self._on_webex_response)
-        self._unregister_callbacks.append(partial(api.session.unregister_response_callback, id))
-
-    def register_as_webex_api(self, api: AsWebexSimpleApi):
-        """
-        Register response callback for WebexSimpleApi
-
-        :param api:
-        """
-        id = api.session.register_response_callback(self._on_as_webex_response)
-        self._unregister_callbacks.append(partial(api.session.unregister_response_callback, id))
+        reg_id = api.session.register_response_callback(self._on_as_webex_response)
+        self._unregister_callbacks[reg_id] = api.session.unregister_response_callback
+        return reg_id
 
     def __enter__(self):
         return self
@@ -82,9 +93,9 @@ class HarWriter:
 
     def close(self):
         # unregister callbacks
-        for unregister in self._unregister_callbacks:
-            unregister()
-        self._unregister_callbacks = []
+        for reg_id, unregister in self._unregister_callbacks.items():
+            unregister(reg_id)
+        self._unregister_callbacks = dict()
         self._write_har()
 
         # close IO stream if necessary

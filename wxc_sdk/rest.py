@@ -338,7 +338,7 @@ class RestSession(Session):
         :type headers: Optional[dict]
         :param content_type:
         :type content_type: str
-        :param kwargs: additional keyward args
+        :param kwargs: additional keyword args
         :type kwargs: dict
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
         :rtype:
