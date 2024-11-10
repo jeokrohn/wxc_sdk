@@ -46,8 +46,9 @@ Example output (IDs truncated to protect the innocent):
               "alternateNumbers": []
           .....
 
-REST logging is used extensively in the `test cases`_. Check the implementation of the TestCaseWithLog_ class.
-This base class for test cases sets up REST logging to a dedicated log file for each test case.
+REST logging is used extensively in the `test cases`_. Check the implementation of the class.
+This base class for test cases sets up REST logging to a dedicated log file for each test case:
 
-.. _TestCaseWithLog: https://github.com/jeokrohn/wxc_sdk/blob/4b9f9131a39f4a543af865e2b456e7ff0731bce2/tests/base.py#L270-L311
+    .. autoclass:: tests.base.TestCaseWithLog()
+
 .. _test cases: https://github.com/jeokrohn/wxc_sdk/tree/master/tests
