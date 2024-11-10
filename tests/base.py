@@ -483,7 +483,8 @@ class TestCaseWithLog(TestCaseWithTokens):
         # also create a HAR file?
         self.async_api_reg_id = None
         if self.with_har:
-            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api)
+            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api,
+                                        incremental=True)
 
         # enable debug logging on the REST loggers
         for rest_logger_name in self.rest_logger_names:
