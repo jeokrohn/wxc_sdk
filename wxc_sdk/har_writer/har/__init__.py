@@ -42,7 +42,7 @@ class HARModel(BaseModel):
             self,
             *,
             mode: Literal['json', 'python'] | str = 'json',
-            exclude_unset: bool = True,
+            exclude_unset: bool = False,
             exclude_none: bool = True,
             by_alias: bool = True,
             **kwargs
@@ -194,7 +194,8 @@ class HARRequest(HARModel):
                             body += 'file data missing'
                             body += '\r\n'
                         body += f'{boundary}--\r\n'
-                        newPostData = PostData(text=base64.b64encode(body.encode()).decode(), mimeType=content_type)
+                        # use body as bytes; rely on PostData serializer for base64 encoding
+                        newPostData = PostData(text=body.encode(), mimeType=content_type)
                         self.postData = newPostData
                         # self.bodySize = self.headers.get('Content-Length', -1)
                         self.bodySize = -1
@@ -211,7 +212,8 @@ class HARRequest(HARModel):
                             body += 'file data missing'
                             body += '\r\n'
                         body += f'--{boundary}--\r\n'
-                        newPostData = PostData(text=base64.b64encode(body.encode()).decode(), mimeType=content_type)
+                        # use body as bytes; rely on PostData serializer for base64 encoding
+                        newPostData = PostData(text=body.encode(), mimeType=content_type)
                         self.postData = newPostData
                         self.bodySize = -1
                     else:
