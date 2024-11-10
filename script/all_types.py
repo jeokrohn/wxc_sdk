@@ -56,6 +56,7 @@ def main():
                'wxc_sdk.as_api',
                'wxc_sdk.all_types',
                'wxc_sdk.as_mpe',
+               'wxc_sdk.har_writer',
                'wxc_sdk.har_writer.har']
     err = False
     for module_name in module_names:
