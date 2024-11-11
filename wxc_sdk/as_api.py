@@ -26609,8 +26609,8 @@ class AsXApi(AsApiChild, base='xapi'):
         Executes a command on the Webex RoomOS Device. Specify the command to execute in the `commandName` URI
         parameter.
 
-        See the `xAPI section of the Device Developers Guide
-        <https://developer.webex.com/docs/devices#xapi>`_ for a description of command expressions.
+        See the `xAPI section of the Device Developers Guide <https://developer.webex.com/docs/devices#xapi>`_ for a
+        description of command expressions.
 
         :param command_name: Command to execute on the Webex RoomOS Device.
         :type command_name: str
@@ -26618,8 +26618,7 @@ class AsXApi(AsApiChild, base='xapi'):
         :type device_id: str
         :param arguments: xAPI command arguments
         :type arguments: dict
-        :param body: xAPI command body, as a complex JSON object or as a string, for example: `import xapi from
-            'xapi';\n\nconsole.log('Hello, World!');\n`
+        :param body: xAPI command body, as a complex JSON object or as a string
         :type body: ExecuteCommandBody
         :rtype: :class:`ExecuteCommandResponse`
         """

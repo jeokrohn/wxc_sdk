@@ -270,7 +270,7 @@ class AsRestSession(ClientSession):
         :param trace_configs: trace configurations, passed to :class:`aiohttp.ClientSession`
         :param proxy_url: used as proxy argument for all :meth:`aiohttp.ClientSession.request` calls
         :param ssl: used as ssl argument for all :meth:`aiohttp.ClientSession.request` calls
-        :param kwargs: additional arguments. All arguments with a 'req_' prefix are passed to each
+        :param kwargs: additional arguments. All arguments with a "req_" prefix are passed to each
             :meth:`aiohttp.ClientSession.request` call. All other arguments are passed to the constructor of
             :class:`aiohttp.ClientSession`
         """
