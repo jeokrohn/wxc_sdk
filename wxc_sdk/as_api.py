@@ -18,31 +18,12 @@ from aiohttp import FormData
 from pydantic import TypeAdapter
 
 from wxc_sdk.all_types import *
+from wxc_sdk.as_mpe import MultipartEncoder
 from wxc_sdk.as_rest import AsRestSession
 from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 log = logging.getLogger(__name__)
-
-
-class MultipartEncoder(FormData):
-    """
-    Compatibility class for requests toolbelt MultipartEncoder
-    """
-
-    def __init__(self, body):
-        super().__init__()
-        for name, value in body.items():
-            if isinstance(value, str):
-                self.add_field(name, value)
-            elif isinstance(value, tuple):
-                self.add_field(name, value=value[1], content_type=value[2], filename=value[0])
-            else:
-                raise NotImplementedError
-
-    @property
-    def content_type(self) -> str:
-        return self._writer.content_type
 
 
 # there seems to be a problem with getting too many users with calling data at the same time
@@ -26481,7 +26462,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
             settings.org_id = org_id
         data = settings.update_or_create()
         url = self.ep()
-        data = await self.post(url, data=data)
+        data = await self.post(url, json=data)
         return Workspace.model_validate(data)
 
     async def details(self, workspace_id) -> Workspace:
@@ -26538,7 +26519,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         url = self.ep(workspace_id)
         j_data = settings.update_or_create(for_update=True)
-        data = await self.put(url, data=j_data)
+        data = await self.put(url, json=j_data)
         return Workspace.model_validate(data)
 
     async def delete_workspace(self, workspace_id):

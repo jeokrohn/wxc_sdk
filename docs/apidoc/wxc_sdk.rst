@@ -23,6 +23,7 @@ Subpackages
    wxc_sdk.events
    wxc_sdk.groups
    wxc_sdk.guests
+   wxc_sdk.har_writer
    wxc_sdk.integration
    wxc_sdk.licenses
    wxc_sdk.locations
@@ -57,6 +58,7 @@ Submodules
 
    wxc_sdk.api_child
    wxc_sdk.as_api
+   wxc_sdk.as_mpe
    wxc_sdk.as_rest
    wxc_sdk.base
    wxc_sdk.rest
