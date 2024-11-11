@@ -474,10 +474,11 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
 
             .. list-table::
                :header-rows: 1
+
                * - **Attributes**
                  - **Operators**
                * - **SCIM Core**
-                 - ----
+                 - 
                * - `id`
                  - eq
                * - `userName`
@@ -503,7 +504,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
                * - `phoneNumbers.display`
                  - eq sw ew
                * - **Enterprise Extensions**
-                 - ----
+                 -
                * - `employeeNumber`
                  - eq sw ew
                * - `costCenter`

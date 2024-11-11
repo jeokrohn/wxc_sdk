@@ -11264,6 +11264,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
 
             .. list-table::
                :header-rows: 1
+
                * - **Attributes**
                  - **Operators**
                * - **SCIM Core**
