@@ -139,6 +139,8 @@ class WebexSimpleApi:
         :type concurrent_requests: int
         :param retry_429: automatically retry for 429 throttling response
         :type retry_429: bool
+        :param kwargs: additional arguments to be passed to the constructor of the :attr:`session` object to be used
+            for all requests
         """
         if isinstance(tokens, str):
             tokens = Tokens(access_token=tokens)

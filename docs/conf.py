@@ -43,7 +43,9 @@ extensions = [
 # to view an object inventory:
 #   python -m sphinx.ext.intersphinx https://dateutil.readthedocs.io/en/stable/objects.inv
 intersphinx_mapping = {
-    'dateutil': ('https://dateutil.readthedocs.io/en/stable/', None)
+    'dateutil': ('https://dateutil.readthedocs.io/en/stable/', None),
+    'requests': ('https://requests.readthedocs.io/en/stable/', None),
+    'aiohttp': ('https://docs.aiohttp.org/en/stable/', None)
 }
 
 # We recommend adding the following config value.
@@ -72,6 +74,13 @@ autodoc_member_order = 'bysource'
 # autoapi_add_toctree_entry = False
 # autoapi_python_class_content = 'both'
 
+
+# https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#confval-autodoc_default_options
+# https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#directive-option-automodule-special-members
+autodoc_default_options = {
+    'special-members': '__init__'  # include __init__ method in the documentation
+}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -87,6 +96,16 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = 'sphinx_rtd_theme'
 
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+#
+# https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html
+html_theme_options = {
+    "collapse_navigation": True,
+    "titles_only": False,
+    "navigation_depth": 2}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -97,6 +116,10 @@ def skip_member(app, what, name, obj, skip, options):
     # skip doc creation for model_config and model_fields members; part of pydantic.BaseModel
     if name in {'model_config', 'model_fields', 'model_computed_fields'}:
         return True
+    # if name == '__init__':
+    #     print(f'{name=}, {what=}, {obj=}, {obj.__name__=}, {obj.__qualname__=}')
+    # if name == '__init__' and obj.__qualname__ in {'WebexSimpleApi.__init__'}:
+    #     return True
     return None
 
 

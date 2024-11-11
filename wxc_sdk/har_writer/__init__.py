@@ -29,17 +29,27 @@ class HarWriter:
     active: bool
     #: flag to indicate if the writer should include authorization headers
     with_authorization: bool
+    #: HAR log
+    har: HAR
     #: stream to write HAR data to
     _iostream: TextIOBase
     #: flag to indicate if the stream must be closed when done
     _must_close: bool
-    #: HAR log
-    _har: HAR
     #: callables to unregister callbacks
     _unregister_callbacks: list[Callable]
 
     def __init__(self, path: Union[str, TextIOBase], api: Union[WebexSimpleApi, AsWebexSimpleApi],
                  with_authorization: bool = False):
+        """
+        Create a new HAR writer
+
+        :param path: path to HAR file or stream to write HAR data to. Can be None to disable writing to a file. The
+            recorded HAR data can be retrieved from the `har` attribute.
+        :param api: API object to record requests and responses from. If additional API instances (for example a sync
+            and an async API) need to be recorded then additional API instances can be registered using
+            the :meth:`register_webex_api` and :meth:`register_as_webex_api` method.
+        :param with_authorization: flag to indicate if the writer should include authorization headers
+        """
         self.active = True
         self.with_authorization = with_authorization
         if isinstance(path, str):
@@ -48,13 +58,13 @@ class HarWriter:
         else:
             self._iostream = path
             self._must_close = False
-        self._har = HAR(log=HARLog(version='1.2', creator=HARCreator(name='wxc_sdk', version=wxc_sdk.__version__)))
+        self.har = HAR(log=HARLog(version='1.2', creator=HARCreator(name='wxc_sdk', version=wxc_sdk.__version__)))
         self._unregister_callbacks = []
         # register request/response hooks
         if isinstance(api, WebexSimpleApi):
             self.register_webex_api(api)
         else:
-            raise NotImplementedError('only WebexSimpleApi is supported')
+            self.register_as_webex_api(api)
 
     def register_webex_api(self, api: WebexSimpleApi):
         """
@@ -133,7 +143,7 @@ class HarWriter:
         except Exception as e:
             log.error(f'Error creating HAR entry: {e}')
         else:
-            self._har.log.entries.append(new_entry)
+            self.har.log.entries.append(new_entry)
 
     def _on_as_webex_response(self, response: ClientResponse, request_body: Union[str, bytes], request_ct: str,
                               response_data: Union[str, dict], diff_ns: int):
@@ -168,9 +178,9 @@ class HarWriter:
         except Exception as e:
             log.error(f'Error creating HAR entry: {e}')
         else:
-            self._har.log.entries.append(new_entry)
+            self.har.log.entries.append(new_entry)
 
     def _write_har(self):
         # write HAR file
-        data = self._har.model_dump()
+        data = self.har.model_dump()
         self._iostream.write(json.dumps(data, indent=2))

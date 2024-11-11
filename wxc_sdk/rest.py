@@ -11,7 +11,7 @@ from functools import wraps, partial
 from io import TextIOBase, StringIO
 from json import JSONDecodeError
 from threading import Semaphore
-from typing import Tuple, Type, Optional, ClassVar, Callable
+from typing import Tuple, Type, Optional, ClassVar, Callable, Union
 from urllib.parse import parse_qsl
 
 from pydantic import BaseModel, ValidationError, Field
@@ -266,8 +266,8 @@ class RestSession(Session):
     # registry of response callbacks
     _response_callback_registry: dict[str, RestResponseCallBack]
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True, proxy_url: str = None,
-                 verify: bool = None):
+    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True,
+                 proxy_url: str = None, verify: Union[bool, str] = None):
         super().__init__()
         self.mount('http://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self.mount('https://', HTTPAdapter(pool_maxsize=concurrent_requests))
@@ -277,7 +277,7 @@ class RestSession(Session):
         self._response_callback_registry = dict()
         self.register_response_callback(_dump_response_callback)
         if proxy_url:
-            self.proxies = {'http': proxy_url, 'https': proxy_url}
+            self.proxies = {'https': proxy_url}
         if verify is not None:
             self.verify = verify
 

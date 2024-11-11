@@ -104,6 +104,10 @@ class HARRequest(HARModel):
 
     @model_validator(mode='after')
     def val_model(self):
+        """
+
+        :meta private:
+        """
         # if no authorization should be included, remove authorization header
         if not self.with_authorization:
             # strip out the Authorization header
@@ -205,6 +209,8 @@ class HARResponse(HARModel):
         """
         Validate the model and derive content from content_str or vice versa. Also set headersSize and bodySize if not
         set
+
+        :meta private:
         """
         # either content or content_str must be set
         # .. and then we derive content from content_str or vice versa
@@ -304,5 +310,7 @@ class HAR(HARModel):
                    **kwargs) -> dict[str, Any]:
         """
         Dump the HAR to a dictionary
+
+        :meta private:
         """
         return super().model_dump(mode=mode, exclude_none=exclude_none, by_alias=by_alias, **kwargs)

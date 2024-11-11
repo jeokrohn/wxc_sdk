@@ -522,7 +522,7 @@ Release history
     - trunks: :attr:`wxc_sdk.telephony.prem_pstn.PremisePstnApi.trunk`
     - route lists: :attr:`wxc_sdk.telephony.prem_pstn.PremisePstnApi.route_list`
     - route groups: :attr:`wxc_sdk.telephony.prem_pstn.PremisePstnApi.route_group`
-- new: cross reference of all methods in :doc:`Reference of all available methods <./method_ref>`
+- new: cross reference of all methods in :doc:`Reference of all available methods <method_ref>`
 - new update person numbers: :meth:`wxc_sdk.person_settings.numbers.NumbersApi.update`
 - workaround to catch broken pagination URLs
 - new test cases

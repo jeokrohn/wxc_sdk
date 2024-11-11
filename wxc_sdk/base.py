@@ -75,8 +75,10 @@ def to_camel(s: str) -> str:
     """
     return ''.join(w.title() if i else w for i, w in enumerate(s.split('_')))
 
+
 load_dotenv()
 API_MODEL_ALLOW_EXTRA = os.getenv('API_MODEL_ALLOW_EXTRA', 'allow')
+
 
 class ApiModel(BaseModel):
     """

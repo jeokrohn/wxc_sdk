@@ -126,7 +126,7 @@ def main():
     print(len(method_list))
     print('\n'.join('/'.join(m) for m in method_list))
 
-    rst_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'docs', RST_FILE))
+    rst_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'docs', 'user', RST_FILE))
 
     with open(rst_path, mode='w') as f:
         f.write(PREFIX)

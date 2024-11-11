@@ -13,7 +13,7 @@ Source: |calling_users.py|_
 .. |calling_users.py| replace:: ``calling_users.py``
 
 
-.. literalinclude:: ../examples/calling_users.py
+.. literalinclude:: ../../examples/calling_users.py
     :linenos:
 
 
@@ -25,7 +25,7 @@ Source: |calling_users_async.py|_
 .. |calling_users_async.py| replace:: ``calling_users_async.py``
 
 
-.. literalinclude:: ../examples/calling_users_async.py
+.. literalinclude:: ../../examples/calling_users_async.py
     :linenos:
 
 
@@ -37,7 +37,7 @@ Source: |users_wo_devices.py|_
 .. |users_wo_devices.py| replace:: ``users_wo_devices.py``
 
 
-.. literalinclude:: ../examples/users_wo_devices.py
+.. literalinclude:: ../../examples/users_wo_devices.py
     :linenos:
 
 Default call forwarding settings for all users
@@ -51,7 +51,7 @@ Source: |reset_call_forwarding.py|_
 
 .. |reset_call_forwarding.py| replace:: ``reset_call_forwarding.py``
 
-.. literalinclude:: ../examples/reset_call_forwarding.py
+.. literalinclude:: ../../examples/reset_call_forwarding.py
     :linenos:
 
 Modify number of rings configuration for users read from CSV
@@ -66,7 +66,7 @@ Source: |modify_voicemail.py|_
 
 .. |modify_voicemail.py| replace:: ``modify_voicemail.py``
 
-.. literalinclude:: ../examples/modify_voicemail.py
+.. literalinclude:: ../../examples/modify_voicemail.py
     :linenos:
 
 
@@ -86,7 +86,7 @@ Source: |us_holidays.py|_
 
 .. |us_holidays.py| replace:: ``us_holidays.py``
 
-.. literalinclude:: ../examples/us_holidays.py
+.. literalinclude:: ../../examples/us_holidays.py
     :linenos:
 
 
@@ -104,7 +104,7 @@ Source: |us_holidays_async.py|_
 
 .. |us_holidays_async.py| replace:: ``us_holidays_async.py``
 
-.. literalinclude:: ../examples/us_holidays_async.py
+.. literalinclude:: ../../examples/us_holidays_async.py
     :linenos:
 
 
@@ -128,7 +128,7 @@ The sample script reads the integration parameters from environment variables (`
 ``TOKEN_INTEGRATION_CLIENT_SECRET``, ``TOKEN_INTEGRATION_CLIENT_SCOPES``). These variables can also be defined in
 ``get_tokens.env`` in the current directory:
 
-.. literalinclude:: ../examples/get_tokens.env (sample)
+.. literalinclude:: ../../examples/get_tokens.env (sample)
 
 The sample code persists the tokens in ``get_tokens.yml`` in the current directory. On startup the sample code tries
 to read tokens from that file. If needed a new access token is obtained using the refresh token.
@@ -139,7 +139,7 @@ Source: |get_tokens.py|_
 
 .. |get_tokens.py| replace:: ``get_tokens.py``
 
-.. literalinclude:: ../examples/get_tokens.py
+.. literalinclude:: ../../examples/get_tokens.py
     :linenos:
 
 
@@ -163,7 +163,7 @@ Source: |call_intercept.py|_
 
 .. |call_intercept.py| replace:: ``call_intercept.py``
 
-.. literalinclude:: ../examples/call_intercept.py
+.. literalinclude:: ../../examples/call_intercept.py
     :linenos:
 
 Read/update call queue agent join states
@@ -209,7 +209,7 @@ Source: |queue_helper.py|_
 
 .. |queue_helper.py| replace:: ``queue_helper.py``
 
-.. literalinclude:: ../examples/queue_helper.py
+.. literalinclude:: ../../examples/queue_helper.py
     :linenos:
 
 Using service APP tokens to access a API endpoints
@@ -222,7 +222,7 @@ Source: |service_app.py|_
 
 .. |service_app.py| replace:: ``service_app.py``
 
-.. literalinclude:: ../examples/service_app.py
+.. literalinclude:: ../../examples/service_app.py
     :linenos:
 
 Pool unassigned TNs on hunt groups to catch calls to unassigned TNs
@@ -247,7 +247,7 @@ Source: |catch_tns.py|_
 
 .. |catch_tns.py| replace:: ``catch_tns.py``
 
-.. literalinclude:: ../examples/catch_tns.py
+.. literalinclude:: ../../examples/catch_tns.py
     :linenos:
 
 Downgrade room device workspaces from Webex Calling to free calling
@@ -274,7 +274,7 @@ Source: |room_devices.py|_
 
 .. |room_devices.py| replace:: ``room_devices.py``
 
-.. literalinclude:: ../examples/room_devices.py
+.. literalinclude:: ../../examples/room_devices.py
     :linenos:
 
 
@@ -302,7 +302,7 @@ Source: |logout_users.py|_
 
 .. |logout_users.py| replace:: ``logout_users.py``
 
-.. literalinclude:: ../examples/logout_users.py
+.. literalinclude:: ../../examples/logout_users.py
     :linenos:
 
 Leave spaces with no activity in the last n days
@@ -326,7 +326,7 @@ Source: |leave_spaces.py|_
 
 .. |leave_spaces.py| replace:: ``leave_spaces.py``
 
-.. literalinclude:: ../examples/leave_spaces.py
+.. literalinclude:: ../../examples/leave_spaces.py
     :linenos:
 
 
@@ -350,7 +350,7 @@ Source: |access_codes.py|_
 
 .. |access_codes.py| replace:: ``access_codes.py``
 
-.. literalinclude:: ../examples/access_codes.py
+.. literalinclude:: ../../examples/access_codes.py
     :linenos:
 
 

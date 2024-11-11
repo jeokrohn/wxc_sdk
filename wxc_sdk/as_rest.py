@@ -254,19 +254,45 @@ class AsRestSession(ClientSession):
     retry_429: bool
     # registry of response callbacks
     _response_callback_registry: dict[str, AsRestResponseCallBack]
+    # additional request arguments
+    _request_arguments: dict
     _proxy: str
-    _ssl: Union[bool, aiohttp.Fingerprint, ssl.SSLContext]
 
     def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True,
                  trace_configs: list[TraceConfig] = None, proxy_url: str = None,
                  ssl: Union[bool, aiohttp.Fingerprint, ssl.SSLContext] = None, **kwargs):
+        """
+        Initialize the REST session
+
+        :param tokens: tokens to be used for the session
+        :param concurrent_requests: maximum number of concurrent requests
+        :param retry_429: enable automatic retry on 429 responses
+        :param trace_configs: trace configurations, passed to :class:`aiohttp.ClientSession`
+        :param proxy_url: used as proxy argument for all :meth:`aiohttp.ClientSession.request` calls
+        :param ssl: used as ssl argument for all :meth:`aiohttp.ClientSession.request` calls
+        :param kwargs: additional arguments. All arguments with a 'req_' prefix are passed to each
+            :meth:`aiohttp.ClientSession.request` call. All other arguments are passed to the constructor of
+            :class:`aiohttp.ClientSession`
+        """
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
         self.retry_429 = retry_429
         self._response_callback_registry = dict()
         self.register_response_callback(_dump_response_callback)
-        self._proxy = proxy_url
-        self._ssl = ssl
+        # keyword arguments for requests start with 'req_'. Any other keyword arguments are passed to the session.
+        request_arguments = dict()
+        session_arguments = dict()
+        for k,v in kwargs.items():
+            if k.startswith('req_'):
+                request_arguments[k[4:]] = v
+            else:
+                session_arguments[k] = v
+        self._request_arguments = request_arguments
+
+        if proxy_url is not None:
+            self._request_arguments['proxy'] = proxy_url
+        if ssl is not None:
+            self._request_arguments['ssl'] = ssl
 
         # setup trace config
         trace_configs = trace_configs or []
@@ -277,7 +303,7 @@ class AsRestSession(ClientSession):
         # tc._on_request_headers_sent.append(self._on_request_headers_sent)
         # tc._on_response_chunk_received.append(self._on_response_chunk_received)
         # trace_configs.append(tc)
-        super().__init__(trace_configs=trace_configs, **kwargs)
+        super().__init__(trace_configs=trace_configs, **session_arguments)
 
     # async def _on_request_start(self, session, trace_config_ctx, params: TraceRequestStartParams):
     #     log.debug(f'Request {params.method} {params.url}')
@@ -388,11 +414,20 @@ class AsRestSession(ClientSession):
             request_headers.update((k.lower(), v) for k, v in headers.items())
         if content_type:
             request_headers['Content-Type'] = content_type
+
+        # handle additional request arguments
+        if kwargs and self._request_arguments:
+            # combine both sets of arguments if both are given
+            additional_arguments = dict(kwargs)
+            additional_arguments.update(self._request_arguments)
+        else:
+            # just pick one set of arguments .. or none
+            additional_arguments = kwargs or self._request_arguments
         # the event is cleared if any task hit a 429
         start = perf_counter_ns()
         async with self.request(method, url=url, headers=request_headers,
                                 data=data, json=json, proxy=self._proxy, ssl=self._ssl,
-                                **kwargs) as response:
+                                **additional_arguments) as response:
             # get response body as text or dict (parsed JSON)
             ct = response.headers.get('Content-Type')
             if not ct:

@@ -9,29 +9,28 @@ wxc_sdk
 A simple SDK to work with `Webex APIs <https://developer.webex.com>`_, special focus on Webex Calling specific API
 endpoints.
 
+.. this is the main left side TOC
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    user/installation
+    user/asyncio
+    user/proxy
+    user/examples
+    user/rest_debug
+    user/har_writer
+    user/changes
+    user/method_ref
+    apidoc/wxc_sdk
+
+
 ----------------------------------------------
 
 This is how easy it is to use the SDK. The example code list all calling enabled users within the org.
 
 .. literalinclude:: ../examples/calling_users.py
     :language: Python
-
-Installation
-------------
-
-Installing and upgrading wxc_sdk is easy:
-
-**Install via PIP**
-
-.. code-block:: bash
-
-    $ pip install wxc-sdk
-
-**Upgrade to the latest version**
-
-.. code-block:: bash
-
-    $ pip install wxc-sdk --upgrade
 
 Documentation
 -------------
@@ -71,31 +70,6 @@ All ``wxc_sdk`` data types can also be imported at once:
 .. code-block::
 
    from wxc_sdk.all_types import *
-
-Async version of the SDK (experimental)
----------------------------------------
-
-With :class:`wxc_sdk.as_api.AsWebexSimpleApi` the SDK offers an async variant based on asyncio/aiohttp. This variant is
-automatically generated based off the source of the synchronous API and offers async variants of the endpoints using the
-same datastructures as the synchronous API.
-
-Here is an example of how to use the async SDK:
-
-.. literalinclude:: ../examples/calling_users_async.py
-    :language: Python
-
-Reference
----------
-
-.. toctree::
-   :maxdepth: 4
-
-   apidoc/wxc_sdk.rst
-   changes.rst
-   .. rest_debug.rst
-   .. examples.rst
-   .. method_ref.rst
-
 
 ---------
 
