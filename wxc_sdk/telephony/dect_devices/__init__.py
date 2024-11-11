@@ -111,7 +111,6 @@ class DECTHandsetLine(ApiModel):
 
 class Handset(ApiModel):
     #: Unique identifier of the DECT handset.
-    #: example:
     # Y2lzY29zcGFyazovL3VzL1NDSU1fR1JPVVAvZjA2ZWRiOGMtMjMxNC00ZTcxLWIzNzgtZTdiMmQwNjk3OTliOjk2YWJjMmFhLTNkY2MtMTFlNS1hMTUyLWZlMzQ4MTljZGM5RG
     id: Optional[str] = None
     #: Display name of the DECT handset.
@@ -125,7 +124,6 @@ class Handset(ApiModel):
 
 class BaseStationDetail(ApiModel):
     #: Unique identifier of the base station.
-    #: example:
     # Y2lzY29zcGFyazovL3VzL1NDSU1fR1JPVVAvZjA2ZWRiOGMtMjMxNC00ZTcxLWIzNzgtZTdiMmQwNjk3OTliOjk2YWJjMmFhLTNkY2MtMTFlNS1hMTUyLWZlMzQ4MTljZGM5YQ
     id: Optional[str] = None
     #: Mac address of the DECT base station device.

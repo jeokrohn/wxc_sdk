@@ -9,25 +9,20 @@ __all__ = ['LocationEmergencyServicesApi', 'LocationEmergencyCallNotification', 
 class LocationCallNotificationOrganization(ApiModel):
     #: When true sends an email to the specified email address when a call is made from this location to emergency
     #: services.
-    #: example: True
     emergency_call_notification_enabled: Optional[bool] = None
     #: Send an emergency call notification email for all locations.
-    #: example: True
     allow_email_notification_all_location_enabled: Optional[bool] = None
     #: When `emergencyCallNotificationEnabled` is true, the emergency notification email is sent to the specified email
     #: address.
-    #: example: test@gmail.com
     email_address: Optional[str] = None
 
 
 class LocationEmergencyCallNotification(ApiModel):
     #: When true sends an email to the specified email address when a call is made from this location to emergency
     #: services.
-    #: example: True
     emergency_call_notification_enabled: Optional[bool] = None
     #: When `emergencyCallNotificationEnabled` is true, the emergency notification email is sent to the specified email
     #: address.
-    #: example: callback@gmail.com
     email_address: Optional[str] = None
     #: All locations at organization level
     customer: Optional[LocationCallNotificationOrganization] = None

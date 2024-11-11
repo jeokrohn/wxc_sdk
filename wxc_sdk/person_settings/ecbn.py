@@ -84,30 +84,22 @@ class ECBNLocationEffectiveLevel(str, Enum):
 
 class ECBNLocationMember(ApiModel):
     #: The callback phone number that is associated with member configured for the location ECBN.
-    #: example: 18164196067
     phone_number: Optional[str] = None
     #: First name of the user.
-    #: example: workspace1
     first_name: Optional[str] = None
     #: Last name of the user or `.`.
-    #: example: .
     last_name: Optional[str] = None
     #: Member ID of user/place/virtual line within the location
-    #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFLzExYTNmOTkwLWE2ODktNDc3ZC1iZTZiLTcxMjAwMjVkOGFiYg
     member_id: Optional[str] = None
     #: Indicates the type of the member.
-    #: example: PLACE
     member_type: Optional[CallBackMemberType] = None
     #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
     #: fallback rules as necessary.
-    #: example: LOCATION_MEMBER_NUMBER
     effective_level: Optional[ECBNLocationEffectiveLevel] = None
     #: The field contains the valid ECBN number at the location level, or the user's main number if valid, defaulting
     #: to the location's main number if both are unavailable.
-    #: example: 18164196067
     effective_value: Optional[str] = None
     #: Used to represent whether a number is a recommended ECBN.
-    #: example: RECOMMENDED
     quality: Optional[ECBNQuality] = None
 
 
@@ -135,7 +127,6 @@ class ECBNSelection(str, Enum):
 
 class PersonECBN(ApiModel):
     #: Selected number type to configure emergency callback.
-    #: example: DIRECT_LINE
     selected: Optional[ECBNSelection] = None
     #: Data relevant to the ECBN for this user/location/virtual line.
     direct_line_info: Optional[PersonECBNDirectLine] = None
@@ -164,7 +155,6 @@ class SelectedECBN(str, Enum):
 
 class ECBNDependencies(ApiModel):
     #: The default emergency callback number for the location when `isLocationEcbnDefault` is true.
-    #: example: True
     is_location_ecbn_default: Optional[bool] = None
     #: The default emergency callback number for the person when `isSelfEcbnDefault` is true.
     is_self_ecbn_default: Optional[bool] = None

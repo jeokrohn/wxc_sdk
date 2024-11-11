@@ -881,19 +881,15 @@ class BackgroundImageColor(str, Enum):
 
 class Multicast(ApiModel):
     #: Specify the multicast group URL and listening port.
-    #: example: 224.0.0.0:22
     host_and_port: Optional[str] = None
     #: Specify whether the multicast group URL has an XML application URL.
-    #: example: True
     has_xml_app_url: Optional[bool] = None
     #: Specify the timeout for the XML application.
-    #: example: 10
     xml_app_timeout: Optional[int] = None
 
 
 class EnhancedMulticast(ApiModel):
     #: Specify the URL for the XML application.
-    #: example: http://127.0.0.1:8080/
     xml_app_url: Optional[str] = None
     #: Specify up to 10 multicast group URLs each with a unique listening port, an XML application URL, and a timeout.
     multicast_list: Optional[list[Multicast]] = None

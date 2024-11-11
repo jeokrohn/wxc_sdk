@@ -8,7 +8,6 @@ __all__ = ['ExecuteCommandResponse', 'QueryStatusResponse', 'XApi']
 
 class QueryStatusResponse(ApiModel):
     #: The unique identifier for the Webex RoomOS Device.
-    #: example: Y2lzY29zcGFyazovL3VzL0RFVklDRS8wNTVkYThiNy02NWI2LTQ5NjgtOTg1ZC02ZmFjODcwOWMyMDM
     device_id: Optional[str] = None
     #: xAPI status result
     result: Optional[dict] = None
