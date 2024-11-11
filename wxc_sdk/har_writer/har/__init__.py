@@ -10,7 +10,7 @@ from typing import Optional, Annotated, Union, Mapping, Literal, Any, TextIO
 
 import requests_toolbelt
 from pydantic import (BaseModel, PlainSerializer, AwareDatetime, BeforeValidator, AfterValidator, Field,
-                      model_validator, TypeAdapter, PlainValidator)
+                      model_validator, TypeAdapter, PlainValidator, model_serializer)
 from requests.structures import CaseInsensitiveDict
 
 import wxc_sdk.as_mpe
@@ -37,6 +37,21 @@ class HARModel(BaseModel):
 
     class Config:
         extra = 'allow'
+
+    def model_dump(
+            self,
+            *,
+            mode: Literal['json', 'python'] | str = 'json',
+            exclude_unset: bool = False,
+            exclude_none: bool = True,
+            by_alias: bool = True,
+            **kwargs
+    ) -> dict[str, Any]:
+        """
+        different defaults than BaseModel.model_dump()
+        """
+        return super().model_dump(mode=mode, by_alias=by_alias, exclude_unset=exclude_unset, exclude_none=exclude_none,
+                                  **kwargs)
 
 
 class NameValue(HARModel):
@@ -84,7 +99,42 @@ HARDict = Annotated[
 class PostData(HARModel):
     mimeType: str
     params: Optional[HARDict] = None
-    text: str
+    # for mimeType 'multipart/form-data' text is actually base64 encoded
+    # excluded from serialization; serialization handled in model_serializer
+    text: Union[bytes, str] = Field(exclude=True)
+
+    def is_multipart(self):
+        return self.mimeType.startswith('multipart/form-data')
+
+    @model_serializer(mode='wrap')
+    def mod_serializer(self, handler):
+        """
+        Serializer handles text attribute, specifically for multipart/form-data
+
+        For multipart/form-data the text attribute needs to be base64 encoded when serializing
+        """
+        data = handler(self)
+        text = self.text
+        if self.is_multipart() and isinstance(text, bytes):
+            # for multipart messages text should be serialized as base64
+            text = base64.b64encode(text).decode()
+
+        # explicitly add text to serialization as this field is excluded above
+        data['text'] = text
+        return data
+
+    @model_validator(mode='wrap')
+    @classmethod
+    def mod_val(cls, data, handler):
+        """
+        model validator to make sure that when deserializing (or instantiating) a multiform PostData instance then the
+        text attribute has the base64 decoded text.
+        """
+        pd:PostData = handler(data)
+        if pd.is_multipart() and isinstance(pd.text, str):
+            # if text is str then we assume that this is base64 encoded
+            pd.text = base64.b64decode(pd.text.encode())
+        return pd
 
 
 class HARRequest(HARModel):
@@ -148,7 +198,8 @@ class HARRequest(HARModel):
                             body += 'file data missing'
                             body += '\r\n'
                         body += f'{boundary}--\r\n'
-                        newPostData = PostData(text=base64.b64encode(body.encode()).decode(), mimeType=content_type)
+                        # use body as bytes; rely on PostData serializer for base64 encoding
+                        newPostData = PostData(text=body.encode(), mimeType=content_type)
                         self.postData = newPostData
                         # self.bodySize = self.headers.get('Content-Length', -1)
                         self.bodySize = -1
@@ -165,10 +216,10 @@ class HARRequest(HARModel):
                             body += 'file data missing'
                             body += '\r\n'
                         body += f'--{boundary}--\r\n'
-                        newPostData = PostData(text=base64.b64encode(body.encode()).decode(), mimeType=content_type)
+                        # use body as bytes; rely on PostData serializer for base64 encoding
+                        newPostData = PostData(text=body.encode(), mimeType=content_type)
                         self.postData = newPostData
                         self.bodySize = -1
-                        # self.bodySize = self.headers.get('Content-Length', -1)
                     else:
                         raise NotImplementedError('Unsupported multipart/form-data postData')
                 else:
@@ -224,14 +275,20 @@ class HARResponse(HARModel):
                 if content.encoding is None:
                     self.content_str = content.text
                 elif content.encoding == 'base64':
-                    self.content_str = base64.b64decode(content.text).decode()
+                    self.content_str = base64.b64decode(content.text)
                 else:
                     raise ValueError(f'Unsupported encoding: {content.encoding}')
         elif self.content is None:
             # derive content from content_str
             if self.content_str:
-                self.content = HARContent(size=len(self.content_str),
-                                          text=base64.b64encode(self.content_str.encode()).decode(),
+                # content_str can be str or bytes
+                content_str = self.content_str
+                try:
+                    content_str = content_str.encode()
+                except AttributeError:
+                    pass
+                self.content = HARContent(size=len(content_str),
+                                          text=base64.b64encode(content_str).decode(),
                                           encoding='base64', mimeType=self.headers['Content-Type'])
             else:
                 self.content = None
@@ -240,6 +297,8 @@ class HARResponse(HARModel):
             # header size is the sum of the length of the keys and values of the headers, header and value are
             # separated by ': ', each header line has a trailing '\r\n' and there is a trailing '\r\n' after the last
             # header
+            if isinstance(self.headers, list):
+                self.headers = NameValue.list_to_dict(self.headers)
             self.headersSize = sum(len(k) + len(v) + 4 for k, v in self.headers.items()) + 2
 
         if not self.bodySize or self.bodySize == -1:

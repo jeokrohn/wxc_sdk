@@ -1,11 +1,10 @@
 import json
 import logging
-import urllib.parse
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
-from functools import partial
 from io import TextIOBase
-from typing import Union
+from typing import Union, Optional
 
 from aiohttp import ClientResponse
 from requests import Response
@@ -37,9 +36,21 @@ class HarWriter:
     _must_close: bool
     #: callables to unregister callbacks
     _unregister_callbacks: list[Callable]
+    #: path parameter
+    _path: Union[None, str, TextIOBase]
+    #: dictionary of unregister callbacks indexed by registration id
+    _unregister_callbacks: dict[tuple[str, Callable]]
+    #: iostream to write to, only used for incremental writer
+    _iostream: Optional[TextIOBase]
+    #: incremental writer
+    _incremental: bool
+    _incremental_first_entry: bool
+    _incremental_trailer: str
 
-    def __init__(self, path: Union[str, TextIOBase], api: Union[WebexSimpleApi, AsWebexSimpleApi],
-                 with_authorization: bool = False):
+    def __init__(self, path: Union[None, str, TextIOBase]=None,
+                 api: Union[WebexSimpleApi, AsWebexSimpleApi] = None,
+                 with_authorization: bool = False,
+                 incremental: bool = False):
         """
         Create a new HAR writer
 
@@ -49,40 +60,93 @@ class HarWriter:
             and an async API) need to be recorded then additional API instances can be registered using
             the :meth:`register_webex_api` and :meth:`register_as_webex_api` method.
         :param with_authorization: flag to indicate if the writer should include authorization headers
+        :param incremental: write each request to HAR file incrementally instead of only when closing the HarWriter
         """
         self.active = True
         self.with_authorization = with_authorization
-        if isinstance(path, str):
-            self._iostream = open(path, 'w')
-            self._must_close = True
-        else:
-            self._iostream = path
-            self._must_close = False
-        self.har = HAR(log=HARLog(version='1.2', creator=HARCreator(name='wxc_sdk', version=wxc_sdk.__version__)))
-        self._unregister_callbacks = []
+        self._path = path
+        self._unregister_callbacks = dict()
+
         # register request/response hooks
         if isinstance(api, WebexSimpleApi):
             self.register_webex_api(api)
-        else:
+        elif isinstance(api, AsWebexSimpleApi):
             self.register_as_webex_api(api)
 
-    def register_webex_api(self, api: WebexSimpleApi):
+        har_instance = HAR(log=HARLog(version='1.2',
+                                      creator=HARCreator(name='wxc_sdk',
+                                                         version=wxc_sdk.__version__),
+                                      entries=[]))
+        self._incremental = incremental
+        if self._incremental:
+            # open stream if needed
+            self._set_or_open_iostream()
+            self._har = None
+            # write start of HAR
+            json_str = har_instance.model_dump_json(exclude_none=True)
+            m = re.match(r'^(.+"entries":\s*\[)(].+)$', json_str, flags=re.DOTALL)
+            if self._iostream is not None:
+                self._iostream.write(m.group(1))
+            self._incremental_trailer = m.group(2)
+            self._incremental_first_entry = True
+        else:
+            # don't open any file, just keep HAR object so that we can keep track of entries
+            self._har = har_instance
+            self._iostream = None
+        return
+
+    def unregister_api(self, reg_id: str):
+        """
+        unregister an API using an id returned by register_webex_api(), or register_as_webex_api()
+
+        :param reg_id: registration id
+        """
+        unregister_callback = self._unregister_callbacks.pop(reg_id, None)
+        if unregister_callback is not None:
+            unregister_callback(reg_id)
+
+    def register_webex_api(self, api: WebexSimpleApi) -> str:
+        """
+        Register response callback for WebexSimpleApi
+
+        returns a registration id that can be used to unregister an API via unregister_api()
+
+        :param api:
+        """
+        reg_id = api.session.register_response_callback(self._on_webex_response)
+        self._unregister_callbacks[reg_id] = api.session.unregister_response_callback
+        return reg_id
+
+    def register_as_webex_api(self, api: AsWebexSimpleApi) -> str:
         """
         Register response callback for WebexSimpleApi
 
         :param api:
         """
-        id = api.session.register_response_callback(self._on_webex_response)
-        self._unregister_callbacks.append(partial(api.session.unregister_response_callback, id))
+        reg_id = api.session.register_response_callback(self._on_as_webex_response)
+        self._unregister_callbacks[reg_id] = api.session.unregister_response_callback
+        return reg_id
 
-    def register_as_webex_api(self, api: AsWebexSimpleApi):
-        """
-        Register response callback for WebexSimpleApi
+    def _set_or_open_iostream(self) -> TextIOBase:
+        if isinstance(self._path, str):
+            self._iostream = open(self._path, 'w')
+        else:
+            self._iostream = self._path
 
-        :param api:
+    def new_entry(self, entry: HAREntry):
         """
-        id = api.session.register_response_callback(self._on_as_webex_response)
-        self._unregister_callbacks.append(partial(api.session.unregister_response_callback, id))
+        Log new entry either by adding to entries of HAR object or by writing to IOStream directly
+        """
+        if self._incremental:
+            # write json representation of entry to HAR file
+            json_str = entry.model_dump_json(exclude_none=True)
+            if not self._incremental_first_entry:
+                json_str = f',{json_str}'
+            self._incremental_first_entry = False
+            self._iostream.write(json_str)
+        else:
+            # append entry
+            self._har.log.entries.append(entry)
 
     def __enter__(self):
         return self
@@ -92,31 +156,10 @@ class HarWriter:
 
     def close(self):
         # unregister callbacks
-        for unregister in self._unregister_callbacks:
-            unregister()
-        self._unregister_callbacks = []
+        for reg_id, unregister in self._unregister_callbacks.items():
+            unregister(reg_id)
+        self._unregister_callbacks = dict()
         self._write_har()
-
-        # close IO stream if necessary
-        if self._iostream is None:
-            return  # already closed
-
-        if self._must_close:
-            self._iostream.close()
-        self._iostream = None
-
-    @staticmethod
-    def _query_string(url: str):
-        """
-        build HAR query string from URL
-        """
-        parsed_url = urllib.parse.urlparse(url)
-        if query := parsed_url.query:
-            qsl = urllib.parse.parse_qsl(query)
-            query = [{'name': k, 'value': v} for k, v in qsl]
-        else:
-            query = []
-        return query
 
     def _on_webex_response(self, response: Response, diff_ns: int):
         """
@@ -143,7 +186,7 @@ class HarWriter:
         except Exception as e:
             log.error(f'Error creating HAR entry: {e}')
         else:
-            self.har.log.entries.append(new_entry)
+            self.new_entry(new_entry)
 
     def _on_as_webex_response(self, response: ClientResponse, request_body: Union[str, bytes], request_ct: str,
                               response_data: Union[str, dict], diff_ns: int):
@@ -178,9 +221,22 @@ class HarWriter:
         except Exception as e:
             log.error(f'Error creating HAR entry: {e}')
         else:
-            self.har.log.entries.append(new_entry)
+            self.new_entry(new_entry)
 
     def _write_har(self):
-        # write HAR file
-        data = self.har.model_dump()
-        self._iostream.write(json.dumps(data, indent=2))
+        """
+        Write full HAR file or trailer for incremental HAR writer
+        """
+        if self._incremental:
+            # write closing part of HAR
+            if self._iostream is not None:
+                self._iostream.write(self._incremental_trailer)
+        else:
+            # for non-incremental writer open HAR file at the end
+            self._set_or_open_iostream()
+            # write full HAR
+            if self._iostream is not None:
+                self._iostream.write(self._har.model_dump_json(exclude_none=True))
+        if isinstance(self._path, str):
+            self._iostream.close()
+        self._iostream = None

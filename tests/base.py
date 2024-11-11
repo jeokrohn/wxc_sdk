@@ -459,6 +459,8 @@ class TestCaseWithLog(TestCaseWithTokens):
     # write HAR file as well?
     with_har: ClassVar[bool] = True
     har_writer: HarWriter = field(default=None)
+    # registration id if async API was registered with HARWriter
+    async_api_reg_id: Optional[str] = field(default=None)
 
     rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest', 'webexteamsasyncapi.rest']
 
@@ -479,8 +481,10 @@ class TestCaseWithLog(TestCaseWithTokens):
         self.record_log_handler = RecordHandler(level=logging.DEBUG)
 
         # also create a HAR file?
+        self.async_api_reg_id = None
         if self.with_har:
-            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api)
+            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api,
+                                        incremental=True)
 
         # enable debug logging on the REST loggers
         for rest_logger_name in self.rest_logger_names:
@@ -513,7 +517,16 @@ class TestCaseWithLog(TestCaseWithTokens):
         when running async test also register the async API with an existing HAR writer
         """
         if self.har_writer:
-            self.har_writer.register_as_webex_api(self.async_api)
+            self.async_api_reg_id = self.har_writer.register_as_webex_api(self.async_api)
+
+    def shutdown_async(self):
+        """
+        After running an async test unregister the asaync api from the HARWriter again
+        :return:
+        """
+        if self.har_writer and self.async_api_reg_id is not None:
+            self.har_writer.unregister_api(self.async_api_reg_id)
+            self.async_api_reg_id = None
 
     @contextmanager
     def no_log(self, keep: bool = False):
