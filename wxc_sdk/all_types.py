@@ -148,6 +148,8 @@ from wxc_sdk.telephony.callqueue import AudioSource, AvailableAgent, CQRoutingTy
     CallQueueCallPolicies, CallQueueSettings, ComfortMessageBypass, ComfortMessageSetting, DistinctiveRing, \
     MohMessageSetting, OverflowAction, OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, \
     WelcomeMessageSetting
+from wxc_sdk.telephony.callqueue.agents import AgentCallQueueSetting, CallQueueAgent, CallQueueAgentDetail, \
+    CallQueueAgentQueue
 from wxc_sdk.telephony.callqueue.announcement import Announcement
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward, \
     HolidayService, NightService, ScheduleLevel, StrandedCalls, StrandedCallsAction
@@ -156,6 +158,7 @@ from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, Call
     TelephonyEvent, TelephonyEventData, TelephonyParty
 from wxc_sdk.telephony.conference import ConferenceDetails, ConferenceParticipant, ConferenceState, \
     ConferenceTypeEnum
+from wxc_sdk.telephony.cx_essentials import ScreenPopConfiguration
 from wxc_sdk.telephony.dect_devices import BaseStationDetail, BaseStationResponse, BaseStationResult, \
     BaseStationsResponse, DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, \
     DectDevice, Handset, UsageType
@@ -216,36 +219,37 @@ from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMa
 from wxc_sdk.xapi import ExecuteCommandResponse, QueryStatusResponse
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationState', 'AdaptiveCard',
-           'AdaptiveCardAction', 'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentCallerId',
-           'AgentOrSupervisor', 'AlternateNumber', 'AlternateNumberSettings', 'AnnAudioFile', 'Announcement',
-           'AnnouncementLanguage', 'AnnouncementLevel', 'AnnouncementMode', 'AnswerCondition', 'AnswerObject',
-           'Answers', 'ApiModel', 'ApiModelWithErrors', 'ApiSelector', 'AppServicesSettings', 'AppliedService',
-           'AppliedServiceTranslationPattern', 'ApplyLineKeyTemplateAction', 'ApplyLineKeyTemplateJobDetails',
-           'ApprovalQuestion', 'ApprovalRule', 'AssignedDectNetwork', 'AtaCustomization', 'AtaDtmfMethod',
-           'AtaDtmfMode', 'AttachmentAction', 'AttachmentActionData', 'AttendeePrivileges', 'Audio',
-           'AudioCodecPriority', 'AudioConnectionOptions', 'AudioConnectionType', 'AudioSource', 'AudioType',
-           'AuditEvent', 'AuditEventData', 'AuthCode', 'AuthCodeLevel', 'AuthCodes', 'Authorization',
-           'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
-           'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers', 'AvailableAgent',
-           'AvailableCallerIdType', 'AvailableMember', 'AvailableNumber', 'AvailablePhoneNumberLicenseType',
-           'AvailableRecallHuntGroup', 'Background', 'BackgroundImage', 'BackgroundImageColor', 'BackgroundImages',
-           'BackgroundSelection', 'BacklightTimer', 'BacklightTimer68XX78XX', 'BargeSettings', 'BaseStationDetail',
-           'BaseStationResponse', 'BaseStationResult', 'BaseStationsResponse', 'BehaviorType',
-           'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BluetoothMode',
-           'BluetoothSetting', 'BreakoutSession', 'BulkErrorResponse', 'BulkMethod', 'BulkOperation', 'BulkResponse',
-           'BulkResponseOperation', 'BusinessContinuity', 'CCSnippet', 'CDR', 'CDRCallType', 'CDRClientType',
-           'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason', 'CDRUserType',
-           'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType', 'CallBackMemberType',
-           'CallBackSelected', 'CallBounce', 'CallBridgeSetting', 'CallForwardExpandedSoftKey', 'CallForwarding',
-           'CallForwardingAlways', 'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber',
-           'CallForwardingNumberType', 'CallForwardingPerson', 'CallHistoryMethod', 'CallHistoryRecord',
-           'CallInNumber', 'CallInNumbers', 'CallInfo', 'CallInterceptDetails', 'CallInterceptDetailsPermission',
-           'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue',
-           'CallQueueCallPolicies', 'CallQueueSettings', 'CallRecordingInfo', 'CallRecordingSetting',
-           'CallRecordingTermsOfService', 'CallSourceInfo', 'CallSourceType', 'CallState', 'CallType',
-           'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId',
-           'CallingLineIdPolicy', 'CallingPermissions', 'CallingPlanReason', 'CallingType', 'CallsFrom',
-           'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason',
+           'AdaptiveCardAction', 'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentCallQueueSetting',
+           'AgentCallerId', 'AgentOrSupervisor', 'AlternateNumber', 'AlternateNumberSettings', 'AnnAudioFile',
+           'Announcement', 'AnnouncementLanguage', 'AnnouncementLevel', 'AnnouncementMode', 'AnswerCondition',
+           'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors', 'ApiSelector', 'AppServicesSettings',
+           'AppliedService', 'AppliedServiceTranslationPattern', 'ApplyLineKeyTemplateAction',
+           'ApplyLineKeyTemplateJobDetails', 'ApprovalQuestion', 'ApprovalRule', 'AssignedDectNetwork',
+           'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction', 'AttachmentActionData',
+           'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions', 'AudioConnectionType',
+           'AudioSource', 'AudioType', 'AuditEvent', 'AuditEventData', 'AuthCode', 'AuthCodeLevel', 'AuthCodes',
+           'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
+           'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers',
+           'AvailableAgent', 'AvailableCallerIdType', 'AvailableMember', 'AvailableNumber',
+           'AvailablePhoneNumberLicenseType', 'AvailableRecallHuntGroup', 'Background', 'BackgroundImage',
+           'BackgroundImageColor', 'BackgroundImages', 'BackgroundSelection', 'BacklightTimer',
+           'BacklightTimer68XX78XX', 'BargeSettings', 'BaseStationDetail', 'BaseStationResponse', 'BaseStationResult',
+           'BaseStationsResponse', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes',
+           'BlockRepeatedDigits', 'BluetoothMode', 'BluetoothSetting', 'BreakoutSession', 'BulkErrorResponse',
+           'BulkMethod', 'BulkOperation', 'BulkResponse', 'BulkResponseOperation', 'BusinessContinuity', 'CCSnippet',
+           'CDR', 'CDRCallType', 'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason',
+           'CDRRelatedReason', 'CDRUserType', 'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar',
+           'CalendarType', 'CallBackMemberType', 'CallBackSelected', 'CallBounce', 'CallBridgeSetting',
+           'CallForwardExpandedSoftKey', 'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon',
+           'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType', 'CallForwardingPerson',
+           'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers', 'CallInfo',
+           'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallPark', 'CallParkExtension',
+           'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueAgent', 'CallQueueAgentDetail',
+           'CallQueueAgentQueue', 'CallQueueCallPolicies', 'CallQueueSettings', 'CallRecordingInfo',
+           'CallRecordingSetting', 'CallRecordingTermsOfService', 'CallSourceInfo', 'CallSourceType', 'CallState',
+           'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR',
+           'CallingLineId', 'CallingLineIdPolicy', 'CallingPermissions', 'CallingPlanReason', 'CallingType',
+           'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason',
            'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization', 'ComplianceEvent',
            'Component', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceState', 'ConferenceTypeEnum',
            'ConfigurationLevel', 'ConnectionStatus', 'Contact', 'ContactAddress', 'ContactEmail', 'ContactIm',
@@ -328,14 +332,14 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'RouteType', 'RoutingPrefixCounts', 'SafeEnum', 'Schedule', 'ScheduleApiBase', 'ScheduleDay',
            'ScheduleLevel', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting',
            'ScheduledType', 'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimMeta', 'ScimPhoneNumberType',
-           'ScimUser', 'ScimValueDisplayRef', 'SearchGroupResponse', 'SearchUserResponse', 'SelectedECBN',
-           'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit', 'SelectiveCriteria', 'SelectiveForward',
-           'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject', 'SelectiveRejectCriteria',
-           'SelectiveScheduleLevel', 'SelectiveSource', 'Sender', 'SequentialRing', 'SequentialRingCriteria',
-           'SequentialRingNumber', 'ServiceType', 'SettingsObject', 'SimRing', 'SimRingCriteria', 'SimRingNumber',
-           'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType',
-           'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu',
-           'StandardRegistrationApproveRule', 'StartJobResponse', 'StartMoveUsersJobResponse',
+           'ScimUser', 'ScimValueDisplayRef', 'ScreenPopConfiguration', 'SearchGroupResponse', 'SearchUserResponse',
+           'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit', 'SelectiveCriteria',
+           'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
+           'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'SelectiveSource', 'Sender', 'SequentialRing',
+           'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SettingsObject', 'SimRing',
+           'SimRingCriteria', 'SimRingNumber', 'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject',
+           'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout',
+           'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse', 'StartMoveUsersJobResponse',
            'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
            'StrandedCalls', 'StrandedCallsAction', 'SupervisorAgentStatus', 'SupportAndConfiguredInfo',
            'SupportedDevice', 'SupportedDevices', 'SupportsLogCollection', 'SurveyResult', 'TagOp', 'Team',

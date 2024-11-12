@@ -711,6 +711,12 @@ The method name is a link to the method documentation.
         Update Call Queue Settings
    * - :meth:`api.telephony.callqueue.update_or_create <wxc_sdk.telephony.callqueue.CallQueueApi.update_or_create>`
         Get JSON for update or create
+   * - :meth:`api.telephony.callqueue.agents.details <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.details>`
+        Get Details for a Call Queue Agent
+   * - :meth:`api.telephony.callqueue.agents.list <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.list>`
+        Read the List of Call Queue Agents
+   * - :meth:`api.telephony.callqueue.agents.update_call_queue_settings <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.update_call_queue_settings>`
+        Update an Agent's Settings of One or More Call Queues
    * - :meth:`api.telephony.calls.answer <wxc_sdk.telephony.calls.CallsApi.answer>`
         Answer an incoming call
    * - :meth:`api.telephony.calls.barge_in <wxc_sdk.telephony.calls.CallsApi.barge_in>`
@@ -777,6 +783,12 @@ The method name is a link to the method documentation.
         Undeafen Participant
    * - :meth:`api.telephony.conference.unmute <wxc_sdk.telephony.conference.ConferenceControlsApi.unmute>`
         Unmute
+   * - :meth:`api.telephony.cx_essentials.available_agents <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.available_agents>`
+        Get List of available agents for Customer Experience Essentials
+   * - :meth:`api.telephony.cx_essentials.get_screen_pop_configuration <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.get_screen_pop_configuration>`
+        Get Screen Pop configuration for a Call Queue in a Location
+   * - :meth:`api.telephony.cx_essentials.modify_screen_pop_configuration <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.modify_screen_pop_configuration>`
+        Modify Screen Pop configuration for a Call Queue in a Location
    * - :meth:`api.telephony.dect_devices.add_a_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_a_handset>`
         Add a Handset to a DECT Network
    * - :meth:`api.telephony.dect_devices.available_members <wxc_sdk.telephony.dect_devices.DECTDevicesApi.available_members>`
@@ -1260,7 +1272,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.schedules.update <wxc_sdk.common.schedules.ScheduleApi.update>`
         Update a Schedule
    * - :meth:`api.telephony.supervisors.assign_un_assign_agents <wxc_sdk.telephony.supervisor.SupervisorApi.assign_un_assign_agents>`
-        Assign/Un-assign Agents to Supervisor
+        Assign or Unassign Agents to Supervisor
    * - :meth:`api.telephony.supervisors.available_agents <wxc_sdk.telephony.supervisor.SupervisorApi.available_agents>`
         List Available Agents
    * - :meth:`api.telephony.supervisors.available_supervisors <wxc_sdk.telephony.supervisor.SupervisorApi.available_supervisors>`

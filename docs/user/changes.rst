@@ -4,6 +4,11 @@ Release history
 - feat: new API: :attr:`api.org_contacts <wxc_sdk.WebexSimpleApi.org_contacts>`
 - break: deprecated HGCallPolicies.business_continuity, use :attr:`HGCallPolicies.business_continuity_redirect <wxc_sdk.telephony.huntgroup.HGCallPolicies.business_continuity_redirect>` instead
 - feat: new API: :attr:`api.xapi <wxc_sdk.WebexSimpleApi.xapi>`
+- feat: support for Customer Experience Essentials
+- feat: new API: :attr:`TelephonyApi.cx_essentials <wxc_sdk.telephony.TelephonyApi.cx_essentials>`
+- feat: :doc:`proxy support for the SDK <proxy>`
+- feat: :doc:`HARWriter to log all requests to HAR files <har_writer>`
+- feat: new API: :attr:`CallQueueApi.agents <wxc_sdk.telephony.callqueue.CallQueueApi.agents>`
 
 1.22.1
 ------

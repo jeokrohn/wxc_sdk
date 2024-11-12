@@ -36,22 +36,23 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsAnnouncementsRepositoryApi', 'AsAnonCallsApi', 'AsApiChild', 'AsAppServicesApi', 'AsAppSharedLineApi',
            'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
            'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallInterceptApi',
-           'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueApi', 'AsCallRecordingApi',
-           'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi',
-           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
-           'AsConvergedRecordingsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi',
-           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi',
-           'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi',
-           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
-           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
-           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
-           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgEmergencyServicesApi',
-           'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI',
-           'AsOrganizationApi', 'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
+           'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueAgentsApi', 'AsCallQueueApi',
+           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
+           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
+           'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
+           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
+           'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi',
+           'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
+           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
+           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi',
+           'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
@@ -13598,16 +13599,209 @@ class AsCQPolicyApi:
         await self._session.rest_put(url=url, params=params, data=update.model_dump_json())
 
 
+class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
+    """
+    Call Queue Agents API
+    """
+
+    def list_gen(self, location_id: str = None, queue_id: str = None, name: str = None,
+             phone_number: str = None, join_enabled: bool = None,
+             has_cx_essentials: bool = None, order: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[CallQueueAgent, None, None]:
+        """
+        Read the List of Call Queue Agents
+
+        List all Call Queues Agents for the organization.
+
+        Agents can be users, workplace or virtual lines assigned to a call queue. Calls from the call queue are routed
+        to agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        **Note**: The decoded value of the agent's `id`, and the `type` returned in the response, are always returned
+        as `PEOPLE`, even when the agent is a workspace or virtual line. This will be addressed in a future release.
+
+        :param location_id: Return only the call queue agents in this location.
+        :type location_id: str
+        :param queue_id: Only return call queue agents with the matching queue ID.
+        :type queue_id: str
+        :param name: Returns only the list of call queue agents that match the given name.
+        :type name: str
+        :param phone_number: Returns only the list of call queue agents that match the given phone number or extension.
+        :type phone_number: str
+        :param join_enabled: Returns only the list of call queue agents that match the given `joinEnabled` value.
+        :type join_enabled: bool
+        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :type has_cx_essentials: bool
+        :param order: Sort results alphabetically by call queue agent's name, in ascending or descending order.
+        :type order: str
+        :param org_id: List call queues agents in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ListCallQueueAgentObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if queue_id is not None:
+            params['queueId'] = queue_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if join_enabled is not None:
+            params['joinEnabled'] = str(join_enabled).lower()
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if order is not None:
+            params['order'] = order
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=CallQueueAgent, item_key='agents', params=params)
+
+    async def list(self, location_id: str = None, queue_id: str = None, name: str = None,
+             phone_number: str = None, join_enabled: bool = None,
+             has_cx_essentials: bool = None, order: str = None, org_id: str = None,
+             **params) -> List[CallQueueAgent]:
+        """
+        Read the List of Call Queue Agents
+
+        List all Call Queues Agents for the organization.
+
+        Agents can be users, workplace or virtual lines assigned to a call queue. Calls from the call queue are routed
+        to agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        **Note**: The decoded value of the agent's `id`, and the `type` returned in the response, are always returned
+        as `PEOPLE`, even when the agent is a workspace or virtual line. This will be addressed in a future release.
+
+        :param location_id: Return only the call queue agents in this location.
+        :type location_id: str
+        :param queue_id: Only return call queue agents with the matching queue ID.
+        :type queue_id: str
+        :param name: Returns only the list of call queue agents that match the given name.
+        :type name: str
+        :param phone_number: Returns only the list of call queue agents that match the given phone number or extension.
+        :type phone_number: str
+        :param join_enabled: Returns only the list of call queue agents that match the given `joinEnabled` value.
+        :type join_enabled: bool
+        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :type has_cx_essentials: bool
+        :param order: Sort results alphabetically by call queue agent's name, in ascending or descending order.
+        :type order: str
+        :param org_id: List call queues agents in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ListCallQueueAgentObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if queue_id is not None:
+            params['queueId'] = queue_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if join_enabled is not None:
+            params['joinEnabled'] = str(join_enabled).lower()
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if order is not None:
+            params['order'] = order
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=CallQueueAgent, item_key='agents', params=params)]
+
+    async def details(self, id: str, has_cx_essentials: bool = None,
+                org_id: str = None) -> CallQueueAgentDetail:
+        """
+        Get Details for a Call Queue Agent
+
+        Retrieve details of a particular Call queue agent based on the agent ID.
+
+        Agents can be users, workplace or virtual lines assigned to a call queue. Calls from the call queue are routed
+        to agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving a call queue agent's details require a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        **Note**: The agent's `type` returned in the response and in the decoded value of the agent's `id`, is always
+        of type `PEOPLE`, even if the agent is a workspace or virtual line. This` will be corrected in a future
+        release.
+
+        :param id: Retrieve call queue agents with this identifier.
+        :type id: str
+        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Experience
+            Essentials license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Retrieve call queue agents from this organization.
+        :type org_id: str
+        :rtype: :class:`CallQueueAgent`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep(f'{id}')
+        data = await super().get(url, params=params)
+        r = CallQueueAgent.model_validate(data)
+        return r
+
+    async def update_call_queue_settings(self, id: str, settings: List[AgentCallQueueSetting],
+                                   has_cx_essentials: bool = None, org_id: str = None):
+        """
+        Update an Agent's Settings of One or More Call Queues
+
+        Modify an agent's call queue settings for an organization.
+
+        Calls from the call queue are routed to agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        This operation requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param id: Identifier of the agent to be updated.
+        :type id: str
+        :type settings: list[ModifyAgentsForCallQueueObjectSettings]
+        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Experience Essentials
+            license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Update the settings of an agent in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        body = dict()
+        body['settings'] = TypeAdapter(list[AgentCallQueueSetting]).dump_python(settings, mode='json',
+                                                                                by_alias=True,
+                                                                                exclude_none=True)
+        url = self.ep(f'{id}/settings')
+        await super().put(url, params=params, json=body)
+
+
 class AsCallQueueApi(AsApiChild, base=''):
     """
     Call Queue APÍ
     """
+    agents: AsCallQueueAgentsApi
     forwarding: AsForwardingApi
     announcement: AsAnnouncementApi
     policy: AsCQPolicyApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.agents = AsCallQueueAgentsApi(session=session)
         self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AsAnnouncementApi(session=session)
         self.policy = AsCQPolicyApi(session=session)
@@ -13661,107 +13855,145 @@ class AsCallQueueApi(AsApiChild, base=''):
                          {'overflow':
                               {'is_transfer_number_set': True}}})
 
-    def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None, department_id: str = None,
-             department_name: str = None, org_id: str = None, **params) -> AsyncGenerator[CallQueue, None, None]:
+    def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None,
+             department_id: str = None, department_name: str = None,
+             has_cx_essentials: bool = None, org_id: str = None,
+             **params) -> AsyncGenerator[CallQueue, None, None]:
         """
         Read the List of Call Queues
+
         List all Call Queues for the organization.
 
-        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
-        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
-        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
-        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
-        dialed internally to reach users assigned to the call queue.
+        Call queues temporarily hold calls in the cloud, when all agents
+        assigned to receive calls from the queue are unavailable. Queued calls are routed to
+        an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach the users assigned to the call queue.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param location_id: Only return call queues with matching location ID.
+        :param location_id: Returns the list of call queues in this location.
         :type location_id: str
-        :param name: Only return call queues with the matching name.
+        :param name: Returns only the call queues matching the given name.
         :type name: str
-        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :param phone_number: Returns only the call queues matching the given primary phone number or extension.
         :type phone_number: str
-        :param department_id: Return only call queues with the matching departmentId.
+        :param department_id: Returns only call queues matching the given department ID.
         :type department_id: str
-        :param department_name: Return only call queues with the matching departmentName.
+        :param department_name: Returns only call queues matching the given department name.
         :type department_name: str
-        :param org_id: List call queues for this organization
+        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :type has_cx_essentials: bool
+        :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
-        :param params: dict of additional parameters passed directly to endpoint
-        :type params: dict
         :return: yields :class:`CallQueue` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if department_id is not None:
+            params['departmentId'] = department_id
+        if department_name is not None:
+            params['departmentName'] = department_name
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallQueue, params=params)
 
-    async def list(self, location_id: str = None, name: str = None, phone_number: str = None, department_id: str = None,
-             department_name: str = None, org_id: str = None, **params) -> List[CallQueue]:
+    async def list(self, location_id: str = None, name: str = None, phone_number: str = None,
+             department_id: str = None, department_name: str = None,
+             has_cx_essentials: bool = None, org_id: str = None,
+             **params) -> List[CallQueue]:
         """
         Read the List of Call Queues
+
         List all Call Queues for the organization.
 
-        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
-        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
-        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
-        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
-        dialed internally to reach users assigned to the call queue.
+        Call queues temporarily hold calls in the cloud, when all agents
+        assigned to receive calls from the queue are unavailable. Queued calls are routed to
+        an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach the users assigned to the call queue.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param location_id: Only return call queues with matching location ID.
+        :param location_id: Returns the list of call queues in this location.
         :type location_id: str
-        :param name: Only return call queues with the matching name.
+        :param name: Returns only the call queues matching the given name.
         :type name: str
-        :param phone_number: Only return call queues with matching primary phone number or extension.
+        :param phone_number: Returns only the call queues matching the given primary phone number or extension.
         :type phone_number: str
-        :param department_id: Return only call queues with the matching departmentId.
+        :param department_id: Returns only call queues matching the given department ID.
         :type department_id: str
-        :param department_name: Return only call queues with the matching departmentName.
+        :param department_name: Returns only call queues matching the given department name.
         :type department_name: str
-        :param org_id: List call queues for this organization
+        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :type has_cx_essentials: bool
+        :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
-        :param params: dict of additional parameters passed directly to endpoint
-        :type params: dict
         :return: yields :class:`CallQueue` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if department_id is not None:
+            params['departmentId'] = department_id
+        if department_name is not None:
+            params['departmentName'] = department_name
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self._endpoint()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CallQueue, params=params)]
 
-    async def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
+    async def by_name(self, name: str, location_id: str = None, has_cx_essentials: bool = None,
+                org_id: str = None) -> Optional[CallQueue]:
         """
         Get queue info by name
 
         :param location_id:
+        :param has_cx_essentials:
         :param name:
         :param org_id:
         :return:
         """
-        return next((cq for cq in await self.list(location_id=location_id, org_id=org_id, name=name)
+        return next((cq for cq in await self.list(location_id=location_id, has_cx_essentials=has_cx_essentials,
+                                            org_id=org_id, name=name)
                      if cq.name == name), None)
 
     async def create(self, location_id: str, settings: CallQueue, org_id: str = None) -> str:
         """
         Create a Call Queue
+
         Create new Call Queues for the given location.
 
-        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
-        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
-        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
-        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
-        dialed internally to reach users assigned to the call queue.
+        Call queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are
+        unavailable.
+        Queued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead
+        number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue. Call queues are also
+        assigned an internal extension,
+        which can be dialed internally to reach the users assigned to the call queue.
 
-        Creating a call queue requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Creating a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Create the call queue for this location.
         :type location_id: str
@@ -13818,31 +14050,42 @@ class AsCallQueueApi(AsApiChild, base=''):
         params = org_id and {'orgId': org_id} or None
         await self.delete(url=url, params=params)
 
-    async def details(self, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
+    async def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None,
+                org_id: str = None) -> CallQueue:
         """
         Get Details for a Call Queue
+
         Retrieve Call Queue details.
 
-        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
-        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
-        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
-        to reach users assigned to the call queue. Call queues are also assigned anvinternal extension, which can be
-        dialed internally to reach users assigned to the call queue.
+        Call queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are
+        unavailable.
+        Queued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead
+        number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue. Call queues are also
+        assigned an internal extension,
+        which can be dialed internally to reach the users assigned to the call queue.
 
-        Retrieving call queue details requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
-        :param location_id: Retrieve settings for a call queue in this location
+        :param location_id: Retrieves the details of a call queue in this location.
         :type location_id: str
-        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :param queue_id: Retrieves the details of call queue with this identifier.
         :type queue_id: str
-        :param org_id: Retrieve call queue settings from this organization.
+        :param has_cx_essentials: Must be set to `true`, to view the details of a call queue with Customer Experience
+            Essentials license. This can otherwise be omited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Retrieves the details of a call queue in this organization.
         :type org_id: str
         :return: call queue details
         :rtype: :class:`CallQueue`
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
-        params = {'orgId': org_id} if org_id is not None else {}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         data = await self.get(url, params=params)
         result = CallQueue.model_validate(data)
         result.location_id = location_id
@@ -15528,6 +15771,132 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
         """
         url = self.ep('resume')
         await super().post(url)
+
+
+class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Customer Experience Essentials
+
+    Webex Customer Experience Essentials APIs provide the core capabilities of the Webex Contact Center solution. These
+    APIs allow you to
+    manage Customer Experience Essentials features such as supervisor configuration, agent configuration, and call
+    queue configuration, which are distinct from the Customer Experience Basic suite.
+
+    `Learn more about the customer Experience Essentials suite.
+    <https://help.webex.com/en-us/article/72sb3r/Webex-Customer-Experience-Essentials>`_
+
+    Viewing the read-only customer Experience Essentials APIs requires a full, device or read-only administrator auth
+    token with a scope of `spark-admin:telephony_config_read`.
+
+    Modifying the customer Experience Essentials APIs requires a full or device administrator auth token with a scope
+    of `spark-admin:telephony_config_write`.
+    """
+
+    async def get_screen_pop_configuration(self, location_id: str = None,
+                                     queue_id: str = None, org_id: str = None) -> ScreenPopConfiguration:
+        """
+        Get Screen Pop configuration for a Call Queue in a Location
+
+        Screen pop lets agents view customer-related info in a pop-up window. This API returns the screen pop
+        configuration for a call queue in a location.
+
+        :param location_id: The location ID where the call queue resides.
+        :type location_id: str
+        :param queue_id: The call queue ID for which screen pop configuration is modified.
+        :type queue_id: str
+        :param org_id: The organization ID of the customer or partner's organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
+        data = await super().get(url, params=params)
+        return ScreenPopConfiguration.model_validate(data)
+
+    async def modify_screen_pop_configuration(self, location_id: str,
+                                        queue_id: str, settings: ScreenPopConfiguration, org_id: str = None):
+        """
+        Modify Screen Pop configuration for a Call Queue in a Location
+
+        Screen pop lets agents view customer-related info in a pop-up window. This API allows you to modify the screen
+        pop configuration for a call queue in a location.
+
+        :param location_id: The location ID where the call queue resides.
+        :type location_id: str
+        :param queue_id: The call queue ID for which screen pop configuration is modified.
+        :type queue_id: str
+        :param settings: The screen pop configuration settings.
+        :type settings: ScreenPopConfiguration
+        :param org_id: The organization ID of the customer or partner's organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True)
+        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
+        await super().put(url, params=params, json=body)
+
+    def available_agents_gen(self, location_id: str,
+                         has_cx_essentials: bool = None,
+                         org_id: str = None) -> AsyncGenerator[AvailableAgent, None, None]:
+        """
+        Get List of available agents for Customer Experience Essentials
+
+        Retrieve the list of available agents with Customer Experience Essentials license in a location.
+
+        This operation requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve the list of avaiilable agents in this location.
+        :type location_id: str
+        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials license
+            when `true`, otherwise returns the list of available agents with Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: The organization ID of the customer or partner's organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgent` instances
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep(f'{location_id}/cxEssentials/agents/availableAgents')
+        return self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents',
+                                              params=params)
+
+    async def available_agents(self, location_id: str,
+                         has_cx_essentials: bool = None,
+                         org_id: str = None) -> List[AvailableAgent]:
+        """
+        Get List of available agents for Customer Experience Essentials
+
+        Retrieve the list of available agents with Customer Experience Essentials license in a location.
+
+        This operation requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve the list of avaiilable agents in this location.
+        :type location_id: str
+        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials license
+            when `true`, otherwise returns the list of available agents with Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: The organization ID of the customer or partner's organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgent` instances
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep(f'{location_id}/cxEssentials/agents/availableAgents')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents',
+                                              params=params)]
 
 
 class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
@@ -20377,7 +20746,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
     """
 
     def list_gen(self, name: str = None, phone_number: str = None, order: str = None,
-             org_id: str = None, **params) -> AsyncGenerator[AgentOrSupervisor, None, None]:
+             has_cx_essentials: bool = None, org_id: str = None,
+             **params) -> AsyncGenerator[AgentOrSupervisor, None, None]:
         """
         Get List of Supervisors
 
@@ -20389,13 +20759,16 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         Requires a full, location, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param name: Only return supervisors with the matching name.
+        :param name: Only return the supervisors that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Only return the supervisors that match the given phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List the supervisors for this organization.
+        :param has_cx_essentials: Returns only the list of supervisors with Customer Experience Essentials license,
+            when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List the supervisors in this organization.
         :type org_id: str
         :return: Generator yielding :class:`AgentOrSupervisor` instances
         """
@@ -20407,12 +20780,15 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep()
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors',
                                               params=params)
 
     async def list(self, name: str = None, phone_number: str = None, order: str = None,
-             org_id: str = None, **params) -> List[AgentOrSupervisor]:
+             has_cx_essentials: bool = None, org_id: str = None,
+             **params) -> List[AgentOrSupervisor]:
         """
         Get List of Supervisors
 
@@ -20424,13 +20800,16 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         Requires a full, location, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param name: Only return supervisors with the matching name.
+        :param name: Only return the supervisors that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Only return the supervisors that match the given phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List the supervisors for this organization.
+        :param has_cx_essentials: Returns only the list of supervisors with Customer Experience Essentials license,
+            when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List the supervisors in this organization.
         :type org_id: str
         :return: Generator yielding :class:`AgentOrSupervisor` instances
         """
@@ -20442,33 +20821,42 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors',
                                               params=params)]
 
     async def create(self, id: str, agents: List[str],
+               has_cx_essentials: bool = None,
                org_id: str = None):
         """
         Create a Supervisor
 
-        Create a new supervisor. The supervisor must be created with atleast one agent.
+        Create a new supervisor. The supervisor must be created with at least one agent.
 
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This operation requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param id: A unique identifier for the supervisor.
         :type id: str
-        :param agents: Ids of People, workspaces and virtual lines that are eligible to receive calls.
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: list[str]
-        :param org_id: Create supervisor for this organization.
+        :param has_cx_essentials: Creates a Customer Experience Essentials queue supervisor, when `true`. Customer
+            Experience Essentials queue supervisors must have a Customer Experience Essentials license.
+        :type has_cx_essentials: bool
+        :param org_id: The organization ID where the supervisor needs to be created.
         :type org_id: str
         :rtype: None
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         body = dict()
         body['id'] = id
         body['agents'] = [{'id': agent_id} for agent_id in agents]
@@ -20527,7 +20915,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         await super().delete(url, params=params, json=body)
 
     def available_supervisors_gen(self, name: str = None, phone_number: str = None, order: str = None,
-                              org_id: str = None,
+                              has_cx_essentials: bool = None, org_id: str = None,
                               **params) -> AsyncGenerator[AgentOrSupervisor, None, None]:
         """
         List Available Supervisors
@@ -20537,16 +20925,20 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of
+        This operation requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param name: Only return supervisors with the matching name.
+        :param name: Only return the supervisors that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Only return the supervisors that match the given phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List available supervisors of this organization.
+        :param has_cx_essentials: Returns only the list of available supervisors with Customer Experience Essentials
+            license, when `true`. When ommited or set to 'false', will return the list of available supervisors with
+            Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List the available supervisors in this organization.
         :type org_id: str
         :return: Generator yielding :class:`AgentOrSupervisor` instances
         """
@@ -20558,12 +20950,14 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep('availableSupervisors')
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors',
                                               params=params)
 
     async def available_supervisors(self, name: str = None, phone_number: str = None, order: str = None,
-                              org_id: str = None,
+                              has_cx_essentials: bool = None, org_id: str = None,
                               **params) -> List[AgentOrSupervisor]:
         """
         List Available Supervisors
@@ -20573,16 +20967,20 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of
+        This operation requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param name: Only return supervisors with the matching name.
+        :param name: Only return the supervisors that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Only return the supervisors that match the given phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List available supervisors of this organization.
+        :param has_cx_essentials: Returns only the list of available supervisors with Customer Experience Essentials
+            license, when `true`. When ommited or set to 'false', will return the list of available supervisors with
+            Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List the available supervisors in this organization.
         :type org_id: str
         :return: Generator yielding :class:`AgentOrSupervisor` instances
         """
@@ -20594,35 +20992,43 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep('availableSupervisors')
         return [o async for o in self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors',
                                               params=params)]
 
     def details_gen(self, supervisor_id: str, name: str = None,
-                phone_number: str = None, order: str = None,
-                org_id: str = None, **params) -> AsyncGenerator[AgentOrSupervisor, None, None]:
+                phone_number: str = None, order: str = None, has_cx_essentials: bool = None,
+                org_id: str = None, **additional_params) -> AsyncGenerator[AgentOrSupervisor, None, None]:
         """
         GET Supervisor Details
 
-        Get list of agents associated with the supervisor for an organization.
+        Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
+        organization.
 
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        This operation requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
-        :param supervisor_id: List the agents assigned to specific supervisor.
+        :param supervisor_id: List the agents assigned to this supervisor.
         :type supervisor_id: str
-        :param name: Only return supervisors with the matching name.
+        :param name: Only return the agents that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Only return agents that match the given phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List the agents assigned to specific supervisor for this organization.
+        :param has_cx_essentials: Must be set to `true`, to view the details of a supervisor with Customer Experience
+            Essentials license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: List the agents assigned to a supervisor in this organization.
         :type org_id: str
         :return: Generator yieldig :class:`AgentOtSupervisor` instances
         """
+        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
@@ -20631,34 +21037,43 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        params.update(additional_params)
         url = self.ep(supervisor_id)
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')
 
     async def details(self, supervisor_id: str, name: str = None,
-                phone_number: str = None, order: str = None,
-                org_id: str = None, **params) -> List[AgentOrSupervisor]:
+                phone_number: str = None, order: str = None, has_cx_essentials: bool = None,
+                org_id: str = None, **additional_params) -> List[AgentOrSupervisor]:
         """
         GET Supervisor Details
 
-        Get list of agents associated with the supervisor for an organization.
+        Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
+        organization.
 
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        This operation requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
-        :param supervisor_id: List the agents assigned to specific supervisor.
+        :param supervisor_id: List the agents assigned to this supervisor.
         :type supervisor_id: str
-        :param name: Only return supervisors with the matching name.
+        :param name: Only return the agents that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Only return agents that match the given phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List the agents assigned to specific supervisor for this organization.
+        :param has_cx_essentials: Must be set to `true`, to view the details of a supervisor with Customer Experience
+            Essentials license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: List the agents assigned to a supervisor in this organization.
         :type org_id: str
         :return: Generator yieldig :class:`AgentOtSupervisor` instances
         """
+        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
@@ -20667,13 +21082,17 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        params.update(additional_params)
         url = self.ep(supervisor_id)
         return [o async for o in self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')]
 
     async def assign_un_assign_agents(self, supervisor_id: str, agents: List[IdAndAction],
+                                has_cx_essentials: bool = None,
                                 org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
         """
-        Assign/Un-assign Agents to Supervisor
+        Assign or Unassign Agents to Supervisor
 
         Assign or unassign agents to the supervisor for an organization.
 
@@ -20682,17 +21101,22 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
 
         Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param supervisor_id: Identifier of the superviser to be updated.
+        :param supervisor_id: Identifier of the supervisor to be updated.
         :type supervisor_id: str
-        :param agents: agents to be assigned or unasssigned
-        :type agents: list[IdAndAction]
-        :param org_id: Assign or unassign agents to a supervisor for this organization.
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[PutPersonPlaceVirtualLineAgentObject]
+        :param has_cx_essentials: Must be set to `true` to modify a supervisor with Customer Experience Essentials
+            license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Assign or unassign agents to a supervisor in this organization.
         :type org_id: str
         :rtype: list[SupervisorAgentStatus]
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         body = dict()
         body['agents'] = TypeAdapter(list[IdAndAction]).dump_python(agents, mode='json', by_alias=True)
         url = self.ep(supervisor_id)
@@ -20702,7 +21126,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         r = TypeAdapter(List[SupervisorAgentStatus]).validate_python(data['supervisorAgentStatus'])
         return r
 
-    def available_agents_gen(self, name: str = None, phone_number: str = None, order: str = None, org_id: str = None,
+    def available_agents_gen(self, name: str = None, phone_number: str = None, order: str = None,
+                         has_cx_essentials: bool = None, org_id: str = None,
                          **params) -> AsyncGenerator[AgentOrSupervisor, None, None]:
         """
         List Available Agents
@@ -20712,16 +21137,20 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of
+        This operation requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param name: Only return supervisors with the matching name.
+        :param name: Returns only the agents that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Returns only the agents that match the phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List of agents in a supervisor's list for this organization.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials
+            license, when `true`. When ommited or set to `false`, will return the list of available agents with
+            Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List of available agents in a supervisor's list for this organization.
         :type org_id: str
         :return: Generator yielding :class:`AgentOrSupervisor` instances
         """
@@ -20733,11 +21162,14 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep('availableAgents')
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='agents',
                                               params=params)
 
-    async def available_agents(self, name: str = None, phone_number: str = None, order: str = None, org_id: str = None,
+    async def available_agents(self, name: str = None, phone_number: str = None, order: str = None,
+                         has_cx_essentials: bool = None, org_id: str = None,
                          **params) -> List[AgentOrSupervisor]:
         """
         List Available Agents
@@ -20747,16 +21179,20 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of
+        This operation requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param name: Only return supervisors with the matching name.
+        :param name: Returns only the agents that match the given name.
         :type name: str
-        :param phone_number: Only return supervisors with matching primary phone number.
+        :param phone_number: Returns only the agents that match the phone number, extension, or ESN.
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param org_id: List of agents in a supervisor's list for this organization.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials
+            license, when `true`. When ommited or set to `false`, will return the list of available agents with
+            Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List of available agents in a supervisor's list for this organization.
         :type org_id: str
         :return: Generator yielding :class:`AgentOrSupervisor` instances
         """
@@ -20768,6 +21204,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
             params['phoneNumber'] = phone_number
         if order is not None:
             params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep('availableAgents')
         return [o async for o in self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='agents',
                                               params=params)]
@@ -23820,6 +24258,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     callqueue: AsCallQueueApi
     call_recording: AsCallRecordingSettingsApi
     conference: AsConferenceControlsApi
+    cx_essentials: AsCustomerExperienceEssentialsApi
     dect_devices: AsDECTDevicesApi
     #: emergency services
     emergency_services: AsOrgEmergencyServicesApi
@@ -23865,6 +24304,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.callpark_extension = AsCallparkExtensionApi(session=session)
         self.callqueue = AsCallQueueApi(session=session)
         self.conference = AsConferenceControlsApi(session=session)
+        self.cx_essentials = AsCustomerExperienceEssentialsApi(session=session)
         self.dect_devices = AsDECTDevicesApi(session=session)
         self.devices = AsTelephonyDevicesApi(session=session)
         self.emergency_services = AsOrgEmergencyServicesApi(session=session)
