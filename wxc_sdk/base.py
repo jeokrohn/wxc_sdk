@@ -7,7 +7,7 @@ from typing import Optional, Union
 
 from aenum import Enum, extend_enum
 from dateutil import tz
-from flask.cli import load_dotenv
+from dotenv import load_dotenv
 from pydantic import BaseModel, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
