@@ -379,7 +379,7 @@ class HAR(HARModel):
             return cls.model_validate_json(f.read())
 
     def model_dump(self, *,
-                   mode: Literal['json', 'python'] | str = 'json',
+                   mode: Literal['json', 'python'] = 'json',
                    exclude_none: bool = True,
                    by_alias: bool = True,
                    **kwargs) -> dict[str, Any]:
