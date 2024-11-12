@@ -96,8 +96,11 @@ class BetaFeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/conf
         :type org_id: str
         :rtype: None
         """
-        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop?orgId={org_id}')
-        super().get(url)
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
+        super().get(url, params=params)
 
     def modify_screen_pop_configuration_for_a_call_queue_in_a_location(self, location_id: str = None,
                                                                        queue_id: str = None, enabled: bool = None,
@@ -127,6 +130,9 @@ class BetaFeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/conf
         :type org_id: str
         :rtype: None
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         body = dict()
         if enabled is not None:
             body['enabled'] = enabled
@@ -136,8 +142,8 @@ class BetaFeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/conf
             body['desktopLabel'] = desktop_label
         if query_params is not None:
             body['queryParams'] = query_params
-        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop?orgId={org_id}')
-        super().put(url, json=body)
+        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
+        super().put(url, params=params, json=body)
 
     def get_list_of_available_agents_for_customer_experience_essentials(self, location_id: str,
                                                                         has_cx_essentials: bool = None,

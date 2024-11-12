@@ -123,7 +123,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         :param id: A unique identifier for the supervisor.
         :type id: str
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
-        :type agents: list[PostPersonPlaceVirtualLineSupervisorObject]
+        :type agents: list[str]
         :param has_cx_essentials: Creates a Customer Experience Essentials queue supervisor, when `true`. Customer
             Experience Essentials queue supervisors must have a Customer Experience Essentials license.
         :type has_cx_essentials: bool
@@ -204,7 +204,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of
+        This operation requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param name: Only return the supervisors that match the given name.
@@ -237,7 +237,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
 
     def details(self, supervisor_id: str, name: str = None,
                 phone_number: str = None, order: str = None, has_cx_essentials: bool = None,
-                org_id: str = None, **params) -> Generator[AgentOrSupervisor, None, None]:
+                org_id: str = None, **additional_params) -> Generator[AgentOrSupervisor, None, None]:
         """
         GET Supervisor Details
 
@@ -276,6 +276,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
             params['order'] = order
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        params.update(additional_params)
         url = self.ep(supervisor_id)
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')
 
@@ -283,7 +284,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
                                 has_cx_essentials: bool = None,
                                 org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
         """
-        Assign/Un-assign Agents to Supervisor
+        Assign or Unassign Agents to Supervisor
 
         Assign or unassign agents to the supervisor for an organization.
 
@@ -328,7 +329,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
         over calls that their assigned agents are currently handling.
 
-        Requires a full, user or read-only administrator auth token with a scope of
+        This operation requires a full, user or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param name: Returns only the agents that match the given name.

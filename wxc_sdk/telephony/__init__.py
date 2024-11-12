@@ -18,6 +18,7 @@ from .callpickup import CallPickupApi
 from .callqueue import CallQueueApi
 from .calls import CallsApi
 from .conference import ConferenceControlsApi
+from .cx_essentials import CustomerExperienceEssentialsApi
 from .dect_devices import DECTDevicesApi
 from .devices import TelephonyDevicesApi
 from .emergency_services import OrgEmergencyServicesApi
@@ -655,6 +656,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     callqueue: CallQueueApi
     call_recording: CallRecordingSettingsApi
     conference: ConferenceControlsApi
+    cx_essentials: CustomerExperienceEssentialsApi
     dect_devices: DECTDevicesApi
     #: emergency services
     emergency_services: OrgEmergencyServicesApi
@@ -700,6 +702,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.callpark_extension = CallparkExtensionApi(session=session)
         self.callqueue = CallQueueApi(session=session)
         self.conference = ConferenceControlsApi(session=session)
+        self.cx_essentials = CustomerExperienceEssentialsApi(session=session)
         self.dect_devices = DECTDevicesApi(session=session)
         self.devices = TelephonyDevicesApi(session=session)
         self.emergency_services = OrgEmergencyServicesApi(session=session)

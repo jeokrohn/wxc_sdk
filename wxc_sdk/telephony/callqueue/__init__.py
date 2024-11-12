@@ -487,13 +487,15 @@ class CallQueueApi(ApiChild, base=''):
              **params) -> Generator[CallQueue, None, None]:
         """
         Read the List of Call Queues
+
         List all Call Queues for the organization.
 
-        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
-        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
-        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
-        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
-        dialed internally to reach users assigned to the call queue.
+        Call queues temporarily hold calls in the cloud, when all agents
+        assigned to receive calls from the queue are unavailable. Queued calls are routed to
+        an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach the users assigned to the call queue.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
@@ -551,16 +553,19 @@ class CallQueueApi(ApiChild, base=''):
     def create(self, location_id: str, settings: CallQueue, org_id: str = None) -> str:
         """
         Create a Call Queue
+
         Create new Call Queues for the given location.
 
-        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
-        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
-        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
-        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
-        dialed internally to reach users assigned to the call queue.
+        Call queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are
+        unavailable.
+        Queued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead
+        number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue. Call queues are also
+        assigned an internal extension,
+        which can be dialed internally to reach the users assigned to the call queue.
 
-        Creating a call queue requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Creating a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Create the call queue for this location.
         :type location_id: str
@@ -621,6 +626,7 @@ class CallQueueApi(ApiChild, base=''):
                 org_id: str = None) -> CallQueue:
         """
         Get Details for a Call Queue
+
         Retrieve Call Queue details.
 
         Call queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are
