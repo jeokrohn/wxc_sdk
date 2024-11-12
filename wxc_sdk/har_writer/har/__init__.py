@@ -43,7 +43,7 @@ class HARModel(BaseModel):
     def model_dump(
             self,
             *,
-            mode: Literal['json', 'python'] | str = 'json',
+            mode: Literal['json', 'python'] = 'json',
             exclude_unset: bool = False,
             exclude_none: bool = True,
             by_alias: bool = True,
