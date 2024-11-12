@@ -2,10 +2,12 @@
 HAR file format models, based on the HAR 1.2 spec, http://www.softwareishard.com/blog/har-12-spec/
 """
 import base64
+import json
 import re
 import urllib.parse
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from json import JSONDecodeError
 from typing import Optional, Annotated, Union, Mapping, Literal, Any, TextIO
 
 import requests_toolbelt
@@ -254,6 +256,20 @@ class HARResponse(HARModel):
     #: content as string.
     #: Not part of the HAR spec, but derived from content and can be used to set content
     content_str: Optional[str] = Field(default=None, exclude=None)
+
+    @property
+    def json_data(self)->Optional[dict]:
+        """
+        JSON content if available
+        """
+        ct = self.headers.get('content-type')
+        if ct is None or not ct.startswith('application/json'):
+            return None
+        try:
+            r = json.loads(self.content_str)
+        except JSONDecodeError:
+            r = None
+        return r
 
     @model_validator(mode='after')
     def val_model(self):

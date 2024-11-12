@@ -81,7 +81,7 @@ class HarWriter:
         if self._incremental:
             # open stream if needed
             self._set_or_open_iostream()
-            self._har = None
+            self.har = None
             # write start of HAR
             json_str = har_instance.model_dump_json(exclude_none=True)
             m = re.match(r'^(.+"entries":\s*\[)(].+)$', json_str, flags=re.DOTALL)
@@ -91,7 +91,7 @@ class HarWriter:
             self._incremental_first_entry = True
         else:
             # don't open any file, just keep HAR object so that we can keep track of entries
-            self._har = har_instance
+            self.har = har_instance
             self._iostream = None
         return
 
@@ -146,7 +146,7 @@ class HarWriter:
             self._iostream.write(json_str)
         else:
             # append entry
-            self._har.log.entries.append(entry)
+            self.har.log.entries.append(entry)
 
     def __enter__(self):
         return self
@@ -236,7 +236,7 @@ class HarWriter:
             self._set_or_open_iostream()
             # write full HAR
             if self._iostream is not None:
-                self._iostream.write(self._har.model_dump_json(exclude_none=True))
+                self._iostream.write(self.har.model_dump_json(exclude_none=True))
         if isinstance(self._path, str):
             self._iostream.close()
         self._iostream = None

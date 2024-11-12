@@ -132,6 +132,12 @@ class TestTelephonySupervisors(TestCaseWithLog):
             sapi.delete(supervisor_id=supervisor.id)
             list_after_delete = list(sapi.list())
             self.assertIsNone(next((sup for sup in list_after_delete if sup.id == supervisor.id), None))
+        # final validation: did the create() call actually return something?
+        har_post_entry = next((entry for entry in self.har_writer.har.log.entries
+                               if entry.request.method == 'POST'), None)
+        self.assertTrue(har_post_entry.response.json_data,
+                        'According to docs the create() calls should returns '
+                        'something. Issue 193')
 
     def test_create_with_vl_as_agent(self):
         """

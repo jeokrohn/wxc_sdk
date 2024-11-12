@@ -483,8 +483,8 @@ class TestCaseWithLog(TestCaseWithTokens):
         # also create a HAR file?
         self.async_api_reg_id = None
         if self.with_har:
-            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api,
-                                        incremental=True)
+            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'),
+                                        api=self.api)
 
         # enable debug logging on the REST loggers
         for rest_logger_name in self.rest_logger_names:
@@ -521,8 +521,7 @@ class TestCaseWithLog(TestCaseWithTokens):
 
     def shutdown_async(self):
         """
-        After running an async test unregister the asaync api from the HARWriter again
-        :return:
+        After running an async test unregister the async api from the HARWriter again
         """
         if self.har_writer and self.async_api_reg_id is not None:
             self.har_writer.unregister_api(self.async_api_reg_id)
