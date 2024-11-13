@@ -7,7 +7,6 @@ from typing import Optional, Union
 
 from aenum import Enum, extend_enum
 from dateutil import tz
-from dotenv import load_dotenv
 from pydantic import BaseModel, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
@@ -76,7 +75,6 @@ def to_camel(s: str) -> str:
     return ''.join(w.title() if i else w for i, w in enumerate(s.split('_')))
 
 
-load_dotenv()
 API_MODEL_ALLOW_EXTRA = os.getenv('API_MODEL_ALLOW_EXTRA', 'allow')
 
 

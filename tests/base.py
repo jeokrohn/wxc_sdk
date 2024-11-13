@@ -1,6 +1,9 @@
 """
 base functions for unit tests
 """
+from dotenv import load_dotenv
+
+load_dotenv()
 import asyncio
 import glob
 import json
@@ -22,7 +25,6 @@ from typing import Optional, Any, Union, ClassVar
 from unittest import TestCase
 
 import yaml
-from dotenv import load_dotenv
 from pydantic import ValidationError, BaseModel, Field, model_validator, TypeAdapter
 from yaml import safe_load
 from yaml.scanner import ScannerError
