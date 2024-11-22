@@ -8,13 +8,13 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from unittest import skip
 
+from tests.base import TestCaseWithLog, TestWithLocations, TestWithProfessionalWorkspace, async_test
+from tests.testutil import available_extensions_gen, new_workspace_names, TEST_WORKSPACES_PREFIX, \
+    create_workspace_with_webex_calling
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
 from wxc_sdk.rest import RestError
 from wxc_sdk.workspaces import WorkspaceCalling, WorkspaceWebexCalling, WorkspaceSupportedDevices
-from tests.base import TestCaseWithLog, TestWithLocations, TestWithProfessionalWorkspace, async_test
-from tests.testutil import available_extensions_gen, new_workspace_names, TEST_WORKSPACES_PREFIX, \
-    create_workspace_with_webex_calling
 
 
 def workspace_location_for_location(api: WebexSimpleApi, location_id: str) -> WorkspaceLocation:

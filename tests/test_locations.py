@@ -1118,6 +1118,9 @@ class TestLocationConsistency(TestCaseWithLog):
                                                key_attr=attrgetter('group_id'), entity='voicemail group'),
             OwnerType.group_paging: partial(check_exists, cache=validator_cache.group_paging,
                                             list_call=self.api.telephony.paging.list,
+                                            key_attr=attrgetter('paging_id'), entity='paging group'),
+            OwnerType.paging_group: partial(check_exists, cache=validator_cache.group_paging,
+                                            list_call=self.api.telephony.paging.list,
                                             key_attr=attrgetter('paging_id'), entity='paging group')
         }
 

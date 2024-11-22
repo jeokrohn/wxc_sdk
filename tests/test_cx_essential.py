@@ -153,6 +153,9 @@ class TestTelephonySupervisors(TestCaseWithLog):
             """
             # get all queues with or without CX Essentials
             queues = await self.async_api.telephony.callqueue.list(has_cx_essentials=has_cx_essentials)
+            if not queues:
+                print(f'No queues with CX Essentials: {has_cx_essentials}')
+                return
             # for all queues get details and agent list agents.list()
             queue_details, agent_lists = await asyncio.gather(
                 asyncio.gather(
