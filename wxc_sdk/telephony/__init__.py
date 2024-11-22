@@ -543,7 +543,7 @@ class SupportsLogCollection(str, Enum):
     cisco_roomos = 'CISCO_ROOMOS'
 
 
-class supports_hot_desk_only(ApiModel):
+class SupportedDevice(ApiModel):
     #: Model name of the device.
     model: str
     #: Display name of the device.
