@@ -213,6 +213,7 @@ class Workspace(ApiModel):
                                         'sip_address': True,
                                         'created': True,
                                         'hybrid_calling': True,
+                                        'health': True,
                                         # only include workspace_location_id if no location_id is given
                                         # location_id is the preferred/new way of setting the location
                                         'workspace_location_id': not (self.workspace_location_id
