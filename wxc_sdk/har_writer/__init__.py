@@ -19,7 +19,7 @@ __all__ = ['HarWriter']
 log = logging.getLogger(__name__)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class HarWriter:
     """
     log WebexSimpleApi and AsWebexSimpleApi requests and responses to HAR files
