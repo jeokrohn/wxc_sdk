@@ -78,6 +78,11 @@ class CallRecordingAccessSettings(ApiModel):
     share_recordings_enabled: Optional[bool] = None
 
 
+class PostCallRecordingSettings(ApiModel):
+    summary_and_action_items_enabled: Optional[bool] = None
+    transcript_enabled: Optional[bool] = None
+
+
 class CallRecordingSetting(ApiModel):
     #: true if call recording is enabled.
     enabled: bool
@@ -102,6 +107,8 @@ class CallRecordingSetting(ApiModel):
     start_stop_announcement: Optional[StartStopAnnouncement] = None
     #: Settings related to call recording access.
     call_recording_access_settings: Optional[CallRecordingAccessSettings] = None
+    #: TODO: undocumented, issue 201
+    post_call_recording_settings: Optional[PostCallRecordingSettings] = None
 
     @staticmethod
     def default() -> 'CallRecordingSetting':
