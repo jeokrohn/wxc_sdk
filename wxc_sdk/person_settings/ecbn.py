@@ -5,12 +5,14 @@ from pydantic import Field
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['ECBNApi', 'CallBackMemberType', 'ECBNQuality',
+__all__ = ['ECBNApi', 'ECBNQuality',
            'ECBNDependencies', 'PersonECBN',
            'ECBNDefault', 'PersonECBNDirectLine',
            'ECBNLocationMember', 'ECBNEffectiveLevel',
            'ECBNSelection', 'SelectedECBN',
            'ECBNLocationEffectiveLevel']
+
+from wxc_sdk.common import UserType
 
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
@@ -56,14 +58,6 @@ class PersonECBNDirectLine(ApiModel):
     quality: Optional[ECBNQuality] = None
 
 
-class CallBackMemberType(str, Enum):
-    #: Indicates the associated member is a person.
-    people = 'PEOPLE'
-    #: Indicates the associated member is a workspace.
-    place = 'PLACE'
-    #: Indicates the associated member is a virtual line.
-    virtual_line = 'VIRTUAL_LINE'
-
 
 class ECBNLocationEffectiveLevel(str, Enum):
     #: Returned calls from the Public Safety Answering Point go directly to the member. The Emergency Service Address
@@ -92,7 +86,7 @@ class ECBNLocationMember(ApiModel):
     #: Member ID of user/place/virtual line within the location
     member_id: Optional[str] = None
     #: Indicates the type of the member.
-    member_type: Optional[CallBackMemberType] = None
+    member_type: Optional[UserType] = None
     #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
     #: fallback rules as necessary.
     effective_level: Optional[ECBNLocationEffectiveLevel] = None

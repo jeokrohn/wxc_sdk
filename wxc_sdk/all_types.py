@@ -85,7 +85,7 @@ from wxc_sdk.person_settings.caller_id import CallerId, CallerIdSelectedType, Ex
 from wxc_sdk.person_settings.calling_behavior import BehaviorType, CallingBehavior
 from wxc_sdk.person_settings.common import ApiSelector, PersonSettingsApiChild
 from wxc_sdk.person_settings.dnd import DND
-from wxc_sdk.person_settings.ecbn import CallBackMemberType, ECBNDefault, ECBNDependencies, ECBNEffectiveLevel, \
+from wxc_sdk.person_settings.ecbn import ECBNDefault, ECBNDependencies, ECBNEffectiveLevel, \
     ECBNLocationEffectiveLevel, ECBNLocationMember, ECBNQuality, ECBNSelection, PersonECBN, PersonECBNDirectLine, \
     SelectedECBN
 from wxc_sdk.person_settings.exec_assistant import ExecAssistantType, _Helper
@@ -240,17 +240,17 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'BulkMethod', 'BulkOperation', 'BulkResponse', 'BulkResponseOperation', 'BusinessContinuity', 'CCSnippet',
            'CDR', 'CDRCallType', 'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason',
            'CDRRelatedReason', 'CDRUserType', 'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar',
-           'CalendarType', 'CallBackMemberType', 'CallBackSelected', 'CallBounce', 'CallBridgeSetting',
-           'CallForwardExpandedSoftKey', 'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon',
-           'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType', 'CallForwardingPerson',
-           'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers', 'CallInfo',
-           'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallPark', 'CallParkExtension',
-           'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueAgent', 'CallQueueAgentDetail',
-           'CallQueueAgentQueue', 'CallQueueCallPolicies', 'CallQueueSettings', 'CallRecordingInfo',
-           'CallRecordingSetting', 'CallRecordingTermsOfService', 'CallSourceInfo', 'CallSourceType', 'CallState',
-           'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR',
-           'CallingLineId', 'CallingLineIdPolicy', 'CallingPermissions', 'CallingPlanReason', 'CallingType',
-           'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason',
+           'CalendarType', 'CallBackSelected', 'CallBounce', 'CallBridgeSetting', 'CallForwardExpandedSoftKey',
+           'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon', 'CallForwardingNoAnswer',
+           'CallForwardingNumber', 'CallForwardingNumberType', 'CallForwardingPerson', 'CallHistoryMethod',
+           'CallHistoryRecord', 'CallInNumber', 'CallInNumbers', 'CallInfo', 'CallInterceptDetails',
+           'CallInterceptDetailsPermission', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings',
+           'CallPickup', 'CallQueue', 'CallQueueAgent', 'CallQueueAgentDetail', 'CallQueueAgentQueue',
+           'CallQueueCallPolicies', 'CallQueueSettings', 'CallRecordingInfo', 'CallRecordingSetting',
+           'CallRecordingTermsOfService', 'CallSourceInfo', 'CallSourceType', 'CallState', 'CallType',
+           'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId',
+           'CallingLineIdPolicy', 'CallingPermissions', 'CallingPlanReason', 'CallingType', 'CallsFrom',
+           'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason',
            'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization', 'ComplianceEvent',
            'Component', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceState', 'ConferenceTypeEnum',
            'ConfigurationLevel', 'ConnectionStatus', 'Contact', 'ContactAddress', 'ContactEmail', 'ContactIm',
