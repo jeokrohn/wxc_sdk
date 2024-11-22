@@ -256,7 +256,6 @@ class AsRestSession(ClientSession):
     _response_callback_registry: dict[str, AsRestResponseCallBack]
     # additional request arguments
     _request_arguments: dict
-    _proxy: str
 
     def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True,
                  trace_configs: list[TraceConfig] = None, proxy_url: str = None,
@@ -426,7 +425,7 @@ class AsRestSession(ClientSession):
         # the event is cleared if any task hit a 429
         start = perf_counter_ns()
         async with self.request(method, url=url, headers=request_headers,
-                                data=data, json=json, proxy=self._proxy, ssl=self._ssl,
+                                data=data, json=json,
                                 **additional_arguments) as response:
             # get response body as text or dict (parsed JSON)
             ct = response.headers.get('Content-Type')
