@@ -23,7 +23,7 @@ from ..base import ApiModel, enum_str
 from ..base import SafeEnum as Enum
 
 __all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar',
-           'WorkspaceCallingHybridCalling',
+           'WorkspaceCallingHybridCalling', 'WorkspaceHealth', 'WorkspaceHealthIssue',
            'HotdeskingStatus', 'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling',
            'WorkspaceSupportedDevices', 'WorkspaceIndoorNavigation', 'WorkspacesApi', 'SupportAndConfiguredInfo']
 
@@ -140,6 +140,17 @@ class WorkspaceIndoorNavigation(ApiModel):
     #: URL of a map locating the workspace.
     url: Optional[str] = None
 
+class WorkspaceHealthIssue(ApiModel):
+    id: Optional[str] = None
+    created_at: Optional[datetime.datetime] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    recommended_action: Optional[str] = None
+    level: Optional[str] = None
+
+class WorkspaceHealth(ApiModel):
+    level: Optional[str] = None
+    issues: Optional[list[WorkspaceHealthIssue]] = None
 
 class Workspace(ApiModel):
     """
@@ -183,6 +194,8 @@ class Workspace(ApiModel):
     device_platform: Optional[DevicePlatform] = None
     #: Indoor navigation configuration.
     indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
+    #: TODO: undocumented,  issue200
+    health: Optional[WorkspaceHealth] = None
 
     def update_or_create(self, for_update: bool = False) -> dict:
         """

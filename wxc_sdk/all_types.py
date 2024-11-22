@@ -215,7 +215,8 @@ from wxc_sdk.workspace_personalization import WorkspacePersonalizationTaskRespon
 from wxc_sdk.workspace_settings.numbers import UpdateWorkspacePhoneNumber, WorkspaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, HotdeskingStatus, \
     SupportAndConfiguredInfo, WorkSpaceType, Workspace, WorkspaceCalling, WorkspaceCallingHybridCalling, \
-    WorkspaceEmail, WorkspaceIndoorNavigation, WorkspaceSupportedDevices, WorkspaceWebexCalling
+    WorkspaceEmail, WorkspaceHealth, WorkspaceHealthIssue, WorkspaceIndoorNavigation, WorkspaceSupportedDevices, \
+    WorkspaceWebexCalling
 from wxc_sdk.xapi import ExecuteCommandResponse, QueryStatusResponse
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationState', 'AdaptiveCard',
@@ -368,7 +369,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook', 'WebhookCreate', 'WebhookEvent',
            'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting',
            'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceType', 'Workspace',
-           'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail', 'WorkspaceIndoorNavigation',
-           'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse',
-           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1',
-           'to_camel', 'webex_id_to_uuid']
+           'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail', 'WorkspaceHealth',
+           'WorkspaceHealthIssue', 'WorkspaceIndoorNavigation', 'WorkspaceLocation', 'WorkspaceLocationFloor',
+           'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse', 'WorkspaceSupportedDevices',
+           'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
