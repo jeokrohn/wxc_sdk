@@ -204,6 +204,7 @@ class LineKeyType(str, Enum):
     open = 'OPEN'
     #: Button not usable but reserved for future features.
     closed = 'CLOSED'
+    mode_management = 'MODE_MANAGEMENT'
 
 
 class ProgrammableLineKey(ApiModel):

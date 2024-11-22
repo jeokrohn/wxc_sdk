@@ -543,7 +543,7 @@ class SupportsLogCollection(str, Enum):
     cisco_roomos = 'CISCO_ROOMOS'
 
 
-class SupportedDevice(ApiModel):
+class supports_hot_desk_only(ApiModel):
     #: Model name of the device.
     model: str
     #: Display name of the device.
@@ -611,6 +611,7 @@ class SupportedDevice(ApiModel):
     allow_configure_phone_settings_enabled: Optional[bool] = None
     #: Enables / disables hotline support.
     supports_hotline_enabled: Optional[bool] = None
+    supports_hot_desk_only: Optional[bool] = None
 
 
 class AnnouncementLanguage(ApiModel):
