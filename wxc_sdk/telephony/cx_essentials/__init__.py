@@ -84,7 +84,7 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config/locations
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True)
+        body = settings.model_dump(mode='json', by_alias=True)
         url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
         super().put(url, params=params, json=body)
 

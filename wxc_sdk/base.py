@@ -122,12 +122,17 @@ def plus1(v: Optional[str]) -> str:
     return v and len(v) == 10 and v[0] != '+' and f'+1{v}' or v
 
 
-def dt_iso_str(dt: datetime) -> str:
+def dt_iso_str(dt: datetime, with_msec: bool=True) -> str:
     """
     ISO format datetime as used by Webex API (no time zone, milliseconds)
+
     :param dt:
+    :param with_msec:
     :return:
     """
     dt = dt.astimezone(tz.tzutc())
     dt = dt.replace(tzinfo=None)
-    return f"{dt.isoformat(timespec='milliseconds')}Z"
+    r =  f"{dt.isoformat(timespec='milliseconds')}Z"
+    if not with_msec:
+        r = r[:-5] + 'Z'
+    return r

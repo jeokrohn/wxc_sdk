@@ -6,14 +6,15 @@ from itertools import chain
 from typing import Optional
 
 from tests.base import TestCaseWithLog, async_test
-from wxc_sdk.as_api import AsWebexSimpleApi
+from tests.testutil import calling_users, create_cxe_queue
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import UserType
 from wxc_sdk.licenses import LicenseProperties, LicenseRequest, LicenseRequestOperation
-from wxc_sdk.people import Person, PhoneNumberType
+from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberListPhoneNumberType
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.callqueue.agents import CallQueueAgent
+from wxc_sdk.telephony.cx_essentials import ScreenPopConfiguration
 from wxc_sdk.telephony.hg_and_cq import Agent
 
 
@@ -36,7 +37,7 @@ class TestTelephonySupervisors(TestCaseWithLog):
                          lic.consumed_units < lic.total_units)),
                     None)
 
-    def users_with_cx_essentials(self, api: AsWebexSimpleApi) -> list[Person]:
+    def users_with_cx_essentials(self) -> list[Person]:
         """
         Get all users with CX Essentials license
         """
@@ -57,6 +58,7 @@ class TestTelephonySupervisors(TestCaseWithLog):
         number = next(n
                       for n in self.api.telephony.phone_numbers(owner_id=user_id)
                       if not n.phone_number or n.phone_number_type == NumberListPhoneNumberType.primary)
+
         # for some reason when adding a CX essentials license, TN and extension have to be provided
         lp = LicenseProperties(location_id=number.location.id)
         if number.extension:
@@ -78,6 +80,31 @@ class TestTelephonySupervisors(TestCaseWithLog):
                 licenses=[LicenseRequest(id=license_id,
                                          operation=LicenseRequestOperation.remove)])
         return
+
+    @contextmanager
+    def assert_user_with_cx_essentials(self) -> Person:
+        """
+        get a user with CX Essentials license for testt
+        """
+        # all calling users: users with location_id
+        users = calling_users(api=self.api)
+
+        # users with CX Essentials license
+        cxe_licenses = self.cx_essentials_licenses()
+        users_with_cx_essentials = [user for user in users
+                                    if set(user.licenses) & cxe_licenses]
+
+        if users_with_cx_essentials:
+            user = random.choice(users_with_cx_essentials)
+            print(f'existing CX essentials user: {user.display_name}')
+            yield user
+            return
+
+        # pick a random user and temporarily assign CX Essentials license
+        user = random.choice(calling_users)
+        with self.assign_cx_essentials(user_id=user.id):
+            print(f'Temporary CX essentials user: {user.display_name}')
+            yield user
 
     def test_queues_w_or_wo_cx_essentials(self):
         """
@@ -121,6 +148,7 @@ class TestTelephonySupervisors(TestCaseWithLog):
         async def test_queues(has_cx_essentials: bool):
             """
             test all queues with or without CX Essentials
+
             :param has_cx_essentials:
             """
             # get all queues with or without CX Essentials
@@ -180,6 +208,7 @@ class TestTelephonySupervisors(TestCaseWithLog):
         list available agents with and w/o CX Essentials
         """
         sapi = self.api.telephony.supervisors
+
         def list_agents(has_cx_essentials: bool):
             agents = list(sapi.available_agents(has_cx_essentials=has_cx_essentials))
             types = set(agent.type for agent in agents)
@@ -225,9 +254,25 @@ class TestTelephonySupervisors(TestCaseWithLog):
         sup_agents_with_cxe = list(self.api.telephony.supervisors.available_agents(has_cx_essentials=True))
         foo = 1
 
+    def test_users_with_cx_essentials(self):
+        users = self.users_with_cx_essentials()
+        print(f'Users with CX Essentials: {len(users)}')
+        for user in users:
+            print(f'{user.display_name}')
+
+    def test_create_cxe_queue(self):
+        """
+        create a queue with CX Essentials
+        """
+        queue = create_cxe_queue(api=self.api)
+        try:
+            self.assertTrue(queue.has_cx_essentials, 'Queue should have CX Essentials')
+        finally:
+            self.api.telephony.callqueue.delete_queue(location_id=queue.location_id, queue_id=queue.id)
+
     @async_test
     async def test_cxe_agents(self):
-        users_with_license = self.users_with_cx_essentials(api=self.async_api)
+        users_with_license = self.users_with_cx_essentials()
         queues = list(self.api.telephony.callqueue.list())
         queue_details = await asyncio.gather(
             *[self.async_api.telephony.callqueue.details(location_id=queue.location_id, queue_id=queue.id)
@@ -247,3 +292,65 @@ class TestTelephonySupervisors(TestCaseWithLog):
                 print('not in list of CQ agents')
             else:
                 print(f'Agent: {agent.first_name} {agent.last_name}')
+
+    @contextmanager
+    def assert_queues_with_cx_essentials(self) -> list[CallQueue]:
+        """
+        Assert that there are queues with CX Essentials
+        """
+        queues_with_cxe = list(self.api.telephony.callqueue.list(has_cx_essentials=True))
+
+        if queues_with_cxe:
+            print(f'{len(queues_with_cxe)} existing queues with CX Essentials')
+            yield queues_with_cxe
+            return
+
+        queue = create_cxe_queue(api=self.api)
+        try:
+            print(f'Created queue with CX Essentials: {queue.name}')
+            yield [queue]
+        finally:
+            # delete queue again
+            print(f'deleting queue with CX Essentials: {queue.name}')
+            self.api.telephony.callqueue.delete_queue(location_id=queue.location_id, queue_id=queue.id)
+        #
+
+    def test_get_screen_pop_configuration(self):
+        """
+        Test get_screen_pop_configuration
+        """
+        with self.assert_queues_with_cx_essentials() as queues:
+            queue = queues[0]
+            screen_pop_configuration = self.api.telephony.cx_essentials.get_screen_pop_configuration(
+                location_id=queue.location_id, queue_id=queue.id)
+            print(screen_pop_configuration)
+
+    @contextmanager
+    def screen_pop_target(self) -> CallQueue:
+        with self.assert_queues_with_cx_essentials() as queues:
+            queue = queues[0]
+            print(f'screen pop target: {queue.name}')
+            screen_pop_configuration = self.api.telephony.cx_essentials.get_screen_pop_configuration(
+                location_id=queue.location_id, queue_id=queue.id)
+            try:
+                config = screen_pop_configuration.model_copy(deep=True)
+                yield queue, config
+            finally:
+                self.api.telephony.cx_essentials.modify_screen_pop_configuration(location_id=queue.location_id,
+                                                                                 queue_id=queue.id,
+                                                                                 settings=screen_pop_configuration)
+
+    def test_update_screen_pop_configuration(self):
+        with self.screen_pop_target() as target:
+            queue, screen_pop_configuration = target
+            screen_pop_configuration: ScreenPopConfiguration
+            queue: CallQueue
+
+            settings = ScreenPopConfiguration(enabled=True, screen_pop_url='https://example.com',
+                                              desktop_label='foo', query_params={'foo': 'bar'})
+            self.api.telephony.cx_essentials.modify_screen_pop_configuration(location_id=queue.location_id,
+                                                                             queue_id=queue.id,
+                                                                             settings=settings)
+            after = self.api.telephony.cx_essentials.get_screen_pop_configuration(location_id=queue.location_id,
+                                                                                  queue_id=queue.id)
+            self.assertEqual(settings, after)

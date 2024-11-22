@@ -13978,7 +13978,8 @@ class AsCallQueueApi(AsApiChild, base=''):
                                             org_id=org_id, name=name)
                      if cq.name == name), None)
 
-    async def create(self, location_id: str, settings: CallQueue, org_id: str = None) -> str:
+    async def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None,
+               org_id: str = None) -> str:
         """
         Create a Call Queue
 
@@ -13999,6 +14000,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         :type location_id: str
         :param settings: parameters for queue creation.
         :type settings: :class:`CallQueue`
+        :param has_cx_essentials: Creates a Customer Experience Essentials call queue, when `true`. This requires
+            Customer Experience Essentials licensed agents.
+        :type has_cx_essentials: bool
         :param org_id: Create the call queue for this organization.
         :type org_id: str
         :return: queue id
@@ -14020,6 +14024,10 @@ class AsCallQueueApi(AsApiChild, base=''):
 
         """
         params = org_id and {'orgId': org_id} or {}
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        elif settings.has_cx_essentials:
+            params['hasCxEssentials'] = 'true'
         cq_data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
         data = await self.post(url, json=cq_data, params=params)
@@ -15836,7 +15844,7 @@ class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config/locat
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True)
+        body = settings.model_dump(mode='json', by_alias=True)
         url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
         await super().put(url, params=params, json=body)
 

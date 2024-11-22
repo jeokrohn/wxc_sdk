@@ -326,7 +326,8 @@ class CallQueue(HGandCQ):
         base_exclude.update({'queue_settings':
                                  {'overflow':
                                       {'is_transfer_number_set': True}},
-                             'department': {'name': True}})
+                             'department': {'name': True},
+                             'has_cx_essentials': True})
         return base_exclude
 
     @staticmethod
@@ -341,6 +342,7 @@ class CallQueue(HGandCQ):
                phone_number: str = None,
                extension: str = None,
                department_id: str = None,
+               has_cx_essentials: bool = None,
                call_policies: CallQueueCallPolicies = None,
                queue_settings: QueueSettings = None,
                allow_call_waiting_for_agents_enabled: bool = None,
@@ -361,6 +363,7 @@ class CallQueue(HGandCQ):
         :param phone_number:
         :param extension:
         :param department_id:
+        :param has_cx_essentials:
         :param call_policies:
         :param queue_settings:
         :param allow_call_waiting_for_agents_enabled:
@@ -550,7 +553,8 @@ class CallQueueApi(ApiChild, base=''):
                                             org_id=org_id, name=name)
                      if cq.name == name), None)
 
-    def create(self, location_id: str, settings: CallQueue, org_id: str = None) -> str:
+    def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None,
+               org_id: str = None) -> str:
         """
         Create a Call Queue
 
@@ -571,6 +575,9 @@ class CallQueueApi(ApiChild, base=''):
         :type location_id: str
         :param settings: parameters for queue creation.
         :type settings: :class:`CallQueue`
+        :param has_cx_essentials: Creates a Customer Experience Essentials call queue, when `true`. This requires
+            Customer Experience Essentials licensed agents.
+        :type has_cx_essentials: bool
         :param org_id: Create the call queue for this organization.
         :type org_id: str
         :return: queue id
@@ -592,6 +599,10 @@ class CallQueueApi(ApiChild, base=''):
 
         """
         params = org_id and {'orgId': org_id} or {}
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        elif settings.has_cx_essentials:
+            params['hasCxEssentials'] = 'true'
         cq_data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
         data = self.post(url, json=cq_data, params=params)

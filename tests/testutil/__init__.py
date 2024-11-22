@@ -36,7 +36,9 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
            'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
            'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license',
-           'create_calling_user', 'create_random_calling_user']
+           'create_calling_user', 'create_random_calling_user', 'create_cxe_queue']
+
+from wxc_sdk.telephony.callqueue import CallQueue
 
 from wxc_sdk.telephony.devices import MACState
 from wxc_sdk.telephony.location import TelephonyLocation
@@ -181,11 +183,12 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
     us_locations = [loc for loc in api.locations.list()
                     if loc.address.country == 'US']
 
-    def safe_tel_location_details(location_id: str)->Optional[TelephonyLocation]:
+    def safe_tel_location_details(location_id: str) -> Optional[TelephonyLocation]:
         try:
             return api.telephony.location.details(location_id)
         except RestError:
             return None
+
     with ThreadPoolExecutor() as pool:
         tel_locations = list(pool.map(safe_tel_location_details, (loc.location_id for loc in us_locations)))
 
@@ -479,6 +482,7 @@ def create_random_calling_user(api: WebexSimpleApi, location_id: str, calling_li
         async with AsWebexSimpleApi(tokens=api.access_token) as as_api:
             users = await random_users(api=as_api)
         return users[0]
+
     random_user = asyncio.run(get_random_user())
 
     if with_tn:
@@ -510,3 +514,28 @@ def create_random_calling_user(api: WebexSimpleApi, location_id: str, calling_li
     return create_calling_user(api=api, user=random_user, location_id=location_id,
                                calling_license_id=calling_license_id, extension=extension,
                                phone_number=phone_number)
+
+
+def create_cxe_queue(api: WebexSimpleApi) -> CallQueue:
+    """
+    Create a Customer Experience Essentials queue
+
+    :param api:
+    """
+    # list both types of queues to get all names
+    queues = list(api.telephony.callqueue.list())
+    cxe_queues = list(api.telephony.callqueue.list(has_cx_essentials=True))
+    queue_names = {q.name for q in chain(queues, cxe_queues)}
+
+    # new queue name
+    new_name = next(name for i in range(1, 1000) if (name := f'test_{i:03}') not in queue_names)
+    locations = list(api.telephony.locations.list())
+    target_location = random.choice(locations)
+    extension = next(available_extensions_gen(api=api, location_id=target_location.location_id))
+    settings = CallQueue.create(name=new_name, agents=[], queue_size=5, extension=extension)
+    queue_id = api.telephony.callqueue.create(location_id=target_location.location_id, settings=settings,
+                                              has_cx_essentials=True)
+    queue = api.telephony.callqueue.details(location_id=target_location.location_id,
+                                            queue_id=queue_id,
+                                            has_cx_essentials=True)
+    return queue

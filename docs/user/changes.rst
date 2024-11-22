@@ -9,6 +9,7 @@ Release history
 - feat: :doc:`proxy support for the SDK <proxy>`
 - feat: :doc:`HARWriter to log all requests to HAR files <har_writer>`
 - feat: new API: :attr:`CallQueueApi.agents <wxc_sdk.telephony.callqueue.CallQueueApi.agents>`
+- fix: enable creation of CX essentials queues
 
 1.22.1
 ------
