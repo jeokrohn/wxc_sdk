@@ -103,8 +103,6 @@ class HuntGroup(HGandCQ):
     alternate_numbers: Optional[list[AlternateNumber]] = None
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[HGCallPolicies] = None
-    # TODO: undocumented
-    address_agents: Optional[Any] = None
     #: Whether or not the hunt group can be used as the caller ID when the agent places outgoing calls.
     hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
 
@@ -121,8 +119,7 @@ class HuntGroup(HGandCQ):
                                  {'no_answer': {'system_max_number_of_rings': True}},
                              'alternate_numbers':
                                  {'__all__':
-                                      {'toll_free_number': True}},
-                             'address_agents': True})
+                                      {'toll_free_number': True}}})
         return base_exclude
 
     @staticmethod
