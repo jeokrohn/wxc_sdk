@@ -52,6 +52,9 @@ class WebhookResource(str, Enum):
     #: The `Attachment Actions
     #: <https://developer.webex.com/docs/api/v1/attachment-actions>`_ resource.
     attachment_actions = 'attachmentActions'
+    #: `data sources
+    #: <https://developer.webex.com/docs/api/v1/data-sources>`_ resource.
+    data_sources = 'dataSources'
     #: The `Memberships
     #: <https://developer.webex.com/docs/api/v1/memberships>`_ resource.
     memberships = 'memberships'
