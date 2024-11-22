@@ -189,7 +189,7 @@ class TestTelephonySupervisors(TestCaseWithLog):
             # remove 1st agent and add 3rd agent
             print(f'Removing agent: {agents[0].display_name}, {base64.b64decode(agents[0].id + "==").decode()}')
             print(f'Adding agent: {agents[2].display_name}, {base64.b64decode(agents[2].id + "==").decode()}')
-            sapi.assign_un_assign_agents(supervisor_id=supervisor.id,
+            sapi.assign_unassign_agents(supervisor_id=supervisor.id,
                                          agents=[IdAndAction(id=agents[0].id,
                                                              action=PatternAction.delete),
                                                  IdAndAction(id=agents[2].id,
@@ -214,7 +214,7 @@ class TestTelephonySupervisors(TestCaseWithLog):
             agents: list[AgentOrSupervisor]
 
             # try to add 1st agent ... again
-            r = sapi.assign_un_assign_agents(supervisor_id=supervisor.id,
+            r = sapi.assign_unassign_agents(supervisor_id=supervisor.id,
                                              agents=[IdAndAction(id=agents[0].id,
                                                                  action=PatternAction.add)])
             self.assertIsNotNone(r)

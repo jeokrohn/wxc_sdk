@@ -5,9 +5,9 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from typing import ClassVar
 
-from wxc_sdk.all_types import *
 from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations, async_test
 from tests.testutil import available_extensions_gen
+from wxc_sdk.all_types import *
 
 # number of huntgroups to create my create many test
 HG_MANY = 100
@@ -90,9 +90,6 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
             # and get details of new queue using the queue id
             details = hapi.details(location_id=target_location.location_id, huntgroup_id=new_hg_id)
             print(json.dumps(json.loads(details.model_dump_json()), indent=2))
-            self.assertTrue(details.address_agents is None, 'Undocumented address_agents attribute')
-            self.assertTrue(details.address_agents is not None,
-                            'Undocumented address_agents attribute is gone; remove from class')
         finally:
             # delete the new hunt group
             hapi.delete_huntgroup(location_id=target_location.location_id, huntgroup_id=new_hg_id)

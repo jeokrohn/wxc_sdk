@@ -640,6 +640,7 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         # add an extra permission
         response_body['callingPermissions'].append({'action': 'BLOCK',
                                                     'callType': 'MADE_UP',
+                                                    'isCallTypeRestrictionEnabled': True,
                                                     'transferEnabled': True})
         # should parse w/o an issue
         parsed_response = OutgoingPermissions.model_validate(response_body)

@@ -287,14 +287,15 @@ class TestTelephonySupervisors(TestCaseWithLog):
         for agent in sorted(agents.values(), key=lambda a: (a.user_type, a.last_name, a.first_name)):
             print(f'{agent.user_type} {agent.first_name} {agent.last_name}')
         cxe_agents = list(self.api.telephony.callqueue.agents.list(has_cx_essentials=True))
-        disp_len = max(len(user.display_name) for user in users_with_license)
-        for user in users_with_license:
-            print(f'{user.display_name:{disp_len}}: ', end='')
-            agent = next((a for a in cxe_agents if a.id == user.person_id), None)
-            if agent is None:
-                print('not in list of CQ agents')
-            else:
-                print(f'Agent: {agent.first_name} {agent.last_name}')
+        if users_with_license:
+            disp_len = max(len(user.display_name) for user in users_with_license)
+            for user in users_with_license:
+                print(f'{user.display_name:{disp_len}}: ', end='')
+                agent = next((a for a in cxe_agents if a.id == user.person_id), None)
+                if agent is None:
+                    print('not in list of CQ agents')
+                else:
+                    print(f'Agent: {agent.first_name} {agent.last_name}')
 
     @contextmanager
     def assert_queues_with_cx_essentials(self) -> list[CallQueue]:
