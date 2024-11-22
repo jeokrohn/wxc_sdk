@@ -43,6 +43,8 @@ class SupervisorAgentStatus(ApiModel):
     status: Optional[str] = None
     #: Detailed message for the status.
     message: Optional[str] = None
+    #: TODO: undocumented, issue 202
+    type: Optional[UserType] = None
 
 
 class IdAndAction(ApiModel):
@@ -280,7 +282,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')
 
-    def assign_un_assign_agents(self, supervisor_id: str, agents: List[IdAndAction],
+    def assign_unassign_agents(self, supervisor_id: str, agents: List[IdAndAction],
                                 has_cx_essentials: bool = None,
                                 org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
         """
@@ -298,7 +300,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: list[PutPersonPlaceVirtualLineAgentObject]
         :param has_cx_essentials: Must be set to `true` to modify a supervisor with Customer Experience Essentials
-            license. This can otherwise be ommited or set to `false`.
+            license. This can otherwise be omitted or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Assign or unassign agents to a supervisor in this organization.
         :type org_id: str

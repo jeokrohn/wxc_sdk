@@ -287,29 +287,43 @@ class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
 
 class AsAuthorizationsApi(AsApiChild, base='authorizations'):
     """
-    Authorizations are user grants to applications to act on the user's behalf. Authorizations are how Integrations get
-    authorized with specific access scopes in the oAuth client life-cycle. Integrations and some of the Webex service
-    portals, like developer.webex.com, are all oAuth clients, each with their unique clientId.
+    Authorizations
 
-    Your application receives an API access token and a refresh token through the oAuth process. The access token is
-    used to call Webex APIs for which the user authorized the scopes. Access tokens expire fairly frequently,
-    while refresh tokens (when being regularly used) will be refreshed to last forever (see Using the Refresh Token
+    This is an admin API. As a partner admin revoking tokens for your customer
+    users, you must be a `Full Admin.` As an admin in your own org revoking tokens
+    for your home org users, you must have either of the following roles: `Full
+    Admin,` `Device Admin,` `Or user Admin.` Read-only admins are not supported.
+
+    Authorizations are user grants to applications to act on the user's behalf. Authorizations are how `Integrations
+    <https://developer.webex.com/docs/integrations>`_ get
+    authorized with specific `access scopes
+    <https://developer.webex.com/docs/integrations#scopes>`_ in the oAuth client life-cycle. Integrations and some of the Webex service
+    portals, like `developer.webex.com
+    <https://developer.webex.com/>`_, are all oAuth clients, each with their unique `clientId.`
+
+    Your application receives an API `access token
+    <https://developer.webex.com/docs/integrations#getting-an-access-token>`_ and a `refresh token
+    used to call Webex APIs for which the user authorized the scopes. Access tokens expire reasonably frequently,
+    while refresh tokens (when being regularly used) will be refreshed to last forever (see `Using the Refresh Token
+    <https://developer.webex.com/docs/integrations#using-the-refresh-token>`_
     for details).
 
-    In this API an authorization is synonymous with an API access token.
+    In this API an authorization is synonymous with an `API access token
+    <https://developer.webex.com/docs/integrations#getting-an-access-token>`_.
 
-    To provide admins with fine-grained token management control, you use the /authorizations API with the DELETE HTTP
-    method to revoke access and refresh tokens.
+    To provide admins with fine-grained token management control, you use the `/authorizations
+    <https://developer.webex.com/docs/api/v1/authorizations>`_ API with the `DELETE`
+    HTTP method to revoke access and refresh tokens.
 
     Deleting a refresh token will revoke all associated access tokens as well. Deleting an access token will revoke the
-    developers ability to call the APIs with it. Webex subsystems may cache the validity of the token for a short while
-    longer after the authorization was deleted.
+    developer's ability to call the APIs with it.
+    Webex subsystems may cache the token's validity briefly after the authorization is deleted.
 
-    Admins can revoke user authorizations for users in their organization. When an admin deletes their own token,
-    the clientId used to authorize the request must match the clientId used to generate the token.
+    Admins can revoke user authorizations for users in their organization. When an admin deletes their own token, the
+    `clientId` used to authorize the request must match the `clientId` used to generate the token.
 
-    To use the authorizations API in an Integration the scopes must
-    include: identity:tokens_write, identity:tokens_read.
+    To use the authorizations API in an Integration the scopes must include: `identity:tokens_write,`
+    `identity:tokens_read.`
     """
 
     async def list(self, person_id: str = None, person_email: str = None) -> list[Authorization]:
@@ -21096,7 +21110,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         return [o async for o in self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')]
 
-    async def assign_un_assign_agents(self, supervisor_id: str, agents: List[IdAndAction],
+    async def assign_unassign_agents(self, supervisor_id: str, agents: List[IdAndAction],
                                 has_cx_essentials: bool = None,
                                 org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
         """
@@ -21114,7 +21128,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: list[PutPersonPlaceVirtualLineAgentObject]
         :param has_cx_essentials: Must be set to `true` to modify a supervisor with Customer Experience Essentials
-            license. This can otherwise be ommited or set to `false`.
+            license. This can otherwise be omitted or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Assign or unassign agents to a supervisor in this organization.
         :type org_id: str
