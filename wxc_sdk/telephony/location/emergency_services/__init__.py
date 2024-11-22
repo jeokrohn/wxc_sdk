@@ -25,7 +25,7 @@ class LocationEmergencyCallNotification(ApiModel):
     #: address.
     email_address: Optional[str] = None
     #: All locations at organization level
-    customer: Optional[LocationCallNotificationOrganization] = None
+    organization: Optional[LocationCallNotificationOrganization] = None
 
     def update(self) -> dict:
         """
