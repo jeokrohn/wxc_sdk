@@ -8,11 +8,11 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
+from tests.testutil import available_extensions_gen
 from wxc_sdk.all_types import AutoAttendant, ScheduleType
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.locations import Location
-from tests.base import TestCaseWithLog, TestWithLocations, async_test
-from tests.testutil import available_extensions_gen
 
 
 class TestAutoAttendant(TestCaseWithLog):
@@ -133,7 +133,7 @@ class TestForwarding(TestCaseWithLog):
         get forwarding settings for all auto attendants
         """
         ata = self.api.telephony.auto_attendant
-        aa_list = list(ata.list(name='aa_'))
+        aa_list = list(ata.list())
         with ThreadPoolExecutor() as pool:
             forwarding_settings = list(pool.map(
                 lambda aa: ata.forwarding.settings(location_id=aa.location_id, feature_id=aa.auto_attendant_id),
