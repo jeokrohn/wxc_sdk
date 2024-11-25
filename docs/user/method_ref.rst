@@ -1271,7 +1271,7 @@ The method name is a link to the method documentation.
         List of Schedules for a Person or location
    * - :meth:`api.telephony.schedules.update <wxc_sdk.common.schedules.ScheduleApi.update>`
         Update a Schedule
-   * - :meth:`api.telephony.supervisors.assign_un_assign_agents <wxc_sdk.telephony.supervisor.SupervisorApi.assign_un_assign_agents>`
+   * - :meth:`api.telephony.supervisors.assign_unassign_agents <wxc_sdk.telephony.supervisor.SupervisorApi.assign_unassign_agents>`
         Assign or Unassign Agents to Supervisor
    * - :meth:`api.telephony.supervisors.available_agents <wxc_sdk.telephony.supervisor.SupervisorApi.available_agents>`
         List Available Agents
