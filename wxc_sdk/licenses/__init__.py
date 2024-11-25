@@ -152,9 +152,9 @@ class LicenseRequest(ApiModel):
 
 class SiteAccountType(str, Enum):
     #: Attendee account on the site.
-    attendee = 'attendee'
+    attendee = 'ATTENDEE'
     #: Host account on the site.
-    host = 'host'
+    host = 'HOST'
 
 
 class SiteUrlsRequest(ApiModel):
