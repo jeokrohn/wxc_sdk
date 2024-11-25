@@ -17,6 +17,7 @@ from wxc_sdk.har_writer.har import HAR, PostData
 @dataclass(init=False)
 class TestHar(TestCase):
     latest_har_in_downloads: str
+    all_hars_in_downloads: list[str]
 
     def get_all_hars(self, path: str) -> Optional[list[tuple[int, str]]]:
         har_files = [(f, os.path.getmtime(f)) for f in glob.glob(os.path.join(path, '*.har'))]
@@ -32,6 +33,7 @@ class TestHar(TestCase):
     def setUp(self):
         # find latest HAR file in Downloads
         self.latest_har_in_downloads = self.get_latest_har(os.path.expanduser('~/Downloads'))
+        self.all_hars_in_downloads = [f for f, _ in self.get_all_hars(os.path.expanduser('~/Downloads'))]
 
     def test_parse_latest_in_downloads(self):
         latest = self.latest_har_in_downloads
