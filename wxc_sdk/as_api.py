@@ -14015,7 +14015,8 @@ class AsCallQueueApi(AsApiChild, base=''):
         :param settings: parameters for queue creation.
         :type settings: :class:`CallQueue`
         :param has_cx_essentials: Creates a Customer Experience Essentials call queue, when `true`. This requires
-            Customer Experience Essentials licensed agents.
+            Customer Experience Essentials licensed agents. If this parameter is not set, the `has_cx_essentials`
+            attribute of the `settings` object is considered.
         :type has_cx_essentials: bool
         :param org_id: Create the call queue for this organization.
         :type org_id: str
