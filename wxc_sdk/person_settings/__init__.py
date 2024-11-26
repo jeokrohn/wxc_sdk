@@ -17,6 +17,7 @@ from .call_waiting import CallWaitingApi
 from .callbridge import CallBridgeApi
 from .caller_id import CallerIdApi
 from .calling_behavior import CallingBehaviorApi
+from .common import ApiSelector
 from .dnd import DndApi
 from .ecbn import ECBNApi
 from .exec_assistant import ExecAssistantApi
@@ -32,6 +33,9 @@ from .preferred_answer import PreferredAnswerApi
 from .privacy import PrivacyApi
 from .push_to_talk import PushToTalkApi
 from .receptionist import ReceptionistApi
+from .selective_accept import SelectiveAcceptApi
+from .selective_forward import SelectiveForwardApi
+from .selective_reject import SelectiveRejectApi
 from .voicemail import VoicemailApi
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -175,10 +179,21 @@ class PersonSettingsApi(ApiChild, base='people'):
     receptionist: ReceptionistApi
     #: Schedules for a Person
     schedules: ScheduleApi
+    #: selective accept settings
+    selective_accept: SelectiveAcceptApi
+    #: selective forward settings
+    selective_forward: SelectiveForwardApi
+    #: selective reject settings
+    selective_reject: SelectiveRejectApi
+
     #: Voicemail Settings for a Person
     voicemail: VoicemailApi
 
     def __init__(self, session: RestSession):
+        """
+
+        :meta private:
+        """
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session)
         self.app_shared_line = AppSharedLineApi(session=session)
@@ -207,6 +222,10 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.push_to_talk = PushToTalkApi(session=session)
         self.receptionist = ReceptionistApi(session=session)
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.people)
+        self.selective_accept = SelectiveAcceptApi(session=session, selector=ApiSelector.person)
+        self.selective_forward = SelectiveForwardApi(session=session, selector=ApiSelector.person)
+        self.selective_reject = SelectiveRejectApi(session=session, selector=ApiSelector.person)
+
         self.voicemail = VoicemailApi(session=session)
 
     # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.

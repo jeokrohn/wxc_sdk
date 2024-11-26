@@ -1,6 +1,10 @@
 Release history
 ===============
 
+- feat: new API: :attr:`api.person_settings.selective_accept <wxc_sdk.person_settings.PersonSettingsApi.selective_accept>`
+- feat: new API: :attr:`api.person_settings.selective_forward <wxc_sdk.person_settings.PersonSettingsApi.selective_forward>`
+- feat: new API: :attr:`api.person_settings.selective_reject <wxc_sdk.person_settings.PersonSettingsApi.selective_reject>`
+
 1.23.0
 ======
 
