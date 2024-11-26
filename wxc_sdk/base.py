@@ -86,10 +86,9 @@ class ApiModel(BaseModel):
     class Config:
         alias_generator = to_camel  # alias is camelcase version of attribute name
         populate_by_name = True
-        #: set to 'forbid' if run in unittest to catch schema issues during tests
-        #: else set to 'allow'
+        #: set to 'allow' by default. Can be overridden by setting environment variable API_MODEL_ALLOW_EXTRA
         extra = API_MODEL_ALLOW_EXTRA
-        # store values instead of enum types
+        #: store values instead of enum types
         use_enum_values = True
 
     def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
