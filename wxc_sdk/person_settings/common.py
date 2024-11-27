@@ -96,6 +96,9 @@ class PersonSettingsApiChild(ApiChild, base=''):
             ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
             ('people', 'musicOnHold'): ('telephony/config/people', '/'),
+            ('people', 'selectiveAccept'): ('telephony/config/people', '/'),
+            ('people', 'selectiveForward'): ('telephony/config/people', '/'),
+            ('people', 'selectiveReject'): ('telephony/config/people', '/'),
         }
         if selector == 'people' and self.feature == 'voicemail' and path == '/passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure

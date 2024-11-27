@@ -445,6 +445,42 @@ The method name is a link to the method documentation.
         List of Schedules for a Person or location
    * - :meth:`api.person_settings.schedules.update <wxc_sdk.common.schedules.ScheduleApi.update>`
         Update a Schedule
+   * - :meth:`api.person_settings.selective_accept.configure <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure>`
+        Modify Selective Accept Settings for an entity
+   * - :meth:`api.person_settings.selective_accept.configure_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure_criteria>`
+        Modify Selective Accept Criteria for an entity
+   * - :meth:`api.person_settings.selective_accept.create_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.create_criteria>`
+        Create Selective Accept Criteria for an entity
+   * - :meth:`api.person_settings.selective_accept.delete_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.delete_criteria>`
+        Delete Selective Accept Criteria for an entity
+   * - :meth:`api.person_settings.selective_accept.read <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.read>`
+        Retrieve Selective Accept Settings for an entity
+   * - :meth:`api.person_settings.selective_accept.read_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.read_criteria>`
+        Retrieve Selective Accept Criteria for an entity
+   * - :meth:`api.person_settings.selective_forward.configure <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.configure>`
+        Modify Selective Forward Settings for a Workspace
+   * - :meth:`api.person_settings.selective_forward.configure_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.configure_criteria>`
+        Modify Selective Forward Criteria for a Workspace
+   * - :meth:`api.person_settings.selective_forward.create_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.create_criteria>`
+        Create Selective Forward Criteria for a Workspace
+   * - :meth:`api.person_settings.selective_forward.delete_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.delete_criteria>`
+        Delete Selective Forward Criteria for a Workspace
+   * - :meth:`api.person_settings.selective_forward.read <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.read>`
+        Retrieve Selective Forward Settings for a Workspace
+   * - :meth:`api.person_settings.selective_forward.read_criteria <wxc_sdk.person_settings.selective_forward.SelectiveForwardApi.read_criteria>`
+        Retrieve Selective Forward Criteria for a Workspace
+   * - :meth:`api.person_settings.selective_reject.configure <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure>`
+        Modify Selective Reject Settings for an entity
+   * - :meth:`api.person_settings.selective_reject.configure_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.configure_criteria>`
+        Modify Selective Reject Criteria for an entity
+   * - :meth:`api.person_settings.selective_reject.create_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.create_criteria>`
+        Create Selective Reject Criteria for an entity
+   * - :meth:`api.person_settings.selective_reject.delete_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.delete_criteria>`
+        Delete Selective Reject Criteria for an entity
+   * - :meth:`api.person_settings.selective_reject.read <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read>`
+        Retrieve Selective Reject Settings for an entity
+   * - :meth:`api.person_settings.selective_reject.read_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read_criteria>`
+        Retrieve Selective Reject Criteria for an entity
    * - :meth:`api.person_settings.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
         Configure Voicemail Settings for an entity
    * - :meth:`api.person_settings.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`

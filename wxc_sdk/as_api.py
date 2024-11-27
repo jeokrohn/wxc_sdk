@@ -6439,6 +6439,9 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
             ('people', 'musicOnHold'): ('telephony/config/people', '/'),
+            ('people', 'selectiveAccept'): ('telephony/config/people', '/'),
+            ('people', 'selectiveForward'): ('telephony/config/people', '/'),
+            ('people', 'selectiveReject'): ('telephony/config/people', '/'),
         }
         if selector == 'people' and self.feature == 'voicemail' and path == '/passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
@@ -9610,6 +9613,570 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         await self.delete(url, params=params)
 
 
+class AsSelectiveAcceptApi(AsPersonSettingsApiChild):
+    """
+    API for selective accept settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'selectiveAccept'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SelectiveAcceptCriteria:
+        """
+        Retrieve Selective Accept Criteria for an entity
+
+        Retrieve Selective Accept Criteria Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveAcceptCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SelectiveAcceptCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveAcceptCriteria,
+                           org_id: str = None):
+        """
+        Modify Selective Accept Criteria for an entity
+
+        Modify Selective Accept Criteria Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveAcceptCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Selective Accept Criteria for an entity
+
+        Delete Selective Accept criteria Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SelectiveAcceptCriteria, org_id: str = None) -> str:
+        """
+        Create Selective Accept Criteria for an entity
+
+        Create Selective Accept Criteria Settings for an entity.
+
+        With the Selective Accept feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveAcceptCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, 'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SelectiveAccept:
+        """
+        Retrieve Selective Accept Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveAccept`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SelectiveAccept.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SelectiveAccept, org_id: str = None):
+        """
+        Modify Selective Accept Settings for an entity.
+
+        With the Selective Accept feature, you can accept calls at specific times from specific callers.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveAccept
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSelectiveForwardApi(AsPersonSettingsApiChild):
+    """
+    API for selective forward settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'selectiveForward'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SelectiveForwardCriteria:
+        """
+        Retrieve Selective Forward Criteria for a Workspace
+
+        Retrieve Selective Forward Criteria Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SelectiveForwardCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveForwardCriteria,
+                           org_id: str = None):
+        """
+        Modify Selective Forward Criteria for a Workspace
+
+        Modify Selective Forward Call Criteria Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveForwardCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Selective Forward Criteria for a Workspace
+
+        Delete Selective Forward Call criteria Settings for a workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SelectiveForwardCriteria,
+                        org_id: str = None) -> str:
+        """
+        Create Selective Forward Criteria for a Workspace
+
+        Create Selective Forward Call Criteria Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
+        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+
+        url = self.f_ep(entity_id, 'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SelectiveForward:
+        """
+        Retrieve Selective Forward Settings for a Workspace
+
+        Retrieve Selective Forward Call Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveForward`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SelectiveForward.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SelectiveForward,
+                  org_id: str = None):
+        """
+        Modify Selective Forward Settings for a Workspace
+
+        Modify Selective Forward Call Settings for a Workspace.
+
+        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
+        takes precedence over call forwarding.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: Settings for new criteria
+        :type settings: SelectiveForward
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
+class AsSelectiveRejectApi(AsPersonSettingsApiChild):
+    """
+    API for selective reject settings
+
+    For now only used for workspaces
+    """
+
+    feature = 'selectiveReject'
+
+    async def read_criteria(self, entity_id: str, id: str,
+                      org_id: str = None) -> SelectiveRejectCriteria:
+        """
+        Retrieve Selective Reject Criteria for an entity
+
+        Retrieve Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveRejectCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        data = await super().get(url, params=params)
+        r = SelectiveRejectCriteria.model_validate(data)
+        return r
+
+    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveRejectCriteria,
+                           org_id: str = None):
+        """
+        Modify Selective Reject Criteria for an entity
+
+        Modify Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveRejectCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
+        """
+        Delete Selective Reject Criteria for an entity
+
+        Delete Selective Reject criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param id: Unique identifier for the criteria.
+        :type id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id, f'criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def create_criteria(self, entity_id: str, settings: SelectiveRejectCriteria, org_id: str = None) -> str:
+        """
+        Create Selective Reject Criteria for an entity
+
+        Create Selective Reject Criteria Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveRejectCriteria
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id, 'criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def read(self, entity_id: str,
+             org_id: str = None) -> SelectiveReject:
+        """
+        Retrieve Selective Reject Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: :class:`SelectiveReject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.f_ep(entity_id)
+        data = await super().get(url, params=params)
+        r = SelectiveReject.model_validate(data)
+        return r
+
+    async def configure(self, entity_id: str, settings: SelectiveReject, org_id: str = None):
+        """
+        Modify Selective Reject Settings for an entity.
+
+        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
+        takes precedence over Selectively Accept Calls.
+        Schedules can also be set up for this feature during certain times of the day or days of the week.
+
+        **NOTE**: This API is only available for professional licensed workspaces.
+
+        :param entity_id: Unique identifier for the entity.
+        :type entity_id: str
+        :param settings: new settings to be applied.
+        :type settings: SelectiveReject
+        :param org_id: ID of the organization within which the entity resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.f_ep(entity_id)
+        await super().put(url, params=params, json=body)
+
+
 class AsVoicemailApi(AsPersonSettingsApiChild):
     """
     API for person's call voicemail settings. Also used for virtual lines and workspaces
@@ -9860,6 +10427,10 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     receptionist: AsReceptionistApi
     #: Schedules for a Person
     schedules: AsScheduleApi
+    selective_accept: AsSelectiveAcceptApi
+    selective_forward: AsSelectiveForwardApi
+    selective_reject: AsSelectiveRejectApi
+
     #: Voicemail Settings for a Person
     voicemail: AsVoicemailApi
 
@@ -9892,6 +10463,10 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.push_to_talk = AsPushToTalkApi(session=session)
         self.receptionist = AsReceptionistApi(session=session)
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.people)
+        self.selective_accept = AsSelectiveAcceptApi(session=session, selector=ApiSelector.person)
+        self.selective_forward = AsSelectiveForwardApi(session=session, selector=ApiSelector.person)
+        self.selective_reject = AsSelectiveRejectApi(session=session, selector=ApiSelector.person)
+
         self.voicemail = AsVoicemailApi(session=session)
 
     # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.
@@ -25536,570 +26111,6 @@ class AsPriorityAlertApi(AsPersonSettingsApiChild):
         :type entity_id: str
         :param settings: Settings for new criteria
         :type settings: PriorityAlert
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id)
-        await super().put(url, params=params, json=body)
-
-
-class AsSelectiveAcceptApi(AsPersonSettingsApiChild):
-    """
-    API for selective accept settings
-
-    For now only used for workspaces
-    """
-
-    feature = 'selectiveAccept'
-
-    async def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SelectiveAcceptCriteria:
-        """
-        Retrieve Selective Accept Criteria for an entity
-
-        Retrieve Selective Accept Criteria Settings for an entity.
-
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: :class:`SelectiveAcceptCriteria`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        data = await super().get(url, params=params)
-        r = SelectiveAcceptCriteria.model_validate(data)
-        return r
-
-    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveAcceptCriteria,
-                           org_id: str = None):
-        """
-        Modify Selective Accept Criteria for an entity
-
-        Modify Selective Accept Criteria Settings for an entity.
-
-        With the Selective Accept feature, you can accept calls at specific times from specific callers
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveAcceptCriteria
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        await super().put(url, params=params, json=body)
-
-    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
-        """
-        Delete Selective Accept Criteria for an entity
-
-        Delete Selective Accept criteria Settings for an entity.
-
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        await super().delete(url, params=params)
-
-    async def create_criteria(self, entity_id: str, settings: SelectiveAcceptCriteria, org_id: str = None) -> str:
-        """
-        Create Selective Accept Criteria for an entity
-
-        Create Selective Accept Criteria Settings for an entity.
-
-        With the Selective Accept feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveAcceptCriteria
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id, 'criteria')
-        data = await super().post(url, params=params, json=body)
-        r = data['id']
-        return r
-
-    async def read(self, entity_id: str,
-             org_id: str = None) -> SelectiveAccept:
-        """
-        Retrieve Selective Accept Settings for an entity.
-
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: :class:`SelectiveAccept`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id)
-        data = await super().get(url, params=params)
-        r = SelectiveAccept.model_validate(data)
-        return r
-
-    async def configure(self, entity_id: str, settings: SelectiveAccept, org_id: str = None):
-        """
-        Modify Selective Accept Settings for an entity.
-
-        With the Selective Accept feature, you can accept calls at specific times from specific callers.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveAccept
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id)
-        await super().put(url, params=params, json=body)
-
-
-class AsSelectiveForwardApi(AsPersonSettingsApiChild):
-    """
-    API for selective forward settings
-
-    For now only used for workspaces
-    """
-
-    feature = 'selectiveForward'
-
-    async def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SelectiveForwardCriteria:
-        """
-        Retrieve Selective Forward Criteria for a Workspace
-
-        Retrieve Selective Forward Criteria Settings for a Workspace.
-
-        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
-        takes precedence over call forwarding.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: :class:`SelectiveCriteria`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        data = await super().get(url, params=params)
-        r = SelectiveForwardCriteria.model_validate(data)
-        return r
-
-    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveForwardCriteria,
-                           org_id: str = None):
-        """
-        Modify Selective Forward Criteria for a Workspace
-
-        Modify Selective Forward Call Criteria Settings for a Workspace.
-
-        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
-        takes precedence over call forwarding.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveForwardCriteria
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        await super().put(url, params=params, json=body)
-
-    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
-        """
-        Delete Selective Forward Criteria for a Workspace
-
-        Delete Selective Forward Call criteria Settings for a workspace.
-
-        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
-        takes precedence over call forwarding.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        await super().delete(url, params=params)
-
-    async def create_criteria(self, entity_id: str, settings: SelectiveForwardCriteria,
-                        org_id: str = None) -> str:
-        """
-        Create Selective Forward Criteria for a Workspace
-
-        Create Selective Forward Call Criteria Settings for a Workspace.
-
-        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
-        takes precedence over call forwarding.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
-        scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveCriteria
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-
-        url = self.f_ep(entity_id, 'criteria')
-        data = await super().post(url, params=params, json=body)
-        r = data['id']
-        return r
-
-    async def read(self, entity_id: str,
-             org_id: str = None) -> SelectiveForward:
-        """
-        Retrieve Selective Forward Settings for a Workspace
-
-        Retrieve Selective Forward Call Settings for a Workspace.
-
-        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
-        takes precedence over call forwarding.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: :class:`SelectiveForward`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id)
-        data = await super().get(url, params=params)
-        r = SelectiveForward.model_validate(data)
-        return r
-
-    async def configure(self, entity_id: str, settings: SelectiveForward,
-                  org_id: str = None):
-        """
-        Modify Selective Forward Settings for a Workspace
-
-        Modify Selective Forward Call Settings for a Workspace.
-
-        With the Selective Forward feature, you can forward calls at specific times from specific callers. This setting
-        takes precedence over call forwarding.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param settings: Settings for new criteria
-        :type settings: SelectiveForward
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id)
-        await super().put(url, params=params, json=body)
-
-
-class AsSelectiveRejectApi(AsPersonSettingsApiChild):
-    """
-    API for selective reject settings
-
-    For now only used for workspaces
-    """
-
-    feature = 'selectiveReject'
-
-    async def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SelectiveRejectCriteria:
-        """
-        Retrieve Selective Reject Criteria for an entity
-
-        Retrieve Selective Reject Criteria Settings for an entity.
-
-        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: :class:`SelectiveRejectCriteria`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        data = await super().get(url, params=params)
-        r = SelectiveRejectCriteria.model_validate(data)
-        return r
-
-    async def configure_criteria(self, entity_id: str, id: str, settings: SelectiveRejectCriteria,
-                           org_id: str = None):
-        """
-        Modify Selective Reject Criteria for an entity
-
-        Modify Selective Reject Criteria Settings for an entity.
-
-        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveRejectCriteria
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        await super().put(url, params=params, json=body)
-
-    async def delete_criteria(self, entity_id: str, id: str, org_id: str = None):
-        """
-        Delete Selective Reject Criteria for an entity
-
-        Delete Selective Reject criteria Settings for an entity.
-
-        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param id: Unique identifier for the criteria.
-        :type id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id, f'criteria/{id}')
-        await super().delete(url, params=params)
-
-    async def create_criteria(self, entity_id: str, settings: SelectiveRejectCriteria, org_id: str = None) -> str:
-        """
-        Create Selective Reject Criteria for an entity
-
-        Create Selective Reject Criteria Settings for an entity.
-
-        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveRejectCriteria
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = settings.update()
-        url = self.f_ep(entity_id, 'criteria')
-        data = await super().post(url, params=params, json=body)
-        r = data['id']
-        return r
-
-    async def read(self, entity_id: str,
-             org_id: str = None) -> SelectiveReject:
-        """
-        Retrieve Selective Reject Settings for an entity.
-
-        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param org_id: ID of the organization within which the entity resides. Only admin users of another
-            organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
-        :type org_id: str
-        :rtype: :class:`SelectiveReject`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.f_ep(entity_id)
-        data = await super().get(url, params=params)
-        r = SelectiveReject.model_validate(data)
-        return r
-
-    async def configure(self, entity_id: str, settings: SelectiveReject, org_id: str = None):
-        """
-        Modify Selective Reject Settings for an entity.
-
-        With the Selective Reject feature, you can reject calls at specific times from specific callers. This setting
-        takes precedence over Selectively Accept Calls.
-        Schedules can also be set up for this feature during certain times of the day or days of the week.
-
-        **NOTE**: This API is only available for professional licensed workspaces.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param settings: new settings to be applied.
-        :type settings: SelectiveReject
         :param org_id: ID of the organization within which the entity resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
