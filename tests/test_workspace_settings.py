@@ -7,8 +7,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog, async_test, TestWithProfessionalWorkspace
-from wxc_sdk.common.schedules import Schedule
+from tests.base import TestCaseWithLog, async_test, TestWithProfessionalWorkspace, TestWithTarget
+from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.common.selective import SelectiveFrom, SelectiveScheduleLevel
 from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
@@ -649,36 +649,32 @@ class SimRingTest(TestWithProfessionalWorkspace):
                             f'{", ".join(str(pn.phone_number) for pn in after.phone_numbers if pn.phone_number)}')
 
 
-@dataclass(init=False)
-class SelectiveRejectTest(TestWithProfessionalWorkspace):
+@dataclass(init=False, repr=False)
+class SelectiveRejectTest(TestWithTarget):
+    # Also used for user settings test
     tapi: ClassVar[SelectiveRejectApi]
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.tapi = cls.api.workspace_settings.selective_reject
 
     def test_criteria_create(self):
         """
         create criteria
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         criteria = SelectiveRejectCriteria(calls_from=SelectiveFrom.any_phone_number, enabled=True)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(criteria.calls_from, details.calls_from)
             self.assertEqual(criteria.enabled, details.enabled)
 
             # also there should be one criteria in the details
-            after = api.read(self.workspace.workspace_id)
+            after = api.read(self.target_id)
             self.assertEqual(1, len(after.criteria))
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_create_with_phone_number(self):
@@ -686,16 +682,16 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
         create criteria with phone numbers
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveRejectCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                            phone_numbers=phone_numbers,
                                            anonymous_callers_enabled=False,
                                            unavailable_callers_enabled=False)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details = api.read_criteria(self.target_id, criteria_id)
             details_with_cleaned_phone_number = details.model_copy(deep=True)
             details_with_cleaned_phone_number.phone_numbers = \
                 [pn.replace('-', '')
@@ -704,7 +700,7 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
             self.assertEqual(criteria, details_with_cleaned_phone_number)
 
             # also there should be one criteria in the details
-            after = api.read(self.workspace.workspace_id)
+            after = api.read(self.target_id)
             self.assertEqual(1, len(after.criteria))
 
             # ... and the numbers are somewhat screwed up
@@ -716,8 +712,8 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_add_phone_number(self):
@@ -725,17 +721,17 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
         create criteria and add phone number
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveRejectCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                            phone_numbers=phone_numbers,
                                            anonymous_callers_enabled=False,
                                            unavailable_callers_enabled=False)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            details = api.read_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             criteria.id = details.id
             self.assertEqual(2, len(details.phone_numbers))
             # also there should be one criteria in the details
@@ -745,14 +741,14 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
             phone_numbers.append('+4961007739767')
             update = details.model_copy(deep=True)
             update.phone_numbers = phone_numbers
-            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
-            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            api.configure_criteria(self.target_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(3, len(criteria_after.phone_numbers))
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_remove_phone_number(self):
@@ -760,17 +756,17 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
         create criteria and remove phone number
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveRejectCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                            phone_numbers=phone_numbers,
                                            anonymous_callers_enabled=False,
                                            unavailable_callers_enabled=False)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            details = api.read_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             criteria.id = details.id
             self.assertEqual(2, len(details.phone_numbers))
             # also there should be one criteria in the details
@@ -779,14 +775,14 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
             # now, let's try to remove a phone numbers
             update = details.model_copy(deep=True)
             update.phone_numbers = phone_numbers[:-1]
-            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
-            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            api.configure_criteria(self.target_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(1, len(criteria_after.phone_numbers))
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_create_with_schedule(self):
@@ -797,22 +793,22 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
 
         with self.with_schedule() as schedule:
             schedule: Schedule
-            before = api.read(self.workspace.workspace_id)
+            before = api.read(self.target_id)
             self.assertEqual(0, len(before.criteria))
             criteria = SelectiveRejectCriteria(calls_from=SelectiveFrom.any_phone_number,
                                                enabled=True,
                                                schedule_name=schedule.name,
                                                schedule_type=schedule.schedule_type,
                                                schedule_level=SelectiveScheduleLevel.group)
-            criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+            criteria_id = api.create_criteria(self.target_id, criteria)
             try:
-                details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-                after = api.read(self.workspace.workspace_id)
+                details = api.read_criteria(self.target_id, criteria_id)
+                after = api.read(self.target_id)
                 self.assertEqual(1, len(after.criteria))
             finally:
                 # clean up: delete criteria again
-                api.delete_criteria(self.workspace.workspace_id, criteria_id)
-                after = api.read(self.workspace.workspace_id)
+                api.delete_criteria(self.target_id, criteria_id)
+                after = api.read(self.target_id)
                 self.assertEqual(0, len(after.criteria))
 
     def test_read(self):
@@ -820,7 +816,7 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
         read selective reject settings
         """
         api = self.tapi
-        api.read(self.workspace.workspace_id)
+        api.read(self.target_id)
 
     def test_configure(self):
         """
@@ -831,28 +827,28 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
         @contextmanager
         def create_criteria():
             """
-            Create two sim ring criteria on workspace
+            Create two selective reject criteria on workspace
             """
             criteria = SelectiveRejectCriteria(schedule_name='', schedule_level='GLOBAL',
                                                calls_from=SelectiveFrom.any_phone_number, enabled=True)
-            cid1 = api.create_criteria(self.workspace.workspace_id, criteria)
+            cid1 = api.create_criteria(self.target_id, criteria)
             criteria = SelectiveRejectCriteria(schedule_name='', schedule_level='GLOBAL',
                                                calls_from=SelectiveFrom.select_phone_numbers,
                                                enabled=False,
                                                phone_numbers=['+4961007739765', '+4961007739766'],
                                                anonymous_callers_enabled=False, unavailable_callers_enabled=False)
-            cid2 = api.create_criteria(self.workspace.workspace_id, criteria)
+            cid2 = api.create_criteria(self.target_id, criteria)
             try:
                 yield
             finally:
-                api.delete_criteria(self.workspace.workspace_id, cid1)
-                api.delete_criteria(self.workspace.workspace_id, cid2)
+                api.delete_criteria(self.target_id, cid1)
+                api.delete_criteria(self.target_id, cid2)
             return
 
         with create_criteria():
             update = SelectiveReject(enabled=True)
-            api.configure(self.workspace.workspace_id, update)
-            after = api.read(self.workspace.workspace_id)
+            api.configure(self.target_id, update)
+            after = api.read(self.target_id)
 
             # as the update doesn't have criteria, we also want to ignore differences in criteria
             update.criteria = after.criteria
@@ -862,8 +858,18 @@ class SelectiveRejectTest(TestWithProfessionalWorkspace):
             self.assertEqual(2, len(after.criteria))
 
 
-@dataclass(init=False)
-class SelectiveAcceptTest(TestWithProfessionalWorkspace):
+class SelectiveRejectTestWorkspace(TestWithProfessionalWorkspace, SelectiveRejectTest):
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.tapi = cls.api.workspace_settings.selective_reject
+        cls.target_id = cls.workspace.workspace_id
+
+
+@dataclass(init=False, repr=False)
+class SelectiveAcceptTest(TestWithTarget):
+    # Also used for user settings test
     tapi: ClassVar[SelectiveAcceptApi]
 
     @classmethod
@@ -876,22 +882,22 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
         create criteria
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         criteria = SelectiveAcceptCriteria(calls_from=SelectiveFrom.any_phone_number, enabled=True)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(criteria.calls_from, details.calls_from)
             self.assertEqual(criteria.enabled, details.enabled)
 
             # also there should be one criteria in the details
-            after = api.read(self.workspace.workspace_id)
+            after = api.read(self.target_id)
             self.assertEqual(1, len(after.criteria))
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_create_with_phone_number(self):
@@ -899,16 +905,16 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
         create criteria with phone numbers
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveAcceptCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                            phone_numbers=phone_numbers,
                                            anonymous_callers_enabled=False,
                                            unavailable_callers_enabled=False)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details = api.read_criteria(self.target_id, criteria_id)
             details_with_cleaned_phone_number = details.model_copy(deep=True)
             details_with_cleaned_phone_number.phone_numbers = \
                 [pn.replace('-', '')
@@ -917,7 +923,7 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
             self.assertEqual(criteria, details_with_cleaned_phone_number)
 
             # also there should be one criteria in the details
-            after = api.read(self.workspace.workspace_id)
+            after = api.read(self.target_id)
             self.assertEqual(1, len(after.criteria))
 
             # ... and the numbers are somewhat screwed up
@@ -929,8 +935,8 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_add_phone_number(self):
@@ -938,17 +944,17 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
         create criteria and add phone number
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveAcceptCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                            phone_numbers=phone_numbers,
                                            anonymous_callers_enabled=False,
                                            unavailable_callers_enabled=False)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            details = api.read_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             criteria.id = details.id
             self.assertEqual(2, len(details.phone_numbers))
             # also there should be one criteria in the details
@@ -958,14 +964,14 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
             phone_numbers.append('+4961007739767')
             update = details.model_copy(deep=True)
             update.phone_numbers = phone_numbers
-            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
-            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            api.configure_criteria(self.target_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(3, len(criteria_after.phone_numbers))
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_remove_phone_number(self):
@@ -973,17 +979,17 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
         create criteria and remove phone number
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveAcceptCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
                                            phone_numbers=phone_numbers,
                                            anonymous_callers_enabled=False,
                                            unavailable_callers_enabled=False)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            details = api.read_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             criteria.id = details.id
             self.assertEqual(2, len(details.phone_numbers))
             # also there should be one criteria in the details
@@ -992,14 +998,14 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
             # now, let's try to remove a phone numbers
             update = details.model_copy(deep=True)
             update.phone_numbers = phone_numbers[:-1]
-            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
-            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            api.configure_criteria(self.target_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(1, len(criteria_after.phone_numbers))
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_create_with_schedule(self):
@@ -1010,22 +1016,22 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
 
         with self.with_schedule() as schedule:
             schedule: Schedule
-            before = api.read(self.workspace.workspace_id)
+            before = api.read(self.target_id)
             self.assertEqual(0, len(before.criteria))
             criteria = SelectiveAcceptCriteria(calls_from=SelectiveFrom.any_phone_number,
                                                enabled=True,
                                                schedule_name=schedule.name,
                                                schedule_type=schedule.schedule_type,
                                                schedule_level=SelectiveScheduleLevel.group)
-            criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+            criteria_id = api.create_criteria(self.target_id, criteria)
             try:
-                details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-                after = api.read(self.workspace.workspace_id)
+                details = api.read_criteria(self.target_id, criteria_id)
+                after = api.read(self.target_id)
                 self.assertEqual(1, len(after.criteria))
             finally:
                 # clean up: delete criteria again
-                api.delete_criteria(self.workspace.workspace_id, criteria_id)
-                after = api.read(self.workspace.workspace_id)
+                api.delete_criteria(self.target_id, criteria_id)
+                after = api.read(self.target_id)
                 self.assertEqual(0, len(after.criteria))
 
     def test_read(self):
@@ -1033,7 +1039,7 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
         read selective accept settings
         """
         api = self.tapi
-        api.read(self.workspace.workspace_id)
+        api.read(self.target_id)
 
     def test_configure(self):
         """
@@ -1048,24 +1054,24 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
             """
             criteria = SelectiveAcceptCriteria(schedule_name='', schedule_level='GLOBAL',
                                                calls_from=SelectiveFrom.any_phone_number, enabled=True)
-            cid1 = api.create_criteria(self.workspace.workspace_id, criteria)
+            cid1 = api.create_criteria(self.target_id, criteria)
             criteria = SelectiveAcceptCriteria(schedule_name='', schedule_level='GLOBAL',
                                                calls_from=SelectiveFrom.select_phone_numbers,
                                                enabled=False,
                                                phone_numbers=['+4961007739765', '+4961007739766'],
                                                anonymous_callers_enabled=False, unavailable_callers_enabled=False)
-            cid2 = api.create_criteria(self.workspace.workspace_id, criteria)
+            cid2 = api.create_criteria(self.target_id, criteria)
             try:
                 yield
             finally:
-                api.delete_criteria(self.workspace.workspace_id, cid1)
-                api.delete_criteria(self.workspace.workspace_id, cid2)
+                api.delete_criteria(self.target_id, cid1)
+                api.delete_criteria(self.target_id, cid2)
             return
 
         with create_criteria():
             update = SelectiveAccept(enabled=True)
-            api.configure(self.workspace.workspace_id, update)
-            after = api.read(self.workspace.workspace_id)
+            api.configure(self.target_id, update)
+            after = api.read(self.target_id)
 
             # as the update doesn't have criteria, we also want to ignore differences in criteria
             update.criteria = after.criteria
@@ -1074,6 +1080,17 @@ class SelectiveAcceptTest(TestWithProfessionalWorkspace):
             # we created two criteria, so there should be two criteria in the details
             self.assertEqual(2, len(after.criteria))
 
+
+@dataclass(init=False)
+class SelectiveAcceptTestWorkspace(TestWithProfessionalWorkspace, SelectiveAcceptTest):
+    # Also used for user settings test
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.tapi = cls.api.workspace_settings.selective_accept
+        cls.target_id = cls.workspace.workspace_id
+        
 
 @dataclass(init=False)
 class PriorityAlertTest(TestWithProfessionalWorkspace):
@@ -1289,16 +1306,16 @@ class PriorityAlertTest(TestWithProfessionalWorkspace):
 
 
 @dataclass(init=False)
-class SelectiveForwardTest(TestWithProfessionalWorkspace):
+class SelectiveForwardTest(TestWithTarget):
+    # Also used for user settings test
     tapi: ClassVar[SelectiveForwardApi]
     forward_to_phone_number: ClassVar[str]
 
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.tapi = cls.api.workspace_settings.selective_forward
         numbers = list(
-            cls.api.telephony.phone_numbers(location_id=cls.location.location_id, number_type=NumberType.number))
+            cls.api.telephony.phone_numbers(location_id=cls.location_id, number_type=NumberType.number))
         if numbers:
             cls.forward_to_phone_number = random.choice(numbers).phone_number
         else:
@@ -1314,14 +1331,14 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
         create criteria
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.any_phone_number, enabled=True,
                                             forward_to_phone_number=self.forward_to_phone_number,
                                             send_to_voicemail_enabled=True)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(criteria.calls_from, details.calls_from)
             self.assertEqual(criteria.enabled, details.enabled)
             self.assertEqual(criteria.send_to_voicemail_enabled, details.send_to_voicemail_enabled)
@@ -1330,13 +1347,13 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
                              details.forward_to_phone_number.replace('-', ''))
 
             # also there should be one criteria in the details
-            after = api.read(self.workspace.workspace_id)
+            after = api.read(self.target_id)
             self.assertEqual(1, len(after.criteria))
             self.assertEqual(criteria.forward_to_phone_number, details.forward_to_phone_number)
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_create_with_phone_number(self):
@@ -1344,7 +1361,7 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
         create criteria with phone numbers
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
@@ -1353,9 +1370,9 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
                                             unavailable_callers_enabled=False,
                                             forward_to_phone_number=self.forward_to_phone_number,
                                             send_to_voicemail_enabled=True)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            details = api.read_criteria(self.target_id, criteria_id)
             details_with_cleaned_phone_number = details.model_copy(deep=True)
             details_with_cleaned_phone_number.phone_numbers = \
                 [pn.replace('-', '')
@@ -1366,7 +1383,7 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
             self.assertEqual(criteria, details_with_cleaned_phone_number)
 
             # also there should be one criteria in the details
-            after = api.read(self.workspace.workspace_id)
+            after = api.read(self.target_id)
             self.assertEqual(1, len(after.criteria))
 
             # ... and the numbers are somewhat screwed up
@@ -1385,8 +1402,8 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_add_phone_number(self):
@@ -1394,7 +1411,7 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
         create criteria and add phone number
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
@@ -1402,10 +1419,10 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
                                             anonymous_callers_enabled=False,
                                             unavailable_callers_enabled=False,
                                             forward_to_phone_number=self.forward_to_phone_number)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            details = api.read_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             criteria.id = details.id
             self.assertEqual(2, len(details.phone_numbers))
             # also there should be one criteria in the details
@@ -1415,14 +1432,14 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
             phone_numbers.append('+4961007739767')
             update = details.model_copy(deep=True)
             update.phone_numbers = phone_numbers
-            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
-            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            api.configure_criteria(self.target_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(3, len(criteria_after.phone_numbers))
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_remove_phone_number(self):
@@ -1430,7 +1447,7 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
         create criteria and remove phone number
         """
         api = self.tapi
-        before = api.read(self.workspace.workspace_id)
+        before = api.read(self.target_id)
         self.assertEqual(0, len(before.criteria))
         phone_numbers = ['+4961007739765', '+4961007739766']
         criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.select_phone_numbers, enabled=True,
@@ -1438,10 +1455,10 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
                                             anonymous_callers_enabled=False,
                                             unavailable_callers_enabled=False,
                                             forward_to_phone_number=self.forward_to_phone_number)
-        criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+        criteria_id = api.create_criteria(self.target_id, criteria)
         try:
-            details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            details = api.read_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             criteria.id = details.id
             self.assertEqual(2, len(details.phone_numbers))
             # also there should be one criteria in the details
@@ -1450,14 +1467,14 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
             # now, let's try to remove a phone numbers
             update = details.model_copy(deep=True)
             update.phone_numbers = phone_numbers[:-1]
-            api.configure_criteria(self.workspace.workspace_id, criteria_id, update)
-            criteria_after = api.read_criteria(self.workspace.workspace_id, criteria_id)
+            api.configure_criteria(self.target_id, criteria_id, update)
+            criteria_after = api.read_criteria(self.target_id, criteria_id)
             self.assertEqual(1, len(criteria_after.phone_numbers))
 
         finally:
             # clean up: delete criteria again
-            api.delete_criteria(self.workspace.workspace_id, criteria_id)
-            after = api.read(self.workspace.workspace_id)
+            api.delete_criteria(self.target_id, criteria_id)
+            after = api.read(self.target_id)
             self.assertEqual(0, len(after.criteria))
 
     def test_criteria_create_with_schedule(self):
@@ -1468,7 +1485,7 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
 
         with self.with_schedule() as schedule:
             schedule: Schedule
-            before = api.read(self.workspace.workspace_id)
+            before = api.read(self.target_id)
             self.assertEqual(0, len(before.criteria))
             criteria = SelectiveForwardCriteria(calls_from=SelectiveFrom.any_phone_number,
                                                 enabled=True,
@@ -1476,15 +1493,15 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
                                                 schedule_type=schedule.schedule_type,
                                                 schedule_level=SelectiveScheduleLevel.group,
                                                 forward_to_phone_number=self.forward_to_phone_number)
-            criteria_id = api.create_criteria(self.workspace.workspace_id, criteria)
+            criteria_id = api.create_criteria(self.target_id, criteria)
             try:
-                details = api.read_criteria(self.workspace.workspace_id, criteria_id)
-                after = api.read(self.workspace.workspace_id)
+                details = api.read_criteria(self.target_id, criteria_id)
+                after = api.read(self.target_id)
                 self.assertEqual(1, len(after.criteria))
             finally:
                 # clean up: delete criteria again
-                api.delete_criteria(self.workspace.workspace_id, criteria_id)
-                after = api.read(self.workspace.workspace_id)
+                api.delete_criteria(self.target_id, criteria_id)
+                after = api.read(self.target_id)
                 self.assertEqual(0, len(after.criteria))
 
     def test_read(self):
@@ -1492,7 +1509,7 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
         read selective forward settings
         """
         api = self.tapi
-        api.read(self.workspace.workspace_id)
+        api.read(self.target_id)
 
     def test_configure(self):
         """
@@ -1508,26 +1525,26 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
             criteria = SelectiveForwardCriteria(schedule_name='', schedule_level='GLOBAL',
                                                 calls_from=SelectiveFrom.any_phone_number, enabled=True,
                                                 forward_to_phone_number=self.forward_to_phone_number)
-            cid1 = api.create_criteria(self.workspace.workspace_id, criteria)
+            cid1 = api.create_criteria(self.target_id, criteria)
             criteria = SelectiveForwardCriteria(schedule_name='', schedule_level='GLOBAL',
                                                 calls_from=SelectiveFrom.select_phone_numbers,
                                                 enabled=False,
                                                 phone_numbers=['+4961007739765', '+4961007739766'],
                                                 anonymous_callers_enabled=False, unavailable_callers_enabled=False,
                                                 forward_to_phone_number=self.forward_to_phone_number)
-            cid2 = api.create_criteria(self.workspace.workspace_id, criteria)
+            cid2 = api.create_criteria(self.target_id, criteria)
             try:
                 yield
             finally:
-                api.delete_criteria(self.workspace.workspace_id, cid1)
-                api.delete_criteria(self.workspace.workspace_id, cid2)
+                api.delete_criteria(self.target_id, cid1)
+                api.delete_criteria(self.target_id, cid2)
             return
 
         with create_criteria():
             update = SelectiveForward(enabled=True, default_phone_number_to_forward=self.forward_to_phone_number,
                                       ring_reminder_enabled=True, destination_voicemail_enabled=True)
-            api.configure(self.workspace.workspace_id, update)
-            after = api.read(self.workspace.workspace_id)
+            api.configure(self.target_id, update)
+            after = api.read(self.target_id)
 
             # as the update doesn't have criteria, we also want to ignore differences in criteria
             update.criteria = after.criteria
@@ -1535,3 +1552,12 @@ class SelectiveForwardTest(TestWithProfessionalWorkspace):
 
             # we created two criteria, so there should be two criteria in the details
             self.assertEqual(2, len(after.criteria))
+
+
+class SelectiveForwardTestWorkspace(TestWithProfessionalWorkspace, SelectiveForwardTest):
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.tapi = cls.api.workspace_settings.selective_forward
+        cls.target_id = cls.workspace.workspace_id
