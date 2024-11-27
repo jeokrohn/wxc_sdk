@@ -50,7 +50,7 @@ log = logging.getLogger(__name__)
 
 __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
            'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces', 'WithIntegrationTokens',
-           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithProfessionalWorkspace']
+           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithTarget', 'TestWithProfessionalWorkspace']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
@@ -799,8 +799,56 @@ class TestLocationsUsersWorkspacesVirtualLines(TestWithLocations, TestCaseWithUs
         super().setUp()
 
 
+@dataclass(init=False, repr=False)
+class TestWithTarget(TestWithLocations):
+    target_id: ClassVar[str] = None
+    location_id: ClassVar[str] = None
+
+    def setUp(self) -> None:
+        if self.target_id is None:
+            self.skipTest(f'No target_id set. {self.__class__.__name__} might be an abstract test class?')
+        super().setUp()
+
+    @classmethod
+    def assert_location(cls):
+        """
+        make sure that location_id is set
+        """
+        if cls.location_id is None:
+            location = random.choice(cls.locations)
+            cls.location_id = location.location_id
+        return
+
+    @contextmanager
+    def with_schedule(self) -> Schedule:
+        """
+        get or create a schedule for the test
+        """
+        self.assert_location()
+        with self.no_log():
+            schedules = list(self.api.telephony.schedules.list(self.location_id))
+        if False and schedules:
+            temp_schedule: Schedule = random.choice(schedules)
+            yield temp_schedule
+        else:
+            # create a temporary schedule for the test
+            print('creating temporary schedule for the test')
+            temp_schedule = Schedule.business('test schedule')
+            with self.no_log():
+                schedule_id = self.api.telephony.schedules.create(self.location_id, temp_schedule)
+            try:
+                yield temp_schedule
+            finally:
+                with self.no_log():
+                    print('deleting temporary schedule')
+                    self.api.telephony.schedules.delete_schedule(self.location_id,
+                                                                 schedule_type=ScheduleType.business_hours,
+                                                                 schedule_id=schedule_id)
+        return
+
+
 @dataclass(init=False)
-class TestWithProfessionalWorkspace(TestWithLocations):
+class TestWithProfessionalWorkspace(TestWithTarget):
     """
     Tests for workspace settings using a temporary professional workspace
     """
@@ -822,6 +870,7 @@ class TestWithProfessionalWorkspace(TestWithLocations):
             pro_license: License
             # create WS in random location
             location = random.choice(cls.locations)
+            cls.location_id = location.location_id
             cls.location = location
             workspace = create_workspace_with_webex_calling(api=cls.api,
                                                             target_location=location,
@@ -831,6 +880,7 @@ class TestWithProfessionalWorkspace(TestWithLocations):
                                                                   f'location "{location.name}"',
                                                             license=pro_license)
             cls.workspace = workspace
+            cls.target_id = workspace.workspace_id
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -846,29 +896,3 @@ class TestWithProfessionalWorkspace(TestWithLocations):
     def setUp(self) -> None:
         super().setUp()
         self.assertIsNotNone(self.workspace, 'No professional workspace created')
-
-    @contextmanager
-    def with_schedule(self) -> Schedule:
-        """
-        get or create a schedule for the test
-        """
-        with self.no_log():
-            schedules = list(self.api.telephony.schedules.list(self.workspace.location_id))
-        if False and schedules:
-            temp_schedule: Schedule = random.choice(schedules)
-            yield temp_schedule
-        else:
-            # create a temporary schedule for the test
-            print('creating temporary schedule for the test')
-            temp_schedule = Schedule.business('test schedule')
-            with self.no_log():
-                schedule_id = self.api.telephony.schedules.create(self.workspace.location_id, temp_schedule)
-            try:
-                yield temp_schedule
-            finally:
-                with self.no_log():
-                    print('deleting temporary schedule')
-                    self.api.telephony.schedules.delete_schedule(self.workspace.location_id,
-                                                                 schedule_type=ScheduleType.business_hours,
-                                                                 schedule_id=schedule_id)
-        return

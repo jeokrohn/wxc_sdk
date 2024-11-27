@@ -10427,14 +10427,21 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     receptionist: AsReceptionistApi
     #: Schedules for a Person
     schedules: AsScheduleApi
+    #: selective accept settings
     selective_accept: AsSelectiveAcceptApi
+    #: selective forward settings
     selective_forward: AsSelectiveForwardApi
+    #: selective reject settings
     selective_reject: AsSelectiveRejectApi
 
     #: Voicemail Settings for a Person
     voicemail: AsVoicemailApi
 
     def __init__(self, session: AsRestSession):
+        """
+
+        :meta private:
+        """
         super().__init__(session=session)
         self.agent_caller_id = AsAgentCallerIdApi(session=session)
         self.app_shared_line = AsAppSharedLineApi(session=session)
