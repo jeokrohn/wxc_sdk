@@ -134,7 +134,11 @@ class HGandCQ(ApiModel):
                           'last_name': True,
                           'user_type': True,
                           'extension': True,
-                          'phone_number': True}},
+                          'phone_number': True,
+                          'routing_prefix': True,
+                          'esn': True,
+                          'location': True,
+                          'has_cx_essentials': True}},
                 'alternate_number_settings':
                     {'alternate_numbers':
                          {'__all__':
