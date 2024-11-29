@@ -354,6 +354,41 @@ Source: |access_codes.py|_
     :linenos:
 
 
+Bulk assign/unassign agents to/from call queues
+-----------------------------------------------
+
+Bulk assign/unassign agents to/from call queues
+
+    | usage: queue_agents.py [-h] (--add | --remove) --queues QUEUES --agent AGENT [--token TOKEN] [--debug] [--har]
+    | 
+    | Bulk manage agents in call queues
+    | 
+    | options:
+    |   -h, --help       show this help message and exit
+    |   --add            Add agent(s) to specified queues
+    |   --remove         Remove agent(s) from specified queues
+    |   --queues QUEUES  Text file with list of call queue names (one per line). Each line should be the a location
+    |                    name and a queue name separated by a colon. Example: "Location1:Queue1"
+    |   --agent AGENT    Single agent email address or text file with agent email addresses (one per line)
+    |   --token TOKEN    admin access token to use. If no token is given then the script will try to use service app
+    |                    tokens. The service app parameters are read from environment variables SERVICE_APP_ID,
+    |                    SERvICE_APP_SECRET, and SERVICE_APP_REFRESH. These parameters can also be defined in
+    |                    "queue_agents.env" file. Service app tokens are cached in "queue_agents.yml". If no access
+    |                    token is passed and no service app is defined then the script falls back to try to read an
+    |                    access token from environment variable WEBEX_ACCESS_TOKEN.
+    |   --debug          Enable debug output
+    |   --har            Enable HAR output
+    | 
+    | Example: queue_agents.py --queues queues.txt --agent agents.txt --add
+
+Source: |queue_agents.py|_
+
+.. |queue_agents.py| replace:: ``queue_agents.py``
+
+.. literalinclude:: ../../examples/queue_agents.py
+    :linenos:
+
+
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _"Integrations" page on developer.cisco.com: https://developer.webex.com/docs/integrations
 
@@ -374,6 +409,7 @@ Source: |access_codes.py|_
 .. _logout_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/logout_users.py
 .. _leave_spaces.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/leave_spaces.py
 .. _access_codes.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/access_codes.py
+.. _queue_agents.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_agents.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps

@@ -167,3 +167,6 @@ cython_debug/
 /tests/test_integration.env
 /tests/test_integration.yml
 /tests/cleanup.har
+/examples/agents.txt
+/examples/queue_agents.har
+/examples/queues.txt
