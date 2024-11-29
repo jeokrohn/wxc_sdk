@@ -90,9 +90,9 @@ def get_access_token() -> Optional[Tokens]:
     app_id, app_secret, app_refresh = (os.getenv(var) for var in env_vars)
     if not all((app_id, app_secret, app_refresh)):
         return None
-    tokens = Tokens(refresh_token=os.getenv('SERVICE_APP_REFRESH'))
-    integration = Integration(client_id=os.getenv('SERVICE_APP_ID'),
-                              client_secret=os.getenv('SERVICE_APP_SECRET'),
+    tokens = Tokens(refresh_token=app_refresh)
+    integration = Integration(client_id=app_id,
+                              client_secret=app_secret,
                               scopes=[], redirect_url=None)
     integration.refresh(tokens=tokens)
     write_tokens_to_file(tokens)
@@ -140,37 +140,9 @@ def read_file_lines(filename: str) -> List[str]:
         sys.exit(1)
 
 
-def process_queues(queues: Iterable[str], agent: str, action: str):
-    """
-    Process adding or removing an agent from multiple call queues.
-
-    Args:
-        queues (Iterable[str]): List of call queue names
-        agent (str): Agent name to add or remove
-        action (str): Either 'add' or 'remove'
-    """
-    for queue in queues:
-        try:
-            # Replace this with actual call queue management command
-            # Example: asterisk -rx "queue remove member SIP/agent1 from queue1"
-            # or "queue add member SIP/agent1 to queue1"
-            command = f"echo '{action.upper()} agent {agent} to/from queue {queue}'"
-            print(f"Executing: {command}")
-            # Uncomment the following line when you have the actual command
-            # os.system(command)
-        except Exception as e:
-            print(f"Error processing queue {queue}: {e}", file=sys.stderr)
-
-
 async def process_one_queue(api: AsWebexSimpleApi, queue: CallQueue, agents: list[Person], action: str):
     """
     Process adding or removing agents from a single call queue.
-
-    :param api:
-    :param queue:
-    :param agents:
-    :param action:
-    :return:
     """
     # get agents
     details = await api.telephony.callqueue.details(location_id=queue.location_id, queue_id=queue.id)
@@ -202,11 +174,7 @@ async def process_one_queue(api: AsWebexSimpleApi, queue: CallQueue, agents: lis
 
 async def validate_queues(api: AsWebexSimpleApi, queues: Iterable[str]) -> list[CallQueue]:
     """
-    Validate queue names and return a list of CallQueue objects and a dictionary of existing queues.
-
-    :param api:
-    :param queues:
-    :return:
+    Validate queue names and return a list of CallQueue objects
     """
     # validate queue names
     existing_queues = {f'{queue.location_name}:{queue.name}': queue
@@ -224,12 +192,7 @@ async def validate_queues(api: AsWebexSimpleApi, queues: Iterable[str]) -> list[
 async def validate_users(api: AsWebexSimpleApi, users: Iterable[str]) -> list[Person]:
     """
     Validate user emails and return a list of Person objects
-
-    :param api:
-    :param users:
-    :return:
     """
-    # validate user names
     existing_users = {user.emails[0].lower(): user for user in await api.people.list()}
     validated_users = []
     for user in users:
@@ -274,6 +237,7 @@ def main():
                              f'is defined then the script falls back to try to read an access token from environment '
                              f'variable WEBEX_ACCESS_TOKEN.')
 
+    # Debug and HAR output arguments
     parser.add_argument('--debug', action='store_true', help='Enable debug output')
     parser.add_argument('--har', action='store_true', help='Enable HAR output')
 
@@ -290,7 +254,7 @@ def main():
     # Read queues from file
     queues = read_file_lines(args.queues)
 
-    # Determine if agent is a file or a single agent name
+    # Determine if agent is a file or a single agent email
     try:
         agents = read_file_lines(args.agent) if os.path.isfile(args.agent) else [args.agent]
     except FileNotFoundError:
@@ -300,8 +264,14 @@ def main():
         logging.basicConfig(level=logging.DEBUG)
 
     async def as_main():
+        """
+        Async main entry point
+        """
         @contextmanager
         def har_writer():
+            """
+            optional context manager to write HAR file
+            """
             if args.har:
                 with HarWriter(f'{os.path.splitext(os.path.basename(__file__))[0]}.har', api):
                     yield None
@@ -310,6 +280,7 @@ def main():
 
         async with (AsWebexSimpleApi(tokens=token) as api):
             with har_writer():
+                # validate queues and agents
                 validated_queues, validated_agents = await asyncio.gather(
                     validate_queues(api, queues),
                     validate_users(api, agents))
@@ -323,9 +294,10 @@ def main():
                 validated_agents: List[Person]
 
                 # process all queues in parallel
-                await asyncio.gather(*[process_one_queue(api=api, queue=queue, agents=validated_agents, action=args.action)
-                                       for queue in validated_queues],
-                                     return_exceptions=False)
+                await asyncio.gather(
+                    *[process_one_queue(api=api, queue=queue, agents=validated_agents, action=args.action)
+                      for queue in validated_queues],
+                    return_exceptions=False)
             # with
         return
 
