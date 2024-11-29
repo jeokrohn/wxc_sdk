@@ -548,7 +548,7 @@ class AsRestSession(ClientSession):
             model = model.model_validate
 
         while url:
-            log.debug(f'{self}.pagination: getting {url}')
+            log.debug(f'{self.__class__.__name__}.pagination: getting {url}')
             response, data = await self._request_w_response('GET', url=url, params=params, **kwargs)
             # params only in first request. In subsequent requests we rely on the completeness of the 'next' URL
             params = None
