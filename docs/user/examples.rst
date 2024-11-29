@@ -146,15 +146,17 @@ Source: |get_tokens.py|_
 Read/update call intercept settings of a user
 ---------------------------------------------
 
-    | usage: call_intercept.py [-h] [--token TOKEN] user_email [{on,off}]
-    |
-    | positional arguments:
-    |   user_email     email address of user
-    |   {on,off}       operation to apply
-    |
-    | options:
-    |  -h, --help     show this help message and exit
-    |  --token TOKEN  admin access token to use
+.. code-block:: text
+
+    usage: call_intercept.py [-h] [--token TOKEN] user_email [{on,off}]
+   
+    positional arguments:
+      user_email     email address of user
+      {on,off}       operation to apply
+   
+    options:
+     -h, --help     show this help message and exit
+     --token TOKEN  admin access token to use
 
 The script uses the access token passed via the CLI, reads one from the WEBEX_ACCESS_TOKEN environment variable or
 obtains tokens via an OAuth flow. For the last option the integration parameters are read from environment variables which can be set in a ``.env`` file
@@ -169,37 +171,39 @@ Source: |call_intercept.py|_
 Read/update call queue agent join states
 ----------------------------------------
 
-    | usage: queue_helper.py [-h] [--location LOCATION [LOCATION ...]]
-    |                        [--queue QUEUE [QUEUE ...]]
-    |                        [--join JOIN_AGENT [JOIN_AGENT ...]]
-    |                        [--unjoin UNJOIN_AGENT [UNJOIN_AGENT ...]]
-    |                        [--remove REMOVE_USER [REMOVE_USER ...]]
-    |                        [--add ADD_USER [ADD_USER ...]] [--dryrun]
-    |                        [--token TOKEN]
-    | 
-    | Modify call queue settings from the CLI
-    | 
-    | optional arguments:
-    |   -h, --help            show this help message and exit
-    |   --location LOCATION [LOCATION ...], -l LOCATION [LOCATION ...]
-    |                         name of location to work on. If missing then work on
-    |                         all locations.
-    |   --queue QUEUE [QUEUE ...], -q QUEUE [QUEUE ...]
-    |                         name(s) of queue(s) to operate on. If missing then
-    |                         work on all queues in location.
-    |   --join JOIN_AGENT [JOIN_AGENT ...], -j JOIN_AGENT [JOIN_AGENT ...]
-    |                         Join given user(s) on given queue(s). Can be "all" to
-    |                         act on all agents.
-    |   --unjoin UNJOIN_AGENT [UNJOIN_AGENT ...], -u UNJOIN_AGENT [UNJOIN_AGENT ...]
-    |                         Unjoin given agent(s) from given queue(s). Can be
-    |                         "all" to act on all agents.
-    |   --remove REMOVE_USER [REMOVE_USER ...], -r REMOVE_USER [REMOVE_USER ...]
-    |                         Remove given agent from given queue(s). Can be "all"
-    |                         to act on all agents.
-    |   --add ADD_USER [ADD_USER ...], -a ADD_USER [ADD_USER ...]
-    |                         Add given users to given queue(s).
-    |   --dryrun, -d          Dry run; don't apply any changes
-    |   --token TOKEN         admin access token to use
+.. code-block:: text
+
+    usage: queue_helper.py [-h] [--location LOCATION [LOCATION ...]]
+                           [--queue QUEUE [QUEUE ...]]
+                           [--join JOIN_AGENT [JOIN_AGENT ...]]
+                           [--unjoin UNJOIN_AGENT [UNJOIN_AGENT ...]]
+                           [--remove REMOVE_USER [REMOVE_USER ...]]
+                           [--add ADD_USER [ADD_USER ...]] [--dryrun]
+                           [--token TOKEN]
+    
+    Modify call queue settings from the CLI
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --location LOCATION [LOCATION ...], -l LOCATION [LOCATION ...]
+                            name of location to work on. If missing then work on
+                            all locations.
+      --queue QUEUE [QUEUE ...], -q QUEUE [QUEUE ...]
+                            name(s) of queue(s) to operate on. If missing then
+                            work on all queues in location.
+      --join JOIN_AGENT [JOIN_AGENT ...], -j JOIN_AGENT [JOIN_AGENT ...]
+                            Join given user(s) on given queue(s). Can be "all" to
+                            act on all agents.
+      --unjoin UNJOIN_AGENT [UNJOIN_AGENT ...], -u UNJOIN_AGENT [UNJOIN_AGENT ...]
+                            Unjoin given agent(s) from given queue(s). Can be
+                            "all" to act on all agents.
+      --remove REMOVE_USER [REMOVE_USER ...], -r REMOVE_USER [REMOVE_USER ...]
+                            Remove given agent from given queue(s). Can be "all"
+                            to act on all agents.
+      --add ADD_USER [ADD_USER ...], -a ADD_USER [ADD_USER ...]
+                            Add given users to given queue(s).
+      --dryrun, -d          Dry run; don't apply any changes
+      --token TOKEN         admin access token to use
 
 The script uses the access token passed via the CLI, reads one from the WEBEX_ACCESS_TOKEN environment variable or
 obtains tokens via an OAuth flow. For the last option the integration parameters are read from environment variables
@@ -231,16 +235,18 @@ Pool unassigned TNs on hunt groups to catch calls to unassigned TNs
 This script looks for unassigned TNs and assigns them to HGs that are forwarded to the locations main number.
 The idea is to catch all incoming calls to unassigned TNs and handle them accordingly.
 
-    | usage: catch_tns.py [-h] [--test] [--location LOCATION] [--token TOKEN]
-    |                     [--cleanup]
-    | 
-    | optional arguments:
-    |   -h, --help           show this help message and exit
-    |   --test               test only; don't actually apply any config
-    |   --location LOCATION  Location to work on
-    |   --token TOKEN        admin access token to use.
-    |   --cleanup            remove all pooling HGs
-    |
+.. code-block:: text
+
+    usage: catch_tns.py [-h] [--test] [--location LOCATION] [--token TOKEN]
+                        [--cleanup]
+    
+    optional arguments:
+      -h, --help           show this help message and exit
+      --test               test only; don't actually apply any config
+      --location LOCATION  Location to work on
+      --token TOKEN        admin access token to use.
+      --cleanup            remove all pooling HGs
+   
 
 
 Source: |catch_tns.py|_
@@ -256,19 +262,37 @@ Downgrade room device workspaces from Webex Calling to free calling
 This script looks for workspaces in a given location (or all workspaces) and downgrades them from Webex Calling to free
 calling.
 
-    | usage: room_devices.py [-h] [--location LOCATION] [--wsnames WSNAMES] [--test] {show,clear}
-    |
-    | CLI tool to manage room device calling entitlements
-    |
-    | positional arguments:
-    |   {show,clear}         show: show all room devices with their calling settings, clear: remove calling
-    |                        license from devices
-    |
-    | optional arguments:
-    |   -h, --help           show this help message and exit
-    |   --location LOCATION  work on devices in given location
-    |   --wsnames WSNAMES    file name of a file with workspace names to operate on; one name per line
-    |   --test               test run only
+.. code-block:: text
+
+    usage: room_devices.py [-h] [--location LOCATION] [--wsnames WSNAMES] [--test] {show,clear}
+
+    CLI tool to manage room device calling entitlements
+
+    positional arguments:
+      {show,clear}         show: show all room devices with their calling settings, clear:
+                           remove calling license from devices
+
+    options:
+      -h, --help           show this help message and exit
+      --location LOCATION  work on devices in given location
+      --wsnames WSNAMES    file name of a file with workspace names to operate on; one name per
+                           line
+      --test               test run only
+    (wxc-sdk-py3.11) ➜  examples git:(master) ✗ ./room_devices.py --help
+    usage: room_devices.py [-h] [--location LOCATION] [--wsnames WSNAMES] [--test] {show,clear}
+
+    CLI tool to manage room device calling entitlements
+
+    positional arguments:
+      {show,clear}         show: show all room devices with their calling settings, clear: remove
+                           calling license from devices
+
+    options:
+      -h, --help           show this help message and exit
+      --location LOCATION  work on devices in given location
+      --wsnames WSNAMES    file name of a file with workspace names to operate on; one name per
+                           line
+      --test               test run only
 
 Source: |room_devices.py|_
 
@@ -283,20 +307,23 @@ Logout users by selectively revoking authorizations
 
 Selectively revoke authorizations.
 
-    | usage: logout_users.py [-h] [--appname APPNAME] [--test] email
-    | 
-    | CLI tool to logout users by revoking user authorizations
-    | 
-    | positional arguments:
-    |   email              single email or path to file w/ email addresses (one email address per line). "all" can be
-    |                      used to print authorizations for all users. "all" cannot be combined with other parameters
-    |                      and no authorizations will be revoked in this case."
-    | 
-    | optional arguments:
-    |   -h, --help         show this help message and exit
-    |   --appname APPNAME  regular expression matching authorization application names. When missing authorizations for
-    |                      all client ids defined in the script are revoked
-    |   --test             test run only
+.. code-block:: text
+
+    usage: logout_users.py [-h] [--appname APPNAME] [--test] email
+
+    CLI tool to logout users by revoking user authorizations
+
+    positional arguments:
+      email              single email or path to file w/ email addresses (one email address per
+                         line). "all" can be used to print authorizations for all users. "all"
+                         cannot be combined with other parameters and no authorizations will be
+                         revoked in this case."
+
+    options:
+      -h, --help         show this help message and exit
+      --appname APPNAME  regular expression matching authorization application names. When missing
+                         authorizations for all client ids defined in the script are revoked
+      --test             test run only
 
 Source: |logout_users.py|_
 
@@ -310,17 +337,21 @@ Leave spaces with no activity in the last n days
 
 Leave spaces w/o recent activity.
 
-    | usage: leave_spaces.py [-h] [--days DAYS] [--token TOKEN] [--no_test] [--no_messages]
-    | 
-    | leave spaces with no activity
-    | 
-    | options:
-    |   -h, --help            show this help message and exit
-    |   --days DAYS, -d DAYS  days since last activity
-    |   --token TOKEN         Personal access token to use. If not provided script will try to read token
-    |                         from WEBEX_ACCESS_TOKEN environment variable.
-    |   --no_test             Don't test; actually leave the spaces
-    |   --no_messages         Only leave spaces that have no messages
+.. code-block:: text
+
+    usage: leave_spaces.py [-h] [--days DAYS] [--token TOKEN] [--no_test] [--no_messages]
+                           [--keep KEEP]
+
+    leave spaces with no activity
+
+    options:
+      -h, --help            show this help message and exit
+      --days DAYS, -d DAYS  days since last activity; default: 1095
+      --token TOKEN         Personal access token to use. If not provided script will try to read
+                            token from WEBEX_ACCESS_TOKEN environment variable.
+      --no_test             Don't test; actually leave the spaces
+      --no_messages         Only leave spaces that have no messages
+      --keep KEEP, -k KEEP  file with list of spaces to keep
 
 Source: |leave_spaces.py|_
 
@@ -335,16 +366,18 @@ Provision location level access codes from a CSV file
 
 Provision location level access codes from a CSV file
 
-    | usage: access_codes.py [-h] [--token TOKEN] csv_file
-    |
-    | Provision location level access codes from a CSV file
-    |
-    | positional arguments:
-    |   csv_file       CSV file with access codes
-    |
-    | options:
-    |   -h, --help     show this help message and exit
-    |   --token TOKEN  API token
+.. code-block:: text
+
+    usage: access_codes.py [-h] [--token TOKEN] csv_file
+   
+    Provision location level access codes from a CSV file
+   
+    positional arguments:
+      csv_file       CSV file with access codes
+   
+    options:
+      -h, --help     show this help message and exit
+      --token TOKEN  API token
 
 Source: |access_codes.py|_
 
@@ -359,27 +392,34 @@ Bulk assign/unassign agents to/from call queues
 
 Bulk assign/unassign agents to/from call queues
 
-    | usage: queue_agents.py [-h] (--add | --remove) --queues QUEUES --agent AGENT [--token TOKEN] [--debug] [--har]
-    | 
-    | Bulk manage agents in call queues
-    | 
-    | options:
-    |   -h, --help       show this help message and exit
-    |   --add            Add agent(s) to specified queues
-    |   --remove         Remove agent(s) from specified queues
-    |   --queues QUEUES  Text file with list of call queue names (one per line). Each line should be the a location
-    |                    name and a queue name separated by a colon. Example: "Location1:Queue1"
-    |   --agent AGENT    Single agent email address or text file with agent email addresses (one per line)
-    |   --token TOKEN    admin access token to use. If no token is given then the script will try to use service app
-    |                    tokens. The service app parameters are read from environment variables SERVICE_APP_ID,
-    |                    SERvICE_APP_SECRET, and SERVICE_APP_REFRESH. These parameters can also be defined in
-    |                    "queue_agents.env" file. Service app tokens are cached in "queue_agents.yml". If no access
-    |                    token is passed and no service app is defined then the script falls back to try to read an
-    |                    access token from environment variable WEBEX_ACCESS_TOKEN.
-    |   --debug          Enable debug output
-    |   --har            Enable HAR output
-    | 
-    | Example: queue_agents.py --queues queues.txt --agent agents.txt --add
+.. code-block:: text
+
+    usage: queue_agents.py [-h] (--add | --remove) --queues QUEUES --agent AGENT [--token TOKEN]
+                           [--debug] [--har]
+
+    Bulk manage agents in call queues
+
+    options:
+      -h, --help       show this help message and exit
+      --add            Add agent(s) to specified queues
+      --remove         Remove agent(s) from specified queues
+      --queues QUEUES  Text file with list of call queue names (one per line). Each line should be
+                       the a location name and a queue name separated by a colon. Example:
+                       "Location1:Queue1"
+      --agent AGENT    Single agent email address or text file with agent email addresses (one per
+                       line)
+      --token TOKEN    admin access token to use. If no token is given then the script will try to
+                       use service app tokens. The service app parameters are read from
+                       environment variables SERVICE_APP_ID, SERvICE_APP_SECRET, and
+                       SERVICE_APP_REFRESH. These parameters can also be defined in
+                       "queue_agents.env" file. Service app tokens are cached in
+                       "queue_agents.yml". If no access token is passed and no service app is
+                       defined then the script falls back to try to read an access token from
+                       environment variable WEBEX_ACCESS_TOKEN.
+      --debug          Enable debug output
+      --har            Enable HAR output
+
+    Example: queue_agents.py --queues queues.txt --agent agents.txt --add
 
 Source: |queue_agents.py|_
 
