@@ -41,18 +41,18 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
            'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
            'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
-           'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi',
-           'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
-           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi',
-           'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
-           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
+           'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEnum', 'AsEventsApi', 'AsExecAssistantApi',
+           'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi',
+           'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
+           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgEmergencyServicesApi',
+           'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI',
+           'AsOrganizationApi', 'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
@@ -64,7 +64,7 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
            'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
            'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
-           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsXApi']
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsXApi', 'Asstr']
 
 
 @dataclass(init=False)
@@ -12720,14 +12720,26 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         
 
 
-class AsForwardingApi:
+class AsFeatureSelector(str, Enum):
+    queues = 'queues'
+    huntgroups = 'huntGroups'
+    auto_attendants = 'autoAttendants'
+
+
+
+
+
+class AsForwardingApi(AsApiChild, base=''):
     """
     API for forwarding settings on call queues, hunt groups, and auto attendants
     """
+    _session: AsRestSession
+    _feature: AsFeatureSelector
 
-    def __init__(self, session: AsRestSession, feature_selector: FeatureSelector):
+    def __init__(self, session: AsRestSession, feature_selector: AsFeatureSelector):
         self._session = session
         self._feature = feature_selector
+        super().__init__(session=session)
 
     def _endpoint(self, location_id: str, feature_id: str, path: str = None):
         """
@@ -12736,7 +12748,6 @@ class AsForwardingApi:
         :param location_id:
         :param feature_id:
         :param path:
-        :return:
         """
         path = path and f'/{path}' or ''
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/{self._feature.value}/'
@@ -12747,6 +12758,15 @@ class AsForwardingApi:
         """
         Retrieve Call Forwarding settings for the designated feature including the list of call
         forwarding rules.
+        
+        The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
+        Below are the available options for configuring your call forwarding:
+        1. Always forward calls to a designated number.
+        2. Forward calls to a designated number based on certain criteria.
+        3. Forward calls using different modes.
+
+        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Location in which this feature exists.
         :type location_id: str
@@ -12901,7 +12921,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
-        self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.auto_attendants)
+        self.forwarding = AsForwardingApi(session=session, feature_selector=AsFeatureSelector.auto_attendants)
 
     def _endpoint(self, *, location_id: str = None, auto_attendant_id: str = None, path: str = None) -> str:
         """
@@ -14398,7 +14418,7 @@ class AsCallQueueApi(AsApiChild, base=''):
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
         self.agents = AsCallQueueAgentsApi(session=session)
-        self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.queues)
+        self.forwarding = AsForwardingApi(session=session, feature_selector=AsFeatureSelector.queues)
         self.announcement = AsAnnouncementApi(session=session)
         self.policy = AsCQPolicyApi(session=session)
 
@@ -17301,7 +17321,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
-        self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.huntgroups)
+        self.forwarding = AsForwardingApi(session=session, feature_selector=AsFeatureSelector.huntgroups)
 
     def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None, path: str = None) -> str:
         """

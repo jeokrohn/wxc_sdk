@@ -663,6 +663,18 @@ The method name is a link to the method documentation.
         Get Auto Attendant Primary Available Phone Numbers
    * - :meth:`api.telephony.auto_attendant.update <wxc_sdk.telephony.autoattendant.AutoAttendantApi.update>`
         Update an Auto Attendant
+   * - :meth:`api.telephony.auto_attendant.forwarding.call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.call_forwarding_rule>`
+        Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue
+   * - :meth:`api.telephony.auto_attendant.forwarding.create_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.create_call_forwarding_rule>`
+        Create a Selective Call Forwarding Rule feature
+   * - :meth:`api.telephony.auto_attendant.forwarding.delete_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.delete_call_forwarding_rule>`
+        Delete a Selective Call Forwarding Rule for the designated feature
+   * - :meth:`api.telephony.auto_attendant.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
+        Retrieve Call Forwarding settings for the designated feature including the list of call
+   * - :meth:`api.telephony.auto_attendant.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
+        Update Call Forwarding Settings for a feature
+   * - :meth:`api.telephony.auto_attendant.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
+        Update a Selective Call Forwarding Rule's settings for the designated feature
    * - :meth:`api.telephony.call_intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`
         Put Location Intercept
    * - :meth:`api.telephony.call_intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
@@ -753,6 +765,18 @@ The method name is a link to the method documentation.
         Read the List of Call Queue Agents
    * - :meth:`api.telephony.callqueue.agents.update_call_queue_settings <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.update_call_queue_settings>`
         Update an Agent's Settings of One or More Call Queues
+   * - :meth:`api.telephony.callqueue.forwarding.call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.call_forwarding_rule>`
+        Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue
+   * - :meth:`api.telephony.callqueue.forwarding.create_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.create_call_forwarding_rule>`
+        Create a Selective Call Forwarding Rule feature
+   * - :meth:`api.telephony.callqueue.forwarding.delete_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.delete_call_forwarding_rule>`
+        Delete a Selective Call Forwarding Rule for the designated feature
+   * - :meth:`api.telephony.callqueue.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
+        Retrieve Call Forwarding settings for the designated feature including the list of call
+   * - :meth:`api.telephony.callqueue.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
+        Update Call Forwarding Settings for a feature
+   * - :meth:`api.telephony.callqueue.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
+        Update a Selective Call Forwarding Rule's settings for the designated feature
    * - :meth:`api.telephony.calls.answer <wxc_sdk.telephony.calls.CallsApi.answer>`
         Answer an incoming call
    * - :meth:`api.telephony.calls.barge_in <wxc_sdk.telephony.calls.CallsApi.barge_in>`
@@ -941,6 +965,18 @@ The method name is a link to the method documentation.
         Get Hunt Group Primary Available Phone Numbers
    * - :meth:`api.telephony.huntgroup.update <wxc_sdk.telephony.huntgroup.HuntGroupApi.update>`
         Update a Hunt Group
+   * - :meth:`api.telephony.huntgroup.forwarding.call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.call_forwarding_rule>`
+        Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue
+   * - :meth:`api.telephony.huntgroup.forwarding.create_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.create_call_forwarding_rule>`
+        Create a Selective Call Forwarding Rule feature
+   * - :meth:`api.telephony.huntgroup.forwarding.delete_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.delete_call_forwarding_rule>`
+        Delete a Selective Call Forwarding Rule for the designated feature
+   * - :meth:`api.telephony.huntgroup.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
+        Retrieve Call Forwarding settings for the designated feature including the list of call
+   * - :meth:`api.telephony.huntgroup.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
+        Update Call Forwarding Settings for a feature
+   * - :meth:`api.telephony.huntgroup.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
+        Update a Selective Call Forwarding Rule's settings for the designated feature
    * - :meth:`api.telephony.jobs.apply_line_key_templates.apply <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.apply>`
         Apply a Line key Template
    * - :meth:`api.telephony.jobs.apply_line_key_templates.errors <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.errors>`

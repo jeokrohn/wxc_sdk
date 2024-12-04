@@ -2,10 +2,12 @@
 Forwarding settings and API for call queues, hunt groups, and auto attendants
 """
 import json
+from dataclasses import dataclass
 from typing import Optional
 
 from pydantic import Field, field_validator
 
+from ..api_child import ApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..rest import RestSession
@@ -66,8 +68,12 @@ class ForwardingSetting(ApiModel):
 
 
 class CallForwarding(ApiModel):
+    #: Settings for forwarding all incoming calls to the destination you choose.
     always: ForwardingSetting
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: ForwardingSetting
+    #: Rules for selectively forwarding calls.
     rules: Optional[list[ForwardingRule]] = None
 
     @staticmethod
@@ -117,6 +123,7 @@ class CallForwardingNumber(ApiModel):
     def validate_phone_number(cls, v):
         """
         Platform returns NANP numbers w/o +
+
         :meta private:
         """
         return assert_plus1(v)
@@ -214,14 +221,18 @@ class FeatureSelector(str, Enum):
     auto_attendants = 'autoAttendants'
 
 
-class ForwardingApi:
+@dataclass(init=False, repr=False)
+class ForwardingApi(ApiChild, base=''):
     """
     API for forwarding settings on call queues, hunt groups, and auto attendants
     """
+    _session: RestSession
+    _feature: FeatureSelector
 
     def __init__(self, session: RestSession, feature_selector: FeatureSelector):
         self._session = session
         self._feature = feature_selector
+        super().__init__(session=session)
 
     def _endpoint(self, location_id: str, feature_id: str, path: str = None):
         """
@@ -230,7 +241,6 @@ class ForwardingApi:
         :param location_id:
         :param feature_id:
         :param path:
-        :return:
         """
         path = path and f'/{path}' or ''
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/{self._feature.value}/'
@@ -241,6 +251,15 @@ class ForwardingApi:
         """
         Retrieve Call Forwarding settings for the designated feature including the list of call
         forwarding rules.
+        
+        The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
+        Below are the available options for configuring your call forwarding:
+        1. Always forward calls to a designated number.
+        2. Forward calls to a designated number based on certain criteria.
+        3. Forward calls using different modes.
+
+        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Location in which this feature exists.
         :type location_id: str
