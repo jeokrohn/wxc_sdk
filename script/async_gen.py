@@ -305,6 +305,7 @@ def source_paths() -> list[Path]:
     # don't look at the file we are about to create
     py_files = [path for path in py_files
                 if os.path.basename(path) != AS_API_SOURCE]
+    py_files = [path for path in py_files if 'har_writer' not in str(path)]
     return py_files
 
 
