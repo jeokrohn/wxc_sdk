@@ -395,7 +395,7 @@ Bulk assign/unassign agents to/from call queues
 .. code-block:: text
 
     usage: queue_agents.py [-h] (--add | --remove) --queues QUEUES --agent AGENT [--token TOKEN]
-                           [--debug] [--har]
+                           [--debug] [--har] [--dry-run]
 
     Bulk manage agents in call queues
 
@@ -403,13 +403,13 @@ Bulk assign/unassign agents to/from call queues
       -h, --help       show this help message and exit
       --add            Add agent(s) to specified queues
       --remove         Remove agent(s) from specified queues
-      --queues QUEUES  Text file with list of call queue names (one per line). Each line should be
-                       the a location name and a queue name separated by a colon. Example:
+      --queues QUEUES  Text file with list of call queue names (one per line). Each line should
+                       be the a location name and a queue name separated by a colon. Example:
                        "Location1:Queue1"
-      --agent AGENT    Single agent email address or text file with agent email addresses (one per
-                       line)
-      --token TOKEN    admin access token to use. If no token is given then the script will try to
-                       use service app tokens. The service app parameters are read from
+      --agent AGENT    Single agent email address or text file with agent email addresses (one
+                       per line)
+      --token TOKEN    admin access token to use. If no token is given then the script will try
+                       to use service app tokens. The service app parameters are read from
                        environment variables SERVICE_APP_ID, SERvICE_APP_SECRET, and
                        SERVICE_APP_REFRESH. These parameters can also be defined in
                        "queue_agents.env" file. Service app tokens are cached in
@@ -418,6 +418,7 @@ Bulk assign/unassign agents to/from call queues
                        environment variable WEBEX_ACCESS_TOKEN.
       --debug          Enable debug output
       --har            Enable HAR output
+      --dry-run        Simulate the operation without making actual changes
 
     Example: queue_agents.py --queues queues.txt --agent agents.txt --add
 

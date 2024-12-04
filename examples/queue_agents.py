@@ -140,7 +140,8 @@ def read_file_lines(filename: str) -> List[str]:
         sys.exit(1)
 
 
-async def process_one_queue(api: AsWebexSimpleApi, queue: CallQueue, agents: list[Person], action: str):
+async def process_one_queue(*, api: AsWebexSimpleApi, queue: CallQueue, agents: list[Person], action: str,
+                            dry_run: bool=True):
     """
     Process adding or removing agents from a single call queue.
     """
@@ -169,7 +170,8 @@ async def process_one_queue(api: AsWebexSimpleApi, queue: CallQueue, agents: lis
         print(f"Removing agents from queue {queue.name} in location {queue.location_name}: {agent_str}")
         details.agents = [agent for agent in details.agents if agent.agent_id not in agents_to_remove]
     update = CallQueue(agents=details.agents)
-    await api.telephony.callqueue.update(location_id=queue.location_id, queue_id=queue.id, update=update)
+    if not dry_run:
+        await api.telephony.callqueue.update(location_id=queue.location_id, queue_id=queue.id, update=update)
 
 
 async def validate_queues(api: AsWebexSimpleApi, queues: Iterable[str]) -> list[CallQueue]:
@@ -241,6 +243,10 @@ def main():
     parser.add_argument('--debug', action='store_true', help='Enable debug output')
     parser.add_argument('--har', action='store_true', help='Enable HAR output')
 
+    # fry run option
+    parser.add_argument('--dry-run', action='store_true',
+                        help='Simulate the operation without making actual changes')
+
     # Parse arguments
     args = parser.parse_args()
 
@@ -295,7 +301,8 @@ def main():
 
                 # process all queues in parallel
                 await asyncio.gather(
-                    *[process_one_queue(api=api, queue=queue, agents=validated_agents, action=args.action)
+                    *[process_one_queue(api=api, queue=queue, agents=validated_agents, action=args.action,
+                                        dry_run=args.dry_run)
                       for queue in validated_queues],
                     return_exceptions=False)
             # with
