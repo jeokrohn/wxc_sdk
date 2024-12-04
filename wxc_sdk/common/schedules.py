@@ -14,7 +14,19 @@ from ..rest import RestSession
 
 __all__ = ['ScheduleApi', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'ScheduleWeek', 'RecurWeekly',
            'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'Event', 'Schedule', 'ScheduleApiBase',
-           'ScheduleTypeOrStr']
+           'ScheduleTypeOrStr', 'ScheduleLevel']
+
+
+class ScheduleLevel(str, Enum):
+    """
+    Specifies whether the schedule mentioned in holidayScheduleName is org or location specific.
+    (Must be from holidaySchedules list)
+    """
+    #: Specifies this Schedule is configured across location.
+    location = 'LOCATION'
+    #: Specifies this Schedule is configured across organisation.
+    organization = 'ORGANIZATION'
+
 
 ScheduleTypeOrStr = Union[str, 'ScheduleType']
 

@@ -7,14 +7,16 @@ from dataclasses import dataclass
 from itertools import chain
 from operator import attrgetter
 from re import match
-from typing import ClassVar
+from typing import ClassVar, Callable, Any
 
 from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
 from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
 from wxc_sdk.all_types import *
+from wxc_sdk.person_settings import MonitoringApi
 from wxc_sdk.telephony.callqueue import CQRoutingType, CallQueueSettings
 from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, ScheduleLevel, NightService, \
     StrandedCalls, StrandedCallsAction, ForcedForward
+from wxc_sdk.telephony.forwarding import ForwardingApi
 from wxc_sdk.telephony.hg_and_cq import CallingLineIdPolicy
 
 # number of call queues to create by create many test
@@ -833,3 +835,45 @@ class TestOrgSettings(TestCaseWithLog):
             self.api.telephony.callqueue.update_call_queue_settings(settings=before)
             after = self.api.telephony.callqueue.get_call_queue_settings()
             self.assertEqual(before, after)
+
+
+@dataclass(init=False, repr=False)
+class TestForwarding(TestCaseWithLog):
+    fwd_api: ClassVar[ForwardingApi] = None
+    target: ClassVar[CallQueue] = None
+
+    @property
+    def target_id(self):
+        return {'location_id': self.target.location_id,
+                'feature_id': self.target.id}
+
+    def setUp(self) -> None:
+        if self.__class__ == TestForwarding:
+            self.skipTest('Abstract test class')
+        if not self.target:
+            self.skipTest('No target queue to run tests')
+        super().setUp()
+
+    def test_001_get_settings(self):
+        """
+        Get call forwarding settings
+        """
+        settings = self.fwd_api.settings(**self.target_id)
+        print(json.dumps(json.loads(settings.model_dump_json()), indent=2))
+
+    def test_002_switch_mode_for_call_forwarding(self):
+        self.fwd_api.switch_mode_for_call_forwarding(**self.target_id)
+
+
+class TestQueueForwarding(TestForwarding):
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.fwd_api = cls.api.telephony.callqueue.forwarding
+        cls.target = next((q for q in cls.api.telephony.callqueue.list(name='word support') if q.name=='word support'), None)
+
+    def test_001_get_settings(self):
+        super().test_001_get_settings()
+
+    def test_002_switch_mode_for_call_forwarding(self):
+        super().test_002_switch_mode_for_call_forwarding()

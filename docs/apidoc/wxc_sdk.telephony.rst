@@ -24,6 +24,7 @@ Subpackages
    wxc_sdk.telephony.guest_calling
    wxc_sdk.telephony.jobs
    wxc_sdk.telephony.location
+   wxc_sdk.telephony.operating_modes
    wxc_sdk.telephony.org_access_codes
    wxc_sdk.telephony.playlists
    wxc_sdk.telephony.prem_pstn

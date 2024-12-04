@@ -9,9 +9,10 @@ from pydantic import Field
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
 from ...common import Greeting, AnnAudioFile
+from ...common.schedules import ScheduleLevel
 from ...rest import RestSession
 
-__all__ = ['CPActionType', 'ScheduleLevel', 'CQHolidaySchedule', 'HolidayService', 'AnnouncementMode', 'NightService',
+__all__ = ['CPActionType', 'CQHolidaySchedule', 'HolidayService', 'AnnouncementMode', 'NightService',
            'StrandedCalls', 'StrandedCallsAction', 'ForcedForward', 'CQPolicyApi']
 
 
@@ -24,16 +25,6 @@ class CPActionType(str, Enum):
     #: Transfers the call to number specified in transferPhoneNumber.
     transfer = 'TRANSFER'
 
-
-class ScheduleLevel(str, Enum):
-    """
-    Specifies whether the schedule mentioned in holidayScheduleName is org or location specific.
-    (Must be from holidaySchedules list)
-    """
-    #: Specifies this Schedule is configured across location.
-    location = 'LOCATION'
-    #: Specifies this Schedule is configured across organisation.
-    organization = 'ORGANIZATION'
 
 
 class CQHolidaySchedule(ApiModel):

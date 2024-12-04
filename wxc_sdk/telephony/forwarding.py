@@ -10,11 +10,13 @@ from pydantic import Field, field_validator
 from ..api_child import ApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
+from ..common.schedules import ScheduleLevel
 from ..rest import RestSession
 
-__all__ = ['ForwardingRule', 'ForwardingSetting', 'CallForwarding', 'ForwardToSelection', 'CallForwardingNumberType',
-           'CallForwardingNumber', 'ForwardCallsTo', 'CustomNumbers', 'CallsFrom', 'ForwardingRuleDetails',
-           'FeatureSelector', 'ForwardingApi']
+__all__ = ['ForwardingRule', 'ForwardingSetting', 'ForwardOperatingModesException', 'ModeType',
+           'ModeDefaultForwardToSelection', 'ForwardToSelection', 'ModeForwardTo', 'ModeForward',
+           'ForwardOperatingModes', 'CallForwarding', 'ForwardTo', 'ForwardFromSelection', 'CallForwardingNumber',
+           'ForwardCallsTo', 'CustomNumbers', 'CallsFrom', 'ForwardingRuleDetails', 'FeatureSelector', 'ForwardingApi']
 
 
 def assert_plus1(number: str) -> str:
@@ -67,6 +69,88 @@ class ForwardingSetting(ApiModel):
                                  destination='')
 
 
+class ForwardOperatingModesException(str, Enum):
+    #: The mode was switched to or extended by the user for manual switch back and runs as an exception until the user
+    #: manual switches the feature back to normal operation or a different mode.
+    manual_switch_back = 'MANUAL_SWITCH_BACK'
+    #: The mode was switched to by the user before its start time and runs as an exception until its end time is
+    #: reached at which point it automatically switches the feature back to normal operation.
+    automatic_switch_back_early_start = 'AUTOMATIC_SWITCH_BACK_EARLY_START'
+    #: The current mode was extended by the user before its end time and runs as an exception until the extension end
+    #: time (mode's end time + extension of up to 12 hours) is reached at which point it automatically switches the
+    #: feature back to normal operation.
+    automatic_switch_back_extension = 'AUTOMATIC_SWITCH_BACK_EXTENSION'
+    #: The mode will remain the current operating mode for the feature until its normal end time is reached.
+    automatic_switch_back_standard = 'AUTOMATIC_SWITCH_BACK_STANDARD'
+
+
+class ModeType(str, Enum):
+    #: The operating mode is not scheduled.
+    none_ = 'NONE'
+    #: Single time duration for Monday-Friday and single time duration for Saturday-Sunday.
+    same_hours_daily = 'SAME_HOURS_DAILY'
+    #: Individual time durations for every day of the week.
+    different_hours_daily = 'DIFFERENT_HOURS_DAILY'
+    #: Holidays which have date durations spanning multiple days, as well as an optional yearly recurrence by day or
+    #: date.
+    holiday = 'HOLIDAY'
+
+
+class ModeDefaultForwardToSelection(str, Enum):
+    #: When the rule matches, forward to the destination for this rule.
+    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
+    #: When the rule matches, do not forward to another number.
+    do_not_forward = 'DO_NOT_FORWARD'
+
+
+class ForwardToSelection(str, Enum):
+    default_number = 'FORWARD_TO_DEFAULT_NUMBER'
+    specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
+    dont_forward = 'DO_NOT_FORWARD'
+
+
+class ModeForwardTo(ApiModel):
+    #: The selection for forwarding.
+    selection: Optional[ForwardToSelection] = None
+    #: The destination for forwarding. Required when the selection is set to `FORWARD_TO_SPECIFIED_NUMBER`.
+    destination: Optional[str] = None
+    #: Sending incoming calls to voicemail is enabled/disabled when the destination is an internal phone number and
+    #: that number has the voicemail service enabled.
+    destination_voicemail_enabled: Optional[bool] = None
+    #: The operating mode's destination.
+    default_destination: Optional[str] = None
+    #: The operating mode's destination voicemail enabled.
+    default_destination_voicemail_enabled: Optional[bool] = None
+    #: The operating mode's forward to selection.
+    default_forward_to_selection: Optional[ModeDefaultForwardToSelection] = None
+
+
+class ModeForward(ApiModel):
+    #: Normal operation is enabled or disabled.
+    normal_operation_enabled: Optional[bool] = None
+    #: The ID of the operating mode.
+    id: Optional[str] = None
+    #: The name of the operating mode.
+    name: Optional[str] = None
+    #: The type of the operating mode.
+    type: Optional[ModeType] = None
+    #: The level of the operating mode.
+    level: Optional[ScheduleLevel] = None
+    #: Forward to settings.
+    forward_to: Optional[ModeForwardTo] = None
+
+
+class ForwardOperatingModes(ApiModel):
+    #: Operating modes are enabled or disabled.
+    enabled: Optional[bool] = None
+    #: The ID of the current operating mode.
+    current_operating_mode_id: Optional[str] = None
+    #: The exception type.
+    exception_type: Optional[ForwardOperatingModesException] = None
+    #: Operating modes.
+    modes: Optional[list[ModeForward]] = None
+
+
 class CallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: ForwardingSetting
@@ -75,18 +159,14 @@ class CallForwarding(ApiModel):
     selective: ForwardingSetting
     #: Rules for selectively forwarding calls.
     rules: Optional[list[ForwardingRule]] = None
+    #: Settings related to operating modes.
+    operating_modes: Optional[ForwardOperatingModes] = None
 
     @staticmethod
     def default() -> 'CallForwarding':
         return CallForwarding(always=ForwardingSetting.default(),
                               selective=ForwardingSetting.default(),
                               rules=[])
-
-
-class ForwardToSelection(str, Enum):
-    default_number = 'FORWARD_TO_DEFAULT_NUMBER'
-    specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
-    dont_forward = 'DO_NOT_FORWARD'
 
 
 class ForwardTo(ApiModel):
@@ -251,7 +331,7 @@ class ForwardingApi(ApiChild, base=''):
         """
         Retrieve Call Forwarding settings for the designated feature including the list of call
         forwarding rules.
-        
+
         The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
         Below are the available options for configuring your call forwarding:
         1. Always forward calls to a designated number.
@@ -404,3 +484,27 @@ class ForwardingApi(ApiChild, base=''):
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
         self._session.rest_delete(url=url, params=params)
+
+    def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str,
+                                        org_id: str = None):
+        """
+        Switch Mode for Call Forwarding Settings for en entity
+
+        Switches the current operating mode to the mode as per normal operations.
+
+        Switching operating mode a full, or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: `Location` in which this `call queue` exists.
+        :type location_id: str
+        :param feature_id: Switch operating mode to normal operations for this entity.
+        :type feature_id: str
+        :param org_id: Switch operating mode as per normal operations for this entity from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self._endpoint(location_id=location_id, feature_id=feature_id, path='actions/switchMode/invoke')
+        self._session.rest_put(url, params=params)

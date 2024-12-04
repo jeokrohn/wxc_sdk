@@ -27,6 +27,7 @@ from .huntgroup import HuntGroupApi
 from .jobs import JobsApi
 from .location import TelephonyLocationApi
 from .location.intercept import LocationInterceptApi
+from .operating_modes import OperatingModesApi
 from .org_access_codes import OrganisationAccessCodesApi
 from .organisation_vm import OrganisationVoicemailSettingsAPI
 from .paging import PagingApi
@@ -671,6 +672,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     location: TelephonyLocationApi
     locations: TelephonyLocationApi
     ms_teams: OrgMSTeamsSettingApi
+    operating_modes: OperatingModesApi
     #: organisation access codes
     organisation_access_codes: OrganisationAccessCodesApi
     #: organisation voicemail settings
@@ -715,6 +717,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.location = TelephonyLocationApi(session=session)
         self.locations = self.location
         self.ms_teams = OrgMSTeamsSettingApi(session=session)
+        self.operating_modes = OperatingModesApi(session=session)
         self.organisation_access_codes = OrganisationAccessCodesApi(session=session)
         self.organisation_voicemail = OrganisationVoicemailSettingsAPI(session=session)
         self.paging = PagingApi(session=session)
