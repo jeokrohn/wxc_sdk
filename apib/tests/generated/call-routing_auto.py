@@ -1036,7 +1036,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             number or URI.
         :type originator_number: str
         :param include_applied_services: This element is used to retrieve if any translation pattern, call intercept,
-            permission by type is present for the called party.
+            permission by type or permission by digit pattern is present for the called party.
         :type include_applied_services: bool
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
