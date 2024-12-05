@@ -4,6 +4,10 @@ Release history
 - feat: new API: :attr:`api.person_settings.selective_accept <wxc_sdk.person_settings.PersonSettingsApi.selective_accept>`
 - feat: new API: :attr:`api.person_settings.selective_forward <wxc_sdk.person_settings.PersonSettingsApi.selective_forward>`
 - feat: new API: :attr:`api.person_settings.selective_reject <wxc_sdk.person_settings.PersonSettingsApi.selective_reject>`
+- feat: new parameter `topic` in :meth:`api.converged_recordings.ConvergedRecordingsApi.list <wxc_sdk.converged_recordings.ConvergedRecordingsApi.list>`
+- feat: new method :meth:`api.converged_recordings.ConvergedRecordingsApi.move_recordings_into_the_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.move_recordings_into_the_recycle_bin>`
+- feat: new method :meth:`api.converged_recordings.ConvergedRecordingsApi.restore_recordings_from_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.restore_recordings_from_recycle_bin>`
+- feat: new method :meth:`api.converged_recordings.ConvergedRecordingsApi.purge_recordings_from_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.purge_recordings_from_recycle_bin>`
 
 1.23.0
 ======
