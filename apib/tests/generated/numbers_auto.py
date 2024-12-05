@@ -560,9 +560,9 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/numbers')
         super().delete(url, params=params, json=body)
 
-    def validate_phone_numbers_(self, phone_numbers: list[str], org_id: str = None) -> ValidateNumbersResponse:
+    def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidateNumbersResponse:
         """
-        Validate phone numbers.
+        Validate phone numbers
 
         Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
         response.
