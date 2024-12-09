@@ -52,8 +52,6 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
     """
     Conference Controls
 
-    Not supported for Webex for Government (FedRAMP)
-
     Conference Control APIs in support of Webex Calling.
 
     All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`

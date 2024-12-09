@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['BetaConferenceControlsApi', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceStateEnum',
+__all__ = ['ConferenceControlsApi', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceStateEnum',
            'ConferenceTypeEnum']
 
 
@@ -60,13 +60,9 @@ class ConferenceDetails(ApiModel):
     participants: Optional[list[ConferenceParticipant]] = None
 
 
-class BetaConferenceControlsApi(ApiChild, base='telephony/conference'):
+class ConferenceControlsApi(ApiChild, base='telephony/conference'):
     """
-    Beta Conference Controls
-    
-    Not supported for Webex for Government (FedRAMP)
-    
-    
+    Conference Controls
     
     Conference Control APIs in support of Webex Calling.
     
