@@ -388,10 +388,15 @@ class CreateDevice(TestWithLocations):
         if result is None:
             errs.append('Empty response when creating desk phone device')
 
-        person_devices = self.api.devices.list(person_id=target_user.person_id)
+        person_devices = list(self.api.devices.list(person_id=target_user.person_id))
         created_device = next((d for d in person_devices if d.mac == mac), None)
         if created_device is None:
+            errs.append('Device not found in list of devices')
+        device_list = self.api.person_settings.devices(person_id=target_user.person_id)
+        created_device = next((d for d in device_list.devices if d.mac == mac), None)
+        if created_device is None:
             errs.append('Device not found in list of user devices')
+
         self.assertTrue(not errs, ', '.join(errs))
 
 
