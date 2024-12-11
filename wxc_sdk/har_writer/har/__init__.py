@@ -162,10 +162,12 @@ class HARRequest(HARModel):
         """
         # if no authorization should be included, remove authorization header
         if not self.with_authorization:
-            # strip out the Authorization header
+            # mask the token in the Authorization header
             if isinstance(self.headers, list):
                 self.headers = NameValue.list_to_dict(self.headers)
-            self.headers.pop('Authorization', None)
+            auth_header = self.headers.get('Authorization')
+            if auth_header:
+                self.headers['Authorization'] = re.sub(r'Bearer\s+\S+', 'Bearer <token>', auth_header)
 
         # if queryString is not set, parse it from url
         if not self.queryString:
