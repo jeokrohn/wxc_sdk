@@ -8,6 +8,7 @@ Release history
 - feat: new method :meth:`api.converged_recordings.ConvergedRecordingsApi.move_recordings_into_the_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.move_recordings_into_the_recycle_bin>`
 - feat: new method :meth:`api.converged_recordings.ConvergedRecordingsApi.restore_recordings_from_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.restore_recordings_from_recycle_bin>`
 - feat: new method :meth:`api.converged_recordings.ConvergedRecordingsApi.purge_recordings_from_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.purge_recordings_from_recycle_bin>`
+- fix: :meth:`api.devices.create_by_mac_address <wxc_sdk.devices.DevicesApi.create_by_mac_address>` returns None if device creation leads to empty response. Apparently this is the case for deskphone devices
 
 1.23.0
 ======

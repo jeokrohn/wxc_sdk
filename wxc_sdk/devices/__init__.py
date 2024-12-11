@@ -330,7 +330,7 @@ class DevicesApi(ApiChild, base='devices'):
         return ActivationCodeResponse.model_validate(data)
 
     def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
-                              model: str = None, password: str = None, org_id: str = None) -> Device:
+                              model: str = None, password: str = None, org_id: str = None) -> Optional[Device]:
         """
         Create a phone by it's MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.
@@ -362,4 +362,6 @@ class DevicesApi(ApiChild, base='devices'):
             body['password'] = password
         url = self.ep()
         data = super().post(url=url, json=body, params=params)
+        if not data:
+            return None
         return Device.model_validate(data)

@@ -1,5 +1,6 @@
 import asyncio
 import json
+import random
 import uuid
 from contextlib import contextmanager
 from itertools import chain
@@ -10,6 +11,7 @@ from pydantic import Field, TypeAdapter
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_mac_address, calling_users, create_workspace_with_webex_calling
+from wxc_sdk.common import DeviceType
 from wxc_sdk.devices import TagOp, Device
 from wxc_sdk.telephony import DeviceManagedBy
 from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
@@ -228,7 +230,8 @@ class CreateDevice(TestWithLocations):
 
     def setUp(self) -> None:
         super().setUp()
-        self.workspaces = list(self.api.workspaces.list())
+        with self.no_log():
+            self.workspaces = list(self.api.workspaces.list())
 
     def workspaces_w_calling(self) -> list[Workspace]:
         result = [w for w in self.workspaces
@@ -357,6 +360,39 @@ class CreateDevice(TestWithLocations):
         print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         details = self.api.telephony.devices.details(device_id=result.device_id)
         print(json.dumps(details.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+
+    def test_006_create_desk_phone(self):
+        """
+        Create a desk phone device for a user
+        """
+        # get all device types
+        with self.no_log():
+            supported_devices = self.api.telephony.supported_devices()
+            desk_phones = [device for device in supported_devices.devices
+                           if device.device_type == DeviceType.desk_phone]
+            model = random.choice(desk_phones).model
+
+            # pick a random user
+            users = calling_users(api=self.api)
+            target_user = choice(users)
+
+            # get an available MAC address
+            mac = next(available_mac_address(api=self.api))
+        print(f'Trying to create an {model} with mac {mac} for user: {target_user.display_name}')
+
+        # add device by MAC
+        result = self.api.devices.create_by_mac_address(mac=mac,
+                                                        person_id=target_user.person_id,
+                                                        model=model)
+        errs = []
+        if result is None:
+            errs.append('Empty response when creating desk phone device')
+
+        person_devices = self.api.devices.list(person_id=target_user.person_id)
+        created_device = next((d for d in person_devices if d.mac == mac), None)
+        if created_device is None:
+            errs.append('Device not found in list of user devices')
+        self.assertTrue(not errs, ', '.join(errs))
 
 
 @skip
