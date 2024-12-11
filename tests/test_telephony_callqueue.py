@@ -10,7 +10,8 @@ from re import match
 from typing import ClassVar, Callable, Any
 
 from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
-from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
+from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule, \
+    create_simple_call_queue
 from wxc_sdk.all_types import *
 from wxc_sdk.person_settings import MonitoringApi
 from wxc_sdk.telephony.callqueue import CQRoutingType, CallQueueSettings
@@ -82,37 +83,10 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         """
         create a simple call queue
         """
-        # pick a random location
-        target_location = random.choice(self.locations)
-        print(f'Target location: {target_location.name}')
-
-        tcq = self.api.telephony.callqueue
-        # pick available CQ name in location
-        cq_list = list(tcq.list(location_id=target_location.location_id))
-        queue_names = set(queue.name for queue in cq_list)
-        new_name = next(name for i in range(1000)
-                        if (name := f'cq_{i:03}') not in queue_names)
-        with self.no_log():
-            extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id))
-
-        # pick two calling users
-        members = random.sample(self.users, 2)
-
-        # settings for new call queue
-        settings = CallQueue(name=new_name,
-                             extension=extension,
-                             calling_line_id_policy=CallingLineIdPolicy.location_number,
-                             call_policies=CallQueueCallPolicies.default(),
-                             queue_settings=QueueSettings.default(queue_size=10),
-                             phone_number_for_outgoing_calls_enabled=True,
-                             agents=[Agent(agent_id=user.person_id) for user in members])
-        # create new queue
-        new_queue = tcq.create(location_id=target_location.location_id,
-                               settings=settings)
-
-        # and get details of new queue using the queue id
-        details = tcq.details(location_id=target_location.location_id,
-                              queue_id=new_queue)
+        details = create_simple_call_queue(api=self.api,
+                                           locations=self.telephony_locations,
+                                           no_log=self.no_log,
+                                           users=self.users)
         print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_002_duplicate_call_queue(self):
@@ -835,45 +809,3 @@ class TestOrgSettings(TestCaseWithLog):
             self.api.telephony.callqueue.update_call_queue_settings(settings=before)
             after = self.api.telephony.callqueue.get_call_queue_settings()
             self.assertEqual(before, after)
-
-
-@dataclass(init=False, repr=False)
-class TestForwarding(TestCaseWithLog):
-    fwd_api: ClassVar[ForwardingApi] = None
-    target: ClassVar[CallQueue] = None
-
-    @property
-    def target_id(self):
-        return {'location_id': self.target.location_id,
-                'feature_id': self.target.id}
-
-    def setUp(self) -> None:
-        if self.__class__ == TestForwarding:
-            self.skipTest('Abstract test class')
-        if not self.target:
-            self.skipTest('No target queue to run tests')
-        super().setUp()
-
-    def test_001_get_settings(self):
-        """
-        Get call forwarding settings
-        """
-        settings = self.fwd_api.settings(**self.target_id)
-        print(json.dumps(json.loads(settings.model_dump_json()), indent=2))
-
-    def test_002_switch_mode_for_call_forwarding(self):
-        self.fwd_api.switch_mode_for_call_forwarding(**self.target_id)
-
-
-class TestQueueForwarding(TestForwarding):
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.fwd_api = cls.api.telephony.callqueue.forwarding
-        cls.target = next((q for q in cls.api.telephony.callqueue.list(name='word support') if q.name=='word support'), None)
-
-    def test_001_get_settings(self):
-        super().test_001_get_settings()
-
-    def test_002_switch_mode_for_call_forwarding(self):
-        super().test_002_switch_mode_for_call_forwarding()

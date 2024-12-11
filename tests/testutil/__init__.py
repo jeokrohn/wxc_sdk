@@ -36,11 +36,12 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
            'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
            'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license',
-           'create_calling_user', 'create_random_calling_user', 'create_cxe_queue']
+           'create_calling_user', 'create_random_calling_user', 'create_cxe_queue', 'create_simple_call_queue']
 
-from wxc_sdk.telephony.callqueue import CallQueue
+from wxc_sdk.telephony.callqueue import CallQueue, CallQueueCallPolicies, QueueSettings
 
 from wxc_sdk.telephony.devices import MACState
+from wxc_sdk.telephony.hg_and_cq import Agent, CallingLineIdPolicy
 from wxc_sdk.telephony.location import TelephonyLocation
 
 from wxc_sdk.workspace_locations import WorkspaceLocation
@@ -539,3 +540,44 @@ def create_cxe_queue(api: WebexSimpleApi) -> CallQueue:
                                             queue_id=queue_id,
                                             has_cx_essentials=True)
     return queue
+
+def create_simple_call_queue(*, api: WebexSimpleApi, no_log, locations: list[TelephonyLocation],
+                             users: list[Person]=None)->CallQueue:
+    """
+    Create a call queue
+    """
+    # pick a random location
+    target_location = random.choice(locations)
+    print(f'Target location: {target_location.name}')
+
+    tcq = api.telephony.callqueue
+    # pick available CQ name in location
+    cq_list = list(tcq.list(location_id=target_location.location_id))
+    queue_names = set(queue.name for queue in cq_list)
+    new_name = next(name for i in range(1000)
+                    if (name := f'cq_{i:03}') not in queue_names)
+    with no_log():
+        extension = next(available_extensions_gen(api=api, location_id=target_location.location_id))
+
+    # pick two calling users
+    if users:
+        members = random.sample(users, 2)
+    else:
+        members = []
+
+    # settings for new call queue
+    settings = CallQueue(name=new_name,
+                         extension=extension,
+                         calling_line_id_policy=CallingLineIdPolicy.location_number,
+                         call_policies=CallQueueCallPolicies.default(),
+                         queue_settings=QueueSettings.default(queue_size=10),
+                         phone_number_for_outgoing_calls_enabled=True,
+                         agents=[Agent(id=user.person_id) for user in members])
+    # create new queue
+    queue_id = tcq.create(location_id=target_location.location_id,
+                           settings=settings)
+
+    # and get details of new queue using the queue id
+    details = tcq.details(location_id=target_location.location_id,
+                          queue_id=queue_id)
+    return details

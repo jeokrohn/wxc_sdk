@@ -507,4 +507,4 @@ class ForwardingApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='actions/switchMode/invoke')
-        self._session.rest_put(url, params=params)
+        self._session.rest_post(url, params=params)

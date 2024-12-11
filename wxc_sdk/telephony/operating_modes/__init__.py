@@ -1,8 +1,8 @@
 from collections.abc import Generator
 from datetime import datetime, time
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Annotated
 
-from pydantic import TypeAdapter
+from pydantic import TypeAdapter, PlainSerializer
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
@@ -33,6 +33,9 @@ class OperatingModeScheduleType(str, Enum):
     none_ = 'NONE'
 
 
+TimeHHMM = Annotated[time, PlainSerializer(lambda v: v.strftime('%H:%M') if v else None, return_type=str)]
+
+
 class DaySchedule(ApiModel):
     #: Specifies if the `operating mode` schedule for the specified weekday(s) is enabled, or not. `False` if the flag
     #: is not set.
@@ -40,9 +43,9 @@ class DaySchedule(ApiModel):
     #: Specifies if the `operating mode` is enabled for the entire day. `False` if the flag is not set.
     all_day_enabled: Optional[bool] = None
     #: Start time for the `operating mode`.
-    start_time: Optional[datetime] = None
+    start_time: Optional[TimeHHMM] = None
     #: End time for the `operating mode`.
-    end_time: Optional[datetime] = None
+    end_time: Optional[TimeHHMM] = None
 
 
 class SameHoursDaily(ApiModel):
@@ -192,7 +195,7 @@ class OperatingMode(ApiModel):
 
 class OperatingModesApi(ApiChild, base='telephony/config'):
     """
-    Beta Features: Schedule Based Routing with Operating Modes
+    Schedule Based Routing with Operating Modes
 
     Features: `Operating modes` help manage calls more efficiently by routing them based on predefined settings.
     Authorized users can adjust these modes to reduce wait times for clients.
@@ -209,7 +212,7 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def list(self, limit_to_location_id: str, name: str = None,
+    def list(self, limit_to_location_id: str = None, name: str = None,
              limit_to_org_level_enabled: bool = None, order: str = None,
              org_id: str = None,
              **params) -> Generator[OperatingMode, None, None]:
@@ -240,7 +243,8 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         """
         if name is not None:
             params['name'] = name
-        params['limitToLocationId'] = limit_to_location_id
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
         if limit_to_org_level_enabled is not None:
             params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
         if order is not None:
