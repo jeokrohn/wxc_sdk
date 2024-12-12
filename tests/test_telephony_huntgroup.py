@@ -81,7 +81,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         # settings for new hunt group
         settings = HuntGroup(name=new_name,
                              extension=extension,
-                             agents=[Agent(agent_id=user.person_id) for user in members])
+                             agents=[Agent(id=user.person_id) for user in members])
 
         # creat new hg
         new_hg_id = hapi.create(location_id=target_location.location_id,
