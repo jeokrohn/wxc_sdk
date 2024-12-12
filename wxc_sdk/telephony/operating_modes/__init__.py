@@ -1,27 +1,26 @@
 from collections.abc import Generator
-from datetime import datetime, time
+from datetime import datetime, time, date
 from typing import Optional, Union, List, Annotated
 
 from pydantic import TypeAdapter, PlainSerializer
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, enum_str
+from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.common import IdAndName
+from wxc_sdk.common.schedules import ScheduleLevel
+from wxc_sdk.person_settings.forwarding import CallForwardingCommon
 
 __all__ = ['OperatingModesApi', 'Month',
            'DaySchedule',
            'DifferentHoursDaily', 'OperatingMode',
            'OperatingModeHoliday',
            'OperatingModeRecurrence', 'SameHoursDaily',
-           'OperatingModeScheduleType', 'OperatingModeRecurYearlyByDate',
+           'OperatingModeSchedule', 'OperatingModeRecurYearlyByDate',
            'OperatingModeRecurYearlyByDay', 'Day', 'Week']
 
-from wxc_sdk.common import IdAndName
-from wxc_sdk.common.schedules import ScheduleLevel
-from wxc_sdk.person_settings.forwarding import CallForwardingCommon
 
-
-class OperatingModeScheduleType(str, Enum):
+class OperatingModeSchedule(str, Enum):
     #: Specifies the `operating mode` is active during the same hours daily (i.e., same schedule for Monday to Friday,
     #: and Saturday to Sunday).
     same_hours_daily = 'SAME_HOURS_DAILY'
@@ -34,6 +33,7 @@ class OperatingModeScheduleType(str, Enum):
 
 
 TimeHHMM = Annotated[time, PlainSerializer(lambda v: v.strftime('%H:%M') if v else None, return_type=str)]
+DateYYYYMMDD = Annotated[date, PlainSerializer(lambda v: v.strftime('%Y-%m-%d') if v else None, return_type=str)]
 
 
 class DaySchedule(ApiModel):
@@ -98,6 +98,18 @@ class Month(str, Enum):
     #: Schedule the event in December.
     december = 'DECEMBER'
 
+    @classmethod
+    def from_index(cls, i: int) -> 'Week':
+        return list(cls)[i]
+
+    @classmethod
+    def from_date(cls, d: date) -> 'Month':
+        return cls.from_month(d.month)
+
+    @classmethod
+    def from_month(cls, m: int) -> 'Month':
+        return self.from_index(m - 1)
+
 
 class OperatingModeRecurYearlyByDate(ApiModel):
     #: Schedule the event on a specific day of the month.
@@ -122,6 +134,9 @@ class Day(str, Enum):
     #: Schedule the event on Saturday.
     saturday = 'SATURDAY'
 
+    @classmethod
+    def from_index(cls, i: int) -> 'Week':
+        return list(cls)[i]
 
 class Week(str, Enum):
     #: Schedule the event on the first week of the month.
@@ -134,6 +149,10 @@ class Week(str, Enum):
     fourth = 'FOURTH'
     #: Schedule the event on the last week of the month.
     last = 'LAST'
+
+    @classmethod
+    def from_index(cls, i: int) -> 'Week':
+        return list(cls)[i]
 
 
 class OperatingModeRecurYearlyByDay(ApiModel):
@@ -161,15 +180,24 @@ class OperatingModeHoliday(ApiModel):
     #: not set.
     all_day_enabled: Optional[bool] = None
     #: Start date of the `operating mode holiday`.
-    start_date: Optional[datetime] = None
+    start_date: Optional[DateYYYYMMDD] = None
     #: End date of the `operating mode holiday`.
-    end_date: Optional[datetime] = None
+    end_date: Optional[DateYYYYMMDD] = None
     #: Start time for the `operating mode holiday`. Mandatory if `allDayEnabled` is false.
-    start_time: Optional[time] = None
+    start_time: Optional[TimeHHMM] = None
     #: End time for the `operating mode holiday`. Mandatory if `allDayEnabled` is false.
-    end_time: Optional[time] = None
+    end_time: Optional[TimeHHMM] = None
     #: Recurrence configuration for the `operating mode holiday`.
     recurrence: Optional[OperatingModeRecurrence] = None
+
+    def create_update(self) -> dict:
+        """
+        Data for create and update calls
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        return data
 
 
 class OperatingMode(ApiModel):
@@ -178,7 +206,7 @@ class OperatingMode(ApiModel):
     #: Unique name for the `operating mode`.
     name: Optional[str] = None
     #: Defines the scheduling of the `operating mode`.
-    type: Optional[OperatingModeScheduleType] = None
+    type: Optional[OperatingModeSchedule] = None
     #: Level at which the `operating mode` would be defined.
     level: Optional[ScheduleLevel] = None
     #: Location object having a unique identifier for the location, and its name. Mandatory if level is `LOCATION`.
@@ -191,6 +219,34 @@ class OperatingMode(ApiModel):
     holidays: Optional[list[OperatingModeHoliday]] = None
     #: Call forwarding settings for an `operating mode`.
     call_forwarding: Optional[CallForwardingCommon] = None
+
+    def create(self) -> dict:
+        """
+        Data for create calls
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True,
+                               exclude={'id': True,
+                                        'location': True,
+                                        'holidays': {'__all__': {'id': True}}})
+        if self.location:
+            data['locationId'] = self.location.id
+        return data
+
+    def update(self) -> dict:
+        """
+        Data for update calls
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True,
+                               exclude={'id': True,
+                                        'location': True,
+                                        'holidays': {'__all__': {'id': True}},
+                                        'type': True,
+                                        'level': True})
+        return data
 
 
 class OperatingModesApi(ApiChild, base='telephony/config'):
@@ -281,11 +337,7 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         r = OperatingMode.model_validate(data)
         return r
 
-    def create(self, name: str, type: OperatingModeScheduleType, level: ScheduleLevel,
-               call_forwarding: CallForwardingCommon, location_id: str = None,
-               same_hours_daily: SameHoursDaily = None,
-               different_hours_daily: DifferentHoursDaily = None,
-               holidays: List[OperatingModeHoliday] = None, org_id: str = None) -> str:
+    def create(self, settings: OperatingMode, org_id: str = None) -> str:
         """
         Create an Operating Mode.
 
@@ -297,57 +349,20 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         Creating an `Operating Mode` requires a full, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
-        :param name: Unique name for the `operating mode`.
-        :type name: str
-        :param type: Defines the scheduling of the `operating mode`.
-        :type type: OperatingModeScheduleType
-        :param level: Level at which the `operating mode` would be defined.
-        :type level: ScheduleLevel
-        :param call_forwarding: Call forwarding settings for an `operating mode`.
-        :type call_forwarding: CallForwardingCommon
-        :param location_id: Unique identifier of the location. Mandatory if level is `LOCATION`.
-        :type location_id: str
-        :param same_hours_daily: `Operating mode` schedule for same hours daily. Mandatory if type is
-            `SAME_HOURS_DAILY`.
-        :type same_hours_daily: SameHoursDaily
-        :param different_hours_daily: `Operating mode` schedule for different hours daily. Mandatory if type is
-            `DIFFERENT_HOURS_DAILY`.
-        :type different_hours_daily: DifferentHoursDaily
-        :param holidays: `Operating mode` holidays. Mandatory if type is `HOLIDAY`.
-        :type holidays: list[OperatingModeHolidayObject]
+        :param settings: Create the `operating mode` with these settings. At least name, type and level must be set.
+        :type settings: OperatingMode
         :param org_id: Create the `operating mode` for this organization.
         :type org_id: str
         :rtype: str
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['name'] = name
-        body['type'] = enum_str(type)
-        body['level'] = enum_str(level)
-        if location_id is not None:
-            body['locationId'] = location_id
-        if same_hours_daily is not None:
-            body['sameHoursDaily'] = same_hours_daily.model_dump(mode='json', by_alias=True, exclude_none=True)
-        if different_hours_daily is not None:
-            body['differentHoursDaily'] = different_hours_daily.model_dump(mode='json', by_alias=True,
-                                                                           exclude_none=True)
-        if holidays is not None:
-            body['holidays'] = TypeAdapter(list[OperatingModeHoliday]).dump_python(holidays, mode='json',
-                                                                                   by_alias=True,
-                                                                                   exclude_none=True)
-        body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
+        params = {'orgId': org_id} if org_id else None
+        body = settings.create()
         url = self.ep('operatingModes')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
-    def update(self, mode_id: str, name: str = None,
-               same_hours_daily: SameHoursDaily = None,
-               different_hours_daily: DifferentHoursDaily = None,
-               holidays: List[OperatingModeHoliday] = None,
-               call_forwarding: CallForwardingCommon = None, org_id: str = None):
+    def update(self, mode_id: str, settings: OperatingMode, org_id: str = None):
         """
         Modify an Operating Mode.
 
@@ -361,37 +376,15 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
 
         :param mode_id: Modify the `operating mode` with the matching ID.
         :type mode_id: str
-        :param name: New unique name for the `operating mode`.
-        :type name: str
-        :param same_hours_daily: Updated schedule for same hours daily.
-        :type same_hours_daily: SameHoursDaily
-        :param different_hours_daily: Updated schedule for different hours daily.
-        :type different_hours_daily: DifferentHoursDaily
-        :param holidays: Updated holidays. This will replace the existing holidays.
-        :type holidays: list[OperatingModeHolidayObject]
-        :param call_forwarding: Updated call forwarding settings for an `operating mode`.
-        :type call_forwarding: CallForwardingCommon
+        :param settings: Modify the `operating mode` with these settings.
+        :type settings: OperatingMode
         :param org_id: Modify the `operating mode` from this organization.
         :type org_id: str
         :rtype: None
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        if name is not None:
-            body['name'] = name
-        if same_hours_daily is not None:
-            body['sameHoursDaily'] = same_hours_daily.model_dump(mode='json', by_alias=True, exclude_none=True)
-        if different_hours_daily is not None:
-            body['differentHoursDaily'] = different_hours_daily.model_dump(mode='json', by_alias=True,
-                                                                           exclude_none=True)
-        if holidays is not None:
-            body['holidays'] = TypeAdapter(list[OperatingModeHoliday]).dump_python(holidays, mode='json',
-                                                                                   by_alias=True,
-                                                                                   exclude_none=True)
-        if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
+        params = {'orgId': org_id} if org_id else None
+        body = settings.update()
+        mode_id = mode_id or settings.id
         url = self.ep(f'operatingModes/{mode_id}')
         super().put(url, params=params, json=body)
 
@@ -416,7 +409,7 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'operatingModes/{mode_id}')
         super().delete(url, params=params)
 
-    def details_holiday(self, mode_id: str, holiday_id: str = None,
+    def holiday_details(self, mode_id: str, holiday_id: str,
                         org_id: str = None) -> OperatingModeHoliday:
         """
         Get details for an Operating Mode Holiday.
@@ -436,19 +429,13 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`OperatingModeHoliday`
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
+        params = {'orgId': org_id} if org_id else None
         url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
         data = super().get(url, params=params)
         r = OperatingModeHoliday.model_validate(data)
         return r
 
-    def create_holiday(self, mode_id: str, name: str, all_day_enabled: bool, start_date: Union[str,
-    datetime], end_date: Union[str, datetime], start_time: Union[str,
-    datetime] = None, end_time: Union[str, datetime] = None,
-                       recurrence: OperatingModeRecurrence = None,
-                       org_id: str = None) -> str:
+    def holiday_create(self, mode_id: str, settings: OperatingModeHoliday, org_id: str = None) -> str:
         """
         Create an Operating Mode Holiday.
 
@@ -462,49 +449,20 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
 
         :param mode_id: Create the holiday for this `operating mode`.
         :type mode_id: str
-        :param name: Name of the holiday.
-        :type name: str
-        :param all_day_enabled: Specifies if the `operating mode holiday` schedule event is enabled for the entire day.
-            `False` if the flag is not set.
-        :type all_day_enabled: bool
-        :param start_date: Start date of the `operating mode holiday`.
-        :type start_date: Union[str, datetime]
-        :param end_date: End date of the `operating mode holiday`.
-        :type end_date: Union[str, datetime]
-        :param start_time: Start time for the `operating mode holiday`. Mandatory if `allDayEnabled` is false.
-        :type start_time: Union[str, datetime]
-        :param end_time: End time for the `operating mode holiday`. Mandatory if `allDayEnabled` is false.
-        :type end_time: Union[str, datetime]
-        :param recurrence: Recurrence configuration for the `operating mode holiday`.
-        :type recurrence: OperatingModeRecurrence
+        :param settings: Create the `operating mode holiday` with these settings.
+        :type settings: OperatingModeHoliday
         :param org_id: Create the `operating mode holiday` for this organization.
         :type org_id: str
         :rtype: str
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['name'] = name
-        body['allDayEnabled'] = all_day_enabled
-        body['startDate'] = start_date
-        body['endDate'] = end_date
-        if start_time is not None:
-            body['startTime'] = start_time
-        if end_time is not None:
-            body['endTime'] = end_time
-        if recurrence is not None:
-            body['recurrence'] = recurrence.model_dump(mode='json', by_alias=True, exclude_none=True)
+        params = {'orgId': org_id} if org_id else None
+        body = settings.create_update()
         url = self.ep(f'operatingModes/{mode_id}/holidays')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
-    def modify_holiday(self, mode_id: str, holiday_id: str = None, name: str = None,
-                       all_day_enabled: bool = None, start_date: Union[str, datetime] = None,
-                       end_date: Union[str, datetime] = None, start_time: Union[str,
-            datetime] = None, end_time: Union[str, datetime] = None,
-                       recurrence: OperatingModeRecurrence = None, org_id: str = None):
+    def holiday_update(self, mode_id: str, holiday_id: str, settings: OperatingModeHoliday, org_id: str = None):
         """
         Modify an Operating Mode Holiday.
 
@@ -517,47 +475,19 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         :type mode_id: str
         :param holiday_id: Modify the `Holiday` with the matching ID.
         :type holiday_id: str
-        :param name: Name of the holiday.
-        :type name: str
-        :param all_day_enabled: Specifies if the `operating mode holiday` schedule event is enabled for the entire day.
-            If `startTime`, and `endTime` are provided, this field is ignored.
-        :type all_day_enabled: bool
-        :param start_date: Start date of the `operating mode holiday`.
-        :type start_date: Union[str, datetime]
-        :param end_date: End date of the `operating mode holiday`.
-        :type end_date: Union[str, datetime]
-        :param start_time: Start time for the `operating mode holiday`. Mandatory if `allDayEnabled` is not set.
-        :type start_time: Union[str, datetime]
-        :param end_time: End time for the `operating mode holiday`. Mandatory if `allDayEnabled` is not set.
-        :type end_time: Union[str, datetime]
-        :param recurrence: Recurrence configuration for the `operating mode holiday`.
-        :type recurrence: OperatingModeRecurrence
+        :param settings: Modify the `operating mode holiday` with these settings.
+        :type settings: OperatingModeHoliday
         :param org_id: Modify the `operating mode` from this organization.
         :type org_id: str
         :rtype: None
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        if name is not None:
-            body['name'] = name
-        if all_day_enabled is not None:
-            body['allDayEnabled'] = all_day_enabled
-        if start_date is not None:
-            body['startDate'] = start_date
-        if end_date is not None:
-            body['endDate'] = end_date
-        if start_time is not None:
-            body['startTime'] = start_time
-        if end_time is not None:
-            body['endTime'] = end_time
-        if recurrence is not None:
-            body['recurrence'] = recurrence.model_dump(mode='json', by_alias=True, exclude_none=True)
+        params = {'orgId': org_id} if org_id else None
+        holiday_id = holiday_id or settings.id
+        body = settings.create_update()
         url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
         super().put(url, params=params, json=body)
 
-    def delete_holiday(self, mode_id: str, holiday_id: str = None, org_id: str = None):
+    def holiday_delete(self, mode_id: str, holiday_id: str = None, org_id: str = None):
         """
         Delete an Operating Mode Holiday.
 
