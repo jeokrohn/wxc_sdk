@@ -31,7 +31,7 @@ from wxc_sdk.converged_recordings import ConvergedRecording, ConvergedRecordingM
 from wxc_sdk.device_configurations import DeviceConfiguration, DeviceConfigurationOperation, \
     DeviceConfigurationResponse, DeviceConfigurationSource, DeviceConfigurationSourceEditability, \
     DeviceConfigurationSources
-from wxc_sdk.devices import ActivationCodeResponse, ConnectionStatus, Device, ProductType, TagOp
+from wxc_sdk.devices import ActivationCodeResponse, ConnectionStatus, Device, Lifecycle, ProductType, TagOp
 from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.guests import Guest
@@ -287,9 +287,9 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
            'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
            'KemKey', 'KemModuleType', 'LayoutMode', 'License', 'LicenseProperties', 'LicenseRequest',
-           'LicenseRequestOperation', 'LicenseUser', 'LicenseUserType', 'LineKeyLabelSelection', 'LineKeyLedPattern',
-           'LineKeyTemplate', 'LineKeyTemplateAdvisoryTypes', 'LineKeyType', 'LinkRelation', 'Location',
-           'LocationAddress', 'LocationAndNumbers', 'LocationCallNotificationOrganization',
+           'LicenseRequestOperation', 'LicenseUser', 'LicenseUserType', 'Lifecycle', 'LineKeyLabelSelection',
+           'LineKeyLedPattern', 'LineKeyTemplate', 'LineKeyTemplateAdvisoryTypes', 'LineKeyType', 'LinkRelation',
+           'Location', 'LocationAddress', 'LocationAndNumbers', 'LocationCallNotificationOrganization',
            'LocationCallParkSettings', 'LocationComplianceAnnouncement', 'LocationECBN', 'LocationECBNLocation',
            'LocationECBNLocationMember', 'LocationEmergencyCallNotification', 'LocationMoHGreetingType',
            'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus',

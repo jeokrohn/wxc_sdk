@@ -16,7 +16,7 @@ from ..rest import RestSession
 from ..telephony import DeviceManagedBy
 from ..telephony.jobs import DeviceSettingsJobsApi
 
-__all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse', 'ProductType', 'ConnectionStatus']
+__all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse', 'ProductType', 'ConnectionStatus', 'Lifecycle']
 
 
 class ProductType(str, Enum):
@@ -31,6 +31,16 @@ class ConnectionStatus(str, Enum):
     offline_expired = 'offline_expired'
     activating = 'activating'
     unknown = 'unknown'
+
+
+class Lifecycle(str, Enum):
+    unknown = 'UNKNOWN'
+    active = 'ACTIVE'
+    end_of_sale = 'END_OF_SALE'
+    end_of_maintenance = 'END_OF_MAINTENANCE'
+    end_of_service = 'END_OF_SERVICE'
+    upcoming_end_of_support = 'UPCOMING_END_OF_SUPPORT'
+    end_of_support = 'END_OF_SUPPORT'
 
 
 class Device(ApiModel):
@@ -59,7 +69,7 @@ class Device(ApiModel):
     tags: list[str]
     #: The current IP address of the device.
     ip: Optional[str] = None
-    #: The current network connectivty for the device.
+    #: The current network connectivity for the device.
     active_interface: Optional[str] = None
     #: The unique address for the network adapter.
     mac: Optional[str] = None
@@ -101,7 +111,7 @@ class Device(ApiModel):
     sip_user_name: Optional[str] = None
     #: The device platform.
     device_platform: Optional[DevicePlatform] = None
-    lifecycle: Optional[str] = None
+    lifecycle: Optional[Lifecycle] = None
 
     @model_validator(mode='before')
     def pop_place_id(cls, values):
