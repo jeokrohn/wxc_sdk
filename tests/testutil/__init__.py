@@ -38,7 +38,7 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
            'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license',
            'create_calling_user', 'create_random_calling_user', 'create_cxe_queue', 'create_simple_call_queue',
-           'new_operating_mode_names', 'create_operating_mode']
+           'new_operating_mode_names', 'create_operating_mode', 'new_aa_names']
 
 from wxc_sdk.telephony.callqueue import CallQueue, CallQueueCallPolicies, QueueSettings
 
@@ -592,9 +592,8 @@ def new_operating_mode_names(api: WebexSimpleApi) -> Generator[str, None, None]:
     """
     Generate new mode names
     """
-    modes = list(api.telephony.operating_modes.list())
-    names = set(m.name for m in modes)
-    return (f'test_{i:03}' for i in range(1, 1000) if f'test_{i:03}' not in names)
+    names = set(m.name for m in api.telephony.operating_modes.list())
+    return (name for i in range(1, 1000) if (name:=f'test_{i:03}') not in names)
 
 
 def create_operating_mode(api: WebexSimpleApi, location: TelephonyLocation = None,
@@ -625,4 +624,9 @@ def create_operating_mode(api: WebexSimpleApi, location: TelephonyLocation = Non
     details = api.telephony.operating_modes.details(mode_id)
     return details
 
-
+def new_aa_names(api: WebexSimpleApi) -> Generator[str, None, None]:
+    """
+    Generate new mode names
+    """
+    names = set(m.name for m in api.telephony.auto_attendant.list())
+    return (name for i in range(1, 1000) if (name:=f'aa_{i:03}') not in names)

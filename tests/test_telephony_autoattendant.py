@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
-from tests.testutil import available_extensions_gen
+from tests.testutil import available_extensions_gen, new_aa_names
 from wxc_sdk.all_types import AutoAttendant, ScheduleType
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.locations import Location
@@ -86,13 +86,10 @@ class TestCreate(TestWithLocations):
             # shortcut
             ata = self.api.telephony.auto_attendant
 
-            # get an available name for the new auto attendant
-            existing_aa = list(ata.list(location_id=target_location.location_id))
-            names = set(aa.name for aa in existing_aa)
-            new_name = next(name for i in range(1000)
-                            if (name := f'aa_{i:03}') not in names)
-
-            extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id))
+            # get an available name and extension for the new auto attendant
+            with self.no_log():
+                new_name = next(new_aa_names(api=self.api))
+                extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id))
 
             print(f'creating AA "{new_name}" ({extension}) with schedule "{target_schedule.name}" '
                   f'in location "{target_location.name}"...')
