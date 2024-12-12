@@ -12,6 +12,7 @@ from pydantic import TypeAdapter
 
 from examples.calendarific import CalendarifiyApi
 from tests.base import TestCaseWithLog, async_test
+from tests.testutil import new_operating_mode_names, create_operating_mode
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import IdAndName
 from wxc_sdk.common.schedules import ScheduleLevel
@@ -66,9 +67,8 @@ class TestCreateOperatingModes(TestCaseWithLog):
         Generate new mode names
         """
         with self.no_log():
-            modes = list(self.api.telephony.operating_modes.list())
-            names = set(m.name for m in modes)
-        return (f'test_{i:03}' for i in range(1, 1000) if f'test_{i:03}' not in names)
+            new_names = new_operating_mode_names(self.api)
+        return new_names
 
     def test_create_org(self):
         """
@@ -136,34 +136,11 @@ class TestCreateOperatingModes(TestCaseWithLog):
         """
         create operating mode with holidays
         """
-        today = date.today()
-        tomorrow = today + timedelta(days=1)
-        if holidays is None:
-            holidays = [OperatingModeHoliday(name='today', all_day_enabled=False, start_date=today, end_date=today,
-                                             start_time='09:00',
-                                             end_time='17:00',
-                                             recurrence=OperatingModeRecurrence(
-                                                 recur_yearly_by_date=OperatingModeRecurYearlyByDate(
-                                                     day_of_month=today.day, month=Month.from_date(today)))),
-                        OperatingModeHoliday(name='tomorrow', all_day_enabled=True, start_date=tomorrow,
-                                             end_date=tomorrow)]
-        new_name = next(self.new_mode_names())
-        settings = OperatingMode(name=new_name,
-                                 type=OperatingModeSchedule.holiday,
-                                 level=ScheduleLevel.organization,
-                                 holidays=holidays)
-        if location:
-            settings.level = ScheduleLevel.location
-            settings.location = IdAndName(id=location.location_id)
-        mode_id = self.api.telephony.operating_modes.create(settings)
+        details = create_operating_mode(self.api, location, holidays)
         try:
-            details = self.api.telephony.operating_modes.details(mode_id)
-            self.assertEqual(new_name, details.name)
-            if location:
-                self.assertEqual(location.location_id, details.location.id)
             yield details
         finally:
-            self.api.telephony.operating_modes.delete(mode_id)
+            self.api.telephony.operating_modes.delete(details.id)
 
     def test_create_location_with_schedule_holidays(self):
         """

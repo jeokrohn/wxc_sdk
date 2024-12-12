@@ -108,7 +108,7 @@ class Month(str, Enum):
 
     @classmethod
     def from_month(cls, m: int) -> 'Month':
-        return self.from_index(m - 1)
+        return cls.from_index(m - 1)
 
 
 class OperatingModeRecurYearlyByDate(ApiModel):

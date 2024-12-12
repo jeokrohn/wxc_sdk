@@ -7,8 +7,9 @@ import random
 from collections import defaultdict
 from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from functools import reduce
 from itertools import zip_longest, chain
 from operator import attrgetter
@@ -23,8 +24,8 @@ from test_helper.randomuserutil import RandomUserUtil
 from examples.calendarific import CalendarifiyApi
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import NumberState
-from wxc_sdk.common.schedules import ScheduleType, Schedule, Event
+from wxc_sdk.common import NumberState, IdAndName
+from wxc_sdk.common.schedules import ScheduleType, Schedule, Event, ScheduleLevel
 from wxc_sdk.licenses import LicenseRequest, LicenseProperties, License
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
@@ -36,13 +37,16 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
            'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
            'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license',
-           'create_calling_user', 'create_random_calling_user', 'create_cxe_queue', 'create_simple_call_queue']
+           'create_calling_user', 'create_random_calling_user', 'create_cxe_queue', 'create_simple_call_queue',
+           'new_operating_mode_names', 'create_operating_mode']
 
 from wxc_sdk.telephony.callqueue import CallQueue, CallQueueCallPolicies, QueueSettings
 
 from wxc_sdk.telephony.devices import MACState
 from wxc_sdk.telephony.hg_and_cq import Agent, CallingLineIdPolicy
 from wxc_sdk.telephony.location import TelephonyLocation
+from wxc_sdk.telephony.operating_modes import OperatingModeHoliday, OperatingModeRecurrence, \
+    OperatingModeRecurYearlyByDate, Month, OperatingMode, OperatingModeSchedule
 
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace, WorkspaceCalling, CallingType, WorkspaceWebexCalling, \
@@ -541,8 +545,9 @@ def create_cxe_queue(api: WebexSimpleApi) -> CallQueue:
                                             has_cx_essentials=True)
     return queue
 
+
 def create_simple_call_queue(*, api: WebexSimpleApi, no_log, locations: list[TelephonyLocation],
-                             users: list[Person]=None)->CallQueue:
+                             users: list[Person] = None) -> CallQueue:
     """
     Create a call queue
     """
@@ -575,9 +580,49 @@ def create_simple_call_queue(*, api: WebexSimpleApi, no_log, locations: list[Tel
                          agents=[Agent(id=user.person_id) for user in members])
     # create new queue
     queue_id = tcq.create(location_id=target_location.location_id,
-                           settings=settings)
+                          settings=settings)
 
     # and get details of new queue using the queue id
     details = tcq.details(location_id=target_location.location_id,
                           queue_id=queue_id)
     return details
+
+
+def new_operating_mode_names(api: WebexSimpleApi) -> Generator[str, None, None]:
+    """
+    Generate new mode names
+    """
+    modes = list(api.telephony.operating_modes.list())
+    names = set(m.name for m in modes)
+    return (f'test_{i:03}' for i in range(1, 1000) if f'test_{i:03}' not in names)
+
+
+def create_operating_mode(api: WebexSimpleApi, location: TelephonyLocation = None,
+                          holidays: list[OperatingModeHoliday] = None) -> OperatingMode:
+    """
+    create operating mode
+    """
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+    if holidays is None:
+        holidays = [OperatingModeHoliday(name='today', all_day_enabled=False, start_date=today, end_date=today,
+                                         start_time='09:00',
+                                         end_time='17:00',
+                                         recurrence=OperatingModeRecurrence(
+                                             recur_yearly_by_date=OperatingModeRecurYearlyByDate(
+                                                 day_of_month=today.day, month=Month.from_date(today)))),
+                    OperatingModeHoliday(name='tomorrow', all_day_enabled=True, start_date=tomorrow,
+                                         end_date=tomorrow)]
+    new_name = next(new_operating_mode_names(api=api))
+    settings = OperatingMode(name=new_name,
+                             type=OperatingModeSchedule.holiday,
+                             level=ScheduleLevel.organization,
+                             holidays=holidays)
+    if location:
+        settings.level = ScheduleLevel.location
+        settings.location = IdAndName(id=location.location_id)
+    mode_id = api.telephony.operating_modes.create(settings)
+    details = api.telephony.operating_modes.details(mode_id)
+    return details
+
+

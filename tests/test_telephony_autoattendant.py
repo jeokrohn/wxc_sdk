@@ -79,7 +79,7 @@ class TestCreate(TestWithLocations):
         """
         Create a simple AA in a random location
         """
-        target_location = random.choice(self.locations)
+        target_location = random.choice(self.telephony_locations)
         with self.get_schedule(location=target_location) as target_schedule:
             target_schedule: Schedule
 
@@ -125,17 +125,3 @@ class TestDelete(TestCaseWithLog):
         print(f'Deleting aa "{target_aa.name}" in location "{target_aa.location_name}"')
         ata.delete_auto_attendant(location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id)
 
-
-class TestForwarding(TestCaseWithLog):
-
-    def test_001_get_all_forwarding_settings(self):
-        """
-        get forwarding settings for all auto attendants
-        """
-        ata = self.api.telephony.auto_attendant
-        aa_list = list(ata.list())
-        with ThreadPoolExecutor() as pool:
-            forwarding_settings = list(pool.map(
-                lambda aa: ata.forwarding.settings(location_id=aa.location_id, feature_id=aa.auto_attendant_id),
-                aa_list))
-        print(f'Got forwarding settings for {len(forwarding_settings)} auto attendants.')

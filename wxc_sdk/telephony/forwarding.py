@@ -153,10 +153,10 @@ class ForwardOperatingModes(ApiModel):
 
 class CallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
-    always: ForwardingSetting
+    always: Optional[ForwardingSetting] = None
     #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
     #: rule for forwarding applied for call forwarding to be active.
-    selective: ForwardingSetting
+    selective: Optional[ForwardingSetting] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[ForwardingRule]] = None
     #: Settings related to operating modes.
@@ -167,6 +167,18 @@ class CallForwarding(ApiModel):
         return CallForwarding(always=ForwardingSetting.default(),
                               selective=ForwardingSetting.default(),
                               rules=[])
+
+    def update(self) -> dict:
+        """
+        Date for updating call
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_unset=True,
+                               exclude={'rules': {'__all__': {'calls_from',
+                                                              'forward_to',
+                                                              'calls_to',
+                                                              'name'}}})
 
 
 class ForwardTo(ApiModel):
@@ -378,10 +390,7 @@ class ForwardingApi(ApiChild, base=''):
         params = org_id and {'orgId': org_id} or {}
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
 
-        body = {'callForwarding': json.loads(forwarding.model_dump_json(exclude={'rules': {'__all__': {'calls_from',
-                                                                                                       'forward_to',
-                                                                                                       'calls_to',
-                                                                                                       'name'}}}))}
+        body = {'callForwarding': forwarding.update()}
         self._session.rest_put(url=url, json=body, params=params)
 
     def create_call_forwarding_rule(self, location_id: str, feature_id: str,
