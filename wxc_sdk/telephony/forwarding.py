@@ -174,7 +174,7 @@ class CallForwarding(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_unset=True,
+        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
                                exclude={'rules': {'__all__': {'calls_from',
                                                               'forward_to',
                                                               'calls_to',
