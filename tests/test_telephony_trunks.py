@@ -144,7 +144,7 @@ class TestTrunkTypes(TestCaseWithLog):
 AddressTuple = namedtuple('AddressTuple', ['address', 'domain'])
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestValidateFQDNandDomain(TestCaseWithLog):
     verified_domain = 'jkrohn-sandbox.wbx.ai'
 

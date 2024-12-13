@@ -120,7 +120,7 @@ class DeviceList(ApiModel):
     max_owned_device_count: Optional[int] = None
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class PersonSettingsApi(ApiChild, base='people'):
     """
     API for all user level settings

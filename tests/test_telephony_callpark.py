@@ -228,7 +228,7 @@ class TestCreate(TestWithLocations):
         print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestWithLocations):
     """
     Test call park updates

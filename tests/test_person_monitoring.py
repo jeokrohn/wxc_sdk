@@ -43,7 +43,7 @@ class TestRead(TestCaseWithUsers):
             print_monitoring(user=user, monitoring=ms)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TempCPE:
     api: WebexSimpleApi
     generated_cpe_ids: list[str]
@@ -120,7 +120,7 @@ class TempCPE:
                 asyncio.run(self.cleanup())
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestCaseWithUsers):
     callpark_extensions: ClassVar[Optional[list[CallParkExtension]]]
 

@@ -467,7 +467,7 @@ class CDR(ApiModel):
     pstn_provider_id: Optional[str] = None
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class DetailedCDRApi(ApiChild, base='devices'):
     """
     To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope.

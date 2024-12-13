@@ -395,7 +395,7 @@ class RLTestContext:
         return trunk, rg, rl
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCallRouting(TestCaseWithLog):
     dp_context: ClassVar[Optional[DpContext]] = field(default=None)
     rl_context: ClassVar[Optional[RLTestContext]] = field(default=None)
@@ -480,7 +480,7 @@ class LocationAndTelephony(NamedTuple):
     main_number: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ToUserWithTN(TestCallRouting):
     """
     Test calling a user with a TN.
@@ -1381,7 +1381,7 @@ class CQContext:
                                                                phone_numbers=[self.cq_tn])
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestHostedFeature(TestCallRouting):
     """
     Call routing tests for calls to hosted features
@@ -1998,7 +1998,7 @@ class UserCalls(TestCaseWithLog):
                 self.api.telephony.call_routing.tp.delete(translation_id=tp_id, location_id=location.location_id)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Test911(TestCaseWithLog):
     """
     Validate 911 calling options

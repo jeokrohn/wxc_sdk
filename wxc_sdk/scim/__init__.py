@@ -9,7 +9,7 @@ from wxc_sdk.scim.users import SCIM2UsersApi
 __all__ = ['ScimV2Api']
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ScimV2Api(ApiChild, base=''):
     users: SCIM2UsersApi
     bulk: SCIM2BulkApi

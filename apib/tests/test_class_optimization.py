@@ -147,7 +147,7 @@ class EndpointType(str, Enum):
     modify = 'modify'
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class EndpointGroup:
     """
     Group of endpoints with a common URL prefix
@@ -202,7 +202,7 @@ class EndpointGroup:
             raise ValueError(f'unknown method: {ep.method}')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class EndpointCollection():
     # all end points grouped by URL prefix
     # URL prefix is url w/o the last URL parameter

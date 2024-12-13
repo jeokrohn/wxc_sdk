@@ -554,7 +554,7 @@ class TestUser:
         self.user = api.people.details(person_id=self.id)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestBetweenUsers(TestCaseWithLog):
     """
     Test calls between users

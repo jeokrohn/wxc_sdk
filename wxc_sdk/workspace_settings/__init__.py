@@ -37,7 +37,7 @@ from ..rest import RestSession
 __all__ = ['WorkspaceSettingsApi']
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     """
     API for all workspace settings.

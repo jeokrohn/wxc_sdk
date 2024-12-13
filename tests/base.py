@@ -145,7 +145,7 @@ def get_tokens() -> Optional[Tokens]:
     return tokens
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCaseWithTokens(TestCase):
     """
     A test case that requires access tokens to run
@@ -221,7 +221,7 @@ class TestCaseWithTokens(TestCase):
 async_test = TestCaseWithTokens.async_test
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class WithIntegrationTokens(TestCase):
     integration_token_identifier: ClassVar[str] = 'TEST_INTEGRATION'
     integration_tokens: ClassVar[Tokens]
@@ -449,7 +449,7 @@ class RecordHandler(logging.Handler):
         yield from LoggedRequest.from_records(records=self.records, method=method, url_filter=url_filter)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCaseWithLog(TestCaseWithTokens):
     """
     Test case with automatic logging
@@ -606,7 +606,7 @@ class TestCaseWithLog(TestCaseWithTokens):
             print(f'{url_and_method}: {url_counters[url_and_method]} requests')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestWithLocations(TestCaseWithLog):
     """
     Test cases with existing locations
@@ -666,7 +666,7 @@ class UserCache(BaseModel):
         return seconds_since_last_access > 300
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCaseWithUsers(TestCaseWithLog):
     users: ClassVar[list[Person]]
 
@@ -742,7 +742,7 @@ class TestCaseWithUsers(TestCaseWithLog):
             self.skipTest('Need at least one calling user to run test')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCaseWithUsersAndSpaces(TestCaseWithLog):
     users: ClassVar[list[Person]]
     spaces: ClassVar[list[Room]]
@@ -769,7 +769,7 @@ class TestCaseWithUsersAndSpaces(TestCaseWithLog):
             ...
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestLocationsUsersWorkspacesVirtualLines(TestWithLocations, TestCaseWithUsers):
     """
     Base class for test cases related to outgoing permissions
@@ -847,7 +847,7 @@ class TestWithTarget(TestWithLocations):
         return
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestWithProfessionalWorkspace(TestWithTarget):
     """
     Tests for workspace settings using a temporary professional workspace

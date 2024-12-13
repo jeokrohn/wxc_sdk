@@ -1429,7 +1429,7 @@ class MoveUsersJobsApi(ApiChild, base='telephony/config/jobs/person/moveLocation
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
     Jobs API

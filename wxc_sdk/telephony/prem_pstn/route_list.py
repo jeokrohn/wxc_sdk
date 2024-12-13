@@ -60,7 +60,7 @@ class UpdateNumbersResponse(ApiModel):
     message: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
     """
     API for everything route lists

@@ -67,7 +67,7 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsXApi', 'Asstr']
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class AsApiChild:
     """
     Base class for child APIs of :class:`WebexSimpleApi`
@@ -12185,7 +12185,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         await super().delete(url)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class AsScimV2Api(AsApiChild, base=''):
     users: AsSCIM2UsersApi
     bulk: AsSCIM2BulkApi
@@ -15601,7 +15601,7 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         await super().delete(url, params=params)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class AsCallRoutingApi(AsApiChild, base='telephony/config'):
     """
     Call Routing Api
@@ -26699,7 +26699,7 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         await super().put(url, params=params, json=body)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     """
     API for all workspace settings.
@@ -27146,7 +27146,7 @@ class AsXApi(AsApiChild, base='xapi'):
         return self.execute_command('SystemUnit.Boot', device_id, arguments={'Force': str(force)})
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class AsWebexSimpleApi:
     """
     The main API object

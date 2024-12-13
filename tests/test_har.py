@@ -14,7 +14,7 @@ from wxc_sdk.har_writer import HAREntry, HarWriter
 from wxc_sdk.har_writer.har import HAR, PostData
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestHar(TestCase):
     latest_har_in_downloads: str
     all_hars_in_downloads: list[str]

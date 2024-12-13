@@ -95,7 +95,7 @@ class VirtualLineDevices(ApiModel):
     max_device_count: Optional[int] = None
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     #: agent caller id Api
     agent_caller_id: AgentCallerIdApi

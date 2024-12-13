@@ -604,7 +604,7 @@ class ClearAddress2(TestCaseWithLog):
         await asyncio.gather(*[clear_address2(loc) for loc in targets])
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdateTelephony(TestCaseWithLog):
     """
     Tests updating location telephony settings

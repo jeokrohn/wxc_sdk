@@ -23,7 +23,7 @@ class TestList(TestCaseWithLog):
         print(f'Got {len(rgs)} route list')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCreate(TestCaseWithLog):
     _locations: list[LocationInfo] = field(default=None)
     _route_groups: list[RouteGroup] = field(default=None)
@@ -180,7 +180,7 @@ class TestDetail(TestCaseWithLog):
         print(f'Got details for {len(rls)} route lists')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestNumbers(TestCaseWithLog):
     """
     Test case to add/remove numbers from a route list

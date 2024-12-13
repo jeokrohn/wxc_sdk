@@ -1072,7 +1072,7 @@ class TrackingCode(ApiModel):
     type: Optional[TrackingCodeType] = None
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class MeetingsApi(ApiChild, base='meetings'):
     """
     Meetings API

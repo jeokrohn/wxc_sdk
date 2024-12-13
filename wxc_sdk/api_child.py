@@ -6,7 +6,7 @@ from .rest import RestSession
 __all__ = ['ApiChild']
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ApiChild:
     """
     Base class for child APIs of :class:`WebexSimpleApi`

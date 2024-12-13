@@ -86,7 +86,7 @@ class TestRead(TestCaseWithUsers):
         self.assertFalse(not diffs, 'apparently prefer_e164_format does not change anything?')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
     target_location: Location = None
     new_tn: str = None
@@ -398,7 +398,7 @@ class TestCreateCallingUser(TestWithLocations):
             self.assertEqual(new_user.person_id, number.owner.owner_id)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestCaseWithUsers):
     """
     Assign and un-assign alternate numbers to person
@@ -510,7 +510,7 @@ class TestAvailableNumbers(TestCaseWithUsers):
                                lt in AvailablePhoneNumberLicenseType])
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUserLocationConsistency(TestCaseWithLog):
     numbers: ClassVar[list[NumberListPhoneNumber]]
     numbers_by_owner_id: ClassVar[dict[str, list[NumberListPhoneNumber]]]

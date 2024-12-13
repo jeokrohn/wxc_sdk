@@ -52,7 +52,7 @@ class PatternAndAction(ApiModel):
                                 action=PatternAction.delete)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
 
     def list(self, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,

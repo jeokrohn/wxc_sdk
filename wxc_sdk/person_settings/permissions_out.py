@@ -680,7 +680,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
         super().delete(url, params=params)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class OutgoingPermissionsApi(PersonSettingsApiChild):
     """
     API for outgoing permissions settings

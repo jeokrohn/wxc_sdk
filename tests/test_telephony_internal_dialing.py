@@ -11,7 +11,7 @@ from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestInternalDialing(TestWithLocations):
     _settings: list[InternalDialing] = field(default=None)
     _route_choices: list[RouteIdentity] = field(default=None)

@@ -498,7 +498,7 @@ class Members(TestCaseWithLog):
         foo = 1
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestsWithDevices(TestCaseWithLog):
     """
     Test cases needing list of devices and owners

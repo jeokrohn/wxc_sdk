@@ -235,7 +235,7 @@ def _dump_response_callback(response: ClientResponse, request_body: str, request
                      diff_ns=diff_ns)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class AsRestSession(ClientSession):
     """
     REST session used for API requests:

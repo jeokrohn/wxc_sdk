@@ -152,7 +152,7 @@ class HuntGroup(HGandCQ):
         return data
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
     """
     Hunt Group API

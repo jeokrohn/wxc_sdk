@@ -32,7 +32,7 @@ class TestWorkspaceNumbers(TestCaseWithLog):
         print(f'Got numbers for {len(numbers)} workspaces')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdateNumbers(TestWithLocations):
     location: ClassVar[Location] = None
     workspace: ClassVar[Workspace] = None

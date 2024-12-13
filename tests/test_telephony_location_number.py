@@ -17,7 +17,7 @@ from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberType
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class NumberTest(TestCaseWithLog):
     location_info: ClassVar[list[LocationInfo]]
 
@@ -30,7 +30,7 @@ class NumberTest(TestCaseWithLog):
         cls.location_info = us_location_info(api=cls.api)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestAddAndActivate(NumberTest):
     target_location_info: LocationInfo = field(default=None)
     new_numbers: list[str] = field(default=None)
@@ -157,7 +157,7 @@ class TestAddExisting(NumberTest):
         self.assertEqual(25223, rest_error.exception.detail.error_code)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestAvailable(TestWithLocations):
     validated_owners: ClassVar[set[str]]
 

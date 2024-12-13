@@ -123,7 +123,7 @@ class TestScheduleList(TestWithLocations):
         print(f'Got details of {len(event_details)} events in {len(schedules)} schedules.')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestWithTestSchedules(TestWithLocations):
     """
     Base class for tests with test schedules (test_xxx)

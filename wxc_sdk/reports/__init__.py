@@ -93,7 +93,7 @@ class CallingCDR(CDR):
             yield cls.model_validate(record)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReportsApi(ApiChild, base='devices'):
     """
     Reports

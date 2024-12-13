@@ -17,7 +17,7 @@ from wxc_sdk.tokens import Tokens
 from wxc_sdk.converged_recordings import ConvergedRecording
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class WithRecordingServiceApp(TestCase):
     """
     Base class for tests that need to use the recording service app.
@@ -119,7 +119,7 @@ class WithRecordingServiceApp(TestCase):
         return webex_id_to_uuid(self.me.org_id)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens, TestCaseWithLog):
     integration_api: ClassVar[WebexSimpleApi]
 

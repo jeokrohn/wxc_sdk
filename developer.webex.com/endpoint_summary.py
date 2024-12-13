@@ -21,7 +21,7 @@ from sys import stdout, stderr
 from scraper import DocMethodDetails, MethodDetails, SectionAndMethodDetails
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class EndPointGrouper:
     keys: set[str]
 

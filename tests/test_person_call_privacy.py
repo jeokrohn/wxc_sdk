@@ -25,7 +25,7 @@ class TestRead(TestCaseWithUsers):
         print(f'Got privacy settings for {len(self.users)} users')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestCaseWithUsers):
 
     @contextmanager

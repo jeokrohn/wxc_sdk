@@ -52,7 +52,7 @@ class TestRead(TestCaseWithUsers):
                         'invalid/incomplete calling behavior for at least one user')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestCaseWithLog):
     users: ClassVar[list[Person]]
 

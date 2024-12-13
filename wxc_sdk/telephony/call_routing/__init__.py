@@ -7,7 +7,7 @@ from ...rest import RestSession
 __all__ = ['CallRoutingApi']
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class CallRoutingApi(ApiChild, base='telephony/config'):
     """
     Call Routing Api

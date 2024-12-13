@@ -52,7 +52,7 @@ log = logging.getLogger(__name__)
 
 
 # noinspection PyShadowingNames
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class WebexSimpleApi:
     """
     The main API object

@@ -238,7 +238,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         self.assertFalse(pagination_link_error, 'Wrong pagination link format')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestWithQueues(TestCaseWithLog):
     queues: ClassVar[list[CallQueue]]
 
@@ -248,7 +248,7 @@ class TestWithQueues(TestCaseWithLog):
         cls.queues = list(cls.api.telephony.callqueue.list(name='cq_'))
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestWithQueues):
     """
     Try to update call queues

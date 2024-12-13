@@ -639,7 +639,7 @@ class MoHConfig(ApiModel):
     default_org_moh: MoHTheme
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TelephonyApi(ApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.

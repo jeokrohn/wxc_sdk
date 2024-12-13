@@ -25,7 +25,7 @@ class TestRead(TestCaseWithUsers):
         print('\n'.join(s.model_dump_json() for s in settings))
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestCaseWithUsers):
 
     @contextmanager

@@ -141,7 +141,7 @@ class TrunkUsage(ApiModel):
     route_group_count: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
     """
     API for everything trunks

@@ -145,7 +145,7 @@ class LocationECBN(ApiModel):
     selected: Optional[CallBackSelected] = None
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
     #: emergency services
     emergency_services: LocationEmergencyServicesApi

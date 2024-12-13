@@ -44,7 +44,7 @@ class TestPaging(TestCaseWithLog):
         print(f'Got details for {len(details)} paging groups')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCreate(TestCaseWithUsers, TestWithLocations):
     """
     Test paging group creation
@@ -137,7 +137,7 @@ class TestCreate(TestCaseWithUsers, TestWithLocations):
         self.assertEqual(len(pg_list), len(queues_pag))
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestUpdate(TestCaseWithUsers):
     """
     Try to update paging groups

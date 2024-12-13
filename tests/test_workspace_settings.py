@@ -169,7 +169,7 @@ class TestWorkspaceSettingsWithProWorkspace(TestWithProfessionalWorkspace):
         return
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class SeqRingTest(TestWithProfessionalWorkspace):
     tapi: ClassVar[SequentialRingApi]
 
@@ -412,7 +412,7 @@ class SeqRingTest(TestWithProfessionalWorkspace):
                             f'{", ".join(str(pn.phone_number) for pn in after.phone_numbers if pn.phone_number)}')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class SimRingTest(TestWithProfessionalWorkspace):
     tapi: ClassVar[SimRingApi]
 
@@ -1081,7 +1081,7 @@ class SelectiveAcceptTest(TestWithTarget):
             self.assertEqual(2, len(after.criteria))
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class SelectiveAcceptTestWorkspace(TestWithProfessionalWorkspace, SelectiveAcceptTest):
     # Also used for user settings test
 
@@ -1092,7 +1092,7 @@ class SelectiveAcceptTestWorkspace(TestWithProfessionalWorkspace, SelectiveAccep
         cls.target_id = cls.workspace.workspace_id
         
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class PriorityAlertTest(TestWithProfessionalWorkspace):
     tapi: ClassVar[PriorityAlertApi]
 
@@ -1305,7 +1305,7 @@ class PriorityAlertTest(TestWithProfessionalWorkspace):
             self.assertEqual(2, len(after.criteria))
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class SelectiveForwardTest(TestWithTarget):
     # Also used for user settings test
     tapi: ClassVar[SelectiveForwardApi]

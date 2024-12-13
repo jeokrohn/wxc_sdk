@@ -822,7 +822,7 @@ def guess_datetime_or_int(sample: Optional[str], type_hint: Optional[str]) -> tu
     return sample, python_type
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class PythonClassRegistry:
     # context used to disambiguate class names in the registry
     _context: str = field(repr=False)

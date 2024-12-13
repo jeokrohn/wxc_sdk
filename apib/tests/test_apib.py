@@ -20,7 +20,7 @@ from apib.apib import *
 from apib.python_class import PythonClass, PythonClassRegistry
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ApibTest(TestCase):
     apib_paths: ClassVar[list[str]]
     apib_data: ClassVar[dict[str, dict]]

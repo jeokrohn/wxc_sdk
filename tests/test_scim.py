@@ -119,7 +119,7 @@ def get_tokens() -> Optional[Tokens]:
     return tokens
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestWithScimToken(TestCaseWithLog):
     test_api: ClassVar[WebexSimpleApi]
 
@@ -423,7 +423,7 @@ class TestScimCreate(TestWithScimToken):
         self.assertFalse(err, 'Something went wrong; check output')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestScimUpdate(TestWithScimToken):
     target_user: ClassVar[ScimUser]
 
@@ -643,7 +643,7 @@ class TestScimAndPeople(TestScimCreate, TestWithLocations):
                     break
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
     """
     tests to validate number information in CI (and people API) for calling users
@@ -749,7 +749,7 @@ class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
         self.assertFalse(err, 'Inconsistencies found')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestScimGroups(TestWithScimToken):
     def test_search(self):
         """

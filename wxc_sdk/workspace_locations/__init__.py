@@ -171,7 +171,7 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         super().delete(url=url, params=params)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
     #: Workspace location floor API :class:`WorkspaceLocationFloorApi`
     floors: WorkspaceLocationFloorApi

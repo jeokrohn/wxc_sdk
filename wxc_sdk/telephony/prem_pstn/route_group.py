@@ -48,7 +48,7 @@ class UsageRouteLists(ApiModel):
     location_name: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
     """
     API for everything route groups

@@ -24,7 +24,7 @@ class DialPatternValidationResult(ApiModel):
         return self.status == ValidationStatus.ok
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class PremisePstnApi(ApiChild, base='telephony/config/premisePstn'):
     """
     Premises PSTN API

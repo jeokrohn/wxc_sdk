@@ -142,7 +142,7 @@ class ActivationCodeResponse(ApiModel):
     expiry_time: datetime
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class DevicesApi(ApiChild, base='devices'):
     """
     Devices

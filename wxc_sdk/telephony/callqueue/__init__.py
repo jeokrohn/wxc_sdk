@@ -418,7 +418,7 @@ class AvailableAgent(ApiModel):
     numbers: Optional[list[UserNumber]] = None
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class CallQueueApi(ApiChild, base=''):
     """
     Call Queue APÍ

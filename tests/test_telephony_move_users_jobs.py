@@ -8,7 +8,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.telephony.jobs import MoveUsersList, MoveUser
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestMoveUsers(TestCaseWithUsers):
     locations: tuple[Location, Location] = None
     from_location: Location = None

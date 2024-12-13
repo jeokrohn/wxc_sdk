@@ -12,7 +12,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.person_settings.agent_caller_id import AgentCallerId
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestAgentCallerId(TestCaseWithLog):
     users: ClassVar[list[Person]]
 

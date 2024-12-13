@@ -92,7 +92,7 @@ class TestMessages(TestCaseWithUsersAndSpaces):
         foo = 1
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestMembership(TestCaseWithUsersAndSpaces):
 
     def test_001_list_memberships(self):
@@ -206,7 +206,7 @@ class TestRooms(TestCaseWithLog):
             self.assertEqual(room, after)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestTeams(TestCaseWithLog):
     users: ClassVar[list[Person]] = None
 

@@ -217,7 +217,7 @@ class AutoAttendant(ApiModel):
                              after_hours_menu=AutoAttendantMenu.default())
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
     """
     Auto attendant API

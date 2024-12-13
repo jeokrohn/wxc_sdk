@@ -12,7 +12,7 @@ from wxc_sdk.common import DialPatternStatus, DialPatternValidate, RouteIdentity
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCreate(TestCaseWithLog):
     dial_plans: ClassVar[list[DialPlan]]
     new_dp_names: ClassVar[Generator[str, None, None]]
@@ -267,7 +267,7 @@ class TestPatternValidation(TestCaseWithLog):
         self.assertEqual(DialPatternStatus.duplicate_in_list, result.dial_pattern_status[0].pattern_status)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestModifyPatterns(TestCaseWithLog):
     """
     Test cases to modify patterns in dial plan

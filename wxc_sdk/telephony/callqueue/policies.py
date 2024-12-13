@@ -164,7 +164,7 @@ class ForcedForward(ApiModel):
     audio_files: Optional[list[AnnAudioFile]] = None
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class CQPolicyApi:
     _session: RestSession
 

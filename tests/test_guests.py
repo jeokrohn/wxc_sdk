@@ -75,7 +75,7 @@ def get_tokens() -> Optional[Tokens]:
     return tokens
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestGuests(TestCaseWithLog):
     guest_service_api: ClassVar[WebexSimpleApi]
     guests: ClassVar[list[Guest]]

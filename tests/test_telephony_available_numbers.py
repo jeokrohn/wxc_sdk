@@ -57,7 +57,7 @@ class TestUser(TestCaseWithUsers):
                                               for user in self.users])
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestWorkspace(TestCaseWithLog):
     workspaces: ClassVar[list[Workspace]]
 
@@ -119,7 +119,7 @@ class TestWorkspace(TestCaseWithLog):
                                               for workspace in self.workspaces])
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestVirtualLines(TestCaseWithLog):
     virtual_lines: list[VirtualLine] = None
 

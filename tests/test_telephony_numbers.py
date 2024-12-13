@@ -116,7 +116,7 @@ class TestValidateExtensions(TestCaseWithLog):
             self.assertEqual(ValidateExtensionStatusState.duplicate_in_list, result.extension_status[i].state)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestValidatePhoneNumbers(TestCaseWithLog):
     us_locations: ClassVar[list[LocationInfo]]
     available: Optional[str] = field(default=None)

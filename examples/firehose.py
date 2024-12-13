@@ -91,7 +91,7 @@ log = logging.getLogger(__name__)
 load_dotenv(env_path())
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class FireHose(Flask):
     """
     A Firehose webhook listener

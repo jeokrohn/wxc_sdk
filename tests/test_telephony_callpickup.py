@@ -65,7 +65,7 @@ class TestDetails(TestWithLocations):
                 print(f'{location.name:{location_len}}: {agent.user_type:{user_type_len}} - {agent.display_name}')
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class TestCreateAndUpdate(TestWithLocations):
     available_agents: ClassVar[list[list[PersonPlaceAgent]]]
 
