@@ -23,6 +23,7 @@ from .ecbn import ECBNApi
 from .exec_assistant import ExecAssistantApi
 from .forwarding import PersonForwardingApi
 from .hoteling import HotelingApi
+from .mode_management import ModeManagementApi
 from .moh import MusicOnHoldApi
 from .monitoring import MonitoringApi
 from .msteams import MSTeamsSettingApi
@@ -157,6 +158,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     forwarding: PersonForwardingApi
     #: Hoteling Settings for a Person
     hoteling: HotelingApi
+    #: Person's mode management settings
+    mode_management: ModeManagementApi
     #: Person's Monitoring Settings
     monitoring: MonitoringApi
     # ; MS Teams settings
@@ -211,6 +214,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.exec_assistant = ExecAssistantApi(session=session)
         self.forwarding = PersonForwardingApi(session=session)
         self.hoteling = HotelingApi(session=session)
+        self.mode_management = ModeManagementApi(session=session)
         self.monitoring = MonitoringApi(session=session)
         self.ms_teams = MSTeamsSettingApi(session=session)
         self.music_on_hold = MusicOnHoldApi(session=session)

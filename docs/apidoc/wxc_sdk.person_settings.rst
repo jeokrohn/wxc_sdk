@@ -31,6 +31,7 @@ Submodules
    wxc_sdk.person_settings.exec_assistant
    wxc_sdk.person_settings.forwarding
    wxc_sdk.person_settings.hoteling
+   wxc_sdk.person_settings.mode_management
    wxc_sdk.person_settings.moh
    wxc_sdk.person_settings.monitoring
    wxc_sdk.person_settings.msteams

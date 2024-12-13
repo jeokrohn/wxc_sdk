@@ -204,6 +204,7 @@ class LineKeyType(str, Enum):
     open = 'OPEN'
     #: Button not usable but reserved for future features.
     closed = 'CLOSED'
+    #: Allows users to manage call forwarding for features via schedule-based routing.
     mode_management = 'MODE_MANAGEMENT'
 
 
