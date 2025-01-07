@@ -12,6 +12,12 @@ Release history
 - feat: new guest calling settings API: :attr:`api.telephony.guest_calling <wxc_sdk.telephony.TelephonyApi.guest_calling>`
 - feat: new endpoint to get call token for click-to-call :meth:`api.telephony.create_a_call_token <wxc_sdk.telephony.TelephonyApi.create_a_call_token>`
 
+- feat: person mode management settings API: :attr:`api.person_settings.mode_management <wxc_sdk.person_settings.PersonSettingsApi.mode_management>`
+- feat: new endpoint to switch mode for call forwarding (AA): :meth:`api.telephony.auto_attendant.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
+- feat: new endpoint to switch mode for call forwarding (CQ): :meth:`api.telephony.callqueue.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
+- feat: new endpoint to switch mode for call forwarding (HG): :meth:`api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
+- feat: operating modes API: :attr:`api.telephony.operating_modes <wxc_sdk.telephony.TelephonyApi.operating_modes>`
+
 1.23.0
 ======
 

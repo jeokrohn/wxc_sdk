@@ -42,17 +42,18 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
            'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
            'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEnum', 'AsEventsApi', 'AsExecAssistantApi',
-           'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestManagementApi', 'AsHotelingApi',
-           'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
-           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
-           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
-           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
-           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOrgEmergencyServicesApi',
-           'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI',
-           'AsOrganizationApi', 'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
+           'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi',
+           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
+           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPlayListApi',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
@@ -391,6 +392,15 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
     This API is currently limited to Webex Calling i.e., providing details for call recordings but will later be
     extended to include Webex Meeting recordings.
 
+    The access token needs the following scopes:
+
+    User: `spark:recordings_read` `spark:recordings_write`
+
+    Admin: `spark-admin:recordings_read` `spark-admin:recordings_write`
+
+    Compliance officer: `spark-compliance:recordings_read` `spark-compliance:recordings_write`
+
+
     When the recording is paused in a call, the recording does not contain the pause. If the recording is stopped and
     restarted in a call, several recordings are created. Those recordings will be consolidated and available all at
     once.
@@ -406,25 +416,27 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
              format_: str = None, owner_id: str = None,
              owner_email: str = None, owner_type: RecordingOwnerType = None,
              storage_region: RecordingStorageRegion = None,
-             location_id: str = None,
+             location_id: str = None, topic: str = None,
              **params) -> AsyncGenerator[ConvergedRecording, None, None]:
         """
-        List Recordings for Compliance officer
+        List Recordings
 
-        List recordings for compliance officer. You can specify a date range, and the maximum number of recordings to
-        return.
+        List recordings. You can specify a date range, and the maximum number of recordings to return.
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        List recordings requires the spark-compliance:recordings_read scope.
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        List recordings requires the `spark:recordings_read` scope.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `from` cannot be after `to`.
+            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
         :type from_: Union[str, datetime]
         :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `to` cannot be before `from`.
+            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
         :type to_: Union[str, datetime]
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
@@ -446,6 +458,9 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
             Hub).
         :type location_id: str
+        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
+            manner.
+        :type topic: str
         :return: Generator yielding :class:`ConvergedRecording` instances
         """
         if from_ is not None:
@@ -474,6 +489,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             params['storageRegion'] = enum_str(storage_region)
         if location_id is not None:
             params['locationId'] = location_id
+        if topic is not None:
+            params['topic'] = topic
         url = self.ep('admin/convergedRecordings')
         return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
 
@@ -483,25 +500,27 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
              format_: str = None, owner_id: str = None,
              owner_email: str = None, owner_type: RecordingOwnerType = None,
              storage_region: RecordingStorageRegion = None,
-             location_id: str = None,
+             location_id: str = None, topic: str = None,
              **params) -> List[ConvergedRecording]:
         """
-        List Recordings for Compliance officer
+        List Recordings
 
-        List recordings for compliance officer. You can specify a date range, and the maximum number of recordings to
-        return.
+        List recordings. You can specify a date range, and the maximum number of recordings to return.
 
         The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        List recordings requires the spark-compliance:recordings_read scope.
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        List recordings requires the `spark:recordings_read` scope.
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `from` cannot be after `to`.
+            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
         :type from_: Union[str, datetime]
         :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `to` cannot be before `from`.
+            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
         :type to_: Union[str, datetime]
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
@@ -523,6 +542,9 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
             Hub).
         :type location_id: str
+        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
+            manner.
+        :type topic: str
         :return: Generator yielding :class:`ConvergedRecording` instances
         """
         if from_ is not None:
@@ -551,6 +573,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             params['storageRegion'] = enum_str(storage_region)
         if location_id is not None:
             params['locationId'] = location_id
+        if topic is not None:
+            params['topic'] = topic
         url = self.ep('admin/convergedRecordings')
         return [o async for o in self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)]
 
@@ -562,7 +586,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
         Only recordings of owner with the authenticated user may be retrieved.
 
-        Get Recording Details requires the spark-compliance:recordings_read scope.
+        Get Recording Details requires the `spark-compliance:recordings_read` scope for compliance officer,
+        `spark-admin:recordings_read` scope for admin and `spark:recordings_read` scope for user.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
@@ -582,7 +607,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users
         (host, attendees and shared), and to Compliance officer also. This action purges the recordings from Webex.
 
-        Delete a Recording requires the spark-compliance:recordings_write scope.
+        Delete a Recording requires the `spark-compliance:recordings_write` scope.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
@@ -612,7 +637,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         For information on the metadata fields, refer to `Metadata Guide
         <https://developer.webex.com/docs/api/guides/consolidated-metadata-documentation-and-samples-guide>`_
 
-        Get Recording metadata requires the spark-compliance:recordings_read scope.
+        Get Recording metadata requires the `spark-compliance:recordings_read` scope for compliance officer,
+        `spark-admin:recordings_read` for admin and `spark:recordings_read` for user.
 
         :param recording_id: A unique identifier for the recording.
         :type recording_id: str
@@ -620,8 +646,11 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             specified, the following attributes of the metadata will be hidden.
 
             * serviceData.callActivity.mediaStreams
+
             * serviceData.callActivity.participants
+
             * serviceData.callActivity.redirectInfo
+
             * serviceData.callActivity.redirectedCall
         :type show_all_types: bool
         :rtype: None
@@ -644,12 +673,12 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         be a valid org user.
 
         * If only the 'ownerEmail' is provided, it indicates that all recordings owned by the "ownerEmail" will be
-        reassigned.
+          reassigned.
 
         * If only the 'recordingIds' are provided, it indicates that these 'recordingIds' will be reassigned.
 
         * If both the 'ownerEmail' and 'recordingIds' are provided, only the recordingIds belonging to the provided
-        'ownerEmail' will be reassigned.
+          'ownerEmail' will be reassigned.
 
         The `spark-admin:recordings_write` scope is required to reassign recordings.
 
@@ -668,6 +697,188 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             body['recordingIds'] = recording_ids
         body['reassignOwnerEmail'] = reassign_owner_email
         url = self.ep('convergedRecordings/reassign')
+        await super().post(url, json=body)
+
+    async def move_recordings_into_the_recycle_bin(self, trash_all: bool = None, owner_email: str = None,
+                                             recording_ids: List[str] = None):
+        """
+        Move Recordings into the Recycle Bin
+
+        Move recordings into the recycle bin with recording IDs or move all the recordings to the recycle bin.
+
+        Only the following two entities can use this API
+
+        * Administrator: A user or an application with the scope `spark-admin:recordings_write`.
+
+        * User: An authenticated user who does not have the scope `spark-admin:recordings_write` but has
+          `spark:recordings_write`.
+
+        As an `administrator`, you can move a list of recordings or all recordings of a particular user within the org
+        you manage to the recycle bin.
+
+        As a `user`, you can move a list of your own recordings or all your recordings to the recycle bin.
+
+        Recordings in the recycle bin can be recovered by `Restore Recordings from Recycle Bin
+        <https://developer.webex.com/docs/api/v1/converged-recordings/restore-recordings-from-recycle-bin>`_ API. If you'd like to
+        empty recordings from the recycle bin, you can use `Purge Recordings from Recycle Bin
+        <https://developer.webex.com/docs/api/v1/converged-recordings/purge-recordings-from-recycle-bin>`_ API to purge all or some
+        of them.
+
+        * If `trashAll` is `true`:
+
+        * `recordingIds` should be empty.
+
+        * If the caller of this API is an `administrator`, `ownerEmail` should not be empty and all recordings owned by
+          the `ownerEmail` will be moved to the recycle bin.
+
+        * If the caller of this API is a `user`, `ownerEmail` should be empty and all recordings owned by the caller
+          will be moved to the recycle bin.
+
+        * If `trashAll` is `false`:
+
+        * `ownerEmail` should be empty.
+
+        * `recordingIds` should not be empty and its maximum size is `100`.
+
+        :param trash_all: If not specified or `false`, moves the recordings specified by `recordingIds` to the recycle
+            bin. If `true`, moves all recordings owned by the caller in case of `user`, and all recordings owned by
+            `ownerEmail` in case of `administrator` to the recycle bin.
+        :type trash_all: bool
+        :param owner_email: Email address for the recording owner. This parameter is only used if `trashAll` is set to
+            `true` and the user or application calling the API has the required administrator scope
+            `spark-admin:recordings_write`. The administrator may specify the email of a user from an org they manage
+            and the API will move all the recordings of that user into the recycle bin.
+        :type owner_email: str
+        :param recording_ids: Recording IDs for moving recordings to the recycle bin in batch.
+        :type recording_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        if trash_all is not None:
+            body['trashAll'] = trash_all
+        if owner_email is not None:
+            body['ownerEmail'] = owner_email
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        url = self.ep('convergedRecordings/softDelete')
+        await super().post(url, json=body)
+
+    async def restore_recordings_from_recycle_bin(self, restore_all: bool = None, owner_email: str = None,
+                                            recording_ids: List[str] = None):
+        """
+        Restore Recordings from Recycle Bin
+
+        Restore recordings from the recycle bin with recording IDs or restore all the recordings that are in the
+        recycle bin.
+
+        Only the following two entities can use this API
+
+        * Administrator: A user or an application with the scope `spark-admin:recordings_write`.
+
+        * User: An authenticated user who does not have the scope `spark-admin:recordings_write` but has
+          `spark:recordings_write`.
+
+        As an `administrator`, you can restore a list of recordings or all recordings of a particular user within the
+        org you manage from the recycle bin.
+
+        As a `user`, you can restore a list of your own recordings or all your recordings from the recycle bin.
+
+        * If `restoreAll` is `true`:
+
+        * `recordingIds` should be empty.
+
+        * If the caller of this API is an `administrator`, `ownerEmail` should not be empty and all recordings owned by
+          the `ownerEmail` will be restored from the recycle bin.
+
+        * If the caller of this API is a `user`, `ownerEmail` should be empty and all recordings owned by the caller
+          will be restored from the recycle bin.
+
+        * If `restoreAll` is `false`:
+
+        * `ownerEmail` should be empty.
+
+        * `recordingIds` should not be empty and its maximum size is `100`.
+
+        :param restore_all: If not specified or `false`, restores the recordings specified by `recordingIds` from the
+            recycle bin. If `true`, restores all recordings owned by the caller in case of `user`, and all recordings
+            owned by `ownerEmail` in case of `administrator` from the recycle bin.
+        :type restore_all: bool
+        :param owner_email: Email address for the recording owner. This parameter is only used if `restoreAll` is set
+            to `true` and the user or application calling the API has the required administrator scope
+            `spark-admin:recordings_write`. The administrator may specify the email of a user from an org they manage
+            and the API will restore all the recordings of that user from the recycle bin.
+        :type owner_email: str
+        :param recording_ids: Recording IDs for restoring recordings from the recycle bin in batch.
+        :type recording_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        if restore_all is not None:
+            body['restoreAll'] = restore_all
+        if owner_email is not None:
+            body['ownerEmail'] = owner_email
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        url = self.ep('convergedRecordings/restore')
+        await super().post(url, json=body)
+
+    async def purge_recordings_from_recycle_bin(self, purge_all: bool = None, owner_email: str = None,
+                                          recording_ids: List[str] = None):
+        """
+        Purge Recordings from Recycle Bin
+
+        Purge recordings from the recycle bin with recording IDs or purge all the recordings that are in the recycle
+        bin. A recording once purged cannot be restored.
+
+        Only the following two entities can use this API
+
+        * Administrator: A user or an application with the scope `spark-admin:recordings_write`.
+
+        * User: An authenticated user who does not have the scope `spark-admin:recordings_write` but has
+          `spark:recordings_write`.
+
+        As an `administrator`, you can purge a list of recordings or all recordings of a particular user within the org
+        you manage from the recycle bin.
+
+        As a `user`, you can purge a list of your own recordings or all your recordings from the recycle bin.
+
+        * If `purgeAll` is `true`:
+
+        * `recordingIds` should be empty.
+
+        * If the caller of this API is an `administrator`, `ownerEmail` should not be empty and all recordings owned
+          the `ownerEmail` will be purged from the recycle bin.
+
+        * If the caller of this API is a `user`, `ownerEmail` should be empty and all recordings owned by the caller
+          will be purged from the recycle bin.
+
+        * If `purgeAll` is `false`:
+
+        * `ownerEmail` should be empty.
+
+        * `recordingIds` should not be empty and its maximum size is `100`.
+
+        :param purge_all: If not specified or `false`, purges the recordings specified by `recordingIds` from the
+            recycle bin. If `true`, purges all recordings owned by the caller in case of `user`, and all recordings
+            owned by `ownerEmail` in case of `administrator` from the recycle bin.
+        :type purge_all: bool
+        :param owner_email: Email address for the recording owner. This parameter is only used if `purgeAll` is set to
+            `true` and the user or application calling the API has the required administrator scope
+            `spark-admin:recordings_write`. The administrator may specify the email of a user from an org they manage
+            and the API will purge all the recordings of that user from the recycle bin.
+        :type owner_email: str
+        :param recording_ids: Recording IDs for purging recordings from the recycle bin in batch.
+        :type recording_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        if purge_all is not None:
+            body['purgeAll'] = purge_all
+        if owner_email is not None:
+            body['ownerEmail'] = owner_email
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        url = self.ep('convergedRecordings/purge')
         await super().post(url, json=body)
 
 
@@ -1233,7 +1444,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         return ActivationCodeResponse.model_validate(data)
 
     async def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
-                              model: str = None, password: str = None, org_id: str = None) -> Device:
+                              model: str = None, password: str = None, org_id: str = None) -> Optional[Device]:
         """
         Create a phone by it's MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.
@@ -1265,6 +1476,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
             body['password'] = password
         url = self.ep()
         data = await super().post(url=url, json=body, params=params)
+        if not data:
+            return None
         return Device.model_validate(data)
 
 
@@ -8274,6 +8487,171 @@ class AsMSTeamsSettingApi(AsApiChild, base='telephony/config/people'):
         await super().put(url, params=params, json=body)
 
 
+class AsModeManagementApi(AsApiChild, base='telephony/config/people'):
+    """
+    Operating Mode Management for Person Call Settings
+
+    Person Call Settings supports modifying Webex Calling settings for a specific person.
+
+    Viewing People requires a full, user, or read-only administrator or location administrator auth token with a scope
+    of `spark-admin:people_read` or, for select APIs, a user auth token with `spark:people_read` scope can be used by
+    a person to read their own settings.
+
+    Configuring People settings requires a full, or user administrator or location administrator auth token with the
+    `spark-admin:people_write` scope or, for select APIs, a user auth token with `spark:people_write` scope can be
+    used by a person to update their own settings.
+
+    Call Settings API access can be restricted via Control Hub by a full administrator. Restricting access causes the
+    APIs to throw a `403 Access Forbidden` error.
+
+    See details about `features available by license type for Webex Calling
+    <https://help.webex.com/en-us/article/n1qbbp7/Features-available-by-license-type-for-Webex-Calling>`_.
+    """
+
+    def available_features_gen(self, person_id: str = None, name: str = None,
+                           phone_number: str = None, extension: str = None, order: str = None,
+                           org_id: str = None,
+                           **params) -> AsyncGenerator[AvailableFeature, None, None]:
+        """
+        Retrieve the List of Available Features.
+
+        Retrieve a list of feature identifiers that can be assigned to a user for `Mode Management`. Feature
+        identifiers reference feature instances like `Auto Attendants`, `Call Queues`, and `Hunt Groups`.
+
+        Features with mode-based call forwarding enabled can be assigned to a user for `Mode Management`.
+
+        Retrieving this list requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :param name: List features whose `name` contains this string.
+        :type name: str
+        :param phone_number: List features whose phoneNumber contains this matching string.
+        :type phone_number: str
+        :param extension: List features whose `extension` contains this matching string.
+        :type extension: str
+        :param order: Sort the list of features based on `name`, `phoneNumber`, or `extension`, either `asc`, or
+            `desc`.
+        :type order: str
+        :param org_id: Retrieve features list from this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableFeature` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if order is not None:
+            params['order'] = order
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{person_id}/modeManagement/availableFeatures')
+        return self.session.follow_pagination(url=url, model=AvailableFeature,
+                                              item_key='features', params=params)
+
+    async def available_features(self, person_id: str = None, name: str = None,
+                           phone_number: str = None, extension: str = None, order: str = None,
+                           org_id: str = None,
+                           **params) -> List[AvailableFeature]:
+        """
+        Retrieve the List of Available Features.
+
+        Retrieve a list of feature identifiers that can be assigned to a user for `Mode Management`. Feature
+        identifiers reference feature instances like `Auto Attendants`, `Call Queues`, and `Hunt Groups`.
+
+        Features with mode-based call forwarding enabled can be assigned to a user for `Mode Management`.
+
+        Retrieving this list requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :param name: List features whose `name` contains this string.
+        :type name: str
+        :param phone_number: List features whose phoneNumber contains this matching string.
+        :type phone_number: str
+        :param extension: List features whose `extension` contains this matching string.
+        :type extension: str
+        :param order: Sort the list of features based on `name`, `phoneNumber`, or `extension`, either `asc`, or
+            `desc`.
+        :type order: str
+        :param org_id: Retrieve features list from this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableFeature` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if order is not None:
+            params['order'] = order
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{person_id}/modeManagement/availableFeatures')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableFeature,
+                                              item_key='features', params=params)]
+
+    async def assigned_features(self, person_id: str = None,
+                          org_id: str = None) -> list[ModeManagementFeature]:
+        """
+        Retrieve the List of Features Assigned to a User for Mode Management.
+
+        Retrieve a list of feature identifiers that are already assigned to a user for `Mode Management`. Feature
+        identifiers reference feature instances like `Auto Attendants`, `Call Queues`, and `Hunt Groups`.
+        A maximum of 50 features can be assigned to a user for `Mode Management`.
+
+        Features with mode-based call forwarding enabled can be assigned to a user for `Mode Management`.
+
+        Retrieving this list requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :param org_id: Retrieve features list from this organization.
+        :type org_id: str
+        :rtype: list[ModeManagementFeature]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{person_id}/modeManagement/features')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])
+        return r
+
+    async def assign_features(self, feature_ids: list[str], person_id: str = None, org_id: str = None):
+        """
+        Assign a List of Features to a User for Mode Management.
+
+        Assign a user a list of feature identifiers for `Mode Management`. Feature identifiers reference feature
+        instances like `Auto Attendants`, `Call Queues`, and `Hunt Groups`.
+        A maximum of 50 features can be assigned to a user for `Mode Management`.
+
+        Updating mode management settings for a user requires a full, or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param feature_ids: Array of feature IDs.
+        :type feature_ids: list[str]
+        :param person_id: A unique identifier for the user.
+        :type person_id: str
+        :param org_id: Retrieve features list from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['featureIds'] = feature_ids
+        url = self.ep(f'{person_id}/modeManagement/features')
+        await super().put(url, params=params, json=body)
+
+
 class AsMonitoringApi(AsPersonSettingsApiChild):
     """
     API for person's call monitoring settings, also used for workspaces
@@ -10405,6 +10783,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     forwarding: AsPersonForwardingApi
     #: Hoteling Settings for a Person
     hoteling: AsHotelingApi
+    #: Person's mode management settings
+    mode_management: AsModeManagementApi
     #: Person's Monitoring Settings
     monitoring: AsMonitoringApi
     # ; MS Teams settings
@@ -10459,6 +10839,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.exec_assistant = AsExecAssistantApi(session=session)
         self.forwarding = AsPersonForwardingApi(session=session)
         self.hoteling = AsHotelingApi(session=session)
+        self.mode_management = AsModeManagementApi(session=session)
         self.monitoring = AsMonitoringApi(session=session)
         self.ms_teams = AsMSTeamsSettingApi(session=session)
         self.music_on_hold = AsMusicOnHoldApi(session=session)
@@ -12758,7 +13139,7 @@ class AsForwardingApi(AsApiChild, base=''):
         """
         Retrieve Call Forwarding settings for the designated feature including the list of call
         forwarding rules.
-        
+
         The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
         Below are the available options for configuring your call forwarding:
         1. Always forward calls to a designated number.
@@ -12805,10 +13186,7 @@ class AsForwardingApi(AsApiChild, base=''):
         params = org_id and {'orgId': org_id} or {}
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
 
-        body = {'callForwarding': json.loads(forwarding.model_dump_json(exclude={'rules': {'__all__': {'calls_from',
-                                                                                                       'forward_to',
-                                                                                                       'calls_to',
-                                                                                                       'name'}}}))}
+        body = {'callForwarding': forwarding.update()}
         await self._session.rest_put(url=url, json=body, params=params)
 
     async def create_call_forwarding_rule(self, location_id: str, feature_id: str,
@@ -12911,6 +13289,30 @@ class AsForwardingApi(AsApiChild, base=''):
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
         await self._session.rest_delete(url=url, params=params)
+
+    async def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str,
+                                        org_id: str = None):
+        """
+        Switch Mode for Call Forwarding Settings for an entity
+
+        Switches the current operating mode to the mode as per normal operations.
+
+        Switching operating mode a full, or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: `Location` in which this `call queue` exists.
+        :type location_id: str
+        :param feature_id: Switch operating mode to normal operations for this entity.
+        :type feature_id: str
+        :param org_id: Switch operating mode as per normal operations for this entity from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self._endpoint(location_id=location_id, feature_id=feature_id, path='actions/switchMode/invoke')
+        await self._session.rest_post(url, params=params)
 
 
 class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
@@ -16238,8 +16640,6 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
     """
     Conference Controls
 
-    Not supported for Webex for Government (FedRAMP)
-
     Conference Control APIs in support of Webex Calling.
 
     All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
@@ -17311,6 +17711,226 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
             params['usageType'] = enum_str(usage_type)
         url = self.ep('devices/availableMembers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)]
+
+
+class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
+    """
+    Guest Calling Settings with Click-to-call
+
+    Calling Service Settings supports reading and writing of Webex Calling service settings for a specific
+    organization.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+
+    async def read(self, org_id: str = None) -> GuestCallingSettings:
+        """
+        Read the Click-to-call Settings
+
+        Retrieve the organization's click-to-call calling settings.
+
+        Click-to-call settings determine whether click-to-call is enabled and whether privacy mode is enabled.
+
+        Retrieving click-to-call settings requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :rtype: :class:`GuestCallingSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = GuestCallingSettings.model_validate(data)
+        return r
+
+    async def update(self, enabled: bool, privacy_enabled: bool, destination_members: list[str],
+               org_id: str = None):
+        """
+        Update the Click-to-call Settings
+
+        Update the organization's click-to-call settings.
+
+        Click-to-call settings determine whether click-to-call is enabled and whether privacy mode is enabled.
+
+        Updating an organization's click-to-call settings requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param enabled: Set to `true` to allow click-to-call calling.
+        :type enabled: bool
+        :param privacy_enabled: Set to `true` to enable privacy mode.
+        :type privacy_enabled: bool
+        :param destination_members: List of destination member IDs. Supported destination types are Auto Attendant,
+            Call Queue, Hunt Group, and Virtual Line.
+        :type destination_members: list[str]
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        body['privacyEnabled'] = privacy_enabled
+        body['destinationMembers'] = destination_members
+        url = self.ep()
+        await super().put(url, params=params, json=body)
+
+    def members_gen(self, member_name: str = None, phone_number: str = None, extension: str = None,
+                org_id: str = None, **params) -> AsyncGenerator[DestinationMember, None, None]:
+        """
+        Read the Click-to-call Members
+
+        Retrieve the organization's click-to-call members.
+
+        Click-to-call members are the destination members that click-to-call callers can call.
+
+        Retrieving click-to-call members requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`DestinationMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep('members')
+        return self.session.follow_pagination(url=url, model=DestinationMember, item_key='destinationMembers',
+                                              params=params)
+
+    async def members(self, member_name: str = None, phone_number: str = None, extension: str = None,
+                org_id: str = None, **params) -> List[DestinationMember]:
+        """
+        Read the Click-to-call Members
+
+        Retrieve the organization's click-to-call members.
+
+        Click-to-call members are the destination members that click-to-call callers can call.
+
+        Retrieving click-to-call members requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
+
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`DestinationMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep('members')
+        return [o async for o in self.session.follow_pagination(url=url, model=DestinationMember, item_key='destinationMembers',
+                                              params=params)]
+
+    def available_members_gen(self, member_name: str = None, phone_number: str = None,
+                          extension: str = None, org_id: str = None,
+                          **params) -> AsyncGenerator[DestinationMember, None, None]:
+        """
+        Read the Click-to-call Available Members
+
+        Retrieve the organization's click-to-call available members.
+
+        Click-to-call available members are the members that can be added as destination members for click-to-call
+        callers.
+
+        Retrieving click-to-call available members requires a full or read-only administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`DestinationMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep('availableMembers')
+        return self.session.follow_pagination(url=url, model=DestinationMember, item_key='availableDestinationMembers',
+                                              params=params)
+
+    async def available_members(self, member_name: str = None, phone_number: str = None,
+                          extension: str = None, org_id: str = None,
+                          **params) -> List[DestinationMember]:
+        """
+        Read the Click-to-call Available Members
+
+        Retrieve the organization's click-to-call available members.
+
+        Click-to-call available members are the members that can be added as destination members for click-to-call
+        callers.
+
+        Retrieving click-to-call available members requires a full or read-only administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`DestinationMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep('availableMembers')
+        return [o async for o in self.session.follow_pagination(url=url, model=DestinationMember, item_key='availableDestinationMembers',
+                                              params=params)]
 
 
 class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
@@ -19087,6 +19707,340 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         data = settings.model_dump_json()
         await self.put(ep, params=params, data=data)
+
+
+class AsOperatingModesApi(AsApiChild, base='telephony/config'):
+    """
+    Schedule Based Routing with Operating Modes
+
+    Features: `Operating modes` help manage calls more efficiently by routing them based on predefined settings.
+    Authorized users can adjust these modes to reduce wait times for clients.
+    `Operating modes` are used by mode-based forwarding for the `Auto Attendant`, `Call Queue`, and `Hunt Group`
+    features.
+
+    Viewing these read-only organization settings requires a full, read-only, or location administrator auth token with
+    a scope of `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full, or location administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve, or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+
+    def list_gen(self, limit_to_location_id: str = None, name: str = None,
+             limit_to_org_level_enabled: bool = None, order: str = None,
+             org_id: str = None,
+             **params) -> AsyncGenerator[OperatingMode, None, None]:
+        """
+        Read the List of Operating Modes.
+
+        Retrieve `Operating Modes` list defined at location, or organization level. Use query parameters to filter the
+        result set by location or level. The list returned is sorted in ascending order by operating mode name. Long
+        result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        `Operating modes` help manage calls more efficiently by routing them based on predefined settings.
+
+        Retrieving this list requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: Location query parameter to filter the `operating modes` from that location only.
+        :type limit_to_location_id: str
+        :param name: List `operating modes` whose name contains this string.
+        :type name: str
+        :param limit_to_org_level_enabled: If true, only return `operating modes` defined at the organization level.
+        :type limit_to_org_level_enabled: bool
+        :param order: Sort the list of `operating modes` based on `name`, either asc, or desc.
+        :type order: str
+        :param org_id: Retrieve `operating modes` list from this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`OperatingMode` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if order is not None:
+            params['order'] = order
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('operatingModes')
+        return self.session.follow_pagination(url=url, model=OperatingMode, item_key='operatingModes',
+                                              params=params)
+
+    async def list(self, limit_to_location_id: str = None, name: str = None,
+             limit_to_org_level_enabled: bool = None, order: str = None,
+             org_id: str = None,
+             **params) -> List[OperatingMode]:
+        """
+        Read the List of Operating Modes.
+
+        Retrieve `Operating Modes` list defined at location, or organization level. Use query parameters to filter the
+        result set by location or level. The list returned is sorted in ascending order by operating mode name. Long
+        result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        `Operating modes` help manage calls more efficiently by routing them based on predefined settings.
+
+        Retrieving this list requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: Location query parameter to filter the `operating modes` from that location only.
+        :type limit_to_location_id: str
+        :param name: List `operating modes` whose name contains this string.
+        :type name: str
+        :param limit_to_org_level_enabled: If true, only return `operating modes` defined at the organization level.
+        :type limit_to_org_level_enabled: bool
+        :param order: Sort the list of `operating modes` based on `name`, either asc, or desc.
+        :type order: str
+        :param org_id: Retrieve `operating modes` list from this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`OperatingMode` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if order is not None:
+            params['order'] = order
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('operatingModes')
+        return [o async for o in self.session.follow_pagination(url=url, model=OperatingMode, item_key='operatingModes',
+                                              params=params)]
+
+    async def details(self, mode_id: str, org_id: str = None) -> OperatingMode:
+        """
+        Get Details for an Operating Mode.
+
+        Retrieve an `Operating Mode` by `Operating Mode ID`.
+
+        `Operating modes` can be used to define call routing rules for different scenarios like business hours, after
+        hours, holidays, etc.
+
+        Retrieving an `operating mode` requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param mode_id: Get the `operating mode` with the matching ID.
+        :type mode_id: str
+        :param org_id: Get the `operating mode` from this organization.
+        :type org_id: str
+        :rtype: :class:`OperatingMode`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'operatingModes/{mode_id}')
+        data = await super().get(url, params=params)
+        r = OperatingMode.model_validate(data)
+        return r
+
+    async def create(self, settings: OperatingMode, org_id: str = None) -> str:
+        """
+        Create an Operating Mode.
+
+        Create an `Operating Mode` at an organization, or a location level.
+
+        `Operating modes` can be used to define call routing rules for different scenarios like business hours, after
+        hours, holidays, etc.
+
+        Creating an `Operating Mode` requires a full, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param settings: Create the `operating mode` with these settings. At least name, type and level must be set.
+        :type settings: OperatingMode
+        :param org_id: Create the `operating mode` for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {'orgId': org_id} if org_id else None
+        body = settings.create()
+        url = self.ep('operatingModes')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def update(self, mode_id: str, settings: OperatingMode, org_id: str = None):
+        """
+        Modify an Operating Mode.
+
+        Modify the designated `Operating Mode's` configuration.
+
+        `Operating modes` can be used to define call routing rules for different scenarios like business hours, after
+        hours, holidays, etc.
+
+        Modifying an `Operating Mode` requires a full, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param mode_id: Modify the `operating mode` with the matching ID.
+        :type mode_id: str
+        :param settings: Modify the `operating mode` with these settings.
+        :type settings: OperatingMode
+        :param org_id: Modify the `operating mode` from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {'orgId': org_id} if org_id else None
+        body = settings.update()
+        mode_id = mode_id or settings.id
+        url = self.ep(f'operatingModes/{mode_id}')
+        await super().put(url, params=params, json=body)
+
+    async def delete(self, mode_id: str, org_id: str = None):
+        """
+        Delete an Operating Mode.
+
+        Delete the designated `Operating Mode`.
+
+        Deleting an `Operating Mode` requires a full, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param mode_id: Delete the `operating mode` with the matching ID.
+        :type mode_id: str
+        :param org_id: Delete the `operating mode` from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'operatingModes/{mode_id}')
+        await super().delete(url, params=params)
+
+    async def holiday_details(self, mode_id: str, holiday_id: str,
+                        org_id: str = None) -> OperatingModeHoliday:
+        """
+        Get details for an Operating Mode Holiday.
+
+        Retrieve an `Operating Mode Holiday` by ID.
+
+        Holidays define a recurring schedule for the `Operating Modes`.
+
+        Retrieving an `Operating Mode Holiday` requires a full, read-only, or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param mode_id: Get the holiday from this `operating mode` matching ID.
+        :type mode_id: str
+        :param holiday_id: Get the `operating mode Holiday` with the matching ID.
+        :type holiday_id: str
+        :param org_id: Get the `operating mode` from this organization.
+        :type org_id: str
+        :rtype: :class:`OperatingModeHoliday`
+        """
+        params = {'orgId': org_id} if org_id else None
+        url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
+        data = await super().get(url, params=params)
+        r = OperatingModeHoliday.model_validate(data)
+        return r
+
+    async def holiday_create(self, mode_id: str, settings: OperatingModeHoliday, org_id: str = None) -> str:
+        """
+        Create an Operating Mode Holiday.
+
+        Create a holiday schedule event for the designated `Operating Mode`.
+
+        Holidays define a recurring schedule for the `Operating Modes`. An `Operating Mode` can have a max of 150
+        holidays.
+
+        Creating an `Operating Mode Holiday` requires a full, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param mode_id: Create the holiday for this `operating mode`.
+        :type mode_id: str
+        :param settings: Create the `operating mode holiday` with these settings.
+        :type settings: OperatingModeHoliday
+        :param org_id: Create the `operating mode holiday` for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {'orgId': org_id} if org_id else None
+        body = settings.create_update()
+        url = self.ep(f'operatingModes/{mode_id}/holidays')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def holiday_update(self, mode_id: str, holiday_id: str, settings: OperatingModeHoliday, org_id: str = None):
+        """
+        Modify an Operating Mode Holiday.
+
+        Modify the designated `Operating Mode Holiday's` configuration.
+
+        Modifying an `Operating Mode Holiday` requires a full, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param mode_id: Modify the holiday from this `operating mode` matching ID.
+        :type mode_id: str
+        :param holiday_id: Modify the `Holiday` with the matching ID.
+        :type holiday_id: str
+        :param settings: Modify the `operating mode holiday` with these settings.
+        :type settings: OperatingModeHoliday
+        :param org_id: Modify the `operating mode` from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {'orgId': org_id} if org_id else None
+        holiday_id = holiday_id or settings.id
+        body = settings.create_update()
+        url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
+        await super().put(url, params=params, json=body)
+
+    async def holiday_delete(self, mode_id: str, holiday_id: str = None, org_id: str = None):
+        """
+        Delete an Operating Mode Holiday.
+
+        Delete the designated `Operating Mode Holiday`.
+
+        Deleting an `Operating Mode Holiday` requires a full, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param mode_id: Delete the holiday from this `operating mode` matching ID.
+        :type mode_id: str
+        :param holiday_id: Delete the holiday with the matching ID.
+        :type holiday_id: str
+        :param org_id: Delete the `operating mode` from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
+        await super().delete(url, params=params)
+
+    async def available_operating_modes(self, location_id: str,
+                                  org_id: str = None) -> List[IdAndName]:
+        """
+        Retrieve the List of Available Operating Modes in a Location.
+
+        Retrieve list of `Operating Modes` which are available to be assigned to a location level feature (`Auto
+        Attendant`, `Call Queue`, or `Hunt Group`). Since each location and an org can have a max of 100 `Operating
+        Modes` defined. The max number of `operating modes` that can be returned is 200.
+
+        `Operating modes` can be used to define call routing rules for different scenarios like business hours, after
+        hours, holidays, etc. for the `Auto Attendant`, `Call Queue`, and `Hunt Group` features.
+
+        Retrieving this list requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve `operating modes` list from this location.
+        :type location_id: str
+        :param org_id: Retrieve `operating modes` list from this organization.
+        :type org_id: str
+        :rtype: list[IdAndName]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/operatingModes/availableOperatingModes')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[IdAndName]).validate_python(data['operatingModes'])
+        return r
 
 
 class AsOrgEmergencyServicesApi(AsApiChild, base='telephony/config/emergencyCallNotification'):
@@ -24885,16 +25839,18 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     conference: AsConferenceControlsApi
     cx_essentials: AsCustomerExperienceEssentialsApi
     dect_devices: AsDECTDevicesApi
-    #: emergency services
-    emergency_services: AsOrgEmergencyServicesApi
     #: WxC device operations
     devices: AsTelephonyDevicesApi
+    #: emergency services
+    emergency_services: AsOrgEmergencyServicesApi
+    guest_calling: AsGuestCallingApi
     huntgroup: AsHuntGroupApi
     jobs: AsJobsApi
     #: location specific settings
     location: AsTelephonyLocationApi
     locations: AsTelephonyLocationApi
     ms_teams: AsOrgMSTeamsSettingApi
+    operating_modes: AsOperatingModesApi
     #: organisation access codes
     organisation_access_codes: AsOrganisationAccessCodesApi
     #: organisation voicemail settings
@@ -24933,11 +25889,13 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.dect_devices = AsDECTDevicesApi(session=session)
         self.devices = AsTelephonyDevicesApi(session=session)
         self.emergency_services = AsOrgEmergencyServicesApi(session=session)
+        self.guest_calling = AsGuestCallingApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
         self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
         self.locations = self.location
         self.ms_teams = AsOrgMSTeamsSettingApi(session=session)
+        self.operating_modes = AsOperatingModesApi(session=session)
         self.organisation_access_codes = AsOrganisationAccessCodesApi(session=session)
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
@@ -25287,7 +26245,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
             number or URI.
         :type originator_number: str
         :param include_applied_services: This element is used to retrieve if any translation pattern, call intercept,
-            permission by type, or permission by digit pattern is present for the called party.
+            permission by type or permission by digit pattern is present for the called party.
         :type include_applied_services: bool
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
@@ -25386,6 +26344,34 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('moh/settings')
         await super().put(url, params=params, json=body)
+
+    async def create_a_call_token(self, called_number: str, guest_name: str = None) -> str:
+        """
+        Create a call token
+
+        Create a call token before initiating the click-to-call interaction.
+        The call token embeds information related to click-to-call interaction into an encrypted JWE token.
+        This token is used along with the `guest token
+        <https://developer.webex.com/docs/api/v1/guests-management/create-a-guest>`_ to initialise the web calling SDK
+
+        Creating a call token requires a service app access token with a scope of `spark:webrtc_calling`.
+
+        :param called_number: Number to be called. This number should be enabled as guest calling destination at
+            `Webex Control Hub
+            <https://admin.webex.com>`_ by the administrator.
+        :type called_number: str
+        :param guest_name: Name of the guest caller.
+        :type guest_name: str
+        :rtype: str
+        """
+        body = dict()
+        body['calledNumber'] = called_number
+        if guest_name is not None:
+            body['guestName'] = guest_name
+        url = self.session.ep('telephony/click2call/callToken')
+        data = await super().post(url, json=body)
+        r = data['callToken']
+        return r
 
 
 class AsWebhookApi(AsApiChild, base='webhooks'):

@@ -367,6 +367,12 @@ The method name is a link to the method documentation.
         Configure Hoteling Settings for a Person
    * - :meth:`api.person_settings.hoteling.read <wxc_sdk.person_settings.hoteling.HotelingApi.read>`
         Read Hoteling Settings for a Person
+   * - :meth:`api.person_settings.mode_management.assign_features <wxc_sdk.person_settings.mode_management.ModeManagementApi.assign_features>`
+        Assign a List of Features to a User for Mode Management
+   * - :meth:`api.person_settings.mode_management.assigned_features <wxc_sdk.person_settings.mode_management.ModeManagementApi.assigned_features>`
+        Retrieve the List of Features Assigned to a User for Mode Management
+   * - :meth:`api.person_settings.mode_management.available_features <wxc_sdk.person_settings.mode_management.ModeManagementApi.available_features>`
+        Retrieve the List of Available Features
    * - :meth:`api.person_settings.monitoring.configure <wxc_sdk.person_settings.monitoring.MonitoringApi.configure>`
         Modify an entity's Monitoring Settings
    * - :meth:`api.person_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
@@ -679,6 +685,8 @@ The method name is a link to the method documentation.
         Delete a Selective Call Forwarding Rule for the designated feature
    * - :meth:`api.telephony.auto_attendant.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
         Retrieve Call Forwarding settings for the designated feature including the list of call
+   * - :meth:`api.telephony.auto_attendant.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
+        Switch Mode for Call Forwarding Settings for an entity
    * - :meth:`api.telephony.auto_attendant.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
         Update Call Forwarding Settings for a feature
    * - :meth:`api.telephony.auto_attendant.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
@@ -781,6 +789,8 @@ The method name is a link to the method documentation.
         Delete a Selective Call Forwarding Rule for the designated feature
    * - :meth:`api.telephony.callqueue.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
         Retrieve Call Forwarding settings for the designated feature including the list of call
+   * - :meth:`api.telephony.callqueue.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
+        Switch Mode for Call Forwarding Settings for an entity
    * - :meth:`api.telephony.callqueue.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
         Update Call Forwarding Settings for a feature
    * - :meth:`api.telephony.callqueue.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
@@ -989,6 +999,8 @@ The method name is a link to the method documentation.
         Delete a Selective Call Forwarding Rule for the designated feature
    * - :meth:`api.telephony.huntgroup.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
         Retrieve Call Forwarding settings for the designated feature including the list of call
+   * - :meth:`api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
+        Switch Mode for Call Forwarding Settings for an entity
    * - :meth:`api.telephony.huntgroup.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
         Update Call Forwarding Settings for a feature
    * - :meth:`api.telephony.huntgroup.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
@@ -1183,6 +1195,26 @@ The method name is a link to the method documentation.
         Update an Organization's MS Teams Setting
    * - :meth:`api.telephony.ms_teams.read <wxc_sdk.person_settings.msteams.OrgMSTeamsSettingApi.read>`
         Get an Organization's MS Teams Settings
+   * - :meth:`api.telephony.operating_modes.available_operating_modes <wxc_sdk.telephony.operating_modes.OperatingModesApi.available_operating_modes>`
+        Retrieve the List of Available Operating Modes in a Location
+   * - :meth:`api.telephony.operating_modes.create <wxc_sdk.telephony.operating_modes.OperatingModesApi.create>`
+        Create an Operating Mode
+   * - :meth:`api.telephony.operating_modes.delete <wxc_sdk.telephony.operating_modes.OperatingModesApi.delete>`
+        Delete an Operating Mode
+   * - :meth:`api.telephony.operating_modes.details <wxc_sdk.telephony.operating_modes.OperatingModesApi.details>`
+        Get Details for an Operating Mode
+   * - :meth:`api.telephony.operating_modes.holiday_create <wxc_sdk.telephony.operating_modes.OperatingModesApi.holiday_create>`
+        Create an Operating Mode Holiday
+   * - :meth:`api.telephony.operating_modes.holiday_delete <wxc_sdk.telephony.operating_modes.OperatingModesApi.holiday_delete>`
+        Delete an Operating Mode Holiday
+   * - :meth:`api.telephony.operating_modes.holiday_details <wxc_sdk.telephony.operating_modes.OperatingModesApi.holiday_details>`
+        Get details for an Operating Mode Holiday
+   * - :meth:`api.telephony.operating_modes.holiday_update <wxc_sdk.telephony.operating_modes.OperatingModesApi.holiday_update>`
+        Modify an Operating Mode Holiday
+   * - :meth:`api.telephony.operating_modes.list <wxc_sdk.telephony.operating_modes.OperatingModesApi.list>`
+        Read the List of Operating Modes
+   * - :meth:`api.telephony.operating_modes.update <wxc_sdk.telephony.operating_modes.OperatingModesApi.update>`
+        Modify an Operating Mode
    * - :meth:`api.telephony.organisation_access_codes.create <wxc_sdk.telephony.org_access_codes.OrganisationAccessCodesApi.create>`
         Create Access Codes for an Organisation
    * - :meth:`api.telephony.organisation_access_codes.delete <wxc_sdk.telephony.org_access_codes.OrganisationAccessCodesApi.delete>`
