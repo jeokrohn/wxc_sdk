@@ -25,6 +25,19 @@ class Guest(ApiModel):
     #: absolute time of guest access token expiration
     expires_at: Optional[datetime] = None  #: expiration, calculated at time of guest creation
 
+    @property
+    def remaining(self) -> int:
+        """
+        remaining guest access token lifetime in seconds
+        """
+        if not self.access_token:
+            return 0
+        now = datetime.now(pytz.UTC)
+        diff = self.expires_at - now
+        diff: timedelta
+        diff = int(diff.total_seconds())
+        return diff
+
 
 class GuestManagementApi(ApiChild, base='guests'):
     """
