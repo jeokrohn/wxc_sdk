@@ -22,6 +22,7 @@ from .cx_essentials import CustomerExperienceEssentialsApi
 from .dect_devices import DECTDevicesApi
 from .devices import TelephonyDevicesApi
 from .emergency_services import OrgEmergencyServicesApi
+from .guest_calling import GuestCallingApi
 from .huntgroup import HuntGroupApi
 from .jobs import JobsApi
 from .location import TelephonyLocationApi
@@ -659,10 +660,11 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     conference: ConferenceControlsApi
     cx_essentials: CustomerExperienceEssentialsApi
     dect_devices: DECTDevicesApi
-    #: emergency services
-    emergency_services: OrgEmergencyServicesApi
     #: WxC device operations
     devices: TelephonyDevicesApi
+    #: emergency services
+    emergency_services: OrgEmergencyServicesApi
+    guest_calling: GuestCallingApi
     huntgroup: HuntGroupApi
     jobs: JobsApi
     #: location specific settings
@@ -707,6 +709,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.dect_devices = DECTDevicesApi(session=session)
         self.devices = TelephonyDevicesApi(session=session)
         self.emergency_services = OrgEmergencyServicesApi(session=session)
+        self.guest_calling = GuestCallingApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
         self.jobs = JobsApi(session=session)
         self.location = TelephonyLocationApi(session=session)
@@ -1050,3 +1053,31 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('moh/settings')
         super().put(url, params=params, json=body)
+
+    def create_a_call_token(self, called_number: str, guest_name: str = None) -> str:
+        """
+        Create a call token
+
+        Create a call token before initiating the click-to-call interaction.
+        The call token embeds information related to click-to-call interaction into an encrypted JWE token.
+        This token is used along with the `guest token
+        <https://developer.webex.com/docs/api/v1/guests-management/create-a-guest>`_ to initialise the web calling SDK
+
+        Creating a call token requires a service app access token with a scope of `spark:webrtc_calling`.
+
+        :param called_number: Number to be called. This number should be enabled as guest calling destination at
+            `Webex Control Hub
+            <https://admin.webex.com>`_ by the administrator.
+        :type called_number: str
+        :param guest_name: Name of the guest caller.
+        :type guest_name: str
+        :rtype: str
+        """
+        body = dict()
+        body['calledNumber'] = called_number
+        if guest_name is not None:
+            body['guestName'] = guest_name
+        url = self.session.ep('telephony/click2call/callToken')
+        data = super().post(url, json=body)
+        r = data['callToken']
+        return r

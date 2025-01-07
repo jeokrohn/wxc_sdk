@@ -28,11 +28,17 @@ The method name is a link to the method documentation.
    * - :meth:`api.converged_recordings.details <wxc_sdk.converged_recordings.ConvergedRecordingsApi.details>`
         Get Recording Details
    * - :meth:`api.converged_recordings.list <wxc_sdk.converged_recordings.ConvergedRecordingsApi.list>`
-        List Recordings for Compliance officer
+        List Recordings
    * - :meth:`api.converged_recordings.metadata <wxc_sdk.converged_recordings.ConvergedRecordingsApi.metadata>`
         Get Recording metadata
+   * - :meth:`api.converged_recordings.move_recordings_into_the_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.move_recordings_into_the_recycle_bin>`
+        Move Recordings into the Recycle Bin
+   * - :meth:`api.converged_recordings.purge_recordings_from_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.purge_recordings_from_recycle_bin>`
+        Purge Recordings from Recycle Bin
    * - :meth:`api.converged_recordings.reassign <wxc_sdk.converged_recordings.ConvergedRecordingsApi.reassign>`
         Reassign Recordings
+   * - :meth:`api.converged_recordings.restore_recordings_from_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.restore_recordings_from_recycle_bin>`
+        Restore Recordings from Recycle Bin
    * - :meth:`api.device_configurations.list <wxc_sdk.device_configurations.DeviceConfigurationsApi.list>`
         Lists all device configurations associated with the given device ID
    * - :meth:`api.device_configurations.update <wxc_sdk.device_configurations.DeviceConfigurationsApi.update>`
@@ -601,6 +607,8 @@ The method name is a link to the method documentation.
         Lists teams to which the authenticated user belongs
    * - :meth:`api.teams.update <wxc_sdk.teams.TeamsApi.update>`
         Updates details for a team, by ID
+   * - :meth:`api.telephony.create_a_call_token <wxc_sdk.telephony.TelephonyApi.create_a_call_token>`
+        Create a call token
    * - :meth:`api.telephony.device_settings <wxc_sdk.telephony.TelephonyApi.device_settings>`
         Get device override settings for an organization
    * - :meth:`api.telephony.phone_number_details <wxc_sdk.telephony.TelephonyApi.phone_number_details>`
@@ -947,6 +955,14 @@ The method name is a link to the method documentation.
         Get an Organization Emergency Call Notification
    * - :meth:`api.telephony.emergency_services.update_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_emergency_call_notification>`
         Update an organization emergency call notification
+   * - :meth:`api.telephony.guest_calling.available_members <wxc_sdk.telephony.guest_calling.GuestCallingApi.available_members>`
+        Read the Click-to-call Available Members
+   * - :meth:`api.telephony.guest_calling.members <wxc_sdk.telephony.guest_calling.GuestCallingApi.members>`
+        Read the Click-to-call Members
+   * - :meth:`api.telephony.guest_calling.read <wxc_sdk.telephony.guest_calling.GuestCallingApi.read>`
+        Read the Click-to-call Settings
+   * - :meth:`api.telephony.guest_calling.update <wxc_sdk.telephony.guest_calling.GuestCallingApi.update>`
+        Update the Click-to-call Settings
    * - :meth:`api.telephony.huntgroup.alternate_available_phone_numbers <wxc_sdk.telephony.huntgroup.HuntGroupApi.alternate_available_phone_numbers>`
         Get Hunt Group Alternate Available Phone Numbers
    * - :meth:`api.telephony.huntgroup.by_name <wxc_sdk.telephony.huntgroup.HuntGroupApi.by_name>`
