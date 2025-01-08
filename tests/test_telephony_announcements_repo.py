@@ -118,9 +118,13 @@ class Repo(TestWithLocations):
         target_location: Location
         print(f'Target location: "{target_location.name}"')
         new_name = next(self.new_ann_names(location_id=target_location.location_id))
-        r = api.upload_announcement(name=new_name, file='sample.wav', upload_as=f'sample_{new_name[-3:]}.wav',
+        new_id = api.upload_announcement(name=new_name, file='sample.wav', upload_as=f'sample_{new_name[-3:]}.wav',
                                     location_id=target_location.location_id)
-        print(f'Uploaded new announcement in location: {new_name} id: {r}')
+
+        print(f'Uploaded new announcement in location: {new_name} id: {new_id}')
+        announcements = api.list(location_id=target_location.location_id)
+        ann = next((ann for ann in announcements if ann.id == new_id), None)
+        self.assertIsNotNone(ann, 'New announcement not found in location list')
 
     def test_008_org_repository_usage(self):
         api = self.api.telephony.announcements_repo
