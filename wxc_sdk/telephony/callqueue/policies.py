@@ -33,7 +33,7 @@ class CQHolidaySchedule(ApiModel):
     """
     #: Name of the schedule configured for a holiday service.
     schedule_name: str
-    #: Specifies whether the schedule mentioned in scheduleName is org or location specific.
+    #: Indicates whether the schedule in scheduleName is specific to the organization or location.
     schedule_level: ScheduleLevel
 
 
@@ -43,18 +43,18 @@ class HolidayService(ApiModel):
     """
     #: Whether or not the call queue holiday service routing policy is enabled.
     holiday_service_enabled: bool
-    #: Specifies call processing action type.
+    #: The call processing action type.
     action: Optional[CPActionType] = None
-    #: Specifies whether the schedule mentioned in holidayScheduleName is org or location specific.
-    #: (Must be from holidaySchedules list)
+    #: The schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from `holidaySchedules`
+    #: list)
     holiday_schedule_level: Optional[ScheduleLevel] = None
     #: Name of the schedule configured for a holiday service as one of from holidaySchedules list.
     holiday_schedule_name: Optional[str] = None
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
     transfer_phone_number: Optional[str] = None
-    #: Specifies if an announcement plays to callers before applying the action.
+    #: Indicates whether an announcement plays to callers before the action is applied.
     play_announcement_before_enabled: bool
-    #: Specifies what type of announcement to be played.
+    #: The type of announcement to be played.
     audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
     audio_files: Optional[list[AnnAudioFile]] = None
@@ -78,28 +78,27 @@ class NightService(ApiModel):
     """
     #: Whether or not the call queue night service routing policy is enabled.
     night_service_enabled: bool
-    #: Specifies call processing action type.
+    #: The call processing action type.
     action: Optional[CPActionType] = None
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
     transfer_phone_number: Optional[str] = None
-    #: Specifies if an announcement plays to callers before applying the action.
+    #: Indicates whether an announcement plays to callers before the action is applied.
     play_announcement_before_enabled: bool
-    #: Specifies the type of announcements to played.
+    #: The type of announcements to played.
     announcement_mode: Optional[AnnouncementMode] = None
-    #: Specifies what type of announcement to be played.
+    #: The type of announcements to be played when announcementMode is set to `NORMAL`.
     audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
     audio_files: Optional[list[AnnAudioFile]] = None
     #: Name of the schedule configured for a night service as one of from businessHourSchedules list.
     business_hours_name: Optional[str] = None
-    #: Specifies whether the above mentioned schedule is org or location specific.
-    #: (Must be from businessHourSchedules list).
+    #: The above mentioned schedule is org or location specific. (Must be from `businessHourSchedules` list).
     business_hours_level: Optional[ScheduleLevel] = None
     #: Lists the pre-configured business hour schedules.
     business_hour_schedules: list[CQHolidaySchedule] = Field(default_factory=list)
     #: Force night service regardless of business hour schedule.
     force_night_service_enabled: Optional[bool] = None
-    #: Specifies what type of announcement to be played when announcementMode is MANUAL.
+    #: The type of announcements to be played when announcementMode is set to NORMAL.
     manual_audio_message_selection: Optional[Greeting] = None
     #: List Of Audio Files.
     manual_audio_files: Optional[list[AnnAudioFile]] = None
@@ -130,10 +129,11 @@ class StrandedCalls(ApiModel):
     """
     Call Queue Holiday Service details
     """
-    #: Specifies call processing action type.
+    #: The call processing action type.
     action: Optional[StrandedCallsAction] = None
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
     transfer_phone_number: Optional[str] = None
+    #: The type of announcement to be played.
     audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
     audio_files: Optional[list[AnnAudioFile]] = None

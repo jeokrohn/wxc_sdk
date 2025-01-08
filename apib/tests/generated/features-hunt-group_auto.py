@@ -205,7 +205,8 @@ class PostHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: If `forwardEnabled` is true, enables and disables sending incoming to destination number's voicemail if the
-    #: destination is an internal phone number and that number has the voicemail service enabled.
+    #: destination is an internal phone number and that number has the voicemail service enabled. If
+    #: `destinationVoicemailEnabled` is enabled, then *55 is added as a prefix for `destination`.
     destination_voicemail_enabled: Optional[bool] = None
 
 

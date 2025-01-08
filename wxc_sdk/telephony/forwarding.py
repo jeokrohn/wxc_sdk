@@ -497,7 +497,7 @@ class ForwardingApi(ApiChild, base=''):
     def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str,
                                         org_id: str = None):
         """
-        Switch Mode for Call Forwarding Settings for en entity
+        Switch Mode for Call Forwarding Settings for an entity
 
         Switches the current operating mode to the mode as per normal operations.
 

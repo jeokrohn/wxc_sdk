@@ -32,8 +32,9 @@ class NoAnswer(ApiModel):
     number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for number_of_rings setting.
     system_max_number_of_rings: Optional[int] = None
-    #: If destination_voicemail_enabled is true, enables and disables sending incoming to destination number's
-    #: voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: If `forwardEnabled` is true, enables and disables sending incoming to destination number's voicemail if the
+    #: destination is an internal phone number and that number has the voicemail service enabled. If
+    #: `destinationVoicemailEnabled` is enabled, then *55 is added as a prefix for `destination`.
     destination_voicemail_enabled: Optional[bool] = None
 
     @staticmethod

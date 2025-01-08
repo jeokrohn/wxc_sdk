@@ -25,7 +25,7 @@ class AlternateNumberSettings(ApiModel):
     #: Distinctive Ringing selected for the alternate numbers in the call queue or hunt group overrides the normal
     #: ringing patterns set for Alternate Number.
     distinctive_ring_enabled: bool = Field(default=True)
-    #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
+    #: Allows up to 10 numbers, each with an optional distinctive ring setting override.
     alternate_numbers: Optional[list[AlternateNumber]] = None
 
 

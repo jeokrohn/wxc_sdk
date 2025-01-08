@@ -11,33 +11,41 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel',
+__all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel',
            'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType',
-           'AvailableAgentObject', 'CallForwardRulesGet', 'CallForwardRulesSet',
-           'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
-           'CallForwardingNumbers', 'CallForwardingNumbersType', 'CallQueueCallForwardAvailableNumberObject',
-           'CallQueueCallForwardAvailableNumberObjectOwner', 'CallQueueHolidaySchedulesObject',
-           'CallQueueHolidaySchedulesObjectScheduleLevel', 'CallQueuePrimaryAvailableNumberObject',
-           'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage',
-           'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage',
-           'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
-           'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting',
-           'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode',
-           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateCallQueueObjectCallingLineIdPolicy',
-           'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers',
-           'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo',
-           'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection',
-           'FeaturesCallQueueApi', 'GetAnnouncementFileInfo', 'GetCallQueueCallPolicyObject',
-           'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
-           'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
-           'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
+           'AvailableAgentListObject', 'AvailableAgentObject', 'AvailableSupervisorsListObject',
+           'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGetCallForwarding',
+           'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType',
+           'CallQueueCallForwardAvailableNumberObject', 'CallQueueCallForwardAvailableNumberObjectOwner',
+           'CallQueueHolidaySchedulesObject', 'CallQueueHolidaySchedulesObjectScheduleLevel',
+           'CallQueuePrimaryAvailableNumberObject', 'CallQueueQueueEssentialsSettingsObject',
+           'CallQueueQueueEssentialsSettingsObjectOverflow', 'CallQueueQueueSettingsGetObject',
+           'CallQueueQueueSettingsGetObjectComfortMessage', 'CallQueueQueueSettingsGetObjectComfortMessageBypass',
+           'CallQueueQueueSettingsGetObjectMohMessage', 'CallQueueQueueSettingsGetObjectMohMessageNormalSource',
+           'CallQueueQueueSettingsGetObjectOverflow', 'CallQueueQueueSettingsGetObjectOverflowAction',
+           'CallQueueQueueSettingsGetObjectOverflowGreeting', 'CallQueueQueueSettingsGetObjectWaitMessage',
+           'CallQueueQueueSettingsGetObjectWaitMessageWaitMode', 'CallQueueQueueSettingsGetObjectWelcomeMessage',
+           'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
+           'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
+           'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
+           'CreateForwardingRuleObjectForwardToSelection', 'FeaturesCallQueueApi', 'GetAnnouncementFileInfo',
+           'GetCallQueueAgentObject', 'GetCallQueueAgentObjectAgent', 'GetCallQueueAgentObjectQueues',
+           'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
+           'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueEssentialsCallPolicyObject',
+           'GetCallQueueEssentialsObject', 'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject',
+           'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject',
+           'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
-           'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject',
+           'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject', 'GetPersonPlaceObject',
            'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType',
-           'GetUserNumberItemObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject',
-           'LocationObject', 'MediaType', 'ModifyCallForwardingObjectCallForwarding',
-           'ModifyPersonPlaceVirtualLineCallQueueObject', 'NumberOwnerType',
-           'PostPersonPlaceVirtualLineCallQueueObject', 'RingPatternObject', 'STATE', 'TelephonyType']
+           'GetSupervisorDetailsResponse', 'GetUserNumberItemObject', 'HuntPolicySelection',
+           'HuntRoutingTypeSelection', 'ListCallQueueAgentObject', 'ListCallQueueEssentialsObject',
+           'ListCallQueueObject', 'ListSupervisorAgentObject', 'ListSupervisorAgentStatusObject',
+           'ListSupervisorObject', 'LocationObject', 'MediaType', 'ModifyAgentsForCallQueueObjectSettings',
+           'ModifyCallForwardingObjectCallForwarding', 'ModifyPersonPlaceVirtualLineCallQueueObject',
+           'NumberOwnerType', 'PostPersonPlaceVirtualLineCallQueueObject',
+           'PostPersonPlaceVirtualLineSupervisorObject', 'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject',
+           'STATE', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -185,9 +193,9 @@ class CallForwardingNumbers(ApiModel):
 
 
 class CallQueueHolidaySchedulesObjectScheduleLevel(str, Enum):
-    #: Specifies this Schedule is configured across location.
+    #: Schedule is configured across a location.
     location = 'LOCATION'
-    #: Specifies this Schedule is configured across organization.
+    #: Schedule is configured across an organization.
     organization = 'ORGANIZATION'
 
 
@@ -195,7 +203,7 @@ class CallQueueHolidaySchedulesObject(ApiModel):
     #: Name of the schedule configured for a holiday service.
     #: example: 2022 All Holidays
     schedule_name: Optional[str] = None
-    #: Specifies whether the schedule mentioned in `scheduleName` is org or location specific.
+    #: Indicates whether the schedule in scheduleName is specific to the organization or location.
     #: example: LOCATION
     schedule_level: Optional[CallQueueHolidaySchedulesObjectScheduleLevel] = None
 
@@ -567,10 +575,10 @@ class GetCallQueueForcedForwardObject(ApiModel):
     #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
     #: example: 1235557890
     transfer_phone_number: Optional[str] = None
-    #: Specifies if an announcement plays to callers before applying the action.
+    #: Indicates whether an announcement plays to callers before the action is applied.
     #: example: True
     play_announcement_before_enabled: Optional[bool] = None
-    #: Specifies what type of announcement to be played.
+    #: The type of announcement to be played.
     #: example: DEFAULT
     audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: List of Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
@@ -588,11 +596,11 @@ class GetCallQueueHolidayObject(ApiModel):
     #: Whether or not the call queue holiday service routing policy is enabled.
     #: example: True
     holiday_service_enabled: Optional[bool] = None
-    #: Specifies call processing action type.
+    #: The call processing action type.
     #: example: BUSY
     action: Optional[GetCallQueueHolidayObjectAction] = None
-    #: Specifies whether the schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from
-    #: `holidaySchedules` list)
+    #: The schedule mentioned in `holidayScheduleName` is org or location specific. (Must be from `holidaySchedules`
+    #: list)
     #: example: LOCATION
     holiday_schedule_level: Optional[CallQueueHolidaySchedulesObjectScheduleLevel] = None
     #: Name of the schedule configured for a holiday service as one of from `holidaySchedules` list.
@@ -601,10 +609,10 @@ class GetCallQueueHolidayObject(ApiModel):
     #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
     #: example: 1235557890
     transfer_phone_number: Optional[str] = None
-    #: Specifies if an announcement plays to callers before applying the action.
+    #: Indicates whether an announcement plays to callers before the action is applied.
     #: example: True
     play_announcement_before_enabled: Optional[bool] = None
-    #: Specifies what type of announcement to be played.
+    #: The type of announcement to be played.
     #: example: DEFAULT
     audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: List of Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
@@ -624,19 +632,19 @@ class GetCallQueueNightServiceObject(ApiModel):
     #: Whether or not the call queue night service routing policy is enabled.
     #: example: True
     night_service_enabled: Optional[bool] = None
-    #: Specifies call processing action type.
+    #: The call processing action type.
     #: example: TRANSFER
     action: Optional[GetCallQueueHolidayObjectAction] = None
     #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
     #: example: 1234
     transfer_phone_number: Optional[str] = None
-    #: Specifies if an announcement plays to callers before applying the action.
+    #: Indicates whether an announcement plays to callers before the action is applied.
     #: example: True
     play_announcement_before_enabled: Optional[bool] = None
-    #: Specifies the type of announcements to played.
+    #: The type of announcements to played.
     #: example: NORMAL
     announcement_mode: Optional[GetCallQueueNightServiceObjectAnnouncementMode] = None
-    #: Specifies what type of announcements to be played when `announcementMode` is `NORMAL`.
+    #: The type of announcements to be played when announcementMode is set to `NORMAL`.
     #: example: DEFAULT
     audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: List of Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
@@ -644,8 +652,7 @@ class GetCallQueueNightServiceObject(ApiModel):
     #: Name of the schedule configured for a night service as one of from `businessHourSchedules` list.
     #: example: Working Hour
     business_hours_name: Optional[str] = None
-    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from
-    #: `businessHourSchedules` list).
+    #: The above mentioned schedule is org or location specific. (Must be from `businessHourSchedules` list).
     #: example: ORGANIZATION
     business_hours_level: Optional[CallQueueHolidaySchedulesObjectScheduleLevel] = None
     #: Lists the pre-configured business hour schedules.
@@ -653,7 +660,7 @@ class GetCallQueueNightServiceObject(ApiModel):
     #: Force night service regardless of business hour schedule.
     #: example: True
     force_night_service_enabled: Optional[bool] = None
-    #: Specifies what type of announcement to be played when `announcementMode` is `MANUAL`.
+    #: The type of announcements to be played when announcementMode is set to NORMAL.`MANUAL`.
     #: example: DEFAULT
     manual_audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: List Of Audio Files.
@@ -665,7 +672,7 @@ class GetCallQueueObjectAlternateNumberSettings(ApiModel):
     #: set for the Alternate Numbers.
     #: example: True
     distinctive_ring_enabled: Optional[bool] = None
-    #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
+    #: Allows up to 10 numbers, each with an optional distinctive ring setting override.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
 
 
@@ -804,13 +811,13 @@ class GetCallQueueStrandedCallsObjectAction(str, Enum):
 
 
 class GetCallQueueStrandedCallsObject(ApiModel):
-    #: Specifies call processing action type.
+    #: The call processing action type.
     #: example: BUSY
     action: Optional[GetCallQueueStrandedCallsObjectAction] = None
     #: Call gets transferred to this number when action is set to `TRANSFER`. This can also be an extension.
     #: example: 1235557890
     transfer_phone_number: Optional[str] = None
-    #: Specifies what type of announcement to be played.
+    #: The type of announcement to be played.
     #: example: DEFAULT
     audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: List of Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
@@ -1043,11 +1050,417 @@ class AvailableAgentObject(ApiModel):
     numbers: Optional[list[GetUserNumberItemObject]] = None
 
 
+class ListSupervisorObject(ApiModel):
+    #: A unique identifier for the supervisor.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS81OGVkZTIwNi0yNTM5LTQ1ZjQtODg4Ny05M2E3ZWIwZWI3ZDI
+    id: Optional[str] = None
+    #: First name of the supervisor.
+    #: example: John
+    first_name: Optional[str] = None
+    #: Last name of the supervisor.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Primary phone number of the supervisor.
+    #: example: +19845550186
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the supervisor.
+    #: example: 12554
+    extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 34
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person.
+    #: example: 3412554
+    esn: Optional[str] = None
+    #: Number of agents managed by supervisor. A supervisor must manage at least one agent.
+    #: example: 2
+    agent_count: Optional[str] = None
+
+
+class PostPersonPlaceVirtualLineSupervisorObject(ApiModel):
+    #: Identifier of the person, workspace or virtual line.
+    #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFLzE3NzczMWRiLWE1YzEtNGI2MC05ZTMwLTNhM2MxMGFiM2IxMQ
+    id: Optional[str] = None
+
+
+class AvailableSupervisorsListObject(ApiModel):
+    #: A unique identifier for the supervisor.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80YzVlODRhMS0wZmEwLTQzNDAtODVkZC1mMzM1ZGQ4MTkxMmI
+    id: Optional[str] = None
+    #: First name of the supervisor.
+    #: example: Adam
+    first_name: Optional[str] = None
+    #: Last name of the supervisor.
+    #: example: Sandler
+    last_name: Optional[str] = None
+    #: (string, optional) - Display name of the supervisor.
+    #: example: Adam Sandler
+    display_name: Optional[str] = None
+    #: Primary phone number of the supervisor.
+    #: example: +19845550200
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the supervisor.
+    #: example: 20
+    extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 34543
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person.
+    #: example: 345430020
+    esn: Optional[str] = None
+
+
+class ListSupervisorAgentObject(ApiModel):
+    #: ID of person, workspace or virtual line.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85NTA4OTc4ZC05YmFkLTRmYWEtYTljNC0wOWQ4NWQ4ZmRjZTY
+    id: Optional[str] = None
+    #: Last name of the agent.
+    #: example: user
+    last_name: Optional[str] = None
+    #: First name of the agent.
+    #: example: test
+    first_name: Optional[str] = None
+    #: Primary phone extension of the agent.
+    #: example: 20
+    extension: Optional[str] = None
+    #: Routing prefix + extension of a agent.
+    #: example: 20
+    esn: Optional[str] = None
+    #: Primary phone number of the agent.
+    #: example: +1972998998
+    phone_number: Optional[str] = None
+
+
+class AgentAction(str, Enum):
+    #: Assign an agent to a supervisor.
+    add = 'ADD'
+    #: Remove an agent from a supervisor.
+    delete = 'DELETE'
+
+
+class PutPersonPlaceVirtualLineAgentObject(ApiModel):
+    #: ID of person, workspace or virtual line. **WARNING**: The `id` returned is always of type `PEOPLE` even if the
+    #: agent is a workspace or virtual line. The `type` of the agent `id` will be corrected in a future release.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS81OGVkZTIwNi0yNTM5LTQ1ZjQtODg4Ny05M2E3ZWIwZWI3ZDI
+    id: Optional[str] = None
+    #: Enumeration that indicates whether an agent needs to be added (`ADD`) or deleted (`DELETE`) from a supervisor.
+    action: Optional[AgentAction] = None
+
+
+class ListSupervisorAgentStatusObject(ApiModel):
+    #: ID of person, workspace or virtual line. **WARNING**: The `id` returned is in UUID format, since we don't have
+    #: agentType from OCI response. This will be converting to Hydra type in future release.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85NTA4OTc4ZC05YmFkLTRmYWEtYTljNC0wOWQ4NWQ4ZmRjZTY
+    id: Optional[str] = None
+    #: status of the agent.
+    #: example: DUPLICATE
+    status: Optional[str] = None
+    #: Detailed message for the status.
+    #: example: [Error 6612] Agent 9508978d-9bad-4faa-a9c4-09d85d8fdce6 is already assigned to the supervisor.
+    message: Optional[str] = None
+
+
+class AvailableAgentListObject(ApiModel):
+    #: A unique identifier for the agent.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80YzVlODRhMS0wZmEwLTQzNDAtODVkZC1mMzM1ZGQ4MTkxMmI
+    id: Optional[str] = None
+    #: First name of the agent.
+    #: example: Adam
+    first_name: Optional[str] = None
+    #: Last name of the agent.
+    #: example: Sandler
+    last_name: Optional[str] = None
+    #: (string, optional) - Display name of the agent.
+    #: example: Adam Sandler
+    display_name: Optional[str] = None
+    #: Primary phone number of the agent.
+    #: example: +19845550200
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the agent.
+    #: example: 20
+    extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 34543
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a person.
+    #: example: 345430020
+    esn: Optional[str] = None
+    #: Type of the person, workspace or virtual line.
+    #: example: PEOPLE
+    type: Optional[GetPersonPlaceVirtualLineCallQueueObjectType] = None
+
+
+class ListCallQueueAgentObject(ApiModel):
+    #: Unique call queue agent identifier.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zYjY4Yjg2YS1hMTZiLTRmNzItOTlmZi01ZDlhZjgyZWNmNTE
+    id: Optional[str] = None
+    #: First name for the call queue agent.
+    #: example: test_301_person_phone_extnsion
+    first_name: Optional[str] = None
+    #: Last name for the call queue agent.
+    #: example: last_nam
+    last_name: Optional[str] = None
+    #: Primary phone number of the call queue agent.
+    #: example: 5558675309
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the call queue agent.
+    #: example: 23234
+    extension: Optional[str] = None
+    #: Routing prefix of the call queue agent.
+    #: example: 8002
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of a agent.
+    #: example: 23234
+    esn: Optional[str] = None
+    #: Denotes the queue count for call queue agent.
+    #: example: 1
+    queue_count: Optional[int] = None
+    #: Denotes the location count for call queue agent.
+    #: example: 1
+    location_count: Optional[int] = None
+    #: Denotes the join count for call queue agent.
+    #: example: 1
+    join_count: Optional[int] = None
+    #: Denotes unjoin count for call queue agent.
+    unjoin_count: Optional[int] = None
+    #: The location information.
+    location: Optional[LocationObject] = None
+    #: The type of the call queue agent.
+    #: example: PEOPLE
+    type: Optional[str] = None
+
+
+class GetCallQueueAgentObjectAgent(ApiModel):
+    #: A unique identifier for the call queue agent.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xZmNiMjczZS0wYzdmLTQ1ZGUtYmNlOC0yMWE3YzFlYjVjYmY
+    id: Optional[str] = None
+    #: First name for the call queue agent.
+    #: example: Arthur
+    first_name: Optional[str] = None
+    #: last name for the call queue agent.
+    #: example: Murray
+    last_name: Optional[str] = None
+    #: Primary phone number of the call queue agent.
+    #: example: 19728881234
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the call queue agent.
+    #: example: 34543
+    extension: Optional[str] = None
+    #: Routing prefix + extension of a agent.
+    #: example: 34543180
+    esn: Optional[str] = None
+    #: The location information.
+    location: Optional[LocationObject] = None
+    #: TIMEhe type of the call queue agent.
+    #: example: PEOPLE
+    type: Optional[str] = None
+
+
+class GetCallQueueAgentObjectQueues(ApiModel):
+    #: Unique identifier of the call queue.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUVVFVUUvZjM4NDIxZGYtN2MxOC00NGI1LThlNmQtNDFmZTEyMTFlZDFk
+    id: Optional[str] = None
+    #: Unique name for the call queue.
+    #: example: YU7
+    name: Optional[str] = None
+    #: Primary phone number of the call queue.
+    #: example: 12144184002
+    phone_number: Optional[str] = None
+    #: The routing prefix for the call queue.
+    #: example: 34543
+    routing_prefix: Optional[str] = None
+    #: The location identifier of the call queue.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzZhZjk4ZGViLWVlZGItNGFmYi1hMDAzLTEzNzgyYjdjODAxYw
+    location_id: Optional[str] = None
+    #: The location name where the call queue resides.
+    #: example: RCDN
+    location_name: Optional[str] = None
+    #: Whether or not the call queue is enabled.
+    #: example: True
+    join_enabled: Optional[bool] = None
+
+
+class GetCallQueueAgentObject(ApiModel):
+    agent: Optional[GetCallQueueAgentObjectAgent] = None
+    queues: Optional[list[GetCallQueueAgentObjectQueues]] = None
+
+
+class ModifyAgentsForCallQueueObjectSettings(ApiModel):
+    #: Unique call queue identifier.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUVVFVUUvZjM4NDIxZGYtN2MxOC00NGI1LThlNmQtNDFmZTEyMTFlZDFk
+    queue_id: Optional[str] = None
+    #: Whether or not the call queue is enabled.
+    #: example: True
+    join_enabled: Optional[bool] = None
+
+
+class ListCallQueueEssentialsObject(ApiModel):
+    #: A unique identifier for the call queue.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUVVFVUUvNTU1MzY4Y2QtZDg5Mi00YzFlLTk0YjYtNzdjNjRiYWQ3NWMx
+    id: Optional[str] = None
+    #: Unique name for the call queue.
+    #: example: 5714328359
+    name: Optional[str] = None
+    #: Denotes if the call queue has Customer Experience Essentials license.
+    #: example: True
+    has_cx_essentials: Optional[bool] = None
+    #: Name of location for call queue.
+    #: example: WXCSIVDKCPAPIC4S1
+    location_name: Optional[str] = None
+    #: ID of location for call queue.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
+    location_id: Optional[str] = None
+    #: Primary phone number of the call queue.
+    #: example: 5558675309
+    phone_number: Optional[str] = None
+    #: Primary phone extension of the call queue.
+    #: example: 7781
+    extension: Optional[str] = None
+    #: Whether or not the call queue is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: The department information.
+    department: Optional[LocationObject] = None
+
+
+class GetCallQueueEssentialsCallPolicyObject(ApiModel):
+    #: Call routing policy to use to dispatch calls to agents.
+    #: example: UNIFORM
+    policy: Optional[HuntPolicySelection] = None
+    #: Settings for when the call into the call queue is not answered.
+    call_bounce: Optional[GetCallQueueCallPolicyObjectCallBounce] = None
+    #: Whether or not the call queue has the distinctive ring option enabled.
+    distinctive_ring: Optional[GetCallQueueCallPolicyObjectDistinctiveRing] = None
+
+
+class CallQueueQueueEssentialsSettingsObjectOverflow(ApiModel):
+    #: Indicates how to handle new calls when the queue is full.
+    #: example: PERFORM_BUSY_TREATMENT
+    action: Optional[CallQueueQueueSettingsGetObjectOverflowAction] = None
+    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an
+    #: external `transferNumber` is entered.
+    send_to_voicemail: Optional[bool] = None
+    #: Destination number for overflow calls when `action` is set to `TRANSFER_TO_PHONE_NUMBER`.
+    #: example: +15553331212
+    transfer_number: Optional[str] = None
+    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is
+    #: triggered.
+    #: example: True
+    overflow_after_wait_enabled: Optional[bool] = None
+    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available.
+    #: example: 20
+    overflow_after_wait_time: Optional[int] = None
+    #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered by a
+    #: user.
+    #: example: True
+    play_overflow_greeting_enabled: Optional[bool] = None
+    #: Indicates how to handle new calls when the queue is full.
+    #: example: DEFAULT
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: Array of announcement file name strings to be played as overflow greetings. These files are from the list of
+    #: announcements files associated with this call queue.
+    audio_files: Optional[list[str]] = None
+
+
+class CallQueueQueueEssentialsSettingsObject(ApiModel):
+    #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are
+    #: triggered.
+    #: example: 50
+    queue_size: Optional[int] = None
+    #: Play ringing tone to callers when their call is set to an available agent.
+    call_offer_tone_enabled__true_: Optional[bool] = Field(alias='callOfferToneEnabled `true`', default=None)
+    #: Reset caller statistics upon queue entry.
+    reset_call_statistics_enabled: Optional[bool] = None
+    #: Settings for incoming calls exceed queueSize.
+    overflow: Optional[CallQueueQueueEssentialsSettingsObjectOverflow] = None
+
+
+class GetPersonPlaceObject(ApiModel):
+    #: ID of person or workspace.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS80NDVkMzMzMC1mNjE3LTExZWItOWQyZS01NzViODE3ZGE1NmE
+    id: Optional[str] = None
+    #: First name of person or workspace.
+    #: example: Hakim
+    first_name: Optional[str] = None
+    #: First name of person or workspace.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Phone number of person or workspace.
+    #: example: +15555551234
+    phone_number: Optional[str] = None
+    #: Extension of person or workspace.
+    #: example: 1234
+    extension: Optional[str] = None
+    #: Weight of person or workspace. Only applied when call policy is `WEIGHTED`.
+    #: example: 50
+    weight: Optional[str] = None
+
+
+class GetCallQueueEssentialsObject(ApiModel):
+    #: A unique identifier for the call queue.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUVVFVUUvNTU1MzY4Y2QtZDg5Mi00YzFlLTk0YjYtNzdjNjRiYWQ3NWMx
+    id: Optional[str] = None
+    #: Unique name for the call queue.
+    #: example: CallQueue-1
+    name: Optional[str] = None
+    #: Denotes if the call queue has Customer Experience Essentials license.
+    #: example: True
+    has_cx_essentials: Optional[bool] = None
+    #: Whether or not the call queue is enabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
+    #: example: Hakim
+    first_name: Optional[str] = None
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
+    #: example: Smith
+    last_name: Optional[str] = None
+    #: Primary phone number of the call queue.
+    #: example: 5558675309
+    phone_number: Optional[str] = None
+    #: Extension of the call queue.
+    #: example: 7781
+    extension: Optional[str] = None
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
+    #: Language for call queue.
+    #: example: English
+    language: Optional[str] = None
+    #: Language code for call queue.
+    #: example: en-US
+    language_code: Optional[str] = None
+    #: Time zone for the call queue.
+    #: example: America/Chicago
+    time_zone: Optional[str] = None
+    #: Policy controlling how calls are routed to agents.
+    call_policies: Optional[GetCallQueueEssentialsCallPolicyObject] = None
+    #: Overall call queue settings.
+    queue_settings: Optional[CallQueueQueueEssentialsSettingsObject] = None
+    #: Flag to indicate whether call waiting is enabled for agents.
+    allow_call_waiting_for_agents_enabled: Optional[bool] = None
+    #: People, including workspaces, that are eligible to receive calls.
+    agents: Optional[list[GetPersonPlaceObject]] = None
+    #: The department information.
+    department: Optional[LocationObject] = None
+
+
+class GetSupervisorDetailsResponse(ApiModel):
+    #: unique identifier of the supervisor
+    id: Optional[str] = None
+    #: Array of agents assigned to a specific supervisor.
+    agents: Optional[list[ListSupervisorAgentObject]] = None
+
+
 class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     """
     Features:  Call Queue
     
     Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
+    
+    Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
     
     Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
     `spark-admin:telephony_config_read`.
@@ -1104,7 +1517,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                             extension: str = None, language_code: str = None, first_name: str = None,
                             last_name: str = None, time_zone: str = None,
                             calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
-                            calling_line_id_phone_number: str = None, allow_agent_join_enabled: bool = None,
+                            calling_line_id_phone_number: str = None,
+                            allow_call_waiting_for_agents_enabled: bool = None, allow_agent_join_enabled: bool = None,
                             phone_number_for_outgoing_calls_enabled: bool = None, org_id: str = None) -> str:
         """
         Create a Call Queue
@@ -1150,6 +1564,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy
         :param calling_line_id_phone_number: Calling line ID Phone number which will be shown if CUSTOM is selected.
         :type calling_line_id_phone_number: str
+        :param allow_call_waiting_for_agents_enabled: If `true`, call waiting is enabled for the agents.
+        :type allow_call_waiting_for_agents_enabled: bool
         :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
         :type allow_agent_join_enabled: bool
         :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
@@ -1183,6 +1599,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['callingLineIdPolicy'] = enum_str(calling_line_id_policy)
         if calling_line_id_phone_number is not None:
             body['callingLineIdPhoneNumber'] = calling_line_id_phone_number
+        if allow_call_waiting_for_agents_enabled is not None:
+            body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
         if allow_agent_join_enabled is not None:
             body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
@@ -1747,15 +2165,15 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type queue_id: str
         :param holiday_service_enabled: Enable or Disable the call queue holiday service routing policy.
         :type holiday_service_enabled: bool
-        :param action: Specifies call processing action type.
+        :param action: The call processing action type.
         :type action: GetCallQueueHolidayObjectAction
-        :param holiday_schedule_level: Specifies whether the schedule mentioned in `holidayScheduleName` is org or
-            location specific. (Must be from `holidaySchedules` list)
+        :param holiday_schedule_level: The schedule mentioned in `holidayScheduleName` is org or location specific.
+            (Must be from `holidaySchedules` list)
         :type holiday_schedule_level: CallQueueHolidaySchedulesObjectScheduleLevel
-        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
-            action.
+        :param play_announcement_before_enabled: Indicates whether an announcement plays to callers before the action
+            is applied.
         :type play_announcement_before_enabled: bool
-        :param audio_message_selection: Specifies what type of announcement to be played.
+        :param audio_message_selection: The type of announcement to be played.
         :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param holiday_schedule_name: Name of the schedule configured for a holiday service as one of from
             `holidaySchedules` list.
@@ -1846,20 +2264,20 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type queue_id: str
         :param night_service_enabled: Enable or disable call queue night service routing policy.
         :type night_service_enabled: bool
-        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
-            action.
+        :param play_announcement_before_enabled: Indicates whether an announcement plays to callers before the action
+            is applied.
         :type play_announcement_before_enabled: bool
-        :param announcement_mode: Specifies the type of announcements to played.
+        :param announcement_mode: The type of announcements to played.
         :type announcement_mode: GetCallQueueNightServiceObjectAnnouncementMode
-        :param audio_message_selection: Specifies what type of announcements to be played when `announcementMode` is
+        :param audio_message_selection: The type of announcements to be played when announcementMode is set to
             `NORMAL`.
         :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param force_night_service_enabled: Force night service regardless of business hour schedule.
         :type force_night_service_enabled: bool
-        :param manual_audio_message_selection: Specifies what type of announcement to be played when `announcementMode`
-            is `MANUAL`.
+        :param manual_audio_message_selection: The type of announcements to be played when announcementMode is set to
+            `MANUAL`.
         :type manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
-        :param action: Specifies call processing action type.
+        :param action: The call processing action type.
         :type action: GetCallQueueHolidayObjectAction
         :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
             also be an extension.
@@ -1869,8 +2287,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param business_hours_name: Name of the schedule configured for a night service as one of from
             `businessHourSchedules` list.
         :type business_hours_name: str
-        :param business_hours_level: Specifies whether the above mentioned schedule is org or location specific. (Must
-            be from `businessHourSchedules` list)
+        :param business_hours_level: The above mentioned schedule is org or location specific. (Must be from
+            `businessHourSchedules` list)
         :type business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel
         :param manual_audio_files: List Of pre-configured Audio Files.
         :type manual_audio_files: list[AudioAnnouncementFileFeatureGetObject]
@@ -1955,10 +2373,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type queue_id: str
         :param forced_forward_enabled: Enable or disable call forced forward service routing policy.
         :type forced_forward_enabled: bool
-        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
-            action.
+        :param play_announcement_before_enabled: Indicates whether an announcement plays to callers before the action
+            is applied.
         :type play_announcement_before_enabled: bool
-        :param audio_message_selection: Specifies what type of announcement to be played.
+        :param audio_message_selection: The type of announcement to be played.
         :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
             also be an extension.
@@ -2034,9 +2452,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param action: Specifies call processing action type.
+        :param action: The call processing action type.
         :type action: GetCallQueueStrandedCallsObjectAction
-        :param audio_message_selection: Specifies what type of announcement to be played.
+        :param audio_message_selection: The type of announcement to be played.
         :type audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting
         :param transfer_phone_number: Call gets transferred to this number when action is set to `TRANSFER`. This can
             also be an extension.
@@ -2215,3 +2633,870 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['order'] = order
         url = self.ep('queues/agents/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentObject, item_key='agents', params=params)
+
+    def get_list_of_supervisors(self, name: str = None, phone_number: str = None, order: str = None,
+                                org_id: str = None, **params) -> Generator[ListSupervisorObject, None, None]:
+        """
+        Get List of Supervisors
+
+        Get list of supervisors for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        Requires a full, location, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Only return supervisors with the matching name.
+        :type name: str
+        :param phone_number: Only return supervisors with matching primary phone number.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param org_id: List the supervisors for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ListSupervisorObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep('supervisors')
+        return self.session.follow_pagination(url=url, model=ListSupervisorObject, item_key='supervisors', params=params)
+
+    def create_a_supervisor(self, id: str, agents: list[PostPersonPlaceVirtualLineSupervisorObject],
+                            org_id: str = None) -> list[ListSupervisorAgentStatusObject]:
+        """
+        Create a Supervisor
+
+        Create a new supervisor. The supervisor must be created with atleast one agent.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        Requires a full or location administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param id: A unique identifier for the supervisor.
+        :type id: str
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineSupervisorObject]
+        :param org_id: Create supervisor for this organization.
+        :type org_id: str
+        :rtype: list[ListSupervisorAgentStatusObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['id'] = id
+        body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineSupervisorObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep('supervisors')
+        data = super().post(url, params=params, json=body)
+        r = TypeAdapter(list[ListSupervisorAgentStatusObject]).validate_python(data['supervisorAgentStatus'])
+        return r
+
+    def delete_a_supervisor(self, supervisor_id: str, org_id: str = None):
+        """
+        Delete A Supervisor
+
+        Deletes the supervisor from an organization.
+
+        Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
+
+        Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param supervisor_id: Delete the specified supervisor.
+        :type supervisor_id: str
+        :param org_id: Delete the supervisor in the specified organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'supervisors/{supervisor_id}')
+        super().delete(url, params=params)
+
+    def delete_bulk_supervisors(self, supervisor_ids: list[str], delete_all: bool = None, org_id: str = None):
+        """
+        Delete Bulk supervisors
+
+        Deletes supervisors in bulk from an organization.
+
+        Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
+
+        Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param supervisor_ids: Array of supervisors IDs to be deleted.
+        :type supervisor_ids: list[str]
+        :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
+            deleted. **WARNING**: This will remove all supervisors from the organization.
+        :type delete_all: bool
+        :param org_id: Delete supervisors in bulk for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['supervisorIds'] = supervisor_ids
+        if delete_all is not None:
+            body['deleteAll'] = delete_all
+        url = self.ep('supervisors')
+        super().delete(url, params=params, json=body)
+
+    def list_available_supervisors(self, name: str = None, phone_number: str = None, order: str = None,
+                                   org_id: str = None,
+                                   **params) -> Generator[AvailableSupervisorsListObject, None, None]:
+        """
+        List Available Supervisors
+
+        Get list of available supervisors for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        Requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Only return supervisors with the matching name.
+        :type name: str
+        :param phone_number: Only return supervisors with matching primary phone number.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param org_id: List available supervisors of this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableSupervisorsListObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep('supervisors/availableSupervisors')
+        return self.session.follow_pagination(url=url, model=AvailableSupervisorsListObject, item_key='supervisors', params=params)
+
+    def get_supervisor_details(self, supervisor_id: str, max_: int = None, start: int = None, name: str = None,
+                               phone_number: str = None, order: str = None,
+                               org_id: str = None) -> GetSupervisorDetailsResponse:
+        """
+        GET Supervisor Details
+
+        Get details of a specific supervisor as well as the associated agents for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling. The agent `id` returned is always of type
+        `PEOPLE` even if the agent is a workspace or virtual line. The `type` of the agent `id` can be found by using
+        GET available agents api with agent name as a query param. The `type` of the agent `id` will be corrected in a
+        future release.
+
+        Requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param supervisor_id: List the agents assigned to specific supervisor.
+        :type supervisor_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return agents with the matching name.
+        :type name: str
+        :param phone_number: Only return agents with matching primary phone number, extension, or ESN.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param org_id: List the agents assigned to specific supervisor for this organization.
+        :type org_id: str
+        :rtype: :class:`GetSupervisorDetailsResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep(f'supervisors/{supervisor_id}')
+        data = super().get(url, params=params)
+        r = GetSupervisorDetailsResponse.model_validate(data)
+        return r
+
+    def assign_or_unassign_agents_to_supervisor(self, supervisor_id: str,
+                                                agents: list[PutPersonPlaceVirtualLineAgentObject],
+                                                org_id: str = None) -> list[ListSupervisorAgentStatusObject]:
+        """
+        Assign or Unassign Agents to Supervisor
+
+        Assign or unassign agents to the supervisor for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param supervisor_id: Identifier of the superviser to be updated.
+        :type supervisor_id: str
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls. **WARNING**: The `id`
+            returned is in UUID format, since we don't have agentType from OCI response. This will be converting to
+            Hydra type in future release.
+        :type agents: list[PutPersonPlaceVirtualLineAgentObject]
+        :param org_id: Assign or unassign agents to a supervisor for this organization.
+        :type org_id: str
+        :rtype: list[ListSupervisorAgentStatusObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['agents'] = TypeAdapter(list[PutPersonPlaceVirtualLineAgentObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'supervisors/{supervisor_id}')
+        data = super().put(url, params=params, json=body)
+        r = TypeAdapter(list[ListSupervisorAgentStatusObject]).validate_python(data['supervisorAgentStatus'])
+        return r
+
+    def list_available_agents(self, name: str = None, phone_number: str = None, order: str = None, org_id: str = None,
+                              **params) -> Generator[AvailableAgentListObject, None, None]:
+        """
+        List Available Agents
+
+        Get list of available agents for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        Requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Only return agents with the matching name.
+        :type name: str
+        :param phone_number: Only return agents with matching primary phone number, extension, or ESN.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param org_id: List of agents in a supervisor's list for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgentListObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        url = self.ep('supervisors/availableAgents')
+        return self.session.follow_pagination(url=url, model=AvailableAgentListObject, item_key='agents', params=params)
+
+    def read_the_list_of_call_queue_agents_with_customer_experience_essentials(self, location_id: str = None,
+                                                                               queue_id: str = None, name: str = None,
+                                                                               phone_number: str = None,
+                                                                               join_enabled: bool = None,
+                                                                               has_cx_essentials: bool = None,
+                                                                               order: str = None, org_id: str = None,
+                                                                               **params) -> Generator[ListCallQueueAgentObject, None, None]:
+        """
+        Read the List of Call Queue Agents with Customer Experience Essentials
+
+        List all Call Queues Agents for the organization.
+
+        Agents can be users, workplace or virtual lines assigned to a call queue. Calls from the call queue are routed
+        to agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        **Note**: The decoded value of the agent's `id`, and the `type` returned in the response, are always returned
+        as `PEOPLE`, even when the agent is a workspace or virtual line. This will be addressed in a future release.
+
+        :param location_id: Return only the call queue agents in this location.
+        :type location_id: str
+        :param queue_id: Only return call queue agents with the matching queue ID.
+        :type queue_id: str
+        :param name: Returns only the list of call queue agents that match the given name.
+        :type name: str
+        :param phone_number: Returns only the list of call queue agents that match the given phone number or extension.
+        :type phone_number: str
+        :param join_enabled: Returns only the list of call queue agents that match the given `joinEnabled` value.
+        :type join_enabled: bool
+        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :type has_cx_essentials: bool
+        :param order: Sort results alphabetically by call queue agent's name, in ascending or descending order.
+        :type order: str
+        :param org_id: List call queues agents in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ListCallQueueAgentObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if queue_id is not None:
+            params['queueId'] = queue_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if join_enabled is not None:
+            params['joinEnabled'] = str(join_enabled).lower()
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if order is not None:
+            params['order'] = order
+        url = self.ep('queues/agents')
+        return self.session.follow_pagination(url=url, model=ListCallQueueAgentObject, item_key='agents', params=params)
+
+    def get_details_for_a_call_queue_agent_with_customer_experience_essentials(self, id: str, max_: int, start: int,
+                                                                               has_cx_essentials: bool = None,
+                                                                               org_id: str = None) -> GetCallQueueAgentObject:
+        """
+        Get Details for a Call Queue Agent with Customer Experience Essentials
+
+        Retrieve details of a particular Call queue agent based on the agent ID.
+
+        Agents can be users, workplace or virtual lines assigned to a call queue. Calls from the call queue are routed
+        to agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        Retrieving a call queue agent's details require a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        **Note**: The agent's `type` returned in the response and in the decoded value of the agent's `id`, is always
+        of type `PEOPLE`, even if the agent is a workspace or virtual line. This` will be corrected in a future
+        release.
+
+        :param id: Retrieve call queue agents with this identifier.
+        :type id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Experience
+            Essentials license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Retrieve call queue agents from this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueAgentObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        params['max'] = max_
+        params['start'] = start
+        url = self.ep(f'queues/agents/{id}')
+        data = super().get(url, params=params)
+        r = GetCallQueueAgentObject.model_validate(data)
+        return r
+
+    def update_an_agent_s_settings_of_one_or_more_call_queues_with_customer_experience_essentials(self, id: str,
+                                                                                                  settings: list[ModifyAgentsForCallQueueObjectSettings],
+                                                                                                  has_cx_essentials: bool = None,
+                                                                                                  org_id: str = None):
+        """
+        Update an Agent's Settings of One or More Call Queues with Customer Experience Essentials
+
+        Modify an agent's call queue settings for an organization.
+
+        Calls from the call queue are routed to agents based on configuration.
+        An agent can be assigned to one or more call queues and can be managed by supervisors.
+
+        This operation requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param id: Identifier of the agent to be updated.
+        :type id: str
+        :type settings: list[ModifyAgentsForCallQueueObjectSettings]
+        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Experience Essentials
+            license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Update the settings of an agent in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        body = dict()
+        body['settings'] = TypeAdapter(list[ModifyAgentsForCallQueueObjectSettings]).dump_python(settings, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'queues/agents/{id}/settings')
+        super().put(url, params=params, json=body)
+
+    def read_the_list_of_call_queues_with_customer_experience_essentials(self, location_id: str = None,
+                                                                         name: str = None, phone_number: str = None,
+                                                                         department_id: str = None,
+                                                                         department_name: str = None,
+                                                                         has_cx_essentials: bool = None,
+                                                                         org_id: str = None,
+                                                                         **params) -> Generator[ListCallQueueEssentialsObject, None, None]:
+        """
+        Read the List of Call Queues with Customer Experience Essentials
+
+        List all Call Queues for the organization.
+
+        Call queues temporarily hold calls in the cloud, when all agents
+        assigned to receive calls from the queue are unavailable. Queued calls are routed to
+        an available agent, when not on an active call. Each call queue is assigned a lead number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue.
+        Call queues are also assigned an internal extension, which can be dialed
+        internally to reach the users assigned to the call queue.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Returns the list of call queues in this location.
+        :type location_id: str
+        :param name: Returns only the call queues matching the given name.
+        :type name: str
+        :param phone_number: Returns only the call queues matching the given primary phone number or extension.
+        :type phone_number: str
+        :param department_id: Returns only call queues matching the given department ID.
+        :type department_id: str
+        :param department_name: Returns only call queues matching the given department name.
+        :type department_name: str
+        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :type has_cx_essentials: bool
+        :param org_id: Returns the list of call queues in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ListCallQueueEssentialsObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if department_id is not None:
+            params['departmentId'] = department_id
+        if department_name is not None:
+            params['departmentName'] = department_name
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep('queues')
+        return self.session.follow_pagination(url=url, model=ListCallQueueEssentialsObject, item_key='queues', params=params)
+
+    def get_details_for_a_call_queue_with_customer_experience_essentials(self, location_id: str, queue_id: str,
+                                                                         has_cx_essentials: bool = None,
+                                                                         org_id: str = None) -> GetCallQueueEssentialsObject:
+        """
+        Get Details for a Call Queue with Customer Experience Essentials
+
+        Retrieve Call Queue details.
+
+        Call queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are
+        unavailable.
+        Queued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead
+        number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue. Call queues are also
+        assigned an internal extension,
+        which can be dialed internally to reach the users assigned to the call queue.
+
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieves the details of a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieves the details of call queue with this identifier.
+        :type queue_id: str
+        :param has_cx_essentials: Must be set to `true`, to view the details of a call queue with Customer Experience
+            Essentials license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Retrieves the details of a call queue in this organization.
+        :type org_id: str
+        :rtype: :class:`GetCallQueueEssentialsObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}')
+        data = super().get(url, params=params)
+        r = GetCallQueueEssentialsObject.model_validate(data)
+        return r
+
+    def create_a_call_queue_with_customer_experience_essentials(self, location_id: str, name: str,
+                                                                call_policies: GetCallQueueCallPolicyObject,
+                                                                queue_settings: CallQueueQueueSettingsGetObject,
+                                                                agents: list[PostPersonPlaceVirtualLineCallQueueObject],
+                                                                has_cx_essentials: bool = None,
+                                                                phone_number: str = None, extension: str = None,
+                                                                language_code: str = None, first_name: str = None,
+                                                                last_name: str = None, time_zone: str = None,
+                                                                calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
+                                                                calling_line_id_phone_number: str = None,
+                                                                allow_agent_join_enabled: bool = None,
+                                                                phone_number_for_outgoing_calls_enabled: bool = None,
+                                                                org_id: str = None) -> str:
+        """
+        Create a Call Queue with Customer Experience Essentials
+
+        Create new Call Queues for the given location.
+
+        Call queues temporarily hold calls in the cloud, when all agents assigned to receive calls from the queue are
+        unavailable.
+        Queued calls are routed to an available agent, when not on an active call. Each call queue is assigned a lead
+        number, which is a telephone
+        number that external callers can dial to reach the users assigned to the call queue. Call queues are also
+        assigned an internal extension,
+        which can be dialed internally to reach the users assigned to the call queue.
+
+        Creating a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue needs to be created.
+        :type location_id: str
+        :param name: Unique name for the call queue.
+        :type name: str
+        :param call_policies: Policy controlling how calls are routed to `agents`.
+        :type call_policies: GetCallQueueCallPolicyObject
+        :param queue_settings: Overall call queue settings.
+        :type queue_settings: CallQueueQueueSettingsGetObject
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineCallQueueObject]
+        :param has_cx_essentials: Creates a Customer Experience Essentials call queue, when `true`. This requires
+            Customer Experience Essentials licensed agents.
+        :type has_cx_essentials: bool
+        :param phone_number: Primary phone number of the call queue. Either a `phoneNumber` or `extension` is
+            mandatory.
+        :type phone_number: str
+        :param extension: Primary phone extension of the call queue. Either a `phoneNumber` or extension is mandatory.
+        :type extension: str
+        :param language_code: Language code.
+        :type language_code: str
+        :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
+        :type first_name: str
+        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to
+            `phoneNumber` if set, otherwise defaults to call group name.
+        :type last_name: str
+        :param time_zone: Time zone for the call queue.
+        :type time_zone: str
+        :param calling_line_id_policy: Which type of Calling Line ID Policy Selected for Call Queue.
+        :type calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy
+        :param calling_line_id_phone_number: Calling line ID Phone number which will be shown if CUSTOM is selected.
+        :type calling_line_id_phone_number: str
+        :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
+        :type allow_agent_join_enabled: bool
+        :param phone_number_for_outgoing_calls_enabled: When `true`, indicates that the agent's configuration allows
+            them to use the queue's Caller ID for outgoing calls.
+        :type phone_number_for_outgoing_calls_enabled: bool
+        :param org_id: The organization ID where the call queue needs to be created.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        body = dict()
+        body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if language_code is not None:
+            body['languageCode'] = language_code
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        body['callPolicies'] = call_policies.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['queueSettings'] = queue_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineCallQueueObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
+        if calling_line_id_policy is not None:
+            body['callingLineIdPolicy'] = enum_str(calling_line_id_policy)
+        if calling_line_id_phone_number is not None:
+            body['callingLineIdPhoneNumber'] = calling_line_id_phone_number
+        if allow_agent_join_enabled is not None:
+            body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+        if phone_number_for_outgoing_calls_enabled is not None:
+            body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
+        url = self.ep(f'locations/{location_id}/queues')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def create_a_supervisor_with_customer_experience_essentials(self, id: str,
+                                                                agents: list[PostPersonPlaceVirtualLineSupervisorObject],
+                                                                has_cx_essentials: bool = None,
+                                                                org_id: str = None) -> list[ListSupervisorAgentStatusObject]:
+        """
+        Create a Supervisor with Customer Experience Essentials
+
+        Create a new supervisor. The supervisor must be created with at least one agent.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        This operation requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param id: A unique identifier for the supervisor.
+        :type id: str
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: list[PostPersonPlaceVirtualLineSupervisorObject]
+        :param has_cx_essentials: Creates a Customer Experience Essentials queue supervisor, when `true`. Customer
+            Experience Essentials queue supervisors must have a Customer Experience Essentials license.
+        :type has_cx_essentials: bool
+        :param org_id: The organization ID where the supervisor needs to be created.
+        :type org_id: str
+        :rtype: list[ListSupervisorAgentStatusObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        body = dict()
+        body['id'] = id
+        body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineSupervisorObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep('supervisors')
+        data = super().post(url, params=params, json=body)
+        r = TypeAdapter(list[ListSupervisorAgentStatusObject]).validate_python(data['supervisorAgentStatus'])
+        return r
+
+    def get_list_of_supervisors_with_customer_experience_essentials(self, name: str = None, phone_number: str = None,
+                                                                    order: str = None, has_cx_essentials: bool = None,
+                                                                    org_id: str = None,
+                                                                    **params) -> Generator[ListSupervisorObject, None, None]:
+        """
+        Get List of Supervisors with Customer Experience Essentials
+
+        Get list of supervisors for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        Requires a full, location, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Only return the supervisors that match the given name.
+        :type name: str
+        :param phone_number: Only return the supervisors that match the given phone number, extension, or ESN.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param has_cx_essentials: Returns only the list of supervisors with Customer Experience Essentials license,
+            when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List the supervisors in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ListSupervisorObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep('supervisors')
+        return self.session.follow_pagination(url=url, model=ListSupervisorObject, item_key='supervisors', params=params)
+
+    def list_available_supervisors_with_customer_experience_essentials(self, name: str = None,
+                                                                       phone_number: str = None, order: str = None,
+                                                                       has_cx_essentials: bool = None,
+                                                                       org_id: str = None,
+                                                                       **params) -> Generator[AvailableSupervisorsListObject, None, None]:
+        """
+        List Available Supervisors with Customer Experience Essentials
+
+        Get list of available supervisors for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        This operation requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Only return the supervisors that match the given name.
+        :type name: str
+        :param phone_number: Only return the supervisors that match the given phone number, extension, or ESN.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param has_cx_essentials: Returns only the list of available supervisors with Customer Experience Essentials
+            license, when `true`. When ommited or set to 'false', will return the list of available supervisors with
+            Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List the available supervisors in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableSupervisorsListObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep('supervisors/availableSupervisors')
+        return self.session.follow_pagination(url=url, model=AvailableSupervisorsListObject, item_key='supervisors', params=params)
+
+    def get_supervisor_detail_with_customer_experience_essentials(self, supervisor_id: str, max_: int = None,
+                                                                  start: int = None, name: str = None,
+                                                                  phone_number: str = None, order: str = None,
+                                                                  has_cx_essentials: bool = None,
+                                                                  org_id: str = None) -> GetSupervisorDetailsResponse:
+        """
+        GET Supervisor Detail with Customer Experience Essentials
+
+        Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
+        organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        This operation requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param supervisor_id: List the agents assigned to this supervisor.
+        :type supervisor_id: str
+        :param max_: Limit the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param name: Only return the agents that match the given name.
+        :type name: str
+        :param phone_number: Only return agents that match the given phone number, extension, or ESN.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param has_cx_essentials: Must be set to `true`, to view the details of a supervisor with Customer Experience
+            Essentials license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: List the agents assigned to a supervisor in this organization.
+        :type org_id: str
+        :rtype: :class:`GetSupervisorDetailsResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep(f'supervisors/{supervisor_id}')
+        data = super().get(url, params=params)
+        r = GetSupervisorDetailsResponse.model_validate(data)
+        return r
+
+    def assign_or_unassign_agents_to_supervisor_with_customer_experience_essentials(self, supervisor_id: str,
+                                                                                    agents: list[PutPersonPlaceVirtualLineAgentObject],
+                                                                                    has_cx_essentials: bool = None,
+                                                                                    org_id: str = None) -> list[ListSupervisorAgentStatusObject]:
+        """
+        Assign or Unassign Agents to Supervisor with Customer Experience Essentials
+
+        Assign or unassign agents to the supervisor for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        This operation requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param supervisor_id: Identifier of the supervisor to be updated.
+        :type supervisor_id: str
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls. **WARNING**: The `id`
+            returned is in UUID format, since we don't have agentType from OCI response. This will be converting to
+            Hydra type in future release.
+        :type agents: list[PutPersonPlaceVirtualLineAgentObject]
+        :param has_cx_essentials: Must be set to `true` to modify a supervisor with Customer Experience Essentials
+            license. This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
+        :param org_id: Assign or unassign agents to a supervisor in this organization.
+        :type org_id: str
+        :rtype: list[ListSupervisorAgentStatusObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        body = dict()
+        body['agents'] = TypeAdapter(list[PutPersonPlaceVirtualLineAgentObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'supervisors/{supervisor_id}')
+        data = super().put(url, params=params, json=body)
+        r = TypeAdapter(list[ListSupervisorAgentStatusObject]).validate_python(data['supervisorAgentStatus'])
+        return r
+
+    def list_available_agents_with_customer_experience_essentials(self, name: str = None, phone_number: str = None,
+                                                                  order: str = None, has_cx_essentials: bool = None,
+                                                                  org_id: str = None,
+                                                                  **params) -> Generator[AvailableAgentListObject, None, None]:
+        """
+        List Available Agents with Customer Experience Essentials
+
+        Get list of available agents for an organization.
+
+        Agents in a call queue can be associated with a supervisor who can silently monitor, coach, barge in or to take
+        over calls that their assigned agents are currently handling.
+
+        This operation requires a full, user or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Returns only the agents that match the given name.
+        :type name: str
+        :param phone_number: Returns only the agents that match the phone number, extension, or ESN.
+        :type phone_number: str
+        :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
+        :type order: str
+        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials
+            license, when `true`. When ommited or set to `false`, will return the list of available agents with
+            Customer Experience Basic license.
+        :type has_cx_essentials: bool
+        :param org_id: List of available agents in a supervisor's list for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgentListObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        url = self.ep('supervisors/availableAgents')
+        return self.session.follow_pagination(url=url, model=AvailableAgentListObject, item_key='agents', params=params)

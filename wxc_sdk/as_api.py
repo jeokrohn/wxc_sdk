@@ -14810,7 +14810,20 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
 
 class AsCallQueueApi(AsApiChild, base=''):
     """
-    Call Queue APÍ
+    Features:  Call Queue
+
+    Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
+
+    Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope
+    of `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope
+    of `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
     """
     agents: AsCallQueueAgentsApi
     forwarding: AsForwardingApi
