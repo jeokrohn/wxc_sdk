@@ -319,6 +319,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                upload_as: str = None, location_id: str = None, org_id: str = None):
         """
         Modify an existing announcement greeting
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param announcement_id: Unique identifier of an announcement.

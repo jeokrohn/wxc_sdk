@@ -11,8 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AnnouncementResponse', 'AnnouncementUsageResponse', 'AnnouncementsListResponse',
-           'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FeaturesAnnouncementRepositoryApi',
+__all__ = ['AnnouncementResponse', 'AnnouncementResponseWithPlaylist', 'AnnouncementUsageResponse',
+           'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject',
+           'FeaturesAnnouncementRepositoryApi',
            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'LocationObject']
 
 
@@ -61,6 +62,43 @@ class AnnouncementResponse(ApiModel):
     feature_references: Optional[list[FeatureReferenceObject]] = None
 
 
+class LocationObject(ApiModel):
+    #: Unique identifier of the location.
+    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi81ZTk3MzFlNy1iOWQ0LTRmMWQtYjYyMi05NDgwMDhhMjkzMzM
+    id: Optional[str] = None
+    #: Name of the Location.
+    #: example: RCDN
+    name: Optional[str] = None
+
+
+class AnnouncementResponseWithPlaylist(ApiModel):
+    #: Unique identifier of the announcement.
+    #: example: Y2lzY29zcGFyazovL3VzL0FOTk9VTkNFTUVOVC8zMjAxNjRmNC1lNWEzLTQxZmYtYTMyNi02N2MwOThlNDFkMWQ
+    id: Optional[str] = None
+    #: Name of the announcement.
+    #: example: Public_Announcement
+    name: Optional[str] = None
+    #: File name of the uploaded binary announcement greeting.
+    #: example: Sample_Greetings_file.wav
+    file_name: Optional[str] = None
+    #: Size of the file in kilobytes.
+    #: example: 356
+    file_size: Optional[str] = None
+    #: Media file type of the announcement file.
+    #: example: WAV
+    media_file_type: Optional[str] = None
+    #: Last updated timestamp (in UTC format) of the announcement.
+    #: example: 2023-06-13T18:39:53.651Z
+    last_updated: Optional[datetime] = None
+    #: Reference count of the call features this announcement is assigned to.
+    #: example: 1
+    feature_reference_count: Optional[int] = None
+    #: Call features referenced by this announcement.
+    feature_references: Optional[list[FeatureReferenceObject]] = None
+    #: List of playlist available for selection.
+    playlists: Optional[list[LocationObject]] = None
+
+
 class AnnouncementUsageResponse(ApiModel):
     #: Total file size used by announcements in this repository in kilobytes.
     #: example: 1068
@@ -78,15 +116,6 @@ class AnnouncementUsageResponse(ApiModel):
 
 class AnnouncementsListResponseLevel(str, Enum):
     location = 'LOCATION'
-
-
-class LocationObject(ApiModel):
-    #: Unique identifier of the location.
-    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi81ZTk3MzFlNy1iOWQ0LTRmMWQtYjYyMi05NDgwMDhhMjkzMzM
-    id: Optional[str] = None
-    #: Name of the Location.
-    #: example: RCDN
-    name: Optional[str] = None
 
 
 class AnnouncementsListResponse(ApiModel):
@@ -123,7 +152,7 @@ class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId(s
 
 class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
     """
-    Features:  Announcement Repository
+    Features: Announcement Repository
     
     Features: Announcement Repository support reading and writing of Webex Calling Announcement Repository settings for
     a specific organization.
@@ -258,7 +287,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         super().delete(url, params=params)
 
     def fetch_details_of_a_binary_announcement_greeting_at_the_organization_level(self, announcement_id: str,
-                                                                                  org_id: str = None) -> AnnouncementResponse:
+                                                                                  org_id: str = None) -> AnnouncementResponseWithPlaylist:
         """
         Fetch details of a binary announcement greeting at the organization level
 
@@ -273,21 +302,27 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type announcement_id: str
         :param org_id: Get an announcement in this organization.
         :type org_id: str
-        :rtype: :class:`AnnouncementResponse`
+        :rtype: :class:`AnnouncementResponseWithPlaylist`
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'announcements/{announcement_id}')
         data = super().get(url, params=params)
-        r = AnnouncementResponse.model_validate(data)
+        r = AnnouncementResponseWithPlaylist.model_validate(data)
         return r
 
     def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str, org_id: str = None):
         """
         Modify a binary announcement greeting at organization level
 
-        Modify an existing announcement greeting at an organization level.
+        Modify an existing announcement greeting at a organization level.
+
+        An admin can upload a file or modify an existing file at a location level. This file will be uploaded to the
+        announcement repository.
+
+        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
+        Content-Type.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
