@@ -30,6 +30,7 @@ from .msteams import MSTeamsSettingApi
 from .numbers import NumbersApi
 from .permissions_in import IncomingPermissionsApi
 from .permissions_out import OutgoingPermissionsApi
+from .personal_assistant import PersonalAssistantApi
 from .preferred_answer import PreferredAnswerApi
 from .privacy import PrivacyApi
 from .push_to_talk import PushToTalkApi
@@ -172,6 +173,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     permissions_in: IncomingPermissionsApi
     #: Person's Outgoing Calling Permissions Settings
     permissions_out: OutgoingPermissionsApi
+    #: Personal Assistant Settings
+    personal_assistant: PersonalAssistantApi
     #: Preferred answer endpoint settings
     preferred_answer: PreferredAnswerApi
     #: Person's Privacy Settings
@@ -221,6 +224,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.numbers = NumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session)
+        self.personal_assistant = PersonalAssistantApi(session=session)
         self.preferred_answer = PreferredAnswerApi(session=session)
         self.privacy = PrivacyApi(session=session)
         self.push_to_talk = PushToTalkApi(session=session)

@@ -420,9 +420,13 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
         Modify the Digit Pattern Category Control Settings for the entity
    * - :meth:`api.person_settings.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
-        Modify Transfer Numbers Settings for a Place
+        Modify Transfer Numbers Settings for an entity
    * - :meth:`api.person_settings.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
+   * - :meth:`api.person_settings.personal_assistant.get <wxc_sdk.person_settings.personal_assistant.PersonalAssistantApi.get>`
+        Get Personal Assistant
+   * - :meth:`api.person_settings.personal_assistant.update <wxc_sdk.person_settings.personal_assistant.PersonalAssistantApi.update>`
+        Update Personal Assistant
    * - :meth:`api.person_settings.preferred_answer.modify <wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.modify>`
         Modify Preferred Answer Endpoint
    * - :meth:`api.person_settings.preferred_answer.read <wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.read>`
@@ -1256,7 +1260,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
         Modify the Digit Pattern Category Control Settings for the entity
    * - :meth:`api.telephony.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
-        Modify Transfer Numbers Settings for a Place
+        Modify Transfer Numbers Settings for an entity
    * - :meth:`api.telephony.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
    * - :meth:`api.telephony.pickup.available_agents <wxc_sdk.telephony.callpickup.CallPickupApi.available_agents>`
@@ -1518,7 +1522,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.virtual_lines.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
         Modify the Digit Pattern Category Control Settings for the entity
    * - :meth:`api.telephony.virtual_lines.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
-        Modify Transfer Numbers Settings for a Place
+        Modify Transfer Numbers Settings for an entity
    * - :meth:`api.telephony.virtual_lines.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
    * - :meth:`api.telephony.virtual_lines.privacy.configure <wxc_sdk.person_settings.privacy.PrivacyApi.configure>`
@@ -1720,7 +1724,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.workspace_settings.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
         Modify the Digit Pattern Category Control Settings for the entity
    * - :meth:`api.workspace_settings.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
-        Modify Transfer Numbers Settings for a Place
+        Modify Transfer Numbers Settings for an entity
    * - :meth:`api.workspace_settings.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
         Retrieve Transfer Numbers Settings
    * - :meth:`api.workspace_settings.priority_alert.configure <wxc_sdk.person_settings.priority_alert.PriorityAlertApi.configure>`

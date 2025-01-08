@@ -346,7 +346,7 @@ class TransferNumbersApi(PersonSettingsApiChild):
 
     def configure(self, entity_id: str, settings: AutoTransferNumbers, org_id: str = None):
         """
-        Modify Transfer Numbers Settings for a Place.
+        Modify Transfer Numbers Settings for an entity.
 
         When calling a specific call type, this entity will be automatically transferred to another number.
         The person assigned the Auto Transfer Number can then approve the call and send it through or reject the

@@ -39,11 +39,13 @@ __all__ = ['Action', 'AgentCallerIdType', 'ApplicationsSetting', 'AudioAnnouncem
            'MonitoredMemberObject', 'MonitoredNumberObject', 'MonitoringSettings', 'NumberOwnerType',
            'OutgoingCallingPermissionsSettingGet', 'OutgoingCallingPermissionsSettingGetCallingPermissions',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsAction',
-           'OutgoingCallingPermissionsSettingGetCallingPermissionsCallType', 'PeopleOrPlaceOrVirtualLineType',
+           'OutgoingCallingPermissionsSettingGetCallingPermissionsCallType',
+           'OutgoingCallingPermissionsSettingPutCallingPermissions', 'PeopleOrPlaceOrVirtualLineType',
            'PersonCallForwardAvailableNumberObject', 'PersonCallForwardAvailableNumberObjectOwner',
            'PersonECBNAvailableNumberObject', 'PersonECBNAvailableNumberObjectOwner',
            'PersonPrimaryAvailableNumberObject', 'PersonPrimaryAvailableNumberObjectTelephonyType',
-           'PersonSecondaryAvailableNumberObject', 'PhoneNumber', 'PrivacyGet', 'PushToTalkAccessType',
+           'PersonSecondaryAvailableNumberObject', 'PersonalAssistantGet', 'PersonalAssistantGetAlerting',
+           'PersonalAssistantGetPresence', 'PhoneNumber', 'PrivacyGet', 'PushToTalkAccessType',
            'PushToTalkConnectionType', 'PushToTalkInfo', 'PutSharedLineMemberItem', 'ReceptionInfo',
            'RetrieveExecutiveAssistantSettingsForAPersonResponseType', 'STATE', 'ScheduleLongDetails',
            'ScheduleShortDetails', 'ScheduleType', 'SettingsObject', 'SettingsObjectLevel',
@@ -74,22 +76,22 @@ class ApplicationsSetting(ApiModel):
     #: When `true`, indicates to ring devices for Call Park recalled.
     #: example: True
     ring_devices_for_call_park_enabled: Optional[bool] = None
-    #: Indicates that the browser Webex Calling application is enabled for use.
+    #: If `true`, the browser Webex Calling application is enabled for use.
     #: example: True
     browser_client_enabled: Optional[bool] = None
     #: Device ID of WebRTC client. Returns only if `browserClientEnabled` is true.
     #: example: Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OLzQyNDM3YzY5LTBlNmYtNGMxZS1iMTJhLTFjNGYxZTk5NDRjMA
     browser_client_id: Optional[str] = None
-    #: Indicates that the desktop Webex Calling application is enabled for use.
+    #: If `true`, the desktop Webex Calling application is enabled for use.
     #: example: True
     desktop_client_enabled: Optional[bool] = None
     #: Device ID of Desktop client. Returns only if `desktopClientEnabled` is true.
     #: example: Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OL2IwOWYzMDlhLTY0NDItNDRiYi05OGI2LWEzNTEwYjFhNTJmZg
     desktop_client_id: Optional[str] = None
-    #: Indicates that the tablet Webex Calling application is enabled for use.
+    #: If `true`, the tablet Webex Calling application is enabled for use.
     #: example: True
     tablet_client_enabled: Optional[bool] = None
-    #: Indicates that the mobile Webex Calling application is enabled for use.
+    #: If `true`, the mobile Webex Calling application is enabled for use.
     #: example: True
     mobile_client_enabled: Optional[bool] = None
     #: Number of available device licenses for assigning devices/apps.
@@ -98,20 +100,20 @@ class ApplicationsSetting(ApiModel):
 
 
 class AuthorizationCodeLevel(str, Enum):
-    #: Indicates the location level access code.
+    #: The location level access code.
     location = 'LOCATION'
-    #: Indicates the user level access code.
+    #: The user level access code.
     custom = 'CUSTOM'
 
 
 class AuthorizationCode(ApiModel):
-    #: Indicates an access code.
+    #: An access code.
     #: example: 4856
     code: Optional[str] = None
-    #: Indicates the description of the access code.
+    #: The description of the access code.
     #: example: Marketing's access code
     description: Optional[str] = None
-    #: Indicates the level of each access code.
+    #: The level of each access code.
     #: example: CUSTOM
     level: Optional[AuthorizationCodeLevel] = None
 
@@ -155,7 +157,7 @@ class AvailableSharedLineMemberItem(ApiModel):
     #: Routing prefix + extension of a person or workspace.
     #: example: 12340000
     esn: Optional[str] = None
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    #: If the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None
     #: Location object having a unique identifier for the location and its name.
@@ -163,10 +165,10 @@ class AvailableSharedLineMemberItem(ApiModel):
 
 
 class BargeInInfo(ApiModel):
-    #: Indicates if the Barge In feature is enabled.
+    #: If `true`, the Barge In feature is enabled.
     #: example: True
     enabled: Optional[bool] = None
-    #: Indicates that a stutter dial tone will be played when a person is barging in on the active call.
+    #: If `true`, a stutter dial tone will be played when a person is barging in on the active call.
     tone_enabled: Optional[bool] = None
 
 
@@ -179,8 +181,8 @@ class CallForwardingInfoCallForwardingAlways(ApiModel):
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
     ring_reminder_enabled: Optional[bool] = None
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
-    #: phone number and that number has the voicemail service enabled.
+    #: Enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone
+    #: number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
@@ -191,8 +193,8 @@ class CallForwardingInfoCallForwardingBusy(ApiModel):
     #: Destination for "Busy" call forwarding.
     #: example: 2225551212
     destination: Optional[str] = None
-    #: Indicates the enabled or disabled state of sending incoming calls to voicemail when the destination is an
-    #: internal phone number and that number has the voicemail service enabled.
+    #: The enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone
+    #: number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
@@ -209,8 +211,8 @@ class CallForwardingInfoCallForwardingNoAnswer(ApiModel):
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 15
     system_max_number_of_rings: Optional[int] = None
-    #: Indicates the enabled or disabled state of sending incoming calls to destination number's voicemail if the
-    #: destination is an internal phone number and that number has the voicemail service enabled.
+    #: Enabled or disabled state of sending incoming calls to destination number's voicemail if the destination is an
+    #: internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
@@ -519,9 +521,9 @@ class CallerIdInfo(ApiModel):
 
 
 class DeviceType(str, Enum):
-    #: Indicates the endpoint is a device.
+    #: The endpoint is a device.
     device = 'DEVICE'
-    #: Indicates the endpoint is a application.
+    #: The endpoint is a application.
     application = 'APPLICATION'
 
 
@@ -544,20 +546,20 @@ class EventLongDetailsRecurrenceRecurWeekly(ApiModel):
     #: Specifies the number of weeks between the start of each recurrence.
     #: example: 1
     recur_interval: Optional[int] = None
-    #: Indicates event occurs weekly on Sunday.
+    #: The Event occurs weekly on Sunday.
     sunday: Optional[bool] = None
-    #: Indicates event occurs weekly on Monday.
+    #: The Event occurs weekly on Monday.
     monday: Optional[bool] = None
-    #: Indicates event occurs weekly on Tuesday.
+    #: The Event occurs weekly on Tuesday.
     tuesday: Optional[bool] = None
-    #: Indicates event occurs weekly on Wednesday.
+    #: The Event occurs weekly on Wednesday.
     #: example: True
     wednesday: Optional[bool] = None
-    #: Indicates event occurs weekly on Thursday.
+    #: The Event occurs weekly on Thursday.
     thursday: Optional[bool] = None
-    #: Indicates event occurs weekly on Friday.
+    #: The Event occurs weekly on Friday.
     friday: Optional[bool] = None
-    #: Indicates event occurs weekly on Saturday.
+    #: The Event occurs weekly on Saturday.
     saturday: Optional[bool] = None
 
 
@@ -601,16 +603,16 @@ class EventLongDetails(ApiModel):
     end_time: Optional[datetime] = None
     #: True if it is all-day event.
     all_day_enabled: Optional[bool] = None
-    #: Recurrance scheme for an event.
+    #: Recurrence scheme for an event.
     recurrence: Optional[EventLongDetailsRecurrence] = None
 
 
 class PeopleOrPlaceOrVirtualLineType(str, Enum):
-    #: Indicates a person or list of people.
+    #: Person or list of people.
     people = 'PEOPLE'
-    #: Indicates a workspace that is not assigned to a specific person such as for a shared device in a common area.
+    #: Place that is not assigned to a specific person such as for a shared device in a common area.
     place = 'PLACE'
-    #: Indicates a virtual line or list of virtual lines.
+    #: A Virtual line or list of virtual lines.
     virtual_line = 'VIRTUAL_LINE'
 
 
@@ -645,7 +647,7 @@ class GetSharedLineMemberItem(ApiModel):
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
     #: example: True
     primary_owner: Optional[bool] = None
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    #: If the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
@@ -672,7 +674,7 @@ class GetSharedLineMemberItem(ApiModel):
     #: Device line label.
     #: example: share line label
     line_label: Optional[str] = None
-    #: Indicates if the member is of type `PEOPLE` or `PLACE`.
+    #: If the member is of type `PEOPLE` or `PLACE`.
     member_type: Optional[PeopleOrPlaceOrVirtualLineType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
@@ -975,6 +977,9 @@ class OutgoingCallingPermissionsSettingGetCallingPermissions(ApiModel):
     action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsAction] = None
     #: Allow the person to transfer or forward a call of the specified call type.
     transfer_enabled: Optional[bool] = None
+    #: If enabled, indicates the call restriction is enabled for the specific call type.
+    #: example: True
+    is_call_type_restriction_enabled: Optional[bool] = None
 
 
 class OutgoingCallingPermissionsSettingGet(ApiModel):
@@ -987,6 +992,17 @@ class OutgoingCallingPermissionsSettingGet(ApiModel):
     use_custom_permissions: Optional[bool] = None
     #: Specifies the outbound calling permissions settings.
     calling_permissions: Optional[list[OutgoingCallingPermissionsSettingGetCallingPermissions]] = None
+
+
+class OutgoingCallingPermissionsSettingPutCallingPermissions(ApiModel):
+    #: Designates the action to be taken for each call type and if transferring the call type is allowed.
+    #: example: INTERNAL_CALL
+    call_type: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsCallType] = None
+    #: Action on the given `callType`.
+    #: example: ALLOW
+    action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsAction] = None
+    #: Allow the person to transfer or forward a call of the specified call type.
+    transfer_enabled: Optional[bool] = None
 
 
 class PhoneNumber(ApiModel):
@@ -1064,7 +1080,7 @@ class PutSharedLineMemberItem(ApiModel):
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
     #: example: True
     primary_owner: Optional[bool] = None
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    #: If the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
@@ -1096,9 +1112,9 @@ class ReceptionInfo(ApiModel):
 
 
 class ScheduleType(str, Enum):
-    #: Indicates the schedule type that specifies the business or working hours during the day.
+    #: The Schedule type that specifies the business or working hours during the day.
     business_hours = 'businessHours'
-    #: Indicates the schedule type that specifies the day when your organization is not open.
+    #: The Schedule type that specifies the day when your organization is not open.
     holidays = 'holidays'
 
 
@@ -1109,7 +1125,7 @@ class ScheduleShortDetails(ApiModel):
     #: Name for the schedule.
     #: example: Dallas_Office_Hours
     name: Optional[str] = None
-    #: Indicates the schedule type whether `businessHours` or `holidays`.
+    #: The Schedule type whether `businessHours` or `holidays`.
     type: Optional[ScheduleType] = None
 
 
@@ -1120,9 +1136,9 @@ class ScheduleLongDetails(ApiModel):
     #: Name for the schedule.
     #: example: Dallas_Office_Hours
     name: Optional[str] = None
-    #: Indicates the schedule type whether `businessHours` or `holidays`.
+    #: The Schedule type whether `businessHours` or `holidays`.
     type: Optional[ScheduleType] = None
-    #: Indicates a list of events.
+    #: List of events.
     events: Optional[list[EventLongDetails]] = None
 
 
@@ -1141,7 +1157,7 @@ class VoiceMailPartyInformation(ApiModel):
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFL2ExOWQ3MWEyLTRlOTItOTFhYi05ZjJmLWJjYTEzNTAxM2ExNA==
     place_id: Optional[str] = None
-    #: Indicates whether privacy is enabled for the name, number and `personId`/`placeId`.
+    #: if `true`, denotes privacy is enabled for the name, number and `personId`/`placeId`.
     privacy_enabled: Optional[bool] = None
 
 
@@ -1177,7 +1193,7 @@ class VoicemailInfoSendBusyCalls(ApiModel):
     #: `DEFAULT` indicates the default greeting will be played. `CUSTOM` indicates a custom `.wav` file will be played.
     #: example: DEFAULT
     greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
-    #: Indicates a custom greeting has been uploaded.
+    #: A custom greeting has been uploaded.
     #: example: True
     greeting_uploaded: Optional[bool] = None
 
@@ -1189,7 +1205,7 @@ class VoicemailInfoSendUnansweredCalls(ApiModel):
     #: `DEFAULT` indicates the default greeting will be played. `CUSTOM` indicates a custom `.wav` file will be played.
     #: example: DEFAULT
     greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
-    #: Indicates a custom greeting has been uploaded
+    #: A custom greeting has been uploaded
     #: example: True
     greeting_uploaded: Optional[bool] = None
     #: Number of rings before unanswered call will be sent to voicemail.
@@ -1414,8 +1430,7 @@ class JobDetailsResponse(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
-    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of
-    #: invocation.
+    #: The most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Most recent exit code of the job at the time of invocation.
     #: example: COMPLETED
@@ -1448,8 +1463,7 @@ class JobDetailsResponseById(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
-    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of
-    #: invocation.
+    #: The most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Most recent exit code of the job at the time of invocation.
     #: example: COMPLETED
@@ -1762,10 +1776,10 @@ class PersonPrimaryAvailableNumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[STATE] = None
-    #: Indicates if the phone number is used as a location CLID.
+    #: If the phone number is used as a location CLID.
     #: example: True
     is_main_number: Optional[bool] = None
-    #: Indicates the telephony type for the number.
+    #: The telephony type for the number.
     #: example: PSTN_NUMBER
     telephony_type: Optional[PersonPrimaryAvailableNumberObjectTelephonyType] = None
     #: Mobile Network for the number if the number's `telephonyType` is `MOBILE_NUMBER`.
@@ -1877,7 +1891,7 @@ class ModifyUserMSTeamsSettingsObjectSettingName(str, Enum):
 class UserPlaceAuthorizationCodeListGet(ApiModel):
     #: When `true`, use custom settings for the access codes category of outgoing call permissions.
     use_custom_access_codes: Optional[bool] = None
-    #: Indicates the set of activation codes and description.
+    #: The set of activation codes and description.
     access_codes: Optional[list[AuthorizationCode]] = None
 
 
@@ -1924,12 +1938,68 @@ class TransferNumberGet(ApiModel):
     auto_transfer_number3: Optional[str] = None
 
 
+class PersonalAssistantGetPresence(str, Enum):
+    #: User is available.
+    none_ = 'NONE'
+    #: User is gone for a business trip.
+    business_trip = 'BUSINESS_TRIP'
+    #: User is gone for the day.
+    gone_for_the_day = 'GONE_FOR_THE_DAY'
+    #: User is gone for lunch.
+    lunch = 'LUNCH'
+    #: User is gone for a meeting.
+    meeting = 'MEETING'
+    #: User is out of office.
+    out_of_office = 'OUT_OF_OFFICE'
+    #: User is temporarily out.
+    temporarily_out = 'TEMPORARILY_OUT'
+    #: User is gone for training.
+    training = 'TRAINING'
+    #: User is unavailable.
+    unavailable = 'UNAVAILABLE'
+    #: User is gone for vacation.
+    vacation = 'VACATION'
+
+
+class PersonalAssistantGetAlerting(str, Enum):
+    #: Ring the recipient first.
+    alert_me_first = 'ALERT_ME_FIRST'
+    #: Reminder ring the recipient.
+    play_ring_reminder = 'PLAY_RING_REMINDER'
+    #: No alert.
+    none_ = 'NONE'
+
+
+class PersonalAssistantGet(ApiModel):
+    #: Toggles feature.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Person's availability.
+    #: example: LUNCH
+    presence: Optional[PersonalAssistantGetPresence] = None
+    #: The date until which personal assistant is active.
+    #: example: 2022-08-24T06:18:31.092Z
+    until_date_time: Optional[datetime] = None
+    #: Toggle the option to transfer to another number.
+    #: example: True
+    transfer_enabled: Optional[bool] = None
+    #: Number to transfer to.
+    #: example: +14126525012
+    transfer_number: Optional[str] = None
+    #: Alert type.
+    #: example: ALERT_ME_FIRST
+    alerting: Optional[PersonalAssistantGetAlerting] = None
+    #: Number of rings for alert type: `ALERT_ME_FIRST`; available range is 0-20
+    #: example: 3
+    alert_me_first_number_of_rings: Optional[int] = None
+
+
 class RetrieveExecutiveAssistantSettingsForAPersonResponseType(str, Enum):
-    #: Indicates the feature is not enabled.
+    #: The feature is not enabled.
     unassigned = 'UNASSIGNED'
-    #: Indicates the feature is enabled and the person is an Executive.
+    #: The feature is enabled and the person is an Executive.
     executive = 'EXECUTIVE'
-    #: Indicates the feature is enabled and the person is an Executive Assistant.
+    #: The feature is enabled and the person is an Executive Assistant.
     executive_assistant = 'EXECUTIVE_ASSISTANT'
 
 
@@ -2026,13 +2096,13 @@ class UserCallSettingsApi(ApiChild, base=''):
         :type ring_devices_for_group_page_enabled: bool
         :param ring_devices_for_call_park_enabled: When `true`, indicates to ring devices for Call Park recalled.
         :type ring_devices_for_call_park_enabled: bool
-        :param browser_client_enabled: Indicates that the browser Webex Calling application is enabled for use.
+        :param browser_client_enabled: If `true`, the browser Webex Calling application is enabled for use.
         :type browser_client_enabled: bool
-        :param desktop_client_enabled: Indicates that the desktop Webex Calling application is enabled for use.
+        :param desktop_client_enabled: If `true`, the desktop Webex Calling application is enabled for use.
         :type desktop_client_enabled: bool
-        :param tablet_client_enabled: Indicates that the tablet Webex Calling application is enabled for use.
+        :param tablet_client_enabled: If `true`, the tablet Webex Calling application is enabled for use.
         :type tablet_client_enabled: bool
-        :param mobile_client_enabled: Indicates that the mobile Webex Calling application is enabled for use.
+        :param mobile_client_enabled: If `true`, the mobile Webex Calling application is enabled for use.
         :type mobile_client_enabled: bool
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -3557,7 +3627,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         return r
 
     def modify_a_person_s_outgoing_calling_permissions_settings(self, person_id: str,
-                                                                calling_permissions: list[OutgoingCallingPermissionsSettingGetCallingPermissions],
+                                                                calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissions],
                                                                 use_custom_enabled: bool = None,
                                                                 use_custom_permissions: bool = None,
                                                                 org_id: str = None):
@@ -3574,7 +3644,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param calling_permissions: Specifies the outbound calling permissions settings.
-        :type calling_permissions: list[OutgoingCallingPermissionsSettingGetCallingPermissions]
+        :type calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissions]
         :param use_custom_enabled: When true, indicates that this user uses the shared control that applies to all
             outgoing call settings categories when placing outbound calls.
         :type use_custom_enabled: bool
@@ -3595,7 +3665,7 @@ class UserCallSettingsApi(ApiChild, base=''):
             body['useCustomEnabled'] = use_custom_enabled
         if use_custom_permissions is not None:
             body['useCustomPermissions'] = use_custom_permissions
-        body['callingPermissions'] = TypeAdapter(list[OutgoingCallingPermissionsSettingGetCallingPermissions]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
+        body['callingPermissions'] = TypeAdapter(list[OutgoingCallingPermissionsSettingPutCallingPermissions]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/outgoingPermission')
         super().put(url, params=params, json=body)
 
@@ -3644,7 +3714,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         :param use_custom_access_codes: When `true`, use custom settings for the access codes category of outgoing call
             permissions.
         :type use_custom_access_codes: bool
-        :param delete_codes: Indicates access codes to delete.
+        :param delete_codes: Access codes to delete.
         :type delete_codes: list[str]
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -3676,9 +3746,9 @@ class UserCallSettingsApi(ApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param code: Indicates an access code.
+        :param code: An access code.
         :type code: str
-        :param description: Indicates the description of the access code.
+        :param description: The description of the access code.
         :type description: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -3749,7 +3819,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         r = TransferNumberGet.model_validate(data)
         return r
 
-    def modify_transfer_numbers_for_a_person(self, person_id: str, use_custom_transfer_numbers: bool = None,
+    def modify_transfer_numbers_for_a_person(self, person_id: str, use_custom_transfer_numbers: bool,
                                              auto_transfer_number1: str = None, auto_transfer_number2: str = None,
                                              auto_transfer_number3: str = None, org_id: str = None):
         """
@@ -3791,8 +3861,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        if use_custom_transfer_numbers is not None:
-            body['useCustomTransferNumbers'] = use_custom_transfer_numbers
+        body['useCustomTransferNumbers'] = use_custom_transfer_numbers
         if auto_transfer_number1 is not None:
             body['autoTransferNumber1'] = auto_transfer_number1
         if auto_transfer_number2 is not None:
@@ -4438,9 +4507,9 @@ class UserCallSettingsApi(ApiChild, base=''):
         :type person_id: str
         :param name: Name for the schedule.
         :type name: str
-        :param type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param type: The Schedule type whether `businessHours` or `holidays`.
         :type type: ScheduleType
-        :param events: Indicates a list of events.
+        :param events: A list of events.
         :type events: list[EventLongDetails]
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -4521,9 +4590,9 @@ class UserCallSettingsApi(ApiChild, base=''):
         :type new_name: str
         :param name: Name for the schedule.
         :type name: str
-        :param type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param type: The Schedule type whether `businessHours` or `holidays`.
         :type type: ScheduleType
-        :param events: Indicates a list of events.
+        :param events: List of events.
         :type events: list[EventLongDetails]
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -4651,7 +4720,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         :type end_time: Union[str, datetime]
         :param all_day_enabled: True if it is all-day event.
         :type all_day_enabled: bool
-        :param recurrence: Recurrance scheme for an event.
+        :param recurrence: Recurrence scheme for an event.
         :type recurrence: EventLongDetailsRecurrence
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -5585,4 +5654,85 @@ class UserCallSettingsApi(ApiChild, base=''):
         body['settingName'] = enum_str(setting_name)
         body['value'] = value
         url = self.ep(f'telephony/config/people/{person_id}/settings/msTeams')
+        super().put(url, params=params, json=body)
+
+    def get_personal_assistant(self, person_id: str, org_id: str = None) -> PersonalAssistantGet:
+        """
+        Get Personal Assistant
+
+        Retrieve Personal Assistant details for a specific user.
+
+        Personal Assistant is used to manage a user's incoming calls when they are away.
+
+        Retrieving Personal Assistant details requires a full, user, or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: Get Personal Assistant details for the organization.
+        :type org_id: str
+        :rtype: :class:`PersonalAssistantGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
+        data = super().get(url, params=params)
+        r = PersonalAssistantGet.model_validate(data)
+        return r
+
+    def update_personal_assistant(self, person_id: str, enabled: bool = None,
+                                  presence: PersonalAssistantGetPresence = None, until_date_time: Union[str,
+                                  datetime] = None, transfer_enabled: bool = None, transfer_number: str = None,
+                                  alerting: PersonalAssistantGetAlerting = None,
+                                  alert_me_first_number_of_rings: int = None, org_id: str = None):
+        """
+        Update Personal Assistant
+
+        Update Personal Assistant details for a specific user.
+
+        Personal Assistant is used to manage a user's incoming calls when they are away.
+
+        Updating Personal Assistant details requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param enabled: Toggles feature.
+        :type enabled: bool
+        :param presence: Person's availability.
+        :type presence: PersonalAssistantGetPresence
+        :param until_date_time: The date until which the personal assistant is active.
+        :type until_date_time: Union[str, datetime]
+        :param transfer_enabled: Toggle the option to transfer to another number.
+        :type transfer_enabled: bool
+        :param transfer_number: Number to transfer to.
+        :type transfer_number: str
+        :param alerting: Alert type.
+        :type alerting: PersonalAssistantGetAlerting
+        :param alert_me_first_number_of_rings: Number of rings for alert type: ALERT_ME_FIRST; available range is 0-20.
+        :type alert_me_first_number_of_rings: int
+        :param org_id: Update Personal Assistant details for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if presence is not None:
+            body['presence'] = enum_str(presence)
+        if until_date_time is not None:
+            body['untilDateTime'] = until_date_time
+        if transfer_enabled is not None:
+            body['transferEnabled'] = transfer_enabled
+        if transfer_number is not None:
+            body['transferNumber'] = transfer_number
+        if alerting is not None:
+            body['alerting'] = enum_str(alerting)
+        if alert_me_first_number_of_rings is not None:
+            body['alertMeFirstNumberOfRings'] = alert_me_first_number_of_rings
+        url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
         super().put(url, params=params, json=body)

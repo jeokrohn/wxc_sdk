@@ -17,6 +17,7 @@ Release history
 - feat: new endpoint to switch mode for call forwarding (CQ): :meth:`api.telephony.callqueue.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
 - feat: new endpoint to switch mode for call forwarding (HG): :meth:`api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
 - feat: operating modes API: :attr:`api.telephony.operating_modes <wxc_sdk.telephony.TelephonyApi.operating_modes>`
+- feat: personal assistant settings API: :attr:`api.person_settings.personal_assistant <wxc_sdk.person_settings.PersonSettingsApi.personal_assistant>`
 
 1.23.0
 ======

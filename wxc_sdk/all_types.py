@@ -102,6 +102,8 @@ from wxc_sdk.person_settings.numbers import PersonNumbers, PersonPhoneNumber, Up
 from wxc_sdk.person_settings.permissions_in import ExternalTransfer, IncomingPermissions
 from wxc_sdk.person_settings.permissions_out import Action, AuthCodes, AutoTransferNumbers, CallTypePermission, \
     CallingPermissions, DigitPattern, DigitPatterns, OutgoingPermissionCallType, OutgoingPermissions
+from wxc_sdk.person_settings.personal_assistant import PersonalAssistant, PersonalAssistantAlerting, \
+    PersonalAssistantPresence
 from wxc_sdk.person_settings.preferred_answer import PreferredAnswerEndpoint, PreferredAnswerEndpointType, \
     PreferredAnswerResponse
 from wxc_sdk.person_settings.priority_alert import PriorityAlert, PriorityAlertCriteria
@@ -326,7 +328,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'PatchMeetingResponse', 'PatchUserOperation', 'PatchUserOperationOp', 'PatternAction', 'PatternAndAction',
            'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress', 'PersonECBN', 'PersonECBNDirectLine',
            'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent',
-           'PersonSettingsApiChild', 'PersonType', 'PersonalMeetingRoom', 'PersonalMeetingRoomOptions', 'Personality',
+           'PersonSettingsApiChild', 'PersonType', 'PersonalAssistant', 'PersonalAssistantAlerting',
+           'PersonalAssistantPresence', 'PersonalMeetingRoom', 'PersonalMeetingRoomOptions', 'Personality',
            'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType', 'PhotoObject', 'PhotoObjectType',
            'PickupNotificationType', 'PinLength', 'PlayList', 'PlaylistAnnouncement', 'Policy',
            'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse',

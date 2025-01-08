@@ -38,6 +38,7 @@ Submodules
    wxc_sdk.person_settings.numbers
    wxc_sdk.person_settings.permissions_in
    wxc_sdk.person_settings.permissions_out
+   wxc_sdk.person_settings.personal_assistant
    wxc_sdk.person_settings.preferred_answer
    wxc_sdk.person_settings.priority_alert
    wxc_sdk.person_settings.privacy
