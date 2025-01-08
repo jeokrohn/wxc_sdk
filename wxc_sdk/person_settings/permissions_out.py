@@ -62,10 +62,10 @@ class CallTypePermission(ApiModel):
     """
     #: Action on the given call_type.
     action: Action
-    #: If enabled, indicates the call restriction is enabled for the specific call type.
-    is_call_type_restriction_enabled: Optional[bool] = None
     #: Allow to transfer or forward a call of the specified call type.
     transfer_enabled: bool
+    #: If `true`, indicates the call restriction is enabled for the specific call type.
+    is_call_type_restriction_enabled: Optional[bool] = None
 
     @staticmethod
     def default() -> 'CallTypePermission':

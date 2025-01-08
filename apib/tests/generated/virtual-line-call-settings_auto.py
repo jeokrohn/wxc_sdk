@@ -32,16 +32,17 @@ __all__ = ['AgentCallerIdType', 'AudioAnnouncementFileGetObject', 'AudioAnnounce
            'NumberOwnerType', 'OutgoingCallingPermissionsSettingGet',
            'OutgoingCallingPermissionsSettingGetCallingPermissions',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsAction',
-           'OutgoingCallingPermissionsSettingGetCallingPermissionsCallType', 'PeopleOrPlaceOrVirtualLineType',
-           'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'STATE',
-           'TelephonyType', 'TransferNumberGet', 'UserDigitPatternObject',
-           'UserOutgoingPermissionDigitPatternGetListObject', 'UserPlaceAuthorizationCodeListGet',
-           'VirtualLineCallForwardAvailableNumberObject', 'VirtualLineCallForwardAvailableNumberObjectOwner',
-           'VirtualLineCallSettingsApi', 'VirtualLineECBNAvailableNumberObject',
-           'VirtualLineECBNAvailableNumberObjectOwner', 'VirtualLineFaxMessageAvailableNumberObject', 'VoicemailInfo',
-           'VoicemailInfoEmailCopyOfMessage', 'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage',
-           'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls',
-           'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls']
+           'OutgoingCallingPermissionsSettingGetCallingPermissionsCallType',
+           'OutgoingCallingPermissionsSettingPutCallingPermissions', 'PeopleOrPlaceOrVirtualLineType', 'PrivacyGet',
+           'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'STATE', 'TelephonyType',
+           'TransferNumberGet', 'UserDigitPatternObject', 'UserOutgoingPermissionDigitPatternGetListObject',
+           'UserPlaceAuthorizationCodeListGet', 'VirtualLineCallForwardAvailableNumberObject',
+           'VirtualLineCallForwardAvailableNumberObjectOwner', 'VirtualLineCallSettingsApi',
+           'VirtualLineECBNAvailableNumberObject', 'VirtualLineECBNAvailableNumberObjectOwner',
+           'VirtualLineFaxMessageAvailableNumberObject', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
+           'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType',
+           'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls', 'VoicemailPutSendBusyCalls',
+           'VoicemailPutSendUnansweredCalls']
 
 
 class AuthorizationCodeLevel(str, Enum):
@@ -638,6 +639,9 @@ class OutgoingCallingPermissionsSettingGetCallingPermissions(ApiModel):
     action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsAction] = None
     #: Allow the virtual line to transfer or forward a call of the specified call type.
     transfer_enabled: Optional[bool] = None
+    #: If `true`, indicates the call restriction is enabled for the specific call type.
+    #: example: True
+    is_call_type_restriction_enabled: Optional[bool] = None
 
 
 class OutgoingCallingPermissionsSettingGet(ApiModel):
@@ -650,6 +654,17 @@ class OutgoingCallingPermissionsSettingGet(ApiModel):
     use_custom_permissions: Optional[bool] = None
     #: Specifies the outbound calling permissions settings.
     calling_permissions: Optional[list[OutgoingCallingPermissionsSettingGetCallingPermissions]] = None
+
+
+class OutgoingCallingPermissionsSettingPutCallingPermissions(ApiModel):
+    #: Designates the action to be taken for each call type and if transferring the call type is allowed.
+    #: example: INTERNAL_CALL
+    call_type: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsCallType] = None
+    #: Action on the given `callType`.
+    #: example: ALLOW
+    action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsAction] = None
+    #: Allow the virtual line to transfer or forward a call of the specified call type.
+    transfer_enabled: Optional[bool] = None
 
 
 class CallInterceptInfoIncomingType(str, Enum):
@@ -2060,7 +2075,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         return r
 
     def modify_a_virtual_line_s_outgoing_calling_permissions_settings(self, virtual_line_id: str,
-                                                                      calling_permissions: list[OutgoingCallingPermissionsSettingGetCallingPermissions],
+                                                                      calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissions],
                                                                       use_custom_enabled: bool = None,
                                                                       use_custom_permissions: bool = None,
                                                                       org_id: str = None):
@@ -2077,7 +2092,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
         :param calling_permissions: Specifies the outbound calling permissions settings.
-        :type calling_permissions: list[OutgoingCallingPermissionsSettingGetCallingPermissions]
+        :type calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissions]
         :param use_custom_enabled: When true, indicates that this user uses the shared control that applies to all
             outgoing call settings categories when placing outbound calls.
         :type use_custom_enabled: bool
@@ -2098,7 +2113,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             body['useCustomEnabled'] = use_custom_enabled
         if use_custom_permissions is not None:
             body['useCustomPermissions'] = use_custom_permissions
-        body['callingPermissions'] = TypeAdapter(list[OutgoingCallingPermissionsSettingGetCallingPermissions]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
+        body['callingPermissions'] = TypeAdapter(list[OutgoingCallingPermissionsSettingPutCallingPermissions]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/outgoingPermission')
         super().put(url, params=params, json=body)
 
@@ -2251,8 +2266,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = TransferNumberGet.model_validate(data)
         return r
 
-    def modify_transfer_numbers_for_a_virtual_line(self, virtual_line_id: str,
-                                                   use_custom_transfer_numbers: bool = None,
+    def modify_transfer_numbers_for_a_virtual_line(self, virtual_line_id: str, use_custom_transfer_numbers: bool,
                                                    auto_transfer_number1: str = None,
                                                    auto_transfer_number2: str = None,
                                                    auto_transfer_number3: str = None, org_id: str = None):
@@ -2294,8 +2308,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        if use_custom_transfer_numbers is not None:
-            body['useCustomTransferNumbers'] = use_custom_transfer_numbers
+        body['useCustomTransferNumbers'] = use_custom_transfer_numbers
         if auto_transfer_number1 is not None:
             body['autoTransferNumber1'] = auto_transfer_number1
         if auto_transfer_number2 is not None:
