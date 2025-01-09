@@ -18711,7 +18711,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
         Service number, or the other way around.
 
-        :param operation: Indicates the kind of operation to be carried out.
+        :param operation: The kind of operation to be carried out.
         :type operation: str
         :param number_list: Numbers on which to execute the operation.
         :type number_list: list[NumberItem]

@@ -7,18 +7,18 @@ __all__ = ['TelephoneNumberType', 'NumberUsageType', 'LocationNumbersApi']
 
 
 class TelephoneNumberType(str, Enum):
-    #: Indicates a toll-free PSTN number.
+    #: A toll-free PSTN number.
     tollfree = 'TOLLFREE'
-    #: Indicates a normal Direct Inward Dial (DID) PSTN number.
+    #: A normal Direct Inward Dial (DID) PSTN number.
     did = 'DID'
-    #: Indicates a mobile number.
+    #: A mobile number.
     mobile = 'MOBILE'
 
 
 class NumberUsageType(str, Enum):
-    #: Indicates standard/user number usage (default).
+    #: Standard/user number usage (default).
     none_ = 'NONE'
-    #: Indicates the number will be used in high-volume service, for example, Contact Center.
+    #: The number will be used in high-volume service, for example, Contact Center.
     service = 'SERVICE'
 
 

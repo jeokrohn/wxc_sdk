@@ -6,9 +6,9 @@ import random
 from dataclasses import dataclass, field
 from typing import ClassVar, Optional
 
-from wxc_sdk.all_types import *
 from tests.base import TestCaseWithLog, TestCaseWithUsers
 from tests.testutil import LocationInfo, us_location_info, available_tns
+from wxc_sdk.all_types import *
 from wxc_sdk.telephony import TelephonyType
 
 
@@ -44,6 +44,10 @@ class TestNumbers(TestCaseWithLog):
     def test_006_included_mobile(self):
         numbers = list(self.api.telephony.phone_numbers(included_telephony_type=TelephonyType.mobile_number))
         print(f'Got {len(numbers)} mobile numbers')
+
+    def test_007_owner_type_paging_group(self):
+        numbers = list(self.api.telephony.phone_numbers(owner_type=OwnerType.paging_group))
+        print(f'Got {len(numbers)} paging group numbers')
 
 
 class TestNumberConsistency(TestCaseWithUsers):

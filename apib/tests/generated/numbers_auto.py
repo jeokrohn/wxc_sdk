@@ -12,15 +12,14 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject',
-           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType',
-           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
-           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType',
-           'GetPhoneNumbersForAnOrganizationWithGivenCriteriasState', 'ItemObject', 'JobExecutionStatusObject',
+           'GetPhoneNumbersForAnOrganizationWithGivenCriteriaNumberType',
+           'GetPhoneNumbersForAnOrganizationWithGivenCriteriaOwnerType',
+           'GetPhoneNumbersForAnOrganizationWithGivenCriteriaState', 'ItemObject', 'JobExecutionStatusObject',
            'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
-           'NumberObjectLocation', 'NumberObjectOwner', 'NumberOwnerType', 'NumberState', 'NumberStateOptions',
-           'NumberTypeOptions', 'NumberUsageTypeOptions', 'NumbersApi', 'StartJobResponse',
-           'StartJobResponseLatestExecutionExitCode', 'Status', 'StepExecutionStatusesObject', 'TelephonyType',
-           'ValidateNumbersResponse']
+           'NumberObjectLocation', 'NumberObjectOwner', 'NumberObjectPhoneNumberType', 'NumberOwnerType',
+           'NumberState', 'NumberStateOptions', 'NumberTypeOptions', 'NumberUsageTypeOptions', 'NumbersApi',
+           'StartJobResponse', 'StartJobResponseLatestExecutionExitCode', 'Status', 'StepExecutionStatusesObject',
+           'TelephonyType', 'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -32,13 +31,13 @@ class NumberItem(ApiModel):
 
 
 class CountObject(ApiModel):
-    #: Indicates the total number of phone numbers requested to be moved.
+    #: The total number of phone numbers requested to be moved.
     total_numbers: Optional[int] = None
-    #: Indicates the total number of phone numbers successfully deleted.
+    #: The total number of phone numbers successfully deleted.
     numbers_deleted: Optional[int] = None
-    #: Indicates the total number of phone numbers successfully moved.
+    #: The total number of phone numbers successfully moved.
     numbers_moved: Optional[int] = None
-    #: Indicates the total number of phone numbers failed.
+    #: The total number of phone numbers failed.
     numbers_failed: Optional[int] = None
     #: Count of phone numbers for which usage changed.
     numbers_usage_changed: Optional[int] = None
@@ -155,12 +154,12 @@ class StartJobResponse(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
-    #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
+    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Most recent exit code of the job at the time of invocation.
     #: example: COMPLETED
     latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
-    #: Indicates operation type that was carried out.
+    #: The operation type that was carried out.
     operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
     source_location_id: Optional[str] = None
@@ -171,15 +170,15 @@ class StartJobResponse(ApiModel):
 
 
 class NumberState(str, Enum):
-    #: Phone number is available.
+    #: The phone number is available.
     available = 'AVAILABLE'
     #: Duplicate phone number.
     duplicate = 'DUPLICATE'
     #: Duplicate phone number in the list.
     duplicateinlist = 'DUPLICATEINLIST'
-    #: Phone number is invalid.
+    #: The phone number is invalid.
     invalid = 'INVALID'
-    #: Phone number is unavailable and cannot be used.
+    #: The phone number is unavailable and cannot be used.
     unavailable = 'UNAVAILABLE'
 
 
@@ -187,23 +186,36 @@ class Number(ApiModel):
     #: Phone numbers that need to be validated.
     #: example: +2145557901
     number: Optional[str] = None
-    #: Indicates the state of the number.
+    #: The state of the number.
     state: Optional[NumberState] = None
-    #: Indicates whether it's a toll-free number.
+    #: If `true`, it's a toll-free number.
     toll_free_number: Optional[bool] = None
     #: Error details if the number is unavailable.
     detail: Optional[list[str]] = None
 
 
+class NumberObjectPhoneNumberType(str, Enum):
+    #: Filter the results to include only primary phone numbers.
+    primary = 'PRIMARY'
+    #: Filter the results to include only alternate phone numbers.
+    alternate = 'ALTERNATE'
+    #: Filter the results to include only FAX phone numbers.
+    fax = 'FAX'
+    #: Filter the results to include only Dialed Number Identification Service (DNIS) phone numbers.
+    dnis = 'DNIS'
+    #: Filter the results to include all numbers.
+    default = 'Default'
+
+
 class TelephonyType(str, Enum):
-    #: Object is a PSTN number.
+    #: The number is a PSTN number.
     pstn_number = 'PSTN_NUMBER'
-    #: Object is a mobile number.
+    #: The number is a mobile number.
     mobile_number = 'MOBILE_NUMBER'
 
 
 class NumberObjectLocation(ApiModel):
-    #: ID of location for phone number.
+    #: ID of location in which phone number exists.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
     id: Optional[str] = None
     #: Name of the location for phone number.
@@ -212,38 +224,38 @@ class NumberObjectLocation(ApiModel):
 
 
 class NumberOwnerType(str, Enum):
-    #: PSTN phone number's owner is a workspace.
+    #: The PSTN phone number's owner is a workspace.
     place = 'PLACE'
-    #: Phone number's owner is a person.
+    #: The phone number's owner is a person.
     people = 'PEOPLE'
-    #: PSTN phone number's owner is a virtual line.
+    #: The PSTN phone number's owner is a virtual line.
     virtual_line = 'VIRTUAL_LINE'
-    #: PSTN phone number's owner is an auto-attendant.
+    #: The PSTN phone number's owner is an auto-attendant.
     auto_attendant = 'AUTO_ATTENDANT'
-    #: PSTN phone number's owner is a call queue.
+    #: The PSTN phone number's owner is a call queue.
     call_queue = 'CALL_QUEUE'
-    #: PSTN phone number's owner is a group paging.
+    #: The PSTN phone number's owner is a group paging.
     group_paging = 'GROUP_PAGING'
-    #: PSTN phone number's owner is a hunt group.
+    #: The PSTN phone number's owner is a hunt group.
     hunt_group = 'HUNT_GROUP'
-    #: PSTN phone number's owner is a voice messaging.
+    #: The PSTN phone number's owner is a voice messaging.
     voice_messaging = 'VOICE_MESSAGING'
-    #: PSTN phone number's owner is a Single Number Reach.
+    #: The PSTN phone number's owner is a Single Number Reach.
     office_anywhere = 'OFFICE_ANYWHERE'
-    #: PSTN phone number's owner is a Contact Center link.
+    #: The PSTN phone number's owner is a Contact Center link.
     contact_center_link = 'CONTACT_CENTER_LINK'
-    #: PSTN phone number's owner is a Contact Center adapter.
+    #: The PSTN phone number's owner is a Contact Center adapter.
     contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
-    #: PSTN phone number's owner is a route list.
+    #: The PSTN phone number's owner is a route list.
     route_list = 'ROUTE_LIST'
-    #: PSTN phone number's owner is a voicemail group.
+    #: The PSTN phone number's owner is a voicemail group.
     voicemail_group = 'VOICEMAIL_GROUP'
-    #: PSTN phone number's owner is a collaborate bridge.
+    #: The PSTN phone number's owner is a collaborate bridge.
     collaborate_bridge = 'COLLABORATE_BRIDGE'
 
 
 class NumberObjectOwner(ApiModel):
-    #: ID of the owner to which Phone number is assigned.
+    #: ID of the owner to which phone number is assigned.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
     #: Type of the phone number's owner.
@@ -273,9 +285,10 @@ class NumberObject(ApiModel):
     #: Phone number's state.
     #: example: ACTIVE
     state: Optional[str] = None
-    #: Type of phone number.
+    #: Returns the filtered list of phone numbers of the given `phoneNumberType`. Response excludes any extensions
+    #: without numbers. Possible input values:
     #: example: PRIMARY
-    phone_number_type: Optional[str] = None
+    phone_number_type: Optional[NumberObjectPhoneNumberType] = None
     #: If `true`, the phone number is used as location CLID.
     #: example: True
     main_number: Optional[bool] = None
@@ -299,25 +312,25 @@ class NumberObject(ApiModel):
 
 
 class NumberTypeOptions(str, Enum):
-    #: Indicates a toll-free PSTN number.
+    #: A toll-free PSTN number.
     tollfree = 'TOLLFREE'
-    #: Indicates a normal Direct Inward Dial (DID) PSTN number.
+    #: A normal Direct Inward Dial (DID) PSTN number.
     did = 'DID'
-    #: Indicates a mobile number.
+    #: A mobile number.
     mobile = 'MOBILE'
 
 
 class NumberUsageTypeOptions(str, Enum):
-    #: Indicates standard/user number usage (default).
+    #: Standard/user number usage (default).
     none_ = 'NONE'
-    #: Indicates the number will be used in high-volume service, for example, Contact Center.
+    #: The number will be used in high-volume service, for example, Contact Center.
     service = 'SERVICE'
 
 
 class NumberStateOptions(str, Enum):
-    #: Indicates number is activated and has calling capability.
+    #: The number is activated and has calling capability.
     active = 'ACTIVE'
-    #: Indicates a number is not yet activated and has no calling capability.
+    #: A number is not yet activated and has no calling capability.
     inactive = 'INACTIVE'
 
 
@@ -329,7 +342,7 @@ class Status(str, Enum):
 
 
 class ValidateNumbersResponse(ApiModel):
-    #: Indicates the status of the numbers.
+    #: The status of the numbers.
     status: Optional[Status] = None
     #: An array of number objects with number details.
     numbers: Optional[list[Number]] = None
@@ -355,12 +368,12 @@ class JobIdResponseObject(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
-    #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
+    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Most recent exit code of the job at the time of invocation.
     #: example: COMPLETED
     latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
-    #: Indicates the operation type that was carried out.
+    #: The operation type that was carried out.
     operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
     source_location_id: Optional[str] = None
@@ -374,7 +387,7 @@ class JobIdResponseObject(ApiModel):
     counts: Optional[CountObject] = None
 
 
-class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriaOwnerType(str, Enum):
     people = 'PEOPLE'
     place = 'PLACE'
     auto_attendant = 'AUTO_ATTENDANT'
@@ -389,21 +402,13 @@ class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):
     virtual_line = 'VIRTUAL_LINE'
 
 
-class GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType(str, Enum):
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriaNumberType(str, Enum):
     number = 'NUMBER'
     extension = 'EXTENSION'
     default = 'Default'
 
 
-class GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType(str, Enum):
-    primary = 'PRIMARY'
-    alternate = 'ALTERNATE'
-    fax = 'FAX'
-    dnis = 'DNIS'
-    default = 'Default'
-
-
-class GetPhoneNumbersForAnOrganizationWithGivenCriteriasState(str, Enum):
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriaState(str, Enum):
     active = 'ACTIVE'
     inactive = 'INACTIVE'
     default = 'Default'
@@ -458,14 +463,14 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param phone_numbers: List of phone numbers that need to be added.
         :type phone_numbers: list[str]
-        :param number_type: Type of the number. Required for `MOBILE` number type.
+        :param number_type: The type of the number. Required for `MOBILE` number type.
         :type number_type: NumberTypeOptions
-        :param number_usage_type: Type of usage expected for the number.
+        :param number_usage_type: The type of usage expected for the number.
         :type number_usage_type: NumberUsageTypeOptions
-        :param state: Reflects the state of the number. By default, the state of a number is set to `ACTIVE` for DID
-            and toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
+        :param state: The state of the number. By default, the state of a number is set to `ACTIVE` for DID and
+            toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
         :type state: NumberStateOptions
-        :param subscription_id: Reflects the `subscriptionId` to be used for mobile number order.
+        :param subscription_id: The `subscriptionId` to be used for mobile number order.
         :type subscription_id: str
         :param org_id: Organization of the Route Group.
         :type org_id: str
@@ -590,28 +595,28 @@ class NumbersApi(ApiChild, base='telephony/config'):
         r = ValidateNumbersResponse.model_validate(data)
         return r
 
-    def get_phone_numbers_for_an_organization_with_given_criterias(self, location_id: str = None,
-                                                                   phone_number: str = None, available: bool = None,
-                                                                   order: str = None, owner_name: str = None,
-                                                                   owner_id: str = None,
-                                                                   owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType = None,
-                                                                   extension: str = None,
-                                                                   number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType = None,
-                                                                   phone_number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType = None,
-                                                                   state: GetPhoneNumbersForAnOrganizationWithGivenCriteriasState = None,
-                                                                   details: bool = None,
-                                                                   toll_free_numbers: bool = None,
-                                                                   restricted_non_geo_numbers: bool = None,
-                                                                   included_telephony_types: list[TelephonyType] = None,
-                                                                   service_number: bool = None, org_id: str = None,
-                                                                   **params) -> Generator[NumberObject, None, None]:
+    def get_phone_numbers_for_an_organization_with_given_criteria(self, location_id: str = None,
+                                                                  phone_number: str = None, available: bool = None,
+                                                                  order: str = None, owner_name: str = None,
+                                                                  owner_id: str = None,
+                                                                  owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriaOwnerType = None,
+                                                                  extension: str = None,
+                                                                  number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriaNumberType = None,
+                                                                  phone_number_type: NumberObjectPhoneNumberType = None,
+                                                                  state: GetPhoneNumbersForAnOrganizationWithGivenCriteriaState = None,
+                                                                  details: bool = None,
+                                                                  toll_free_numbers: bool = None,
+                                                                  restricted_non_geo_numbers: bool = None,
+                                                                  included_telephony_types: list[TelephonyType] = None,
+                                                                  service_number: bool = None, org_id: str = None,
+                                                                  **params) -> Generator[NumberObject, None, None]:
         """
-        Get Phone Numbers for an Organization with Given Criterias
+        Get Phone Numbers for an Organization with Given Criteria
 
         List all the phone numbers for the given organization along with the status and owner (if any).
 
         Numbers can be standard, service, or mobile. Both standard and service numbers are PSTN numbers.
-        Service numbers are considered as high-utilization or high-concurrency phone numbers and can be assigned to
+        Service numbers are considered high-utilization or high-concurrency phone numbers and can be assigned to
         features like auto-attendants, call queues, and hunt groups.
         Phone numbers can be linked to a specific location, be active or inactive, and be assigned or unassigned.
         The owner of a number is the person, workspace, or feature to which the number is assigned.
@@ -631,28 +636,29 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :param order: Sort the list of phone numbers based on the following:`lastName`,`dn`,`extension`. Sorted by
             number and extension in ascending order.
         :type order: str
-        :param owner_name: Return the list of phone numbers that are owned by given `ownerName`. Maximum length is 255.
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
         :type owner_name: str
         :param owner_id: Returns only the matched number/extension entries assigned to the feature with the specified
             UUID or `broadsoftId`.
         :type owner_id: str
-        :param owner_type: Returns the list of phone numbers that are of given `ownerType`. Possible input values:
-        :type owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType
+        :param owner_type: Returns the list of phone numbers of the given `ownerType`. Possible input values:
+        :type owner_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriaOwnerType
         :param extension: Returns the list of phone numbers with the given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of phone numbers that contains given type of numbers.
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number.
             `numberType` cannot be used along with the `available` or `state` query parameters. Possible input values:
-        :type number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasNumberType
+        :type number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriaNumberType
         :param phone_number_type: Returns the filtered list of phone numbers of the given `phoneNumberType`. Response
             excludes any extensions without numbers. Possible input values:
-        :type phone_number_type: GetPhoneNumbersForAnOrganizationWithGivenCriteriasPhoneNumberType
-        :param state: Returns the list of phone numbers with matching state. Response excludes any extensions without
-            numbers. Possible input values:
-        :type state: GetPhoneNumbersForAnOrganizationWithGivenCriteriasState
+        :type phone_number_type: NumberObjectPhoneNumberType
+        :param state: Returns the list of phone numbers with the matching state. Response excludes any extensions
+            without numbers. Possible input values:
+        :type state: GetPhoneNumbersForAnOrganizationWithGivenCriteriaState
         :param details: Returns the overall count of the phone numbers along with other details for a given
             organization.
         :type details: bool
-        :param toll_free_numbers: Returns the list of toll free phone numbers.
+        :param toll_free_numbers: Returns the list of toll-free phone numbers.
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non-geographical numbers.
         :type restricted_non_geo_numbers: bool
@@ -783,14 +789,14 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         <br/>
 
-        :param operation: Indicates the kind of operation to be carried out.
+        :param operation: The kind of operation to be carried out.
         :type operation: str
         :param number_list: Numbers on which to execute the operation.
         :type number_list: list[NumberItem]
         :param target_location_id: Mandatory for a `MOVE` operation. The target location within organization where the
             unassigned numbers will be moved from the source location.
         :type target_location_id: str
-        :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
+        :param number_usage_type: The number usage type. Mandatory for `NUMBER_USAGE_CHANGE` operation.
         :type number_usage_type: str
         :rtype: :class:`StartJobResponse`
         """

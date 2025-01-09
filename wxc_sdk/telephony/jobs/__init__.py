@@ -64,18 +64,18 @@ class JobExecutionStatus(ApiModel):
 
 
 class RoutingPrefixCounts(ApiModel):
-    #: Indicates the total number of records whose routing prefix update is successful.
+    #: The total number of records whose routing prefix update is successful.
     routing_prefix_updated: Optional[int] = None
-    #: Indicates the total number of records whose routing prefix update failed.
+    #: The total number of records whose routing prefix update failed.
     routing_prefix_failed: Optional[int] = None
 
 
 class MoveCounts(ApiModel):
-    #: Indicates the total number of user moves requested.
+    #: The total number of user moves requested.
     total_moves: Optional[int] = None
-    #: Indicates the total number of user moves completed.
+    #: The total number of user moves completed.
     moved: Optional[int] = None
-    #: Indicates the total number of user moves that failed.
+    #: The total number of user moves that failed.
     failed: Optional[int] = None
 
 
@@ -99,7 +99,7 @@ class StartJobResponse(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involve in the
     #: execution of the job.
     job_execution_status: list[JobExecutionStatus]
-    #: Indicates the most recent status (STARTING, STARTED, COMPLETED, or FAILED) of the job at the time of invocation.
+    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: str
     #: Most recent exit code of the job at the time of invocation.
     latest_execution_exit_code: Optional[str] = None
@@ -258,22 +258,22 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
 class NumberItem(ApiModel):
     #: The source location of the numbers to be moved.
     location_id: Optional[str] = None
-    #: Indicates the numbers to be moved from one location to another location.
+    #: The numbers to be moved from one location to another location.
     numbers: Optional[list[str]] = None
 
 
 class MoveNumberCounts(ApiModel):
-    #: Indicates the total number of phone numbers requested to be moved.
+    #: The total number of phone numbers requested to be moved.
     total_numbers: Optional[int] = None
-    #: Indicates the total number of phone numbers successfully deleted.
+    #: The total number of phone numbers successfully deleted.
     numbers_deleted: Optional[int] = None
-    #: Indicates the total number of phone numbers successfully moved.
+    #: The total number of phone numbers successfully moved.
     numbers_moved: Optional[int] = None
-    #: Indicates the total number of phone numbers failed.
+    #: The total number of phone numbers failed.
     numbers_failed: Optional[int] = None
-    numbers_activated: Optional[int] = None
     #: Count of phone numbers for which usage changed.
     numbers_usage_changed: Optional[int] = None
+    numbers_activated: Optional[int] = None
 
 
 class NumberJob(ApiModel):
@@ -296,7 +296,7 @@ class NumberJob(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     # execution of the job.
     job_execution_status: Optional[list[JobExecutionStatus]] = None
-    #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
+    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Most recent exit code of the job at the time of invocation.
     latest_execution_exit_code: Optional[str] = None
@@ -339,11 +339,11 @@ class ManageNumberErrorItem(ApiModel):
 
 
 class InitiateMoveNumberJobsBody(ApiModel):
-    #: Indicates the kind of operation to be carried out.
+    #: The kind of operation to be carried out.
     operation: Optional[str] = None
     #: The target location within organization where the unassigned numbers will be moved from the source location.
     target_location_id: Optional[str] = None
-    #: Indicates the numbers to be moved from source to target locations.
+    #: The numbers to be moved from source to target locations.
     number_list: Optional[list[NumberItem]] = None
 
 
@@ -409,7 +409,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
         Service number, or the other way around.
 
-        :param operation: Indicates the kind of operation to be carried out.
+        :param operation: The kind of operation to be carried out.
         :type operation: str
         :param number_list: Numbers on which to execute the operation.
         :type number_list: list[NumberItem]
@@ -543,12 +543,11 @@ class ApplyLineKeyTemplateJobDetails(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatus]] = None
-    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of
-    #: invocation.
+    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Most recent exit code of the job at the time of invocation.
     latest_execution_exit_code: Optional[str] = None
-    #: Indicates the progress of the job.
+    #: The progress of the job.
     percentage_complete: Optional[int] = None
     #: Number of job steps completed.
     updated_count: Optional[int] = None
@@ -920,8 +919,7 @@ class MoveUserJobDetails(ApiModel):
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatus]] = None
-    #: Indicates the most recent status (`STARTING`,`STARTED`,`COMPLETED`,`FAILED`) of the job at the time of
-    #: invocation.
+    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
     #: Most recent exit code of the job at the time of invocation.
     latest_execution_exit_code: Optional[str] = None

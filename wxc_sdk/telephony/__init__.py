@@ -72,12 +72,13 @@ class NumberListPhoneNumberType(str, Enum):
     alternate = 'ALTERNATE'
     fax = 'FAX'
     dnis = 'DNIS'
+    default = 'Default'
 
 
 class TelephonyType(str, Enum):
-    #: Object is a PSTN number.
+    #: The number is a PSTN number.
     pstn_number = 'PSTN_NUMBER'
-    #: Object is a mobile number.
+    #: The number is a mobile number.
     mobile_number = 'MOBILE_NUMBER'
 
 

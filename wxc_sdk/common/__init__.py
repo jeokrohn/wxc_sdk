@@ -296,7 +296,9 @@ class PatternAction(str, Enum):
 
 
 class NumberState(str, Enum):
+    #: The number is activated and has calling capability.
     active = 'ACTIVE'
+    #: A number is not yet activated and has no calling capability.
     inactive = 'INACTIVE'
 
 
@@ -336,26 +338,26 @@ class ValidateExtensionsResponse(ApiModel):
 
 
 class ValidatePhoneNumberStatusState(str, Enum):
-    #: This means the phone number is available.
+    #: The phone number is available.
     available = 'Available'
-    #: This means it's a duplicate phone number.
+    #: Duplicate phone number.
     duplicate = 'Duplicate'
-    #: This means it's a duplicate phone number in the list.
+    #: Duplicate phone number in the list.
     duplicate_in_list = 'Duplicate In List'
     #: The phone number is invalid.
     invalid = 'Invalid'
-    #: This phone number is unavailable and cannot be used.
+    #: The phone number is unavailable and cannot be used.
     unavailable = 'Unavailable'
 
 
 class ValidatePhoneNumberStatus(ApiModel):
     #: Phone number that need to be validated.
     phone_number: str
-    #: This indicates the state of the number.
+    #: The state of the number.
     state: ValidatePhoneNumberStatusState
-    #: This indicated whether it's a toll-free number
+    #: If `true`, it's a toll-free number.
     toll_free_number: bool
-    #: This field has the details if error if the number is unavailable.
+    #: Error details if the number is unavailable.
     detail: list[str] = Field(default_factory=list)
 
     @property
@@ -1103,35 +1105,35 @@ class AnnAudioFile(ApiModel):
 
 
 class OwnerType(str, Enum):
-    #: PSTN phone number's owner is a workspace.
+    #: The PSTN phone number's owner is a workspace.
     place = 'PLACE'
-    #: PSTN phone number's owner is a person.
+    #: The phone number's owner is a person.
     people = 'PEOPLE'
-    #: PSTN phone number's owner is a Virtual Profile.
+    #: The PSTN phone number's owner is a virtual line.
     virtual_line = 'VIRTUAL_LINE'
-    #: PSTN phone number's owner is an auto-attendant.
+    #: The PSTN phone number's owner is an auto-attendant.
     auto_attendant = 'AUTO_ATTENDANT'
-    #: PSTN phone number's owner is a call queue.
+    #: The PSTN phone number's owner is a call queue.
     call_queue = 'CALL_QUEUE'
-    #: PSTN phone number's owner is a group paging.
-    group_paging = 'GROUP_PAGING'
-    # TODO: which one?
+    #: The PSTN phone number's owner is a paging group.
     paging_group = 'PAGING_GROUP'
-    #: PSTN phone number's owner is a hunt group.
+    #: The PSTN phone number's owner is a hunt group.
     hunt_group = 'HUNT_GROUP'
-    #: PSTN phone number's owner is a voice messaging.
+    #: The PSTN phone number's owner is a voice messaging.
     voice_messaging = 'VOICE_MESSAGING'
+    #: The PSTN phone number's owner is a Single Number Reach.
+    office_anywhere = 'OFFICE_ANYWHERE'
     #: PSTN phone number's owner is a Single Number Reach.
     broadworks_anywhere = 'BROADWORKS_ANYWHERE'
-    #: PSTN phone number's owner is a Contact Center link.
+    #: The PSTN phone number's owner is a Contact Center link.
     contact_center_link = 'CONTACT_CENTER_LINK'
-    #: PSTN phone number's owner is a Contact Center adapter.
+    #: The PSTN phone number's owner is a Contact Center adapter.
     contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
-    #: PSTN phone number's owner is a route list.
+    #: The PSTN phone number's owner is a route list.
     route_list = 'ROUTE_LIST'
-    #: PSTN phone number's owner is a voice mail group.
+    #: The PSTN phone number's owner is a voicemail group.
     voicemail_group = 'VOICEMAIL_GROUP'
-    #: PSTN phone number's owner is a collaborate bridge.
+    #: The PSTN phone number's owner is a collaborate bridge.
     collaborate_bridge = 'COLLABORATE_BRIDGE'
 
 
