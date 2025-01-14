@@ -21,7 +21,8 @@ from apib.tools import break_line, sanitize_class_name, snake_case, words_to_cam
     remove_html_comments, remove_div, lines_for_docstring
 from wxc_sdk.base import to_camel, ApiModel
 
-__all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Parameter', 'simple_python_type']
+__all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Parameter', 'simple_python_type',
+           'PythonAPI']
 
 log = logging.getLogger(__name__)
 

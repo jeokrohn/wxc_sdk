@@ -1,15 +1,19 @@
-# Pydantic models to deserialize OpenAPI specs
-import json
+"""
+Pydantic models to deserialize OpenAPI specs
+"""
 
-from pydantic import BaseModel, Field, Extra, field_validator
 from typing import List, Optional, Any, Union
 
+from pydantic import BaseModel, Field, field_validator
 from pydantic_core.core_schema import ValidationInfo
 
 from wxc_sdk.base import to_camel
 
 
 class OpenApiBaseModel(BaseModel):
+    """
+    Base class for OpenAPI models
+    """
     class Config:
         alias_generator = to_camel
         extra = 'forbid'
@@ -111,8 +115,12 @@ class OpenApiSpecSchemaProperty(OpenApiBaseModel):
     discriminator: Optional[Discriminator] = None
     default: Optional[Any] = None
 
+    # noinspection PyMethodParameters
     @field_validator('enum', mode='before')
     def validate_enum(cls, v, validation: ValidationInfo):
+        """
+        Validate enum. Only valid for type 'string'
+        """
         data = validation.data
         if data['type'] != 'string':
             raise ValueError(f"enum is only valid for type 'string'")
@@ -124,7 +132,7 @@ class OpenApiSpecSchema(OpenApiBaseModel):
     type: Optional[str] = None
     required: Optional[List[str]] = Field(default_factory=list)
     properties: dict[str, OpenApiSpecSchemaProperty] = Field(default_factory=dict)
-    # all_of can exist on it's own
+    # all_of can exist on its own
     all_of: Optional[List[Any]] = None
     # if schema is an enum, then these are the possible values
     enum: Optional[List[Optional[str]]] = None
@@ -143,20 +151,3 @@ class OpenAPISpec(OpenApiBaseModel):
     paths: dict[str, dict[str, Operation]]
     components: Components
     tags: Optional[List[str]] = None
-
-
-def parse_all():
-    from open_api.open_api_sources import open_api_specs
-
-    specs = list(open_api_specs())
-    parsed_specs = []
-    for spec in specs:
-        with open(spec.spec_path, 'r') as f:
-            data = json.load(f)
-        parsed_spec = OpenAPISpec.model_validate(data)
-        parsed_specs.append(parsed_spec)
-    foo = 1
-
-
-if __name__ == '__main__':
-    parse_all()

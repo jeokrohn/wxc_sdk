@@ -1,4 +1,6 @@
-# access OpenAPI sources
+"""
+access OpenAPI sources
+"""
 import glob
 import json
 import os
@@ -37,7 +39,9 @@ class APIConfig(BaseModel):
 
 @dataclass
 class OpenApiSpecInfo:
-    # information of one OpenAPI spec
+    """
+    Information of one OpenAPI spec
+    """
     api_name: str
     base_path: str
     spec_path: str
@@ -47,6 +51,9 @@ class OpenApiSpecInfo:
 
     @classmethod
     def from_spec_json_path(cls, path: str) -> 'OpenApiSpecInfo':
+        """
+        Create OpenApiSpecInfo from path to spec.json
+        """
         path_match = re.match(r'^(.+/openapi)/(.+)/(v\d)/spec.json$', path)
         if path_match is None:
             raise ValueError(f"Invalid path: {path}")
@@ -57,14 +64,12 @@ class OpenApiSpecInfo:
 
         api_json_path = os.path.join(base_path, spec_path, 'api.json')
         try:
-            with open(api_json_path, 'r') as f:
+            with open(api_json_path) as f:
                 data = json.load(f)
                 api_config = APIConfig.model_validate(data)
         except FileNotFoundError:
             api_config = None
         return cls(base_path=base_path, spec_path=path, api_config=api_config, version=version, api_name=api_name)
-        ...
-
 
 def open_api_specs() -> Generator[OpenApiSpecInfo, None, None]:
     """
