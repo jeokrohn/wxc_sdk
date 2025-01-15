@@ -854,7 +854,9 @@ class PythonClassRegistry:
             return class_name
         return f'{self._context}%{sanitize_class_name(class_name)}'
 
-    def _add_api(self, apib_key: str, python_api: PythonAPI):
+    def _add_api(self, *, python_api: PythonAPI, apib_key: str=None):
+        if apib_key is None:
+            apib_key = self._context
         if apib_key in self._apis:
             raise KeyError(f'"{apib_key}" already has an API registered')
         self._apis[apib_key] = python_api
@@ -866,7 +868,7 @@ class PythonClassRegistry:
         """
         Add a python class to the registry. When adding the class name to the registry pc.name gets updated to a
         qualident.
-        pc.name has to be unique; this is ensured her
+        pc.name has to be unique; this is ensured here
         """
         qualident = self.qualified_class_name(sanitize_class_name(pc.name))
         if qualident in self._classes:

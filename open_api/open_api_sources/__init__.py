@@ -49,6 +49,13 @@ class OpenApiSpecInfo:
 
     api_config: Optional[APIConfig] = None
 
+    @property
+    def rel_spec_path(self)->str:
+        path = self.spec_path[len(self.base_path):]
+        m = re.match(r'^/(.+)/v\d', path)
+        path = m.group(1)
+        return path
+
     @classmethod
     def from_spec_json_path(cls, path: str) -> 'OpenApiSpecInfo':
         """
