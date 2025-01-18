@@ -49,10 +49,23 @@ def snake_case(s: str) -> str:
 
 
 def sanitize_class_name(class_name: Optional[str]) -> str:
-    if class_name is None:
+    if not class_name:
         return class_name
+    # if the class name is qualified then only sanitize the last part
+    class_name_match = re.match(r'^(.+%)(.+)', class_name)
+    if class_name_match:
+        class_name = class_name_match.group(2)
+
+    # remove non-word characters
     class_name, _ = re.subn(r'\W', '', class_name)
-    return class_name
+
+    # first letter must be a capitalized
+    r = f'{class_name[0].upper()}{class_name[1:]}'
+
+    # if the class name was qualified then add the prefix back
+    if class_name_match:
+        r = f'{class_name_match.group(1)}{r}'
+    return r
 
 
 def break_line(line: str, width: int = None, prefix: str = '',
