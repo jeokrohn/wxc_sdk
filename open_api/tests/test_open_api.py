@@ -5,17 +5,17 @@ import json
 import os
 import re
 from collections import Counter, defaultdict
+from collections.abc import Generator, Callable
 from dataclasses import dataclass
 from functools import reduce
-from itertools import chain
-from typing import ClassVar, Iterable
+from typing import ClassVar, Union
 from unittest import TestCase
 
 import yaml
-from docutils.nodes import description
+from pydantic import ValidationError
 
 from open_api.open_api_class_registry import OpenApiPythonClassRegistry
-from open_api.open_api_model import OpenAPISpec, OpenApiSpecSchemaProperty
+from open_api.open_api_model import OpenAPISpec, OpenApiSpecSchemaProperty, Operation
 from open_api.open_api_sources import open_api_specs, OpenApiSpecInfo
 
 
@@ -27,6 +27,42 @@ def read_one_spec_from_file(spec: OpenApiSpecInfo) -> OpenAPISpec:
         data = json.load(f)
     parsed_spec = OpenAPISpec.model_validate(data)
     return parsed_spec
+
+
+def descend_into_property(*, spec: OpenAPISpec, prop: OpenApiSpecSchemaProperty, path: str,
+                          call_back: Callable[[OpenApiSpecSchemaProperty, str], None] = None,
+                          deref: bool = True):
+    """
+    Descend into a property and call callback for each property
+    """
+    call_back(prop, path)
+    def descend_into_ref(ref: str):
+        # check reference and descend in referenced schema
+        ref_match = re.match(r'^#/components/schemas/(.+)$', ref)
+        if ref_match is None:
+            raise ValueError(f'Invalid reference {ref}')
+        ref_name = ref_match.group(1)
+        ref_schema = spec.components.schemas.get(ref_name)
+        if ref_schema is None:
+            raise ValueError(f'Unknown reference {ref}')
+        if deref:
+            descend_into_property(spec=spec, prop=ref_schema, path=f'{path}(ref {ref})', call_back=call_back,
+                                  deref=deref)
+    if prop.ref:
+        descend_into_ref(prop.ref)
+    if object_ref:=prop.object_ref:
+        descend_into_ref(object_ref)
+    if prop.any_of:
+        for item in prop.any_of:
+            descend_into_property(spec=spec, prop=item, path=f'{path}.any_of', call_back=call_back, deref=deref)
+    if prop.items:
+        # this is an array
+        assert prop.type == 'array'
+        descend_into_property(spec=spec, prop=prop.items, path=f'{path}[]', call_back=call_back, deref=deref)
+    if prop.properties:
+        for name, prop_prop in prop.properties.items():
+            descend_into_property(spec=spec, prop=prop_prop, path=f'{path}.{name}', call_back=call_back, deref=deref)
+    return
 
 
 class TestOpenApiSpecs(TestCase):
@@ -45,11 +81,26 @@ class TestParseOpenApi(TestCase):
     """
 
     def test_read_all(self):
-        parsed_open_api_specs = list(map(read_one_spec_from_file, open_api_specs()))
+        parsed_open_api_specs = []
+        err = False
+        for spec_info in open_api_specs():
+            with open(spec_info.spec_path) as f:
+                data = json.load(f)
+            print(f'Parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
+            try:
+                parsed_spec = OpenAPISpec.model_validate(data)
+            except ValidationError as e:
+                err = True
+                print(f'Error parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
+                print(e)
+                continue
+            parsed_open_api_specs.append(parsed_spec)
+            print(f'{spec_info.api_name} {parsed_spec.info.title}')
         print()
         print(f'Parsed {len(parsed_open_api_specs)} OpenAPI specs')
         parsed_open_api_specs.sort(key=lambda spec: spec.info.title)
         print('\n'.join(spec.info.title for spec in parsed_open_api_specs))
+        self.assertFalse(err, 'Some OpenAPI specs could not be parsed')
 
 
 @dataclass(init=False, repr=False)
@@ -62,7 +113,7 @@ class WithOpenApiSpecInfos(TestCase):
         Read all OpenAPI spec infos
         """
         super().setUpClass()
-        cls.spec_infos = list(open_api_specs())
+        cls.spec_infos = list(sorted(open_api_specs(), key=lambda s: (s.spec_path, s.api_name, s.version)))
 
 
 @dataclass(init=False, repr=False)
@@ -103,14 +154,19 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
     Test assumptions about parsed OpenAPI specs
     """
 
-    def all_schemas(self) -> Iterable[tuple[OpenApiSpecInfo, str, OpenApiSpecSchemaProperty]]:
+    def all_schemas(self) -> Generator[tuple[OpenApiSpecInfo, OpenAPISpec, str, OpenApiSpecSchemaProperty], None, None]:
         """
         Generator of all schemas with api_name and name
         """
-        return chain.from_iterable(((spec_info, name, schema)
-                                    for name, schema in spec.components.schemas.items())
-                                   for spec_info, spec in zip(self.spec_infos, self.parsed_specs)
-                                   if spec.components and spec.components.schemas)
+        for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+            if spec.components and spec.components.schemas:
+                for name, schema in spec.components.schemas.items():
+                    yield spec_info, spec, name, schema
+
+    def all_operations(self) -> Generator[tuple[OpenApiSpecInfo, OpenAPISpec, str, str, Operation], None, None]:
+        for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+            for path, method, operation in spec.operations():
+                yield spec_info, spec, path, method, operation
 
     # noinspection GrazieInspection
     def test_scheme_component_types(self):
@@ -118,7 +174,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         Collect types of components.schemas
         """
         type_counter = Counter(schema.type
-                               for _, _, schema in self.all_schemas())
+                               for _, _, _, schema in self.all_schemas())
         print()
         for type_, count in sorted(type_counter.items(), key=lambda item: item[1], reverse=True):
             print(f'{type_}: {count}')
@@ -127,21 +183,29 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         Understand schema types that are None
         """
-        none_schemas = [(api_spec_info, name, schema)
-                        for api_spec_info, name, schema in self.all_schemas()
-                        if schema.type is None]
-        print()
-        print(f'None schemas: {len(none_schemas)}')
-        for api_spec_info, name, schema in none_schemas:
-            api_name = api_spec_info.api_name
-            print(f'{api_name=} {name=} {schema=}')
+        errs = []
+        def check_none(prop: OpenApiSpecSchemaProperty, path: str):
+            if prop.any_type is None and not prop.properties and not prop.any_ref and not prop.any_of:
+                if prop.example:
+                    # if no explicit type is given, we can infer the type from the example
+                    example_type = type(prop.example)
+                    if example_type in {str, int, float, bool}:  # these are not None
+                        return
+                errs.append((path, prop))
+            return
+
+        for api_spec_info, spec, name, schema in self.all_schemas():
+            descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}', call_back=check_none, deref=False)
+        if errs:
+            print('"None" schemas:')
+            print('\n'.join(f'{path}: {prop}' for path, prop in errs))
 
     def test_schema_component_type_string_are_all_enums(self):
         """
         Understand schema types that are "string"; they should be enums
         """
         string_schemas = [(api_spec_info, name, schema)
-                          for api_spec_info, name, schema in self.all_schemas()
+                          for api_spec_info, _, name, schema in self.all_schemas()
                           if schema.type == 'string']
         print()
         print(f'"string" schemas: {len(string_schemas)}')
@@ -164,7 +228,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         Understand schema types that are "array"
         """
         array_schemas = [(api_spec_info, name, schema)
-                         for api_spec_info, name, schema in self.all_schemas()
+                         for api_spec_info, _, name, schema in self.all_schemas()
                          if schema.type == 'array']
         print()
         print(f'"array" schemas: {len(array_schemas)}')
@@ -177,28 +241,61 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         wrong formatting in APIB can lead to properties ending up in descriptions
         """
 
-        # go through all endpoints and schemas and look for "fishy" descriptions
-        def check_schema_property(*, property: OpenApiSpecSchemaProperty, path: str):
-            if property.description and re.search(r'\s*\+ \S+:', property.description, re.MULTILINE):
+        def check_property(prop: OpenApiSpecSchemaProperty, path: str):
+            if prop.description and re.search(r'\s*\+ \S+:', prop.description, re.MULTILINE):
                 print()
                 print(f'{path}: ')
-                print(f'{property.description}')
+                print(f'{prop.description}')
                 print('-' * 130)
-            if property.items:
-                check_schema_property(property=property.items, path=f'{path}.items')
-            if property.properties:
-                for name, prop in property.properties.items():
-                    check_schema_property(property=prop, path=f'{path}.{name}')
 
-        for api_spec_info, name, schema in self.all_schemas():
-            check_schema_property(property=schema, path=f'{api_spec_info.rel_spec_path}.{name}')
+        for api_spec_info, spec, name, schema in self.all_schemas():
+            descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}',
+                                  call_back=check_property)
+
+    def test_find_broken_responses(self):
+        """
+        Some responses don't have properties
+        """
+
+        errors: list[tuple[str, str]] = []
+
+        def check_empty_property(prop: OpenApiSpecSchemaProperty, prop_path: str):
+            err = None
+            if not prop.model_fields_set:
+                err = 'Empty property'
+            if err:
+                errors.append((prop_path, err))
+                print(f'{prop_path}: {err}')
+            return
+
+        for api_spec_info, parsed_spec, path, method, operation in self.all_operations():
+            for code, response in operation.responses.items():
+                if response.content:
+                    for content_type, content in response.content.items():
+                        ct_path = f'{api_spec_info.rel_spec_path}: {path} {method.upper()}->{code}'
+                        if content.schema_:
+                            descend_into_property(spec=parsed_spec, prop=content.schema_, path=ct_path,
+                                                  call_back=check_empty_property)
+                        else:
+                            err_str = f'no schema, {content=}'
+                            print(f'{ct_path}: {err_str}')
+                            errors.append((ct_path, err_str))
+                        # if
+                    # for
+                # if
+            # for
+        # for
+
+        self.assertTrue(not errors, 'Some responses have empty properties')
+        return
+
 
     def test_object_schema_property_types(self):
         """
         Understand types of properties in object schemas
         """
         object_schemas = [(api_spec_info, name, schema)
-                          for api_spec_info, name, schema in self.all_schemas()
+                          for api_spec_info, _, name, schema in self.all_schemas()
                           if schema.type == 'object']
         # group all properties by type
         properties_by_type = reduce(lambda acc, x: acc[x[0]].append(x[1:]) or acc,
@@ -207,7 +304,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                                      for prop_name, prop in schema.properties.items()),
                                     defaultdict(list))
         properties_by_type: dict[
-            str, list[tuple[OpenApiSpecInfo, str, OpenApiSpecSchemaProperty, str, OpenApiSpecSchemaProperty]]]
+            Union[str, None], list[tuple[OpenApiSpecInfo, str, OpenApiSpecSchemaProperty, str, OpenApiSpecSchemaProperty]]]
         for type_ in sorted(properties_by_type, key=lambda key: len(properties_by_type[key]), reverse=True):
             print()
             print(f'{type_}: {len(properties_by_type[type_])}')

@@ -4,9 +4,6 @@ Python class registry for OpenAPI schema; derived from PythonClassRegistry; used
 import json
 import re
 
-from attr import attributes
-from docutils.nodes import description
-
 from apib.python_class import PythonClassRegistry, PythonAPI, PythonClass, Attribute
 from apib.tools import sanitize_class_name
 from open_api.open_api_model import OpenAPISpec, OpenApiSpecSchemaProperty
@@ -29,22 +26,22 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         super().__init__()
 
     @staticmethod
-    def _attributes_from_enum(property: OpenApiSpecSchemaProperty) -> list[Attribute]:
+    def _attributes_from_enum(prop: OpenApiSpecSchemaProperty) -> list[Attribute]:
         """
         Create attributes from enum values
         """
-        attributes = [Attribute(name=enum_value, python_type='str', docstring=None, sample=None,
-                                referenced_class=None)
-                      for enum_value in property.enum]
-        return attributes
+        attrs = [Attribute(name=enum_value, python_type='str', docstring=None, sample=None,
+                           referenced_class=None)
+                 for enum_value in prop.enum]
+        return attrs
 
     def _add_object_schema(self, schema_name: str, schema: OpenApiSpecSchemaProperty):
         """
         Add "object" schema to registry as Python class
         """
         name = class_name_from_schema_name(schema_name)
-        description = schema.description
-        attributes = []
+        schema_description = schema.description
+        attrs = []
         for prop_name, prop in schema.properties.items():
             # create attribute
             if prop.ref:
@@ -57,10 +54,9 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                                  docstring=prop.description,
                                  python_type=referenced_class_name,
                                  referenced_class=referenced_class_name, sample=None)
-                attributes.append(attr)
+                attrs.append(attr)
                 continue
 
-                ...
             if prop.enum:
                 attr = Attribute(name=prop_name, python_type='str', docstring=prop.description, sample=None,
                                  referenced_class=None)
@@ -79,10 +75,10 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             else:
                 attr = Attribute(name=prop_name, python_type=prop.type, docstring=prop.description, sample=None,
                                  referenced_class=None)
-            attributes.append(attr)
+            attrs.append(attr)
         python_class = PythonClass(name=name,
-                                   attributes=attributes,
-                                   description=description, is_enum=False,
+                                   attributes=attrs,
+                                   description=schema_description, is_enum=False,
                                    baseclass=None)
         # add to registry
         self._add_class(python_class)
@@ -103,9 +99,9 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             if not schema.enum:
                 raise ValueError(f'String schema {schema_name} has no enum values')
             is_enum = True
-            attributes = self._attributes_from_enum(schema)
+            attrs = self._attributes_from_enum(schema)
             python_class = PythonClass(name=name,
-                                       attributes=attributes,
+                                       attributes=attrs,
                                        description=schema.description,
                                        is_enum=is_enum,
                                        baseclass=None)
@@ -141,4 +137,4 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         for schema_name, schema in open_api_spec.components.schemas.items():
             self._add_schema(schema_name, schema)
         # add endpoints
-        foo = 1
+        raise NotImplementedError()

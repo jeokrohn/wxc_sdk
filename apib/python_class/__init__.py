@@ -591,9 +591,9 @@ class Attribute:
     """
     name: str
     python_type: str
-    docstring: str
-    sample: Any
-    referenced_class: str
+    docstring: Optional[str] = None
+    sample: Optional[Any] = None
+    referenced_class: Optional[str] = None
     optional: bool = field(default=False)
 
     def __post_init__(self):
@@ -676,9 +676,9 @@ class PythonClass:
     """
     name: str
     attributes: Optional[list[Attribute]] = field(default=None)
-    description: str = field(default=None)
+    description: Optional[str] = None
     is_enum: bool = field(default=None)
-    baseclass: str = field(default=None)
+    baseclass: Optional[str] = None
 
     def __post_init__(self):
         # attribute names need to be unique
