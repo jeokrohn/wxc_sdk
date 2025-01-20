@@ -11,7 +11,7 @@ from pydantic_core.core_schema import ValidationInfo
 from wxc_sdk.base import to_camel
 
 
-class OpenApiBaseModel(BaseModel):
+class OABaseModel(BaseModel):
     """
     Base class for OpenAPI models
     """
@@ -21,70 +21,70 @@ class OpenApiBaseModel(BaseModel):
         extra = 'forbid'
 
 
-class NameAndUrl(OpenApiBaseModel):
+class OANameAndUrl(OABaseModel):
     name: str
     url: Optional[str] = None
 
 
-class Info(OpenApiBaseModel):
+class OAInfo(OABaseModel):
     title: str
     version: str
     description: str
     terms_of_service: Optional[str] = None
-    license: Optional[NameAndUrl] = None
-    contact: Optional[NameAndUrl] = None
+    license: Optional[OANameAndUrl] = None
+    contact: Optional[OANameAndUrl] = None
 
 
-class Server(OpenApiBaseModel):
+class OAServer(OABaseModel):
     description: Optional[str] = None
     url: str
 
 
-class Parameter(OpenApiBaseModel):
+class OAParameter(OABaseModel):
     name: str
     in_: str = Field(..., alias='in')
     description: Optional[str] = None
     required: bool = False
     example: Optional[Any] = None
-    schema_: dict = Field(alias='schema')
+    schema_: Optional['OASchemaProperty'] = Field(alias='schema', default=None)
     style: Optional[str] = None
     explode: Optional[bool] = None
     allow_reserved: Optional[bool] = None
 
 
-class RequestBody(OpenApiBaseModel):
+class OARequestBody(OABaseModel):
     description: Optional[str] = None
     ref: Optional[str] = Field(alias='$ref', default=None)
-    content: Optional[dict] = None
+    content: Optional[dict[str, 'OAContent']] = None
     required: Optional[bool] = None
 
 
-class OpenApiSpecSchemaPropertyItemsRef(OpenApiBaseModel):
+class OASchemaPropertyItemsRef(OABaseModel):
     ref: str = Field(alias='$ref')
 
 
-class Discriminator(OpenApiBaseModel):
+class OADiscriminator(OABaseModel):
     property_name: str
 
 
-class OpenApiSpecSchemaProperty(OpenApiBaseModel):
+class OASchemaProperty(OABaseModel):
     title: Optional[str] = None
-    type: Optional[Union[str, OpenApiSpecSchemaPropertyItemsRef]] = None
+    type: Optional[Union[str, OASchemaPropertyItemsRef]] = None
     # if no type, then this is a reference to another schema
     ref: Optional[str] = Field(alias='$ref', default=None)
     description: Optional[str] = None
     example: Optional[Any] = None
     # ref for array items if type == 'array'
-    items: Optional['OpenApiSpecSchemaProperty'] = None
+    items: Optional['OASchemaProperty'] = None
     # enum values if type == 'string'
     enum: Optional[List[Optional[str]]] = None
     # properties if type == 'object'
-    properties: Optional[dict[str, 'OpenApiSpecSchemaProperty']] = None
+    properties: Optional[dict[str, 'OASchemaProperty']] = None
     required: Optional[List[str]] = Field(default_factory=list)
     nullable: Optional[bool] = None
     # list of possible types
-    any_of: Optional[list['OpenApiSpecSchemaProperty']] = None
-    all_of: Optional[list['OpenApiSpecSchemaProperty']] = None
+    any_of: Optional[list['OASchemaProperty']] = None
+    all_of: Optional[list['OASchemaProperty']] = None
     one_of: Optional[list[Any]] = None
     format: Optional[str] = None
     max_length: Optional[int] = None
@@ -97,7 +97,7 @@ class OpenApiSpecSchemaProperty(OpenApiBaseModel):
     maximum: Optional[int] = None
     min_items: Optional[int] = None
     max_items: Optional[int] = None
-    discriminator: Optional[Discriminator] = None
+    discriminator: Optional[OADiscriminator] = None
     default: Optional[Any] = None
     definitions: Optional[Any] = None
 
@@ -113,7 +113,7 @@ class OpenApiSpecSchemaProperty(OpenApiBaseModel):
         return v
 
     @staticmethod
-    def _obj_ref(plist: Optional[list['OpenApiSpecSchemaProperty']]) -> Optional[str]:
+    def _obj_ref(plist: Optional[list['OASchemaProperty']]) -> Optional[str]:
         """
         Get the referenced object schema.
         """
@@ -146,7 +146,7 @@ class OpenApiSpecSchemaProperty(OpenApiBaseModel):
 
 
     @property
-    def any_ref(self)->Optional['OpenApiSpecSchemaProperty']:
+    def any_ref(self)->Optional['OASchemaProperty']:
         """
         Any reference
         """
@@ -167,56 +167,65 @@ class OpenApiSpecSchemaProperty(OpenApiBaseModel):
         return any_types.pop()
 
 
-class Content(OpenApiBaseModel):
-    schema_: Optional[OpenApiSpecSchemaProperty] = None
+class OAContent(OABaseModel):
+    schema_: Optional[OASchemaProperty] = None
     example: Optional[Any] = None
     examples: Optional[Any] = None
+    encoding: Optional[Any] = None
 
 
-class Response(OpenApiBaseModel):
+class OAResponse(OABaseModel):
     description: str
     headers: Optional[dict] = None
-    content: Optional[dict[str, Content]] = Field(default_factory=dict)
+    content: Optional[dict[str, OAContent]] = Field(default_factory=dict)
 
 
-class Operation(OpenApiBaseModel):
+class OAOperation(OABaseModel):
     summary: str
     operation_id: Optional[str] = None
     description: str
-    parameters: Optional[List[Parameter]] = Field(default_factory=list)
-    request_body: Optional[RequestBody] = None
+    parameters: Optional[List[OAParameter]] = Field(default_factory=list)
+    request_body: Optional[OARequestBody] = None
     security: Optional[Any] = None
-    responses: dict[str, Response]
+    responses: dict[str, OAResponse]
     tags: List[str]
     deprecated: Optional[bool] = None
 
+    @property
+    def path_parameters(self) -> List[OAParameter]:
+        return [param for param in self.parameters if param.in_ == 'path']
 
-class OpenApiSpecSchema(OpenApiBaseModel):
+    @property
+    def query_parameters(self) -> List[OAParameter]:
+        return [param for param in self.parameters if param.in_ == 'query']
+
+
+class OASpecSchema(OABaseModel):
     title: Optional[str] = None
     type: Optional[str] = None
     required: Optional[List[str]] = Field(default_factory=list)
-    properties: dict[str, OpenApiSpecSchemaProperty] = Field(default_factory=dict)
+    properties: dict[str, OASchemaProperty] = Field(default_factory=dict)
     # all_of can exist on its own
     all_of: Optional[List[Any]] = None
     # if schema is an enum, then these are the possible values
     enum: Optional[List[Optional[str]]] = None
 
 
-class Components(OpenApiBaseModel):
-    schemas: dict[str, OpenApiSpecSchemaProperty]
-    request_bodies: Optional[dict[str, RequestBody]] = None
+class OAComponents(OABaseModel):
+    schemas: dict[str, OASchemaProperty]
+    request_bodies: Optional[dict[str, OARequestBody]] = None
     security_schemes: Optional[dict[str, Any]] = None
 
 
-class OpenAPISpec(OpenApiBaseModel):
+class OASpec(OABaseModel):
     openapi: str
-    info: Info
-    servers: Optional[List[Server]] = None
-    paths: dict[str, dict[str, Operation]]
-    components: Components
+    info: OAInfo
+    servers: Optional[List[OAServer]] = None
+    paths: dict[str, dict[str, OAOperation]]
+    components: OAComponents
     tags: Optional[List[str]] = None
 
-    def operations(self) -> Generator[tuple[str, str, Operation], None, None]:
+    def operations(self) -> Generator[tuple[str, str, OAOperation], None, None]:
         """
         Generator of operations defined in this API spec
         """
@@ -226,7 +235,7 @@ class OpenAPISpec(OpenApiBaseModel):
                 operation = path_item[method]
                 yield path, method, operation
 
-    def get_schema(self, schema_ref: str) -> OpenApiSpecSchemaProperty:
+    def get_schema(self, schema_ref: str) -> OASchemaProperty:
         """
         Get schema by reference
         """

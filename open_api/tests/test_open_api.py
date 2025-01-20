@@ -15,27 +15,29 @@ import yaml
 from pydantic import ValidationError
 
 from open_api.open_api_class_registry import OpenApiPythonClassRegistry
-from open_api.open_api_model import OpenAPISpec, OpenApiSpecSchemaProperty, Operation
+from open_api.open_api_code_generator import OACodeGenerator
+from open_api.open_api_model import OASpec, OASchemaProperty, OAOperation, OAParameter
 from open_api.open_api_sources import open_api_specs, OpenApiSpecInfo
 
 
-def read_one_spec_from_file(spec: OpenApiSpecInfo) -> OpenAPISpec:
+def read_one_spec_from_file(spec: OpenApiSpecInfo) -> OASpec:
     """
     Read one OpenAPI spec from file
     """
     with open(spec.spec_path) as f:
         data = json.load(f)
-    parsed_spec = OpenAPISpec.model_validate(data)
+    parsed_spec = OASpec.model_validate(data)
     return parsed_spec
 
 
-def descend_into_property(*, spec: OpenAPISpec, prop: OpenApiSpecSchemaProperty, path: str,
-                          call_back: Callable[[OpenApiSpecSchemaProperty, str], None] = None,
+def descend_into_property(*, spec: OASpec, prop: OASchemaProperty, path: str,
+                          call_back: Callable[[OASchemaProperty, str], None] = None,
                           deref: bool = True):
     """
     Descend into a property and call callback for each property
     """
     call_back(prop, path)
+
     def descend_into_ref(ref: str):
         # check reference and descend in referenced schema
         ref_match = re.match(r'^#/components/schemas/(.+)$', ref)
@@ -48,9 +50,10 @@ def descend_into_property(*, spec: OpenAPISpec, prop: OpenApiSpecSchemaProperty,
         if deref:
             descend_into_property(spec=spec, prop=ref_schema, path=f'{path}(ref {ref})', call_back=call_back,
                                   deref=deref)
+
     if prop.ref:
         descend_into_ref(prop.ref)
-    if object_ref:=prop.object_ref:
+    if object_ref := prop.object_ref:
         descend_into_ref(object_ref)
     if prop.any_of:
         for item in prop.any_of:
@@ -88,7 +91,7 @@ class TestParseOpenApi(TestCase):
                 data = json.load(f)
             print(f'Parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
             try:
-                parsed_spec = OpenAPISpec.model_validate(data)
+                parsed_spec = OASpec.model_validate(data)
             except ValidationError as e:
                 err = True
                 print(f'Error parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
@@ -118,7 +121,7 @@ class WithOpenApiSpecInfos(TestCase):
 
 @dataclass(init=False, repr=False)
 class WithParsedOpenApiSpecs(WithOpenApiSpecInfos):
-    parsed_specs: ClassVar[list[OpenAPISpec]]
+    parsed_specs: ClassVar[list[OASpec]]
 
     @classmethod
     def setUpClass(cls):
@@ -154,7 +157,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
     Test assumptions about parsed OpenAPI specs
     """
 
-    def all_schemas(self) -> Generator[tuple[OpenApiSpecInfo, OpenAPISpec, str, OpenApiSpecSchemaProperty], None, None]:
+    def all_schemas(self) -> Generator[tuple[OpenApiSpecInfo, OASpec, str, OASchemaProperty], None, None]:
         """
         Generator of all schemas with api_name and name
         """
@@ -163,7 +166,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                 for name, schema in spec.components.schemas.items():
                     yield spec_info, spec, name, schema
 
-    def all_operations(self) -> Generator[tuple[OpenApiSpecInfo, OpenAPISpec, str, str, Operation], None, None]:
+    def all_operations(self) -> Generator[tuple[OpenApiSpecInfo, OASpec, str, str, OAOperation], None, None]:
         for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
             for path, method, operation in spec.operations():
                 yield spec_info, spec, path, method, operation
@@ -184,7 +187,8 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         Understand schema types that are None
         """
         errs = []
-        def check_none(prop: OpenApiSpecSchemaProperty, path: str):
+
+        def check_none(prop: OASchemaProperty, path: str):
             if prop.any_type is None and not prop.properties and not prop.any_ref and not prop.any_of:
                 if prop.example:
                     # if no explicit type is given, we can infer the type from the example
@@ -195,7 +199,8 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             return
 
         for api_spec_info, spec, name, schema in self.all_schemas():
-            descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}', call_back=check_none, deref=False)
+            descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}',
+                                  call_back=check_none, deref=False)
         if errs:
             print('"None" schemas:')
             print('\n'.join(f'{path}: {prop}' for path, prop in errs))
@@ -241,7 +246,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         wrong formatting in APIB can lead to properties ending up in descriptions
         """
 
-        def check_property(prop: OpenApiSpecSchemaProperty, path: str):
+        def check_property(prop: OASchemaProperty, path: str):
             if prop.description and re.search(r'\s*\+ \S+:', prop.description, re.MULTILINE):
                 print()
                 print(f'{path}: ')
@@ -259,7 +264,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
 
         errors: list[tuple[str, str]] = []
 
-        def check_empty_property(prop: OpenApiSpecSchemaProperty, prop_path: str):
+        def check_empty_property(prop: OASchemaProperty, prop_path: str):
             err = None
             if not prop.model_fields_set:
                 err = 'Empty property'
@@ -289,7 +294,6 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         self.assertTrue(not errors, 'Some responses have empty properties')
         return
 
-
     def test_object_schema_property_types(self):
         """
         Understand types of properties in object schemas
@@ -304,7 +308,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                                      for prop_name, prop in schema.properties.items()),
                                     defaultdict(list))
         properties_by_type: dict[
-            Union[str, None], list[tuple[OpenApiSpecInfo, str, OpenApiSpecSchemaProperty, str, OpenApiSpecSchemaProperty]]]
+            Union[str, None], list[tuple[OpenApiSpecInfo, str, OASchemaProperty, str, OASchemaProperty]]]
         for type_ in sorted(properties_by_type, key=lambda key: len(properties_by_type[key]), reverse=True):
             print()
             print(f'{type_}: {len(properties_by_type[type_])}')
@@ -344,6 +348,53 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             else:
                 raise ValueError(f'Unknown type {type_}')
 
+        return
+
+    def test_operation_parameters(self):
+        """
+        Understand operation parameters
+        """
+        parameters_in: dict[
+            str, list[tuple[OAParameter, OpenApiSpecInfo, OASpec, str, str, OAOperation]]] = defaultdict(list)
+        for api_spec_info, parsed_spec, path, method, operation in self.all_operations():
+            for param in operation.parameters:
+                parameters_in[param.in_].append((param, api_spec_info, parsed_spec, path, method, operation))
+        print(f'Possible values for in: {sorted(parameters_in)}')
+
+        return
+
+    def test_operation_request_content_types(self):
+        """
+        Understand operations request content types
+        """
+        content_types = defaultdict(list)
+        for api_spec_info, parsed_spec, path, method, operation in self.all_operations():
+            if not operation.request_body:
+                continue
+            for content_type, content in operation.request_body.content.items():
+                content_types[content_type].append((content, api_spec_info, parsed_spec, path, method, operation))
+        foo = 1
+        return
+
+    def test_operation_request_body_content(self):
+        """
+        Understand operations request body content
+        """
+        err = False
+        for api_spec_info, parsed_spec, path, method, operation in self.all_operations():
+            if not operation.request_body:
+                continue
+            for content_type, content in operation.request_body.content.items():
+                content_schema = content.schema_
+                self.assertIsNotNone(content_schema, 'Missing schema')
+                # schema has a ref or a type
+                if not content_schema.ref and not content_schema.object_ref and not content_schema.type:
+                    print(f'{api_spec_info.rel_spec_path}: {path} {method.upper()} has no type or ref')
+                    err = True
+                    continue
+        self.assertFalse(err)
+        return
+
 
 class TestPythonClassRegistry(TestCase):
     """
@@ -358,5 +409,23 @@ class TestPythonClassRegistry(TestCase):
                 continue
             registry.add_open_api(spec)
             break
+        foo = 1
+        registry.normalize()
 
-    foo = 1
+
+class TestCodeGenerator(TestCase):
+    """
+    Test CodeGenerator
+    """
+
+    def test_read_spec_and_create_source(self):
+        code_gen = OACodeGenerator()
+        # test with the call-routing spec
+        for spec in open_api_specs():
+            if spec.api_name != 'call-routing':
+                continue
+            code_gen.add_open_api_spec(spec)
+            break
+        code_gen.cleanup()
+        source = code_gen.source()
+        print(source)

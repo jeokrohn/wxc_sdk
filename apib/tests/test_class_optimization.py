@@ -15,7 +15,8 @@ from os.path import commonprefix
 from typing import NamedTuple
 
 from apib.generator import CodeGenerator
-from apib.python_class import PythonClass, PythonClassRegistry, Endpoint
+from apib.python_class import PythonClass, Endpoint
+from apib.class_registry import PythonClassRegistry
 from apib.tests.test_generator import GeneratorTest
 from apib.tools import snake_case
 

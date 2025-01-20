@@ -2,27 +2,26 @@ import re
 from collections.abc import Generator, Iterator, Iterable
 
 __all__ = ['break_line', 'remove_links', 'sanitize_class_name', 'remove_html_comments', 'snake_case', 'words_to_camel',
-           'lines_for_docstring', 'remove_div']
+           'lines_for_docstring', 'remove_div', 'simple_python_type', 'cap_first']
 
 from itertools import chain, repeat
 
 from re import Match
 
-from typing import Optional
+from typing import Optional, Any
 from urllib.parse import urljoin
 
 from html2text import html2text
 
+
+def cap_first(s: str) -> str:
+    return f'{s[0].upper()}{s[1:]}'
 
 def words_to_camel(s: str) -> str:
     """
     Generate a camel case Python name from multi-word input string
     Example: 'User name' --> 'UserName'
     """
-
-    def cap_first(s: str) -> str:
-        return f'{s[0].upper()}{s[1:]}'
-
     r = ''.join(cap_first(w) for w in s.split())
     r, _ = re.subn(r'\W', '', r)
     return r
@@ -55,6 +54,9 @@ def sanitize_class_name(class_name: Optional[str]) -> str:
     class_name_match = re.match(r'^(.+%)(.+)', class_name)
     if class_name_match:
         class_name = class_name_match.group(2)
+
+    # move from snake case to camel case
+    class_name, _ = re.subn(r'_\w', lambda m: m.group(0)[1].upper(), class_name)
 
     # remove non-word characters
     class_name, _ = re.subn(r'\W', '', class_name)
@@ -247,3 +249,21 @@ def lines_for_docstring(docstring: str, text_prefix_for_1st_line: str = '', inde
                                                                              repeat((indent_first_line,
                                                                                      indent_first_line)
                                                                                     ))))
+
+
+def simple_python_type(type_hint: str, value: Any = None) -> str:
+    if type_hint == 'string':
+        return 'str'
+    elif type_hint == 'number':
+        # could be float or int
+        if value is not None:
+            try:
+                float(value)
+            except ValueError:
+                return 'int'
+            return 'float'
+        return 'int'
+    elif type_hint == 'boolean':
+        return 'bool'
+    else:
+        raise ValueError(f'unexpected simple type: {type_hint}')
