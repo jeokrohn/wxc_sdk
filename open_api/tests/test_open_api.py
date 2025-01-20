@@ -257,6 +257,39 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}',
                                   call_back=check_property)
 
+    def test_valid_schemas(self):
+        """
+        Check schema validity
+        """
+        print()
+        errors = []
+
+        def err(si: OpenApiSpecInfo, name: str, schema: OASchemaProperty, msg: str):
+            errors.append((si, name, schema))
+            print(f'{si.api_name} {name} {msg} {si.rel_spec_path} {schema}')
+
+        for api_spec_info, spec, name, schema in self.all_schemas():
+            if schema.type == 'array':
+                if not schema.items:
+                    errors.append((api_spec_info, name, schema))
+                    err(api_spec_info, name, schema, 'array has no items')
+                continue
+            if schema.type in {'string', 'number', 'integer', 'boolean'}:
+                # simple types are ok
+                continue
+            if schema.ref or schema.object_ref:
+                # reference to another schema
+                continue
+            if schema.type == 'object':
+                if not schema.properties:
+                    err(api_spec_info, name, schema, 'object has no properties')
+                continue
+            if schema.properties:
+                continue
+            err(api_spec_info, name, schema, 'unknown error')
+        self.assertTrue(not errors, 'Some schemas have no properties')
+        return
+
     def test_find_broken_responses(self):
         """
         Some responses don't have properties
@@ -429,3 +462,23 @@ class TestCodeGenerator(TestCase):
         code_gen.cleanup()
         source = code_gen.source()
         print(source)
+
+    def test_create_all_sources(self):
+        """
+        Try to create source for all OpenAPI specs
+        """
+        err = None
+        for spec in open_api_specs():
+            if spec.api_name != 'location-call-settings':
+                continue
+            try:
+                code_gen = OACodeGenerator()
+                code_gen.add_open_api_spec(spec)
+                code_gen.cleanup()
+                code_gen.source()
+            except Exception as e:
+                print(f'Error creating source for {spec.api_name} {spec.version} {spec.spec_path}')
+                print(f'    {e}')
+                err = err or e
+        if err:
+            raise err

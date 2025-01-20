@@ -18,3 +18,8 @@ class OACodeGenerator(CodeGenerator):
 
     def add_open_api_spec(self, spec_info: OpenApiSpecInfo):
         self.class_registry.add_open_api(spec_info)
+
+
+    def add_open_api_spec_from_path(self, spec_path: str):
+        spec_info = OpenApiSpecInfo.from_spec_json_path(spec_path)
+        self.add_open_api_spec(spec_info)

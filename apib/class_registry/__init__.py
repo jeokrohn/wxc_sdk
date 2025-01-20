@@ -350,7 +350,10 @@ class PythonClassRegistry:
 
         def attribute_key(pc: PythonClass) -> str:
             # concatenation of sorted attribute names ...
-            key = '/'.join(sorted(attr.name for attr in pc.attributes))
+            try:
+                key = '/'.join(sorted(str(attr.name) for attr in pc.attributes))
+            except TypeError:
+                raise
             # ... with leading enum indication
             return f'{pc.is_enum}/{key}'
 
@@ -539,7 +542,14 @@ class PythonClassRegistry:
 
             # result class
             if endpoint.result_referenced_class:
-                python_name = qualident_to_python_name[endpoint.result_referenced_class]
+                try:
+                    python_name = qualident_to_python_name[endpoint.result_referenced_class]
+                except KeyError:
+                    err_txt = (f'"{endpoint.result_referenced_class}" not found in qualident_to_python_name '
+                              f'endpoint: {endpoint.name}')
+                    log.error(err_txt)
+                    raise KeyError(err_txt)
+
                 python_name, _ = self._dereferenced_class(python_name)
                 endpoint.result = endpoint.result.replace(endpoint.result_referenced_class,
                                                           python_name)

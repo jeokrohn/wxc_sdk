@@ -2,6 +2,7 @@
 Python class registry for OpenAPI schema; derived from PythonClassRegistry; used for code creation
 """
 import json
+import logging
 import re
 from typing import Optional
 
@@ -10,6 +11,8 @@ from apib.class_registry import PythonClassRegistry
 from apib.tools import sanitize_class_name, snake_case
 from open_api.open_api_model import OASpec, OASchemaProperty, OAOperation, OAContent
 from open_api.open_api_sources import OpenApiSpecInfo
+
+log = logging.getLogger(__name__)
 
 
 def class_name_from_schema_name(schema_name: str) -> str:
@@ -77,7 +80,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             # and use that as the type
             # create class for array
             array_class_name = sanitize_class_name(f'{name}{sanitize_class_name(prop_name)}')
-            schema_type, referenced_class = self._add_or_get_type_for_property(prop.items, array_class_name)
+            schema_type, referenced_class = self._add_or_get_type_for_property(prop.items, array_class_name, 'item')
             python_type = f'list[{self._schema_type_to_python_type(schema_type)}]'
             referenced_class = self._class_reference(referenced_class)
             if referenced_class:
@@ -94,8 +97,22 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             object_class_name = self.qualified_class_name(object_class_name)
             self._add_object_schema(object_class_name, prop)
             return object_class_name, object_class_name
+        elif any_type := prop.any_type:
+            """
+            property has any_of and types of all options are identical
+            """
+            if self._is_simple_type(any_type):
+                any_type = self._schema_type_to_python_type(any_type)
+                return any_type, None
+            else:
+                raise NotImplementedError(f'any_type {any_type}, need to figure out how to handle non-simple types')
+        elif not prop.model_fields_set:
+            # This is an empty property
+            # for code generation we will use 'Any' as the type
+            log.warning(f'Empty property {prop_name} in {name}')
+            return 'Any', None
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f'Need to handle property {prop_name} in {name}: {prop}')
 
     def _class_reference(self, schema_type: str) -> Optional[str]:
         if self._is_simple_type(schema_type):
@@ -218,19 +235,20 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
         response_ct, response_content = next(iter(response.content.items()), (None, None))
         if not (response_ct and response_content):
+            if response_code == '200':
+                log.warning(f'No content in 200 response for {endpoint_name}')
             response_body = None
             result = None
             result_referenced_class = None
-            if response_code != '204':
-                raise ValueError(f'unexpected response code {response_code}')
+            if response_code not in {'204', '201', '202', '200'}:
+                raise ValueError(f'unexpected response code {response_code} for {endpoint_name}')
         else:
             response_content: OAContent
             # response body is an example
             response_body = response_content.example
             response_schema = response_content.schema_
-            result, result_referenced_class = self._add_or_get_type_for_property(response_schema, 'Response',
-                                                                                 prop_name=endpoint_name)
-            print(f'endpoint {endpoint_name} referenced {result_referenced_class}')
+            result, result_referenced_class = self._add_or_get_type_for_property(response_schema, endpoint_name,
+                                                                                 prop_name='Response')
 
         endpoint = Endpoint(name=endpoint_name, method=method, host=host, url=url,
                             title=title, docstring=docstring, href_parameter=href_parameter,
