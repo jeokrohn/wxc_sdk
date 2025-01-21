@@ -20,6 +20,7 @@ CLI tool to generate Python source from OpenApi specs
 """
 import argparse
 import glob
+import logging
 import os
 import re
 import sys
@@ -33,6 +34,7 @@ from open_api.open_api_code_generator import OACodeGenerator
 
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     env_path = f'{os.path.splitext(__file__)[0]}.env'
     load_dotenv(env_path)
 

@@ -2,6 +2,7 @@
 Tests for OpenAPI specs
 """
 import json
+import logging
 import os
 import re
 from collections import Counter, defaultdict
@@ -451,6 +452,12 @@ class TestCodeGenerator(TestCase):
     Test CodeGenerator
     """
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        logging.basicConfig(level=logging.DEBUG)
+        logging.getLogger('open_api').setLevel(logging.DEBUG)
+
     def test_read_spec_and_create_source(self):
         code_gen = OACodeGenerator()
         # test with the call-routing spec
@@ -469,8 +476,8 @@ class TestCodeGenerator(TestCase):
         """
         err = None
         for spec in open_api_specs():
-            if spec.api_name != 'location-call-settings':
-                continue
+            # if spec.api_name != 'dial-number':
+            #     continue
             try:
                 code_gen = OACodeGenerator()
                 code_gen.add_open_api_spec(spec)
