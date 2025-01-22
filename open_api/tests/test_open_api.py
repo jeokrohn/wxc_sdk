@@ -32,14 +32,14 @@ def read_one_spec_from_file(spec: OpenApiSpecInfo) -> OASpec:
 
 
 def descend_into_property(*, spec: OASpec, prop: OASchemaProperty, path: str,
-                          call_back: Callable[[OASchemaProperty, str], None] = None,
-                          deref: bool = True):
+                          call_back: Callable[[OASchemaProperty, str], bool] = None,
+                          deref: bool = True) -> bool:
     """
     Descend into a property and call callback for each property
     """
-    call_back(prop, path)
+    r = call_back(prop, path)
 
-    def descend_into_ref(ref: str):
+    def descend_into_ref(ref: str) -> bool:
         # check reference and descend in referenced schema
         ref_match = re.match(r'^#/components/schemas/(.+)$', ref)
         if ref_match is None:
@@ -49,24 +49,27 @@ def descend_into_property(*, spec: OASpec, prop: OASchemaProperty, path: str,
         if ref_schema is None:
             raise ValueError(f'Unknown reference {ref}')
         if deref:
-            descend_into_property(spec=spec, prop=ref_schema, path=f'{path}(ref {ref})', call_back=call_back,
-                                  deref=deref)
+            return descend_into_property(spec=spec, prop=ref_schema, path=f'{path}(ref {ref})', call_back=call_back,
+                                         deref=deref)
+        return False
 
     if prop.ref:
-        descend_into_ref(prop.ref)
+        r = r or descend_into_ref(prop.ref)
     if object_ref := prop.object_ref:
-        descend_into_ref(object_ref)
+        r = r or descend_into_ref(object_ref)
     if prop.any_of:
         for item in prop.any_of:
-            descend_into_property(spec=spec, prop=item, path=f'{path}.any_of', call_back=call_back, deref=deref)
+            r = r or descend_into_property(spec=spec, prop=item, path=f'{path}.any_of', call_back=call_back,
+                                           deref=deref)
     if prop.items:
         # this is an array
         assert prop.type == 'array'
-        descend_into_property(spec=spec, prop=prop.items, path=f'{path}[]', call_back=call_back, deref=deref)
+        r = r or descend_into_property(spec=spec, prop=prop.items, path=f'{path}[]', call_back=call_back, deref=deref)
     if prop.properties:
         for name, prop_prop in prop.properties.items():
-            descend_into_property(spec=spec, prop=prop_prop, path=f'{path}.{name}', call_back=call_back, deref=deref)
-    return
+            r = r or descend_into_property(spec=spec, prop=prop_prop, path=f'{path}.{name}', call_back=call_back,
+                                           deref=deref)
+    return r
 
 
 class TestOpenApiSpecs(TestCase):
@@ -298,27 +301,37 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
 
         errors: list[tuple[str, str]] = []
 
-        def check_empty_property(prop: OASchemaProperty, prop_path: str):
+        def check_empty_property(prop: OASchemaProperty, prop_path: str) -> bool:
             err = None
             if not prop.model_fields_set:
                 err = 'Empty property'
             if err:
                 errors.append((prop_path, err))
                 print(f'{prop_path}: {err}')
-            return
+                return True
+            return False
 
+        print()
+        previous_spec_info = None
+        err_in_spec = False
         for api_spec_info, parsed_spec, path, method, operation in self.all_operations():
+            if previous_spec_info != api_spec_info and err_in_spec:
+                print()
+                err_in_spec = False
+            previous_spec_info = api_spec_info
             for code, response in operation.responses.items():
                 if response.content:
                     for content_type, content in response.content.items():
                         ct_path = f'{api_spec_info.rel_spec_path}: {path} {method.upper()}->{code}'
                         if content.schema_:
-                            descend_into_property(spec=parsed_spec, prop=content.schema_, path=ct_path,
-                                                  call_back=check_empty_property)
+                            err_in_spec = err_in_spec or descend_into_property(spec=parsed_spec,
+                                                                               prop=content.schema_, path=ct_path,
+                                                                               call_back=check_empty_property)
                         else:
                             err_str = f'no schema, {content=}'
                             print(f'{ct_path}: {err_str}')
                             errors.append((ct_path, err_str))
+                            err_in_spec = True
                         # if
                     # for
                 # if
@@ -474,6 +487,7 @@ class TestCodeGenerator(TestCase):
         """
         Try to create source for all OpenAPI specs
         """
+        print()
         err = None
         for spec in open_api_specs():
             # if spec.api_name != 'dial-number':
