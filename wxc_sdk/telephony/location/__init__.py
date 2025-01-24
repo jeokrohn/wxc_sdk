@@ -57,27 +57,31 @@ class TelephonyLocation(ApiModel):
     calling_line_id: Optional[CallingLineId] = None
     #: Connection details are only returned for local PSTN types of TRUNK or ROUTE_GROUP.
     connection: Optional[PSTNConnection] = None
+    #: PSTN connection ID given for locations with a PSTN subscription.
+    subscription_id: Optional[str] = None
     #: External Caller ID Name value. Unicode characters.
     external_caller_id_name: Optional[str] = None
     #: Limit on the number of people at the location, Read-Only.
     user_limit: Optional[int] = None
-    #: Location Identifier.
+    #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to
+    #: the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish
+    #: the location of a device when you make an emergency call.
     p_access_network_info: Optional[str] = None
     #: Must dial to reach an outside line, default is None.
     outside_dial_digit: Optional[str] = None
+    #: True when enforcing outside dial digit at location level to make PSTN calls.
+    enforce_outside_dial_digit: Optional[bool] = None
     #: Must dial a prefix when calling between locations having same extension within same location.
     routing_prefix: Optional[str] = None
+    #: IP Address, hostname, or domain. Read-Only.
+    default_domain: Optional[str] = None
     #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
     #: include a P-Charge-Info header with the selected number in the SIP INVITE.
     charge_number: Optional[str] = None
-    #: IP Address, hostname, or domain, Read-Only
-    default_domain: Optional[str] = None
     #: True if E911 setup is required.
     e911_setup_required: Optional[bool] = None
-    #: True when enforcing outside dial digit at location level to make PSTN calls.
-    enforce_outside_dial_digit: Optional[bool] = None
-    # TODO: undocumented
-    subscription_id: Optional[str] = None
+    #: TODO: undocumented
+    charge_number_usage_enabled: Optional[bool] = None
     # TODO: undocumented, item 169
     carrier_account_id: Optional[str] = None
 
