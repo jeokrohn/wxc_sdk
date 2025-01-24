@@ -354,15 +354,19 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
-          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
+        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_, `available numbers
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
-        * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
-          required.
-          Furthermore, it is possible to set the licenses field with a list of Webex Calling license IDs, if desired.
-          If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are supplied,
-          the oldest suitable one from the active subscriptions will be automatically applied.
+        * When creating a `webexCalling` workspace that is not hot desk only, a `locationId` and either a `phoneNumber`
+          or `extension` or both is required. Furthermore, it is possible to set the `licenses` field with a list of
+          Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be
+          applied. If no licenses are supplied, the oldest suitable one from the active subscriptions will be
+          automaticaly applied.
+
+        * When creating a hot desk only workspace, `phoneNumber` and `extension` fields are not applicable.
+          Furthermore, `deviceHostedMeetingsEnabled`, and `calendar` services are not applicable. If any of these fields
+           are provided the API will return an error. The `calling` type is `webexCalling`.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -396,18 +400,19 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
     def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
+        Update a Workspace
+
         Updates details for a workspace by ID.
 
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
-        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional
-        `capacity`, `type` or
+        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
         `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
         provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.
 
         * Information for Webex Calling fields may be found here: `locations
-          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
+        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
 
         * Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`,
           `thirdPartySipCalling` or `webexCalling`.
@@ -417,12 +422,17 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
-        * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
-          required.
-          Furthermore, the licenses field can be set with a list of Webex Calling license IDs, if desired. If
-          multiple license IDs are provided, the oldest suitable one will be applied. If a previously applied license
-          ID is omitted, it will be replaced with one from the list provided. If the licenses field is omitted,
-          the current calling license will be retained.
+        * When updating `webexCalling` information on a workspace that is not hot desk only, a `locationId` and either
+          a `phoneNumber` or `extension` or both is required. Furthermore, the `licenses` field can be set with a list
+          of Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will
+          be applied. If a previously applied license ID is omitted, it will be replaced with one from the list
+          provided. If the `licenses` field is omitted, the current calling license will be retained.
+
+        * When specifying a hot desk only license on a hot desk only workspace, `deviceHostedMeetingsEnabled`, and
+          `calendar` services are not supported and will be automatically disabled. In addition to this, the
+          `phoneNumber` and `extension` will be removed from the workspace. Attempting to enable any of these services,
+          or provide a `phoneNumber` or `extension` will result in an error. The `calling` type for these requests is
+          `webexCalling`.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
