@@ -171,15 +171,15 @@ class StartJobResponse(ApiModel):
 
 class NumberState(str, Enum):
     #: The phone number is available.
-    available = 'AVAILABLE'
+    available = 'Available'
     #: Duplicate phone number.
-    duplicate = 'DUPLICATE'
+    duplicate = 'Duplicate'
     #: Duplicate phone number in the list.
-    duplicateinlist = 'DUPLICATEINLIST'
+    duplicate_in_list = 'Duplicate In List'
     #: The phone number is invalid.
-    invalid = 'INVALID'
+    invalid = 'Invalid'
     #: The phone number is unavailable and cannot be used.
-    unavailable = 'UNAVAILABLE'
+    unavailable = 'Unavailable'
 
 
 class Number(ApiModel):
@@ -234,8 +234,8 @@ class NumberOwnerType(str, Enum):
     auto_attendant = 'AUTO_ATTENDANT'
     #: The PSTN phone number's owner is a call queue.
     call_queue = 'CALL_QUEUE'
-    #: The PSTN phone number's owner is a group paging.
-    group_paging = 'GROUP_PAGING'
+    #: The PSTN phone number's owner is a paging group.
+    paging_group = 'PAGING_GROUP'
     #: The PSTN phone number's owner is a hunt group.
     hunt_group = 'HUNT_GROUP'
     #: The PSTN phone number's owner is a voice messaging.
@@ -392,7 +392,7 @@ class GetPhoneNumbersForAnOrganizationWithGivenCriteriaOwnerType(str, Enum):
     place = 'PLACE'
     auto_attendant = 'AUTO_ATTENDANT'
     call_queue = 'CALL_QUEUE'
-    group_paging = 'GROUP_PAGING'
+    paging_group = 'PAGING_GROUP'
     hunt_group = 'HUNT_GROUP'
     voice_messaging = 'VOICE_MESSAGING'
     broadworks_anywhere = 'BROADWORKS_ANYWHERE'
