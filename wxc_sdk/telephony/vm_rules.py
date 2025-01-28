@@ -25,11 +25,11 @@ class BlockContiguousSequences(ApiModel):
     """
     Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     """
-    #: If enabled, passcode should not contain a numerical sequence.
+    #: If enabled, do not allow the specified number of ascending or descending digits in a row.
     enabled: Optional[bool] = None
-    #: Number of ascending digits in sequence. Min 2, Max 5.
+    #: Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
     number_of_ascending_digits: Optional[int] = None
-    #: Number of descending digits in sequence. Min 2, Max 5.
+    #: Number of descending digits in sequence. The minimum value is 2. The maximum value is 5.
     number_of_descending_digits: Optional[int] = None
 
 
@@ -37,9 +37,9 @@ class PinLength(ApiModel):
     """
     Length of the passcode.
     """
-    #: Min 2, Max 15.
+    #: The minimum value is 2. The maximum value is 15.
     min: Optional[int] = None
-    #: Min 3, Max 30.
+    #: The minimum value is 3. The maximum value is 30.
     max: Optional[int] = None
 
 

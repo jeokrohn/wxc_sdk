@@ -16,7 +16,9 @@ __all__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEm
            'GetLocationVoicemailGroupObjectMessageStorage',
            'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications',
            'GetVoicePortalObject', 'GetVoicePortalPasscodeRuleObject',
-           'GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes', 'GetVoicePortalPasscodeRuleObjectExpirePasscode',
+           'GetVoicePortalPasscodeRuleObjectBlockContiguousSequences',
+           'GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes',
+           'GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits', 'GetVoicePortalPasscodeRuleObjectExpirePasscode',
            'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicePortalPasscodeRuleObjectLength',
            'GetVoicemailGroupObject', 'LocationCallSettingsVoicemailApi', 'PutVoicePortalObjectPasscode', 'STATE',
            'TelephonyType', 'VoicePortalAvailableNumberObject']
@@ -186,6 +188,28 @@ class GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes(ApiModel):
     number_of_passcodes: Optional[int] = None
 
 
+class GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits(ApiModel):
+    #: If enabled, passcode should not contain repeated digits.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Maximum number of digits to be considered as a repeated sequence. The minimum value is 1. The maximum value is
+    #: 6.
+    #: example: 3
+    max_: Optional[int] = None
+
+
+class GetVoicePortalPasscodeRuleObjectBlockContiguousSequences(ApiModel):
+    #: If enabled, do not allow the specified number of ascending or descending digits in a row.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
+    #: example: 3
+    number_of_ascending_digits: Optional[int] = None
+    #: Number of descending digits in sequence. The minimum value is 2. The maximum value is 5.
+    #: example: 3
+    number_of_descending_digits: Optional[int] = None
+
+
 class GetVoicePortalPasscodeRuleObjectLength(ApiModel):
     #: The minimum value is 2. The maximum value is 15.
     #: example: 3
@@ -204,20 +228,9 @@ class GetVoicePortalPasscodeRuleObject(ApiModel):
     block_previous_passcodes: Optional[GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes] = None
     #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
     #: 408408).
-    #: 
-    #: + enabled: true (boolean) - If enabled, passcode should not contain repeated digits.
-    #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1.
-    #: The maximum value is 6.
-    block_repeated_digits: Optional[Any] = None
+    block_repeated_digits: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
-    #: 
-    #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a
-    #: row.
-    #: + numberOfAscendingDigits: `3` (number) -  Number of ascending digits in sequence. The minimum value is 2. The
-    #: maximum value is 5.
-    #: + numberOfDescendingDigits: `3` (number) -  Number of descending digits in sequence. The minimum value is 2. The
-    #: maximum value is 5.
-    block_contiguous_sequences: Optional[Any] = None
+    block_contiguous_sequences: Optional[GetVoicePortalPasscodeRuleObjectBlockContiguousSequences] = None
     #: Allowed length of the passcode.
     length: Optional[GetVoicePortalPasscodeRuleObjectLength] = None
     #: If enabled, the passcode do not contain repeated pattern.
