@@ -24,8 +24,8 @@ class SafeEnum(Enum):
     """
     A replacement for the standard Enum class which allows dynamic enhancements of enums
     """
-    if 'unittest' in sys.modules or 'pytest' in sys.modules:
-        # if run as unit test then don't allow dynamic extension of enum
+    if os.getenv('API_MODEL_ALLOW_EXTRA', 'allow') != 'allow':
+        # don't allow dynamic extension of enum
         @classmethod
         def _missing_(cls, value):
             return None
