@@ -89,7 +89,7 @@ class GuestManagementApi(ApiChild, base='guests'):
         url = self.ep('token')
         data = super().post(url, json=body)
         guest = Guest.model_validate(data)
-        now = datetime.utcnow().replace(tzinfo=pytz.UTC)
+        now = datetime.now(pytz.UTC)
         if not guest.expires_at and guest.expires_in:
             delta = timedelta(seconds=guest.expires_in)
             guest.expires_at = now + delta
