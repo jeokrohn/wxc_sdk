@@ -842,8 +842,15 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         """
         Validate the List of Extensions
 
-        Validate the List of Extensions. Retrieving this list requires a full or read-only administrator auth token
-        with a scope of spark-admin:telephony_config_read.
+        Validates the list of Extensions provided by the customer at the organization level. It checks the extension
+        meets the current extension length limits and does not conflict with the extensions of organization-level
+        entities and settings. To check for extension use across all locations, use the `Get Phone Numbers
+        <https://developer.webex.com/v1/telephony/config/numbers>`_ API. To
+        validate an extension and check for conflicts for a specific location, use the `Validate Extensions
+        <https://developer.webex.com/docs/api/v1/location-call-settings/validate-extensions>`_ API.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
 
         :param extensions: Array of Strings of ID of Extensions.
         :type extensions: list[str]

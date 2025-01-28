@@ -1077,6 +1077,10 @@ The method name is a link to the method documentation.
         Get Location Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.location.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
+   * - :meth:`api.telephony.location.create_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.create_receptionist_contact_directory>`
+        Create a Receptionist Contact Directory
+   * - :meth:`api.telephony.location.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`
+        Delete a Receptionist Contact Directory
    * - :meth:`api.telephony.location.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`
         Shows Webex Calling details for a location, by ID
    * - :meth:`api.telephony.location.device_settings <wxc_sdk.telephony.location.TelephonyLocationApi.device_settings>`
@@ -1084,19 +1088,25 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.ecbn_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.ecbn_available_phone_numbers>`
         Get Location ECBN Available Phone Numbers
    * - :meth:`api.telephony.location.enable_for_calling <wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling>`
-        Enable a location by adding it to Webex Calling
+        Enable a Location for Webex Calling
    * - :meth:`api.telephony.location.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
         Generates an example password using the effective password settings for the location
    * - :meth:`api.telephony.location.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
-        Lists Webex Calling locations for an organization with Webex Calling details
+        List Locations Webex Calling Details
+   * - :meth:`api.telephony.location.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
+        Read list of Receptionist Contact Directories
+   * - :meth:`api.telephony.location.modify_a_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_a_receptionist_contact_directory>`
+        Modify a Receptionist Contact Directory
    * - :meth:`api.telephony.location.phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers>`
         Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.location.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
         Get the List of Phone Numbers Available for External Caller ID
    * - :meth:`api.telephony.location.read_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.read_ecbn>`
         Get a Location Emergency callback number
+   * - :meth:`api.telephony.location.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
+        Get details for a Receptionist Contact Directory
    * - :meth:`api.telephony.location.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
-        Update Webex Calling details for a location, by ID
+        Update Location Webex Calling Details
    * - :meth:`api.telephony.location.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
         Update a Location Emergency callback number
    * - :meth:`api.telephony.location.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
@@ -1141,6 +1151,10 @@ The method name is a link to the method documentation.
         Get Location Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.locations.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
+   * - :meth:`api.telephony.locations.create_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.create_receptionist_contact_directory>`
+        Create a Receptionist Contact Directory
+   * - :meth:`api.telephony.locations.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`
+        Delete a Receptionist Contact Directory
    * - :meth:`api.telephony.locations.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`
         Shows Webex Calling details for a location, by ID
    * - :meth:`api.telephony.locations.device_settings <wxc_sdk.telephony.location.TelephonyLocationApi.device_settings>`
@@ -1148,19 +1162,25 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.ecbn_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.ecbn_available_phone_numbers>`
         Get Location ECBN Available Phone Numbers
    * - :meth:`api.telephony.locations.enable_for_calling <wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling>`
-        Enable a location by adding it to Webex Calling
+        Enable a Location for Webex Calling
    * - :meth:`api.telephony.locations.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
         Generates an example password using the effective password settings for the location
    * - :meth:`api.telephony.locations.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
-        Lists Webex Calling locations for an organization with Webex Calling details
+        List Locations Webex Calling Details
+   * - :meth:`api.telephony.locations.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
+        Read list of Receptionist Contact Directories
+   * - :meth:`api.telephony.locations.modify_a_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_a_receptionist_contact_directory>`
+        Modify a Receptionist Contact Directory
    * - :meth:`api.telephony.locations.phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers>`
         Get Available Phone Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.locations.phone_numbers_available_for_external_caller_id <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers_available_for_external_caller_id>`
         Get the List of Phone Numbers Available for External Caller ID
    * - :meth:`api.telephony.locations.read_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.read_ecbn>`
         Get a Location Emergency callback number
+   * - :meth:`api.telephony.locations.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
+        Get details for a Receptionist Contact Directory
    * - :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
-        Update Webex Calling details for a location, by ID
+        Update Location Webex Calling Details
    * - :meth:`api.telephony.locations.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
         Update a Location Emergency callback number
    * - :meth:`api.telephony.locations.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`

@@ -17821,8 +17821,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
         Generates and enables a 16-character DECT serviceability password.
 
-        <div><Callout type="warning">Generating a password and transmitting it to the DECT network can reboot the
-        entire network. Be sure you choose an appropriate time to generate a new password.</Callout></div>
+        Generating a password and transmitting it to the DECT network can reboot the
+        entire network. Be sure you choose an appropriate time to generate a new password.
 
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
@@ -17854,8 +17854,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
         Retrieves the DECT serviceability password status.
 
-        <div><Callout type="info">If the serviceability password is enabled but has not been generated, the `enabled`
-        status will be returned as `true` even though there is no active serviceability password.</Callout></div>
+        If the serviceability password is enabled but has not been generated, the `enabled`
+        status will be returned as `true` even though there is no active serviceability password.
 
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
@@ -17887,11 +17887,11 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
         Enables or disables the DECT serviceability password.
 
-        <div><Callout type="warning">Enabling or disabling the password and transmitting it to the DECT network can
-        reboot the entire network. Be sure you choose an appropriate time for this action.</Callout></div>
+        Enabling or disabling the password and transmitting it to the DECT network can
+        reboot the entire network. Be sure you choose an appropriate time for this action.
 
-        <div><Callout type="info">If enabling is requested, but the serviceability password has not been generated, we
-        will not actively reject the request even though there is no serviceability password.</Callout></div>
+        If enabling is requested, but the serviceability password has not been generated, we
+        will not actively reject the request even though there is no serviceability password.
 
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
@@ -24395,12 +24395,14 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     async def enable_for_calling(self, location: Location, org_id: str = None) -> str:
         """
-        Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created
-        using the POST /v1/locations API.
+        Enable a Location for Webex Calling
+
+        Enable a location by adding it to Webex Calling. This add Webex Calling support to a
+        location created using the POST /v1/locations API.
 
         Locations are used to support calling features which can be defined at the location level.
 
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :return: A unique identifier for the location.
         :rtype: str
@@ -24413,10 +24415,13 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     def list_gen(self, name: str = None, order: str = None, org_id: str = None) -> AsyncGenerator[TelephonyLocation, None, None]:
         """
+        List Locations Webex Calling Details
+
         Lists Webex Calling locations for an organization with Webex Calling details.
 
-        Searching and viewing locations with Webex Calling details in your organization require an administrator auth
-        token with the spark-admin:telephony_config_read scope.
+        Searching and viewing locations with Webex Calling details in your
+        organization require an administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
 
         :param name: List locations whose name contains this string.
         :type name: str
@@ -24434,10 +24439,13 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     async def list(self, name: str = None, order: str = None, org_id: str = None) -> List[TelephonyLocation]:
         """
+        List Locations Webex Calling Details
+
         Lists Webex Calling locations for an organization with Webex Calling details.
 
-        Searching and viewing locations with Webex Calling details in your organization require an administrator auth
-        token with the spark-admin:telephony_config_read scope.
+        Searching and viewing locations with Webex Calling details in your
+        organization require an administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
 
         :param name: List locations whose name contains this string.
         :type name: str
@@ -24455,14 +24463,16 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None) -> Optional[str]:
         """
+         Update Location Webex Calling Details
+
         Update Webex Calling details for a location, by ID.
 
-        Specify the location ID in the locationId parameter in the URI.
+        Specifies the location ID in the `locationId` parameter in the URI.
 
-        Modifying the connection via API is only supported for the local PSTN types of TRUNK and ROUTE_GROUP.
+        Modifying the `connection` via API is only supported for the local PSTN types of `TRUNK` and `ROUTE_GROUP`.
 
-        Updating a location in your organization requires an administrator auth token with
-        the spark-admin:telephony_config_write scope.
+        Updating a location in your organization requires an administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         Example :
 
@@ -24601,16 +24611,20 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     def phone_numbers_available_for_external_caller_id_gen(self, location_id: str,
                                                        phone_number: List[str] = None,
-                                                       owner_name: str = None, org_id: str = None,
+                                                       owner_name: str = None, person_id: str = None,
+                                                       org_id: str = None,
                                                        **params) -> AsyncGenerator[AvailableNumber, None, None]:
         """
         Get the List of Phone Numbers Available for External Caller ID
 
-        Get the list of phone numbers available for external caller ID usage by a Webex Calling entity (such as a user,
-        virtual line, or workspace) within the specified location.
+        Get the list of phone numbers available for external caller ID usage by a Webex Calling entity (such as a
+        person, virtual line, or workspace) within the specified location.
         Numbers from the specified location are returned and cross location numbers are returned as well where the
         number's location has the same country, PSTN provider, and zone (only applicable for India locations) as the
         specified location.
+        When `personId` is specified, and the person belongs to a cisco PSTN location, has a mobile number assigned as
+        primary DN, and does not have a billing plan, only the assigned mobile number is returned as the available
+        number for caller ID.
 
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
@@ -24625,6 +24639,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
             255.
         :type owner_name: str
+        :param person_id: Retrieve available external caller ID numbers for this person. If `personId` is not provided
+            it may result in the unsuccessful assignment of the returned number. This parameter has no effect when
+            workspace or virtual line ID is used.
+        :type person_id: str
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: Generator yielding :class:`AvailableNumber` instances
@@ -24635,21 +24653,27 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
             params['phoneNumber'] = ','.join(phone_number)
         if owner_name is not None:
             params['ownerName'] = owner_name
+        if person_id is not None:
+            params['personId'] = person_id
         url = self.ep(f'{location_id}/externalCallerId/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
     async def phone_numbers_available_for_external_caller_id(self, location_id: str,
                                                        phone_number: List[str] = None,
-                                                       owner_name: str = None, org_id: str = None,
+                                                       owner_name: str = None, person_id: str = None,
+                                                       org_id: str = None,
                                                        **params) -> List[AvailableNumber]:
         """
         Get the List of Phone Numbers Available for External Caller ID
 
-        Get the list of phone numbers available for external caller ID usage by a Webex Calling entity (such as a user,
-        virtual line, or workspace) within the specified location.
+        Get the list of phone numbers available for external caller ID usage by a Webex Calling entity (such as a
+        person, virtual line, or workspace) within the specified location.
         Numbers from the specified location are returned and cross location numbers are returned as well where the
         number's location has the same country, PSTN provider, and zone (only applicable for India locations) as the
         specified location.
+        When `personId` is specified, and the person belongs to a cisco PSTN location, has a mobile number assigned as
+        primary DN, and does not have a billing plan, only the assigned mobile number is returned as the available
+        number for caller ID.
 
         The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
         or association of these numbers to members or features.
@@ -24664,6 +24688,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
             255.
         :type owner_name: str
+        :param person_id: Retrieve available external caller ID numbers for this person. If `personId` is not provided
+            it may result in the unsuccessful assignment of the returned number. This parameter has no effect when
+            workspace or virtual line ID is used.
+        :type person_id: str
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: Generator yielding :class:`AvailableNumber` instances
@@ -24674,6 +24702,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
             params['phoneNumber'] = ','.join(phone_number)
         if owner_name is not None:
             params['ownerName'] = owner_name
+        if person_id is not None:
+            params['personId'] = person_id
         url = self.ep(f'{location_id}/externalCallerId/availableNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
@@ -24684,7 +24714,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
-        List service and standard numbers that are available to be assigned as the location's main number.
+        List the service and standard PSTN numbers that are available to be assigned as the location's main number.
         These numbers are associated with the location specified in the request URL and can be active/inactive and
         assigned to an owning entity or unassigned.
 
@@ -24723,7 +24753,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
-        List service and standard numbers that are available to be assigned as the location's main number.
+        List the service and standard PSTN numbers that are available to be assigned as the location's main number.
         These numbers are associated with the location specified in the request URL and can be active/inactive and
         assigned to an owning entity or unassigned.
 
@@ -24972,6 +25002,194 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
             params['ownerName'] = owner_name
         url = self.ep(f'{location_id}/callIntercept/availableNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    async def create_receptionist_contact_directory(self, location_id: str, name: str, contacts: List[str],
+                                                org_id: str = None) -> str:
+        """
+        Create a Receptionist Contact Directory
+
+        Create a new Receptionist Contact Directory for a location.
+
+        Receptionist Contact Directories can be used to create named directories of users and/or location features
+        (Auto Attendant, Call Queue, Hunt Group, Single Number Reach, and Paging Group).
+
+        Adding a directory requires a full or write-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Add a Receptionist Contact Directory to this location.
+        :type location_id: str
+        :param name: Receptionist Contact Directory name. The directory name should be greater than 0 and less than 41
+            characters in length.
+        :type name: str
+        :param contacts: Non-empty array of users or location features assigned to this Receptionist Contact Directory.
+        :type contacts: list[str]
+        :param org_id: Add a Receptionist Contact Directory to this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['contacts'] = contacts
+        url = self.ep(f'locations/{location_id}/receptionistContacts/directories')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def list_receptionist_contact_directories(self, location_id: str,
+                                                      org_id: str = None) -> List[IdAndName]:
+        """
+        Read list of Receptionist Contact Directories
+
+        List all Receptionist Contact Directories for a location.
+
+        Receptionist Contact Directories can be used to create named directories of users.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: List Receptionist Contact Directories for this location.
+        :type location_id: str
+        :param org_id: List Receptionist Contact Directories for this organization.
+        :type org_id: str
+        :rtype: list[IdAndName]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/receptionistContacts/directories')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[IdAndName]).validate_python(data['directories'])
+        return r
+
+    async def receptionist_contact_directory_details(self, location_id: str, directory_id: str,
+                                               search_criteria_mode_or: bool = None, first_name: str = None,
+                                               last_name: str = None, phone_number: str = None,
+                                               extension: str = None, person_id: str = None,
+                                               org_id: str = None) -> List[ContactDetails]:
+        """
+        Get details for a Receptionist Contact Directory
+
+        Get details for a specific Receptionist Contact Directory from a location.
+
+        Receptionist Contact Directories are uniquely named per location and contain directories of Persons, Auto
+        Attendants, Call Queues, Hunt Groups, Single Number Reaches, and Paging Groups.
+
+        This API is currently supported for Webex calling organizations with fewer than 2000 users or location-based
+        calling features. For organizations with more than 2000 users or location features, the API will throw an
+        error 25395.
+
+        Retrieving details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Get a Receptionist Contact Directory from this location.
+        :type location_id: str
+        :param directory_id: Get details for the Receptionist Contact Directory with this identifier.
+        :type directory_id: str
+        :param search_criteria_mode_or: When `true`, results matching any one of the search criteria are included. The
+            value can only be `true` or not included in the request. Specifying `searchCriteriaModeOr` without any
+            search criteria, or setting it to `false` results in an `ErrorResponse`. If no search criteria is
+            specified, all results are returned.
+        :type search_criteria_mode_or: bool
+        :param first_name: Search for directories that contain people with the indicated first name.
+        :type first_name: str
+        :param last_name: Search for directories that contain people with the indicated last name.
+        :type last_name: str
+        :param phone_number: Search for directories that contain people with the indicated phone number.
+        :type phone_number: str
+        :param extension: Search for directories that contain people with the indicated extension.
+        :type extension: str
+        :param person_id: Search for directories that contain people with the indicated person ID.
+        :type person_id: str
+        :param org_id: Get a Receptionist Contact Directory from this organization.
+        :type org_id: str
+        :rtype: list[ContactDetails]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if search_criteria_mode_or is not None:
+            params['searchCriteriaModeOr'] = str(search_criteria_mode_or).lower()
+        if first_name is not None:
+            params['firstName'] = first_name
+        if last_name is not None:
+            params['lastName'] = last_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if person_id is not None:
+            params['personId'] = person_id
+        url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[ContactDetails]).validate_python(data['contacts'])
+        return r
+
+    async def delete_receptionist_contact_directory(self, location_id: str, directory_id: str, org_id: str = None):
+        """
+        Delete a Receptionist Contact Directory
+
+        Delete a Receptionist Contact Directory from a location.
+
+        Receptionist Contact Directories can be used to create named directories of users.
+
+        Deleting a directory requires a full or write-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Delete a Receptionist Contact Directory from this location.
+        :type location_id: str
+        :param directory_id: Add a Receptionist Contact Directory ID.
+        :type directory_id: str
+        :param org_id: Delete a Receptionist Contact Directory from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
+        await super().delete(url, params=params)
+
+    async def modify_a_receptionist_contact_directory(self, location_id: str, directory_id: str, name: str,
+                                                contacts: List[str], org_id: str = None) -> str:
+        """
+        Modify a Receptionist Contact Directory
+
+        Modify Receptionist Contact Directories attached to a location. This modification will replace the existing
+        list of contacts with the new incoming contacts list from the request body. The API does not support
+        incremental updates.
+
+        Receptionist Contact Directories can be used to create named groups of Persons, Auto Attendants, Call Queues,
+        Hunt Groups, Single Number Reaches, and Paging Groups.
+
+        Modifying a directory requires a full or write-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Modify list of Receptionist Contact Directories for this location.
+        :type location_id: str
+        :param directory_id: Get details for the Receptionist Contact Directory with this identifier.
+        :type directory_id: str
+        :param name: Receptionist Contact Directory name. The directory name should be greater than 0 and less than 41
+            characters in length.
+        :type name: str
+        :param contacts: Non-empty array of users or location features assigned to this Receptionist Contact Directory.
+        :type contacts: list[str]
+        :param org_id: Modify list of Receptionist Contact Directories for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['contacts'] = contacts
+        url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
+        data = await super().put(url, params=params, json=body)
+        r = data['id']
+        return r
 
 
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
@@ -26312,8 +26530,15 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         """
         Validate the List of Extensions
 
-        Validate the List of Extensions. Retrieving this list requires a full or read-only administrator auth token
-        with a scope of spark-admin:telephony_config_read.
+        Validates the list of Extensions provided by the customer at the organization level. It checks the extension
+        meets the current extension length limits and does not conflict with the extensions of organization-level
+        entities and settings. To check for extension use across all locations, use the `Get Phone Numbers
+        <https://developer.webex.com/v1/telephony/config/numbers>`_ API. To
+        validate an extension and check for conflicts for a specific location, use the `Validate Extensions
+        <https://developer.webex.com/docs/api/v1/location-call-settings/validate-extensions>`_ API.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
 
         :param extensions: Array of Strings of ID of Extensions.
         :type extensions: list[str]

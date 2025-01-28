@@ -19,6 +19,11 @@ Release history
 - feat: operating modes API: :attr:`api.telephony.operating_modes <wxc_sdk.telephony.TelephonyApi.operating_modes>`
 - feat: personal assistant settings API: :attr:`api.person_settings.personal_assistant <wxc_sdk.person_settings.PersonSettingsApi.personal_assistant>`
 - feat: new endpoints: :meth:`api.telephony.dect_devices.generate_and_enable_dect_serviceability_password <wxc_sdk.telephony.dect_devices.DECTDevicesApi.generate_and_enable_dect_serviceability_password>`, :meth:`api.telephony.dect_devices.get_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.get_dect_serviceability_password_status>`, :meth:`api.telephony.dect_devices.update_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_serviceability_password_status>`
+- feat: new endpoints: :meth:`api.telephony.location.create_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.create_receptionist_contact_directory>`, :meth:`api.telephony.location.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`,  :meth:`api.telephony.location.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`,  :meth:`api.telephony.location.modify_a_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_a_receptionist_contact_directory>`,  :meth:`api.telephony.location.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
+
+
+
+
 
 1.23.0
 ======
