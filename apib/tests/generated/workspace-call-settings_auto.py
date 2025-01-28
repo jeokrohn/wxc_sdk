@@ -15,38 +15,39 @@ __all__ = ['Action', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGet
            'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'CLIDPolicySelection',
            'CallForwardingAlwaysGet', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet',
            'CallForwardingPlaceSettingGet', 'CallWaiting', 'CallingPermission', 'CallingPermissionAction',
-           'CallingPermissionCallType', 'ExternalCallerIdNamePolicy', 'GetMusicOnHoldObject',
-           'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch',
-           'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch',
-           'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType', 'ModifyPlaceCallForwardSettings',
-           'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
-           'MonitoredElementUserType', 'MonitoredPersonObject', 'NumberOwnerObject', 'NumberOwnerType', 'PhoneNumber',
-           'PhoneNumbers', 'PlaceCallerIdGet', 'PlaceGetNumbersResponse', 'PlacePriorityAlertCriteriaGet',
-           'PlaceSelectiveAcceptCallCriteriaGet', 'PlaceSelectiveForwardCallCriteriaGet',
-           'PlaceSelectiveRejectCallCriteriaGet', 'PriorityAlertCriteria', 'PriorityAlertGet', 'PrivacyGet',
-           'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'RingPattern', 'STATE',
-           'SelectiveAcceptCallCriteria', 'SelectiveAcceptCallGet', 'SelectiveForwardCallGet',
-           'SelectiveRejectCallCallsFromType', 'SelectiveRejectCallGet', 'SelectiveRejectCallSource',
-           'SelectiveRejectCriteria', 'SequentialRingCriteria', 'SequentialRingCriteriaGet',
-           'SequentialRingCriteriaGetCallsFrom', 'SequentialRingCriteriaGetScheduleLevel',
-           'SequentialRingCriteriaGetScheduleType', 'SequentialRingGet', 'SequentialRingNumber',
-           'SimultaneousRingGet', 'SimultaneousRingNumber', 'SimultaneousRingNumberGet', 'Source', 'TelephonyType',
-           'TransferNumberGet', 'UserBargeInGet', 'UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls',
-           'UserDoNotDisturbGet', 'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer',
-           'UserMonitoringGet', 'UserNumberItem', 'UserOutgoingPermissionGet', 'VoicemailInfo',
-           'VoicemailInfoEmailCopyOfMessage', 'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage',
-           'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls',
-           'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls', 'WorkspaceAvailableNumberObject',
-           'WorkspaceCallForwardAvailableNumberObject', 'WorkspaceCallSettingsApi',
+           'CallingPermissionCallType', 'CallsFromTypeForSelectiveForward', 'ExternalCallerIdNamePolicy',
+           'GetMusicOnHoldObject', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting',
+           'InterceptAnnouncementsPatch', 'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType',
+           'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType',
+           'ModifyCallingPermission', 'ModifyPlaceCallForwardSettings', 'MonitoredElementCallParkExtension',
+           'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'MonitoredPersonObject',
+           'NumberOwnerObject', 'NumberOwnerType', 'PhoneNumber', 'PhoneNumbers', 'PlaceCallerIdGet',
+           'PlaceGetNumbersResponse', 'PlacePriorityAlertCriteriaGet', 'PlaceSelectiveAcceptCallCriteriaGet',
+           'PlaceSelectiveForwardCallCriteriaGet', 'PlaceSelectiveRejectCallCriteriaGet', 'PriorityAlertCriteria',
+           'PriorityAlertGet', 'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo',
+           'RingPattern', 'STATE', 'SelectiveAcceptCallCriteria', 'SelectiveAcceptCallGet',
+           'SelectiveForwardCallCriteria', 'SelectiveForwardCallGet', 'SelectiveRejectCallCallsFromType',
+           'SelectiveRejectCallGet', 'SelectiveRejectCallSource', 'SelectiveRejectCriteria', 'SequentialRingCriteria',
+           'SequentialRingCriteriaGet', 'SequentialRingCriteriaGetCallsFrom',
+           'SequentialRingCriteriaGetScheduleLevel', 'SequentialRingCriteriaGetScheduleType', 'SequentialRingGet',
+           'SequentialRingNumber', 'SimultaneousRingGet', 'SimultaneousRingNumberGet', 'Source',
+           'SourceForSelectiveForward', 'TelephonyType', 'TransferNumberGet', 'UserBargeInGet',
+           'UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls', 'UserDoNotDisturbGet',
+           'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet',
+           'UserNumberItem', 'UserOutgoingPermissionGet', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
+           'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType',
+           'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls', 'VoicemailPutSendBusyCalls',
+           'VoicemailPutSendUnansweredCalls', 'WorkspaceAvailableNumberObject',
+           'WorkspaceCallForwardAvailableNumberObject', 'WorkspaceCallSettingsApi', 'WorkspaceDigitPatternObject',
            'WorkspaceECBNAvailableNumberObject', 'WorkspaceECBNAvailableNumberObjectOwner',
-           'WorkspaceECBNAvailableNumberObjectOwnerType']
+           'WorkspaceECBNAvailableNumberObjectOwnerType', 'WorkspaceOutgoingPermissionDigitPatternGetListObject']
 
 
 class AuthorizationCode(ApiModel):
-    #: Indicates an access code.
+    #: Access code.
     #: example: 4856
     code: Optional[str] = None
-    #: Indicates the description of the access code.
+    #: The description of the access code.
     #: example: Marketing's access code
     description: Optional[str] = None
 
@@ -69,8 +70,8 @@ class CallForwardingAlwaysGet(ApiModel):
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
     ring_reminder_enabled: Optional[bool] = None
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
-    #: phone number and that number has the voicemail service enabled.
+    #: Enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone
+    #: number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
@@ -80,8 +81,8 @@ class CallForwardingBusyGet(ApiModel):
     #: Destination for "Busy" call forwarding.
     #: example: +19075552859
     destination: Optional[str] = None
-    #: Indicates the enabled or disabled state of sending incoming calls to voicemail when the destination is an
-    #: internal phone number and that number has the voicemail service enabled.
+    #: Enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone
+    #: number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool] = None
 
 
@@ -121,25 +122,25 @@ class CallWaiting(ApiModel):
 
 
 class CallingPermissionCallType(str, Enum):
-    #: Indicates the internal call type.
+    #: Internal call type.
     internal_call = 'INTERNAL_CALL'
-    #: Indicates the toll free call type.
+    #: Toll free call type.
     toll_free = 'TOLL_FREE'
-    #: Indicates the international call type.
+    #: International call type.
     international = 'INTERNATIONAL'
-    #: Indicates the operator assisted call type.
+    #: Operator Assisted call type.
     operator_assisted = 'OPERATOR_ASSISTED'
-    #: Indicates the chargeable directory assisted call type.
+    #: Chargeable Directory Assisted call type.
     chargeable_directory_assisted = 'CHARGEABLE_DIRECTORY_ASSISTED'
-    #: Indicates the special services I call type.
+    #: Special Services I call type.
     special_services_i = 'SPECIAL_SERVICES_I'
-    #: Indicates the special services II call type.
+    #: Special Services II call type.
     special_services_ii = 'SPECIAL_SERVICES_II'
-    #: Indicates the premium services I call type.
+    #: Premium Services I call type.
     premium_services_i = 'PREMIUM_SERVICES_I'
-    #: Indicates the premium services II call type.
+    #: Premium Services II call type.
     premium_services_ii = 'PREMIUM_SERVICES_II'
-    #: Indicates the national call type.
+    #: National call type.
     national = 'NATIONAL'
 
 
@@ -148,13 +149,16 @@ class CallingPermissionAction(str, Enum):
     allow = 'ALLOW'
     #: The call type is blocked.
     block = 'BLOCK'
-    #: Indicates access code action for the specified call type.
+    #: Access Code action for the specified call type.
     auth_code = 'AUTH_CODE'
-    #: Indicates transfer number 1 for the specified call type.
+    #: Transfer to Auto Transfer Number 1. The answering person can then approve the call and send it through or reject
+    #: the call.
     transfer_number_1 = 'TRANSFER_NUMBER_1'
-    #: Indicates transfer number 2 for the specified call type.
+    #: Transfer to Auto Transfer Number 2. The answering person can then approve the call and send it through or reject
+    #: the call.
     transfer_number_2 = 'TRANSFER_NUMBER_2'
-    #: Indicates transfer number 3 for the specified call type.
+    #: Transfer to Auto Transfer Number 3. The answering person can then approve the call and send it through or reject
+    #: the call.
     transfer_number_3 = 'TRANSFER_NUMBER_3'
 
 
@@ -162,20 +166,23 @@ class CallingPermission(ApiModel):
     #: Type of the outgoing call.
     #: example: INTERNAL_CALL
     call_type: Optional[CallingPermissionCallType] = None
-    #: Indicates permission for call types.
+    #: Permission for call types.
     #: example: ALLOW
     action: Optional[CallingPermissionAction] = None
-    #: Indicate calling permission for call type enable status.
+    #: If `true`, allows a place to transfer or forward internal calls.
     #: example: True
     transfer_enabled: Optional[bool] = None
+    #: The call restriction is enabled for the specific call type.
+    #: example: True
+    is_call_type_restriction_enabled: Optional[bool] = None
 
 
 class ExternalCallerIdNamePolicy(str, Enum):
-    #: Outgoing caller ID will show the caller's direct line name.
+    #: Outgoing caller ID shows the caller's direct line name.
     direct_line = 'DIRECT_LINE'
-    #: Outgoing caller ID will show the external caller ID name for the location.
+    #: Outgoing caller ID shows the external caller ID name for the location.
     location = 'LOCATION'
-    #: Outgoing caller ID will show the value from the `locationExternalCallerIdName` field.
+    #: Outgoing caller ID shows the value from the `locationExternalCallerIdName` field.
     other = 'OTHER'
 
 
@@ -196,7 +203,7 @@ class InterceptNumberGet(ApiModel):
 
 
 class InterceptAnnouncementsGet(ApiModel):
-    #: Indicates that a system default message will be placed when incoming calls are intercepted.
+    #: System default message places when incoming calls are intercepted.
     #: example: DEFAULT
     greeting: Optional[InterceptAnnouncementsGetGreeting] = None
     #: Filename of the custom greeting; this is an empty string if no custom greeting has been uploaded.
@@ -204,17 +211,17 @@ class InterceptAnnouncementsGet(ApiModel):
     filename: Optional[str] = None
     #: Information about the new number announcement.
     new_number: Optional[InterceptNumberGet] = None
-    #: Information about how the call will be handled if zero (0) is pressed.
+    #: Information about how the call is handled if zero (0) is pressed.
     zero_transfer: Optional[InterceptNumberGet] = None
 
 
 class InterceptAnnouncementsPatch(ApiModel):
-    #: Indicates that a system default message will be placed when incoming calls are intercepted.
+    #: System default message is placed when incoming calls are intercepted.
     #: example: DEFAULT
     greeting: Optional[InterceptAnnouncementsGetGreeting] = None
     #: Information about the new number announcement.
     new_number: Optional[InterceptNumberGet] = None
-    #: Information about how the call will be handled if zero (0) is pressed.
+    #: Information about how the call is handled if zero (0) is pressed.
     zero_transfer: Optional[InterceptNumberGet] = None
 
 
@@ -226,11 +233,11 @@ class InterceptIncomingGetType(str, Enum):
 
 
 class InterceptIncomingGet(ApiModel):
-    #: Indicated incoming calls are intercepted.
+    #: Incoming calls are intercepted.
     #: example: INTERCEPT_ALL
     type: Optional[InterceptIncomingGetType] = None
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
-    #: phone number and that number has the voicemail service enabled.
+    #: Enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone
+    #: number and that number has the voicemail service enabled.
     voicemail_enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[InterceptAnnouncementsGet] = None
@@ -244,7 +251,7 @@ class InterceptOutGoingGetType(str, Enum):
 
 
 class InterceptOutGoingGet(ApiModel):
-    #: Indicated all outgoing calls are intercepted.
+    #: All outgoing calls are intercepted.
     #: example: INTERCEPT_ALL
     type: Optional[InterceptOutGoingGetType] = None
     #: If `true`, when the person attempts to make an outbound call, a system default message is played and the call is
@@ -266,15 +273,27 @@ class InterceptGet(ApiModel):
 
 
 class InterceptIncomingPatch(ApiModel):
-    #: Indicated incoming calls are intercepted.
+    #: Incoming calls are intercepted.
     #: example: INTERCEPT_ALL
     type: Optional[InterceptIncomingGetType] = None
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
-    #: phone number and that number has the voicemail service enabled.
+    #: Enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone
+    #: number and that number has the voicemail service enabled.
     #: example: True
     voicemail_enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[InterceptAnnouncementsPatch] = None
+
+
+class ModifyCallingPermission(ApiModel):
+    #: Types for outgoing calls.
+    #: example: INTERNAL_CALL
+    call_type: Optional[CallingPermissionCallType] = None
+    #: Permission for call types.
+    #: example: ALLOW
+    action: Optional[CallingPermissionAction] = None
+    #: Calling Permission for call type enable status.
+    #: example: True
+    transfer_enabled: Optional[bool] = None
 
 
 class ModifyPlaceCallForwardSettings(ApiModel):
@@ -397,17 +416,17 @@ class PlaceCallerIdGet(ApiModel):
     #: Which type of outgoing Caller ID will be used. This setting is for the number portion.
     #: example: DIRECT_LINE
     selected: Optional[CLIDPolicySelection] = None
-    #: Direct number which will be shown if `DIRECT_LINE` is selected.
+    #: Direct number which is shown if `DIRECT_LINE` is selected.
     #: example: +12815550003
     direct_number: Optional[str] = None
-    #: Location number which will be shown if `LOCATION_NUMBER` is selected
+    #: Location number which is shown if `LOCATION_NUMBER` is selected
     #: example: +12815550002
     location_number: Optional[str] = None
     #: Flag to indicate if the location number is toll-free number.
     toll_free_location_number: Optional[bool] = None
-    #: Custom number which will be shown if CUSTOM is selected. This value must be a number from the workspace's
-    #: location or from another location with the same country, PSTN provider, and zone (only applicable for India
-    #: locations) as the workspace's location.
+    #: Custom number which is shown if CUSTOM is selected. This value must be a number from the workspace's location or
+    #: from another location with the same country, PSTN provider, and zone (only applicable for India locations) as
+    #: the workspace's location.
     #: example: +12815550003
     custom_number: Optional[str] = None
     #: Workspace's caller ID display name.
@@ -422,15 +441,18 @@ class PlaceCallerIdGet(ApiModel):
     #: Designates which type of External Caller ID Name policy is used. Default is `DIRECT_LINE`.
     #: example: DIRECT_LINE
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
-    #: Custom external caller ID name which will be shown if external caller ID name policy is `OTHER`.
+    #: Custom external caller ID name which is shown if external caller ID name policy is `OTHER`.
     #: example: Custom external caller name
     custom_external_caller_id_name: Optional[str] = None
-    #: Location's external caller ID name which will be shown if external caller ID name policy is `LOCATION`.
+    #: Location's external caller ID name which is shown if external caller ID name policy is `LOCATION`.
     #: example: Anna
     location_external_caller_id_name: Optional[str] = None
 
 
 class TransferNumberGet(ApiModel):
+    #: When `true`, use custom settings for the transfer numbers category of outbound permissions.
+    #: example: True
+    use_custom_transfer_numbers: Optional[bool] = None
     #: When calling a specific call type, this workspace will be automatically transferred to another number.
     #: example: "+1205553650"
     auto_transfer_number1: Optional[str] = None
@@ -455,7 +477,7 @@ class UserInboundPermissionGet(ApiModel):
     #: Incoming Permission state. If disabled, the default settings are used.
     #: example: True
     use_custom_enabled: Optional[bool] = None
-    #: Indicate call transfer setting.
+    #: Call transfer setting.
     #: example: ALLOW_ALL_EXTERNAL
     external_transfer: Optional[UserInboundPermissionGetExternalTransfer] = None
     #: Flag to indicate if workspace can receive internal calls.
@@ -475,9 +497,14 @@ class UserMonitoringGet(ApiModel):
 
 
 class UserOutgoingPermissionGet(ApiModel):
-    #: Outgoing Permission state. If disabled, the default settings are used.
+    #: When `true`, indicates that this workspace uses the shared control that applies to all outgoing call settings
+    #: categories when placing outbound calls.
     #: example: True
     use_custom_enabled: Optional[bool] = None
+    #: When `true`, indicates that this workspace uses the specified outgoing calling permissions when placing outbound
+    #: calls.
+    #: example: True
+    use_custom_permissions: Optional[bool] = None
     #: Workspace's list of outgoing permissions.
     calling_permissions: Optional[list[CallingPermission]] = None
 
@@ -783,7 +810,7 @@ class VoicemailInfoSendBusyCalls(ApiModel):
     #: `DEFAULT` indicates the default greeting will be played. `CUSTOM` indicates a custom `.wav` file will be played.
     #: example: DEFAULT
     greeting: Optional[InterceptAnnouncementsGetGreeting] = None
-    #: Indicates a custom greeting has been uploaded.
+    #: A custom greeting has been uploaded.
     #: example: True
     greeting_uploaded: Optional[bool] = None
 
@@ -795,7 +822,7 @@ class VoicemailInfoSendUnansweredCalls(ApiModel):
     #: `DEFAULT` indicates the default greeting will be played. `CUSTOM` indicates a custom `.wav` file will be played.
     #: example: DEFAULT
     greeting: Optional[InterceptAnnouncementsGetGreeting] = None
-    #: Indicates a custom greeting has been uploaded
+    #: A custom greeting has been uploaded
     #: example: True
     greeting_uploaded: Optional[bool] = None
     #: Number of rings before unanswered call will be sent to voicemail.
@@ -889,21 +916,21 @@ class VoicemailPutSendUnansweredCalls(ApiModel):
 
 
 class SequentialRingCriteriaGetScheduleType(str, Enum):
-    #: Indicates schedule is of type `holidays`.
+    #: The Schedule is of type `holidays`.
     holidays = 'holidays'
-    #: Indicates schedule is of type `businessHours`.
+    #: The Schedule is of type `businessHours`.
     business_hours = 'businessHours'
 
 
 class SequentialRingCriteriaGetScheduleLevel(str, Enum):
-    #: Indicates schedule specified is of `GROUP` level.
+    #: The Schedule specified is of `GROUP` level.
     group = 'GROUP'
 
 
 class SequentialRingCriteriaGetCallsFrom(str, Enum):
-    #: Indicates sequential ring criteria only apply for selected incoming numbers.
+    #: Sequential ring criteria only apply for selected incoming numbers.
     select_phone_numbers = 'SELECT_PHONE_NUMBERS'
-    #: Indicates that sequential ring criteria apply for any incoming number.
+    #: Sequential ring criteria apply for any incoming number.
     any_phone_number = 'ANY_PHONE_NUMBER'
 
 
@@ -914,7 +941,7 @@ class SequentialRingCriteriaGet(ApiModel):
     #: Name of the location's schedule which determines when the sequential ring is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: This indicates the type of schedule.
+    #: The type of schedule.
     #: example: holidays
     schedule_type: Optional[SequentialRingCriteriaGetScheduleType] = None
     #: This indicates the level of the schedule specified by `scheduleName`.
@@ -977,7 +1004,7 @@ class SequentialRingCriteria(ApiModel):
     #: Name of the location's schedule which determines when the sequential ring is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates if criteria are applicable for calls from any phone number or specific phone number.
+    #: If criterias are applicable for calls from any phone number or specific phone number.
     source: Optional[Source] = None
     #: When set to `true` sequential ringing is enabled for calls that meet the current criteria. Criteria with
     #: `ringEnabled` set to `false` take priority.
@@ -1014,9 +1041,6 @@ class SimultaneousRingNumberGet(ApiModel):
     phone_number: Optional[str] = None
     #: When set to `true` the called party is required to press 1 on the keypad to receive the call.
     #: example: True
-    answer_confirmation_enabled: Optional[bool] = None
-    #: When set to `true` the called party is required to press 1 on the keypad to receive the call.
-    #: example: True
     answer_confirmation_required_enabled: Optional[bool] = None
 
 
@@ -1036,21 +1060,23 @@ class SimultaneousRingGet(ApiModel):
     criterias_enabled: Optional[bool] = None
 
 
-class SimultaneousRingNumber(ApiModel):
-    #: Phone number set as the sequential number.
-    #: example: +19075552859
-    phone_number: Optional[str] = None
-    #: When set to `true` the called party is required to press 1 on the keypad to receive the call.
-    #: example: True
-    answer_confirmation_required_enabled: Optional[bool] = None
+class CallsFromTypeForSelectiveForward(str, Enum):
+    #: The schedule applies to any phone number.
+    any_phone_number = 'ANY_PHONE_NUMBER'
+    #: The schedule applies to select phone number defined in the `phoneNumbers` property.
+    select_phone_numbers = 'SELECT_PHONE_NUMBERS'
+    #: The schedule applies to any internal phone number.
+    any_internal = 'ANY_INTERNAL'
+    #: The schedule applies to any external phone number.
+    any_external = 'ANY_EXTERNAL'
 
 
 class SelectiveRejectCallSource(str, Enum):
-    #: indicates that selective reject criteria applies for all incoming numbers.
+    #: Selective reject criteria applies for all incoming numbers.
     all_numbers = 'ALL_NUMBERS'
-    #: indicates that selective reject criteria applies for calls from specific numbers.
+    #: Selective reject criteria applies for calls from specific numbers.
     specific_numbers = 'SPECIFIC_NUMBERS'
-    #: indicates that selective reject criteria applies for all forwarded calls.
+    #: Selective reject criteria applies for all forwarded calls.
     forwarded = 'FORWARDED'
 
 
@@ -1061,7 +1087,7 @@ class SelectiveRejectCriteria(ApiModel):
     #: Name of the location's schedule which determines when the selective reject is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates if criteria are applicable for calls from any phone number, specific phone number or forwarded ones.
+    #: If criteria are applicable for calls from any phone number, specific phone number or forwarded ones.
     source: Optional[SelectiveRejectCallSource] = None
     #: This setting specifies to choose to reject or not to reject the calls that fit within these parameters.
     #: example: True
@@ -1077,11 +1103,11 @@ class SelectiveRejectCallGet(ApiModel):
 
 
 class SelectiveRejectCallCallsFromType(str, Enum):
-    #: Indicates the schedule applies to any phone number.
+    #: The Schedule applies to any phone number.
     any_phone_number = 'ANY_PHONE_NUMBER'
-    #: Indicates the schedule applies to select phone number defined in the `phoneNumbers` property.
+    #: The Schedule applies to select phone number defined in the `phoneNumbers` property.
     select_phone_numbers = 'SELECT_PHONE_NUMBERS'
-    #: Indicates the schedule applies to the forwarded calls only.
+    #: The Schedule applies to the forwarded calls only.
     forwarded = 'FORWARDED'
 
 
@@ -1092,9 +1118,9 @@ class PlaceSelectiveRejectCallCriteriaGet(ApiModel):
     #: Name of the location's schedule which determines when the selective reject is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates the schedule type whether `businessHours` or `holidays`.
+    #: The Schedule type whether `businessHours` or `holidays`.
     schedule_type: Optional[SequentialRingCriteriaGetScheduleType] = None
-    #: Indicates the schedule level i.e, Group.
+    #: The Schedule level i.e, Group.
     schedule_level: Optional[SequentialRingCriteriaGetScheduleLevel] = None
     #: Indicates whether to apply the selective reject criteria for calls from Any Phone Number, Select Phone Numbers
     #: or Forwarded ones.
@@ -1121,7 +1147,7 @@ class SelectiveAcceptCallCriteria(ApiModel):
     #: Name of the location's schedule which determines when the selective reject is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates if criteria are applicable for calls from any phone number, specific phone number or forwarded ones.
+    #: If criteria are applicable for calls from any phone number, specific phone number or forwarded ones.
     source: Optional[SelectiveRejectCallSource] = None
     #: This setting specifies to choose to accept or not to accept the calls that fit within these parameters.
     #: example: True
@@ -1143,9 +1169,9 @@ class PlaceSelectiveAcceptCallCriteriaGet(ApiModel):
     #: Name of the location's schedule which determines when the selective accept is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates the schedule type whether `businessHours` or `holidays`.
+    #: The Schedule type whether `businessHours` or `holidays`.
     schedule_type: Optional[SequentialRingCriteriaGetScheduleType] = None
-    #: Indicates the schedule level i.e, Group.
+    #: The Schedule level i.e, Group.
     schedule_level: Optional[SequentialRingCriteriaGetScheduleLevel] = None
     #: Indicates whether to apply the selective accept criteria for calls from Any Phone Number, Select Phone Numbers
     #: or Forwarded ones.
@@ -1214,7 +1240,7 @@ class PriorityAlertCriteria(ApiModel):
     #: Name of the location's schedule which determines when the priority alert is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates if criteria are applicable for calls from any phone number or specific phone number.
+    #: If criteria are applicable for calls from any phone number or specific phone number.
     #: example: ALL_NUMBERS
     source: Optional[Source] = None
     #: When set to `true` notification is enabled for calls that meet the current criteria. Criteria with
@@ -1238,9 +1264,9 @@ class PlacePriorityAlertCriteriaGet(ApiModel):
     #: Name of the location's schedule which determines when the priority alert is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates the schedule type whether `businessHours` or `holidays`.
+    #: The Schedule type whether `businessHours` or `holidays`.
     schedule_type: Optional[SequentialRingCriteriaGetScheduleType] = None
-    #: Indicates the schedule level i.e. Group.
+    #: The Schedule level i.e. Group.
     schedule_level: Optional[SequentialRingCriteriaGetScheduleLevel] = None
     #: Indicates whether to apply priority alert for calls from Any Phone Number or Select Phone Numbers.
     calls_from: Optional[SequentialRingCriteriaGetCallsFrom] = None
@@ -1259,6 +1285,32 @@ class PlacePriorityAlertCriteriaGet(ApiModel):
     notification_enabled: Optional[bool] = None
 
 
+class SourceForSelectiveForward(str, Enum):
+    #: Criteria applies to all incoming numbers.
+    all_numbers = 'ALL_NUMBERS'
+    #: Criteria applies only for specific incoming numbers.
+    specific_numbers = 'SPECIFIC_NUMBERS'
+    #: Criteria applies to all internal incoming numbers.
+    any_internal = 'ANY_INTERNAL'
+    #: Criteria applies to all external incoming numbers.
+    any_external = 'ANY_EXTERNAL'
+
+
+class SelectiveForwardCallCriteria(ApiModel):
+    #: Unique identifier for criteria.
+    #: example: Y2lzY29zcGFyazovL3VzL0NSSVRFUklBLzg2NTAxZDFlLTg1MWMtNDgwYi1hZmE2LTA5MTU4NzQ3NzdmZQ
+    id: Optional[str] = None
+    #: Name of the location's schedule which determines when the sequential ring is in effect.
+    #: example: Business Vacation
+    schedule_name: Optional[str] = None
+    #: Criteria are applicable for calls from any phone number or a specific phone number.
+    source: Optional[SourceForSelectiveForward] = None
+    #: When set to `true` sequential ringing is enabled for calls that meet the current criteria. Criteria with
+    #: `ringEnabled` set to `false` take priority.
+    #: example: True
+    ring_enabled: Optional[bool] = None
+
+
 class SelectiveForwardCallGet(ApiModel):
     #: `true` if the Selective Forward feature is enabled.
     #: example: True
@@ -1273,7 +1325,7 @@ class SelectiveForwardCallGet(ApiModel):
     #: extensions.
     destination_voicemail_enabled: Optional[bool] = None
     #: A list of criteria specifying conditions when selective forward feature is in effect.
-    criteria: Optional[list[SequentialRingCriteria]] = None
+    criteria: Optional[list[SelectiveForwardCallCriteria]] = None
 
 
 class PlaceSelectiveForwardCallCriteriaGet(ApiModel):
@@ -1289,13 +1341,13 @@ class PlaceSelectiveForwardCallCriteriaGet(ApiModel):
     #: Name of the location's schedule which determines when the selective forward is in effect.
     #: example: Business Vacation
     schedule_name: Optional[str] = None
-    #: Indicates the schedule type whether `businessHours` or `holidays`.
+    #: The Schedule type whether `businessHours` or `holidays`.
     schedule_type: Optional[SequentialRingCriteriaGetScheduleType] = None
-    #: Indicates the schedule level i.e, Group.
+    #: The Schedule level i.e, Group.
     schedule_level: Optional[SequentialRingCriteriaGetScheduleLevel] = None
     #: Indicates whether to apply the selective forward criteria for calls from Any Phone Number, Select Phone Numbers
     #: or Forwarded ones.
-    calls_from: Optional[SequentialRingCriteriaGetCallsFrom] = None
+    calls_from: Optional[CallsFromTypeForSelectiveForward] = None
     #: When `true`, enables selective forward to calls from anonymous callers.
     #: example: True
     anonymous_callers_enabled: Optional[bool] = None
@@ -1309,6 +1361,31 @@ class PlaceSelectiveForwardCallCriteriaGet(ApiModel):
     #: not (if forwardEnabled = `false`).
     #: example: True
     forward_enabled: Optional[bool] = None
+
+
+class WorkspaceDigitPatternObject(ApiModel):
+    #: A unique identifier for the digit pattern.
+    #: example: Y2lzY29zcGFyazovL3VzL1NDSEVEVUxFL1FWVlVUMEZVVkVWT1JFRk9WQzFDVlZOSlRrVlRVeTFJVDFWU1V3
+    id: Optional[str] = None
+    #: A unique name for the digit pattern.
+    #: example: DigitPattern1
+    name: Optional[str] = None
+    #: The digit pattern to be matched with the input number.
+    #: example: 1XXX
+    pattern: Optional[str] = None
+    #: Action to be performed on the input number that matches the digit pattern.
+    #: example: ALLOW
+    action: Optional[CallingPermissionAction] = None
+    #: Option to allow or disallow transfer of calls.
+    #: example: True
+    transfer_enabled: Optional[bool] = None
+
+
+class WorkspaceOutgoingPermissionDigitPatternGetListObject(ApiModel):
+    #: When `true`, use custom settings for the digit patterns category of outgoing call permissions.
+    use_custom_digit_patterns: Optional[bool] = None
+    #: List of digit patterns.
+    digit_patterns: Optional[list[WorkspaceDigitPatternObject]] = None
 
 
 class WorkspaceCallSettingsApi(ApiChild, base=''):
@@ -1526,8 +1603,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param selected: Which type of outgoing Caller ID will be used. This setting is for the number portion.
         :type selected: CLIDPolicySelection
-        :param custom_number: Custom number which will be shown if CUSTOM is selected. This value must be a number from
-            the workspace's location or from another location with the same country, PSTN provider, and zone (only
+        :param custom_number: Custom number which is shown if CUSTOM is selected. This value must be a number from the
+            workspace's location or from another location with the same country, PSTN provider, and zone (only
             applicable for India locations) as the workspace's location.
         :type custom_number: str
         :param display_name: Workspace's caller ID display name.
@@ -1539,11 +1616,11 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used. Default
             is `DIRECT_LINE`.
         :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Custom external caller ID name which will be shown if external caller ID
-            name policy is `OTHER`.
+        :param custom_external_caller_id_name: Custom external caller ID name which is shown if external caller ID name
+            policy is `OTHER`.
         :type custom_external_caller_id_name: str
-        :param location_external_caller_id_name: Location's external caller ID name which will be shown if external
-            caller ID name policy is `LOCATION`.
+        :param location_external_caller_id_name: Location's external caller ID name which is shown if external caller
+            ID name policy is `LOCATION`.
         :type location_external_caller_id_name: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
@@ -1778,7 +1855,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param use_custom_enabled: Incoming Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
-        :param external_transfer: Indicate call transfer setting.
+        :param external_transfer: Call transfer setting.
         :type external_transfer: UserInboundPermissionGetExternalTransfer
         :param internal_calls_enabled: Flag to indicate if the workspace can receive internal calls.
         :type internal_calls_enabled: bool
@@ -1821,7 +1898,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
+            token used to access the API.
         :type org_id: str
         :rtype: :class:`UserOutgoingPermissionGet`
         """
@@ -1834,7 +1911,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         return r
 
     def modify_outgoing_permission_settings_for_a_workspace(self, workspace_id: str, use_custom_enabled: bool = None,
-                                                            calling_permissions: list[CallingPermission] = None,
+                                                            use_custom_permissions: bool = None,
+                                                            calling_permissions: list[ModifyCallingPermission] = None,
                                                             org_id: str = None):
         """
         Modify Outgoing Permission Settings for a Workspace
@@ -1850,13 +1928,17 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param use_custom_enabled: Outgoing Permission state. If disabled, the default settings are used.
+        :param use_custom_enabled: When `true`, indicates that this workspace uses the shared control that applies to
+            all outgoing call settings categories when placing outbound calls.
         :type use_custom_enabled: bool
+        :param use_custom_permissions: When `true`, indicates that this workspace uses the specified outgoing calling
+            permissions when placing outbound calls.
+        :type use_custom_permissions: bool
         :param calling_permissions: Workspace's list of outgoing permissions.
-        :type calling_permissions: list[CallingPermission]
+        :type calling_permissions: list[ModifyCallingPermission]
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
+            token used to access the API.
         :type org_id: str
         :rtype: None
         """
@@ -1866,8 +1948,10 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         body = dict()
         if use_custom_enabled is not None:
             body['useCustomEnabled'] = use_custom_enabled
+        if use_custom_permissions is not None:
+            body['useCustomPermissions'] = use_custom_permissions
         if calling_permissions is not None:
-            body['callingPermissions'] = TypeAdapter(list[CallingPermission]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
+            body['callingPermissions'] = TypeAdapter(list[ModifyCallingPermission]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         super().put(url, params=params, json=body)
 
@@ -1885,7 +1969,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
+            token used to access the API.
         :type org_id: str
         :rtype: list[AuthorizationCode]
         """
@@ -1910,11 +1994,11 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param delete_codes: Indicates access codes to delete.
+        :param delete_codes: Access Codes to delete.
         :type delete_codes: list[str]
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
+            token used to access the API.
         :type org_id: str
         :rtype: None
         """
@@ -1941,13 +2025,13 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param code: Indicates an access code.
+        :param code: An Access code.
         :type code: str
-        :param description: Indicates the description of the access code.
+        :param description: The description of the access code.
         :type description: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
+            token used to access the API.
         :type org_id: str
         :rtype: None
         """
@@ -1959,6 +2043,257 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         body['description'] = description
         url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
+
+    def delete_all_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None):
+        """
+        Delete all Access Codes for a Workspace
+
+        Deletes all Access codes for the given workspace.
+
+        Access codes are used to bypass permissions.
+
+        This API requires a full or user administrator or location administrator auth token with the
+        `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
+        update workspace settings.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
+        super().delete(url, params=params)
+
+    def retrieve_all_digit_patterns_for_a_workspace(self, workspace_id: str,
+                                                    org_id: str = None) -> WorkspaceOutgoingPermissionDigitPatternGetListObject:
+        """
+        Retrieve all digit patterns for a Workspace.
+
+        Digit patterns are used to bypass permissions.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: :class:`WorkspaceOutgoingPermissionDigitPatternGetListObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns')
+        data = super().get(url, params=params)
+        r = WorkspaceOutgoingPermissionDigitPatternGetListObject.model_validate(data)
+        return r
+
+    def retrieve_a_digit_pattern_details_for_the_workspace(self, workspace_id: str, digit_pattern_id: str,
+                                                           org_id: str = None) -> WorkspaceDigitPatternObject:
+        """
+        Retrieve a Digit Pattern details for the Workspace
+
+        Retrieve the designated digit pattern.
+
+        Digit patterns are used to bypass permissions.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param digit_pattern_id: Unique identifier for the digit pattern.
+        :type digit_pattern_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: :class:`WorkspaceDigitPatternObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
+        data = super().get(url, params=params)
+        r = WorkspaceDigitPatternObject.model_validate(data)
+        return r
+
+    def create_digit_pattern_for_a_workspace(self, workspace_id: str, name: str, pattern: str,
+                                             action: CallingPermissionAction, transfer_enabled: bool,
+                                             org_id: str = None) -> str:
+        """
+        Create Digit Pattern for a Workspace
+
+        Create a new digit pattern for the given workspace.
+
+        Digit patterns are used to bypass permissions.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param name: A unique name for the digit pattern.
+        :type name: str
+        :param pattern: The digit pattern to be matched with the input number.
+        :type pattern: str
+        :param action: Action to be performed on the input number that matches the digit pattern.
+        :type action: CallingPermissionAction
+        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :type transfer_enabled: bool
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['pattern'] = pattern
+        body['action'] = enum_str(action)
+        body['transferEnabled'] = transfer_enabled
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def modify_the_digit_pattern_category_control_settings_for_the_workspace(self, workspace_id: str,
+                                                                             use_custom_digit_patterns: bool = None,
+                                                                             org_id: str = None):
+        """
+        Modify the Digit Pattern Category Control Settings for the Workspace
+
+        Modifies whether this workspace uses the specified digit patterns when placing outbound calls or not.
+
+        Updating the digit pattern category control settings requires a full or location administrator auth token with
+        a scope of `spark-admin:telephony_config_write`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param use_custom_digit_patterns: When `true`, use custom settings for the digit patterns category of outgoing
+            call permissions.
+        :type use_custom_digit_patterns: bool
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if use_custom_digit_patterns is not None:
+            body['useCustomDigitPatterns'] = use_custom_digit_patterns
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns')
+        super().put(url, params=params, json=body)
+
+    def modify_a_digit_pattern_for_the_workspace(self, workspace_id: str, digit_pattern_id: str, name: str = None,
+                                                 pattern: str = None, action: CallingPermissionAction = None,
+                                                 transfer_enabled: bool = None, org_id: str = None):
+        """
+        Modify a Digit Pattern for the Workspace
+
+        Modify the designated digit pattern.
+
+        Digit patterns are used to bypass permissions.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param digit_pattern_id: Unique identifier for the digit pattern.
+        :type digit_pattern_id: str
+        :param name: A unique name for the digit pattern.
+        :type name: str
+        :param pattern: The digit pattern to be matched with the input number.
+        :type pattern: str
+        :param action: Action to be performed on the input number that matches the digit pattern.
+        :type action: CallingPermissionAction
+        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :type transfer_enabled: bool
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if name is not None:
+            body['name'] = name
+        if pattern is not None:
+            body['pattern'] = pattern
+        if action is not None:
+            body['action'] = enum_str(action)
+        if transfer_enabled is not None:
+            body['transferEnabled'] = transfer_enabled
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
+        super().put(url, params=params, json=body)
+
+    def delete_a_digit_pattern_for_the_workspace(self, workspace_id: str, digit_pattern_id: str, org_id: str = None):
+        """
+        Delete a Digit Pattern for the Workspace
+
+        Delete a digit pattern for a Workspace.
+
+        Digit patterns are used to bypass permissions.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param digit_pattern_id: Unique identifier for the digit pattern.
+        :type digit_pattern_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
+        super().delete(url, params=params)
+
+    def delete_all_digit_patterns_for_a_workspace(self, workspace_id: str, org_id: str = None):
+        """
+        Delete all digit patterns for a Workspace.
+
+        Digit patterns are used to bypass permissions.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/outgoingPermission/digitPatterns')
+        super().delete(url, params=params)
 
     def read_call_intercept_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> InterceptGet:
         """
@@ -2052,7 +2387,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
+            token used to access the API.
         :type org_id: str
         :rtype: :class:`TransferNumberGet`
         """
@@ -2064,7 +2399,8 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         r = TransferNumberGet.model_validate(data)
         return r
 
-    def modify_transfer_numbers_settings_for_a_workspace(self, workspace_id: str, auto_transfer_number1: str = None,
+    def modify_transfer_numbers_settings_for_a_workspace(self, workspace_id: str, use_custom_transfer_numbers: bool,
+                                                         auto_transfer_number1: str = None,
                                                          auto_transfer_number2: str = None,
                                                          auto_transfer_number3: str = None, org_id: str = None):
         """
@@ -2082,6 +2418,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
+        :param use_custom_transfer_numbers: When `true`, use custom settings for the transfer numbers category of
+            outbound permissions.
+        :type use_custom_transfer_numbers: bool
         :param auto_transfer_number1: When calling a specific call type, this workspace will be automatically
             transferred to another number.
         :type auto_transfer_number1: str
@@ -2093,7 +2432,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type auto_transfer_number3: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
-            token used to access API.
+            token used to access the API.
         :type org_id: str
         :rtype: None
         """
@@ -2101,6 +2440,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
+        body['useCustomTransferNumbers'] = use_custom_transfer_numbers
         if auto_transfer_number1 is not None:
             body['autoTransferNumber1'] = auto_transfer_number1
         if auto_transfer_number2 is not None:
@@ -3256,7 +3596,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
     def modify_simultaneous_ring_settings_for_a_workspace(self, workspace_id: str, criterias_enabled: bool,
                                                           enabled: bool = None,
                                                           do_not_ring_if_on_call_enabled: bool = None,
-                                                          phone_numbers: list[SimultaneousRingNumber] = None,
+                                                          phone_numbers: list[SimultaneousRingNumberGet] = None,
                                                           org_id: str = None):
         """
         Modify Simultaneous Ring Settings for a Workspace.
@@ -3281,7 +3621,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type do_not_ring_if_on_call_enabled: bool
         :param phone_numbers: Enter up to 10 phone numbers to ring simultaneously when a workspace phone receives an
             incoming call.
-        :type phone_numbers: list[SimultaneousRingNumber]
+        :type phone_numbers: list[SimultaneousRingNumberGet]
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
@@ -3297,7 +3637,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         if do_not_ring_if_on_call_enabled is not None:
             body['doNotRingIfOnCallEnabled'] = do_not_ring_if_on_call_enabled
         if phone_numbers is not None:
-            body['phoneNumbers'] = TypeAdapter(list[SimultaneousRingNumber]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
+            body['phoneNumbers'] = TypeAdapter(list[SimultaneousRingNumberGet]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
         body['criteriasEnabled'] = criterias_enabled
         url = self.ep(f'telephony/config/workspaces/{workspace_id}/simultaneousRing')
         super().put(url, params=params, json=body)
@@ -3364,9 +3704,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param schedule_name: Name of the location's schedule which determines when the simultaneous ring is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply simultaneously ring for calls from Any Phone Number or Select
             Phone Numbers.
@@ -3438,9 +3778,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type id: str
         :param schedule_name: Name of the location's schedule which determines when the simultaneous ring is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply simultaneously ring for calls from Any Phone Number or Select
             Phone Numbers.
@@ -3561,7 +3901,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param enabled: indicates whether selective reject is enabled or not.
+        :param enabled: if `true`, selective reject is enabled.
         :type enabled: bool
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
@@ -3637,9 +3977,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param schedule_name: Name of the location's schedule which determines when the selective reject is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply the selective reject criteria for calls from Any Phone Number,
             Select Phone Numbers or Forwarded ones.
@@ -3710,9 +4050,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type id: str
         :param schedule_name: Name of the location's schedule which determines when the selective reject is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply the selective reject criteria for calls from Any Phone Number,
             Select Phone Numbers or Forwarded ones.
@@ -3945,9 +4285,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param schedule_name: Name of the location's schedule which determines when the selective accept is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply the selective accept criteria for calls from Any Phone Number,
             Select Phone Numbers or Forwarded ones.
@@ -4017,9 +4357,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type id: str
         :param schedule_name: Name of the location's schedule which determines when the selective accept is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply the selective accept criteria for calls from Any Phone Number,
             Select Phone Numbers or Forwarded ones.
@@ -4217,9 +4557,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param schedule_name: Name of the location's schedule which determines when the priority alert is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e. Group.
+        :param schedule_level: The Schedule level i.e. Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply priority alert for calls from Any Phone Number or Select Phone
             Numbers.
@@ -4291,9 +4631,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type id: str
         :param schedule_name: Name of the location's schedule which determines when the priority alert is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e. Group.
+        :param schedule_level: The Schedule level i.e. Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param calls_from: Indicates whether to apply priority alert for calls from Any Phone Number or Select Phone
             Numbers.
@@ -4488,7 +4828,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         return r
 
     def create_selective_forward_criteria_for_a_workspace(self, workspace_id: str,
-                                                          calls_from: SequentialRingCriteriaGetCallsFrom,
+                                                          calls_from: CallsFromTypeForSelectiveForward,
                                                           forward_to_phone_number: str = None,
                                                           destination_voicemail_enabled: bool = None,
                                                           schedule_name: str = None,
@@ -4516,7 +4856,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type workspace_id: str
         :param calls_from: Indicates whether to apply the selective forward criteria for calls from Any Phone Number,
             Select Phone Numbers or Forwarded ones.
-        :type calls_from: SequentialRingCriteriaGetCallsFrom
+        :type calls_from: CallsFromTypeForSelectiveForward
         :param forward_to_phone_number: Phone number to forward calls to during this schedule.
         :type forward_to_phone_number: str
         :param destination_voicemail_enabled: Enables forwarding for all calls to voicemail. This option is only
@@ -4524,9 +4864,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type destination_voicemail_enabled: bool
         :param schedule_name: Name of the location's schedule which determines when the selective forward is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param anonymous_callers_enabled: When `true`, enables selective forward to calls from anonymous callers.
         :type anonymous_callers_enabled: bool
@@ -4573,7 +4913,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         return r
 
     def modify_selective_forward_criteria_for_a_workspace(self, workspace_id: str, id: str,
-                                                          calls_from: SequentialRingCriteriaGetCallsFrom,
+                                                          calls_from: CallsFromTypeForSelectiveForward,
                                                           forward_to_phone_number: str = None,
                                                           destination_voicemail_enabled: bool = None,
                                                           schedule_name: str = None,
@@ -4603,7 +4943,7 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type id: str
         :param calls_from: Indicates whether to apply the selective forward criteria for calls from Any Phone Number,
             Select Phone Numbers or Forwarded ones.
-        :type calls_from: SequentialRingCriteriaGetCallsFrom
+        :type calls_from: CallsFromTypeForSelectiveForward
         :param forward_to_phone_number: Phone number to forward calls to during this schedule.
         :type forward_to_phone_number: str
         :param destination_voicemail_enabled: Enables forwarding for all calls to voicemail. This option is only
@@ -4611,9 +4951,9 @@ class WorkspaceCallSettingsApi(ApiChild, base=''):
         :type destination_voicemail_enabled: bool
         :param schedule_name: Name of the location's schedule which determines when the selective forward is in effect.
         :type schedule_name: str
-        :param schedule_type: Indicates the schedule type whether `businessHours` or `holidays`.
+        :param schedule_type: The Schedule type whether `businessHours` or `holidays`.
         :type schedule_type: SequentialRingCriteriaGetScheduleType
-        :param schedule_level: Indicates the schedule level i.e, Group.
+        :param schedule_level: The Schedule level i.e, Group.
         :type schedule_level: SequentialRingCriteriaGetScheduleLevel
         :param anonymous_callers_enabled: When `true`, enables selective forward to calls from anonymous callers.
         :type anonymous_callers_enabled: bool
