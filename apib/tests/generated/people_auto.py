@@ -265,7 +265,7 @@ class PeopleApi(ApiChild, base='people'):
         returned for people within your organization or an organization you manage. Presence information will not be
         returned if the authenticated user has `disabled status sharing
         <https://help.webex.com/nkzs6wl/>`_. Calling /people frequently to poll `status`
-        information for a large set of users will quickly lead to `429` errros and throttling of such requests and is
+        information for a large set of users will quickly lead to `429` errors and throttling of such requests and is
         therefore discouraged.
 
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
