@@ -992,3 +992,108 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
             params['usageType'] = enum_str(usage_type)
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)
+
+    def generate_and_enable_dect_serviceability_password(self, location_id: str, dect_network_id: str,
+                                                         org_id: str = None) -> str:
+        """
+        Generate and Enable DECT Serviceability Password
+
+        Generates and enables a 16-character DECT serviceability password.
+
+        <div><Callout type="warning">Generating a password and transmitting it to the DECT network can reboot the
+        entire network. Be sure you choose an appropriate time to generate a new password.</Callout></div>
+
+        The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
+        base stations for performing system serviceability and troubleshooting functions.
+
+        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
+        or a device administrator token with the scope of `spark-admin:devices_write`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param dect_network_id: Unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword/actions/generate/invoke')
+        data = super().post(url, params=params)
+        r = data['password']
+        return r
+
+    def get_dect_serviceability_password_status(self, location_id: str, dect_network_id: str,
+                                                org_id: str = None) -> bool:
+        """
+        Get DECT Serviceability Password status
+
+        Retrieves the DECT serviceability password status.
+
+        <div><Callout type="info">If the serviceability password is enabled but has not been generated, the `enabled`
+        status will be returned as `true` even though there is no active serviceability password.</Callout></div>
+
+        The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
+        base stations for performing system serviceability and troubleshooting functions.
+
+        This API requires an auth token with either a full, read-only token with the scope of
+        `spark-admin:telephony_config_read`, or a device administrator token with the scope of
+        `spark-admin:devices_read`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param dect_network_id: Unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: bool
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
+        data = super().get(url, params=params)
+        r = data['enabled']
+        return r
+
+    def update_dect_serviceability_password_status(self, location_id: str, dect_network_id: str, enabled: bool,
+                                                   org_id: str = None):
+        """
+        Update DECT Serviceability Password status
+
+        Enables or disables the DECT serviceability password.
+
+        <div><Callout type="warning">Enabling or disabling the password and transmitting it to the DECT network can
+        reboot the entire network. Be sure you choose an appropriate time for this action.</Callout></div>
+
+        <div><Callout type="info">If enabling is requested, but the serviceability password has not been generated, we
+        will not actively reject the request even though there is no serviceability password.</Callout></div>
+
+        The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
+        base stations for performing system serviceability and troubleshooting functions.
+
+        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
+        or a device administrator token with the scope of `spark-admin:devices_write`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param dect_network_id: Unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param enabled: DECT serviceability password status. When `enabled` is set to `true`, the serviceability
+            password can be used to manage DECT. When `enabled` is set to `false`, the serviceability password is
+            disabled and the password owned and known by Cisco is required to perform serviceability and
+            troubleshooting.
+        :type enabled: bool
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
+        super().put(url, params=params, json=body)

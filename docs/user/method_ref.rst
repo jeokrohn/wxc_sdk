@@ -901,6 +901,10 @@ The method name is a link to the method documentation.
         Delete multiple handsets
    * - :meth:`api.telephony.dect_devices.device_type_list <wxc_sdk.telephony.dect_devices.DECTDevicesApi.device_type_list>`
         Read the DECT device type list
+   * - :meth:`api.telephony.dect_devices.generate_and_enable_dect_serviceability_password <wxc_sdk.telephony.dect_devices.DECTDevicesApi.generate_and_enable_dect_serviceability_password>`
+        Generate and Enable DECT Serviceability Password
+   * - :meth:`api.telephony.dect_devices.get_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.get_dect_serviceability_password_status>`
+        Get DECT Serviceability Password status
    * - :meth:`api.telephony.dect_devices.handset_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.handset_details>`
         Get Specific DECT Network Handset Details
    * - :meth:`api.telephony.dect_devices.list_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_base_stations>`
@@ -913,6 +917,8 @@ The method name is a link to the method documentation.
         Update DECT Network
    * - :meth:`api.telephony.dect_devices.update_dect_network_settings <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network_settings>`
         Update DECT Network from settings
+   * - :meth:`api.telephony.dect_devices.update_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_serviceability_password_status>`
+        Update DECT Serviceability Password status
    * - :meth:`api.telephony.dect_devices.update_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_handset>`
         Update DECT Network Handset
    * - :meth:`api.telephony.devices.apply_changes <wxc_sdk.telephony.devices.TelephonyDevicesApi.apply_changes>`
@@ -1830,7 +1836,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.workspaces.list <wxc_sdk.workspaces.WorkspacesApi.list>`
         List Workspaces
    * - :meth:`api.workspaces.update <wxc_sdk.workspaces.WorkspacesApi.update>`
-        Updates details for a workspace by ID
+        Update a Workspace
    * - :meth:`api.xapi.execute_command <wxc_sdk.xapi.XApi.execute_command>`
         Execute Command
    * - :meth:`api.xapi.query_status <wxc_sdk.xapi.XApi.query_status>`

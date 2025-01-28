@@ -18,6 +18,7 @@ Release history
 - feat: new endpoint to switch mode for call forwarding (HG): :meth:`api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
 - feat: operating modes API: :attr:`api.telephony.operating_modes <wxc_sdk.telephony.TelephonyApi.operating_modes>`
 - feat: personal assistant settings API: :attr:`api.person_settings.personal_assistant <wxc_sdk.person_settings.PersonSettingsApi.personal_assistant>`
+- feat: new endpoints: :meth:`api.telephony.dect_devices.generate_and_enable_dect_serviceability_password <wxc_sdk.telephony.dect_devices.DECTDevicesApi.generate_and_enable_dect_serviceability_password>`, :meth:`api.telephony.dect_devices.get_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.get_dect_serviceability_password_status>`, :meth:`api.telephony.dect_devices.update_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_serviceability_password_status>`
 
 1.23.0
 ======

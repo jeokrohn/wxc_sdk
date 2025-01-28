@@ -1,5 +1,4 @@
 # auto-generated. DO NOT EDIT
-import csv
 import json
 import logging
 import mimetypes
@@ -12,9 +11,8 @@ from dateutil import tz
 from dateutil.parser import isoparse
 from enum import Enum
 from io import BufferedReader
-from typing import Union, Dict, Optional, Literal, List
+from typing import Union, Optional, Literal, List
 
-from aiohttp import FormData
 from pydantic import TypeAdapter
 
 from wxc_sdk.all_types import *
@@ -41,20 +39,20 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
            'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
            'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
-           'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEnum', 'AsEventsApi', 'AsExecAssistantApi',
-           'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi',
-           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
-           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
-           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
-           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
-           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
-           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
-           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsFeatureSelector',
+           'AsForwardingApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotelingApi',
+           'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
+           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi',
+           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
+           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
+           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
            'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
@@ -65,7 +63,7 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsUpdateRoutingPrefixJobsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
            'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
            'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
-           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsXApi', 'Asstr']
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsXApi']
 
 
 @dataclass(init=False, repr=False)
@@ -17816,6 +17814,112 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep('devices/availableMembers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)]
 
+    async def generate_and_enable_dect_serviceability_password(self, location_id: str, dect_network_id: str,
+                                                         org_id: str = None) -> str:
+        """
+        Generate and Enable DECT Serviceability Password
+
+        Generates and enables a 16-character DECT serviceability password.
+
+        <div><Callout type="warning">Generating a password and transmitting it to the DECT network can reboot the
+        entire network. Be sure you choose an appropriate time to generate a new password.</Callout></div>
+
+        The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
+        base stations for performing system serviceability and troubleshooting functions.
+
+        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
+        or a device administrator token with the scope of `spark-admin:devices_write`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param dect_network_id: Unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(
+            f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword/actions/generate/invoke')
+        data = await super().post(url, params=params)
+        r = data['password']
+        return r
+
+    async def get_dect_serviceability_password_status(self, location_id: str, dect_network_id: str,
+                                                    org_id: str = None) -> bool:
+        """
+        Get DECT Serviceability Password status
+
+        Retrieves the DECT serviceability password status.
+
+        <div><Callout type="info">If the serviceability password is enabled but has not been generated, the `enabled`
+        status will be returned as `true` even though there is no active serviceability password.</Callout></div>
+
+        The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
+        base stations for performing system serviceability and troubleshooting functions.
+
+        This API requires an auth token with either a full, read-only token with the scope of
+        `spark-admin:telephony_config_read`, or a device administrator token with the scope of
+        `spark-admin:devices_read`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param dect_network_id: Unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: bool
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
+        data = await super().get(url, params=params)
+        r = data['enabled']
+        return r
+
+    async def update_dect_serviceability_password_status(self, location_id: str, dect_network_id: str, enabled: bool,
+                                                   org_id: str = None):
+        """
+        Update DECT Serviceability Password status
+
+        Enables or disables the DECT serviceability password.
+
+        <div><Callout type="warning">Enabling or disabling the password and transmitting it to the DECT network can
+        reboot the entire network. Be sure you choose an appropriate time for this action.</Callout></div>
+
+        <div><Callout type="info">If enabling is requested, but the serviceability password has not been generated, we
+        will not actively reject the request even though there is no serviceability password.</Callout></div>
+
+        The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
+        base stations for performing system serviceability and troubleshooting functions.
+
+        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
+        or a device administrator token with the scope of `spark-admin:devices_write`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param dect_network_id: Unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param enabled: DECT serviceability password status. When `enabled` is set to `true`, the serviceability
+            password can be used to manage DECT. When `enabled` is set to `false`, the serviceability password is
+            disabled and the password owned and known by Cisco is required to perform serviceability and
+            troubleshooting.
+        :type enabled: bool
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
+        await super().put(url, params=params, json=body)
+
 
 class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
     """
@@ -28032,15 +28136,19 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
-          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
+        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_, `available numbers
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
-        * When creating a `webexCalling` workspace, a `locationId` and either a `phoneNumber` or `extension` or both is
-          required.
-          Furthermore, it is possible to set the licenses field with a list of Webex Calling license IDs, if desired.
-          If multiple license IDs are provided, the oldest suitable one will be applied. If no licenses are supplied,
-          the oldest suitable one from the active subscriptions will be automatically applied.
+        * When creating a `webexCalling` workspace that is not hot desk only, a `locationId` and either a `phoneNumber`
+          or `extension` or both is required. Furthermore, it is possible to set the `licenses` field with a list of
+          Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be
+          applied. If no licenses are supplied, the oldest suitable one from the active subscriptions will be
+          automaticaly applied.
+
+        * When creating a hot desk only workspace, `phoneNumber` and `extension` fields are not applicable.
+          Furthermore, `deviceHostedMeetingsEnabled`, and `calendar` services are not applicable. If any of these fields
+           are provided the API will return an error. The `calling` type is `webexCalling`.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -28074,18 +28182,19 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
     async def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
+        Update a Workspace
+
         Updates details for a workspace by ID.
 
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
-        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional
-        `capacity`, `type` or
+        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
         `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
         provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.
 
         * Information for Webex Calling fields may be found here: `locations
-          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and available numbers
+        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
 
         * Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`,
           `thirdPartySipCalling` or `webexCalling`.
@@ -28095,12 +28204,17 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
-        * When updating `webexCalling` information, a `locationId` and either a `phoneNumber` or `extension` or both is
-          required.
-          Furthermore, the licenses field can be set with a list of Webex Calling license IDs, if desired. If
-          multiple license IDs are provided, the oldest suitable one will be applied. If a previously applied license
-          ID is omitted, it will be replaced with one from the list provided. If the licenses field is omitted,
-          the current calling license will be retained.
+        * When updating `webexCalling` information on a workspace that is not hot desk only, a `locationId` and either
+          a `phoneNumber` or `extension` or both is required. Furthermore, the `licenses` field can be set with a list
+          of Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will
+          be applied. If a previously applied license ID is omitted, it will be replaced with one from the list
+          provided. If the `licenses` field is omitted, the current calling license will be retained.
+
+        * When specifying a hot desk only license on a hot desk only workspace, `deviceHostedMeetingsEnabled`, and
+          `calendar` services are not supported and will be automatically disabled. In addition to this, the
+          `phoneNumber` and `extension` will be removed from the workspace. Attempting to enable any of these services,
+          or provide a `phoneNumber` or `extension` will result in an error. The `calling` type for these requests is
+          `webexCalling`.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
