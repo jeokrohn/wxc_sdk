@@ -45,11 +45,19 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
     """
     Team Memberships
     
-    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're
-    in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a
-    moderator or deleted to remove them from the team.
+    Manipulating Team Memberships as a Compliance Officer
     
-    Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
+    As a Compliance Officer, you can indirectly manage the memberships of a team to which you do not belong.
+    Individuals added to the team's general space are automatically considered team members. Therefore, you can
+    utilize your standard privilege of adding individuals to a space or room by adding them to the team's general
+    space.
+    
+    The team ID contains the general room ID with a different prefix. To locate the general room ID of a team, you need
+    to decode and recode the team ID using the new prefix. Below is a command-line example for this process. Note that
+    the final sed replacement is used to remove padding characters.
+    
+    Example: echo "Y2lzY29zcGFyazovL3VzL1RFQU0vYjQ5ODhmODAtN2QzMS0xMWVkLTk4Y2MtNWY5MTFhZWU1OTA0" | base64 -d | sed
+    's/TEAM/ROOM/' | base64 | sed 's/\=.//'
     """
 
     def list_team_memberships(self, team_id: str, **params) -> Generator[TeamMembership, None, None]:
