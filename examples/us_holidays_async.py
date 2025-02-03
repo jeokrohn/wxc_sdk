@@ -31,8 +31,8 @@ USE_TASKS = True
 CLEAN_UP = False
 
 # first and last year for which to create public holiday events
-FIRST_YEAR = 2022
-LAST_YEAR = 2024
+FIRST_YEAR = 2024
+LAST_YEAR = 2026
 
 LAST_YEAR = not CLEAN_UP and LAST_YEAR or FIRST_YEAR
 
