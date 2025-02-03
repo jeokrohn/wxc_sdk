@@ -140,16 +140,31 @@ class WorkspaceIndoorNavigation(ApiModel):
     #: URL of a map locating the workspace.
     url: Optional[str] = None
 
+class WorkspaceHealthLevel(str, Enum):
+    error = 'error'
+    warning = 'warning'
+    info = 'info'
+    ok = 'ok'
+
 class WorkspaceHealthIssue(ApiModel):
+    #: Issue id.
     id: Optional[str] = None
+    #: Issue created timestamp.
     created_at: Optional[datetime.datetime] = None
+    #: Issue title.
     title: Optional[str] = None
+    #: Issue description.
     description: Optional[str] = None
+    #: Recommended action to mitigate issue.
     recommended_action: Optional[str] = None
+    #: Issue level.
     level: Optional[str] = None
 
+
 class WorkspaceHealth(ApiModel):
-    level: Optional[str] = None
+    #: Health level. The level is based on the list of issues associated with the workspace.
+    level: Optional[WorkspaceHealthLevel] = None
+    #: A list of workspace issues.
     issues: Optional[list[WorkspaceHealthIssue]] = None
 
 class Workspace(ApiModel):
@@ -194,7 +209,7 @@ class Workspace(ApiModel):
     device_platform: Optional[DevicePlatform] = None
     #: Indoor navigation configuration.
     indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
-    #: TODO: undocumented,  issue200
+    #: The health of the workspace.
     health: Optional[WorkspaceHealth] = None
 
     def update_or_create(self, for_update: bool = False) -> dict:
@@ -271,7 +286,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-             device_platform: DevicePlatform = None, org_id: str = None,
+             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None, org_id: str = None,
              **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
@@ -310,6 +325,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_hosted_meetings_enabled: bool
         :param device_platform: List workspaces by device platform.
         :type device_platform: DevicePlatform
+        :param health_level: List workspaces by health level.
+        :type health_level: WorkspaceHealthLevel
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str

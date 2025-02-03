@@ -15,8 +15,23 @@ __all__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceC
            'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
            'WorkspaceCallingWebexCalling', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
            'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceDeviceHostedMeetings', 'WorkspaceDevicePlatform',
-           'WorkspaceHotdeskingStatus', 'WorkspaceIndoorNavigation', 'WorkspaceSupportedDevices', 'WorkspaceType1',
-           'WorkspacesApi']
+           'WorkspaceHealth', 'WorkspaceHealthLevel', 'WorkspaceHotdeskingStatus', 'WorkspaceIndoorNavigation',
+           'WorkspaceIssue', 'WorkspaceSupportedDevices', 'WorkspaceType1', 'WorkspacesApi']
+
+
+class WorkspaceIssue(ApiModel):
+    #: Issue id.
+    id: Optional[str] = None
+    #: Issue created timestamp.
+    created_at: Optional[str] = None
+    #: Issue title.
+    title: Optional[str] = None
+    #: Issue description.
+    description: Optional[str] = None
+    #: Recommended action to mitigate issue.
+    recommended_action: Optional[str] = None
+    #: Issue level.
+    level: Optional[str] = None
 
 
 class WorkspaceType1(str, Enum):
@@ -125,6 +140,20 @@ class WorkspaceIndoorNavigation(ApiModel):
     url: Optional[str] = None
 
 
+class WorkspaceHealthLevel(str, Enum):
+    error = 'error'
+    warning = 'warning'
+    info = 'info'
+    ok = 'ok'
+
+
+class WorkspaceHealth(ApiModel):
+    #: Health level. The level is based on the list of issues associated with the workspace.
+    level: Optional[WorkspaceHealthLevel] = None
+    #: A list of workspace issues.
+    issues: Optional[list[WorkspaceIssue]] = None
+
+
 class Workspace(ApiModel):
     #: Unique identifier for the Workspace.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFUy81MTAxQjA3Qi00RjhGLTRFRjctQjU2NS1EQjE5QzdCNzIzRjc
@@ -175,6 +204,8 @@ class Workspace(ApiModel):
     device_platform: Optional[WorkspaceDevicePlatform] = None
     #: Indoor navigation configuration.
     indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
+    #: The health of the workspace.
+    health: Optional[WorkspaceHealth] = None
 
 
 class WorkspaceCreationRequestCallingWebexCalling(ApiModel):
@@ -260,8 +291,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                         display_name: str = None, capacity: int = None, type: WorkspaceType1 = None,
                         calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
-                        device_platform: WorkspaceDevicePlatform = None, org_id: str = None,
-                        **params) -> Generator[Workspace, None, None]:
+                        device_platform: WorkspaceDevicePlatform = None, health_level: WorkspaceHealthLevel = None,
+                        org_id: str = None, **params) -> Generator[Workspace, None, None]:
         """
         List workspaces.
 
@@ -297,6 +328,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_hosted_meetings_enabled: bool
         :param device_platform: List workspaces by device platform.
         :type device_platform: WorkspaceDevicePlatform
+        :param health_level: List workspaces by health level.
+        :type health_level: WorkspaceHealthLevel
         :param org_id: List workspaces in this organization. Only admin users of another organization (such as
             partners) may use this parameter.
         :type org_id: str
@@ -326,6 +359,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
         if device_platform is not None:
             params['devicePlatform'] = enum_str(device_platform)
+        if health_level is not None:
+            params['healthLevel'] = enum_str(health_level)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
