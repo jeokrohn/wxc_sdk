@@ -34,12 +34,12 @@ from typing import Optional
 
 from dotenv import load_dotenv
 
-from wxc_sdk import Tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.integration import Integration
 from wxc_sdk.people import Person
 from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.telephony.callqueue import CallQueue
+from wxc_sdk.tokens import Tokens
 from wxc_sdk.telephony.hg_and_cq import Agent
 
 
@@ -52,7 +52,7 @@ def env_path() -> str:
     determine path for .env to load environment variables from; based on name of this file
     :return: .env file path
     """
-    return os.path.join(os.getcwd(), f'{os.path.splitext(os.path.basename(__file__))[0]}.env')
+    return f'{os.path.splitext(__file__)[0]}.env'
 
 
 def yml_path() -> str:
@@ -61,7 +61,7 @@ def yml_path() -> str:
     :return: path to YML file
     :rtype: str
     """
-    return os.path.join(os.getcwd(), f'{os.path.splitext(os.path.basename(__file__))[0]}.yml')
+    return f'{os.path.splitext(__file__)[0]}.yml'
 
 
 def build_integration() -> Integration:
@@ -174,7 +174,7 @@ async def main():
             new_agents.append(agent)
 
         # add new agents
-        new_agents.extend(Agent(agent_id=user.person_id)
+        new_agents.extend(Agent(id=user.person_id)
                           for user in to_add)
 
         # update the queue
