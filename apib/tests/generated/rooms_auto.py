@@ -255,6 +255,15 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         Get Room Meeting Details
 
+        <div>
+        <callout type="warning">
+        The meetingInfo API is deprecated and will be EOL on Jan 31, 2025. Meetings in the WSMP must be scheduled and
+        licensed via the meetings backend.
+        The `Create a Meeting
+        <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ endpoint will provide the SIP address for the meeting to call.
+        </callout>
+        </div>
+
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in
         numbers.
 
@@ -283,6 +292,12 @@ class RoomsApi(ApiChild, base='rooms'):
         officer can convert a space from private to public and only if the space is classified with the lowest
         category (usually `public`), and the space has a description.
         To remove a `description` please use a space character ` ` by itself.
+
+        <div><Callout type="info">When using this method for moving a space under a team, ensure that all moderators in
+        the space are also team members. If a moderator is not part of the team, demote or remove them as a moderator.
+        Alternatively, add the non-team moderators to the team. This ensures compliance with the requirement that all
+        space moderators must be team members for successful operation execution.
+        </Callout></div>
 
         :param room_id: The unique identifier for the room.
         :type room_id: str

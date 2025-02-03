@@ -187,6 +187,13 @@ class RoomsApi(ApiChild, base='rooms'):
 
     def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
         """
+
+        The meetingInfo API is deprecated and will be EOL on Jan 31, 2025. Meetings in the WSMP must be scheduled and
+        licensed via the meetings backend.
+        The `Create a Meeting
+        <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ endpoint will provide the SIP address for
+        the meeting to call.
+
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
         Specify the room ID in the roomId parameter in the URI.
 
@@ -201,15 +208,20 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         Updates details for a room, by ID.
 
-        Specify the room ID in the roomId parameter in the URI.
+        Specify the room ID in the `roomId` parameter in the URI.
 
         A space can only be put into announcement mode when it is locked.
 
         Any space participant or compliance officer can convert a space from public to private. Only a compliance
         officer can convert a space from private to public and only if the space is classified with the lowest
-        category (usually public), and the space has a description.
+        category (usually `public`), and the space has a description.
 
-        To remove a description please use a space character   by itself.
+        To remove a `description` please use a space character ` ` by itself.
+
+        When using this method for moving a space under a team, ensure that all moderators in
+        the space are also team members. If a moderator is not part of the team, demote or remove them as a moderator.
+        Alternatively, add the non-team moderators to the team. This ensures compliance with the requirement that all
+        space moderators must be team members for successful operation execution.
 
         :update: update to apply. ID and title have to be set. Only can update:
 
@@ -218,13 +230,16 @@ class RoomsApi(ApiChild, base='rooms'):
             * team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
               to a team. Assignment between teams is unsupported.
             * is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+            * is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+              room. When `true` the `description` must be filled in.
+            * description: The description of the space.
             * is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
             * is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
               new information exchanges in this space, while maintaining historical data.
         """
         update: Room
-        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked',
-                                               'is_announcement_only', 'is_read_only'})
+        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_public',
+                                               'description', 'is_announcement_only', 'is_read_only'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
