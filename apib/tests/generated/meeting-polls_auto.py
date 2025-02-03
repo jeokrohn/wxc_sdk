@@ -197,6 +197,13 @@ class MeetingPollsApi(ApiChild, base='meetings'):
     
     You can use the Meeting Poll API to list meeting polls, the poll's questions, and answers.
     
+    The Meeting Polls API is deprecated and does not work in the Webex Suite
+    Meeting Platform where Sli.do must be used for Poll and QA. We will provide
+    Sli.do specific APIs instead. Please see also [this document](/docs/app-
+    programming-interface-behavior-changes)
+    
+    
+    
     Currently, these APIs are available to users with one of the meeting host,
     admin or `Compliance Officer
     <https://developer.webex.com/docs/compliance#compliance>`_ roles. The polls,
