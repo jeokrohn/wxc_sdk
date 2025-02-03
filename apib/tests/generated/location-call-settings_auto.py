@@ -1655,7 +1655,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
 
         :param location_id: Delete a Receptionist Contact Directory from this location.
         :type location_id: str
-        :param directory_id: Add a Receptionist Contact Directory ID.
+        :param directory_id: Delete the Receptionist Contact Directory ID with the matching ID.
         :type directory_id: str
         :param org_id: Delete a Receptionist Contact Directory from this organization.
         :type org_id: str
