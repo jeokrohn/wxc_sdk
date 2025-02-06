@@ -218,6 +218,14 @@ class ProgrammableLineKey(ApiModel):
     #: This is applicable only when the lineKeyType is `SPEED_DIAL` and the value must be a valid Telephone Number,
     #: Ext, or SIP URI (format: user@host using A-Z,a-z,0-9,-_ .+ for user and host).
     line_key_value: Optional[str] = None
+    #: Shared line index is the line label number of the shared or virtual line assigned in the configured lines. Since
+    #: you can add multiple appearances of the same shared or virtual line on a phone, entering the index number
+    #: assigns the respective line to a line key. This is applicable only when the `lineKeyType` is SHARED_LINE, If
+    #: multiple programmable line keys are configured as shared lines, and If the `sharedLineIndex` is sent for any of
+    #: the shared line, then the `sharedLineIndex` should be sent for all other shared lines. When `lineKeyType` is
+    #: SHARED_LINE and `sharedLineIndex` is not assigned to any of the configured lines, then `sharedLineIndex` is
+    #: assigned by default in the order the shared line appears in the request.
+    shared_line_index: Optional[int] = None
 
     @classmethod
     def standard_plk_list(cls, lines: int = 10) -> list['ProgrammableLineKey']:
@@ -285,6 +293,14 @@ class KemKey(ApiModel):
     #: Applicable only when the kemKeyType is `SPEED_DIAL`. Value must be a valid Telephone Number, Ext, or SIP URI
     #: (format: `user@host` limited to `A-Z,a-z,0-9,-_ .+` for user and host).
     kem_key_value: Optional[str] = None
+    #: Shared line index is the line label number of the shared or virtual line assigned in the configured lines. Since
+    #: you can add multiple appearances of the same shared or virtual line on a phone, entering the index number
+    #: assigns the respective line to a line key. This is applicable only when the `lineKeyType` is SHARED_LINE, If
+    #: multiple programmable line keys are configured as shared lines, and If the `sharedLineIndex` is sent for any of
+    #: the shared line, then the `sharedLineIndex` should be sent for all other shared lines. When `lineKeyType` is
+    #: SHARED_LINE and `sharedLineIndex` is not assigned to any of the configured lines, then `sharedLineIndex` is
+    #: assigned by default in the order the shared line appears in the request.
+    shared_line_index: Optional[int] = None
 
 
 class DeviceLayout(ApiModel):
