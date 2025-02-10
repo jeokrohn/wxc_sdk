@@ -13,6 +13,7 @@ from typing import ClassVar
 from unittest import skip
 
 from tests.base import TestCaseWithLog, async_test, TestLocationsUsersWorkspacesVirtualLines
+from tests.test_people import time_it
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsDigitPatternsApi, AsOutgoingPermissionsApi
 from wxc_sdk.as_rest import AsRestError
@@ -384,13 +385,14 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLines):
                             pattern=DigitPattern(name=f'test_{pattern}', pattern=pattern, action=Action.block,
                                                  transfer_enabled=False))
                  for pattern in patterns_to_create]
-        print(f'Creating {len(patterns_to_create)} patterns')
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        with time_it(f'Creating {len(patterns_to_create)} patterns'):
+            print(f'Creating {len(patterns_to_create)} patterns')
+            results = await asyncio.gather(*tasks, return_exceptions=True)
         failed = [(pattern, result)
                   for pattern, result in zip(patterns_to_create, results)
                   if isinstance(result, Exception)]
         try:
-            self.assertEqual(1, len(failed), f'Failed to create {len(failed)} patterns')
+            self.assertEqual(1, len(failed), f'Failed to create {len(failed)} patterns; expected: 1')
             # try to add the failed pattern again
             pattern = failed[0][0]
             with self.assertRaises(AsRestError) as exc:
