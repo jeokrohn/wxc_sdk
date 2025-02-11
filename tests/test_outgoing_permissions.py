@@ -392,6 +392,12 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLines):
                   for pattern, result in zip(patterns_to_create, results)
                   if isinstance(result, Exception)]
         try:
+            # get all patterns
+            after = await api.get_digit_patterns(entity_id=entity_id)
+            existing_patterns_by_name = set(p.name for p in after.digit_patterns)
+            patterns_not_added = [pattern for pattern in patterns_to_create if f'test_{pattern}' not in existing_patterns_by_name]
+            self.assertEqual(len(failed), len(patterns_not_added),
+                             f'Failed to create {len(patterns_not_added)} patterns; expected: {len(failed)}')
             self.assertEqual(1, len(failed), f'Failed to create {len(failed)} patterns; expected: 1')
             # try to add the failed pattern again
             pattern = failed[0][0]
