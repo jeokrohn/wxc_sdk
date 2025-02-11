@@ -415,7 +415,8 @@ class AvailableAgent(ApiModel):
     #: Person has the CX Essentials license.
     has_cx_essentials: Optional[bool] = None
     #: List of phone numbers of a person, workspace or virtual line.
-    numbers: Optional[list[UserNumber]] = None
+    #: TODO name change, WXCAPIBULK-697
+    numbers: Optional[list[UserNumber]] = Field(default=None, alias='phoneNumbers')
 
 
 @dataclass(init=False, repr=False)
