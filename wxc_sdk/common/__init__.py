@@ -904,7 +904,7 @@ class MppCustomization(CommonDeviceCustomization):
     #: Indicates whether PNAC of MPP object is enabled or not
     pnac_enabled: bool
     #: Choose the length of time (in minutes) for the phone’s backlight to remain on.
-    backlight_timer: BacklightTimer
+    backlight_timer: Optional[BacklightTimer] = None
     #: Holds the background object of MPP Object.
     background: BackgroundSelection
     #: The display name that appears on the phone screen.
