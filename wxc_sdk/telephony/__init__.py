@@ -579,6 +579,8 @@ class SupportedDevice(ApiModel):
     default_upgrade_channel: Optional[str] = None
     #: Enables / disables the additional primary line appearances.
     additional_primary_line_appearances_enabled: Optional[bool] = None
+    #: TODO: undocumented, issue 208, WXCAPIBULK-696
+    additional_secondary_line_appearances_enabled: Optional[bool] = None
     #: Enables / disables Basic emergency nomadic.
     basic_emergency_nomadic_enabled: Optional[bool] = None
     #: Enables / disables customized behavior support on devices
