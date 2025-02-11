@@ -392,10 +392,14 @@ class CreateDevice(TestWithLocations):
         created_device = next((d for d in person_devices if d.mac == mac), None)
         if created_device is None:
             errs.append('Device not found in list of devices')
+        else:
+            print(f'New device found in devices.list(person_id)')
         device_list = self.api.person_settings.devices(person_id=target_user.person_id)
         created_device = next((d for d in device_list.devices if d.mac == mac), None)
         if created_device is None:
             errs.append('Device not found in list of user devices')
+        else:
+            print(f'New device found in person_settings.devices(person_id)')
 
         self.assertTrue(not errs, ', '.join(errs))
 
