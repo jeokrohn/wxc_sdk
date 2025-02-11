@@ -56,6 +56,8 @@ class AuditEventData(ApiModel):
     added_pattern: Optional[Any] = None
     attributes: Optional[Any] = None
     authorized_status: Optional[Any] = None
+    api_version: Optional[Any] = None
+    business_text_status: Optional[Any] = None
     capacity: Optional[Any] = None
     change_detail_id: Optional[Any] = None
     change_set: Optional[Any] = None
