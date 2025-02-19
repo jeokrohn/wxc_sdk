@@ -829,12 +829,6 @@ class TestCallRoutingPostResponse(ApiModel):
     outside_access_code: Optional[str] = None
     #: `true` if the call would be rejected.
     is_rejected: Optional[bool] = None
-    #: Calling line ID (CLID) configured for the calling user.
-    #: example: +12036680442
-    calling_line_id: Optional[str] = Field(alias='callingLineID', default=None)
-    #: Routing profile that is used to route network calls.
-    #: example: AttRtPf
-    routing_profile: Optional[str] = None
     #: Returned when `destinationType` is `HOSTED_AGENT`.
     hosted_agent: Optional[HostedAgent] = None
     #: Returned when `destinationType` is `HOSTED_FEATURE`.
