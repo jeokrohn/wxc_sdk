@@ -1989,7 +1989,7 @@ class PersonalAssistantGet(ApiModel):
     #: Alert type.
     #: example: ALERT_ME_FIRST
     alerting: Optional[PersonalAssistantGetAlerting] = None
-    #: Number of rings for alert type: `ALERT_ME_FIRST`; available range is 0-20
+    #: Number of rings for alert type: `ALERT_ME_FIRST`; available range is 2-20
     #: example: 3
     alert_me_first_number_of_rings: Optional[int] = None
 
@@ -5710,7 +5710,7 @@ class UserCallSettingsApi(ApiChild, base=''):
         :type transfer_number: str
         :param alerting: Alert type.
         :type alerting: PersonalAssistantGetAlerting
-        :param alert_me_first_number_of_rings: Number of rings for alert type: ALERT_ME_FIRST; available range is 0-20.
+        :param alert_me_first_number_of_rings: Number of rings for alert type: ALERT_ME_FIRST; available range is 2-20.
         :type alert_me_first_number_of_rings: int
         :param org_id: Update Personal Assistant details for the organization.
         :type org_id: str

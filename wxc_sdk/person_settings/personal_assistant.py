@@ -51,7 +51,7 @@ class PersonalAssistant(ApiModel):
     transfer_number: Optional[str] = None
     #: Alert type.
     alerting: Optional[PersonalAssistantAlerting] = None
-    #: Number of rings for alert type: `ALERT_ME_FIRST`; available range is 0-20
+    #: Number of rings for alert type: `ALERT_ME_FIRST`; available range is 2-20
     alert_me_first_number_of_rings: Optional[int] = None
 
 
@@ -86,11 +86,7 @@ class PersonalAssistantApi(ApiChild, base=''):
         r = PersonalAssistant.model_validate(data)
         return r
 
-    def update(self, person_id: str, enabled: bool = None,
-               presence: PersonalAssistantPresence = None,
-               until_date_time: Union[str, datetime] = None, transfer_enabled: bool = None, transfer_number: str = None,
-               alerting: PersonalAssistantAlerting = None,
-               alert_me_first_number_of_rings: int = None, org_id: str = None):
+    def update(self, person_id: str, settings: PersonalAssistant, org_id: str = None):
         """
         Update Personal Assistant
 
@@ -103,41 +99,13 @@ class PersonalAssistantApi(ApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param enabled: Toggles feature.
-        :type enabled: bool
-        :param presence: Person's availability.
-        :type presence: PersonalAssistantPresence
-        :param until_date_time: The date until which the personal assistant is active.
-        :type until_date_time: Union[str, datetime]
-        :param transfer_enabled: Toggle the option to transfer to another number.
-        :type transfer_enabled: bool
-        :param transfer_number: Number to transfer to.
-        :type transfer_number: str
-        :param alerting: Alert type.
-        :type alerting: PersonalAssistantAlerting
-        :param alert_me_first_number_of_rings: Number of rings for alert type: ALERT_ME_FIRST; available range is 0-20.
-        :type alert_me_first_number_of_rings: int
+        :param settings: Personal Assistant settings.
+        :type settings: PersonalAssistant
         :param org_id: Update Personal Assistant details for the organization.
         :type org_id: str
         :rtype: None
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        if enabled is not None:
-            body['enabled'] = enabled
-        if presence is not None:
-            body['presence'] = enum_str(presence)
-        if until_date_time is not None:
-            body['untilDateTime'] = until_date_time
-        if transfer_enabled is not None:
-            body['transferEnabled'] = transfer_enabled
-        if transfer_number is not None:
-            body['transferNumber'] = transfer_number
-        if alerting is not None:
-            body['alerting'] = enum_str(alerting)
-        if alert_me_first_number_of_rings is not None:
-            body['alertMeFirstNumberOfRings'] = alert_me_first_number_of_rings
+        params = {'orgId': org_id} if org_id is not None else None
+        body = settings.model_dump(mode='json', exclude_unset=True, by_alias=True)
         url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
         super().put(url, params=params, json=body)

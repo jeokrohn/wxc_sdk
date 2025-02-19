@@ -22,10 +22,10 @@ from ..api_child import ApiChild
 from ..base import ApiModel, enum_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar',
-           'WorkspaceCallingHybridCalling', 'WorkspaceHealth', 'WorkspaceHealthIssue',
-           'HotdeskingStatus', 'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling',
-           'WorkspaceSupportedDevices', 'WorkspaceIndoorNavigation', 'WorkspacesApi', 'SupportAndConfiguredInfo']
+__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'WorkspaceSupportedDevices',
+           'WorkspaceCallingHybridCalling', 'WorkspaceWebexCalling', 'WorkspaceCalling', 'DeviceHostedMeetings',
+           'HotdeskingStatus', 'WorkspaceIndoorNavigation', 'WorkspaceHealthLevel', 'WorkspaceHealthIssue',
+           'WorkspaceHealth', 'Workspace', 'SupportAndConfiguredInfo', 'CapabilityMap', 'WorkspacesApi']
 
 from ..common import DevicePlatform
 

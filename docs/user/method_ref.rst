@@ -544,7 +544,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.rooms.list <wxc_sdk.rooms.RoomsApi.list>`
         List rooms
    * - :meth:`api.rooms.meeting_details <wxc_sdk.rooms.RoomsApi.meeting_details>`
-        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers
+        The meetingInfo API is deprecated and will be EOL on Jan 31, 2025
    * - :meth:`api.rooms.update <wxc_sdk.rooms.RoomsApi.update>`
         Updates details for a room, by ID
    * - :meth:`api.scim.bulk.bulk_request <wxc_sdk.scim.bulk.SCIM2BulkApi.bulk_request>`

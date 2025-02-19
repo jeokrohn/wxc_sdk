@@ -9393,11 +9393,7 @@ class AsPersonalAssistantApi(AsApiChild, base=''):
         r = PersonalAssistant.model_validate(data)
         return r
 
-    async def update(self, person_id: str, enabled: bool = None,
-               presence: PersonalAssistantPresence = None,
-               until_date_time: Union[str, datetime] = None, transfer_enabled: bool = None, transfer_number: str = None,
-               alerting: PersonalAssistantAlerting = None,
-               alert_me_first_number_of_rings: int = None, org_id: str = None):
+    async def update(self, person_id: str, settings: PersonalAssistant, org_id: str = None):
         """
         Update Personal Assistant
 
@@ -9410,42 +9406,14 @@ class AsPersonalAssistantApi(AsApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param enabled: Toggles feature.
-        :type enabled: bool
-        :param presence: Person's availability.
-        :type presence: PersonalAssistantPresence
-        :param until_date_time: The date until which the personal assistant is active.
-        :type until_date_time: Union[str, datetime]
-        :param transfer_enabled: Toggle the option to transfer to another number.
-        :type transfer_enabled: bool
-        :param transfer_number: Number to transfer to.
-        :type transfer_number: str
-        :param alerting: Alert type.
-        :type alerting: PersonalAssistantAlerting
-        :param alert_me_first_number_of_rings: Number of rings for alert type: ALERT_ME_FIRST; available range is 0-20.
-        :type alert_me_first_number_of_rings: int
+        :param settings: Personal Assistant settings.
+        :type settings: PersonalAssistant
         :param org_id: Update Personal Assistant details for the organization.
         :type org_id: str
         :rtype: None
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        if enabled is not None:
-            body['enabled'] = enabled
-        if presence is not None:
-            body['presence'] = enum_str(presence)
-        if until_date_time is not None:
-            body['untilDateTime'] = until_date_time
-        if transfer_enabled is not None:
-            body['transferEnabled'] = transfer_enabled
-        if transfer_number is not None:
-            body['transferNumber'] = transfer_number
-        if alerting is not None:
-            body['alerting'] = enum_str(alerting)
-        if alert_me_first_number_of_rings is not None:
-            body['alertMeFirstNumberOfRings'] = alert_me_first_number_of_rings
+        params = {'orgId': org_id} if org_id is not None else None
+        body = settings.model_dump(mode='json', exclude_unset=True, by_alias=True)
         url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
         await super().put(url, params=params, json=body)
 
@@ -11537,6 +11505,13 @@ class AsRoomsApi(AsApiChild, base='rooms'):
 
     async def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
         """
+
+        The meetingInfo API is deprecated and will be EOL on Jan 31, 2025. Meetings in the WSMP must be scheduled and
+        licensed via the meetings backend.
+        The `Create a Meeting
+        <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ endpoint will provide the SIP address for
+        the meeting to call.
+
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
         Specify the room ID in the roomId parameter in the URI.
 
@@ -11551,15 +11526,20 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         """
         Updates details for a room, by ID.
 
-        Specify the room ID in the roomId parameter in the URI.
+        Specify the room ID in the `roomId` parameter in the URI.
 
         A space can only be put into announcement mode when it is locked.
 
         Any space participant or compliance officer can convert a space from public to private. Only a compliance
         officer can convert a space from private to public and only if the space is classified with the lowest
-        category (usually public), and the space has a description.
+        category (usually `public`), and the space has a description.
 
-        To remove a description please use a space character   by itself.
+        To remove a `description` please use a space character ` ` by itself.
+
+        When using this method for moving a space under a team, ensure that all moderators in
+        the space are also team members. If a moderator is not part of the team, demote or remove them as a moderator.
+        Alternatively, add the non-team moderators to the team. This ensures compliance with the requirement that all
+        space moderators must be team members for successful operation execution.
 
         :update: update to apply. ID and title have to be set. Only can update:
 
@@ -11568,13 +11548,16 @@ class AsRoomsApi(AsApiChild, base='rooms'):
             * team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
               to a team. Assignment between teams is unsupported.
             * is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+            * is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+              room. When `true` the `description` must be filled in.
+            * description: The description of the space.
             * is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
             * is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
               new information exchanges in this space, while maintaining historical data.
         """
         update: Room
-        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked',
-                                               'is_announcement_only', 'is_read_only'})
+        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_public',
+                                               'description', 'is_announcement_only', 'is_read_only'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
@@ -28202,7 +28185,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-             device_platform: DevicePlatform = None, org_id: str = None,
+             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None, org_id: str = None,
              **params) -> AsyncGenerator[Workspace, None, None]:
         """
         List Workspaces
@@ -28241,6 +28224,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type device_hosted_meetings_enabled: bool
         :param device_platform: List workspaces by device platform.
         :type device_platform: DevicePlatform
+        :param health_level: List workspaces by health level.
+        :type health_level: WorkspaceHealthLevel
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -28278,7 +28263,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-             device_platform: DevicePlatform = None, org_id: str = None,
+             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None, org_id: str = None,
              **params) -> List[Workspace]:
         """
         List Workspaces
@@ -28317,6 +28302,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type device_hosted_meetings_enabled: bool
         :param device_platform: List workspaces by device platform.
         :type device_platform: DevicePlatform
+        :param health_level: List workspaces by health level.
+        :type health_level: WorkspaceHealthLevel
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
