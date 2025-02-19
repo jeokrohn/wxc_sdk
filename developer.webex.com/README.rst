@@ -1,6 +1,8 @@
 Trying to auto-create a reference of APIs by scraping developer.webex.com
 -------------------------------------------------------------------------
 
+NOTE: this method is not used used anymore and all generated files are outdated.
+
 Install ChromeDriver
 =======================
 
