@@ -1,5 +1,5 @@
 """
-Testing teh managing number job API
+Testing the managing number job API
 """
 import asyncio
 import datetime
@@ -10,6 +10,8 @@ from json import dumps, loads
 from random import shuffle
 from time import sleep, perf_counter
 from typing import NamedTuple
+
+from dateutil import tz
 
 from tests.base import TestCaseWithLog, TestWithLocations
 from tests.testutil import as_available_tns
@@ -175,7 +177,7 @@ class TestMoveNumbers(TestWithLocations):
         start = perf_counter()
         max_wait = 30
         while (perf_counter() < (start + max_wait)) and job.latest_execution_status not in {'COMPLETED', 'FAILED'}:
-            print(f'{datetime.datetime.utcnow().isoformat()}: job status: {job.latest_execution_status}')
+            print(f'{datetime.datetime.now(tz=tz.UTC).isoformat()}: job status: {job.latest_execution_status}')
             sleep(2)
             job = self.api.telephony.jobs.manage_numbers.status(job_id=job.id)
         return job

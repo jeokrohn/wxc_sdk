@@ -5,9 +5,10 @@ import os
 import sys
 from argparse import ArgumentParser
 from collections.abc import Iterable
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Optional
 
+from dateutil import tz
 from dotenv import load_dotenv
 
 from wxc_sdk.as_api import AsWebexSimpleApi
@@ -99,8 +100,7 @@ async def as_main():
     if not token:
         print('No token provided and WEBEX_ACCESS_TOKEN not set in environment', file=sys.stderr)
         exit(1)
-    cutoff = datetime.utcnow() - timedelta(days=args.days)
-    cutoff = cutoff.replace(tzinfo=timezone.utc)
+    cutoff = datetime.now(tz=tz.UTC) - timedelta(days=args.days)
     if args.keep:
         try:
             with open(args.keep, mode='r') as f:

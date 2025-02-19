@@ -5,6 +5,8 @@ from itertools import chain
 from math import log, ceil
 from typing import Union
 
+from dateutil import tz
+
 from tests.base import TestCaseWithLog
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.events import EventResource, ComplianceEvent
@@ -20,7 +22,7 @@ class TestEvents(TestCaseWithLog):
 
     @TestCaseWithLog.async_test
     async def test_002_list_events_for_all_resources(self):
-        start = datetime.utcnow() - timedelta(days=3)
+        start = datetime.now(tz=tz.UTC) - timedelta(days=3)
         events_list = await asyncio.gather(*[self.async_api.events.list(resource=r.value, from_=start, max=500)
                                              for r in EventResource])
         events_list: list[list[ComplianceEvent]]
@@ -40,7 +42,7 @@ class TestEvents(TestCaseWithLog):
         Get details for all events
         """
         async with AsWebexSimpleApi(tokens=self.tokens, concurrent_requests=30) as api:
-            start = datetime.utcnow() - timedelta(minutes=60)
+            start = datetime.now(tz=tz.UTC) - timedelta(minutes=60)
             events_list = await asyncio.gather(*[api.events.list(resource=r.value, from_=start, max=500)
                                                  for r in EventResource])
             details = await asyncio.gather(*[api.events.details(event_id=e.id)
@@ -58,7 +60,7 @@ class TestEvents(TestCaseWithLog):
         """
         Get details for all events; threading
         """
-        start = datetime.utcnow() - timedelta(minutes=60)
+        start = datetime.now(tz=tz.UTC) - timedelta(minutes=60)
 
         def details(event: ComplianceEvent) -> Union[RestError, ComplianceEvent]:
             try:

@@ -1,6 +1,7 @@
 """
 base functions for unit tests
 """
+from dateutil import tz
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -662,7 +663,7 @@ class UserCache(BaseModel):
         """
         cache needs validation if is has been longer than 5 minutes since we last used the cache
         """
-        seconds_since_last_access = (datetime.utcnow() - self.last_access).total_seconds()
+        seconds_since_last_access = (datetime.now(tz=tz.UTC) - self.last_access).total_seconds()
         return seconds_since_last_access > 300
 
 
@@ -686,7 +687,7 @@ class TestCaseWithUsers(TestCaseWithLog):
 
     @classmethod
     def dump_users(cls, cache: UserCache):
-        cache.last_access = datetime.utcnow()
+        cache.last_access = datetime.now(tz=tz.UTC)
         with open(cls.user_cache_path(), mode='w') as f:
             yaml.safe_dump(json.loads(cache.model_dump_json()), f)
 
