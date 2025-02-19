@@ -47,6 +47,10 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
     for your home org users, you must have either of the following roles: `Full
     Admin,` `Device Admin,` `Or user Admin.` Read-only admins are not supported.
 
+    Regular users can manage their tokens via the following
+    `GUI
+    <https://idbroker.webex.com/idb/profile#/tokens>`_
+
     Authorizations are user grants to applications to act on the user's behalf. Authorizations are how `Integrations
     <https://developer.webex.com/docs/integrations>`_ get
     authorized with specific `access scopes
