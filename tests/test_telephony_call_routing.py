@@ -24,6 +24,7 @@ from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState, Patt
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
+from wxc_sdk.person_settings.permissions_out import DigitPattern, Action, OutgoingPermissions, CallTypePermission
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import OriginatorType, DestinationType, NumberType, CallSourceType, TestCallRoutingResult, \
     HostedFeatureDestination, ServiceType, HostedUserDestination, CallSourceInfo, PbxUserDestination, \
@@ -741,8 +742,8 @@ class TestUsersAndTrunks(TestCallRouting):
                 location_id=location_id,
                 extension=called.extension,
                 phone_number=called.tn and called.tn.value,
-                hu_id=called.person_id,
-                hu_type=UserType.people,
+                id=called.person_id,
+                type=UserType.people,
                 first_name=called.first_name,
                 last_name=called.last_name))
         try:
@@ -800,8 +801,8 @@ class TestUsersAndTrunks(TestCallRouting):
                     location_id=called.location_id,
                     extension=called.extension,
                     phone_number=(ctn := called.tn) and ctn.value,
-                    hu_id=called.person_id,
-                    hu_type=UserType.people,
+                    id=called.person_id,
+                    type=UserType.people,
                     first_name=called.first_name,
                     last_name=called.last_name
                 )
@@ -831,11 +832,11 @@ class TestUsersAndTrunks(TestCallRouting):
             internal_dialing = self.api.telephony.location.internal_dialing.read(location_id=ctx.location.location_id)
             print(f'trunk location internal dialing: {internal_dialing}')
             with self.raises_inbound_PSTN_call_from_unknown_number():
-                test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
-                                                                   originator_type=OriginatorType.trunk,
-                                                                   destination=called.extension,
-                                                                   originator_number=originator,
-                                                                   include_applied_services=True)
+                self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
+                                                     originator_type=OriginatorType.trunk,
+                                                     destination=called.extension,
+                                                     originator_number=originator,
+                                                     include_applied_services=True)
 
     def test_004_trunk_pstn_to_user_extension(self):
         """
@@ -852,7 +853,7 @@ class TestUsersAndTrunks(TestCallRouting):
                                                      destination=called.extension,
                                                      originator_number=ctx.pstn_number)
 
-    def test_004_trunk_ext_to_user_ext_unknown_extension_routing_enabled(self):
+    def test_005_trunk_ext_to_user_ext_unknown_extension_routing_enabled(self):
         """
         Call from a trunk with extension as caller id to a user's extension should work
         """
@@ -870,8 +871,8 @@ class TestUsersAndTrunks(TestCallRouting):
                     location_id=ctx.location.location_id,
                     update=InternalDialing(enable_unknown_extension_route_policy=True,
                                            unknown_extension_route_identity=RouteIdentity(
-                                               route_id=ctx.trunk.trunk_id,
-                                               route_type=RouteType.trunk)))
+                                               id=ctx.trunk.trunk_id,
+                                               type=RouteType.trunk)))
             try:
                 test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
                                                                    originator_type=OriginatorType.trunk,
@@ -890,7 +891,7 @@ class TestUsersAndTrunks(TestCallRouting):
                     self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
                                                                         update=internal_dialing_before)
 
-    def test_005_trunk_ext_to_user_ext_unknown_extension_routing_disabled(self):
+    def test_006_trunk_ext_to_user_ext_unknown_extension_routing_disabled(self):
         """
         Call from a trunk with extension as caller id to a user's extension should fail
         """
@@ -921,7 +922,7 @@ class TestUsersAndTrunks(TestCallRouting):
                     self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
                                                                         update=internal_dialing_before)
 
-    def test_006_trunk_ext_to_user_ext_unknown_extension_routing_enabled_from_trunk_not_set_for_uer(self):
+    def test_007_trunk_ext_to_user_ext_unknown_extension_routing_enabled_from_trunk_not_set_for_uer(self):
         """
         Call from a trunk with extension as caller id to a user's extension should work
         but only if the incoming trunk is configured as destination for unknown extension routing
@@ -940,21 +941,21 @@ class TestUsersAndTrunks(TestCallRouting):
                     location_id=ctx.location.location_id,
                     update=InternalDialing(enable_unknown_extension_route_policy=True,
                                            unknown_extension_route_identity=RouteIdentity(
-                                               route_id=ctx.trunk.trunk_id,
-                                               route_type=RouteType.trunk)))
+                                               id=ctx.trunk.trunk_id,
+                                               type=RouteType.trunk)))
             try:
                 with self.raises_inbound_PSTN_call_from_unknown_number():
-                    test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
-                                                                       originator_type=OriginatorType.trunk,
-                                                                       destination=called.extension,
-                                                                       originator_number='1234')
+                    self.api.telephony.test_call_routing(originator_id=ctx.trunk_wo_dp.trunk_id,
+                                                         originator_type=OriginatorType.trunk,
+                                                         destination=called.extension,
+                                                         originator_number='1234')
             finally:
                 # restore internal dialing settings
                 with self.no_log():
                     self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
                                                                         update=internal_dialing_before)
 
-    def test_007_trunk_to_trunk_from_prem_e164(self):
+    def test_008_trunk_to_trunk_from_prem_e164(self):
         """
         Call from trunk to trunk (match on e164 pattern). Caller is E.164 based on DP match
         :return:
@@ -1041,11 +1042,16 @@ class TestUsersAndTrunks(TestCallRouting):
                     with self.no_log():
                         self.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=trunk_id)
 
-    @async_test
-    async def test_008_user_to_trunk_international(self):
+    async def user_to_trunk_international(self, test_call_routing_context=None) -> list[TestCallRoutingResult]:
         """
         Calling international destination matching a dial plan pattern using various dialing habits
         """
+
+        @contextmanager
+        def null_context(_: Person):
+            yield None
+
+        test_call_routing_context = test_call_routing_context or null_context
         # find an international pattern that we can add to a dial plan
         # find an existing trunk / routelist
         # create dial plan pointing to route list
@@ -1064,14 +1070,17 @@ class TestUsersAndTrunks(TestCallRouting):
             # now pick a user and dial from that user
             caller = choice(self.calling_users)
 
-            dial_strings = [uk_number,
-                            f'9011{uk_number[1:]}',
-                            f'{uk_prefix}1',
-                            f'9011{uk_prefix[1:]}1']
-            results = await asyncio.gather(*[self.async_api.telephony.test_call_routing(
-                originator_id=caller.person_id,
-                originator_type=OriginatorType.user,
-                destination=dialled) for dialled in dial_strings])
+            with test_call_routing_context(caller):
+                dial_strings = [uk_number,
+                                f'9011{uk_number[1:]}',
+                                f'{uk_prefix}1',
+                                f'9011{uk_prefix[1:]}1']
+                results = await asyncio.gather(
+                    *[self.async_api.telephony.test_call_routing(
+                        originator_id=caller.person_id,
+                        originator_type=OriginatorType.user,
+                        destination=dialled, include_applied_services=True)
+                        for dialled in dial_strings])
             results: list[TestCallRoutingResult]
 
             for dialled, result in zip(dial_strings, results):
@@ -1079,12 +1088,81 @@ class TestUsersAndTrunks(TestCallRouting):
                     f'Dialling "{dialled:{len(uk_number) + 3}}" -> destination: {result.destination_type} ')
             for result in results:
                 self.print_result(result=result)
-            self.assertTrue(all(r.destination_type == DestinationType.pbx_user and r.pbx_user and
-                                r.pbx_user.dial_plan_id == ctx.dial_plan.dial_plan_id
-                                for r in results))
+        self.assertTrue(all(r.destination_type == DestinationType.pbx_user and r.pbx_user and
+                            r.pbx_user.dial_plan_id == ctx.dial_plan.dial_plan_id
+                            for r in results))
+        return results
+
+    @async_test
+    async def test_009_user_to_trunk_international(self):
+        """
+        Calling international destination matching a dial plan pattern using various dialing habits
+        """
+        results = await self.user_to_trunk_international()
+        self.assertTrue(all(not r.is_rejected for r in results))
+
+    @async_test
+    async def test_010_user_to_trunk_international_ocp_pattern_block(self):
+        """
+        Calling international destination matching a dial plan pattern using various dialing habits and with OCP
+        blocking. OCP pattern blocking should still apply
+        """
+
+        @contextmanager
+        def create_block_patterns(user: Person):
+            block_patterns = ['+4420452050XX', '+442045206XXX']
+            dp_api = self.api.person_settings.permissions_out.digit_patterns
+            org_ocp_pattern_names = set(p.name
+                                        for p in dp_api.get_digit_patterns(entity_id=user.person_id).digit_patterns)
+            new_ocp_pattern_names = (name
+                                     for i in range(1, 100)
+                                     if (name := f'test {i:03}') not in org_ocp_pattern_names)
+            print(f'Creating block patterns: {", ".join(block_patterns)}')
+            bp_ids = [dp_api.create(entity_id=user.person_id, pattern=DigitPattern(pattern=bp,
+                                                                                   name=next(new_ocp_pattern_names),
+                                                                                   action=Action.block,
+                                                                                   transfer_enabled=False))
+                      for bp in block_patterns]
+            try:
+                yield None
+            finally:
+                # clean up
+                print(f'removing block patterns: {", ".join(block_patterns)}')
+                for bp_id in bp_ids:
+                    dp_api.delete(entity_id=user.person_id, digit_pattern_id=bp_id)
+
+        results = await self.user_to_trunk_international(create_block_patterns)
+        self.assertTrue(all(r.is_rejected for r in results))
+
+    @async_test
+    async def test_011_user_to_trunk_international_ocp_type_block(self):
+        """
+        Calling international destination matching a dial plan pattern using various dialing habits and with OCP
+        blocking by type.
+        """
+
+        @contextmanager
+        def block_intern(user: Person):
+            po_api = self.api.person_settings.permissions_out
+            ocp = po_api.read(user.person_id)
+            cp = ocp.calling_permissions.model_copy(deep=True)
+            cp.internal_call = CallTypePermission(action=Action.block,
+                                                  transfer_enabled=False,
+                                                  is_call_type_restriction_enabled=True)
+            new_ocp = OutgoingPermissions(use_custom_permissions=True,
+                                          use_custom_enabled=True,
+                                          calling_permissions=cp)
+            po_api.configure(user.person_id, new_ocp)
+            try:
+                yield None
+            finally:
+                po_api.configure(user.person_id, ocp)
+
+        results = await self.user_to_trunk_international(block_intern)
+        self.assertTrue(all(r.is_rejected for r in results))
 
     # RL tests
-    def test_009_trunk_to_ext_rl_wrong_location(self):
+    def test_012_trunk_to_ext_rl_wrong_location(self):
         """
         Call from trunk to ESN, +E.164 caller id matching a RL pattern in wrong location
         """
@@ -1103,7 +1181,7 @@ class TestUsersAndTrunks(TestCallRouting):
                                                      originator_number=originator,
                                                      include_applied_services=True)
 
-    def test_010_trunk_to_ext_rl_match(self):
+    def test_013_trunk_to_ext_rl_match(self):
         """
         Call from trunk to ext, +E.164 caller id matching RL pattern pointing to incoming trunk via RG
         """
@@ -1127,7 +1205,7 @@ class TestUsersAndTrunks(TestCallRouting):
             self.assertEqual(DestinationType.hosted_agent, result.destination_type)
             self.assertEqual(called.person_id, result.hosted_user.hu_id)
 
-    def test_011_trunk_to_ext_rl_match_wrong_trunk(self):
+    def test_014_trunk_to_ext_rl_match_wrong_trunk(self):
         """
         call from trunk to ext, +E.164 caller id matching RL pattern pointing to different trunk but in same location
         """
@@ -1824,7 +1902,7 @@ class TestTranslationPattern(TestCallRouting):
         tpa = self.api.telephony.call_routing.tp
         with self.assertRaises(RestError) as exc:
             tp = TranslationPattern(name='invalid', matching_pattern='!!', replacement_pattern='12')
-            tp_id = tpa.create(tp)
+            tpa.create(tp)
         rest_error: RestError = exc.exception
         self.assertEqual(400, rest_error.response.status_code)
         self.assertEqual(9676, rest_error.code)
@@ -2080,7 +2158,7 @@ class Test911(TestCaseWithLog):
                             ('9911', False),
                             ('9933', False),
                             ('1911', True),
-                            ('1933', False),    # 1933 is handled differently than 1911
+                            ('1933', False),  # 1933 is handled differently than 1911
                             ('91911', False),
                             ('91933', False),
                             )),
@@ -2090,9 +2168,9 @@ class Test911(TestCaseWithLog):
                             ('9911', True),
                             ('9933', True),
                             ('1911', True),
-                            ('1933', False),    # 1933 is handled differently than 1911
+                            ('1933', False),  # 1933 is handled differently than 1911
                             ('91911', True),
-                            ('91933', False),   # 1933 is handled differently than 1911
+                            ('91933', False),  # 1933 is handled differently than 1911
                             )),
             # ODD, mandatory
             (('9', True), (('911', True),
@@ -2100,9 +2178,9 @@ class Test911(TestCaseWithLog):
                            ('9911', True),
                            ('9933', True),
                            ('1911', True),
-                           ('1933', False),     # 1933 is handled differently than 1911
+                           ('1933', False),  # 1933 is handled differently than 1911
                            ('91911', True),
-                           ('91933', False),    # 1933 is handled differently than 1911
+                           ('91933', False),  # 1933 is handled differently than 1911
                            ))
         )
         err = None
