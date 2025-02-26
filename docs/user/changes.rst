@@ -22,6 +22,7 @@ Release history
 - feat: new endpoints: :meth:`api.telephony.location.create_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.create_receptionist_contact_directory>`, :meth:`api.telephony.location.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`,  :meth:`api.telephony.location.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`,  :meth:`api.telephony.location.modify_a_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_a_receptionist_contact_directory>`,  :meth:`api.telephony.location.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
 - feat: device call settings with multi-line support
 - break: changed signature for :meth:`api.person_settings.personal_assistant.update <wxc_sdk.person_settings.personal_assistant.PersonalAssistantApi.update>`
+- break: AvailableAgent.numbers renamed to AvailableAgent.phone_numbers
 
 1.23.0
 ======

@@ -41,7 +41,8 @@ class TestAvailableAgents(TestWithLocations):
         agents_with_type_none = [agent for agent in available_agents
                                  if agent.type is None]
         agent_types = set(agent.type for agent in available_agents)
-        esn_set = set(chain.from_iterable((number.esn for number in agent.numbers) for agent in available_agents))
+        esn_set = set(chain.from_iterable((number.esn for number in agent.phone_numbers)
+                                          for agent in available_agents))
         err = False
         if not esn_set:
             print('No ESNs found')
