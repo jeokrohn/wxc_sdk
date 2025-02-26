@@ -50,6 +50,22 @@ class TestAvailableAgents(TestWithLocations):
         self.assertTrue(None not in agent_types, 'None in agent types')
         self.assertFalse(err, 'No ESNs found')
 
+    @async_test
+    async def test_available_agents_for_all_locations(self):
+        """
+        Get available agents for all locations
+        """
+        # get calling locations
+        locations = list(self.api.telephony.location.list())
+        # get available agents for all locations
+        available_agents = await asyncio.gather(
+            *[self.async_api.telephony.callqueue.available_agents(location_id=location.location_id)
+              for location in locations])
+        # check that we got some agents
+        self.assertTrue(all(agents for agents in available_agents))
+        # all agents should have phone numbers
+        self.assertTrue(all(all(agent.phone_numbers for agent in agents) for agents in available_agents))
+
 
 class TestList(TestCaseWithLog):
 
