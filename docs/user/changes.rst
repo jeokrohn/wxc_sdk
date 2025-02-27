@@ -25,7 +25,7 @@ Release history
 - break: AvailableAgent.numbers renamed to AvailableAgent.phone_numbers
 
 1.23.0
-======
+------
 
 - feat: new API: :attr:`api.org_contacts <wxc_sdk.WebexSimpleApi.org_contacts>`
 - break: deprecated HGCallPolicies.business_continuity, use :attr:`HGCallPolicies.business_continuity_redirect <wxc_sdk.telephony.huntgroup.HGCallPolicies.business_continuity_redirect>` instead
