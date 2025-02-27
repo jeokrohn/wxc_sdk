@@ -213,21 +213,21 @@ async def validate_tns(api: AsWebexSimpleApi, tns: list[str]) -> bool:
         return False
 
     # validate numbers in batches
-    ok_tns = []
-    err = False
     try:
-        for i in range(0, len(tns), BATCH_SIZE):
-            batch = tns[i:i + BATCH_SIZE]
-            r = await api.telephony.validate_phone_numbers(batch)
-            for status in r.phone_numbers:
-                if status.ok:
-                    ok_tns.append(status.phone_number)
-                else:
-                    err = True
-                    logging.error(f'TN {status.phone_number}: {status.state} ')
+        validations = await asyncio.gather(*[api.telephony.validate_phone_numbers(tns[i:i + BATCH_SIZE])
+                                             for i in range(0, len(tns), BATCH_SIZE)])
     except Exception as e:
         logging.error(f'Failed to validate TNs: {e}')
         return False
+
+    ok_tns = []
+    err = False
+    for status in chain.from_iterable(v.phone_numbers for v in validations):
+        if status.ok:
+            ok_tns.append(status.phone_number)
+        else:
+            err = True
+            logging.error(f'TN {status.phone_number}: {status.state} ')
     return not err
 
 
