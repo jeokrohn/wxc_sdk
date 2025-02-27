@@ -24,6 +24,7 @@ Release history
 - break: changed signature for :meth:`api.person_settings.personal_assistant.update <wxc_sdk.person_settings.personal_assistant.PersonalAssistantApi.update>`
 - break: AvailableAgent.numbers renamed to AvailableAgent.phone_numbers
 - feat: result for meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
+- new example: add_numbers.py
 
 1.23.0
 ------

@@ -41,7 +41,7 @@ import yaml
 from dotenv import load_dotenv
 
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import ValidationStatus, NumberState
+from wxc_sdk.common import NumberState
 from wxc_sdk.har_writer import HarWriter
 from wxc_sdk.integration import Integration
 from wxc_sdk.tokens import Tokens
@@ -145,6 +145,7 @@ def setup_logging(args: Namespace, api: AsWebexSimpleApi):
                 f_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
                 logging.getLogger().addHandler(f_handler)
                 yield
+        return
 
     logging.getLogger().setLevel(logging.DEBUG)
     # create a console logging handler
@@ -265,7 +266,6 @@ async def add_numbers():
                                         f'variables can also be set in {env_path()}')
     parser.add_argument('--inactive', action='store_true', help='Add TNs as inactive')
     args = parser.parse_args()
-    dry_run = args.dry_run
     token = args.token or os.getenv('WEBEX_ACCESS_TOKEN') or get_tokens().access_token
     async with AsWebexSimpleApi(tokens=token) as api:
         with setup_logging(args, api):
@@ -294,7 +294,6 @@ async def add_numbers():
             logging.info('Validating TNs...')
             tn_list = list(chain.from_iterable(locations_and_tns.values()))
             validation = await validate_tns(api, tn_list)
-            validation = True
             if not validation:
                 exit(1)
 
