@@ -238,11 +238,10 @@ async def add_tns(api: AsWebexSimpleApi, location_id: str, tns: list[str], inact
     number_state = NumberState.inactive if inactive else NumberState.active
     try:
         # add TNs in batches
-        for i in range(0, len(tns), BATCH_SIZE):
-            batch = tns[i:i + BATCH_SIZE]
-            await api.telephony.location.number.add(location_id=location_id,
-                                                    phone_numbers=batch,
-                                                    state=number_state)
+        await asyncio.gather(*[api.telephony.location.number.add(location_id=location_id,
+                                                                 phone_numbers=tns[i:i + BATCH_SIZE],
+                                                                 state=number_state)
+                               for i in range(0, len(tns), BATCH_SIZE)])
     except Exception as e:
         logging.error(f'Failed to add TNs: {e}')
         return False
