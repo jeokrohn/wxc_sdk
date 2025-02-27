@@ -36,7 +36,7 @@ Documentation
 -------------
 
 Documentation is available at:
-http://wxc_sdk.readthedocs.io
+https://wxc-sdk.readthedocs.io
 
 Examples
 --------
