@@ -10,7 +10,7 @@ test cases. Here is an example of how to use the :class:`HarWriter <wxc_sdk.har_
     from wxc_sdk.har_writer import HarWriter
 
     with WebexSimpleApi() as api:
-        with HarWriter(api, path='har_file.har') as har_writer:
+        with HarWriter(api=api, path='har_file.har') as har_writer:
             # now can use the connection object for you code
             users = list(api.people.list())
         # the HAR file will be written when the HarRecorder object is closed
@@ -29,7 +29,7 @@ The HAR writer can also be used with the `asyncio` variant of the SDK:
 
     async def main():
         async with AsWebexSimpleApi() as api:
-            with HarWriter(api, path='har_file.har') as har_writer:
+            with HarWriter(api=api, path='har_file.har') as har_writer:
                 # now can use the connection object for you code
                 users = await api.people.list()
             # the HAR file will be written when the HarRecorder object is closed
