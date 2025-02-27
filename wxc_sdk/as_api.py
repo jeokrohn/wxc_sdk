@@ -23995,7 +23995,8 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
 
     async def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
             number_usage_type: NumberUsageType = None,
-            state: NumberState = NumberState.inactive, subscription_id: str = None, org_id: str = None):
+            state: NumberState = NumberState.inactive, subscription_id: str = None,
+            org_id: str = None)->NumberAddResponse:
         """
         Add Phone Numbers to a location
 
@@ -24044,7 +24045,10 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         if subscription_id is not None:
             body['subscriptionId'] = subscription_id
 
-        await self.post(url=url, params=params, json=body)
+        r = await self.post(url=url, params=params, json=body)
+        if isinstance(r, list):
+            return NumberAddResponse.model_validate(r[0])
+        return NumberAddResponse.model_validate({})
 
     async def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """

@@ -192,7 +192,8 @@ from wxc_sdk.telephony.location.emergency_services import LocationCallNotificati
     LocationEmergencyCallNotification
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
-from wxc_sdk.telephony.location.numbers import NumberUsageType, TelephoneNumberType
+from wxc_sdk.telephony.location.numbers import NumberAddError, NumberAddResponse, NumberUsageType, \
+    TelephoneNumberType
 from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 from wxc_sdk.telephony.operating_modes import Day, DaySchedule, DifferentHoursDaily, Month, OperatingMode, \
     OperatingModeHoliday, OperatingModeRecurYearlyByDate, OperatingModeRecurYearlyByDay, OperatingModeRecurrence, \
@@ -316,11 +317,11 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'MppVlanDevice', 'Multicast',
            'MusicOnHold', 'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer',
            'NoiseCancellation', 'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType',
-           'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber',
-           'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType', 'NumberUsageType', 'OfficeNumber',
-           'OnboardingMethod', 'OperatingMode', 'OperatingModeHoliday', 'OperatingModeRecurYearlyByDate',
-           'OperatingModeRecurYearlyByDay', 'OperatingModeRecurrence', 'OperatingModeSchedule',
-           'OrgComplianceAnnouncement', 'OrgEmergencyCallNotification', 'OrgMSTeamsSettings',
+           'NumberAddError', 'NumberAddResponse', 'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob',
+           'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType',
+           'NumberUsageType', 'OfficeNumber', 'OnboardingMethod', 'OperatingMode', 'OperatingModeHoliday',
+           'OperatingModeRecurYearlyByDate', 'OperatingModeRecurYearlyByDay', 'OperatingModeRecurrence',
+           'OperatingModeSchedule', 'OrgComplianceAnnouncement', 'OrgEmergencyCallNotification', 'OrgMSTeamsSettings',
            'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
            'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',

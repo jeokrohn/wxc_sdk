@@ -1,9 +1,13 @@
+from typing import Optional
+
+from pydantic import Field
+
 from ...api_child import ApiChild
-from ...base import enum_str
+from ...base import enum_str, ApiModel
 from ...common import NumberState
 from ...base import SafeEnum as Enum
 
-__all__ = ['TelephoneNumberType', 'NumberUsageType', 'LocationNumbersApi']
+__all__ = ['TelephoneNumberType', 'NumberUsageType', 'NumberAddError', 'NumberAddResponse', 'LocationNumbersApi']
 
 
 class TelephoneNumberType(str, Enum):
@@ -22,6 +26,18 @@ class NumberUsageType(str, Enum):
     service = 'SERVICE'
 
 
+class NumberAddError(ApiModel):
+    number: Optional[str] = None
+    error_type: Optional[str] = None
+    error_code: Optional[str] = None
+    error_message: Optional[str] = None
+    error_title: Optional[str] = None
+
+
+class NumberAddResponse(ApiModel):
+    errors: list[NumberAddError] = Field(default_factory=list)
+
+
 class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
     def _url(self, location_id: str, path: str = None):
         """
@@ -33,7 +49,8 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
 
     def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
             number_usage_type: NumberUsageType = None,
-            state: NumberState = NumberState.inactive, subscription_id: str = None, org_id: str = None):
+            state: NumberState = NumberState.inactive, subscription_id: str = None,
+            org_id: str = None)->NumberAddResponse:
         """
         Add Phone Numbers to a location
 
@@ -82,7 +99,10 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         if subscription_id is not None:
             body['subscriptionId'] = subscription_id
 
-        self.post(url=url, params=params, json=body)
+        r = self.post(url=url, params=params, json=body)
+        if isinstance(r, list):
+            return NumberAddResponse.model_validate(r[0])
+        return NumberAddResponse.model_validate({})
 
     def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
