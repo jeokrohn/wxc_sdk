@@ -123,9 +123,11 @@ async def main() -> int:
                         help='single email or path to file w/ email addresses (one email address per line). "all" can '
                              'be used to print authorizations for all users. "all" cannot be combined with other '
                              'parameters and no authorizations will be revoked in this case."')
-    parser.add_argument('--appname', type=str, help='regular expression matching authorization application names. '
-                                                    'When missing authorizations for all client ids defined in the '
-                                                    'script are revoked')
+    parser.add_argument('--appname',
+                        type=str,
+                        help='regular expression matching authorization application names. '
+                             'When missing authorizations for all client ids defined in the '
+                             'script are revoked')
     parser.add_argument('--test', action='store_true', help='test run only')
     args = parser.parse_args()
     email = args.email

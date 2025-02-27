@@ -429,6 +429,38 @@ Source: |queue_agents.py|_
 .. literalinclude:: ../../examples/queue_agents.py
     :linenos:
 
+Bulk add phone numbers to locations
+-----------------------------------
+
+Bulk add TNs to Webex Calling locations
+
+.. code-block:: text
+
+    usage: add_numbers.py [-h] [--dry-run] [--verbose] [--log-file LOG_FILE] [--token TOKEN]
+                          [--inactive]
+                          file
+
+    Add TNs to Webex Calling locations
+
+    positional arguments:
+      file                 CSV file with location names and TNs
+
+    optional arguments:
+      -h, --help           show this help message and exit
+      --dry-run            Do not make any changes
+      --verbose            Print debug information
+      --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
+      --token TOKEN        Webex Calling access token
+      --inactive           Add TNs as inactive
+
+    Example: queue_agents.py --queues queues.txt --agent agents.txt --add
+
+Source: |add_numbers.py|_
+
+.. |add_numbers.py| replace:: ``add_numbers.py``
+
+.. literalinclude:: ../../examples/add_numbers.py
+    :linenos:
 
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _"Integrations" page on developer.cisco.com: https://developer.webex.com/docs/integrations
@@ -451,6 +483,7 @@ Source: |queue_agents.py|_
 .. _leave_spaces.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/leave_spaces.py
 .. _access_codes.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/access_codes.py
 .. _queue_agents.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_agents.py
+.. _add_numbers.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/add_numbers.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
