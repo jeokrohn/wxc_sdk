@@ -15,10 +15,15 @@ optional arguments:
   --dry-run            Do not make any changes
   --verbose            Print debug information
   --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
-  --token TOKEN        Webex Calling access token
+  --token TOKEN        Access token can be provided using --token argument, set in
+                       WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For
+                       the latter set environment variables ('SERVICE_APP_REFRESH_TOKEN',
+                       'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET'). Environment variables
+                       can also be set in add_numbers.env
   --inactive           Add TNs as inactive
 
 Example: add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
+
 """
 import argparse
 import asyncio
@@ -42,6 +47,7 @@ from wxc_sdk.integration import Integration
 from wxc_sdk.tokens import Tokens
 
 BATCH_SIZE = 10
+SERVICE_APP_ENVS = ('SERVICE_APP_REFRESH_TOKEN', 'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET')
 
 
 def yml_path() -> str:
@@ -87,11 +93,11 @@ def get_access_token() -> Tokens:
     Get a new access token using refresh token, service app client id, service app client secret
     """
     load_dotenv(env_path())
-    envs = ('SERVICE_APP_REFRESH_TOKEN', 'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET')
-    refresh, client_id, client_secret = (os.getenv(env) for env in envs)
+    refresh, client_id, client_secret = (os.getenv(env) for env in SERVICE_APP_ENVS)
     if not all((refresh, client_id, client_secret)):
         print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '
-              f'can be a service app token. For the latter set environment variables {envs}. Environment variables can '
+              f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
+              f'variables can '
               f'also be set in {env_path()}', file=sys.stderr)
         exit(1)
 
@@ -253,7 +259,10 @@ async def add_numbers():
     parser.add_argument('--dry-run', action='store_true', help='Do not make any changes')
     parser.add_argument('--verbose', action='store_true', help='Print debug information')
     parser.add_argument('--log-file', help='Log file. If extension is .har, log in HAR format')
-    parser.add_argument('--token', help='Webex Calling access token')
+    parser.add_argument('--token', help=f'Access token can be provided using --token argument, set in '
+                                        f'WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For '
+                                        f'the latter set environment variables {SERVICE_APP_ENVS}. Environment '
+                                        f'variables can also be set in {env_path()}')
     parser.add_argument('--inactive', action='store_true', help='Add TNs as inactive')
     args = parser.parse_args()
     dry_run = args.dry_run

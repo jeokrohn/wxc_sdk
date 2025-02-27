@@ -450,10 +450,14 @@ Bulk add TNs to Webex Calling locations
       --dry-run            Do not make any changes
       --verbose            Print debug information
       --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
-      --token TOKEN        Webex Calling access token
+      --token TOKEN        Access token can be provided using --token argument, set in
+                           WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For
+                           the latter set environment variables ('SERVICE_APP_REFRESH_TOKEN',
+                           'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET'). Environment variables
+                           can also be set in add_numbers.env
       --inactive           Add TNs as inactive
 
-    Example: queue_agents.py --queues queues.txt --agent agents.txt --add
+    Example: add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
 
 Source: |add_numbers.py|_
 
