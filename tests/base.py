@@ -654,14 +654,14 @@ class TestWithLocations(TestCaseWithLog):
 
 
 class UserCache(BaseModel):
-    last_access: datetime = Field(default_factory=datetime.utcnow)
+    last_access: datetime = Field(default_factory=lambda: datetime.now(tz=tz.UTC))
     users: list[Person] = Field(default_factory=list)
     licenses: list[License] = Field(default_factory=list)
 
     @property
     def needs_validation(self) -> bool:
         """
-        cache needs validation if is has been longer than 5 minutes since we last used the cache
+        cache needs validation if it has been longer than 5 minutes since we last used the cache
         """
         seconds_since_last_access = (datetime.now(tz=tz.UTC) - self.last_access).total_seconds()
         return seconds_since_last_access > 300
