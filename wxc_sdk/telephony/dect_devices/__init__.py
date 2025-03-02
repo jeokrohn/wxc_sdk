@@ -919,7 +919,6 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)
 
-
     def generate_and_enable_dect_serviceability_password(self, location_id: str, dect_network_id: str,
                                                          org_id: str = None) -> str:
         """
@@ -954,7 +953,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         return r
 
     def get_dect_serviceability_password_status(self, location_id: str, dect_network_id: str,
-                                                    org_id: str = None) -> bool:
+                                                org_id: str = None) -> bool:
         """
         Get DECT Serviceability Password status
 
@@ -985,7 +984,6 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         data = super().get(url, params=params)
         r = data['enabled']
         return r
-
 
     def update_dect_serviceability_password_status(self, location_id: str, dect_network_id: str, enabled: bool,
                                                    org_id: str = None):

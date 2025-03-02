@@ -58,7 +58,6 @@ class PersonECBNDirectLine(ApiModel):
     quality: Optional[ECBNQuality] = None
 
 
-
 class ECBNLocationEffectiveLevel(str, Enum):
     #: Returned calls from the Public Safety Answering Point go directly to the member. The Emergency Service Address
     #: configured by the PSTN to the member's phone is specific to the member’s location.

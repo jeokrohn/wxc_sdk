@@ -1,7 +1,6 @@
 """
 Forwarding settings and API for call queues, hunt groups, and auto attendants
 """
-import json
 from dataclasses import dataclass
 from typing import Optional
 

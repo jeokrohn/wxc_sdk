@@ -1,10 +1,11 @@
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import SafeEnum as Enum, ApiModel, enum_str
+from wxc_sdk.base import SafeEnum as Enum, ApiModel
 
 __all__ = ['PersonalAssistantPresence', 'PersonalAssistantAlerting', 'PersonalAssistant', 'PersonalAssistantApi']
+
 
 class PersonalAssistantPresence(str, Enum):
     #: User is available.

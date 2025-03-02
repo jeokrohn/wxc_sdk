@@ -10,6 +10,7 @@ from wxc_sdk.common import IdAndName
 __all__ = ['CallQueueAgent', 'CallQueueAgentQueue', 'CallQueueAgentDetail', 'AgentCallQueueSetting',
            'CallQueueAgentsApi']
 
+
 class CallQueueAgent(ApiModel):
     #: Unique call queue agent identifier.
     id: Optional[str] = None

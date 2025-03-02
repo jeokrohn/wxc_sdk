@@ -140,11 +140,13 @@ class WorkspaceIndoorNavigation(ApiModel):
     #: URL of a map locating the workspace.
     url: Optional[str] = None
 
+
 class WorkspaceHealthLevel(str, Enum):
     error = 'error'
     warning = 'warning'
     info = 'info'
     ok = 'ok'
+
 
 class WorkspaceHealthIssue(ApiModel):
     #: Issue id.
@@ -166,6 +168,7 @@ class WorkspaceHealth(ApiModel):
     level: Optional[WorkspaceHealthLevel] = None
     #: A list of workspace issues.
     issues: Optional[list[WorkspaceHealthIssue]] = None
+
 
 class Workspace(ApiModel):
     """
@@ -231,8 +234,8 @@ class Workspace(ApiModel):
                                         'health': True,
                                         # only include workspace_location_id if no location_id is given
                                         # location_id is the preferred/new way of setting the location
-                                        'workspace_location_id': not (self.workspace_location_id
-                                                                      and not self.location_id),
+                                        'workspace_location_id': not (self.workspace_location_id and
+                                                                      not self.location_id),
                                         'supported_devices': for_update})
 
     @staticmethod

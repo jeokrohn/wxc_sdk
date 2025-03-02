@@ -1,6 +1,6 @@
 from collections.abc import Generator
-from datetime import datetime, time, date
-from typing import Optional, Union, List, Annotated
+from datetime import time, date
+from typing import Optional, List, Annotated
 
 from pydantic import TypeAdapter, PlainSerializer
 
@@ -137,6 +137,7 @@ class Day(str, Enum):
     @classmethod
     def from_index(cls, i: int) -> 'Week':
         return list(cls)[i]
+
 
 class Week(str, Enum):
     #: Schedule the event on the first week of the month.

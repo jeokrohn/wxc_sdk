@@ -141,7 +141,7 @@ def read_file_lines(filename: str) -> List[str]:
 
 
 async def process_one_queue(*, api: AsWebexSimpleApi, queue: CallQueue, agents: list[Person], action: str,
-                            dry_run: bool=True):
+                            dry_run: bool = True):
     """
     Process adding or removing agents from a single call queue.
     """

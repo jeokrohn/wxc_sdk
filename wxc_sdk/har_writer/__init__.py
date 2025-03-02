@@ -47,7 +47,7 @@ class HarWriter:
     _incremental_first_entry: bool
     _incremental_trailer: str
 
-    def __init__(self, path: Union[None, str, TextIOBase]=None,
+    def __init__(self, path: Union[None, str, TextIOBase] = None,
                  api: Union[WebexSimpleApi, AsWebexSimpleApi] = None,
                  with_authorization: bool = False,
                  incremental: bool = False):

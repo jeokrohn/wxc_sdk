@@ -26,7 +26,6 @@ class CPActionType(str, Enum):
     transfer = 'TRANSFER'
 
 
-
 class CQHolidaySchedule(ApiModel):
     """
     pre-configured holiday schedule

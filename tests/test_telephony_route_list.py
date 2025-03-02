@@ -234,8 +234,8 @@ class TestNumbers(TestCaseWithLog):
         """
         # get phone numbers in target location
         available_tns = [n.phone_number for n in self.numbers
-                         if n.location.id == self.target_location_info.location.location_id
-                         and not n.main_number and n.owner is None]
+                         if n.location.id == self.target_location_info.location.location_id and
+                         not n.main_number and n.owner is None]
         if len(available_tns) < tn_count:
             with self.no_log():
                 new_tns = self.target_location_info.available_tns(api=self.api,

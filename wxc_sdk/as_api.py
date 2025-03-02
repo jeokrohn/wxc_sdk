@@ -12322,7 +12322,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
                * - **Attributes**
                  - **Operators**
                * - **SCIM Core**
-                 - 
+                 -
                * - `id`
                  - eq
                * - `userName`
@@ -17835,7 +17835,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         return r
 
     async def get_dect_serviceability_password_status(self, location_id: str, dect_network_id: str,
-                                                    org_id: str = None) -> bool:
+                                                org_id: str = None) -> bool:
         """
         Get DECT Serviceability Password status
 
@@ -22863,8 +22863,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         return [o async for o in self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')]
 
     async def assign_unassign_agents(self, supervisor_id: str, agents: List[IdAndAction],
-                                has_cx_essentials: bool = None,
-                                org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
+                               has_cx_essentials: bool = None,
+                               org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
         """
         Assign or Unassign Agents to Supervisor
 
@@ -23996,7 +23996,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
     async def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
             number_usage_type: NumberUsageType = None,
             state: NumberState = NumberState.inactive, subscription_id: str = None,
-            org_id: str = None)->NumberAddResponse:
+            org_id: str = None) -> NumberAddResponse:
         """
         Add Phone Numbers to a location
 

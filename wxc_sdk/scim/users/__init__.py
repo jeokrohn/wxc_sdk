@@ -478,7 +478,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
                * - **Attributes**
                  - **Operators**
                * - **SCIM Core**
-                 - 
+                 -
                * - `id`
                  - eq
                * - `userName`

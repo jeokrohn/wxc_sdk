@@ -50,7 +50,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
     def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
             number_usage_type: NumberUsageType = None,
             state: NumberState = NumberState.inactive, subscription_id: str = None,
-            org_id: str = None)->NumberAddResponse:
+            org_id: str = None) -> NumberAddResponse:
         """
         Add Phone Numbers to a location
 

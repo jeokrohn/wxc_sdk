@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional, List, Union, Any
+from typing import Optional, List
 
 from pydantic import Field, TypeAdapter
 

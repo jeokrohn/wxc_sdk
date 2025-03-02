@@ -1,7 +1,7 @@
 import logging
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, Any, List
+from typing import Optional, List
 
 from .forwarding import ForwardingApi, FeatureSelector
 from .hg_and_cq import HGandCQ, Policy

@@ -7,7 +7,7 @@ import time
 import uuid
 from collections.abc import Generator
 from dataclasses import dataclass
-from functools import wraps, partial
+from functools import wraps
 from io import TextIOBase, StringIO
 from json import JSONDecodeError
 from threading import Semaphore
@@ -243,8 +243,10 @@ def retry_request(func):
 # callbacks get called with the response object and the time the request took
 RestResponseCallBack = Callable[[Response, int], None]
 
+
 def _dump_response_callback(response: Response, diff_ns: int):
     dump_response(response, diff_ns=diff_ns)
+
 
 @dataclass(init=False, repr=False)
 class RestSession(Session):

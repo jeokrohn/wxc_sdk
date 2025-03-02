@@ -283,8 +283,8 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')
 
     def assign_unassign_agents(self, supervisor_id: str, agents: List[IdAndAction],
-                                has_cx_essentials: bool = None,
-                                org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
+                               has_cx_essentials: bool = None,
+                               org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
         """
         Assign or Unassign Agents to Supervisor
 
