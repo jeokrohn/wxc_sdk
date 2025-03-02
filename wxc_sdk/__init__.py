@@ -44,7 +44,7 @@ from dataclasses import dataclass
 
 __all__ = ['WebexSimpleApi']
 
-__version__ = '1.23.0'
+__version__ = '1.24.0'
 
 from .xapi import XApi
 
