@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import random
 import re
 from collections import defaultdict, Counter
 from collections.abc import Generator, Callable
@@ -11,12 +12,13 @@ from itertools import chain
 from json import dumps, loads
 from operator import attrgetter
 from random import shuffle, choice, randint
+from time import sleep
 from typing import ClassVar, Optional, Union, NamedTuple
 from unittest import skip
 
 from tests.base import TestCaseWithLog, async_test
 from tests.testutil import calling_users, us_location_info, LocationInfo, available_extensions, available_tns, \
-    as_available_tns, random_users
+    as_available_tns, random_users, available_numbers, create_calling_user
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
@@ -368,6 +370,7 @@ class RLTestContext:
         """
         create a RG and a RL in a location and add TNs to route list
         If no existing trunk is passed, also create a trunk
+
         :return: trunk, RG, RL
         """
         if trunk is None:
@@ -689,6 +692,9 @@ class ToUserWithTN(TestCallRouting):
 
 
 class TestUsersAndTrunks(TestCallRouting):
+    """
+    Test cases for calls from/to trunks and users
+    """
 
     @async_test
     async def test_001_user_to_user_extension_same_location(self):
@@ -1428,7 +1434,7 @@ class CQContext:
                                                             state=NumberState.active)
                 self.cq_tn = cq_tn
 
-                # create CallQueu
+                # create CallQueue
                 cq = CallQueue.create(name=cq_name, phone_number=cq_tn, extension=cq_extension, agents=list(),
                                       queue_size=5)
                 print(f'Creating call queue "{cq_name}" in location "{self.location.name}"')
@@ -2210,3 +2216,235 @@ class Test911(TestCaseWithLog):
         if err:
             raise err
         return
+
+
+@dataclass(init=False, repr=False)
+class TestInterLocation(TestCaseWithLog):
+    """
+    Test cases for inter-location calling
+    - call between two locations
+        * extension dialing between users same location
+        * extension dialing between users different location
+        * extension dialing between users different location, inter-location dialing disabled
+        * dialing ESN between locations
+        * dialing ESN where target site code is not in line with global ESN format
+    """
+    # list of created demo users
+    temp_users: ClassVar[list[Person]] = []
+    target_locations: ClassVar[list[TelephonyLocation]] = []
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """
+        Setup test cases
+        """
+
+        async def pick_locations_and_create_users():
+            """
+            pick two US locations
+                * with calling
+                * premises based PSTN
+                * main number set
+                * with two users in 1st location and one user in second location
+                    * with extension; make sure that extensions are globally unique
+                    * no TN
+            """
+            async with AsWebexSimpleApi(tokens=cls.api.access_token) as as_api:
+                # list call calling locations
+                calling_locations = list(cls.api.telephony.location.list())
+                calling_location_details = await asyncio.gather(*[as_api.telephony.location.details(loc.location_id)
+                                                                  for loc in calling_locations])
+                calling_location_details: list[TelephonyLocation]
+                # find calling locations:
+                # * with US main number
+                # * with premises based PSTN
+                # * with routing prefix
+                calling_locations_with_us_main_number = [cl for cl in calling_location_details
+                                                         if (cl.routing_prefix and cl.calling_line_id and
+                                                             cl.calling_line_id.phone_number and
+                                                             cl.calling_line_id.phone_number.startswith('+1') and
+                                                             cl.connection and
+                                                             cl.connection.type in {RouteType.trunk,
+                                                                                    RouteType.route_group})]
+                if len(calling_locations_with_us_main_number) < 2:
+                    raise ValueError(
+                        'Not enough locations with US main number and premises based PSTN: need at least two')
+                # pick two locations
+                cls.target_locations = random.sample(calling_locations_with_us_main_number, 2)
+
+                # create two random users in each location
+                # ... with globally unique extensions
+                # get all extensions
+                existing_extensions = set(extension for pn in cls.api.telephony.phone_numbers()
+                                          if (extension := pn.extension))
+                new_extensions = available_numbers(existing_extensions)
+                # get 3 random users
+                new_users = await random_users(api=as_api, user_count=3)
+
+                basic_calling_license_id = next(lic.license_id
+                                                for lic in cls.api.licenses.list() if lic.webex_calling_basic)
+                location_index_list = [0, 0, 1]
+                for location_index, extension, user in zip(location_index_list, new_extensions, new_users):
+                    location = cls.target_locations[location_index]
+                    print(f'Creating user "{user.display_name}" in location "{location.name}" '
+                          f'w/ extension "{extension}"')
+                    cls.temp_users.append(create_calling_user(api=cls.api,
+                                                              user=user,
+                                                              location_id=location.location_id,
+                                                              calling_license_id=basic_calling_license_id,
+                                                              extension=extension))
+            # async with ...
+            return
+
+        super().setUpClass()
+        asyncio.run(pick_locations_and_create_users())
+        return
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """
+        Clean up after test cases
+        """
+
+        async def delete_users():
+            """
+            delete all created users
+            """
+            async with AsWebexSimpleApi(tokens=cls.api.access_token) as as_api:
+                print('Deleting temp users')
+                await asyncio.gather(*[as_api.people.delete_person(user.person_id)
+                                       for user in cls.temp_users],
+                                     return_exceptions=True)
+            return
+
+        if not cls.temp_users:
+            return
+        asyncio.run(delete_users())
+        super().tearDownClass()
+        return
+
+    @contextmanager
+    def extension_dialing_between_locations(self, allowed: bool):
+        """
+        Context manager to set inter-location extension dialing policy
+        """
+        org_id = webex_id_to_uuid(self.temp_users[0].org_id)
+        url = f'https://cpapi-r.wbx2.com/api/v1/customers/{org_id}/servicesettings/callpolicies'
+        result = self.api.session.rest_get(url)
+        before = result['extensionDialingBetweenLocationsEnabled']
+        if allowed == before:
+            yield
+            return
+        print(f'Setting extension dialing between locations to {"enabled" if allowed else "disabled"}')
+        self.api.session.rest_patch(url, json={'extensionDialingBetweenLocationsEnabled': allowed})
+        # apparently it takes a while for the change to take effect
+        sleep(10)
+        try:
+            yield
+        finally:
+            print(f'Resetting extension dialing between locations to {"enabled" if before else "disabled"}')
+            self.api.session.rest_patch(url, json={'extensionDialingBetweenLocationsEnabled': before})
+            # apparently it takes a while for the change to take effect
+            sleep(10)
+
+    def verify(self, caller: Person, callee: Person,
+               caller_location: TelephonyLocation,
+               callee_location: TelephonyLocation,
+               dial_string: str,
+               success: bool):
+        """
+        Verify dialing between two users
+
+        :param caller: caller user
+        :param callee: callee user
+        :param caller_location: location of caller
+        :param callee_location: location of callee
+        :param dial_string: dial string
+        :param success: expected success
+         """
+        print()
+        print(f'caller: {caller.display_name}({caller_location.routing_prefix}-{caller.extension})')
+        print(f'callee: {callee.display_name}({callee_location.routing_prefix}-{callee.extension})')
+        print(f'dialing: {dial_string}')
+        print(f'expected: {"success" if success else "failure"}')
+        result = self.api.telephony.test_call_routing(originator_id=caller.person_id,
+                                                      originator_type=OriginatorType.user,
+                                                      destination=dial_string)
+        self.assertTrue(result.is_rejected == (not success), 'Unexpected result')
+        if success:
+            self.assertEqual(result.destination_type, DestinationType.hosted_agent,
+                             'Unexpected destination type')
+            self.assertIsNotNone(result.hosted_user, 'No hosted user')
+            self.assertTrue(result.hosted_user.location_id == callee.location_id)
+            self.assertTrue(result.hosted_user.hu_id == callee.person_id,
+                            'expected hosted user to be set to callee')
+        return
+
+    def test_intra_location_extension_dialing(self):
+        """
+        Test intra-location extension dialing
+        --> success
+        """
+        caller = self.temp_users[0]
+        callee = self.temp_users[1]
+        dial_string = callee.extension
+        self.verify(caller=caller, callee=callee,
+                    caller_location=self.target_locations[0],
+                    callee_location=self.target_locations[0],
+                    dial_string=dial_string, success=True)
+
+    def test_intra_location_esn_dialing(self):
+        """
+        Test intra-location ESN dialing
+        --> success
+        """
+        caller = self.temp_users[0]
+        callee = self.temp_users[1]
+        dial_string = self.target_locations[0].routing_prefix + callee.extension
+        self.verify(caller=caller, callee=callee,
+                    caller_location=self.target_locations[0],
+                    callee_location=self.target_locations[0],
+                    dial_string=dial_string, success=True)
+
+    def test_inter_location_esn_dialing(self):
+        """
+        Test inter-location ESN dialing
+        --> success
+        """
+        caller = self.temp_users[0]
+        callee = self.temp_users[2]
+        dial_string = self.target_locations[1].routing_prefix + callee.extension
+        self.verify(caller=caller, callee=callee,
+                    caller_location=self.target_locations[0],
+                    callee_location=self.target_locations[1],
+                    dial_string=dial_string, success=True)
+
+    def test_inter_location_extension_dialing_allowed(self):
+        """
+        Test inter-location extension dialing with inter-location dialing allowed
+        --> success
+        """
+        with self.extension_dialing_between_locations(allowed=True):
+            caller = self.temp_users[0]
+            callee = self.temp_users[2]
+            dial_string = callee.extension
+            self.verify(caller=caller, callee=callee,
+                        caller_location=self.target_locations[0],
+                        callee_location=self.target_locations[1],
+                        dial_string=dial_string, success=True)
+        ...
+
+    def test_inter_location_extension_dialing_disallowed(self):
+        """
+        Test inter-location extension dialing with inter-location dialing disallowed
+        --> fail
+        """
+        with self.extension_dialing_between_locations(allowed=False):
+            caller = self.temp_users[0]
+            callee = self.temp_users[2]
+            dial_string = callee.extension
+            self.verify(caller=caller, callee=callee,
+                        caller_location=self.target_locations[0],
+                        callee_location=self.target_locations[1],
+                        dial_string=dial_string, success=False)
+
