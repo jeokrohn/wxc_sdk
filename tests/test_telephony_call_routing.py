@@ -2283,6 +2283,7 @@ class TestInterLocation(TestCaseWithLog):
 
                 basic_calling_license_id = next(lic.license_id
                                                 for lic in cls.api.licenses.list() if lic.webex_calling_basic)
+
                 location_index_list = [0, 0, 1]
                 for location_index, extension, user in zip(location_index_list, new_extensions, new_users):
                     location = cls.target_locations[location_index]
@@ -2346,6 +2347,28 @@ class TestInterLocation(TestCaseWithLog):
             self.api.session.rest_patch(url, json={'extensionDialingBetweenLocationsEnabled': before})
             # apparently it takes a while for the change to take effect
             sleep(10)
+
+    @contextmanager
+    def disable_unknown_extension_dialing(self, location: TelephonyLocation):
+        """
+        Context manager to disable unknown extension dialing policy on location
+        """
+        dapi = self.api.telephony.location.internal_dialing
+        internal_dialing_before = dapi.read(location_id=location.location_id)
+        if not internal_dialing_before.enable_unknown_extension_route_policy:
+            print(f'Unknown extension dialing already disabled on location "{location.name}"')
+            # already disabled, we are done here
+            yield
+            return
+        # temporarily disable unknown extension dialing
+        print(f'Disabling unknown extension dialing on location "{location.name}"')
+        dapi.update(location_id=location.location_id,
+                    update=InternalDialing(enable_unknown_extension_route_policy=False))
+        try:
+            yield
+        finally:
+            print(f'Re-enabling unknown extension dialing on location "{location.name}"')
+            dapi.update(location_id=location.location_id, update=internal_dialing_before)
 
     def verify(self, caller: Person, callee: Person,
                caller_location: TelephonyLocation,
@@ -2432,7 +2455,8 @@ class TestInterLocation(TestCaseWithLog):
                         caller_location=self.target_locations[0],
                         callee_location=self.target_locations[1],
                         dial_string=dial_string, success=True)
-        ...
+        # with ...
+        return
 
     def test_inter_location_extension_dialing_disallowed(self):
         """
@@ -2440,11 +2464,16 @@ class TestInterLocation(TestCaseWithLog):
         --> fail
         """
         with self.extension_dialing_between_locations(allowed=False):
-            caller = self.temp_users[0]
-            callee = self.temp_users[2]
-            dial_string = callee.extension
-            self.verify(caller=caller, callee=callee,
-                        caller_location=self.target_locations[0],
-                        callee_location=self.target_locations[1],
-                        dial_string=dial_string, success=False)
+            # for this call to fail we need to make sure that unknown extension dialing is disabled on caller location
+            with self.disable_unknown_extension_dialing(self.target_locations[0]):
+                caller = self.temp_users[0]
+                callee = self.temp_users[2]
+                dial_string = callee.extension
+                self.verify(caller=caller, callee=callee,
+                            caller_location=self.target_locations[0],
+                            callee_location=self.target_locations[1],
+                            dial_string=dial_string, success=False)
+            # with ...
+        # with ...
+        return
 
