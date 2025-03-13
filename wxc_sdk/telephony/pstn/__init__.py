@@ -8,6 +8,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['PSTNServiceType', 'PSTNConnectionOption', 'PSTNType', 'PSTNApi']
 
+from wxc_sdk.common import RouteType
+
 
 class PSTNServiceType(str, Enum):
     #: PSTN service type for geographic numbers.
@@ -48,6 +50,11 @@ class PSTNConnectionOption(ApiModel):
     pstn_services: Optional[list[PSTNServiceType]] = None
     #: The PSTN connection type set for the location.
     pstn_connection_type: Optional[PSTNType] = None
+    #: Premise route type. This is required if connection type is LOCAL_GATEWAY.
+    route_type: Optional[RouteType] = None
+    #: Premise route ID. This refers to either a Trunk ID or a Route Group ID. This field is optional but required if
+    #: the connection type is LOCAL_GATEWAY.
+    route_id: Optional[str] = None
 
 
 class PSTNApi(ApiChild, base='telephony/pstn/locations'):

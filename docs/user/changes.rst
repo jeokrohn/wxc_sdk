@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new attributes PSTNConnectionOption.route_type and .route_id
+
 1.24.0
 ------
 - feat: new API: :attr:`api.person_settings.selective_accept <wxc_sdk.person_settings.PersonSettingsApi.selective_accept>`

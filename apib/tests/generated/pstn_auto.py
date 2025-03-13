@@ -11,7 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['ConnectionOptionsResponse', 'ConnectionResponse', 'PSTNApi', 'PSTNServiceType', 'PSTNType']
+__all__ = ['ConnectionOptionsResponse', 'ConnectionResponse', 'PSTNApi', 'PSTNServiceType', 'PSTNType',
+           'PremiseRouteType']
 
 
 class PSTNServiceType(str, Enum):
@@ -55,6 +56,13 @@ class PSTNType(str, Enum):
     cisco_pstn = 'CISCO_PSTN'
 
 
+class PremiseRouteType(str, Enum):
+    #: A route group has been selected for premises-based PSTN.
+    route_group = 'ROUTE_GROUP'
+    #: A trunk group has been selected for premises-based PSTN.
+    trunk = 'TRUNK'
+
+
 class ConnectionResponse(ApiModel):
     #: A unique identifier for the connection.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUElDS1VQL1kyRnNiRkJwWTJ0MWNERT0
@@ -66,6 +74,12 @@ class ConnectionResponse(ApiModel):
     pstn_services: Optional[list[PSTNServiceType]] = None
     #: The PSTN connection type set for the location.
     pstn_connection_type: Optional[PSTNType] = None
+    #: Premise route type. This is required if connection type is LOCAL_GATEWAY.
+    route_type: Optional[list[PremiseRouteType]] = None
+    #: Premise route ID. This refers to either a Trunk ID or a Route Group ID. This field is optional but required if
+    #: the connection type is LOCAL_GATEWAY.
+    #: example: Y2lzY29zcGFyazovL3VzL1RSVU5LL2Y1YTU4MzAwLTVmZTYtNGNjMS1hODA3LTRlN2E5OTMzN2Q0ZA
+    route_id: Optional[str] = None
 
 
 class PSTNApi(ApiChild, base='telephony/pstn/locations'):

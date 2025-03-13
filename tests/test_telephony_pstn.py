@@ -24,7 +24,8 @@ class TestPSTN(TestWithLocations):
         list PSTN options for all locations
         """
         pstn_options_list = await asyncio.gather(*[self.async_api.telephony.pstn.list(location_id=loc.location_id)
-                                                   for loc in self.locations], return_exceptions=True)
+                                                   for loc in self.telephony_locations],
+                                                 return_exceptions=True)
         self.check_errors(pstn_options_list)
 
     @async_test
@@ -33,5 +34,6 @@ class TestPSTN(TestWithLocations):
         Read PSTN selection for all locations
         """
         pstn_selections = await asyncio.gather(*[self.async_api.telephony.pstn.read(location_id=loc.location_id)
-                                                for loc in self.locations], return_exceptions=True)
+                                                for loc in self.telephony_locations],
+                                               return_exceptions=True)
         self.check_errors(pstn_selections)
