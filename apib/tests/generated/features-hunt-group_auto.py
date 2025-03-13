@@ -13,17 +13,20 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRulesSet',
            'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
-           'CallForwardingNumbers', 'CallForwardingNumbersType', 'CreateForwardingRuleObjectCallsFrom',
+           'CallForwardSettingsGetCallForwardingOperatingModes',
+           'CallForwardSettingsGetCallForwardingOperatingModesExceptionType', 'CallForwardingNumbers',
+           'CallForwardingNumbersType', 'CreateForwardingRuleObjectCallsFrom',
            'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
            'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
            'CreateForwardingRuleObjectForwardToSelection', 'FeaturesHuntGroupApi', 'GetForwardingRuleObject',
            'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusyRedirect',
            'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
            'HuntGroupCallForwardAvailableNumberObject', 'HuntGroupCallForwardAvailableNumberObjectOwner',
-           'HuntGroupPrimaryAvailableNumberObject', 'HuntPolicySelection', 'ListHuntGroupObject',
-           'ModifyCallForwardingObjectCallForwarding', 'NumberOwnerType', 'PostHuntGroupCallPolicyObject',
-           'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject',
-           'STATE', 'TelephonyType']
+           'HuntGroupPrimaryAvailableNumberObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModesGet',
+           'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetLevel', 'ModesGetType',
+           'ModesPatch', 'ModesPatchForwardTo', 'ModifyCallForwardingObjectCallForwarding', 'NumberOwnerType',
+           'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer',
+           'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject', 'STATE', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -94,6 +97,110 @@ class CallForwardSettingsGetCallForwardingAlways(ApiModel):
     destination_voicemail_enabled: Optional[bool] = None
 
 
+class CallForwardSettingsGetCallForwardingOperatingModesExceptionType(str, Enum):
+    #: The mode was switched to or extended by the user for manual switch back and runs as an exception until the user
+    #: manual switches the feature back to normal operation or a different mode.
+    manual_switch_back = 'MANUAL_SWITCH_BACK'
+    #: The mode was switched to by the user before its start time and runs as an exception until its end time is
+    #: reached at which point it automatically switches the feature back to normal operation.
+    automatic_switch_back_early_start = 'AUTOMATIC_SWITCH_BACK_EARLY_START'
+    #: The current mode was extended by the user before its end time and runs as an exception until the extension end
+    #: time (mode's end time + extension of up to 12 hours) is reached at which point it automatically switches the
+    #: feature back to normal operation.
+    automatic_switch_back_extension = 'AUTOMATIC_SWITCH_BACK_EXTENSION'
+    #: The mode will remain the current operating mode for the feature until its normal end time is reached.
+    automatic_switch_back_standard = 'AUTOMATIC_SWITCH_BACK_STANDARD'
+
+
+class ModesGetType(str, Enum):
+    #: The operating mode is not scheduled.
+    none_ = 'NONE'
+    #: Single time duration for Monday-Friday and single time duration for Saturday-Sunday.
+    same_hours_daily = 'SAME_HOURS_DAILY'
+    #: Individual time durations for every day of the week.
+    different_hours_daily = 'DIFFERENT_HOURS_DAILY'
+    #: Holidays which have date durations spanning multiple days, as well as an optional yearly recurrence by day or
+    #: date.
+    holiday = 'HOLIDAY'
+
+
+class ModesGetLevel(str, Enum):
+    #: The operating mode is at the location level.
+    location = 'LOCATION'
+    #: The operating mode is at the organization level.
+    organization = 'ORGANIZATION'
+
+
+class CreateForwardingRuleObjectForwardToSelection(str, Enum):
+    #: When the rule matches, forward to the destination for the hunt group.
+    forward_to_default_number = 'FORWARD_TO_DEFAULT_NUMBER'
+    #: When the rule matches, forward to the destination for this rule.
+    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
+    #: When the rule matches, do not forward to another number.
+    do_not_forward = 'DO_NOT_FORWARD'
+
+
+class ModesGetForwardToDefaultForwardToSelection(str, Enum):
+    #: When the rule matches, forward to the destination.
+    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
+    #: When the rule matches, do not forward to another number.
+    do_not_forward = 'DO_NOT_FORWARD'
+
+
+class ModesGetForwardTo(ApiModel):
+    #: The selection for forwarding.
+    #: example: FORWARD_TO_SPECIFIED_NUMBER
+    selection: Optional[CreateForwardingRuleObjectForwardToSelection] = None
+    #: The destination for forwarding. Required when the selection is set to `FORWARD_TO_SPECIFIED_NUMBER`.
+    #: example: +19705550006
+    destination: Optional[str] = None
+    #: Sending incoming calls to voicemail is enabled/disabled when the destination is an internal phone number and
+    #: that number has the voicemail service enabled.
+    destination_voicemail_enabled: Optional[bool] = None
+    #: The operating mode's destination.
+    #: example: 00000
+    default_destination: Optional[str] = None
+    #: The operating mode's destination voicemail enabled.
+    default_destination_voicemail_enabled: Optional[bool] = None
+    #: The operating mode's forward to selection.
+    #: example: DO_NOT_FORWARD
+    default_forward_to_selection: Optional[ModesGetForwardToDefaultForwardToSelection] = None
+
+
+class ModesGet(ApiModel):
+    #: Normal operation is enabled or disabled.
+    #: example: True
+    normal_operation_enabled: Optional[bool] = None
+    #: The ID of the operating mode.
+    #: example: Y2lzY29zcGFyazovL3VzL09QRVJBVElOR19NT0RFL2JiOTc1OTcxLTBjZWYtNDdhNi05Yzc5LTliZWFjY2IwYjg4Mg
+    id: Optional[str] = None
+    #: The name of the operating mode.
+    #: example: Day
+    name: Optional[str] = None
+    #: The type of the operating mode.
+    #: example: SAME_HOURS_DAILY
+    type: Optional[ModesGetType] = None
+    #: The level of the operating mode.
+    #: example: LOCATION
+    level: Optional[ModesGetLevel] = None
+    #: Forward to settings.
+    forward_to: Optional[ModesGetForwardTo] = None
+
+
+class CallForwardSettingsGetCallForwardingOperatingModes(ApiModel):
+    #: Operating modes are enabled or disabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: The ID of the current operating mode.
+    #: example: Y2lzY29zcGFyazovL3VzL09QRVJBVElOR19NT0RFL2JiOTc1OTcxLTBjZWYtNDdhNi05Yzc5LTliZWFjY2IwYjg4Mg
+    current_operating_mode_id: Optional[str] = None
+    #: The exception type.
+    #: example: MANUAL_SWITCH_BACK
+    exception_type: Optional[CallForwardSettingsGetCallForwardingOperatingModesExceptionType] = None
+    #: Operating modes.
+    modes: Optional[list[ModesGet]] = None
+
+
 class CallForwardSettingsGetCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
@@ -102,6 +209,8 @@ class CallForwardSettingsGetCallForwarding(ApiModel):
     selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesGet]] = None
+    #: Settings related to operating modes.
+    operating_modes: Optional[CallForwardSettingsGetCallForwardingOperatingModes] = None
 
 
 class CallForwardingNumbersType(str, Enum):
@@ -123,15 +232,6 @@ class CallForwardingNumbers(ApiModel):
     #: Type of
     #: example: PRIMARY
     type: Optional[CallForwardingNumbersType] = None
-
-
-class CreateForwardingRuleObjectForwardToSelection(str, Enum):
-    #: When the rule matches, forward to the destination for the hunt group.
-    forward_to_default_number = 'FORWARD_TO_DEFAULT_NUMBER'
-    #: When the rule matches, forward to the destination for this rule.
-    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
-    #: When the rule matches, do not forward to another number.
-    do_not_forward = 'DO_NOT_FORWARD'
 
 
 class CreateForwardingRuleObjectForwardTo(ApiModel):
@@ -436,6 +536,29 @@ class ListHuntGroupObject(ApiModel):
     enabled: Optional[bool] = None
 
 
+class ModesPatchForwardTo(ApiModel):
+    #: The selection for forwarding.
+    #: example: FORWARD_TO_SPECIFIED_NUMBER
+    selection: Optional[CreateForwardingRuleObjectForwardToSelection] = None
+    #: The destination for forwarding. Required when the selection is set to `FORWARD_TO_SPECIFIED_NUMBER`.
+    #: example: +19705550006
+    destination: Optional[str] = None
+    #: Sending incoming calls to voicemail is enabled/disabled when the destination is an internal phone number and
+    #: that number has the voicemail service enabled.
+    destination_voicemail_enabled: Optional[bool] = None
+
+
+class ModesPatch(ApiModel):
+    #: Normal operation is enabled or disabled.
+    #: example: True
+    normal_operation_enabled: Optional[bool] = None
+    #: The ID of the operating mode.
+    #: example: Y2lzY29zcGFyazovL3VzL09QRVJBVElOR19NT0RFL2JiOTc1OTcxLTBjZWYtNDdhNi05Yzc5LTliZWFjY2IwYjg4Mg
+    id: Optional[str] = None
+    #: Forward to settings.
+    forward_to: Optional[ModesPatchForwardTo] = None
+
+
 class ModifyCallForwardingObjectCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
@@ -444,6 +567,8 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
     selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesSet]] = None
+    #: Configuration for forwarding via Operating modes (Schedule Based Routing).
+    modes: Optional[list[ModesPatch]] = None
 
 
 class STATE(str, Enum):
@@ -831,7 +956,13 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         """
         Get Call Forwarding Settings for a Hunt Group
 
-        Retrieve Call Forwarding settings for the designated Hunt Group including the list of call forwarding rules.
+        Retrieve Call Forwarding settings for the specified Hunt Group including the list of call forwarding rules.
+
+        The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
+        Below are the available options for configuring your call forwarding:
+        1. Always forward calls to a designated number.
+        2. Forward calls to a designated number based on certain criteria.
+        3. Forward calls using different modes.
 
         Retrieving call forwarding settings for a hunt group requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
@@ -858,7 +989,13 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         """
         Update Call Forwarding Settings for a Hunt Group
 
-        Update Call Forwarding settings for the designated Hunt Group.
+        Update Call Forwarding settings for the specified Hunt Group.
+
+        The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
+        Below are the available options for configuring your call forwarding:
+        1. Always forward calls to a designated number.
+        2. Forward calls to a designated number based on certain criteria.
+        3. Forward calls using different modes.
 
         Updating call forwarding settings for a hunt group requires a full administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
@@ -1201,3 +1338,27 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             params['extension'] = extension
         url = self.ep(f'locations/{location_id}/huntGroups/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=HuntGroupCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def switch_mode_for_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
+                                                                  org_id: str = None):
+        """
+        Switch Mode for Call Forwarding Settings for a Hunt Group
+
+        Switches the current operating mode of the `Hunt Group` to the mode as per normal operations.
+
+        Switching operating mode for a `hunt group` requires a full, or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: `Location` in which this `hunt group` exists.
+        :type location_id: str
+        :param hunt_group_id: Switch operating mode to normal operations for this `hunt group`.
+        :type hunt_group_id: str
+        :param org_id: Switch operating mode as per normal operations for the `hunt group` from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/actions/switchMode/invoke')
+        super().post(url, params=params)

@@ -15,37 +15,39 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileG
            'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType',
            'AvailableAgentListObject', 'AvailableAgentObject', 'AvailableSupervisorsListObject',
            'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGetCallForwarding',
-           'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType',
-           'CallQueueCallForwardAvailableNumberObject', 'CallQueueCallForwardAvailableNumberObjectOwner',
-           'CallQueueHolidaySchedulesObject', 'CallQueueHolidaySchedulesObjectScheduleLevel',
-           'CallQueuePrimaryAvailableNumberObject', 'CallQueueQueueEssentialsSettingsObject',
-           'CallQueueQueueEssentialsSettingsObjectOverflow', 'CallQueueQueueSettingsGetObject',
-           'CallQueueQueueSettingsGetObjectComfortMessage', 'CallQueueQueueSettingsGetObjectComfortMessageBypass',
-           'CallQueueQueueSettingsGetObjectMohMessage', 'CallQueueQueueSettingsGetObjectMohMessageNormalSource',
-           'CallQueueQueueSettingsGetObjectOverflow', 'CallQueueQueueSettingsGetObjectOverflowAction',
-           'CallQueueQueueSettingsGetObjectOverflowGreeting', 'CallQueueQueueSettingsGetObjectWaitMessage',
-           'CallQueueQueueSettingsGetObjectWaitMessageWaitMode', 'CallQueueQueueSettingsGetObjectWelcomeMessage',
-           'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
-           'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
-           'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-           'CreateForwardingRuleObjectForwardToSelection', 'FeaturesCallQueueApi', 'GetAnnouncementFileInfo',
-           'GetCallQueueAgentObject', 'GetCallQueueAgentObjectAgent', 'GetCallQueueAgentObjectQueues',
-           'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
-           'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueEssentialsCallPolicyObject',
-           'GetCallQueueEssentialsObject', 'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject',
-           'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject',
-           'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
+           'CallForwardSettingsGetCallForwardingAlways', 'CallForwardSettingsGetCallForwardingOperatingModes',
+           'CallForwardSettingsGetCallForwardingOperatingModesExceptionType', 'CallForwardingNumbers',
+           'CallForwardingNumbersType', 'CallQueueCallForwardAvailableNumberObject',
+           'CallQueueCallForwardAvailableNumberObjectOwner', 'CallQueueHolidaySchedulesObject',
+           'CallQueueHolidaySchedulesObjectScheduleLevel', 'CallQueuePrimaryAvailableNumberObject',
+           'CallQueueQueueEssentialsSettingsObject', 'CallQueueQueueEssentialsSettingsObjectOverflow',
+           'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage',
+           'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage',
+           'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
+           'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting',
+           'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode',
+           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateCallQueueObjectCallingLineIdPolicy',
+           'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers',
+           'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo',
+           'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection',
+           'FeaturesCallQueueApi', 'GetAnnouncementFileInfo', 'GetCallQueueAgentObject',
+           'GetCallQueueAgentObjectAgent', 'GetCallQueueAgentObjectQueues', 'GetCallQueueCallPolicyObject',
+           'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
+           'GetCallQueueEssentialsCallPolicyObject', 'GetCallQueueEssentialsObject',
+           'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
+           'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject',
            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
            'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject', 'GetPersonPlaceObject',
            'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType',
            'GetSupervisorDetailsResponse', 'GetUserNumberItemObject', 'HuntPolicySelection',
            'HuntRoutingTypeSelection', 'ListCallQueueAgentObject', 'ListCallQueueEssentialsObject',
            'ListCallQueueObject', 'ListSupervisorAgentObject', 'ListSupervisorAgentStatusObject',
-           'ListSupervisorObject', 'LocationObject', 'MediaType', 'ModifyAgentsForCallQueueObjectSettings',
-           'ModifyCallForwardingObjectCallForwarding', 'ModifyPersonPlaceVirtualLineCallQueueObject',
-           'NumberOwnerType', 'PostPersonPlaceVirtualLineCallQueueObject',
-           'PostPersonPlaceVirtualLineSupervisorObject', 'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject',
-           'STATE', 'TelephonyType']
+           'ListSupervisorObject', 'LocationObject', 'MediaType', 'ModesGet', 'ModesGetForwardTo',
+           'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType', 'ModesPatch', 'ModesPatchForwardTo',
+           'ModifyAgentsForCallQueueObjectSettings', 'ModifyCallForwardingObjectCallForwarding',
+           'ModifyPersonPlaceVirtualLineCallQueueObject', 'NumberOwnerType',
+           'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineSupervisorObject',
+           'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject', 'STATE', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -161,6 +163,109 @@ class CallForwardSettingsGetCallForwardingAlways(ApiModel):
     destination_voicemail_enabled: Optional[bool] = None
 
 
+class CallForwardSettingsGetCallForwardingOperatingModesExceptionType(str, Enum):
+    #: The mode was switched to or extended by the user for manual switch back and runs as an exception until the user
+    #: manual switches the feature back to normal operation or a different mode.
+    manual_switch_back = 'MANUAL_SWITCH_BACK'
+    #: The mode was switched to by the user before its start time and runs as an exception until its end time is
+    #: reached at which point it automatically switches the feature back to normal operation.
+    automatic_switch_back_early_start = 'AUTOMATIC_SWITCH_BACK_EARLY_START'
+    #: The current mode was extended by the user before its end time and runs as an exception until the extension end
+    #: time (mode's end time + extension of up to 12 hours) is reached at which point it automatically switches the
+    #: feature back to normal operation.
+    automatic_switch_back_extension = 'AUTOMATIC_SWITCH_BACK_EXTENSION'
+    #: The mode will remain the current operating mode for the feature until its normal end time is reached.
+    automatic_switch_back_standard = 'AUTOMATIC_SWITCH_BACK_STANDARD'
+
+
+class ModesGetType(str, Enum):
+    #: The operating mode is not scheduled.
+    none_ = 'NONE'
+    #: Single time duration for Monday-Friday and single time duration for Saturday-Sunday.
+    same_hours_daily = 'SAME_HOURS_DAILY'
+    #: Individual time durations for every day of the week.
+    different_hours_daily = 'DIFFERENT_HOURS_DAILY'
+    #: Holidays which have date durations spanning multiple days, as well as an optional yearly recurrence by day or
+    #: date.
+    holiday = 'HOLIDAY'
+
+
+class CallQueueHolidaySchedulesObjectScheduleLevel(str, Enum):
+    #: Schedule is configured across a location.
+    location = 'LOCATION'
+    #: Schedule is configured across an organization.
+    organization = 'ORGANIZATION'
+
+
+class CreateForwardingRuleObjectForwardToSelection(str, Enum):
+    #: When the rule matches, forward to the destination for the hunt group.
+    forward_to_default_number = 'FORWARD_TO_DEFAULT_NUMBER'
+    #: When the rule matches, forward to the destination for this rule.
+    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
+    #: When the rule matches, do not forward to another number.
+    do_not_forward = 'DO_NOT_FORWARD'
+
+
+class ModesGetForwardToDefaultForwardToSelection(str, Enum):
+    #: When the rule matches, forward to the destination.
+    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
+    #: When the rule matches, do not forward to another number.
+    do_not_forward = 'DO_NOT_FORWARD'
+
+
+class ModesGetForwardTo(ApiModel):
+    #: The selection for forwarding.
+    #: example: FORWARD_TO_SPECIFIED_NUMBER
+    selection: Optional[CreateForwardingRuleObjectForwardToSelection] = None
+    #: The destination for forwarding. Required when the selection is set to `FORWARD_TO_SPECIFIED_NUMBER`.
+    #: example: +19705550006
+    destination: Optional[str] = None
+    #: Destination voicemail is enabled.
+    destination_voicemail_enabled: Optional[bool] = None
+    #: The operating mode's destination.
+    #: example: 00000
+    default_destination: Optional[str] = None
+    #: The operating mode's destination voicemail enabled.
+    default_destination_voicemail_enabled: Optional[bool] = None
+    #: The operating mode's forward to selection.
+    #: example: DO_NOT_FORWARD
+    default_forward_to_selection: Optional[ModesGetForwardToDefaultForwardToSelection] = None
+
+
+class ModesGet(ApiModel):
+    #: Normal operation is enabled or disabled.
+    #: example: True
+    normal_operation_enabled: Optional[bool] = None
+    #: The ID of the operating mode.
+    #: example: Y2lzY29zcGFyazovL3VzL09QRVJBVElOR19NT0RFL2JiOTc1OTcxLTBjZWYtNDdhNi05Yzc5LTliZWFjY2IwYjg4Mg
+    id: Optional[str] = None
+    #: The name of the operating mode.
+    #: example: Day
+    name: Optional[str] = None
+    #: The type of the operating mode.
+    #: example: SAME_HOURS_DAILY
+    type: Optional[ModesGetType] = None
+    #: The level of the operating mode.
+    #: example: LOCATION
+    level: Optional[CallQueueHolidaySchedulesObjectScheduleLevel] = None
+    #: Forward to settings.
+    forward_to: Optional[ModesGetForwardTo] = None
+
+
+class CallForwardSettingsGetCallForwardingOperatingModes(ApiModel):
+    #: Operating modes are enabled or disabled.
+    #: example: True
+    enabled: Optional[bool] = None
+    #: The ID of the current operating mode.
+    #: example: Y2lzY29zcGFyazovL3VzL09QRVJBVElOR19NT0RFL2JiOTc1OTcxLTBjZWYtNDdhNi05Yzc5LTliZWFjY2IwYjg4Mg
+    current_operating_mode_id: Optional[str] = None
+    #: The exception type.
+    #: example: MANUAL_SWITCH_BACK
+    exception_type: Optional[CallForwardSettingsGetCallForwardingOperatingModesExceptionType] = None
+    #: Operating modes.
+    modes: Optional[list[ModesGet]] = None
+
+
 class CallForwardSettingsGetCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
@@ -169,6 +274,8 @@ class CallForwardSettingsGetCallForwarding(ApiModel):
     selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesGet]] = None
+    #: Settings related to operating modes.
+    operating_modes: Optional[CallForwardSettingsGetCallForwardingOperatingModes] = None
 
 
 class CallForwardingNumbersType(str, Enum):
@@ -190,13 +297,6 @@ class CallForwardingNumbers(ApiModel):
     #: Type of
     #: example: PRIMARY
     type: Optional[CallForwardingNumbersType] = None
-
-
-class CallQueueHolidaySchedulesObjectScheduleLevel(str, Enum):
-    #: Schedule is configured across a location.
-    location = 'LOCATION'
-    #: Schedule is configured across an organization.
-    organization = 'ORGANIZATION'
 
 
 class CallQueueHolidaySchedulesObject(ApiModel):
@@ -489,15 +589,6 @@ class PostPersonPlaceVirtualLineCallQueueObject(ApiModel):
     #: Skill level of person, workspace or virtual line. Only applied when call routing type is `SKILL_BASED`.
     #: example: 1
     skill_level: Optional[int] = None
-
-
-class CreateForwardingRuleObjectForwardToSelection(str, Enum):
-    #: When the rule matches, forward to the destination for the hunt group.
-    forward_to_default_number = 'FORWARD_TO_DEFAULT_NUMBER'
-    #: When the rule matches, forward to the destination for this rule.
-    forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
-    #: When the rule matches, do not forward to another number.
-    do_not_forward = 'DO_NOT_FORWARD'
 
 
 class CreateForwardingRuleObjectForwardTo(ApiModel):
@@ -878,6 +969,28 @@ class ListCallQueueObject(ApiModel):
     enabled: Optional[bool] = None
 
 
+class ModesPatchForwardTo(ApiModel):
+    #: The selection for forwarding.
+    #: example: FORWARD_TO_SPECIFIED_NUMBER
+    selection: Optional[CreateForwardingRuleObjectForwardToSelection] = None
+    #: The destination for forwarding. Required when the selection is set to `FORWARD_TO_SPECIFIED_NUMBER`.
+    #: example: +19705550006
+    destination: Optional[str] = None
+    #: Destination voicemail is enabled.
+    destination_voicemail_enabled: Optional[bool] = None
+
+
+class ModesPatch(ApiModel):
+    #: Normal operation is enabled or disabled.
+    #: example: True
+    normal_operation_enabled: Optional[bool] = None
+    #: The ID of the operating mode.
+    #: example: Y2lzY29zcGFyazovL3VzL09QRVJBVElOR19NT0RFL2JiOTc1OTcxLTBjZWYtNDdhNi05Yzc5LTliZWFjY2IwYjg4Mg
+    id: Optional[str] = None
+    #: Forward to settings.
+    forward_to: Optional[ModesPatchForwardTo] = None
+
+
 class ModifyCallForwardingObjectCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
@@ -886,6 +999,8 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
     selective: Optional[CallForwardSettingsGetCallForwardingAlways] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesSet]] = None
+    #: Configuration for forwarding via Operating modes (Schedule Based Routing).
+    modes: Optional[list[ModesPatch]] = None
 
 
 class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
@@ -1047,7 +1162,7 @@ class AvailableAgentObject(ApiModel):
     #: example: True
     has_cx_essentials: Optional[bool] = None
     #: List of phone numbers of a person, workspace or virtual line.
-    numbers: Optional[list[GetUserNumberItemObject]] = None
+    phone_numbers: Optional[list[GetUserNumberItemObject]] = None
 
 
 class ListSupervisorObject(ApiModel):
@@ -1854,7 +1969,13 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         """
         Get Call Forwarding Settings for a Call Queue
 
-        Retrieve Call Forwarding settings for the designated Call Queue including the list of call forwarding rules.
+        Retrieve Call Forwarding settings for the specified Call Queue, including the list of call forwarding rules.
+
+        The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
+        Below are the available options for configuring your call forwarding:
+        1. Always forward calls to a designated number.
+        2. Forward calls to a designated number based on certain criteria.
+        3. Forward calls using different modes.
 
         Retrieving call forwarding settings for a call queue requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
@@ -1882,6 +2003,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         Update Call Forwarding Settings for a Call Queue
 
         Update Call Forwarding settings for the designated Call Queue.
+
+        The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
+        Below are the available options for configuring your call forwarding:
+        1. Always forward calls to a designated number.
+        2. Forward calls to a designated number based on certain criteria.
+        3. Forward calls using different modes.
 
         Updating call forwarding settings for a call queue requires a full administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
@@ -3500,3 +3627,27 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep('supervisors/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentListObject, item_key='agents', params=params)
+
+    def switch_mode_for_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
+                                                                  org_id: str = None):
+        """
+        Switch Mode for Call Forwarding Settings for a Call Queue
+
+        Switches the current operating mode of the `Call Queue` to the mode as per normal operations.
+
+        Switching operating mode for a `call queue` requires a full, or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
+
+        :param location_id: `Location` in which this `call queue` exists.
+        :type location_id: str
+        :param queue_id: Switch operating mode to normal operations for this `call queue`.
+        :type queue_id: str
+        :param org_id: Switch operating mode as per normal operations for the `call queue` from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/actions/switchMode/invoke')
+        super().post(url, params=params)
