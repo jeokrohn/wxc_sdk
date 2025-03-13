@@ -33,7 +33,7 @@ from wxc_sdk.device_configurations import DeviceConfiguration, DeviceConfigurati
     DeviceConfigurationResponse, DeviceConfigurationSource, DeviceConfigurationSourceEditability, \
     DeviceConfigurationSources
 from wxc_sdk.devices import ActivationCodeResponse, ConnectionStatus, Device, Lifecycle, ProductType, TagOp
-from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType
+from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType, Recipient
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.guests import Guest
 from wxc_sdk.licenses import License, LicenseProperties, LicenseRequest, LicenseRequestOperation, LicenseUser, \
@@ -340,7 +340,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
            'QueryMeetingParticipantsWithEmailBody', 'QueryStatusResponse', 'Question', 'QuestionAnswer',
            'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk',
-           'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Record', 'Recording', 'RecordingFormat',
+           'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Recipient', 'Record', 'Recording', 'RecordingFormat',
            'RecordingOwnerType', 'RecordingParty', 'RecordingPartyActor', 'RecordingServiceData',
            'RecordingServiceType', 'RecordingSession', 'RecordingState', 'RecordingStatus', 'RecordingStorageRegion',
            'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason', 'Redirection',

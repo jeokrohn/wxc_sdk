@@ -8,7 +8,7 @@ from ..api_child import ApiChild
 from ..base import ApiModel, dt_iso_str, enum_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['EventData', 'ComplianceEvent', 'EventResource', 'EventType', 'EventsApi']
+__all__ = ['EventData', 'ComplianceEvent', 'EventResource', 'EventType', 'Recipient', 'EventsApi']
 
 
 class EventResource(str, Enum):
@@ -49,6 +49,21 @@ class EventType(str, Enum):
     ended = 'ended'
     read = 'read'
     all = 'all'
+
+
+class Recipient(ApiModel):
+    #: The personId of the recipient
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9lOGYwOTIwOC00ZjUxLTExZWYtOTQ4My1iYTA3NjE2MzY4NmQ
+    person_id: Optional[str] = None
+    #: The personEmail
+    #: example: johndoe@simplistic.com
+    person_email: Optional[str] = None
+    #: Guests, who are unauthenticated users, have a guestDisplayName
+    #: example: John Wayne
+    guest_display_name: Optional[str] = None
+    #: Guests, who are unauthenticated users, have a guestEmail
+    #: example: jwayne@mailinator.com
+    guest_email: Optional[str] = None
 
 
 class EventData(ApiModel):
@@ -100,50 +115,57 @@ class EventData(ApiModel):
     #: <https://developer.webex.com/docs/api/v1/meetings-chat>`_ resource. Meetings chat
     #: collection must be custom enabled.
     has_post_meetings_chat: Optional[str] = None
-    #: telephony; corelation id
+    #: Telephony; corelation id
     correlation_id: Optional[str] = None
-    #: telephony; call types (examples
+    #: Telephony; call types (examples
     #: `VIDEO_DIALIN`,`VIDEO_DIALOUT`,`CASCADE`,`HYBRID_CASCADE`,`PSTN_SIP`,`PSTN_DIALIN`,`PSTN_DIALOUT`,
     #: `PSTN_ONLY_DIALIN`,`PSTN_ONLY_DIALOUT`,`H323`,`H323_IP`,`SIP_ENTERPRISE`,`SIP_MOBILE`,`SIP_NATIONAL`,
     #: `SIP_INTERNATIONAL`,`SIP_EMERGENCY`,`SIP_OPERATOR`,`SIP_SHORTCODE`,`SIP_TOLLFREE`,`SIP_PREMIUM`,`SIP_URI`,
     #: `SIP_INBOUND`,`UNKNOWN`,`ZTM`,`SIP_MEETING`)
     call_type: Optional[str] = None
-    #: telephony; user id of the CDR owner
+    #: Telephony; user id of the CDR owner
     user_id: Optional[str] = None
-    #: telephony; type of user
+    #: Telephony; type of user
     #: (`User`,`Anchor`,`AutomatedAttendantBasic`,`AutomatedAttendantStandard`,`AutomatedAttendantVideo`,
     #: `BroadworksAnywhere`,`CallCenterBasic`,`CallCenterPremium`,`CallCenterStandard`,`CollaborateBridge`,
     #: `ContactCenterAdaptor`,`FindMeFollowMe`,`FlexibleSeatingHost`,`GroupCall`,`GroupPaging`,`HuntGroup`,
     #: `LocalGateway`,`MeetMeConference`,`Place`,`RoutePoint`,`SystemVoicePortal`,`VoiceMailGroup`,
     #: `VoiceMailRetrieval`,`VoiceXML`,`VirtualLine`,`Unknown`)
     user_type: Optional[str] = None
-    #: telephony; `ORIGINATING` or `TERMINATING`
+    #: Telephony; `ORIGINATING` or `TERMINATING`
     call_direction: Optional[str] = None
-    #: telephony; indicates if the call was answered
+    #: Telephony; indicates if the call was answered
     is_call_answered: Optional[bool] = None
-    #: telephony; duration of call in seconds
+    #: Telephony; duration of call in seconds
     call_duration_seconds: Optional[datetime] = None
-    #: telephony; ISO 8601
+    #: Telephony; ISO 8601
     call_start_time: Optional[datetime] = None
-    #: telephony; ISO 8601
+    #: Telephony; ISO 8601
     call_answer_time: Optional[datetime] = None
-    #: telephony; ISO 8601
+    #: Telephony; ISO 8601
     call_transfer_time: Optional[datetime] = None
-    #: telephony; originating number
+    #: Telephony; originating number
     calling_number: Optional[str] = None
-    #: telephony
+    #: Telephony
     calling_line_id: Optional[str] = None
-    #: telephony; destination number
+    #: Telephony; destination number
     called_number: Optional[str] = None
-    #: telephony
+    #: Telephony
     called_line_id: Optional[str] = None
-    #: telephony
+    #: Telephony
     dialed_digits: Optional[str] = None
-    #: telephony
+    #: Telephony
     call_redirecting_number: Optional[str] = None
-    #: telephony
+    #: Telephony
     call_redirected_reason: Optional[str] = None
     created: Optional[datetime] = None
+    #: Message type `direct` or `group` message.
+    type: Optional[str] = None
+    #: The breakout session Id in cases where the action happened in a meeting's brakout session, for example a
+    #: `meetingMessage`.
+    breakout_session_id: Optional[str] = None
+    #: the recipients list for directed meetingMessages.
+    recipients: Optional[list[Recipient]] = None
     content_url: Optional[str] = None
 
 

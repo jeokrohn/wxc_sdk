@@ -11,7 +11,22 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['Event', 'EventData', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi']
+__all__ = ['Event', 'EventData', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'Recipient']
+
+
+class Recipient(ApiModel):
+    #: The personId of the recipient
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9lOGYwOTIwOC00ZjUxLTExZWYtOTQ4My1iYTA3NjE2MzY4NmQ
+    person_id: Optional[str] = None
+    #: The personEmail
+    #: example: johndoe@simplistic.com
+    person_email: Optional[str] = None
+    #: Guests, who are unauthenticated users, have a guestDisplayName
+    #: example: John Wayne
+    guest_display_name: Optional[str] = None
+    #: Guests, who are unauthenticated users, have a guestEmail
+    #: example: jwayne@mailinator.com
+    guest_email: Optional[str] = None
 
 
 class EventData(ApiModel):
@@ -33,79 +48,88 @@ class EventData(ApiModel):
     meeting_id: Optional[str] = None
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82YWE2ZGE5OS0xYzdlLTQ4MWItODY3YS03MWY2NTIwNDk0MzM
     creator_id: Optional[str] = None
-    #: The meeting's host data
+    #: The meeting's host data.
     host: Optional[Any] = None
-    #: Common Identity (CI) authenticated meeting attendees
+    #: Common Identity (CI) authenticated meeting attendees.
     attendees: Optional[list[str]] = None
-    #: indicates whether or not the Voice Assistant was enabled during the meeting. If `true` a transcript should be
+    #: Indicates whether or not the Voice Assistant was enabled during the meeting. If `true` a transcript should be
     #: available a couple minutes after the meeting ended at the `meetingTranscripts resource
-    #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_
+    #: <https://developer.webex.com/docs/api/v1/meeting-transcripts>`_.
     #: example: yes
     transcription_enabled: Optional[str] = None
-    #: indicates if recording was enabled for all or parts of the meeting. If `true` a recording should be available
+    #: Indicates if recording was enabled for all or parts of the meeting. If `true` a recording should be available
     #: shortly after the meeting ended at the `recordings resource
-    #: <https://developer.webex.com/docs/api/v1/recordings>`_
+    #: <https://developer.webex.com/docs/api/v1/recordings>`_.
     #: example: yes
     recording_enabled: Optional[str] = None
-    #: indicates if chat messages were exchanged during the meeting in the meetings client (not the unified client). If
+    #: Indicates if chat messages were exchanged during the meeting in the meetings client (not the unified client). If
     #: `true` these messages can be accessed by a compliance officer at the `postMeetingsChat
     #: <https://developer.webex.com/docs/api/v1/meetings-chat>`_ resource. Meetings chat
     #: collection must be custom enabled.
     #: example: yes
     has_post_meetings_chat: Optional[str] = None
-    #: telephony; corelation id
+    #: Telephony; The corelation id.
     #: example: fdda8613-d34b-424c-8c6a-44ff2e19379c
     corelation_id: Optional[str] = None
-    #: telephony; call types (examples
-    #: `VIDEO_DIALIN`,`VIDEO_DIALOUT`,`CASCADE`,`HYBRID_CASCADE`,`PSTN_SIP`,`PSTN_DIALIN`,`PSTN_DIALOUT`,`PSTN_ONLY_DIALIN`,`PSTN_ONLY_DIALOUT`,`H323`,`H323_IP`,`SIP_ENTERPRISE`,`SIP_MOBILE`,`SIP_NATIONAL`,`SIP_INTERNATIONAL`,`SIP_EMERGENCY`,`SIP_OPERATOR`,`SIP_SHORTCODE`,`SIP_TOLLFREE`,`SIP_PREMIUM`,`SIP_URI`,`SIP_INBOUND`,`UNKNOWN`,`ZTM`,`SIP_MEETING`)
+    #: Telephony; call types (examples
+    #: `VIDEO_DIALIN`,`VIDEO_DIALOUT`,`CASCADE`,`HYBRID_CASCADE`,`PSTN_SIP`,`PSTN_DIALIN`,`PSTN_DIALOUT`,`PSTN_ONLY_DIALIN`,`PSTN_ONLY_DIALOUT`,`H323`,`H323_IP`,`SIP_ENTERPRISE`,`SIP_MOBILE`,`SIP_NATIONAL`,`SIP_INTERNATIONAL`,`SIP_EMERGENCY`,`SIP_OPERATOR`,`SIP_SHORTCODE`,`SIP_TOLLFREE`,`SIP_PREMIUM`,`SIP_URI`,`SIP_INBOUND`,`UNKNOWN`,`ZTM`,`SIP_MEETING`).
     #: example: SIP_ENTERPRISE
     call_type: Optional[str] = None
-    #: telephony; user id of the CDR owner
+    #: Telephony; user id of the CDR owner.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zZjEwMTU1NC04ZGJjLTQyMmUtOGEzZC1kYTk1YTI3NWZlNzU
     user_id: Optional[str] = None
-    #: telephony; type of user
-    #: (`User`,`Anchor`,`AutomatedAttendantBasic`,`AutomatedAttendantStandard`,`AutomatedAttendantVideo`,`BroadworksAnywhere`,`CallCenterBasic`,`CallCenterPremium`,`CallCenterStandard`,`CollaborateBridge`,`ContactCenterAdaptor`,`FindMeFollowMe`,`FlexibleSeatingHost`,`GroupCall`,`GroupPaging`,`HuntGroup`,`LocalGateway`,`MeetMeConference`,`Place`,`RoutePoint`,`SystemVoicePortal`,`VoiceMailGroup`,`VoiceMailRetrieval`,`VoiceXML`,`VirtualLine`,`Unknown`)
+    #: Telephony; The type of user
+    #: (`User`,`Anchor`,`AutomatedAttendantBasic`,`AutomatedAttendantStandard`,`AutomatedAttendantVideo`,`BroadworksAnywhere`,`CallCenterBasic`,`CallCenterPremium`,`CallCenterStandard`,`CollaborateBridge`,`ContactCenterAdaptor`,`FindMeFollowMe`,`FlexibleSeatingHost`,`GroupCall`,`GroupPaging`,`HuntGroup`,`LocalGateway`,`MeetMeConference`,`Place`,`RoutePoint`,`SystemVoicePortal`,`VoiceMailGroup`,`VoiceMailRetrieval`,`VoiceXML`,`VirtualLine`,`Unknown`).
     #: example: User
     user_type: Optional[str] = None
-    #: telephony; `ORIGINATING` or `TERMINATING`
+    #: Telephony; `ORIGINATING` or `TERMINATING`.
     #: example: ORIGINTATING
     call_direction: Optional[str] = None
-    #: telephony; indicates if the call was answered
+    #: Telephony; indicates if the call was answered.
     #: example: True
     is_call_answered: Optional[bool] = None
-    #: telephony; duration of call in seconds
+    #: Telephony; duration of call in seconds.
     #: example: 192
     call_duration_seconds: Optional[str] = None
-    #: telephony; ISO 8601
+    #: Telephony; ISO 8601.
     #: example: 2023-02-08T06:12:43.976Z
     call_start_time: Optional[datetime] = None
-    #: telephony; ISO 8601
+    #: Telephony; ISO 8601.
     #: example: 2023-02-08T06:12:47.012Z
     call_answer_time: Optional[datetime] = None
-    #: telephony; ISO 8601
+    #: Telephony; ISO 8601.
     #: example: 2023-02-08T06:15:19.112Z
     call_transfer_time: Optional[datetime] = None
-    #: telephony; originating number
+    #: Telephony; originating number.
     #: example: 910481234
     calling_number: Optional[str] = None
-    #: telephony
+    #: Telephony.
     #: example: 211
     calling_line_id: Optional[str] = None
-    #: telephony; destination number
+    #: Telephony; destination number.
     #: example: 4089671221
     called_number: Optional[str] = None
-    #: telephony
+    #: Telephony
     #: example: 219
     called_line_id: Optional[str] = None
-    #: telephony
+    #: Telephony
     #: example: 123
     dialed_digits: Optional[str] = None
-    #: telephony
+    #: Telephony
     call_redirecting_number: Optional[str] = None
-    #: telephony
+    #: Telephony
     call_redirected_reason: Optional[str] = None
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None
+    #: Message type `direct` or `group` message.
+    #: example: direct
+    type: Optional[str] = None
+    #: The breakout session Id in cases where the action happened in a meeting's brakout session, for example a
+    #: `meetingMessage`.
+    #: example: d66a4a90-4f50-11ef-bc94-f5c71646dc71
+    breakout_session_id: Optional[str] = None
+    #: the recipients list for directed meetingMessages.
+    recipients: Optional[list[Recipient]] = None
 
 
 class EventResourceEnum(str, Enum):
@@ -171,7 +195,7 @@ class Event(ApiModel):
     #: The event's data representation. This object will contain the event's `resource`, such as `memberships
     #: <https://developer.webex.com/docs/api/v1/memberships/get-membership-details>`_, `messages
     #: `meetings
-    #: <https://developer.webex.com/docs/api/v1/meetings>`_, `tabs
+    #: <https://developer.webex.com/docs/api/v1/meetings>`_, `meetingMessages
     data: Optional[EventData] = None
 
 
