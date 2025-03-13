@@ -215,8 +215,8 @@ class ProgrammableLineKey(ApiModel):
     line_key_type: Optional[LineKeyType] = None
     #: This is applicable only when the lineKeyType is `SPEED_DIAL`.
     line_key_label: Optional[str] = None
-    #: This is applicable only when the lineKeyType is `SPEED_DIAL` and the value must be a valid Telephone Number,
-    #: Ext, or SIP URI (format: user@host using A-Z,a-z,0-9,-_ .+ for user and host).
+    #: Applicable only when the `lineKeyType` is `SPEED_DIAL`. Value must be a valid telephone number, ext, or SIP URI
+    #: (format: `user@host` using A-Z,a-z,0-9,-_ .+ for `user` and `host`).
     line_key_value: Optional[str] = None
     #: Shared line index is the line label number of the shared or virtual line assigned in the configured lines. Since
     #: you can add multiple appearances of the same shared or virtual line on a phone, entering the index number
@@ -678,7 +678,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
 
         Create a Line Key Template in this organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
@@ -709,7 +709,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
 
         List all Line Key Templates available for this organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
@@ -736,7 +736,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
 
         Get detailed information about a Line Key Template by template ID in an organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
@@ -765,7 +765,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
 
         Modify a line key template by its template ID in an organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
@@ -791,7 +791,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
 
         Delete a Line Key Template by its template ID in an organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
@@ -824,7 +824,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         Preview the number of devices that will be affected by the application of a Line Key Template or when resetting
         devices to their factory Line Key settings.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
         display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.

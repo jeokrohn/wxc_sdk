@@ -19,8 +19,8 @@ __all__ = ['AcdObject', 'ActivationStates', 'ApplyLineKeyTemplateJobDetails', 'A
            'CustomizationDeviceLevelObjectDevice', 'CustomizationObject', 'DectDeviceList', 'DectObject',
            'DectVlanObject', 'DefaultLoggingLevelObject', 'DeleteDeviceBackgroundImagesResponse',
            'DeleteImageRequestObject', 'DeleteImageResponseSuccessObject', 'DeleteImageResponseSuccessObjectResult',
-           'DeviceActivationStates', 'DeviceCallSettingsApi', 'DeviceLayout', 'DeviceList', 'DeviceObject',
-           'DeviceOwner', 'DeviceSettingsConfigurationObject', 'DeviceSettingsObject',
+           'DeviceActivationStates', 'DeviceCallSettingsApi', 'DeviceLayout', 'DeviceLineType', 'DeviceList',
+           'DeviceObject', 'DeviceOwner', 'DeviceSettingsConfigurationObject', 'DeviceSettingsObject',
            'DeviceSettingsObjectForDeviceLevel', 'DeviceType', 'Devices', 'DirectoryMethod',
            'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'EnhancedMulticastObject',
            'ErrorMessageObject', 'ErrorObject', 'GetLineKeyTemplateResponse', 'GetMemberResponse',
@@ -1098,7 +1098,7 @@ class DeviceObject(ApiModel):
     allow_configure_layout_enabled: Optional[bool] = None
     #: Number of port lines.
     number_of_line_ports: Optional[int] = None
-    #: Indicates whether Kem support is enabled or not.
+    #: If `true`, KEM is supported.
     #: example: True
     kem_support_enabled: Optional[bool] = None
     #: Module count.
@@ -1113,6 +1113,8 @@ class DeviceObject(ApiModel):
     default_upgrade_channel: Optional[str] = None
     #: Enables / disables the additional primary line appearances.
     additional_primary_line_appearances_enabled: Optional[bool] = None
+    #: Enables / disables the additional shared line appearances.
+    additional_secondary_line_appearances_enabled: Optional[bool] = None
     #: Enables / disables Basic emergency nomadic.
     basic_emergency_nomadic_enabled: Optional[bool] = None
     #: Enables / disables customized behavior support on devices.
@@ -1147,6 +1149,8 @@ class DeviceObject(ApiModel):
     allow_configure_phone_settings_enabled: Optional[bool] = None
     #: Enables / disables hotline support.
     supports_hotline_enabled: Optional[bool] = None
+    #: Supports hot desk only.
+    supports_hot_desk_only: Optional[bool] = None
 
 
 class DeviceSettingsObject(ApiModel):
@@ -1451,6 +1455,18 @@ class StartJobResponse(ApiModel):
     counts: Optional[CountObject] = None
 
 
+class DeviceLineType(str, Enum):
+    #: Primary line for the member.
+    primary = 'PRIMARY'
+    #: Shared line for the member. A shared line allows users to receive and place calls to and from another user's
+    #: extension, using their own device.
+    shared_call_appearance = 'SHARED_CALL_APPEARANCE'
+    #: Device is a shared line.
+    mobility = 'MOBILITY'
+    #: Device is a hotdesking guest.
+    hotdesking_guest = 'HOTDESKING_GUEST'
+
+
 class ListDeviceSettingsObject(ApiModel):
     #: Customization object of the device settings.
     customizations: Optional[CustomizationObject] = None
@@ -1612,7 +1628,7 @@ class Devices(ApiModel):
     #: the device.
     primary_owner: Optional[bool] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
-    type: Optional[LineType] = None
+    type: Optional[DeviceLineType] = None
     #: Hoteling login settings, which are available when the device is the owner's primary device and device type is
     #: PRIMARY. Hoteling login settings are set at the owner level.
     hoteling: Optional[Hoteling] = None
@@ -1716,6 +1732,8 @@ class LineKeyType(str, Enum):
     open = 'OPEN'
     #: Button not usable but reserved for future features.
     closed = 'CLOSED'
+    #: Allows users to manage call forwarding for features via schedule-based routing.
+    mode_management = 'MODE_MANAGEMENT'
 
 
 class ProgrammableLineKeys(ApiModel):
@@ -1728,10 +1746,19 @@ class ProgrammableLineKeys(ApiModel):
     #: This is applicable only when the lineKeyType is `SPEED_DIAL`.
     #: example: Help Line
     line_key_label: Optional[str] = None
-    #: This is applicable only when the lineKeyType is `SPEED_DIAL` and the value must be a valid Telephone Number,
-    #: Ext, or SIP URI (format: user@host using A-Z,a-z,0-9,-_ .+ for user and host).
+    #: Applicable only when the `lineKeyType` is `SPEED_DIAL`. Value must be a valid telephone number, ext, or SIP URI
+    #: (format: `user@host` using A-Z,a-z,0-9,-_ .+ for `user` and `host`).
     #: example: 5646
     line_key_value: Optional[str] = None
+    #: Shared line index is the line label number of the shared or virtual line assigned in the configured lines. Since
+    #: you can add multiple appearances of the same shared or virtual line on a phone, entering the index number
+    #: assigns the respective line to a line key. This is applicable only when the `lineKeyType` is SHARED_LINE, If
+    #: multiple programmable line keys are configured as shared lines, and If the `sharedLineIndex` is sent for any of
+    #: the shared line, then the `sharedLineIndex` should be sent for all other shared lines. When `lineKeyType` is
+    #: SHARED_LINE and `sharedLineIndex` is not assigned to any of the configured lines, then `sharedLineIndex` is
+    #: assigned by default in the order the shared line appears in the request.
+    #: example: 4
+    shared_line_index: Optional[int] = None
 
 
 class GetLineKeyTemplateResponse(ApiModel):
@@ -1809,6 +1836,10 @@ class LineKeyTemplateAdvisoryTypes(ApiModel):
     #: than call park extensions in user's monitoring list".
     #: example: True
     more_cpeappearances_enabled: Optional[bool] = Field(alias='moreCPEAppearancesEnabled', default=None)
+    #: Refine search to apply changes to devices that contain the warning "More mode management lines configured for
+    #: the device". The default value is false.
+    #: example: True
+    more_mode_management_appearances_enabled: Optional[bool] = None
 
 
 class PostApplyLineKeyTemplateRequestAction(str, Enum):
@@ -1902,10 +1933,19 @@ class KEMKeys(ApiModel):
     #: Applicable only when the kemKeyType is `SPEED_DIAL`.
     #: example: Office
     kem_key_label: Optional[str] = None
-    #: Applicable only when the kemKeyType is `SPEED_DIAL`. Value must be a valid Telephone Number, Ext, or SIP URI
-    #: (format: `user@host` limited to `A-Z,a-z,0-9,-_ .+` for user and host).
+    #: Applicable only when the `lineKeyType` is `SPEED_DIAL`. Value must be a valid telephone number, ext, or SIP URI
+    #: (format: `user@host` using A-Z,a-z,0-9,-_ .+ for `user` and `host`).
     #: example: 213457
     kem_key_value: Optional[str] = None
+    #: Shared line index is the line label number of the shared or virtual line assigned in the configured lines. Since
+    #: you can add multiple appearances of the same shared or virtual line on a phone, entering the index number
+    #: assigns the respective line to a line key. This is applicable only when the `lineKeyType` is SHARED_LINE, If
+    #: multiple programmable line keys are configured as shared lines, and If the `sharedLineIndex` is sent for any of
+    #: the shared line, then the `sharedLineIndex` should be sent for all other shared lines. When `lineKeyType` is
+    #: SHARED_LINE and `sharedLineIndex` is not assigned to any of the configured lines, then `sharedLineIndex` is
+    #: assigned by default in the order the shared line appears in the request.
+    #: example: 4
+    shared_line_index: Optional[int] = None
 
 
 class DeviceLayout(ApiModel):
@@ -2523,11 +2563,11 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
 
         Create a Line Key Template in this organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
+        Line Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk
+        phone display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
-        This API allows customers to create a Line Key Template for a device model.
+        This API allows customers to create a `Line Key Template` for a device model.
 
         Creating a Line Key Template requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
@@ -2541,7 +2581,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type line_keys: list[ProgrammableLineKeys]
         :param user_reorder_enabled: User Customization Enabled.
         :type user_reorder_enabled: bool
-        :param org_id: Organization to which line key template belongs.
+        :param org_id: Organization to which the line key template belongs.
         :type org_id: str
         :rtype: str
         """
@@ -2592,13 +2632,13 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
 
         Get detailed information about a Line Key Template by template ID in an organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
+        Line Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk
+        phone display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
         This API allows users to retrieve a line key template by its ID in an organization.
 
-        Retrieving a line key template requires a full, user or read-only administrator auth token with a scope of
+        Retrieving a line key template requires a full, user, or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param template_id: Get line key template for this template ID.
@@ -2620,15 +2660,15 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         """
         Modify a Line Key Template
 
-        Modify a line key template by its template ID in an organization.
+        Modify a Line Key Template by its template ID in an organization.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
+        Line Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk
+        phone display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
         This API allows users to modify an existing Line Key Template by its ID in an organization.
 
-        Modifying an existing line key template requires a full administrator auth token with a scope of
+        Modifying an existing Line Key Template requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param template_id: Modify line key template with this template ID.
@@ -2690,8 +2730,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         Preview the number of devices that will be affected by the application of a Line Key Template or when resetting
         devices to their factory Line Key settings.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
+        Line Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk
+        phone display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
         This API allows users to preview the number of devices that will be affected if a customer were to apply a Line
@@ -2745,12 +2785,12 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
                                   advisory_types: LineKeyTemplateAdvisoryTypes = None,
                                   org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
         """
-        Apply a Line key Template
+        Apply a Line Key Template
 
         Apply a Line Key Template or reset devices to their factory Line Key settings.
 
-        Line Keys also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
+        Line Keys, also known as Programmable Line Keys (PLK), are the keys found on either side of a typical desk
+        phone display.
         A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
         device model.
         This API allows users to apply a line key template or apply factory default Line Key settings to devices in a

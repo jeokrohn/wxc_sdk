@@ -91,6 +91,7 @@ class TelephonyDevice(ApiModel):
     description: list[str]
     #: Identifier for device model.
     model: str
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
     type: Optional[PrimaryOrShared] = None
     #: Identifier for device model type.
     mod_type: DeviceType = Field(alias='modelType', default=None)
@@ -101,7 +102,8 @@ class TelephonyDevice(ApiModel):
     #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
     #: Line/Port of the device.
     primary_owner: bool
-    #: Hoteling settings, which are available when the device is the user's primary device and device type is PRIMARY
+    #: Hoteling login settings, which are available when the device is the owner's primary device and device type is
+    #: PRIMARY. Hoteling login settings are set at the owner level.
     hoteling: Optional[Hoteling] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     device_type: PrimaryOrShared = Field(alias='type')

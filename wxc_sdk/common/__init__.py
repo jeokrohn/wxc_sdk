@@ -1060,13 +1060,15 @@ class DeviceCustomization(ApiModel):
 
 
 class PrimaryOrShared(str, Enum):
-    #: This indicates a Primary line for the member
+    #: Primary line for the member.
     primary = 'PRIMARY'
-    #: This indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to
-    #: and from another user's extension, using their device.
-    shared = 'SHARED_CALL_APPEARANCE'
+    #: Shared line for the member. A shared line allows users to receive and place calls to and from another user's
+    #: extension, using their own device.
+    shared_call_appearance = 'SHARED_CALL_APPEARANCE'
+    #: Device is a shared line.
     mobility = 'MOBILITY'
-
+    #: Device is a hotdesking guest.
+    hotdesking_guest = 'HOTDESKING_GUEST'
 
 class MediaFileType(str, Enum):
     """
