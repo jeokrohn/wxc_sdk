@@ -10,18 +10,18 @@ People types and API
     licensed using the /licenses API, even in large quantities, using
     the new** :meth:`PATCH method <wxc_sdk.licenses.LicensesApi.assign_licenses_to_users>`.
 
-People are registered users of Webex. Searching and viewing People requires an auth token with a
-`scope <https://developer.webex.com/docs/integrations#scopes>`_
-of `spark:people_read`. Viewing the list of all People in your organization requires an administrator auth token
-with `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token
-with the `spark-admin:people_write` and `spark-admin:people_read` scope.
+    People are registered users of Webex. Searching and viewing People requires an auth token with a
+    `scope <https://developer.webex.com/docs/integrations#scopes>`_
+    of `spark:people_read`. Viewing the list of all People in your organization requires an administrator auth token
+    with `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token
+    with the `spark-admin:people_write` and `spark-admin:people_read` scope.
 
-A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
+    A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
 
-To learn more about managing people in a room see the :class:`Memberships API
-<wxc_sdk.memberships.MembershipApi>`. For information about how to allocate Hybrid
-Services licenses to people, see the `Managing Hybrid Services
-<https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
+    To learn more about managing people in a room see the :class:`Memberships API
+    <wxc_sdk.memberships.MembershipApi>`. For information about how to allocate Hybrid
+    Services licenses to people, see the `Managing Hybrid Services
+    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
 """
 
 import datetime
@@ -415,25 +415,39 @@ class PeopleApi(ApiChild, base='people'):
         """
         Update details for a person, by ID.
 
-        Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
+        Specify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.
 
         Include all details for the person. This action expects all user details to be present in the request. A common
-        approach is to first GET the person's details, make changes, then PUT both the changed and unchanged values.
+        approach is to first `GET the person's details
+        <https://developer.webex.com/docs/api/v1/people/get-person-details>`_, make changes, then PUT both the changed and unchanged values.
 
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as true.
 
-        Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is
-        already an existing calling user.
-
-        When doing attendee management, to update a user from host role to an attendee for a site append #attendee to
-        the respective siteUrl and remove the meeting host license for this site from the license array.
+        When doing attendee management, to update a user from host role to an attendee for a site append `#attendee` to
+        the respective `siteUrl` and remove the meeting host license for this site from the license array.
 
         To update a person from an attendee role to a host for a site, add the meeting license for this site in the
-        meeting array, and remove that site from the siteurl parameter.
+        meeting array, and remove that site from the `siteurl` parameter.
 
-        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls
-        array. The showAllTypes parameter must be set to true.
+        To remove the attendee privilege for a user on a meeting site, remove the `sitename#attendee` from the
+        `siteUrl`s array. The `showAllTypes` parameter must be set to `true`.
+
+        **NOTE**:
+
+        * The `locationId` can only be set when assigning a calling license to a user. It cannot be changed if a user
+          is already an existing calling user.
+
+        * The `extension` field should be used to update the Webex Calling extension for a person. The extension value
+          should not include the location routing prefix. The `work_extension` type in the `phoneNumbers` object as seen
+          in the response payload of `List People
+          <https://developer.webex.com/docs/api/v1/people/list-people>`_ or `Get Person Details
+          extension for a person.
+
+        * The People API is a combination of several microservices, each responsible for specific attributes of a
+          person. As a result, a PUT request that returns an error response code may still have altered some values of
+          the person's data. Therefore, it is recommended to perform a GET request after encountering an error to verify
+          the current state of the resource.
 
         :param person: The person to update
         :type person: Person
