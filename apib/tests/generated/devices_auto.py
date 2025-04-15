@@ -90,7 +90,7 @@ class Device(ApiModel):
     #: The current IP address of the device.
     #: example: 100.110.120.130
     ip: Optional[str] = None
-    #: The current network connectivty for the device.
+    #: The current network connectivity for the device.
     #: example: wired
     active_interface: Optional[NetworkConnectivityType] = None
     #: The unique address for the network adapter.
