@@ -121,14 +121,11 @@ class ConvergedRecordingWithDirectDownloadLinks(ApiModel):
     duration_seconds: Optional[int] = None
     #: The size of the recording file in bytes.
     size_bytes: Optional[int] = None
-    #: The download links for MP3, audio of the recording without HTML page rendering in browser or HTTP redirect. This
-    #: attribute is available only for authorised user or a `Compliance Officer
-    #: <https://developer.webex.com/docs/compliance#compliance>`_. This attribute is not available if
-    #: user is an Admin with scope `spark-admin:recordings_read` or if **Prevent Downloading** has been turned on for
-    #: the recording being requested. The Prevent Downloading option can be viewed and set on page when editing a
-    #: recording. Note that there are various products in `Webex Suite
-    #: <https://www.cisco.com/c/en/us/products/conferencing/product_comparison.html>`_ such as "Webex Meetings", "Webex Training" and
-    #: "Webex Events".
+    #: The download links for the MP3 audio of the recordings without rendering an HTML page in a browser or an HTTP
+    #: redirect. This attribute is available only for authorized users or a `Compliance Officer
+    #: <https://developer.webex.com/docs/compliance#compliance>`_. This attribute is not
+    #: available if the user is an admin with scope `spark-admin:recordings_read` or if **Prevent Downloading** has
+    #: been turned on for the recording being requested.
     temporary_direct_download_links: Optional[TemporaryDirectDownloadLink] = None
     status: Optional[RecordingStatus] = None
     #: Webex UUID for recording owner/host.
@@ -169,8 +166,6 @@ class ConvergedRecordingMeta(ApiModel):
 class ConvergedRecordingsApi(ApiChild, base=''):
     """
     Converged Recordings
-
-    Not supported for Webex for Government (FedRAMP)
 
     Webex Meetings and Webex Calling (with Webex as the Call Recording provider) leverage the same recording
     infrastructure. That ensures that users can use the same recording API to fetch call recordings and/or meeting
@@ -235,6 +230,99 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
         :type format_: RecordingObjectFormat
+        :param owner_id: Webex user Id to fetch recordings for a particular user.
+        :type owner_id: str
+        :param owner_email: Webex email address to fetch recordings for a particular user.
+        :type owner_email: str
+        :param owner_type: Recording based on type of user.
+        :type owner_type: RecordingOwnerType
+        :param storage_region: Recording stored in certain Webex locations.
+        :type storage_region: RecordingStorageRegion
+        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
+            Hub).
+        :type location_id: str
+        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
+            manner.
+        :type topic: str
+        :return: Generator yielding :class:`ConvergedRecording` instances
+        """
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if status is not None:
+            params['status'] = enum_str(status)
+        if service_type is not None:
+            params['serviceType'] = enum_str(service_type)
+        if format_ is not None:
+            params['format'] = enum_str(format_)
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_email is not None:
+            params['ownerEmail'] = owner_email
+        if owner_type is not None:
+            params['ownerType'] = enum_str(owner_type)
+        if storage_region is not None:
+            params['storageRegion'] = enum_str(storage_region)
+        if location_id is not None:
+            params['locationId'] = location_id
+        if topic is not None:
+            params['topic'] = topic
+        url = self.ep('convergedRecordings')
+        return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
+
+    def list_for_admin_or_compliance_officer(self, from_: Union[str, datetime] = None,
+                                                        to_: Union[str, datetime] = None, status: RecordingStatus = None,
+                                                        service_type: RecordingServiceType = None,
+                                                        format_: str = None, owner_id: str = None,
+                                                        owner_email: str = None,
+                                                        owner_type: RecordingOwnerType = None,
+                                                        storage_region: RecordingStorageRegion = None,
+                                                        location_id: str = None, topic: str = None,
+                                                        **params) -> Generator[ConvergedRecording, None, None]:
+        """
+        List Recordings for Admin or Compliance officer
+
+        List recordings for an admin or compliance officer. You can specify a date range, and the maximum number of
+        recordings to return.
+
+        The list returned is sorted in descending order by the date and time that the recordings were created.
+
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        List recordings requires the `spark-compliance:recordings_read` scope for compliance officer and
+        `spark-admin:recordings_read` scope for admin.
+
+        #### Request Header
+
+        * `timezone`: *`Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        not defined.*
+
+        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
+        :type to_: Union[str, datetime]
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+        :type status: RecordingStatus
+        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
+            service-type. Valid values are `calling`.
+        :type service_type: RecordingServiceType
+        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
+            `MP3`.
+        :type format_: str
         :param owner_id: Webex user Id to fetch recordings for a particular user.
         :type owner_id: str
         :param owner_email: Webex email address to fetch recordings for a particular user.
