@@ -31,15 +31,21 @@ __all__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLeve
 class CallBackEffectiveLevel(str, Enum):
     #: Location TN.
     location_number = 'LOCATION_NUMBER'
-    #: Assigned number of a user or workspace in the location.
+    #: Assigned number of a user, workspace, virtual line or hunt group in the location.
     location_member_number = 'LOCATION_MEMBER_NUMBER'
+    #: When no other option is selected.
     none_ = 'NONE'
 
 
 class CallBackMemberType(str, Enum):
+    #: Associated member is a person.
     people = 'PEOPLE'
+    #: Associated member is a workspace.
     place = 'PLACE'
+    #: Associated member is a virtual line.
     virtual_line = 'VIRTUAL_LINE'
+    #: Associated member is a hunt group.
+    hunt_group = 'HUNT_GROUP'
 
 
 class CallBackQuality(str, Enum):
@@ -51,7 +57,7 @@ class CallBackQuality(str, Enum):
 class CallBackSelected(str, Enum):
     #: Location TN.
     location_number = 'LOCATION_NUMBER'
-    #: Assigned number of a user or workspace in the location.
+    #: Assigned number of a user, workspace, virtual line or hunt group in the location.
     location_member_number = 'LOCATION_MEMBER_NUMBER'
 
 
@@ -110,7 +116,7 @@ class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
     #: The member last name. Always contains `.` if the member is a place.
     #: example: Grey
     last_name: Optional[str] = None
-    #: Member ID of user/place within the location.
+    #: Member ID of user/place/virtual line/hunt group within the location.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MmQ3YTY3MS00YmVlLTQ2MDItOGVkOC1jOTFmNjU5NjcxZGI
     member_id: Optional[str] = None
     #: Member Type.
@@ -131,7 +137,7 @@ class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
 class GetLocationCallBackNumberObject(ApiModel):
     #: Data relevant to this location.
     location_info: Optional[GetLocationCallBackNumberObjectLocationInfo] = None
-    #: Data relevant to the user/place (member) selected for ECBN.
+    #: Data relevant to the user/place/virtual line/hunt group (member) selected for ECBN.
     location_member_info: Optional[GetLocationCallBackNumberObjectLocationMemberInfo] = None
     #: Selected number type to configure emergency call back.
     #: example: LOCATION_MEMBER_NUMBER
@@ -608,7 +614,8 @@ class LocationECBNAvailableNumberObjectOwner(ApiModel):
     #: `VIRTUAL_LINE`.
     #: example: Person
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PLACE`.
+    #: Display name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PLACE`
+    #: or `HUNT_GROUP`.
     #: example: TestWorkSpace
     display_name: Optional[str] = None
 
@@ -1077,8 +1084,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param selected: Selected number type to configure emergency call back.
         :type selected: CallBackSelected
-        :param location_member_id: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is
-            selected.
+        :param location_member_id: Member ID of user/place/virtual line/hunt group within the location. Required if
+            `LOCATION_MEMBER_NUMBER` is selected.
         :type location_member_id: str
         :param org_id: Update location attributes for this organization.
         :type org_id: str

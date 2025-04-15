@@ -101,7 +101,7 @@ class TelephonyLocation(ApiModel):
 class CallBackSelected(str, Enum):
     #: Location TN.
     location_number = 'LOCATION_NUMBER'
-    #: Assigned number of a user or workspace in the location.
+    #: Assigned number of a user, workspace, virtual line or hunt group in the location.
     location_member_number = 'LOCATION_MEMBER_NUMBER'
 
 
@@ -126,7 +126,7 @@ class LocationECBNLocationMember(ApiModel):
     first_name: Optional[str] = None
     #: The member last name. Always contains `.` if the member is a place.
     last_name: Optional[str] = None
-    #: Member ID of user/place within the location.
+    #: Member ID of user/place/virtual line/hunt group within the location.
     member_id: Optional[str] = None
     #: Member Type.
     member_type: Optional[UserType] = None
@@ -142,7 +142,7 @@ class LocationECBNLocationMember(ApiModel):
 class LocationECBN(ApiModel):
     #: Data relevant to this location.
     location_info: Optional[LocationECBNLocation] = None
-    #: Data relevant to the user/place (member) selected for ECBN.
+    #: Data relevant to the user/place/virtual line/hunt group (member) selected for ECBN.
     location_member_info: Optional[LocationECBNLocationMember] = None
     #: Selected number type to configure emergency call back.
     selected: Optional[CallBackSelected] = None
