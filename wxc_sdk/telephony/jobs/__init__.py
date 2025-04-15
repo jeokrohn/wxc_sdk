@@ -20,7 +20,8 @@ __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'Job
            'InitiateMoveNumberJobsBody', 'ApplyLineKeyTemplatesJobsApi', 'LineKeyTemplateAdvisoryTypes',
            'ApplyLineKeyTemplateJobDetails', 'RebuildPhonesJobsApi', 'UpdateRoutingPrefixJobsApi',
            'RoutingPrefixCounts', 'MoveCounts', 'MoveUser', 'MoveUsersList',
-           'MoveUserJobDetails', 'MoveUsersJobsApi', 'StartMoveUsersJobResponse']
+           'MoveUserJobDetails', 'MoveUsersJobsApi', 'StartMoveUsersJobResponse', 'CallRecordingJobCounts',
+           'CallRecordingJobStatus', 'CallRecordingJobsApi']
 
 
 class StepExecutionStatus(ApiModel):
@@ -956,7 +957,115 @@ class StartMoveUsersJobResponse(ApiModel):
     users_list: Optional[list[MoveUserItem]] = None
     job_details: Optional[StartJobResponse] = None
 
+class CallRecordingJobCounts(ApiModel):
+    #: Total number of locations.
+    total_number_of_locations: Optional[int] = None
+    #: Total number of users.
+    total_number_of_users: Optional[int] = None
+    #: Failed number of users.
+    failed_users: Optional[int] = None
+    #: Updated number of users.
+    updated_users: Optional[int] = None
 
+class CallRecordingJobStatus(ApiModel):
+    #: Name of the job.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier of the user who has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier of the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier of the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatus]] = None
+    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
+    latest_execution_status: Optional[str] = None
+    #: Unique identifier of a location.
+    location_id: Optional[str] = None
+    #: Unique identifier of a vendor.
+    vendor_id: Optional[str] = None
+    #: Job statistics.
+    counts: Optional[CallRecordingJobCounts] = None
+    
+class CallRecordingJobsApi(ApiChild, base='telephony/config/jobs/callRecording'):
+    def list(self, org_id: str = None, **params) -> Generator[CallRecordingJobStatus, None, None]:
+        """
+        List Call Recording Jobs
+
+        Get the list of all call recording jobs in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List call recording jobs in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`CallRecordingJobStatus` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/callRecording')
+        return self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)
+
+    def status(self, job_id: str, org_id: str = None) -> CallRecordingJobStatus:
+        """
+        Get the Job Status of a Call Recording Job
+
+        Get the details of a call recording job by its job ID.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve job status in this organization.
+        :type org_id: str
+        :rtype: :class:`CallRecordingJobStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = super().get(url, params=params)
+        r = CallRecordingJobStatus.model_validate(data)
+        return r
+
+    def errors(self, job_id: str, org_id: str = None,
+                                                **params) -> Generator[JobErrorItem, None, None]:
+        """
+        Get Job Errors for a Call Recording Job
+
+        Get errors for a call recording job in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this job.
+        :type job_id: str
+        :param org_id: Retrieve job errors for a call recording job in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ItemObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+    
 class MoveUsersJobsApi(ApiChild, base='telephony/config/jobs/person/moveLocation'):
     def validate_or_initiate(self, users_list: list[MoveUsersList],
                              org_id: str = None) -> StartMoveUsersJobResponse:
@@ -1440,6 +1549,8 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
     #: API for apply line key template jobs
     apply_line_key_templates: ApplyLineKeyTemplatesJobsApi
+    #: call recording jobs
+    call_recording: CallRecordingJobsApi
     #: API for device settings jobs
     device_settings: DeviceSettingsJobsApi
     #: API for manage numbers jobs
@@ -1454,6 +1565,7 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     def __init__(self, *, session: RestSession):
         super().__init__(session=session)
         self.apply_line_key_templates = ApplyLineKeyTemplatesJobsApi(session=session)
+        self.call_recording = CallRecordingJobsApi(session=session)
         self.device_settings = DeviceSettingsJobsApi(session=session)
         self.manage_numbers = ManageNumbersJobsApi(session=session)
         self.move_users = MoveUsersJobsApi(session=session)
