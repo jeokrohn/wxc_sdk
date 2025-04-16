@@ -4,9 +4,10 @@ Test for workspaces API
 import asyncio
 import json
 import random
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from unittest import skip
+
+from pydantic import TypeAdapter
 
 from tests.base import TestCaseWithLog, TestWithLocations, TestWithProfessionalWorkspace, async_test
 from tests.testutil import available_extensions_gen, new_workspace_names, TEST_WORKSPACES_PREFIX, \
@@ -33,20 +34,31 @@ class TestList(TestCaseWithLog):
     def test_001_list(self):
         workspaces = list(self.api.workspaces.list())
         print(f'got {len(workspaces)} workspaces')
-        print('\n'.join(w.model_dump_json() for w in workspaces))
+        print(json.dumps(TypeAdapter(list[Workspace]).dump_python(workspaces, mode='json', exclude_unset=True),
+                         indent=2))
+
+    def test_002_list_with_devices(self):
+        workspaces = list(self.api.workspaces.list(includeDevices=True))
+        print(f'got {len(workspaces)} workspaces')
+        print(f'workspaces with devices: {len([ws for ws in workspaces if ws.devices])}')
+        print(json.dumps(TypeAdapter(list[Workspace]).dump_python(workspaces, mode='json', exclude_unset=True),
+                         indent=2))
 
 
 class TestDetails(TestCaseWithLog):
-    def test_001_all(self):
+    @async_test
+    async def test_001_all(self):
         """
         details for all workspaces
         """
-        ws = self.api.workspaces
-        ws_list = ws.list()
-        with ThreadPoolExecutor() as pool:
-            details = list(pool.map(lambda w: ws.details(workspace_id=w.workspace_id),
-                                    ws_list))
+        ws_list = list(self.api.workspaces.list())
+        details = await asyncio.gather(*[self.async_api.workspaces.details(workspace_id=w.workspace_id,
+                                                                           include_devices=True)
+                                         for w in ws_list])
         print(f'got details for {len(details)} workspaces')
+        print(f'workspaces with devices: {len([ws for ws in details if ws.devices])}')
+        print(json.dumps(TypeAdapter(list[Workspace]).dump_python(details, mode='json', exclude_unset=True),
+                         indent=2))
 
 
 class TestOutgoingPermissionsAutoTransferNumbers(TestWithProfessionalWorkspace):
@@ -310,7 +322,7 @@ class TestCreate(TestWithLocations):
             after = self.api.workspaces.details(workspace_id=workspace.workspace_id)
             pro_license_after = self.api.licenses.details(license_id=pro_license.license_id)
             self.assertEqual(after.calling.webex_calling.licenses[0], pro_license.license_id)
-            self.assertEqual(pro_license.consumed_by_workspaces+1, pro_license_after.consumed_by_workspaces)
+            self.assertEqual(pro_license.consumed_by_workspaces + 1, pro_license_after.consumed_by_workspaces)
         finally:
             # remove workspace again
             self.api.workspaces.delete_workspace(workspace_id=workspace.workspace_id)

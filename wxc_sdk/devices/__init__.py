@@ -61,7 +61,7 @@ class Device(ApiModel):
     #: against this device.
     permissions: list[str]
     #: The connection status of the device.
-    connection_status: ConnectionStatus
+    connection_status: Optional[ConnectionStatus] = None
     #: The product name. A display friendly version of the device's model.
     product: str
     #: The product type.

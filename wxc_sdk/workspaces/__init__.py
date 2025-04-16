@@ -28,6 +28,7 @@ __all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Ca
            'WorkspaceHealth', 'Workspace', 'SupportAndConfiguredInfo', 'CapabilityMap', 'WorkspacesApi']
 
 from ..common import DevicePlatform
+from ..devices import Device
 
 
 class WorkSpaceType(str, Enum):
@@ -214,6 +215,8 @@ class Workspace(ApiModel):
     indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
     #: The health of the workspace.
     health: Optional[WorkspaceHealth] = None
+    #: A list of devices associated with the workspace.
+    devices: Optional[list[Device]] = None
 
     def update_or_create(self, for_update: bool = False) -> dict:
         """
@@ -232,6 +235,7 @@ class Workspace(ApiModel):
                                         'created': True,
                                         'hybrid_calling': True,
                                         'health': True,
+                                        'devices': True,
                                         # only include workspace_location_id if no location_id is given
                                         # location_id is the preferred/new way of setting the location
                                         'workspace_location_id': not (self.workspace_location_id and
@@ -289,7 +293,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None, org_id: str = None,
+             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
+             include_devices: bool = None, org_id: str = None,
              **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
@@ -330,6 +335,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_platform: DevicePlatform
         :param health_level: List workspaces by health level.
         :type health_level: WorkspaceHealthLevel
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -359,6 +367,10 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
         if device_platform is not None:
             params['devicePlatform'] = enum_str(device_platform)
+        if health_level is not None:
+            params['healthLevel'] = enum_str(health_level)
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
         ep = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
@@ -403,7 +415,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         data = self.post(url, json=data)
         return Workspace.model_validate(data)
 
-    def details(self, workspace_id) -> Workspace:
+    def details(self, workspace_id, include_devices: bool = None) -> Workspace:
         """
         Get Workspace Details
 
@@ -412,11 +424,17 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
         :return: workspace details
         :rtype: :class:`Workspace`
         """
+        params = {}
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
         url = self.ep(workspace_id)
-        return Workspace.model_validate(self.get(url))
+        return Workspace.model_validate(self.get(url, params=params))
 
     def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
