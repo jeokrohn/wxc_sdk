@@ -397,30 +397,6 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[CallRecordingRegion]).validate_python(data['regions'])
         return r
 
-    def get_org_vendor_id(self, org_id: str = None) -> str:
-        """
-        Get Call Recording Vendor ID
-
-        Retrieve the call recording vendor ID for an organization.
-
-        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
-        manage call recordings. An organization is configured with an overall provider, but locations can be
-        configured to use a different vendor than the overall organization default.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve call recording vendor ID for this organization.
-        :type org_id: str
-        :rtype: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('callRecording/vendorUsers')
-        data = super().get(url, params=params)
-        r = data['vendorId']
-        return r
-
     def list_org_users(self, standard_user_only: bool = None,
                        org_id: str = None, **params) -> Generator[RecordingUser, None, None]:
         """

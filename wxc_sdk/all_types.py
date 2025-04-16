@@ -143,8 +143,9 @@ from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServi
 from wxc_sdk.telephony.announcements_repo import FeatureReference, RepoAnnouncement, RepositoryUsage
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, AutoAttendantKeyConfiguration, \
     AutoAttendantMenu, Dialing, MenuKey
-from wxc_sdk.telephony.call_recording import CallRecordingInfo, CallRecordingTermsOfService, \
-    LocationComplianceAnnouncement, OrgComplianceAnnouncement
+from wxc_sdk.telephony.call_recording import CallRecordingInfo, CallRecordingLocationVendors, CallRecordingRegion, \
+    CallRecordingTermsOfService, CallRecordingVendors, FailureBehavior, LocationComplianceAnnouncement, \
+    OrgComplianceAnnouncement, RecordingUser, RecordingVendor
 from wxc_sdk.telephony.call_routing.translation_pattern import TranslationPattern, TranslationPatternLevel
 from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallParkRecall, CallParkSettings, \
     LocationCallParkSettings, RecallHuntGroup
@@ -181,10 +182,10 @@ from wxc_sdk.telephony.forwarding import CallForwarding, CallForwardingNumber, C
 from wxc_sdk.telephony.guest_calling import DestinationMember, GuestCallingSettings
 from wxc_sdk.telephony.hg_and_cq import Agent, AlternateNumberSettings, CallingLineIdPolicy, HGandCQ, Policy
 from wxc_sdk.telephony.huntgroup import BusinessContinuity, HGCallPolicies, HuntGroup, NoAnswer
-from wxc_sdk.telephony.jobs import ApplyLineKeyTemplateJobDetails, ErrorMessageObject, ErrorObject, \
-    InitiateMoveNumberJobsBody, JobError, JobErrorItem, JobErrorMessage, JobExecutionStatus, \
-    LineKeyTemplateAdvisoryTypes, ManageNumberErrorItem, MoveCounts, MoveNumberCounts, MoveUser, \
-    MoveUserJobDetails, MoveUsersList, NumberItem, NumberJob, RoutingPrefixCounts, StartJobResponse, \
+from wxc_sdk.telephony.jobs import ApplyLineKeyTemplateJobDetails, CallRecordingJobCounts, CallRecordingJobStatus, \
+    ErrorMessageObject, ErrorObject, InitiateMoveNumberJobsBody, JobError, JobErrorItem, JobErrorMessage, \
+    JobExecutionStatus, LineKeyTemplateAdvisoryTypes, ManageNumberErrorItem, MoveCounts, MoveNumberCounts, \
+    MoveUser, MoveUserJobDetails, MoveUsersList, NumberItem, NumberJob, RoutingPrefixCounts, StartJobResponse, \
     StartMoveUsersJobResponse, StepExecutionStatus
 from wxc_sdk.telephony.location import CallBackSelected, CallingLineId, ContactDetails, LocationECBN, \
     LocationECBNLocation, LocationECBNLocationMember, PSTNConnection, TelephonyLocation
@@ -257,11 +258,12 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'CallInNumbers', 'CallInfo', 'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallPark',
            'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueAgent',
            'CallQueueAgentDetail', 'CallQueueAgentQueue', 'CallQueueCallPolicies', 'CallQueueSettings',
-           'CallRecordingInfo', 'CallRecordingSetting', 'CallRecordingTermsOfService', 'CallSourceInfo',
-           'CallSourceType', 'CallState', 'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType',
-           'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingLineIdPolicy', 'CallingPermissions',
-           'CallingPlanReason', 'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption',
-           'CnameRecord', 'CoHost', 'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting',
+           'CallRecordingInfo', 'CallRecordingJobCounts', 'CallRecordingJobStatus', 'CallRecordingLocationVendors',
+           'CallRecordingRegion', 'CallRecordingSetting', 'CallRecordingTermsOfService', 'CallRecordingVendors',
+           'CallSourceInfo', 'CallSourceType', 'CallState', 'CallType', 'CallTypePermission', 'CallerId',
+           'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingLineIdPolicy',
+           'CallingPermissions', 'CallingPlanReason', 'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject',
+           'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting',
            'CommonDeviceCustomization', 'ComplianceEvent', 'Component', 'ConferenceDetails', 'ConferenceParticipant',
            'ConferenceState', 'ConferenceTypeEnum', 'ConfigurationLevel', 'ConnectionStatus', 'Contact',
            'ContactAddress', 'ContactDetails', 'ContactEmail', 'ContactIm', 'ContactImType', 'ContactPhoneNumber',
@@ -286,13 +288,13 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'EnabledAndNumberOfDays', 'EnabledAndValue', 'EnhancedMulticast', 'EnterpriseUser', 'EntryAndExitTone',
            'ErrorMessageObject', 'ErrorObject', 'Event', 'EventData', 'EventResource', 'EventType', 'ExceptionType',
            'ExecAssistantType', 'ExecuteCommandResponse', 'ExpirePasscode', 'ExternalCallerIdNamePolicy',
-           'ExternalTransfer', 'FailedAttempts', 'FeatureAccessCodeDestination', 'FeatureReference',
-           'FeatureSelector', 'FeatureType', 'Floor', 'ForcedForward', 'ForwardCallsTo', 'ForwardFromSelection',
-           'ForwardOperatingModes', 'ForwardOperatingModesException', 'ForwardTo', 'ForwardToSelection',
-           'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting', 'GetMeetingSurveyResponse',
-           'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember', 'GroupMemberObject',
-           'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingSettings', 'HGCallPolicies', 'HGandCQ',
-           'Handset', 'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination',
+           'ExternalTransfer', 'FailedAttempts', 'FailureBehavior', 'FeatureAccessCodeDestination',
+           'FeatureReference', 'FeatureSelector', 'FeatureType', 'Floor', 'ForcedForward', 'ForwardCallsTo',
+           'ForwardFromSelection', 'ForwardOperatingModes', 'ForwardOperatingModesException', 'ForwardTo',
+           'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
+           'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
+           'GroupMemberObject', 'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingSettings', 'HGCallPolicies',
+           'HGandCQ', 'Handset', 'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination',
            'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup', 'IdAndAction', 'IdAndName',
            'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate', 'IncomingPermissions',
            'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting',
@@ -343,16 +345,17 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Recipient', 'Record', 'Recording', 'RecordingFormat',
            'RecordingOwnerType', 'RecordingParty', 'RecordingPartyActor', 'RecordingServiceData',
            'RecordingServiceType', 'RecordingSession', 'RecordingState', 'RecordingStatus', 'RecordingStorageRegion',
-           'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason', 'Redirection',
-           'Registration', 'RejectAction', 'RepoAnnouncement', 'Report', 'ReportTemplate', 'RepositoryUsage',
-           'ResponseError', 'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'Room', 'RoomTab', 'RoomType',
-           'RouteGroup', 'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail',
-           'RouteType', 'RoutingPrefixCounts', 'SafeEnum', 'SameHoursDaily', 'Schedule', 'ScheduleApiBase',
-           'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek',
-           'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimMeta',
-           'ScimPhoneNumberType', 'ScimUser', 'ScimValueDisplayRef', 'ScreenPopConfiguration', 'SearchGroupResponse',
-           'SearchUserResponse', 'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit',
-           'SelectiveCriteria', 'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
+           'RecordingUser', 'RecordingVendor', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence',
+           'RedirectReason', 'Redirection', 'Registration', 'RejectAction', 'RepoAnnouncement', 'Report',
+           'ReportTemplate', 'RepositoryUsage', 'ResponseError', 'ResponseStatus', 'ResponseStatusType',
+           'RingPattern', 'Room', 'RoomTab', 'RoomType', 'RouteGroup', 'RouteGroupUsage', 'RouteIdentity',
+           'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType', 'RoutingPrefixCounts', 'SafeEnum',
+           'SameHoursDaily', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth',
+           'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType',
+           'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimMeta', 'ScimPhoneNumberType', 'ScimUser',
+           'ScimValueDisplayRef', 'ScreenPopConfiguration', 'SearchGroupResponse', 'SearchUserResponse',
+           'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit', 'SelectiveCriteria',
+           'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
            'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'SelectiveSource', 'Sender', 'SequentialRing',
            'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SettingsObject', 'SimRing',
            'SimRingCriteria', 'SimRingNumber', 'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject',

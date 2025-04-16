@@ -35,19 +35,20 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
            'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallInterceptApi',
            'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueAgentsApi', 'AsCallQueueApi',
-           'AsCallRecordingApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
-           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
-           'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
-           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi',
-           'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsFeatureSelector',
-           'AsForwardingApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotelingApi',
-           'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
-           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
-           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
-           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
-           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi',
-           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsCallRecordingApi', 'AsCallRecordingJobsApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi',
+           'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
+           'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
+           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
+           'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi',
+           'AsExecAssistantApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestCallingApi',
+           'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
+           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
+           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
            'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
            'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
@@ -384,8 +385,6 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
     """
     Converged Recordings
 
-    Not supported for Webex for Government (FedRAMP)
-
     Webex Meetings and Webex Calling (with Webex as the Call Recording provider) leverage the same recording
     infrastructure. That ensures that users can use the same recording API to fetch call recordings and/or meeting
     recordings. This convergence allows the sharing of functionality (summaries, transcripts, etc.) across the Webex
@@ -493,7 +492,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             params['locationId'] = location_id
         if topic is not None:
             params['topic'] = topic
-        url = self.ep('admin/convergedRecordings')
+        url = self.ep('convergedRecordings')
         return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
 
     async def list(self, from_: Union[str, datetime] = None,
@@ -533,6 +532,192 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
         :type format_: RecordingObjectFormat
+        :param owner_id: Webex user Id to fetch recordings for a particular user.
+        :type owner_id: str
+        :param owner_email: Webex email address to fetch recordings for a particular user.
+        :type owner_email: str
+        :param owner_type: Recording based on type of user.
+        :type owner_type: RecordingOwnerType
+        :param storage_region: Recording stored in certain Webex locations.
+        :type storage_region: RecordingStorageRegion
+        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
+            Hub).
+        :type location_id: str
+        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
+            manner.
+        :type topic: str
+        :return: Generator yielding :class:`ConvergedRecording` instances
+        """
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if status is not None:
+            params['status'] = enum_str(status)
+        if service_type is not None:
+            params['serviceType'] = enum_str(service_type)
+        if format_ is not None:
+            params['format'] = enum_str(format_)
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_email is not None:
+            params['ownerEmail'] = owner_email
+        if owner_type is not None:
+            params['ownerType'] = enum_str(owner_type)
+        if storage_region is not None:
+            params['storageRegion'] = enum_str(storage_region)
+        if location_id is not None:
+            params['locationId'] = location_id
+        if topic is not None:
+            params['topic'] = topic
+        url = self.ep('convergedRecordings')
+        return [o async for o in self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)]
+
+    def list_for_admin_or_compliance_officer_gen(self, from_: Union[str, datetime] = None,
+                                                        to_: Union[str, datetime] = None, status: RecordingStatus = None,
+                                                        service_type: RecordingServiceType = None,
+                                                        format_: str = None, owner_id: str = None,
+                                                        owner_email: str = None,
+                                                        owner_type: RecordingOwnerType = None,
+                                                        storage_region: RecordingStorageRegion = None,
+                                                        location_id: str = None, topic: str = None,
+                                                        **params) -> AsyncGenerator[ConvergedRecording, None, None]:
+        """
+        List Recordings for Admin or Compliance officer
+
+        List recordings for an admin or compliance officer. You can specify a date range, and the maximum number of
+        recordings to return.
+
+        The list returned is sorted in descending order by the date and time that the recordings were created.
+
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        List recordings requires the `spark-compliance:recordings_read` scope for compliance officer and
+        `spark-admin:recordings_read` scope for admin.
+
+        #### Request Header
+
+        * `timezone`: *`Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        not defined.*
+
+        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
+        :type to_: Union[str, datetime]
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+        :type status: RecordingStatus
+        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
+            service-type. Valid values are `calling`.
+        :type service_type: RecordingServiceType
+        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
+            `MP3`.
+        :type format_: str
+        :param owner_id: Webex user Id to fetch recordings for a particular user.
+        :type owner_id: str
+        :param owner_email: Webex email address to fetch recordings for a particular user.
+        :type owner_email: str
+        :param owner_type: Recording based on type of user.
+        :type owner_type: RecordingOwnerType
+        :param storage_region: Recording stored in certain Webex locations.
+        :type storage_region: RecordingStorageRegion
+        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
+            Hub).
+        :type location_id: str
+        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
+            manner.
+        :type topic: str
+        :return: Generator yielding :class:`ConvergedRecording` instances
+        """
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if status is not None:
+            params['status'] = enum_str(status)
+        if service_type is not None:
+            params['serviceType'] = enum_str(service_type)
+        if format_ is not None:
+            params['format'] = enum_str(format_)
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_email is not None:
+            params['ownerEmail'] = owner_email
+        if owner_type is not None:
+            params['ownerType'] = enum_str(owner_type)
+        if storage_region is not None:
+            params['storageRegion'] = enum_str(storage_region)
+        if location_id is not None:
+            params['locationId'] = location_id
+        if topic is not None:
+            params['topic'] = topic
+        url = self.ep('admin/convergedRecordings')
+        return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
+
+    async def list_for_admin_or_compliance_officer(self, from_: Union[str, datetime] = None,
+                                                        to_: Union[str, datetime] = None, status: RecordingStatus = None,
+                                                        service_type: RecordingServiceType = None,
+                                                        format_: str = None, owner_id: str = None,
+                                                        owner_email: str = None,
+                                                        owner_type: RecordingOwnerType = None,
+                                                        storage_region: RecordingStorageRegion = None,
+                                                        location_id: str = None, topic: str = None,
+                                                        **params) -> List[ConvergedRecording]:
+        """
+        List Recordings for Admin or Compliance officer
+
+        List recordings for an admin or compliance officer. You can specify a date range, and the maximum number of
+        recordings to return.
+
+        The list returned is sorted in descending order by the date and time that the recordings were created.
+
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        List recordings requires the `spark-compliance:recordings_read` scope for compliance officer and
+        `spark-admin:recordings_read` scope for admin.
+
+        #### Request Header
+
+        * `timezone`: *`Time zone
+        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
+        not defined.*
+
+        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
+        :type to_: Union[str, datetime]
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+        :type status: RecordingStatus
+        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
+            service-type. Valid values are `calling`.
+        :type service_type: RecordingServiceType
+        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
+            `MP3`.
+        :type format_: str
         :param owner_id: Webex user Id to fetch recordings for a particular user.
         :type owner_id: str
         :param owner_email: Webex email address to fetch recordings for a particular user.
@@ -15684,9 +15869,10 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         """
         Get Call Recording Settings
 
-        Retrieve Call Recording settings for the organization.
+        Retrieve call recording settings for the organization.
 
-        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        The Call Recording feature enables authorized agents to record any active call that Webex Contact Center
+        manages.
 
         Retrieving call recording settings requires a full or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
@@ -15707,9 +15893,10 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         """
         Update Call Recording Settings
 
-        Update Call Recording settings for the organization.
+        Update call recording settings for the organization.
 
-        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        The Call Recording feature enables authorized agents to record any active call that Webex Contact Center
+        manages.
 
         Updating call recording settings requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
@@ -15734,9 +15921,10 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         """
         Get Call Recording Terms Of Service Settings
 
-        Retrieve Call Recording Terms Of Service settings for the organization.
+        Retrieve call recording terms of service settings for the organization.
 
-        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        The Call Recording feature enables authorized agents to record any active call that Webex Contact Center
+        manages.
 
         Retrieving call recording terms of service settings requires a full or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
@@ -15759,9 +15947,10 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         """
         Update Call Recording Terms Of Service Settings
 
-        Update Call Recording Terms Of Service settings for the given vendor.
+        Update call recording terms of service settings for the given vendor.
 
-        Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
+        The Call Recording feature enables authorized agents to record any active call that Webex Contact Center
+        manages.
 
         Updating call recording terms of service settings requires a full administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
@@ -15784,7 +15973,8 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     async def read_org_compliance_announcement(self, org_id: str = None) -> OrgComplianceAnnouncement:
         """
-        Get Details for the organization compliance announcement setting
+        Get details for the organization Compliance Announcement Setting
+
 
         Retrieve the organization compliance announcement settings.
 
@@ -15834,7 +16024,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
     async def read_location_compliance_announcement(self, location_id: str,
                                               org_id: str = None) -> LocationComplianceAnnouncement:
         """
-        Get Details for the location compliance announcement setting
+        Get details for the Location Compliance Announcement Setting
 
         Retrieve the location compliance announcement settings.
 
@@ -15885,6 +16075,312 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/callRecording/complianceAnnouncement')
         await super().put(url, params=params, json=body)
+
+    async def get_call_recording_regions(self, org_id: str = None) -> list[CallRecordingRegion]:
+        """
+        Get Call Recording Regions
+
+        Retrieve all the call recording regions that are available for an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve call recording regions for this organization.
+        :type org_id: str
+        :rtype: list[Regions]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording/regions')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[CallRecordingRegion]).validate_python(data['regions'])
+        return r
+
+    def list_org_users_gen(self, standard_user_only: bool = None,
+                       org_id: str = None, **params) -> AsyncGenerator[RecordingUser, None, None]:
+        """
+        Get Call Recording Vendor Users
+
+        Retrieve call recording vendor users of an organization. This API is used to get the list of users who are
+        assigned to the default call-recording vendor of the organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param standard_user_only: If true, results only include Webex Calling standard users.
+        :type standard_user_only: bool
+        :param org_id: Retrieve call recording vendor users for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if standard_user_only is not None:
+            params['standardUserOnly'] = str(standard_user_only).lower()
+        url = self.ep('callRecording/vendorUsers')
+        return self.session.follow_pagination(url=url, model=RecordingUser, params=params, item_key='members')
+
+    async def list_org_users(self, standard_user_only: bool = None,
+                       org_id: str = None, **params) -> List[RecordingUser]:
+        """
+        Get Call Recording Vendor Users
+
+        Retrieve call recording vendor users of an organization. This API is used to get the list of users who are
+        assigned to the default call-recording vendor of the organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param standard_user_only: If true, results only include Webex Calling standard users.
+        :type standard_user_only: bool
+        :param org_id: Retrieve call recording vendor users for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if standard_user_only is not None:
+            params['standardUserOnly'] = str(standard_user_only).lower()
+        url = self.ep('callRecording/vendorUsers')
+        return [o async for o in self.session.follow_pagination(url=url, model=RecordingUser, params=params, item_key='members')]
+
+    async def set_location_vendor(self, location_id: str, id: str = None,
+                            org_default_enabled: bool = None, storage_region: str = None,
+                            org_storage_region_enabled: bool = None,
+                            failure_behavior: FailureBehavior = None,
+                            org_failure_behavior_enabled: bool = None,
+                            org_id: str = None) -> str:
+        """
+        Set Call Recording Vendor for a Location
+
+        Assign a call recording vendor to a location of an organization. Response will be `204` if the changes can be
+        applied immediatley otherwise `200` with a job ID is returned.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Update the call recording vendor for this location
+        :type location_id: str
+        :param id: Unique identifier of the call recording vendor.
+        :type id: str
+        :param org_default_enabled: Vendor is enabled by default.
+        :type org_default_enabled: bool
+        :param storage_region: Regions where call recordings are stored.
+        :type storage_region: str
+        :param org_storage_region_enabled: Region-based call recording storage is enabled.
+        :type org_storage_region_enabled: bool
+        :param failure_behavior: Type of failure behavior.
+        :type failure_behavior: FailureBehavior
+        :param org_failure_behavior_enabled: Failure behavior is enabled.
+        :type org_failure_behavior_enabled: bool
+        :param org_id: Update the call recording vendor for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if id is not None:
+            body['id'] = id
+        if org_default_enabled is not None:
+            body['orgDefaultEnabled'] = org_default_enabled
+        if storage_region is not None:
+            body['storageRegion'] = storage_region
+        if org_storage_region_enabled is not None:
+            body['orgStorageRegionEnabled'] = org_storage_region_enabled
+        if failure_behavior is not None:
+            body['failureBehavior'] = enum_str(failure_behavior)
+        if org_failure_behavior_enabled is not None:
+            body['orgFailureBehaviorEnabled'] = org_failure_behavior_enabled
+        url = self.ep(f'locations/{location_id}/callRecording/vendor')
+        data = await super().put(url, params=params, json=body)
+        r = data['jobId']
+        return r
+
+    async def get_location_vendors(self, location_id: str,
+                             org_id: str = None) -> CallRecordingLocationVendors:
+        """
+        Get Location Call Recording Vendors
+
+        Retrieve details of the call recording vendor that the location is assigned and also a list of vendors.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve vendor details for this location.
+        :type location_id: str
+        :param org_id: Retrieve vendor details for this organization.
+        :type org_id: str
+        :rtype: :class:`CallRecordingLocationVendors`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callRecording/vendors')
+        data = await super().get(url, params=params)
+        r = CallRecordingLocationVendors.model_validate(data)
+        return r
+
+    async def get_location_vendor_id(self, location_id: str, org_id: str = None):
+        """
+        Get Call Recording Vendor ID for a Location
+
+        Retrieve the call recording vendor ID for a location.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve vendor ID for this location.
+        :type location_id: str
+        :param org_id: Retrieve vendor ID for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callRecording/vendorUsers')
+        data = await super().get(url, params=params)
+        r = data['vendorId']
+        return r
+
+    def list_location_users_gen(self, location_id: str,
+                            standard_user_only: bool = None,
+                            org_id: str = None, **params) -> AsyncGenerator[RecordingUser, None, None]:
+        """
+        Get Call Recording Vendor Users for a Location
+
+        Retrieve call recording vendor users of a location. This API is used to get the list of users assigned to the
+        call recording vendor of the location.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve vendor users for this location.
+        :type location_id: str
+        :param standard_user_only: If true, results only include Webex Calling standard users.
+        :type standard_user_only: bool
+        :param org_id: Retrieve vendor users for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if standard_user_only is not None:
+            params['standardUserOnly'] = str(standard_user_only).lower()
+        url = self.ep(f'locations/{location_id}/callRecording/vendorUsers')
+        return self.session.follow_pagination(url=url, model=RecordingUser, params=params, item_key='members')
+
+    async def list_location_users(self, location_id: str,
+                            standard_user_only: bool = None,
+                            org_id: str = None, **params) -> List[RecordingUser]:
+        """
+        Get Call Recording Vendor Users for a Location
+
+        Retrieve call recording vendor users of a location. This API is used to get the list of users assigned to the
+        call recording vendor of the location.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve vendor users for this location.
+        :type location_id: str
+        :param standard_user_only: If true, results only include Webex Calling standard users.
+        :type standard_user_only: bool
+        :param org_id: Retrieve vendor users for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if standard_user_only is not None:
+            params['standardUserOnly'] = str(standard_user_only).lower()
+        url = self.ep(f'locations/{location_id}/callRecording/vendorUsers')
+        return [o async for o in self.session.follow_pagination(url=url, model=RecordingUser, params=params, item_key='members')]
+
+    async def get_org_vendors(self, org_id: str = None) -> CallRecordingVendors:
+        """
+        Get Organization Call Recording Vendors
+
+        Returns what the current vendor is as well as a list of all the available vendors.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve call recording settings from this organization.
+        :type org_id: str
+        :rtype: :class:`CallRecordingVendors`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording/vendors')
+        data = await super().get(url, params=params)
+        r = CallRecordingVendors.model_validate(data)
+        return r
+
+    async def set_org_vendor(self, vendor_id: str, storage_region: str = None,
+                       failure_behavior: FailureBehavior = None, org_id: str = None) -> str:
+        """
+        Set Organization Call Recording Vendor
+
+        Returns a Job ID that you can use to get the status of the job.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`,
+        `spark-admin:telephony_config_read`, and `spark-admin:people_write`.
+
+        :param vendor_id: Unique identifier of the vendor.
+        :type vendor_id: str
+        :param storage_region: Call recording storage region. Only applicable for Webex as a vendor and isn't used for
+            other vendors.
+        :type storage_region: str
+        :param failure_behavior: Call recording failure behavior.
+        :type failure_behavior: FailureBehavior
+        :param org_id: Modify call recording settings from this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['vendorId'] = vendor_id
+        if storage_region is not None:
+            body['storageRegion'] = storage_region
+        if failure_behavior is not None:
+            body['failureBehavior'] = enum_str(failure_behavior)
+        url = self.ep('callRecording/vendor')
+        data = await super().put(url, params=params, json=body)
+        r = data['jobId']
+        return r
 
 
 class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/translationPatterns'):
@@ -18733,6 +19229,124 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
 
 
+class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecording'):
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[CallRecordingJobStatus, None, None]:
+        """
+        List Call Recording Jobs
+
+        Get the list of all call recording jobs in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List call recording jobs in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`CallRecordingJobStatus` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/callRecording')
+        return self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)
+
+    async def list(self, org_id: str = None, **params) -> List[CallRecordingJobStatus]:
+        """
+        List Call Recording Jobs
+
+        Get the list of all call recording jobs in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List call recording jobs in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`CallRecordingJobStatus` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/callRecording')
+        return [o async for o in self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)]
+
+    async def status(self, job_id: str, org_id: str = None) -> CallRecordingJobStatus:
+        """
+        Get the Job Status of a Call Recording Job
+
+        Get the details of a call recording job by its job ID.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve job status in this organization.
+        :type org_id: str
+        :rtype: :class:`CallRecordingJobStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = CallRecordingJobStatus.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None,
+                                                **params) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get Job Errors for a Call Recording Job
+
+        Get errors for a call recording job in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this job.
+        :type job_id: str
+        :param org_id: Retrieve job errors for a call recording job in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ItemObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+    async def errors(self, job_id: str, org_id: str = None,
+                                                **params) -> List[JobErrorItem]:
+        """
+        Get Job Errors for a Call Recording Job
+
+        Get errors for a call recording job in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this job.
+        :type job_id: str
+        :param org_id: Retrieve job errors for a call recording job in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ItemObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
+
+
 class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
     """
     API for jobs to manage numbers
@@ -19716,6 +20330,8 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     """
     #: API for apply line key template jobs
     apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
+    #: call recording jobs
+    call_recording: AsCallRecordingJobsApi
     #: API for device settings jobs
     device_settings: AsDeviceSettingsJobsApi
     #: API for manage numbers jobs
@@ -19730,6 +20346,7 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
         self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
+        self.call_recording = AsCallRecordingJobsApi(session=session)
         self.device_settings = AsDeviceSettingsJobsApi(session=session)
         self.manage_numbers = AsManageNumbersJobsApi(session=session)
         self.move_users = AsMoveUsersJobsApi(session=session)
@@ -28207,7 +28824,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None, org_id: str = None,
+             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
+             include_devices: bool = None, org_id: str = None,
              **params) -> AsyncGenerator[Workspace, None, None]:
         """
         List Workspaces
@@ -28248,6 +28866,9 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type device_platform: DevicePlatform
         :param health_level: List workspaces by health level.
         :type health_level: WorkspaceHealthLevel
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -28277,6 +28898,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
             params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
         if device_platform is not None:
             params['devicePlatform'] = enum_str(device_platform)
+        if health_level is not None:
+            params['healthLevel'] = enum_str(health_level)
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
         ep = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
@@ -28285,7 +28910,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
              display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None, org_id: str = None,
+             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
+             include_devices: bool = None, org_id: str = None,
              **params) -> List[Workspace]:
         """
         List Workspaces
@@ -28326,6 +28952,9 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type device_platform: DevicePlatform
         :param health_level: List workspaces by health level.
         :type health_level: WorkspaceHealthLevel
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -28355,6 +28984,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
             params['deviceHostedMeetingsEnabled'] = str(device_hosted_meetings_enabled).lower()
         if device_platform is not None:
             params['devicePlatform'] = enum_str(device_platform)
+        if health_level is not None:
+            params['healthLevel'] = enum_str(health_level)
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
         ep = self.ep()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Workspace, params=params)]
@@ -28399,7 +29032,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         data = await self.post(url, json=data)
         return Workspace.model_validate(data)
 
-    async def details(self, workspace_id) -> Workspace:
+    async def details(self, workspace_id, include_devices: bool = None) -> Workspace:
         """
         Get Workspace Details
 
@@ -28408,11 +29041,17 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
         :return: workspace details
         :rtype: :class:`Workspace`
         """
+        params = {}
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
         url = self.ep(workspace_id)
-        return Workspace.model_validate(await self.get(url))
+        return Workspace.model_validate(await self.get(url, params=params))
 
     async def update(self, workspace_id, settings: Workspace) -> Workspace:
         """

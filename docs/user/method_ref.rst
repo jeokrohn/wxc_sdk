@@ -29,6 +29,8 @@ The method name is a link to the method documentation.
         Get Recording Details
    * - :meth:`api.converged_recordings.list <wxc_sdk.converged_recordings.ConvergedRecordingsApi.list>`
         List Recordings
+   * - :meth:`api.converged_recordings.list_for_admin_or_compliance_officer <wxc_sdk.converged_recordings.ConvergedRecordingsApi.list_for_admin_or_compliance_officer>`
+        List Recordings for Admin or Compliance officer
    * - :meth:`api.converged_recordings.metadata <wxc_sdk.converged_recordings.ConvergedRecordingsApi.metadata>`
         Get Recording metadata
    * - :meth:`api.converged_recordings.move_recordings_into_the_recycle_bin <wxc_sdk.converged_recordings.ConvergedRecordingsApi.move_recordings_into_the_recycle_bin>`
@@ -699,14 +701,30 @@ The method name is a link to the method documentation.
         Put Location Intercept
    * - :meth:`api.telephony.call_intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
         Get Location Intercept
+   * - :meth:`api.telephony.call_recording.get_call_recording_regions <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_call_recording_regions>`
+        Get Call Recording Regions
+   * - :meth:`api.telephony.call_recording.get_location_vendor_id <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendor_id>`
+        Get Call Recording Vendor ID for a Location
+   * - :meth:`api.telephony.call_recording.get_location_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendors>`
+        Get Location Call Recording Vendors
+   * - :meth:`api.telephony.call_recording.get_org_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_org_vendors>`
+        Get Organization Call Recording Vendors
+   * - :meth:`api.telephony.call_recording.list_location_users <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.list_location_users>`
+        Get Call Recording Vendor Users for a Location
+   * - :meth:`api.telephony.call_recording.list_org_users <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.list_org_users>`
+        Get Call Recording Vendor Users
    * - :meth:`api.telephony.call_recording.read <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read>`
         Get Call Recording Settings
    * - :meth:`api.telephony.call_recording.read_location_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_location_compliance_announcement>`
-        Get Details for the location compliance announcement setting
+        Get details for the Location Compliance Announcement Setting
    * - :meth:`api.telephony.call_recording.read_org_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_org_compliance_announcement>`
-        Get Details for the organization compliance announcement setting
+        Get details for the organization Compliance Announcement Setting
    * - :meth:`api.telephony.call_recording.read_terms_of_service <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_terms_of_service>`
         Get Call Recording Terms Of Service Settings
+   * - :meth:`api.telephony.call_recording.set_location_vendor <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.set_location_vendor>`
+        Set Call Recording Vendor for a Location
+   * - :meth:`api.telephony.call_recording.set_org_vendor <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.set_org_vendor>`
+        Set Organization Call Recording Vendor
    * - :meth:`api.telephony.call_recording.update <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update>`
         Update Call Recording Settings
    * - :meth:`api.telephony.call_recording.update_location_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_location_compliance_announcement>`
@@ -1023,6 +1041,12 @@ The method name is a link to the method documentation.
         Get List of Apply Line Key Template jobs
    * - :meth:`api.telephony.jobs.apply_line_key_templates.status <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.status>`
         Get the job status of an Apply Line Key Template job
+   * - :meth:`api.telephony.jobs.call_recording.errors <wxc_sdk.telephony.jobs.CallRecordingJobsApi.errors>`
+        Get Job Errors for a Call Recording Job
+   * - :meth:`api.telephony.jobs.call_recording.list <wxc_sdk.telephony.jobs.CallRecordingJobsApi.list>`
+        List Call Recording Jobs
+   * - :meth:`api.telephony.jobs.call_recording.status <wxc_sdk.telephony.jobs.CallRecordingJobsApi.status>`
+        Get the Job Status of a Call Recording Job
    * - :meth:`api.telephony.jobs.device_settings.change <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change>`
         Change device settings across organization or locations jobs
    * - :meth:`api.telephony.jobs.device_settings.errors <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.errors>`
