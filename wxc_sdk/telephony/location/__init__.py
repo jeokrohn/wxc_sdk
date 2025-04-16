@@ -81,8 +81,11 @@ class TelephonyLocation(ApiModel):
     e911_setup_required: Optional[bool] = None
     #: TODO: undocumented
     charge_number_usage_enabled: Optional[bool] = None
-    # TODO: undocumented, item 169
+    #: TODO: undocumented, item 169
     carrier_account_id: Optional[str] = None
+    #: TODO: undocumented, WXCAPIBULK-710
+    use_charge_number_for_pcharge_info: Optional[bool] = Field(default=None, alias='useChargeNumberForPChargeInfo')
+
 
     def update(self) -> dict:
         """
