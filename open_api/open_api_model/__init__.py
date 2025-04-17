@@ -4,9 +4,9 @@ Pydantic models to deserialize OpenAPI specs
 import re
 from collections.abc import Generator
 from email.policy import default
-from typing import List, Optional, Any, Union
+from typing import List, Optional, Any, Union, Tuple
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo
 
 from wxc_sdk.base import to_camel
@@ -119,6 +119,61 @@ class OASchemaProperty(OABaseModel):
             raise ValueError(f"enum is only valid for type 'string'")
         return v
 
+    @property
+    def enum_details(self) -> Optional[List[Tuple[str, str]]]:
+        """
+        Documentation of enum values is pushed into the description
+
+        Example:
+            The type of room.
+                * `direct` - 1:1 room
+                * `group` - group room
+        This function returns a list of tuples with the enum value and its description.
+        """
+        if self.enum is None:
+            return None
+        if self.description is None:
+            return None
+        r = []
+        # we want to look for the enum values in the description and need a regex that matches the enum values
+        # the regex looks for lines that start with * `enum_value` - description
+        # and captures the enum value and description
+        # the regex is multiline, so we need to use re.MULTILINE
+        match_enum_values = '|'.join(f'(?:{enum_value})' for enum_value in self.enum)
+        match_descriptions = f'^\s*\* `({match_enum_values})` - '
+        matches = list(re.finditer(match_descriptions, self.description, re.MULTILINE + re.DOTALL))
+        details = dict()
+        for i, match in enumerate(matches):
+            if i == len(matches) - 1:
+                desc_end = len(self.description)
+            else:
+                desc_end = matches[i + 1].start() - 1
+            desc_start = match.end()
+            desc = self.description[desc_start:desc_end]
+            enum_value = match.group(1)
+            details[enum_value] = desc.strip()
+        return [(enum_value, d if (d:=details.get(enum_value)) else '')
+                for enum_value in self.enum]
+
+    @property
+    def enum_description(self) -> Optional[str]:
+        """
+        Get the enum description. Since enum value documentation is pushed into the description, we need a way to get
+        the description without the enum value documentation.
+        """
+        if self.enum is None:
+            return None
+        if self.description is None:
+            return None
+        # look for first enum value description
+        # look for the documentation of that enum value and use the part before as the enum description
+        pattern = f'(.*?)^ \* `\S+?` -'
+        m = re.match(pattern, self.description, re.MULTILINE)
+        if m:
+            description = m.group(1)
+            return description.strip()
+        return self.description
+
     @staticmethod
     def _obj_ref(plist: Optional[list['OASchemaProperty']]) -> Optional[str]:
         """
@@ -183,7 +238,7 @@ class OAResponse(OABaseModel):
     description: Optional[str] = None
     headers: Optional[dict] = None
     content: Optional[dict[str, OAContent]] = Field(default_factory=dict)
-    ref : Optional[str] = Field(alias='$ref', default=None)
+    ref: Optional[str] = Field(alias='$ref', default=None)
 
 
 class OAOperation(OABaseModel):
@@ -250,3 +305,21 @@ class OASpec(OABaseModel):
         ref_match = re.match(r'^#/components/schemas/(.+)$', schema_ref)
         schema_ref = ref_match and ref_match.group(1) or schema_ref
         return self.components.schemas[schema_ref]
+
+    def deref(self, ref: str):
+        """
+        Dereference a ref like '#/components/responses/BadRequestError'
+        :param ref:
+        :return:
+        """
+        ref_match = re.match(r'^#/components/(.+?)/(.+)$', ref)
+        if not ref_match:
+            return None
+        component_type = ref_match.group(1)
+        component_name = ref_match.group(2)
+        if component_type == 'schemas':
+            return self.components.schemas[component_name]
+        elif component_type == 'responses':
+            return self.components.responses[component_name]
+        else:
+            raise ValueError(f"Unknown component type: {component_type}")

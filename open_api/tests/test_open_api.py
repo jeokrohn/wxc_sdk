@@ -13,6 +13,7 @@ from typing import ClassVar, Union
 from unittest import TestCase
 
 import yaml
+from docutils.nodes import description
 from pydantic import ValidationError
 
 from open_api.open_api_class_registry import OpenApiPythonClassRegistry
@@ -140,7 +141,17 @@ class WithParsedOpenApiSpecs(WithOpenApiSpecInfos):
         Read all OpenAPI specs
         """
         super().setUpClass()
-        cls.parsed_specs = list(map(read_one_spec_from_file, cls.spec_infos))
+        cls.parsed_specs = []
+        for spec_info in cls.spec_infos:
+            with open(spec_info.spec_path) as f:
+                data = json.load(f)
+            try:
+                parsed_spec = OASpec.model_validate(data)
+            except ValidationError as e:
+                logging.error(f'Error parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
+                print(f'Error parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
+                parsed_spec = None
+            cls.parsed_specs.append(parsed_spec)
 
 
 class TestCreateYAML(WithOpenApiSpecInfos):
@@ -170,17 +181,75 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
 
     def all_schemas(self) -> Generator[tuple[OpenApiSpecInfo, OASpec, str, OASchemaProperty], None, None]:
         """
-        Generator of all schemas with api_name and name
+        Generator of all schema properties with api_name and name
         """
         for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+            if spec is None:
+                continue
             if spec.components and spec.components.schemas:
-                for name, schema in spec.components.schemas.items():
-                    yield spec_info, spec, name, schema
+                for name, schema_property in spec.components.schemas.items():
+                    yield spec_info, spec, name, schema_property
 
     def all_operations(self) -> Generator[tuple[OpenApiSpecInfo, OASpec, str, str, OAOperation], None, None]:
         for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+            if spec is None:
+                continue
             for path, method, operation in spec.operations():
                 yield spec_info, spec, path, method, operation
+
+    def all_schema_properties(self) -> Generator[tuple[OpenApiSpecInfo, OASchemaProperty], None, None]:
+        """
+        Generator of all schema properties with api_name and name
+        """
+        visited_refs = set()
+        def yield_and_descend_into_property(spec: OASpec, prop: OASchemaProperty, path: str):
+            while prop.ref and prop.ref not in visited_refs:
+                visited_refs.add(prop.ref)
+                deref_property = spec.get_schema(prop.ref)
+                prop = deref_property
+            yield spec_info, spec, path, prop
+            if prop.properties:
+                for prop_name, prop_prop in prop.properties.items():
+                    yield from yield_and_descend_into_property(spec, prop_prop, f'{path}.{prop_name}')
+            return
+
+        for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+            if spec is None:
+                continue
+            if spec.components and spec.components.schemas:
+                for name, schema_property in spec.components.schemas.items():
+                    yield from yield_and_descend_into_property(spec, schema_property, name)
+            for path, method, operation in spec.operations():
+                if operation.request_body:
+                    for content_type, content in operation.request_body.content.items():
+                        if content.schema_:
+                            yield from yield_and_descend_into_property(spec,
+                                                                       content.schema_,
+                                                                       f'{path} {method} req: {content_type}')
+                        # if
+                    # for
+                # if
+                if operation.responses:
+                    for code, response in operation.responses.items():
+                        if response.ref:
+                            response = spec.deref(response.ref)
+                        if response.content:
+                            for content_type, content in response.content.items():
+                                if content.schema_:
+                                    yield from yield_and_descend_into_property(spec,
+                                                                               content.schema_,
+                                                                               f'{path} {method} {code} resp:{content_type}')
+                                # if
+                            # for
+                        # if
+                    # for
+                # if
+        return
+
+
+
+
+
 
     # noinspection GrazieInspection
     def test_scheme_component_types(self):
@@ -267,6 +336,45 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         for api_spec_info, spec, name, schema in self.all_schemas():
             descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}',
                                   call_back=check_property)
+
+    def test_enum_properties_descriptions(self):
+        """
+        Enum documentation has been pushed to the description field. Validate description fields
+        """
+        err = False
+        for api_spec_info, spec, path, schema_property in self.all_schema_properties():
+            if not schema_property.enum:
+                continue
+            if not schema_property.description:
+                print(f'{api_spec_info.api_name} {path} has no description')
+                continue
+            if '* `' in schema_property.description:
+                # this is a valid description
+                details = schema_property.enum_details
+                description = schema_property.enum_description
+                if not details:
+                    print(f'{api_spec_info.api_name} {path} has no enum details')
+                    err = True
+                    continue
+                if not description:
+                    if schema_property.description.strip().startswith('* `'):
+                        # this is a valid description
+                        continue
+                    err = True
+                    print(f'{api_spec_info.api_name} {path} has no enum description')
+                    d = schema_property.enum_description
+                    continue
+                if len(details) != len(schema_property.enum):
+                    err = True
+                    print(f'{api_spec_info.api_name} {path} has different number of enum and details: '
+                          f'{details=} {schema_property.enum=}')
+                    continue
+                if any(not d for _, d in details):
+                    err = True
+                    print(f'{api_spec_info.api_name} {path} has empty enum details: {details}')
+                    d = schema_property.enum_description
+                    continue
+        self.assertFalse(err)
 
     def test_valid_schemas(self):
         """
