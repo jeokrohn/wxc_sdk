@@ -165,14 +165,21 @@ class OASchemaProperty(OABaseModel):
             return None
         if self.description is None:
             return None
+
         # look for first enum value description
-        # look for the documentation of that enum value and use the part before as the enum description
-        pattern = f'(.*?)^ \* `\S+?` -'
-        m = re.match(pattern, self.description, re.MULTILINE)
+        pattern = f'(:?(.*?)\n)?^ \* `.+?` -'
+        m = re.match(pattern, self.description, re.MULTILINE+re.DOTALL)
         if m:
             description = m.group(1)
             return description.strip()
         return self.description
+
+    @property
+    def docstring(self)->str:
+        """
+        either the full description or the description without the enum value documentation
+        """
+        return self.enum_description or ''
 
     @staticmethod
     def _obj_ref(plist: Optional[list['OASchemaProperty']]) -> Optional[str]:
