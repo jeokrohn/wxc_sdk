@@ -25,16 +25,21 @@ class PublishItem(BaseModel):
 class VisibilityItem(BaseModel):
     access_level: int = Field(..., alias='accessLevel')
 
+class FeatureToggle(BaseModel):
+    method: str
+    path: str
+    toggle_name: str = Field(..., alias='toggleName')
+
+class APIVersion(BaseModel):
+    version: str
+    feature_toggles: List[FeatureToggle] = Field(..., alias='featureToggles')
 
 class APIConfig(BaseModel):
     api_id: str = Field(..., alias='apiId')
-    feature_toggle: List[str] = Field(..., alias='featureToggle')
-    title: str
-    descriptions: List[str]
-    stable_version: str = Field(..., alias='stableVersion')
-    publish: List[PublishItem]
-    visibility: List[VisibilityItem]
-    devportal: str
+    owners: list[str]
+    api_type: str = Field(..., alias='apiType')
+    versions: list[APIVersion]
+    publish_to: List[str] = Field(..., alias='publishTo')
 
 
 @dataclass
