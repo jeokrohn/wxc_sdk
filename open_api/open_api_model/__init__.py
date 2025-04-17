@@ -3,6 +3,7 @@ Pydantic models to deserialize OpenAPI specs
 """
 import re
 from collections.abc import Generator
+from email.policy import default
 from typing import List, Optional, Any, Union
 
 from pydantic import BaseModel, Field, field_validator
@@ -22,8 +23,12 @@ class OABaseModel(BaseModel):
 
 
 class OANameAndUrl(OABaseModel):
-    name: str
+    name: Optional[str] = None
     url: Optional[str] = None
+
+
+class OACContact(OANameAndUrl):
+    email: Optional[str] = None
 
 
 class OAInfo(OABaseModel):
@@ -32,7 +37,7 @@ class OAInfo(OABaseModel):
     description: str
     terms_of_service: Optional[str] = None
     license: Optional[OANameAndUrl] = None
-    contact: Optional[OANameAndUrl] = None
+    contact: Optional[OACContact] = None
 
 
 class OAServer(OABaseModel):
@@ -50,6 +55,7 @@ class OAParameter(OABaseModel):
     style: Optional[str] = None
     explode: Optional[bool] = None
     allow_reserved: Optional[bool] = None
+    content: Optional[dict[str, 'OAContent']] = None
 
 
 class OARequestBody(OABaseModel):
@@ -70,6 +76,7 @@ class OADiscriminator(OABaseModel):
 class OASchemaProperty(OABaseModel):
     title: Optional[str] = None
     type: Optional[Union[str, OASchemaPropertyItemsRef]] = None
+    deprecated: bool = Field(default=False)
     # if no type, then this is a reference to another schema
     ref: Optional[str] = Field(alias='$ref', default=None)
     description: Optional[str] = None
@@ -125,7 +132,6 @@ class OASchemaProperty(OABaseModel):
         ref_item = next((item for item in plist if item.ref is not None), None)
         return ref_item and ref_item.ref
 
-
     @property
     def object_ref(self) -> Optional[str]:
         """
@@ -144,16 +150,15 @@ class OASchemaProperty(OABaseModel):
         """
         return self._obj_ref(self.all_of)
 
-
     @property
-    def any_ref(self)->Optional['OASchemaProperty']:
+    def any_ref(self) -> Optional['OASchemaProperty']:
         """
         Any reference
         """
         return self.ref or self._obj_ref(self.all_of) or self._obj_ref(self.any_of)
 
     @property
-    def any_type(self)->Optional[str]:
+    def any_type(self) -> Optional[str]:
         """
         Any type
         """
@@ -175,9 +180,10 @@ class OAContent(OABaseModel):
 
 
 class OAResponse(OABaseModel):
-    description: str
+    description: Optional[str] = None
     headers: Optional[dict] = None
     content: Optional[dict[str, OAContent]] = Field(default_factory=dict)
+    ref : Optional[str] = Field(alias='$ref', default=None)
 
 
 class OAOperation(OABaseModel):
@@ -215,6 +221,7 @@ class OAComponents(OABaseModel):
     schemas: dict[str, OASchemaProperty]
     request_bodies: Optional[dict[str, OARequestBody]] = None
     security_schemes: Optional[dict[str, Any]] = None
+    responses: Optional[dict[str, OAResponse]] = None
 
 
 class OASpec(OABaseModel):
@@ -224,6 +231,7 @@ class OASpec(OABaseModel):
     paths: dict[str, dict[str, OAOperation]]
     components: OAComponents
     tags: Optional[List[str]] = None
+    security: Optional[List[Any]] = None
 
     def operations(self) -> Generator[tuple[str, str, OAOperation], None, None]:
         """

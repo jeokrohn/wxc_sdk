@@ -89,6 +89,7 @@ class TestParseOpenApi(TestCase):
 
     def test_read_all(self):
         parsed_open_api_specs = []
+        failed_open_api_specs = []
         err = False
         for spec_info in open_api_specs():
             with open(spec_info.spec_path) as f:
@@ -99,7 +100,7 @@ class TestParseOpenApi(TestCase):
             except ValidationError as e:
                 err = True
                 print(f'Error parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
-                print(e)
+                failed_open_api_specs.append((spec_info, e))
                 continue
             parsed_open_api_specs.append(parsed_spec)
             print(f'{spec_info.api_name} {parsed_spec.info.title}')
@@ -107,7 +108,13 @@ class TestParseOpenApi(TestCase):
         print(f'Parsed {len(parsed_open_api_specs)} OpenAPI specs')
         parsed_open_api_specs.sort(key=lambda spec: spec.info.title)
         print('\n'.join(spec.info.title for spec in parsed_open_api_specs))
+        print()
+        print(f'Failed {len(failed_open_api_specs)} OpenAPI specs')
+        for spec_info, error in failed_open_api_specs:
+            print(f'{spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
+            print(f'{error}')
         self.assertFalse(err, 'Some OpenAPI specs could not be parsed')
+
 
 
 @dataclass(init=False, repr=False)
