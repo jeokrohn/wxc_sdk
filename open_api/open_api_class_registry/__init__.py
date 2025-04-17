@@ -72,9 +72,11 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         """
         Create attributes from enum values
         """
-        attrs = [Attribute(name=enum_value, python_type='str', docstring=None, sample=None,
+        enum_values = prop.enum
+        enum_details = dict(prop.enum_details or [])
+        attrs = [Attribute(name=enum_value, python_type='str', docstring=enum_details.get(enum_value), sample=None,
                            referenced_class=None)
-                 for enum_value in prop.enum]
+                 for enum_value in enum_values]
         return attrs
 
     def _add_or_get_type_for_property(self, prop: OASchemaProperty,
@@ -83,6 +85,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                                       parent_example=None) -> tuple[str, Optional[str]]:
         """
         Add or get type for property
+
         :return: python_type and referenced_class
         """
         try:
@@ -100,7 +103,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             # and use that as the type
             enum_class_name = self.qualified_class_name(sanitize_class_name(f'{name}{sanitize_class_name(prop_name)}'))
             attrs = self._attributes_from_enum(prop)
-            python_class = PythonClass(name=enum_class_name, attributes=attrs, description=prop.description,
+            python_class = PythonClass(name=enum_class_name, attributes=attrs, description=prop.enum_description,
                                        is_enum=True, baseclass=None)
             # add to registry
             self._add_class(python_class)
@@ -187,7 +190,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         attrs = []
         for prop_name, prop in schema.properties.items():
             python_type, referenced_class = self._add_or_get_type_for_property(prop, name, prop_name)
-            attr = Attribute(name=prop_name, python_type=python_type, docstring=prop.description, sample=None,
+            attr = Attribute(name=prop_name, python_type=python_type, docstring=prop.docstring, sample=None,
                              referenced_class=referenced_class)
             attrs.append(attr)
         python_class = PythonClass(name=name,
@@ -217,7 +220,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         """
         python_type, referenced_class = self._add_or_get_type_for_property(prop, prop_name)
         return Parameter(name=prop_name, python_type=python_type, referenced_class=referenced_class,
-                         docstring=prop.description, sample=prop.example, optional=prop.required is False,
+                         docstring=prop.docstring, sample=prop.example, optional=prop.required is False,
                          url_parameter=url_parameter,
                          registry=self)
 
@@ -246,7 +249,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         body_content = content[content_type]
         if not (body_schema := body_content.schema_):
             raise ValueError('No schema in request body')
-        if (ref := body_schema.ref or body_schema.object_ref):
+        if ref := body_schema.ref or body_schema.object_ref:
             # reference to a different schema that (hopefully) will be added to the registry as PythonClass later
             class_name = class_name_from_ref(ref)
             # find the schema in the registry
