@@ -349,29 +349,33 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                 print(f'{api_spec_info.api_name} {path} has no description')
                 continue
             if '* `' in schema_property.description:
-                # this is a valid description
-                details = schema_property.enum_details
-                description = schema_property.enum_description
-                if not details:
+                # this might be a valid description that also carries enum value descriptions
+                enum_details = schema_property.enum_details
+                enum_description = schema_property.enum_description
+                if not enum_details:
                     print(f'{api_spec_info.api_name} {path} has no enum details')
                     err = True
                     continue
-                if not description:
+                if not enum_description:
                     if schema_property.description.strip().startswith('* `'):
                         # this is a valid description
                         continue
                     err = True
                     print(f'{api_spec_info.api_name} {path} has no enum description')
-                    d = schema_property.enum_description
                     continue
-                if len(details) != len(schema_property.enum):
+                if ' *' in enum_description:
+                    # enum description should not have anything that smells like an enum value description
+                    err = True
+                    print(f'{api_spec_info.api_name} {path} "fishy" enum description: '
+                          f'{enum_details=} {enum_description=}')
+                if len(enum_details) != len(schema_property.enum):
                     err = True
                     print(f'{api_spec_info.api_name} {path} has different number of enum and details: '
-                          f'{details=} {schema_property.enum=}')
+                          f'{enum_details=} {schema_property.enum=}')
                     continue
-                if any(not d for _, d in details):
+                if any(not d for _, d in enum_details):
                     err = True
-                    print(f'{api_spec_info.api_name} {path} has empty enum details: {details}')
+                    print(f'{api_spec_info.api_name} {path} has empty enum details: {enum_details}')
                     d = schema_property.enum_description
                     continue
         self.assertFalse(err)
