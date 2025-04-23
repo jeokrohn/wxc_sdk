@@ -170,7 +170,7 @@ class OASchemaProperty(OABaseModel):
         pattern = f'(:?(.*?)\n)?^ \* `.+?` -'
         m = re.match(pattern, self.description, re.MULTILINE+re.DOTALL)
         if m:
-            description = m.group(1)
+            description = m.group(1) or ''
             return description.strip()
         return self.description
 

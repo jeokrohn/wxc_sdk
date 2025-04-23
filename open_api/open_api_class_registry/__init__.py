@@ -253,9 +253,9 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             # reference to a different schema that (hopefully) will be added to the registry as PythonClass later
             class_name = class_name_from_ref(ref)
             # find the schema in the registry
-            class_spec = spec.components.schemas.get(class_name)
+            class_spec = spec.get_schema(ref)
             if not class_spec:
-                raise ValueError(f'Referenced schema {class_name} not found')
+                raise ValueError(f'Referenced schema {class_name}/{ref} not found')
             # now we can create the parameter list from the referenced schema
             param_properties = class_spec.properties
         else:
