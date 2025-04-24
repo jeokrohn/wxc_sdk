@@ -602,12 +602,6 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         List recordings requires the `spark-compliance:recordings_read` scope for compliance officer and
         `spark-admin:recordings_read` scope for admin.
 
-        #### Request Header
-
-        * `timezone`: *`Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
-        not defined.*
-
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
             `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
@@ -694,12 +688,6 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
         List recordings requires the `spark-compliance:recordings_read` scope for compliance officer and
         `spark-admin:recordings_read` scope for admin.
-
-        #### Request Header
-
-        * `timezone`: *`Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ in conformance with the `IANA time zone database
-        not defined.*
 
         :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
