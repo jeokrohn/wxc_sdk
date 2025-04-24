@@ -11,12 +11,24 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['CapabilityMap', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType',
-           'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
-           'WorkspaceCallingWebexCalling', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
+__all__ = ['CapabilityMap', 'Device', 'DeviceConnectionStatus', 'ManagedBy', 'NetworkConnectivityType',
+           'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType', 'WorkspaceCalling',
+           'WorkspaceCallingHybridCalling', 'WorkspaceCallingType', 'WorkspaceCallingWebexCalling',
+           'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling',
            'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceDeviceHostedMeetings', 'WorkspaceDevicePlatform',
            'WorkspaceHealth', 'WorkspaceHealthLevel', 'WorkspaceHotdeskingStatus', 'WorkspaceIndoorNavigation',
-           'WorkspaceIssue', 'WorkspaceSupportedDevices', 'WorkspaceType1', 'WorkspacesApi']
+           'WorkspaceIssue', 'WorkspaceIssueLevel', 'WorkspaceIssueLevelMembers', 'WorkspaceSupportedDevices',
+           'WorkspaceType1', 'WorkspacesApi']
+
+
+class WorkspaceIssueLevelMembers(str, Enum):
+    error = 'error'
+    warning = 'warning'
+    info = 'info'
+
+
+class WorkspaceIssueLevel(ApiModel):
+    members: Optional[WorkspaceIssueLevelMembers] = Field(alias='Members', default=None)
 
 
 class WorkspaceIssue(ApiModel):
@@ -31,7 +43,7 @@ class WorkspaceIssue(ApiModel):
     #: Recommended action to mitigate issue.
     recommended_action: Optional[str] = None
     #: Issue level.
-    level: Optional[str] = None
+    level: Optional[WorkspaceIssueLevel] = None
 
 
 class WorkspaceType1(str, Enum):
@@ -154,6 +166,114 @@ class WorkspaceHealth(ApiModel):
     issues: Optional[list[WorkspaceIssue]] = None
 
 
+class DeviceConnectionStatus(str, Enum):
+    connected = 'connected'
+    disconnected = 'disconnected'
+    connected_with_issues = 'connected_with_issues'
+    offline_expired = 'offline_expired'
+    activating = 'activating'
+    unknown = 'unknown'
+    offline_deep_sleep = 'offline_deep_sleep'
+
+
+class NetworkConnectivityType(str, Enum):
+    wired = 'wired'
+
+
+class ManagedBy(str, Enum):
+    cisco = 'CISCO'
+    customer = 'CUSTOMER'
+    partner = 'PARTNER'
+
+
+class Device(ApiModel):
+    #: A unique identifier for the device.
+    #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9ERVZJQ0UvNTEwMUIwN0ItNEY4Ri00RUY3LUI1NjUtREIxOUM3QjcyM0Y3
+    id: Optional[str] = None
+    #: A friendly name for the device.
+    #: example: SFO12-3-PanHandle
+    display_name: Optional[str] = None
+    #: The `placeId` field has been deprecated. Please use `workspaceId` instead.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS83MTZlOWQxYy1jYTQ0LTRmZWQtOGZjYS05ZGY0YjRmNDE3ZjU
+    place_id: Optional[str] = None
+    #: The workspace associated with the device.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS83MTZlOWQxYy1jYTQ0LTRmZWQtOGZjYS05ZGY0YjRmNDE3ZjU
+    workspace_id: Optional[str] = None
+    #: The person associated with the device.
+    #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS83MTZlOWQxYy1jYTQ0LTRmZWQtOGZjYS05ZGY0YjRmNDE3ZjU
+    person_id: Optional[str] = None
+    #: The organization associated with the device.
+    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
+    org_id: Optional[str] = None
+    #: The capabilities of the device.
+    #: example: ['xapi']
+    capabilities: Optional[list[str]] = None
+    #: The permissions the user has for this device. For example, `xapi` means this user is entitled to using the
+    #: `xapi` against this device.
+    #: example: ['xapi']
+    permissions: Optional[list[str]] = None
+    #: The connection status of the device.
+    #: example: connected
+    connection_status: Optional[DeviceConnectionStatus] = None
+    #: The product name. A display friendly version of the device's `model`.
+    #: example: Cisco Webex DX80
+    product: Optional[str] = None
+    #: The product type.
+    #: example: roomdesk
+    type: Optional[str] = None
+    #: Tags assigned to the device.
+    #: example: ['First Tag', 'Second Tag']
+    tags: Optional[list[str]] = None
+    #: The current IP address of the device.
+    #: example: 100.110.120.130
+    ip: Optional[str] = None
+    #: The current network connectivity for the device.
+    #: example: wired
+    active_interface: Optional[NetworkConnectivityType] = None
+    #: The unique address for the network adapter.
+    #: example: 11:22:33:44:AA:FF
+    mac: Optional[str] = None
+    #: The primary SIP address to dial this device.
+    #: example: sample_device@sample_workspacename.orgname.org
+    primary_sip_url: Optional[str] = None
+    #: All SIP addresses to dial this device.
+    #: example: ['sample_device@sample_workspacename.orgname.org', 'another_device@sample_workspacename.orgname.org']
+    sip_urls: Optional[list[str]] = None
+    #: Serial number for the device.
+    #: example: FOC1923NVVN
+    serial: Optional[str] = None
+    #: The operating system name data and version tag.
+    #: example: RoomOS 2018-06-01 608dcdbb6e1
+    software: Optional[str] = None
+    #: The upgrade channel the device is assigned to.
+    #: example: beta
+    upgrade_channel: Optional[str] = None
+    #: The date and time that the device was registered, in ISO8601 format.
+    #: example: 2016-04-21T17:00:00.000Z
+    created: Optional[datetime] = None
+    #: The location associated with the device.
+    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
+    location_id: Optional[str] = None
+    #: The workspace location associated with the device. Deprecated, prefer `locationId`.
+    #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
+    workspace_location_id: Optional[str] = None
+    #: Error codes coming from the device.
+    #: example: ['sipprofileregistration']
+    error_codes: Optional[list[str]] = None
+    #: Timestamp of the first time device sent a status post.
+    #: example: 2021-02-24T09:08:38.822Z
+    first_seen: Optional[datetime] = None
+    #: Timestamp of the last time device sent a status post.
+    #: example: 2023-08-15T14:04:00.444Z
+    last_seen: Optional[datetime] = None
+    #: Entity managing the device configuration.
+    #: example: CISCO
+    managed_by: Optional[ManagedBy] = None
+    #: The device platform.
+    #: example: cisco
+    device_platform: Optional[WorkspaceDevicePlatform] = None
+
+
 class Workspace(ApiModel):
     #: Unique identifier for the Workspace.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFUy81MTAxQjA3Qi00RjhGLTRFRjctQjU2NS1EQjE5QzdCNzIzRjc
@@ -206,6 +326,8 @@ class Workspace(ApiModel):
     indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
     #: The health of the workspace.
     health: Optional[WorkspaceHealth] = None
+    #: A list of devices associated with the workspace.
+    devices: Optional[list[Device]] = None
 
 
 class WorkspaceCreationRequestCallingWebexCalling(ApiModel):
@@ -292,7 +414,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                         calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
                         device_platform: WorkspaceDevicePlatform = None, health_level: WorkspaceHealthLevel = None,
-                        org_id: str = None, **params) -> Generator[Workspace, None, None]:
+                        include_devices: bool = None, org_id: str = None,
+                        **params) -> Generator[Workspace, None, None]:
         """
         List workspaces.
 
@@ -330,6 +453,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type device_platform: WorkspaceDevicePlatform
         :param health_level: List workspaces by health level.
         :type health_level: WorkspaceHealthLevel
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
         :param org_id: List workspaces in this organization. Only admin users of another organization (such as
             partners) may use this parameter.
         :type org_id: str
@@ -361,6 +487,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['devicePlatform'] = enum_str(device_platform)
         if health_level is not None:
             params['healthLevel'] = enum_str(health_level)
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
@@ -466,7 +594,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         r = Workspace.model_validate(data)
         return r
 
-    def get_workspace_details(self, workspace_id: str) -> Workspace:
+    def get_workspace_details(self, workspace_id: str, include_devices: bool = None) -> Workspace:
         """
         Get Workspace Details
 
@@ -478,10 +606,16 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
         :rtype: :class:`Workspace`
         """
+        params = {}
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
         url = self.ep(f'{workspace_id}')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = Workspace.model_validate(data)
         return r
 
