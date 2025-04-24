@@ -17,6 +17,7 @@ from re import Pattern
 from typing import Union
 
 from tests.base import get_tokens, WithIntegrationTokens
+from tests.testutil import calling_users
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
@@ -26,6 +27,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.callqueue import CallQueue
+from wxc_sdk.workspaces import CallingType
 
 TO_DELETE = re.compile(
     r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE |cpe_|cp)\d{3})|National Holidays$')
@@ -60,9 +62,42 @@ def delete_inactive_users(pool: ThreadPoolExecutor, api: WebexSimpleApi):
     licenses_by_id = {lic.license_id: lic for lic in licenses}
     to_delete = [u for u in users if u.invite_pending and not is_calling_user(u)]
     print(f'deleting {len(to_delete)} users')
-    list(pool.map(lambda u: api.people.delete_person(person_id=u.person_id),
-                  to_delete))
+    if not DRY_RUN:
+        list(pool.map(lambda u: api.people.delete_person(person_id=u.person_id),
+                      to_delete))
     return
+
+
+def cleanup_devices(pool: ThreadPoolExecutor, api: WebexSimpleApi):
+    # MPPs with mac DEADEAD mac or still in "activating"
+    mpp_devices = [device for device in api.devices.list(product_type='phone')
+                   if (device.mac and device.mac.startswith('DEADDEAD') or
+                       device.connection_status and device.connection_status == 'activating')]
+    mpp_ids = {device.device_id for device in mpp_devices}
+
+    if False:
+        # non Webex aware 98XX devices son't show up in devices API and can't be deleted: CALL-138285
+        # also some phones don't show in devices list and can only be found by looking at devices of calling users
+        users = calling_users(api=api)
+        user_devices = chain.from_iterable(pool.map(
+            lambda user: api.person_settings.devices(person_id=user.person_id).devices,
+            users))
+        workspaces = list(api.workspaces.list(calling=CallingType.webex))
+        workspace_devices = chain.from_iterable(pool.map(
+            lambda ws: api.workspace_settings.devices.list(workspace_id=ws.workspace_id),
+            workspaces))
+        user_and_workspace_devices = [d for d in chain(user_devices, workspace_devices)
+                                      if (d.device_id not in mpp_ids and
+                                          (d.mac and d.mac.startswith('DEADDEAD') or
+                                           d.activation_state and d.activation_state == 'activating'))]
+    else:
+        user_and_workspace_devices = []
+    devices_to_delete = list(chain(mpp_devices, user_and_workspace_devices))
+
+    print(f'deleting {len(devices_to_delete)} devices: {", ".join(mpp.display_name for mpp in mpp_devices)}')
+    if not DRY_RUN:
+        list(pool.map(lambda mpp: api.devices.delete(device_id=mpp.device_id),
+                      devices_to_delete))
 
 
 async def main():
@@ -107,14 +142,7 @@ async def main():
 
             delete_inactive_users(pool=pool, api=api)
 
-            # MPPs with mac DEADEAD mac or stll in "activating"
-            mpp_devices = [device for device in api.devices.list(product_type='phone')
-                           if device.mac and device.mac.startswith('DEADDEAD') or
-                           device.connection_status and device.connection_status == 'activating']
-            print(f'deleting {len(mpp_devices)} MPP phones: {", ".join(mpp.display_name for mpp in mpp_devices)}')
-            if not DRY_RUN:
-                list(pool.map(lambda mpp: api.devices.delete(device_id=mpp.device_id),
-                              mpp_devices))
+            cleanup_devices(pool=pool, api=api)
 
             # remove Dustin Harris from Call Queues
             if False:
