@@ -75,7 +75,7 @@ class ConnectionResponse(ApiModel):
     #: The PSTN connection type set for the location.
     pstn_connection_type: Optional[PSTNType] = None
     #: Premise route type. This is required if connection type is LOCAL_GATEWAY.
-    route_type: Optional[list[PremiseRouteType]] = None
+    route_type: Optional[PremiseRouteType] = None
     #: Premise route ID. This refers to either a Trunk ID or a Route Group ID. This field is optional but required if
     #: the connection type is LOCAL_GATEWAY.
     #: example: Y2lzY29zcGFyazovL3VzL1RSVU5LL2Y1YTU4MzAwLTVmZTYtNGNjMS1hODA3LTRlN2E5OTMzN2Q0ZA
