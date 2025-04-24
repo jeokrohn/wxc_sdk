@@ -6,6 +6,7 @@ Release history
 - fest: new job api: :attr:`api.telephony.jobs.call_recording <wxc_sdk.telephony.jobs.JobsApi.call_recording>`
 - feat: option to include devices in :meth:`api.workspaces.details <wxc_sdk.workspaces.WorkspacesApi.details>`, :meth:`api.workspaces.list <wxc_sdk.workspaces.WorkspacesApi.list>`
 - fix: updated attributes for class :class:`TelephonyLocation <wxc_sdk.telephony.location.TelephonyLocation>`: removed e911_setup_required, charge_number_usage_enabled, carrier_account_id
+- feat: new attribute in :class:`DND settings <wxc_sdk.person_settings.dnd.DND>`: webex_go_override_enabled
 
 1.24.0
 ------

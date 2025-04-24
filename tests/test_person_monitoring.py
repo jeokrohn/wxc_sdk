@@ -9,10 +9,10 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import ClassVar, Optional
 
+from tests.base import TestCaseWithUsers
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
-from tests.base import TestCaseWithUsers
 
 
 def print_monitoring(*, user: Person, monitoring: Monitoring):

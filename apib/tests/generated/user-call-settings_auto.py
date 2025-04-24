@@ -44,15 +44,16 @@ __all__ = ['Action', 'AgentCallerIdType', 'ApplicationsSetting', 'AudioAnnouncem
            'OutgoingCallingPermissionsSettingPutCallingPermissions', 'PeopleOrPlaceOrVirtualLineType',
            'PersonCallForwardAvailableNumberObject', 'PersonCallForwardAvailableNumberObjectOwner',
            'PersonECBNAvailableNumberObject', 'PersonECBNAvailableNumberObjectOwner',
-           'PersonPrimaryAvailableNumberObject', 'PersonPrimaryAvailableNumberObjectTelephonyType',
-           'PersonSecondaryAvailableNumberObject', 'PersonalAssistantGet', 'PersonalAssistantGetAlerting',
-           'PersonalAssistantGetPresence', 'PhoneNumber', 'PrivacyGet', 'PushToTalkAccessType',
-           'PushToTalkConnectionType', 'PushToTalkInfo', 'PutSharedLineMemberItem', 'ReceptionInfo',
-           'RetrieveExecutiveAssistantSettingsForAPersonResponseType', 'STATE', 'ScheduleLongDetails',
-           'ScheduleShortDetails', 'ScheduleType', 'SettingsObject', 'SettingsObjectLevel',
-           'SettingsObjectSettingName', 'StartJobExecutionStatusObject', 'StartJobExecutionStatusObjectExitCode',
-           'StartJobResponseObject', 'StartJobResponseObjectLatestExecutionStatus', 'StepExecutionStatusesObject',
-           'TelephonyType', 'TransferNumberGet', 'UserCallSettingsApi', 'UserDigitPatternObject', 'UserItem',
+           'PersonECBNAvailableNumberObjectOwnerType', 'PersonPrimaryAvailableNumberObject',
+           'PersonPrimaryAvailableNumberObjectTelephonyType', 'PersonSecondaryAvailableNumberObject',
+           'PersonalAssistantGet', 'PersonalAssistantGetAlerting', 'PersonalAssistantGetPresence', 'PhoneNumber',
+           'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo',
+           'PutSharedLineMemberItem', 'ReceptionInfo', 'RetrieveExecutiveAssistantSettingsForAPersonResponseType',
+           'STATE', 'ScheduleLongDetails', 'ScheduleShortDetails', 'ScheduleType', 'SettingsObject',
+           'SettingsObjectLevel', 'SettingsObjectSettingName', 'StartJobExecutionStatusObject',
+           'StartJobExecutionStatusObjectExitCode', 'StartJobResponseObject',
+           'StartJobResponseObjectLatestExecutionStatus', 'StepExecutionStatusesObject', 'TelephonyType',
+           'TransferNumberGet', 'UserCallSettingsApi', 'UserDigitPatternObject', 'UserItem',
            'UserModeManagementAvailableFeaturesObject', 'UserModeManagementFeatureObject',
            'UserOutgoingPermissionDigitPatternGetListObject', 'UserPlaceAuthorizationCodeListGet', 'UsersListItem',
            'VoiceMailPartyInformation', 'VoiceMessageDetails', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
@@ -535,6 +536,8 @@ class DoNotDisturbInfo(ApiModel):
     enabled: Optional[bool] = None
     #: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.
     ring_splash_enabled: Optional[bool] = None
+    #: `true` if a mobile device will still ring even if Do Not Disturb is enabled.
+    webex_go_override_enabled: Optional[bool] = None
 
 
 class EventLongDetailsRecurrenceRecurDaily(ApiModel):
@@ -783,26 +786,26 @@ class MonitoredNumberObject(ApiModel):
 
 
 class GetMonitoredElementsObjectMember(ApiModel):
-    #: The identifier of the monitored person.
+    #: The identifier of the monitored person, workspace or virtual line.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY
     id: Optional[str] = None
-    #: The last name of the monitored person, place or virtual line.
+    #: The last name of the monitored person, workspace or virtual line.
     #: example: Nelson
     last_name: Optional[str] = None
-    #: The first name of the monitored person, place or virtual line.
+    #: The first name of the monitored person, workspace or virtual line.
     #: example: John
     first_name: Optional[str] = None
-    #: The display name of the monitored person, place or virtual line.
+    #: The display name of the monitored person, workspace or virtual line.
     #: example: John Nelson
     display_name: Optional[str] = None
     #: Indicates whether the type is `PEOPLE`, `PLACE` or `VIRTUAL_LINE`.
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
-    #: The email address of the monitored person, place or virtual line.
+    #: The email address of the monitored person.
     #: example: john.nelson@gmail.com
     email: Optional[str] = None
-    #: The list of phone numbers of the monitored person, place or virtual line.
+    #: The list of phone numbers of the monitored person, workspace or virtual line.
     numbers: Optional[list[MonitoredNumberObject]] = None
-    #: The location name where the call park extension is.
+    #: The name of the location where the monitored person, workspace, or virtual line is situated.
     #: example: Dallas
     location: Optional[str] = None
     #: The ID for the location.
@@ -820,6 +823,12 @@ class GetMonitoredElementsObjectCallparkextension(ApiModel):
     #: The extension number for the call park extension.
     #: example: 4001
     extension: Optional[str] = None
+    #: Routing prefix of location.
+    #: example: 1234
+    routing_prefix: Optional[str] = None
+    #: Routing prefix + extension of the call park extension.
+    #: example: 12344001
+    esn: Optional[str] = None
     #: The location name where the call park extension is.
     #: example: Dallas
     location: Optional[str] = None
@@ -1796,13 +1805,24 @@ class PersonPrimaryAvailableNumberObject(ApiModel):
     is_service_number: Optional[bool] = None
 
 
+class PersonECBNAvailableNumberObjectOwnerType(str, Enum):
+    #: Phone number's owner is a workspace.
+    place = 'PLACE'
+    #: Phone number's owner is a person.
+    people = 'PEOPLE'
+    #: Phone number's owner is a Virtual Line.
+    virtual_line = 'VIRTUAL_LINE'
+    #: Phone number's owner is a Hunt Group.
+    hunt_group = 'HUNT_GROUP'
+
+
 class PersonECBNAvailableNumberObjectOwner(ApiModel):
     #: Unique identifier of the owner to which phone number is assigned.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
     #: Type of the PSTN phone number's owner.
     #: example: PEOPLE
-    type: Optional[PeopleOrPlaceOrVirtualLineType] = None
+    type: Optional[PersonECBNAvailableNumberObjectOwnerType] = None
     #: First name of the phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     #: example: Test
@@ -1811,7 +1831,8 @@ class PersonECBNAvailableNumberObjectOwner(ApiModel):
     #: `VIRTUAL_LINE`.
     #: example: Person
     last_name: Optional[str] = None
-    #: Display name of the phone number's owner. This field will be present only when the owner `type` is `PLACE`.
+    #: Display name of the phone number's owner. This field will be present only when the owner `type` is `PLACE` or
+    #: `HUNT_GROUP`.
     #: example: TestWorkSpace
     display_name: Optional[str] = None
 
@@ -2848,8 +2869,9 @@ class UserCallSettingsApi(ApiChild, base=''):
         r = DoNotDisturbInfo.model_validate(data)
         return r
 
-    def configure_do_not_disturb_settings_for_a_person(self, person_id: str, enabled: bool = None,
-                                                       ring_splash_enabled: bool = None, org_id: str = None):
+    def configure_do_not_disturb_settings_for_a_person(self, person_id: str, webex_go_override_enabled: bool,
+                                                       enabled: bool = None, ring_splash_enabled: bool = None,
+                                                       org_id: str = None):
         """
         Configure Do Not Disturb Settings for a Person
 
@@ -2863,6 +2885,8 @@ class UserCallSettingsApi(ApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
+        :param webex_go_override_enabled: `true` if a mobile device will still ring even if Do Not Disturb is enabled.
+        :type webex_go_override_enabled: bool
         :param enabled: `true` if the Do Not Disturb feature is enabled.
         :type enabled: bool
         :param ring_splash_enabled: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive
@@ -2882,6 +2906,7 @@ class UserCallSettingsApi(ApiChild, base=''):
             body['enabled'] = enabled
         if ring_splash_enabled is not None:
             body['ringSplashEnabled'] = ring_splash_enabled
+        body['webexGoOverrideEnabled'] = webex_go_override_enabled
         url = self.ep(f'people/{person_id}/features/doNotDisturb')
         super().put(url, params=params, json=body)
 

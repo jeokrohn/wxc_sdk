@@ -199,6 +199,8 @@ class CallParkExtension(ApiModel):
     @model_validator(mode='before')
     def fix_location_name(cls, values):
         """
+        The schema changed at some point: endpoint returns "location" instead of "location_name". For backwards
+        compatibility we need to rename it to "location_name" if it is present.
 
         :meta private:
         :param values:

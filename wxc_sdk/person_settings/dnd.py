@@ -1,6 +1,7 @@
 """
 Person DND settings API
 """
+from typing import Optional
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
@@ -16,6 +17,8 @@ class DND(ApiModel):
     enabled: bool
     #: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.
     ring_splash_enabled: bool
+    #: `true` if a mobile device will still ring even if Do Not Disturb is enabled.
+    webex_go_override_enabled: Optional[bool] = None
 
 
 class DndApi(PersonSettingsApiChild):
