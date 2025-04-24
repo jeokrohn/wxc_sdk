@@ -5,6 +5,7 @@ Release history
 - feat: new endpoints in :class:`CallRecordingSettingsApi <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi>` :meth:`get_call_recording_regions <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_call_recording_regions>`, :meth:`list_org_users <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.list_org_users>`, :meth:`set_location_vendor <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.set_location_vendor>`, :meth:`get_location_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendors>`, :meth:`get_location_vendor_id <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendor_id>`, :meth:`list_location_users <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.list_location_users>`, :meth:`get_org_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_org_vendors>`, :meth:`set_org_vendor <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.set_org_vendor>`
 - fest: new job api: :attr:`api.telephony.jobs.call_recording <wxc_sdk.telephony.jobs.JobsApi.call_recording>`
 - feat: option to include devices in :meth:`api.workspaces.details <wxc_sdk.workspaces.WorkspacesApi.details>`, :meth:`api.workspaces.list <wxc_sdk.workspaces.WorkspacesApi.list>`
+- fix: updated attributes for class :class:`TelephonyLocation <wxc_sdk.telephony.location.TelephonyLocation>`: removed e911_setup_required, charge_number_usage_enabled, carrier_account_id
 
 1.24.0
 ------

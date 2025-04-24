@@ -77,13 +77,9 @@ class TelephonyLocation(ApiModel):
     #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
     #: include a P-Charge-Info header with the selected number in the SIP INVITE.
     charge_number: Optional[str] = None
-    #: True if E911 setup is required.
-    e911_setup_required: Optional[bool] = None
-    #: TODO: undocumented
-    charge_number_usage_enabled: Optional[bool] = None
-    #: TODO: undocumented, item 169
-    carrier_account_id: Optional[str] = None
-    #: TODO: undocumented, WXCAPIBULK-710
+    #: Indicates whether the location's chargeNumber (if set) is enabled for use as the P-Charge-Info header in the
+    #: SIP INVITE for all PSTN calls placed from this location. The field is returned as true if the location's PSTN
+    #: allows use of the chargeNumber.
     use_charge_number_for_pcharge_info: Optional[bool] = Field(default=None, alias='useChargeNumberForPChargeInfo')
 
 
@@ -94,8 +90,8 @@ class TelephonyLocation(ApiModel):
         :meta private:
         """
         data = self.model_dump(mode='json', exclude_unset=True, by_alias=True,
-                               exclude={'location_id', 'name', 'user_limit', 'default_domain',
-                                        'e911_setup_required', 'subscription_id', 'carrier_account_id'})
+                               exclude={'location_id', 'name', 'subscription_id', 'user_limit', 'default_domain',
+                                        'use_charge_number_for_pcharge_info'})
         if not self.connection:
             data.pop('connection', None)
         return data
