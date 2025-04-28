@@ -38,14 +38,17 @@ def main():
     env_path = f'{os.path.splitext(__file__)[0]}.env'
     load_dotenv(env_path)
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Convert OpenApi specs to Python source',
+                                     epilog=f'Environment is read from {env_path} if present.')
     parser.add_argument('--oas', type=str,
                         help='name of OpenApi spec file. If name is given w/o path then default path from environment '
                              'OAS_SPEC_PATH (if present) is used to determine the absolute path of the APIB source. '
                              'Parameter value is interpreted as glob wildcard.')
     parser.add_argument('--pypath', type=str,
                         help='dir path to store result in .. if not target with path is given. if parameter is '
-                             'missing then path is read from environment OAS_PY_PATH (if present)')
+                             'missing then path is read from environment OAS_PY_PATH (if present). If the path ends '
+                             'with "/" then the folder hierarchy of the OAS specs is recreated for the created Python '
+                             'sources.')
     parser.add_argument('--pysrc', type=str,
                         help='filename (w/ or w/o path) of python source to generate, "-" to print source to stdout. '
                              'If parameter is missing then the output name is based on the basename of given APIB name')
@@ -101,6 +104,18 @@ def main():
 
     with_examples = args.with_examples or False
 
+    py_path = args.pypath
+    if py_path is not None:
+        # if the path is given then use it
+        py_path_has_slash = py_path.endswith('/')
+        py_path = os.path.abspath(py_path)
+        if py_path_has_slash:
+            py_path = f'{py_path}/'
+        if not os.path.isdir(py_path):
+            print(f'Path "{py_path}" does not exist',
+                  file=sys.stderr)
+            exit(1)
+
     # conversion for each OAS file
     def convert_one_oas(oas_path: str):
         """
@@ -126,8 +141,8 @@ def main():
                         # something like "people_v2"
                         py_basename = f'{path_components[-3]}_{path_components[-2]}'
                     py_basename = f'{py_basename}_auto.py'
-                    oas_py_path = os.getenv('OAS_PY_PATH') or ''
-                    if oas_spec_path and spec_path.startswith(oas_spec_path):
+                    oas_py_path = py_path or os.getenv('OAS_PY_PATH') or ''
+                    if oas_spec_path and spec_path.startswith(oas_spec_path) and oas_py_path.endswith('/'):
                         # for OAS specs that are under the spec path re-create the directory structure in the target
                         # directory
                         # ignore the start of the path and the last 3 components
@@ -139,6 +154,9 @@ def main():
                         if not os.path.isdir(dirname):
                             os.makedirs(dirname)
                         pysrc = os.path.join(dirname, py_basename)
+                    else:
+                        # if the path is not given then use the name of the OAS file
+                        pysrc = os.path.join(oas_py_path, py_basename)
                     # if
                 # if
                 print(f'.. writing output to "{pysrc}"')
