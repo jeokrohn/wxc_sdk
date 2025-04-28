@@ -12,7 +12,7 @@ __all__ = ['OpenApiSpecInfo', 'open_api_specs']
 
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 WORKSPACE_DIR = 'open-api-specs'  # directory where OpenAPI specs are stored under the workspace
 WORKSPACE_BASE = os.path.expanduser(os.path.join('~', 'Documents', 'workspace'))
@@ -39,7 +39,7 @@ class APIConfig(BaseModel):
     owners: list[str]
     api_type: str = Field(..., alias='apiType')
     versions: list[APIVersion]
-    publish_to: List[str] = Field(..., alias='publishTo')
+    publish_to: List[str] = Field(..., alias='publishTo', default_factory=list)
 
 
 @dataclass
@@ -79,6 +79,8 @@ class OpenApiSpecInfo:
             with open(api_json_path) as f:
                 data = json.load(f)
                 api_config = APIConfig.model_validate(data)
+        except ValidationError:
+            raise
         except FileNotFoundError:
             api_config = None
         return cls(base_path=base_path, spec_path=path, api_config=api_config, version=version, api_name=api_name)

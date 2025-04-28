@@ -213,14 +213,17 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         # * baseclass (None)
         self._add_or_get_type_for_property(schema, sanitize_class_name(schema_name))
 
-    def _parameter_from_schema_property(self, prop_name: str, prop: OASchemaProperty,
+    def _parameter_from_schema_property(self, *, prop_name: str, prop: OASchemaProperty,
+                                        param_required: Optional[set[str]] = None,
                                         url_parameter:bool=False) -> Parameter:
         """
         Create parameter from schema property
         """
+        param_required = param_required or prop.required and set(prop.required) or {}
+        required = (param_required and prop_name in param_required)
         python_type, referenced_class = self._add_or_get_type_for_property(prop, prop_name)
         return Parameter(name=prop_name, python_type=python_type, referenced_class=referenced_class,
-                         docstring=prop.docstring, sample=prop.example, optional=prop.required is False,
+                         docstring=prop.docstring, sample=prop.example, optional=not required,
                          url_parameter=url_parameter,
                          registry=self)
 
@@ -258,11 +261,14 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 raise ValueError(f'Referenced schema {class_name}/{ref} not found')
             # now we can create the parameter list from the referenced schema
             param_properties = class_spec.properties
+            param_required = class_spec.required and set(class_spec.required) or {}
         else:
             # create parameter list from schema properties
             param_properties = body_schema.properties
+            param_required = body_schema.required and set(body_schema.required) or {}
         # create parameter list
-        parameters = [self._parameter_from_schema_property(prop_name, prop)
+        parameters = [self._parameter_from_schema_property(prop_name=prop_name, prop=prop,
+                                                           param_required=param_required)
                       for prop_name, prop in param_properties.items()]
         return parameters
 
@@ -279,7 +285,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         docstring = operation.description
 
         href_parameter = [self._parameter_from_oa_parameter(qp)
-                          for qp in operation.parameters]
+                          for qp in operation.parameters if not qp.is_auth]
 
         body_parameter = self._body_parameter_from_operation(spec, operation)
 

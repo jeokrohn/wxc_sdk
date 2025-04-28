@@ -57,6 +57,13 @@ class OAParameter(OABaseModel):
     allow_reserved: Optional[bool] = None
     content: Optional[dict[str, 'OAContent']] = None
 
+    @property
+    def is_auth(self) -> bool:
+        """
+        Check if this is an auth parameter
+        """
+        return self.name == 'Authorization' and self.in_ == 'header'
+
 
 class OARequestBody(OABaseModel):
     description: Optional[str] = None
@@ -179,7 +186,9 @@ class OASchemaProperty(OABaseModel):
         """
         either the full description or the description without the enum value documentation
         """
-        return self.enum_description or ''
+        if self.enum:
+            return self.enum_description or ''
+        return self.description or ''
 
     @staticmethod
     def _obj_ref(plist: Optional[list['OASchemaProperty']]) -> Optional[str]:
