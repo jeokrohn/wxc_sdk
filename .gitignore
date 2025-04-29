@@ -172,3 +172,5 @@ cython_debug/
 /examples/queues.txt
 /examples/add_numbers.har
 /examples/add_numbers.csv
+/examples/ocp_pattern.har
+/examples/ocp_pattern.txt

@@ -466,6 +466,49 @@ Source: |add_numbers.py|_
 .. literalinclude:: ../../examples/add_numbers.py
     :linenos:
 
+Bulk add outgoing call permission patterns to locations
+-------------------------------------------------------
+
+Bulk add outgoing call permission patterns to locations
+
+.. code-block:: text
+
+    usage: ocp_pattern.py [-h] [--token TOKEN] [--dry-run] [--verbose] [--log-file LOG_FILE]
+                          location patterns
+
+    Provision OCP patterns for one or all locations
+
+    positional arguments:
+      location             Location to provision OCP patterns for. Use "all" to provision for
+                           all locations
+      patterns             File with patterns to provision. File has one pattern per line. Use
+                           "remove" to remove all patterns previously provisioned by the
+                           script
+
+    optional arguments:
+      -h, --help           show this help message and exit
+      --token TOKEN        Access token can be provided using --token argument, set in
+                           WEBEX_ACCESS_TOKEN environment variable or can be a service app
+                           token. For the latter set environment variables
+                           ('SERVICE_APP_REFRESH_TOKEN', 'SERVICE_APP_CLIENT_ID',
+                           'SERVICE_APP_CLIENT_SECRET'). Environment variables can also be set
+                           in ocp_pattern.env
+      --dry-run            Dry run, do not provision anything
+      --verbose            Print debug information
+      --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
+
+    Example: ocp_pattern.py all ocp_pattern.txt --log-file ocp_pattern.har --dry-run
+
+Source: |ocp_pattern.py|_
+
+.. |ocp_pattern.py| replace:: ``ocp_pattern.py``
+
+.. literalinclude:: ../../examples/ocp_pattern.py
+    :linenos:
+
+
+
+
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _"Integrations" page on developer.cisco.com: https://developer.webex.com/docs/integrations
 
@@ -488,6 +531,7 @@ Source: |add_numbers.py|_
 .. _access_codes.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/access_codes.py
 .. _queue_agents.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_agents.py
 .. _add_numbers.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/add_numbers.py
+.. _ocp_pattern.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/ocp_pattern.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
