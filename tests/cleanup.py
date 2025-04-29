@@ -27,6 +27,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.callqueue import CallQueue
+from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.workspaces import CallingType
 
 TO_DELETE = re.compile(
@@ -413,7 +414,7 @@ async def main():
             # remove ocp test patterns from all users
             users = list(api.people.list())
 
-            async def remove_ocp_patterns(user: Person):
+            async def remove_ocp_patterns_user(user: Person):
                 try:
                     dpapi = as_api.person_settings.permissions_out.digit_patterns
                     response = await dpapi.get_digit_patterns(user.person_id)
@@ -421,15 +422,37 @@ async def main():
                     patterns_to_delete: list[DigitPattern] = list(filtered(patterns))
                     if not patterns_to_delete:
                         return
-                    print(f'Removing {len(patterns_to_delete)} patterns for {user.display_name}')
+                    print(f'Removing {len(patterns_to_delete)} patterns for user {user.display_name}')
                     await asyncio.gather(*[dpapi.delete(user.person_id, digit_pattern_id=pattern.id)
                                            for pattern in patterns_to_delete],
                                          return_exceptions=True)
                 except Exception as e:
-                    print(f'Error removing patterns for {user.display_name}: {e}')
+                    print(f'Error removing patterns for user {user.display_name}: {e}')
 
-            await asyncio.gather(*[remove_ocp_patterns(user)
+            await asyncio.gather(*[remove_ocp_patterns_user(user)
                                    for user in users],
+                                 return_exceptions=True)
+
+            # remove ocp test patterns from all locations
+            locations = list(api.telephony.location.list())
+
+            async def remove_ocp_patterns_location(location: TelephonyLocation):
+                try:
+                    dpapi = as_api.telephony.permissions_out.digit_patterns
+                    response = await dpapi.get_digit_patterns(location.location_id)
+                    patterns: list[DigitPattern] = response.digit_patterns
+                    patterns_to_delete: list[DigitPattern] = list(filtered(patterns))
+                    if not patterns_to_delete:
+                        return
+                    print(f'Removing {len(patterns_to_delete)} patterns for location {location.name}')
+                    await asyncio.gather(*[dpapi.delete(location.location_id, digit_pattern_id=pattern.id)
+                                           for pattern in patterns_to_delete],
+                                         return_exceptions=True)
+                except Exception as e:
+                    print(f'Error removing patterns for location {location.name}: {e}')
+
+            await asyncio.gather(*[remove_ocp_patterns_location(loc)
+                                   for loc in locations],
                                  return_exceptions=True)
         # async with AsWebexSimpleApi(tokens=tokens)
     # with HarWriter
