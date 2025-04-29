@@ -77,6 +77,8 @@ class TelephonyLocation(ApiModel):
     #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
     #: include a P-Charge-Info header with the selected number in the SIP INVITE.
     charge_number: Optional[str] = None
+    #: True if E911 setup is required.
+    e911_setup_required: Optional[bool] = None
     #: Indicates whether the location's chargeNumber (if set) is enabled for use as the P-Charge-Info header in the
     #: SIP INVITE for all PSTN calls placed from this location. The field is returned as true if the location's PSTN
     #: allows use of the chargeNumber.
