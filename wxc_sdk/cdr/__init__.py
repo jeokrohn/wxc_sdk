@@ -465,6 +465,45 @@ class CDR(ApiModel):
     #: Represents an immutable Cisco defined UUID attribute for a PSTN provider, which uniquely identifies the entity
     #: that has provided PSTN in that country.
     pstn_provider_id: Optional[str] = None
+    external_customer_id: Optional[str] = None
+    #: Whenever call is redirected one or more times, this field indicates the unique identifier of the last
+    #: redirecting party user or service (that is, accountable for) this CDR. This field holds the value of the UUID
+    #: contained in the Cisco Common Identity associated with a user or service.
+    redirecting_party_uuid: Optional[str] = None
+    #: Indicates the public IP address of the device or application making a call in India locations.
+    public_calling_ip_address: Optional[str] = None
+    #: Indicates the public IP address of the terminating device or application in India locations.
+    public_called_ip_address: Optional[str] = None
+    #: Displays the calling party’s presentation number based on the caller id setting from the control hub. It could
+    #: be a direct line/extension, location number, custom option from an organization.
+    caller_id_number: Optional[str] = None
+    #: It's only set when the Control Hub External caller ID phone number setting is either location number or any
+    #: other number from an organization . Also, it is not set when the Direct line/Ext options has been selected.
+    external_caller_id_number: Optional[str] = None
+    #: When calls are made using multi-line or shared line options, it represents the unique identifier of the device
+    #: owner (that is, accountable for). This field holds the value of the UUID contained in the Cisco Common Identity
+    #: associated with a user.
+    #:
+    #: Example: If Alice has a device assigned, where multiline is configured or Bob and makes/receives a call from
+    #: Bob's line, then Bob's CDR for the call will have Alice UUID as the device owner.
+    device_owner_uuid: Optional[str] = None
+    #: Call recording platform name and the recording platform can be "DubberRecorder", "Webex" or "Unknown" if the
+    #: call recording Platform Name could not be fetched. Other supported vendors include Eleveo, ASCTech, MiaRec,
+    #: and Imagicle.
+    call_recording_platform_name: Optional[str] = None
+    #: The status of the recorded media can be
+    #:
+    #: * successful
+    #: * failed
+    #: * successful but not kept
+    call_recording_result: Optional[str] = None
+    #: This field indicates the user's recording mode for this call. The values for this field are:
+    #:
+    #: * always
+    #: * always-pause-resume
+    #: * on-demand
+    #: * on-demand-user-start
+    call_recording_trigger: Optional[str] = None
 
 
 @dataclass(init=False, repr=False)
