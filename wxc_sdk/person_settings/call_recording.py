@@ -85,18 +85,18 @@ class PostCallRecordingSettings(ApiModel):
 
 class CallRecordingSetting(ApiModel):
     #: true if call recording is enabled.
-    enabled: bool
+    enabled: Optional[bool] = None
     #: Specified under which scenarios calls will be recorded.
-    record: Record
+    record: Optional[Record] = None
     #: When true, voicemail messages are also recorded.
-    record_voicemail_enabled: bool
+    record_voicemail_enabled: Optional[bool] = None
     #: When enabled, an announcement is played when call recording starts and an announcement is played when call
     #: recording ends.
-    start_stop_announcement_enabled: bool
+    start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
-    notification: Notification
+    notification: Optional[Notification] = None
     #: Beep sound plays periodically.
-    repeat: NotificationRepeat
+    repeat: Optional[NotificationRepeat] = None
     #: Name of the service provider providing call recording service.
     service_provider: Optional[str] = None
     #: Group utilized by the service provider providing call recording service

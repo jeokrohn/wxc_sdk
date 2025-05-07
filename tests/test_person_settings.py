@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import json
 import os.path
 import random
 import uuid
@@ -18,7 +19,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming
-from wxc_sdk.person_settings.call_recording import CallRecordingSetting
+from wxc_sdk.person_settings.call_recording import CallRecordingSetting, Record, CallRecordingAccessSettings
 from wxc_sdk.person_settings.caller_id import CallerIdSelectedType, CallerId, ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.preferred_answer import PreferredAnswerResponse, PreferredAnswerEndpointType, \
     PreferredAnswerEndpoint
@@ -68,6 +69,10 @@ class TestRead(TestCaseWithUsers):
             if isinstance(result, Exception):
                 continue
             result: CallRecordingSetting
+            print(f'{user.display_name}')
+            print('\n'.join(f'  {l}'
+                            for l in json.dumps(result.model_dump(mode='json', exclude_unset=True, by_alias=True),
+                                                indent=2).splitlines()))
             if result.call_recording_access_settings:
                 print(
                     f'{user.display_name} has call recording access settings: {result.call_recording_access_settings}')
@@ -383,6 +388,27 @@ class TestConfigure(TestCaseWithUsers):
             self.assertTrue(validate(apps=app_settings_after, preferred=preferred_answer_after))
         finally:
             ps_api.appservices.configure(person_id=target_user.person_id, settings=app_settings)
+
+    @async_test
+    async def test_recording_001_enable_for_all_users(self):
+        setting = CallRecordingSetting(enabled=True,
+                                       record=Record.always,
+                                       record_voicemail_enabled=True,
+                                       call_recording_access_settings=CallRecordingAccessSettings(
+                                           view_and_play_recordings_enabled=True, download_recordings_enabled=True,
+                                           delete_recordings_enabled=True, share_recordings_enabled=True))
+        results = await asyncio.gather(
+            *[self.async_api.person_settings.call_recording.configure(user.person_id,
+                                                                     setting)
+              for user in self.users])
+
+    @async_test
+    async def test_recording_002_disable_for_all_users(self):
+        setting = CallRecordingSetting(enabled=False)
+        results = await asyncio.gather(
+            *[self.async_api.person_settings.call_recording.configure(user.person_id,
+                                                                      setting)
+              for user in self.users])
 
 
 class TestCallerIdConfigure(TestCaseWithUsers):
