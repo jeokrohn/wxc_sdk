@@ -37,91 +37,15 @@ from contextlib import contextmanager
 from itertools import chain
 from typing import Optional
 
-import yaml
 from dotenv import load_dotenv
 
+from examples.service_app import SERVICE_APP_ENVS, env_path, get_tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.har_writer import HarWriter
-from wxc_sdk.integration import Integration
 from wxc_sdk.tokens import Tokens
 
 BATCH_SIZE = 10
-SERVICE_APP_ENVS = ('SERVICE_APP_REFRESH_TOKEN', 'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET')
-
-
-def yml_path() -> str:
-    """
-    Get filename for YML file to cache access and refresh token
-    """
-    return f'{os.path.splitext(os.path.basename(__file__))[0]}.yml'
-
-
-def env_path() -> str:
-    """
-    Get path to .env file to read service app settings from
-    """
-    return f'{os.path.splitext(os.path.basename(__file__))[0]}.env'
-
-
-def read_tokens_from_file() -> Optional[Tokens]:
-    """
-    Get service app tokens from cache file, return None if cache does not exist or read fails
-    """
-    path = yml_path()
-    if not os.path.isfile(path):
-        return None
-    try:
-        with open(path, mode='r') as f:
-            data = yaml.safe_load(f)
-        tokens = Tokens.model_validate(data)
-    except Exception:
-        return None
-    return tokens
-
-
-def write_tokens_to_file(tokens: Tokens):
-    """
-    Write tokens to cache
-    """
-    with open(yml_path(), mode='w') as f:
-        yaml.safe_dump(tokens.model_dump(exclude_none=True), f)
-
-
-def get_access_token() -> Tokens:
-    """
-    Get a new access token using refresh token, service app client id, service app client secret
-    """
-    load_dotenv(env_path())
-    refresh, client_id, client_secret = (os.getenv(env) for env in SERVICE_APP_ENVS)
-    if not all((refresh, client_id, client_secret)):
-        print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '
-              f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
-              f'variables can '
-              f'also be set in {env_path()}', file=sys.stderr)
-        exit(1)
-
-    tokens = Tokens(refresh_token=refresh)
-    integration = Integration(client_id=client_id,
-                              client_secret=client_secret,
-                              scopes=[], redirect_url=None)
-    integration.refresh(tokens=tokens)
-    write_tokens_to_file(tokens)
-    return tokens
-
-
-def get_tokens() -> Optional[Tokens]:
-    """
-    Get tokens from cache or create new access token using service app credentials
-    """
-    # try to read from file
-    tokens = read_tokens_from_file()
-    # .. or create new access token using refresh token
-    if tokens is None:
-        tokens = get_access_token()
-    if tokens.remaining < 24 * 60 * 60:
-        tokens = get_access_token()
-    return tokens
 
 
 @contextmanager
@@ -265,8 +189,16 @@ async def add_numbers():
                                         f'variables can also be set in {env_path()}')
     parser.add_argument('--inactive', action='store_true', help='Add TNs as inactive')
     args = parser.parse_args()
-    token = args.token or os.getenv('WEBEX_ACCESS_TOKEN') or get_tokens().access_token
-    async with AsWebexSimpleApi(tokens=token) as api:
+    load_dotenv(env_path())
+    tokens = get_tokens() if args.token is None else Tokens(access_token=args.token)
+    if tokens is None:
+        print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '
+              f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
+              f'variables can '
+              f'also be set in {env_path()}', file=sys.stderr)
+        exit(1)
+
+    async with AsWebexSimpleApi(tokens=tokens) as api:
         with setup_logging(args, api):
             # validate the access token
             try:
