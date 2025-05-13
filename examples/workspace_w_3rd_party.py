@@ -90,6 +90,7 @@ class CSVRow:
     extension: str
     mac_address: str
     password: str
+    workspace: Workspace = field(default=None, init=False)
     calling_license_id: str = field(default=None, init=False)
     location: TelephonyLocation = field(default=None, init=False)
     outbound_proxy: str = field(default=None, init=False)
@@ -202,10 +203,13 @@ async def generate_passwords(*, api: AsWebexSimpleApi, location: TelephonyLocati
     return []
 
 
-async def validate_locations_and_extensions(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow]) -> ValidationResult:
+async def validate_locations_and_extensions(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow],
+                                            cleanup: bool) -> ValidationResult:
     """
     Locations must exist and extensions must be unique
     """
+    if cleanup:
+        return []
     locations = {location.name: location
                  for location in await api.telephony.locations.list()}
     errors = []
@@ -307,10 +311,13 @@ async def mac_addresses_available(*, api: AsWebexSimpleApi, csv_rows: list[CSVRo
     return errors
 
 
-async def validate_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow]) -> ValidationResult:
+async def validate_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow],
+                                 cleanup: bool) -> ValidationResult:
     """
     mac addresses must be unique and available
     """
+    if cleanup:
+        return []
     mac_addresses = set()
     errors = []
     # check if provided MAC addresses are unique
@@ -326,12 +333,20 @@ async def validate_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow
     return errors
 
 
-async def validate_workspaces_and_licenses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow]) -> ValidationResult:
+async def validate_workspaces_and_licenses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow],
+                                           cleanup: bool) -> ValidationResult:
     """
     Workspaces should not exist, also get license for new workspaces
     """
-    workspace_list, licenses = await asyncio.gather(api.workspaces.list(),
-                                                    api.licenses.list())
+    tasks = [api.workspaces.list()]
+    if not cleanup:
+        tasks.append(api.licenses.list())
+    results = await asyncio.gather(*tasks)
+    workspace_list = results[0]
+    if cleanup:
+        licenses = []
+    else:
+        licenses = results[1]
     workspace_list: list[Workspace]
     licenses: list[License]
     workspaces = {ws.display_name: ws
@@ -356,9 +371,14 @@ async def validate_workspaces_and_licenses(*, api: AsWebexSimpleApi, csv_rows: l
     for row_index, csv_row in enumerate(csv_rows, 1):
         # check if workspace exists
         ws = workspaces.get(csv_row.workspace_name)
+        csv_row.workspace = ws
+        if cleanup:
+            if not ws:
+                errors.append((row_index, f'Workspace "{csv_row.workspace_name}" does not exist'))
+            continue
         if ws:
             errors.append((row_index, f'Workspace "{csv_row.workspace_name}" already exists'))
-            continue
+        # get a license for the workspace
         try:
             license_id = next(license_id_gen)
         except StopIteration:
@@ -368,7 +388,7 @@ async def validate_workspaces_and_licenses(*, api: AsWebexSimpleApi, csv_rows: l
     return errors
 
 
-async def validate_and_prepare(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow]) -> None:
+async def validate_and_prepare(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow], cleanup: bool) -> None:
     """
     validate csv and prepare for provisioning
         * location exists
@@ -377,9 +397,9 @@ async def validate_and_prepare(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow])
         * workspace names are unique
         * no devices in the workspace
     """
-    results = await asyncio.gather(validate_locations_and_extensions(api=api, csv_rows=csv_rows),
-                                   validate_mac_addresses(api=api, csv_rows=csv_rows),
-                                   validate_workspaces_and_licenses(api=api, csv_rows=csv_rows))
+    results = await asyncio.gather(validate_locations_and_extensions(api=api, csv_rows=csv_rows, cleanup=cleanup),
+                                   validate_mac_addresses(api=api, csv_rows=csv_rows, cleanup=cleanup),
+                                   validate_workspaces_and_licenses(api=api, csv_rows=csv_rows, cleanup=cleanup))
     errors = list(chain.from_iterable(results))
     errors: ValidationResult
     errors.sort(key=lambda x: x[0])
@@ -389,6 +409,24 @@ async def validate_and_prepare(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow])
             print(f'Row {row_index}: {error}', file=sys.stderr)
         exit(1)
     return
+
+
+async def delete_workspaces(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow], dry_run: bool) -> None:
+    """
+    cleanup: delete workspaces
+    """
+
+    async def delete_one_workspace(workspace: Workspace) -> None:
+        if dry_run:
+            print(f'Delete workspace "{workspace.display_name}"')
+        else:
+            await api.workspaces.delete_workspace(workspace_id=workspace.workspace_id)
+            print(f'Deleted workspace "{workspace.display_name}"')
+        return
+
+    await asyncio.gather(*[delete_one_workspace(csv_row.workspace)
+                           for csv_row in csv_rows
+                           if csv_row.workspace])
 
 
 async def provision_row(*, api: AsWebexSimpleApi, csv_row: CSVRow) -> None:
@@ -432,22 +470,26 @@ def main():
         async with AsWebexSimpleApi(tokens=tokens) as api:
             with setup_logging(args, api):
                 # validation and preparation for provisioning
-                await validate_and_prepare(api=api, csv_rows=csv_rows)
+                await validate_and_prepare(api=api, csv_rows=csv_rows, cleanup=args.cleanup)
                 if args.dry_run:
                     print('Dry run, not provisioning anything')
                     return
-                await asyncio.gather(*[provision_row(api=api, csv_row=csv_row)
-                                       for csv_row in csv_rows])
+                if args.cleanup:
+                    await delete_workspaces(api=api, csv_rows=csv_rows, dry_run=args.dry_run)
+                else:
+                    await asyncio.gather(*[provision_row(api=api, csv_row=csv_row)
+                                           for csv_row in csv_rows])
                 # write output
-                with open(args.output, 'w', newline='') as output:
-                    writer = csv.writer(output)
-                    writer.writerow(['workspace_name', 'location_name', 'extension', 'mac_address',
-                                     'password', 'outbound_proxy', 'sip_user_name', 'line_port'])
-                    for csv_row in csv_rows:
-                        writer.writerow([csv_row.workspace_name, csv_row.location_name,
-                                         csv_row.extension, csv_row.mac_address,
-                                         csv_row.password, csv_row.outbound_proxy,
-                                         csv_row.sip_user_name, csv_row.line_port])
+                if args.output:
+                    with open(args.output, 'w', newline='') as output:
+                        writer = csv.writer(output)
+                        writer.writerow(['workspace_name', 'location_name', 'extension', 'mac_address',
+                                         'password', 'outbound_proxy', 'sip_user_name', 'line_port'])
+                        for csv_row in csv_rows:
+                            writer.writerow([csv_row.workspace_name, csv_row.location_name,
+                                             csv_row.extension, csv_row.mac_address,
+                                             csv_row.password, csv_row.outbound_proxy,
+                                             csv_row.sip_user_name, csv_row.line_port])
                     # for
                 # with open
             # with setup_logging
@@ -473,9 +515,10 @@ def main():
                              f'variables can also be set in {env_path()}')
     parser.add_argument('--dry-run', action='store_true', help='Dry run, do not provision anything')
     parser.add_argument('--log-file', help='Log file. If extension is .har, log in HAR format')
+    parser.add_argument('--cleanup', action='store_true', help='remove workspaces')
     args = parser.parse_args()
-    if not args.output and not args.dry_run:
-        parser.error('Output file is required if not dry-run mode')
+    if not any((args.output, args.dry_run, args.cleanup)):
+        parser.error('Output file is required if not dry-run cleanup mode')
     csv_file = args.csv
     if not os.path.isfile(csv_file):
         print(f'File {csv_file} does not exist', file=sys.stderr)
