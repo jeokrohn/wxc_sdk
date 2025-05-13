@@ -472,14 +472,15 @@ def main():
             with setup_logging(args, api):
                 # validation and preparation for provisioning
                 await validate_and_prepare(api=api, csv_rows=csv_rows, cleanup=args.cleanup)
+                if args.cleanup:
+                    await delete_workspaces(api=api, csv_rows=csv_rows, dry_run=args.dry_run)
+                    return
+
                 if args.dry_run:
                     print('Dry run, not provisioning anything')
                     return
-                if args.cleanup:
-                    await delete_workspaces(api=api, csv_rows=csv_rows, dry_run=args.dry_run)
-                else:
-                    await asyncio.gather(*[provision_row(api=api, csv_row=csv_row)
-                                           for csv_row in csv_rows])
+                await asyncio.gather(*[provision_row(api=api, csv_row=csv_row)
+                                       for csv_row in csv_rows])
                 # write output
                 if args.output:
                     with open(args.output, 'w', newline='') as output:
