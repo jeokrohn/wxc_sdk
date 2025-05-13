@@ -191,12 +191,13 @@ async def generate_passwords(*, api: AsWebexSimpleApi, location: TelephonyLocati
     Generate random passwords for rows without a password
     """
     new_passwords = await asyncio.gather(*[api.telephony.location.generate_password(location_id=location.location_id)
-                                           for _, csv_row in indexed_rows])
+                                           for _, csv_row in indexed_rows
+                                           if not csv_row.password])
 
     for row_index, csv_row in indexed_rows:
         if not csv_row.password:
             # generate new password
-            csv_row.password = new_passwords.pop()
+            csv_row.password = new_passwords.pop(0)
             print(f'Row {row_index}: Generated new password "{csv_row.password}"')
     return []
 
