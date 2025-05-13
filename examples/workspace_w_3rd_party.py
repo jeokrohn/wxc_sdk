@@ -18,21 +18,21 @@ The output is a CSV file with the following columns:
     * line/port
 
 usage: workspace_w_3rd_party.py [-h] [--token TOKEN] [--dry-run]
-                               [--log-file LOG_FILE]
-                               csv [output]
+                                [--log-file LOG_FILE]
+                                csv [output]
 
 Provision workspaces with 3rd party devices.
 
 positional arguments:
   csv                  CSV with workspaces to provision. CSV has the
-                       following columns: * workspace name: if workspace
-                       doesn't exist a new workspace will be created *
-                       location name: must be an existing location *
-                       extension (optional); if missing a new extension
-                       will be generated starting at 2000 * MAC address;
-                       if empty a new (dummy) MAC address will be
-                       generated as DEAD-DEAD-XXXX * password (optional);
-                       if missing a new (random password will be generated
+                       following columns: * workspace name: the workspace
+                       will be created * location name: must be an
+                       existing location * extension (optional); if
+                       missing a new extension will be generated starting
+                       at 2000 * MAC address; if empty a new (dummy) MAC
+                       address will be generated as DEAD-DEAD-XXXX *
+                       password (optional); if missing a new (random
+                       password will be generated
   output               Output CSV with the provisioning results. Not
                        required in dry-run mode
 
@@ -45,7 +45,7 @@ optional arguments:
                        ('SERVICE_APP_REFRESH_TOKEN',
                        'SERVICE_APP_CLIENT_ID',
                        'SERVICE_APP_CLIENT_SECRET'). Environment variables
-                       can also be set in workspace_w_3rdparty.env
+                       can also be set in workspace_w_3rd_party.env
   --dry-run            Dry run, do not provision anything
   --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
 
@@ -458,7 +458,7 @@ def main():
         description="Provision workspaces with 3rd party devices.",
         epilog='Example: %(prog)s input.csv output.csv --log-file log.har')
     parser.add_argument('csv', type=str, help="""CSV with workspaces to provision. CSV has the following columns:
-    * workspace name: if workspace doesn't exist a new workspace will be created
+    * workspace name: the workspace will be created
     * location name: must be an existing location
     * extension (optional); if missing a new extension will be generated starting at 2000
     * MAC address; if empty a new (dummy) MAC address will be generated as DEAD-DEAD-XXXX
