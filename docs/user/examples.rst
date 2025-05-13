@@ -515,7 +515,7 @@ Bulk provisioning of 3rd party devices in Workspaces
 .. code-block:: text
 
     usage: workspace_w_3rd_party.py [-h] [--token TOKEN] [--dry-run]
-                                    [--log-file LOG_FILE]
+                                    [--log-file LOG_FILE] [--cleanup]
                                     csv [output]
 
     Provision workspaces with 3rd party devices.
@@ -545,6 +545,7 @@ Bulk provisioning of 3rd party devices in Workspaces
                            can also be set in workspace_w_3rd_party.env
       --dry-run            Dry run, do not provision anything
       --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
+      --cleanup            remove workspaces
 
     Example: workspace_w_3rd_party.py input.csv output.csv --log-file log.har
 
