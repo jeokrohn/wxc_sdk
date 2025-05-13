@@ -507,6 +507,53 @@ Source: |ocp_pattern.py|_
     :linenos:
 
 
+Bulk provisioning of 3rd party devices in Workspaces
+----------------------------------------------------
+
+Bulk provisioning of 3rd party devices in Workspaces
+
+.. code-block:: text
+
+    usage: workspace_w_3rd_party.py [-h] [--token TOKEN] [--dry-run]
+                                   [--log-file LOG_FILE]
+                                   csv [output]
+
+    Provision workspaces with 3rd party devices.
+
+    positional arguments:
+      csv                  CSV with workspaces to provision. CSV has the
+                           following columns: * workspace name: if workspace
+                           doesn't exist a new workspace will be created *
+                           location name: must be an existing location *
+                           extension (optional); if missing a new extension
+                           will be generated starting at 2000 * MAC address;
+                           if empty a new (dummy) MAC address will be
+                           generated as DEAD-DEAD-XXXX * password (optional);
+                           if missing a new (random password will be generated
+      output               Output CSV with the provisioning results. Not
+                           required in dry-run mode
+
+    optional arguments:
+      -h, --help           show this help message and exit
+      --token TOKEN        Access token can be provided using --token
+                           argument, set in WEBEX_ACCESS_TOKEN environment
+                           variable or can be a service app token. For the
+                           latter set environment variables
+                           ('SERVICE_APP_REFRESH_TOKEN',
+                           'SERVICE_APP_CLIENT_ID',
+                           'SERVICE_APP_CLIENT_SECRET'). Environment variables
+                           can also be set in workspace_w_3rdparty.env
+      --dry-run            Dry run, do not provision anything
+      --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
+
+    Example: workspace_w_3rd_party.py input.csv output.csv --log-file log.har
+
+Source: |workspace_w_3rd_party.py|_
+
+.. |workspace_w_3rd_party.py| replace:: ``workspace_w_3rd_party.py``
+
+.. literalinclude:: ../../examples/workspace_w_3rd_party.py
+    :linenos:
 
 
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
@@ -532,6 +579,7 @@ Source: |ocp_pattern.py|_
 .. _queue_agents.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_agents.py
 .. _add_numbers.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/add_numbers.py
 .. _ocp_pattern.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/ocp_pattern.py
+.. _workspace_w_3rd_party.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/workspace_w_3rd_party.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps

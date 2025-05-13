@@ -174,3 +174,5 @@ cython_debug/
 /examples/add_numbers.csv
 /examples/ocp_pattern.har
 /examples/ocp_pattern.txt
+/examples/workspace_w_3rd_party*.csv
+/examples/*.har
