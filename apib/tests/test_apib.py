@@ -17,7 +17,8 @@ from unittest import TestCase, skip
 from pydantic import ValidationError, parse_obj_as, BaseModel, model_validator, TypeAdapter
 
 from apib.apib import *
-from apib.python_class import PythonClass, PythonClassRegistry
+from apib.python_class import PythonClass
+from apib.class_registry import PythonClassRegistry
 
 
 @dataclass(init=False, repr=False)

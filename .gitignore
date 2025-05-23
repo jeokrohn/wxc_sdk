@@ -170,6 +170,7 @@ cython_debug/
 /examples/agents.txt
 /examples/queue_agents.har
 /examples/queues.txt
+/script/oas2py.env
 /examples/add_numbers.har
 /examples/add_numbers.csv
 /examples/ocp_pattern.har

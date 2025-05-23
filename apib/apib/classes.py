@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 class ApibModel(BaseModel):
     class Config:
-        extra = Extra.forbid
+        extra = 'forbid'
 
 
 ApibKeyValue = Any
@@ -409,7 +409,7 @@ class ApibEnumElement(ApibString, WithTypeAttributes, override_element_type_for=
     """
 
     class Config:
-        extra = Extra.allow
+        extra = 'allow'
         # TODO: check for extra fields?? 'samples' seems to be a candidate
 
     @model_validator(mode='before')

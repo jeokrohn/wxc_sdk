@@ -5,7 +5,8 @@ from itertools import chain
 from typing import NamedTuple
 
 from apib.apib import read_api_blueprint, ApibParseResult
-from apib.python_class import PythonClassRegistry, Endpoint
+from apib.python_class import Endpoint
+from apib.class_registry import PythonClassRegistry
 from apib.tools import break_line
 
 PREAMBLE = """from collections.abc import Generator
@@ -36,8 +37,9 @@ class CodeGenerator:
     #: Dictionary of parsed APIB files. Indexed by basename of APIB file w/o suffix
     parsed_blueprints: dict[str, ApibParseResult]
 
-    def __init__(self, with_unreferenced_classes: bool = False):
-        self.class_registry = PythonClassRegistry()
+    def __init__(self, with_unreferenced_classes: bool = False, class_registry = None):
+        class_registry= class_registry or PythonClassRegistry()
+        self.class_registry = class_registry
         self.parsed_blueprints = dict()
         self.with_unreferenced_classes = with_unreferenced_classes
 
@@ -63,7 +65,7 @@ class CodeGenerator:
         """
         Generator of endpoints defined in the APIB
         """
-        return self.class_registry.endpoints()
+        yield from self.class_registry.endpoints()
 
     def source(self, with_example: bool = True) -> str:
         """
