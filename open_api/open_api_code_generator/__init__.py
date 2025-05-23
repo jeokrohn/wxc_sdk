@@ -12,13 +12,12 @@ class OACodeGenerator(CodeGenerator):
     """
     class_registry = OpenApiPythonClassRegistry
 
-    def __init__(self, with_unreferenced_classes: bool = False, class_registry = None):
-        class_registry= class_registry or OpenApiPythonClassRegistry()
+    def __init__(self, with_unreferenced_classes: bool = False, class_registry=None):
+        class_registry = class_registry or OpenApiPythonClassRegistry()
         super().__init__(with_unreferenced_classes=with_unreferenced_classes, class_registry=class_registry)
 
     def add_open_api_spec(self, spec_info: OpenApiSpecInfo):
         self.class_registry.add_open_api(spec_info)
-
 
     def add_open_api_spec_from_path(self, spec_path: str):
         spec_info = OpenApiSpecInfo.from_spec_json_path(spec_path)
