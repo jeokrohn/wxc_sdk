@@ -170,17 +170,21 @@ def main():
                   file=f)
         return
 
-    err = False
+    failed_oas_files = []
     for oas_file in oas_files:
         print(f'Conversion of "{oas_file}"')
         try:
             convert_one_oas(oas_file)
         except Exception:
-            err = True
+            failed_oas_files.append(oas_file)
             print(f'Conversion of "{oas_file}" failed:',
                   file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
-    if err:
+    if failed_oas_files:
+        print('\n' * 2, file=sys.stderr)
+        print(f'Conversion of {len(failed_oas_files)} OAS files failed:', file=sys.stderr)
+        for failed_file in failed_oas_files:
+            print(f'  {failed_file}', file=sys.stderr)
         exit(1)
     exit(0)
 
