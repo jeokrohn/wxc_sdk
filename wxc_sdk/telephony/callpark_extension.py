@@ -64,9 +64,18 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
         :param params: additional parameters
         :return: yields :class:`wxc_sdk.common.CallParkExtension` instances
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if extension is not None:
+            params['extension'] = extension
+        if location_name is not None:
+            params['locationName'] = location_name
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallParkExtension, params=params)
@@ -100,13 +109,17 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
 
     def create(self, location_id: str, name: str, extension: str, org_id: str = None, ) -> str:
         """
+        Create a Call Park Extension
+
         Create new Call Park Extensions for the given location.
+
         Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
         Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
         monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
         line key.
-        Creating a call park extension requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+
+        Creating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Create the call park extension for this location.
         :type location_id: str
@@ -130,13 +143,17 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
 
     def delete(self, location_id: str, cpe_id: str, org_id: str = None):
         """
+        Delete a Call Park Extension
+
         Delete the designated Call Park Extension.
+
         Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
         Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
         monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
         line key.
-        Deleting a call park extension requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+
+        Deleting a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Location from which to delete a call park extension.
         :type location_id: str
@@ -155,13 +172,17 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
 
     def update(self, location_id: str, cpe_id: str, name: str = None, extension: str = None, org_id: str = None):
         """
+        Update a Call Park Extension
+
         Update the designated Call Park Extension.
+
         Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
         Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
         monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
         line key.
-        Updating a call park extension requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+
+        Updating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call park extension exists.
         :type location_id: str
