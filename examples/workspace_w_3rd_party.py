@@ -521,6 +521,8 @@ def main():
     args = parser.parse_args()
     if not any((args.output, args.dry_run, args.cleanup)):
         parser.error('Output file is required if not dry-run cleanup mode')
+    if args.output and (args.dry_run or args.cleanup):
+        parser.error('Output file is not used in dry-run cleanup mode')
     csv_file = args.csv
     if not os.path.isfile(csv_file):
         print(f'File {csv_file} does not exist', file=sys.stderr)
