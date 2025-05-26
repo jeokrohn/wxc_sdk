@@ -176,13 +176,16 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
 
     def usage(self, rg_id: str, org_id: str = None) -> RouteGroupUsage:
         """
+        Read the Usage of a Routing Group
+
         List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
-        specific Route Group. Users within Call to Extension locations are registered to a PBX which allows you to
-        route unknown extensions (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route
-        Group. PSTN Connections may be cisco PSTN, cloud-connected PSTN, or premises-based PSTN (local gateway).
-        Dial Plans allow you to route calls to on-premises extensions via your trunk or route group. Route Lists are
-        a list of numbers that can be reached via a route group. It can be used to provide cloud PSTN connectivity to
-        Webex Calling Dedicated Instance.
+        specific Route Group.
+        Users within Call to Extension locations are registered to a PBX which allows you to route unknown extensions
+        (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route Group.
+        PSTN Connections may be a Cisco PSTN, a cloud-connected PSTN, or a premises-based PSTN (local gateway).
+        Dial Plans allow you to route calls to on-premises extensions via your trunk or route group.
+        Route Lists are a list of numbers that can be reached via a route group and can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
 
         Retrieving usage information requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
@@ -199,7 +202,8 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         data = self.get(url=url, params=params)
         return RouteGroupUsage.model_validate(data)
 
-    def usage_call_to_extension(self, rg_id: str, org_id: str = None, **params) -> Generator[IdAndName, None, None]:
+    def usage_call_to_extension(self, rg_id: str, location_name: str = None, order: str = None,
+                                org_id: str = None, **params) -> Generator[IdAndName, None, None]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
@@ -209,17 +213,26 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_dial_plan(self, rg_id: str, org_id: str = None, **params) -> Generator[IdAndName, None, None]:
+    def usage_dial_plan(self, rg_id: str, location_name: str = None, order: str = None,
+                        org_id: str = None, **params) -> Generator[IdAndName, None, None]:
         """
         List Dial Plan Locations for a specific route group.
 
@@ -232,17 +245,26 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_location_pstn(self, rg_id: str, org_id: str = None, **params) -> Generator[IdAndName, None, None]:
+    def usage_location_pstn(self, rg_id: str, location_name: str = None,
+                            order: str = None, org_id: str = None, **params) -> Generator[IdAndName, None, None]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -251,31 +273,50 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_route_lists(self, rg_id: str, org_id: str = None, **params) -> Generator[UsageRouteLists, None, None]:
+    def usage_route_lists(self, rg_id: str, name: str = None, order: str = None, org_id: str = None,
+                          **params) -> Generator[UsageRouteLists, None, None]:
         """
-        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a
-        Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+        Read the Route Lists of a Routing Group
 
-        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
+        Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+
+        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param rg_id: Route group requested for information.
+        :param name: Return the list of locations matching the location name.
+        :type name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageRouteList')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)

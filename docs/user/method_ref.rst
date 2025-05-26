@@ -1372,7 +1372,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.prem_pstn.route_group.update <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.update>`
         Modifies an existing Route Group for an organization based on id
    * - :meth:`api.telephony.prem_pstn.route_group.usage <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage>`
-        List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
+        Read the Usage of a Routing Group
    * - :meth:`api.telephony.prem_pstn.route_group.usage_call_to_extension <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_call_to_extension>`
         List "Call to" on-premises Extension Locations for a specific route group
    * - :meth:`api.telephony.prem_pstn.route_group.usage_dial_plan <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_dial_plan>`
@@ -1380,7 +1380,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.prem_pstn.route_group.usage_location_pstn <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_location_pstn>`
         List PSTN Connection Locations for a specific route group
    * - :meth:`api.telephony.prem_pstn.route_group.usage_route_lists <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_route_lists>`
-        List Route Lists for a specific route group
+        Read the Route Lists of a Routing Group
    * - :meth:`api.telephony.prem_pstn.route_list.create <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.create>`
         Create a Route List for the organization
    * - :meth:`api.telephony.prem_pstn.route_list.delete_all_numbers <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.delete_all_numbers>`
@@ -1396,7 +1396,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.prem_pstn.route_list.update <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update>`
         Modify the details for a Route List
    * - :meth:`api.telephony.prem_pstn.route_list.update_numbers <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update_numbers>`
-        Modify numbers for a specific Route List of a Customer
+        Modify Numbers for Route List
    * - :meth:`api.telephony.prem_pstn.trunk.create <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.create>`
         Create a Trunk for the organization
    * - :meth:`api.telephony.prem_pstn.trunk.delete_trunk <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.delete_trunk>`

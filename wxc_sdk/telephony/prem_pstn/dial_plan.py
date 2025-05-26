@@ -2,7 +2,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional, List
 
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel, to_camel
@@ -244,11 +244,10 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         """
         url = self.ep(f'{dial_plan_id}/dialPatterns')
         params = org_id and {'orgId': org_id} or None
-
-        class Body(ApiModel):
-            dial_patterns: list[PatternAndAction]
-
-        body = Body(dial_patterns=dial_patterns).model_dump_json()
+        body = dict()
+        body['dialPatterns'] = TypeAdapter(list[PatternAndAction]).dump_python(dial_patterns, mode='json',
+                                                                               by_alias=True,
+                                                                               exclude_none=True)
         self.put(url=url, params=params, data=body)
 
     def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):
