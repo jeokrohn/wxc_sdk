@@ -8,6 +8,7 @@ Release history
 - fix: updated attributes for class :class:`TelephonyLocation <wxc_sdk.telephony.location.TelephonyLocation>`: removed e911_setup_required, charge_number_usage_enabled, carrier_account_id
 - feat: new attribute in :class:`DND settings <wxc_sdk.person_settings.dnd.DND>`: webex_go_override_enabled
 - feat: new :class:`CDR <wxc_sdk.cdr.CDR>` fields: external_customer_id, redirecting_party_uuid, public_calling_ip_address, public_called_ip_address, caller_id_number, external_caller_id_number, device_owner_uuid, call_recording_platform_name, call_recording_result, call_recording_trigger
+- feat: new API :attr:`api.telephony.virtual_extensions <wxc_sdk.telephony.TelephonyApi.virtual_extensions>`
 
 1.24.0
 ------

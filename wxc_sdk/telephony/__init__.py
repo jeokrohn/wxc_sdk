@@ -36,6 +36,7 @@ from .pnc import PrivateNetworkConnectApi
 from .prem_pstn import PremisePstnApi
 from .pstn import PSTNApi
 from .supervisor import SupervisorApi
+from .virtual_extensions import VirtualExtensionsApi
 from .virtual_line import VirtualLinesApi
 from .vm_rules import VoicemailRulesApi
 from .voice_messaging import VoiceMessagingApi
@@ -687,6 +688,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     pstn: PSTNApi
     schedules: ScheduleApi
     supervisors: SupervisorApi
+    virtual_extensions: VirtualExtensionsApi
     virtual_lines: VirtualLinesApi
     # location voicemail groups
     voicemail_groups: VoicemailGroupsApi
@@ -729,6 +731,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.pstn = PSTNApi(session=session)
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
         self.supervisors = SupervisorApi(session=session)
+        self.virtual_extensions = VirtualExtensionsApi(session=session)
         self.virtual_lines = VirtualLinesApi(session=session)
         self.voicemail_groups = VoicemailGroupsApi(session=session)
         self.voicemail_rules = VoicemailRulesApi(session=session)

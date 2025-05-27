@@ -1461,6 +1461,34 @@ The method name is a link to the method documentation.
         GET Supervisor Details
    * - :meth:`api.telephony.supervisors.list <wxc_sdk.telephony.supervisor.SupervisorApi.list>`
         Get List of Supervisors
+   * - :meth:`api.telephony.virtual_extensions.create_extension <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.create_extension>`
+        Create a Virtual Extension
+   * - :meth:`api.telephony.virtual_extensions.create_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.create_range>`
+        Create a Virtual Extension Range
+   * - :meth:`api.telephony.virtual_extensions.delete_extension <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.delete_extension>`
+        Delete a Virtual Extension
+   * - :meth:`api.telephony.virtual_extensions.delete_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.delete_range>`
+        Delete a Virtual Extension Range
+   * - :meth:`api.telephony.virtual_extensions.details_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.details_range>`
+        Get details of a Virtual Extension Range
+   * - :meth:`api.telephony.virtual_extensions.get_extension <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.get_extension>`
+        Get a Virtual Extension
+   * - :meth:`api.telephony.virtual_extensions.get_extension_settings <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.get_extension_settings>`
+        Get Virtual extension settings
+   * - :meth:`api.telephony.virtual_extensions.list_extensions <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.list_extensions>`
+        Read the List of Virtual Extensions
+   * - :meth:`api.telephony.virtual_extensions.list_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.list_range>`
+        Get a list of a Virtual Extension Range
+   * - :meth:`api.telephony.virtual_extensions.modify_extension_settings <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.modify_extension_settings>`
+        Modify Virtual Extension Settings
+   * - :meth:`api.telephony.virtual_extensions.modify_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.modify_range>`
+        Modify Virtual Extension Range
+   * - :meth:`api.telephony.virtual_extensions.update_extension <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.update_extension>`
+        Update a Virtual Extension
+   * - :meth:`api.telephony.virtual_extensions.validate_external_phone_number <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.validate_external_phone_number>`
+        Validate an external phone number
+   * - :meth:`api.telephony.virtual_extensions.validate_prefix_and_extension_pattern_for_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.validate_prefix_and_extension_pattern_for_range>`
+        Validate the prefix and extension pattern for a Virtual Extension Range
    * - :meth:`api.telephony.virtual_lines.assigned_devices <wxc_sdk.telephony.virtual_line.VirtualLinesApi.assigned_devices>`
         Get List of Devices assigned for a Virtual Line
    * - :meth:`api.telephony.virtual_lines.create <wxc_sdk.telephony.virtual_line.VirtualLinesApi.create>`

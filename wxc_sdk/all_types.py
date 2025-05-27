@@ -212,6 +212,10 @@ from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, Outboun
     ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
 from wxc_sdk.telephony.pstn import PSTNConnectionOption, PSTNServiceType, PSTNType
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction, SupervisorAgentStatus
+from wxc_sdk.telephony.virtual_extensions import ValidateVirtualExtensionRange, \
+    ValidateVirtualExtensionRangeStatus, VirtualExtension, VirtualExtensionLevel, VirtualExtensionMode, \
+    VirtualExtensionRange, VirtualExtensionRangeAction, VirtualExtensionRangeValidationResult, \
+    VirtualExtensionRangeValidationStatus
 from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices, VirtualLineLocation, \
     VirtualLineNumberPhoneNumber
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits, \
@@ -379,8 +383,11 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'UserLicenseType', 'UserLicensesResponse', 'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType',
            'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
            'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
-           'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState',
-           'VirtualExtensionDestination', 'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation',
+           'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionRangeStatus', 'ValidationRules',
+           'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState', 'VirtualExtension',
+           'VirtualExtensionDestination', 'VirtualExtensionLevel', 'VirtualExtensionMode', 'VirtualExtensionRange',
+           'VirtualExtensionRangeAction', 'VirtualExtensionRangeValidationResult',
+           'VirtualExtensionRangeValidationStatus', 'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation',
            'VirtualLineNumberPhoneNumber', 'VlanSetting', 'VoiceMailPartyInformation', 'VoiceMailRules',
            'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
            'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
