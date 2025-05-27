@@ -58,6 +58,9 @@ def main():
                         help='include unreferenced classes')
     parser.add_argument('--with-examples', action='store_true',
                         help='include example values for attributes')
+    parser.add_argument('--raise', action='store_true',
+                        help='raise exception on error instead of printing to stderr',
+                        dest='raise_exception')
     args = parser.parse_args()
 
     oas_path = args.oas or ''
@@ -176,6 +179,8 @@ def main():
         try:
             convert_one_oas(oas_file)
         except Exception:
+            if args.raise_exception:
+                raise
             failed_oas_files.append(oas_file)
             print(f'Conversion of "{oas_file}" failed:',
                   file=sys.stderr)
