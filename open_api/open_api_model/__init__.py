@@ -1,6 +1,7 @@
 """
 Pydantic models to deserialize OpenAPI specs
 """
+import logging
 import re
 from collections.abc import Generator
 from email.policy import default
@@ -11,6 +12,7 @@ from pydantic_core.core_schema import ValidationInfo
 
 from wxc_sdk.base import to_camel
 
+log = logging.getLogger(__name__)
 
 class OABaseModel(BaseModel):
     """
@@ -126,6 +128,16 @@ class OASchemaProperty(OABaseModel):
             raise ValueError(f"enum is only valid for type 'string'")
         return v
 
+    @model_validator(mode='after')
+    def remove_none_from_enum(cls, data: 'OASchemaProperty') -> 'OASchemaProperty':
+        """
+        remove None from enum values. None represents the null value and is not a valid enum value.
+        """
+        if data.enum and any(enum_value is None for enum_value in data.enum):
+            log.warning(f"Remove None from Enum values: {', '.join(map(str, data.enum))}")
+            data.enum = [enum_value for enum_value in data.enum if enum_value is not None]
+        return data
+
     @property
     def enum_details(self) -> Optional[List[Tuple[str, str]]]:
         """
@@ -147,8 +159,12 @@ class OASchemaProperty(OABaseModel):
         # the regex looks for lines that start with * `enum_value` - description
         # and captures the enum value and description
         # the regex is multiline, so we need to use re.MULTILINE
-        match_enum_values = '|'.join(f'(?:{re.escape(enum_value)})' for enum_value in self.enum)
-        match_descriptions = f'^\s*\* `({match_enum_values})` - '
+        try:
+            match_enum_values = '|'.join(f'(?:{re.escape(enum_value)})' for enum_value in self.enum
+                                         if enum_value is not None)
+            match_descriptions = f'^\s*\* `({match_enum_values})` - '
+        except:
+            raise
         matches = list(re.finditer(match_descriptions, self.description, re.MULTILINE + re.DOTALL))
         details = dict()
         for i, match in enumerate(matches):
@@ -201,6 +217,8 @@ class OASchemaProperty(OABaseModel):
         object_item = next((item for item in plist if item.type == 'object'), None)
         if not object_item:
             return None
+        if object_item.properties:
+            raise ValueError(f"Object schema {object_item} has properties, cannot return a reference")
         ref_item = next((item for item in plist if item.ref is not None), None)
         return ref_item and ref_item.ref
 
