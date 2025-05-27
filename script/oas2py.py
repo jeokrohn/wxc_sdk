@@ -23,10 +23,12 @@ import glob
 import logging
 import os
 import re
+import shutil
 import sys
 import traceback
 from contextlib import contextmanager
 from os.path import basename
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -61,6 +63,7 @@ def main():
     parser.add_argument('--raise', action='store_true',
                         help='raise exception on error instead of printing to stderr',
                         dest='raise_exception')
+    parser.add_argument('--cleanup', action='store_true', help='delete all .py files in the output directory.')
     args = parser.parse_args()
 
     oas_path = args.oas or ''
@@ -118,6 +121,26 @@ def main():
             print(f'Path "{py_path}" does not exist',
                   file=sys.stderr)
             exit(1)
+
+    if args.cleanup:
+        cleanup_py_path = py_path or os.getenv('OAS_PY_PATH') or ''
+        if not cleanup_py_path:
+            print('No path given for cleanup, use --pypath to specify the path',
+                  file=sys.stderr)
+            exit(1)
+        cleanup_py_path = Path(cleanup_py_path)
+        if not cleanup_py_path.exists():
+            print(f'Path "{cleanup_py_path}" does not exist',
+                  file=sys.stderr)
+            exit(1)
+        for item in cleanup_py_path.iterdir():
+            if item.is_file() or item.is_symlink():
+                print(f'Removing file or symlink: {item}')
+                item.unlink()  # Remove file or symlink
+            elif item.is_dir():
+                print(f'Removing directory and all contents: {item}')
+                shutil.rmtree(item)  # Remove directory and all contents
+        exit(0)
 
     # conversion for each OAS file
     def convert_one_oas(oas_path: str):

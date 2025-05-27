@@ -98,6 +98,7 @@ fi
 
 if [ ${oas} ]; then
     echo "==> Creating Python sources from OAS files"
+    script/oas2py.py --cleanup
     script/oas2py.py --with-examples
 fi
 
