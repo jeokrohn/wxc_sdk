@@ -137,6 +137,7 @@ class OASchemaProperty(OABaseModel):
                 * `group` - group room
         This function returns a list of tuples with the enum value and its description.
         """
+
         if self.enum is None:
             return None
         if self.description is None:
@@ -146,7 +147,7 @@ class OASchemaProperty(OABaseModel):
         # the regex looks for lines that start with * `enum_value` - description
         # and captures the enum value and description
         # the regex is multiline, so we need to use re.MULTILINE
-        match_enum_values = '|'.join(f'(?:{enum_value})' for enum_value in self.enum)
+        match_enum_values = '|'.join(f'(?:{re.escape(enum_value)})' for enum_value in self.enum)
         match_descriptions = f'^\s*\* `({match_enum_values})` - '
         matches = list(re.finditer(match_descriptions, self.description, re.MULTILINE + re.DOTALL))
         details = dict()
@@ -265,7 +266,7 @@ class OAOperation(OABaseModel):
     request_body: Optional[OARequestBody] = None
     security: Optional[Any] = None
     responses: dict[str, OAResponse]
-    tags: List[str]
+    tags: Optional[List[str]] = Field(default_factory=list)
     deprecated: Optional[bool] = None
 
     @property
