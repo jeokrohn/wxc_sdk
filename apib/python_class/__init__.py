@@ -612,6 +612,24 @@ class Attribute:
             yield Attribute(name=e.content, python_type=simple_python_type(e.element),
                             docstring=e.description, sample=None, referenced_class=None)
 
+    @property
+    def name_for_source(self)->str:
+        name_map = {'*': 'star',
+                    '#': 'hash'}
+
+        attr_name = self.name.strip('"')
+        attr_name = attr_name.strip("'")
+
+        if mapped_name := name_map.get(attr_name):
+            # replace special characters with a Python compatible name
+            attr_name = mapped_name
+        attr_name = snake_case(attr_name)
+
+        # reserved Python names are not allowed as attribute names
+        if attr_name in RESERVED_PARAM_NAMES:
+            attr_name = f'{attr_name}_'
+        return attr_name
+
     def source(self, for_enum: bool, with_example: bool = True) -> str:
         """
         Python source for one class attribute
@@ -627,15 +645,14 @@ class Attribute:
             # something like:
             #   wav = 'WAV'
             if self.name is not None:
-                name = self.name.strip('"')
-                name = name.strip("'")
-                name = snake_case(name)
+                name = self.name_for_source
+
                 if name != 'none' or True:
                     # skip creation of 'none' attribute for enums; this is most probably meant to refer to the actual Null
                     # value
-                    if name in RESERVED_PARAM_NAMES:
-                        name = f'{name}_'
+                    # replace all non-alphanumeric characters with '_'
                     name, _ = subn(r'[^a-z0-9]', '_', name)
+                    # if the name starts with a digit then prefix it with 'd'
                     name = sub('^([0-9])', 'd\\1', name)
                     value = self.name
                     value = value.replace("'", '')
@@ -644,9 +661,7 @@ class Attribute:
         else:
             # something like:
             #   actor_org_name: Optional[str] = None
-            attr_name = snake_case(self.name)
-            if attr_name in RESERVED_PARAM_NAMES:
-                attr_name = f'{attr_name}_'
+            attr_name = self.name_for_source
 
             if with_example and self.sample:
                 lines.append(f'#: example: {self.sample}')
