@@ -100,6 +100,7 @@ class TestScheduleList(TestCaseWithUsers):
             print('\n'.join(sorted(decoded_ids)))
 
 
+# noinspection DuplicatedCode
 class TestCreateOrUpdate(TestCaseWithUsers):
     """
     Test cases for schedule creation or updates
@@ -134,7 +135,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         print(f'new schedule name: {new_name}')
 
         # create user schedule: holidays
-        new_schedule = Schedule(name=new_name, schedule_type=ScheduleType.holidays)
+        new_schedule = Schedule(name=new_name, type=ScheduleType.holidays)
         new_schedule_id = ps.create(obj_id=target_user.person_id,
                                     schedule=new_schedule)
 
@@ -159,8 +160,9 @@ class TestCreateOrUpdate(TestCaseWithUsers):
 
         # new schedule has to be in user schedule list
         in_list = next((schedule for schedule in user_schedules_after
-                        if new_schedule_id == new_schedule_id), None)
+                        if schedule.schedule_id == new_schedule_id), None)
         self.assertTrue(in_list is not None)
+        self.assertEqual('USER', in_list.level, 'New schedule should be a user schedule')
 
     def test_002_create_name_conflict(self):
         """
@@ -195,7 +197,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             # we need to create a location schedule
             new_location_schedule = Schedule(
                 name=target_schedule_name,
-                schedule_type=ScheduleType.holidays)
+                type=ScheduleType.holidays)
             target_location_schedule_id = ls.create(
                 obj_id=target_user.location_id,
                 schedule=new_location_schedule)
@@ -209,7 +211,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         with self.assertRaises(RestError) as exc:
             new_schedule = Schedule(
                 name=target_location_schedule.name,
-                schedule_type=target_location_schedule.schedule_type)
+                type=target_location_schedule.schedule_type)
             ps.create(obj_id=target_user.person_id, schedule=new_schedule)
         self.assertEqual(25030, exc.exception.code)
 
@@ -243,7 +245,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             # new location schedule
             location_schedule_name = next(new_names)
             ls.create(obj_id=target_user.location_id,
-                      schedule=Schedule(name=location_schedule_name, schedule_type=ScheduleType.holidays))
+                      schedule=Schedule(name=location_schedule_name, type=ScheduleType.holidays))
             print(f'new location holiday schedule: {location_schedule_name}')
 
         # validate user and location schedule list
@@ -285,7 +287,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         # new user schedule
         user_schedule_name = next(new_names)
         ps.create(obj_id=target_user.person_id,
-                  schedule=Schedule(name=user_schedule_name, schedule_type=ScheduleType.holidays))
+                  schedule=Schedule(name=user_schedule_name, type=ScheduleType.holidays))
         print(f'new user holiday schedule: {user_schedule_name}')
 
         # validate user and location schedule list
@@ -337,7 +339,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             # new location schedule
             location_schedule_name = next(new_names)
             ls.create(obj_id=target_user.location_id,
-                      schedule=Schedule(name=location_schedule_name, schedule_type=ScheduleType.holidays))
+                      schedule=Schedule(name=location_schedule_name, type=ScheduleType.holidays))
             print(f'new location holiday schedule: {location_schedule_name}')
 
         # we also at least need one real(!) user schedule to prove our point
@@ -346,7 +348,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             # new user schedule
             user_schedule_name = next(new_names)
             ps.create(obj_id=target_user.person_id,
-                      schedule=Schedule(name=user_schedule_name, schedule_type=ScheduleType.holidays))
+                      schedule=Schedule(name=user_schedule_name, type=ScheduleType.holidays))
             print(f'new user holiday schedule: {user_schedule_name}')
 
         # validate user and location schedule list
@@ -417,7 +419,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             user_schedule_name = next(new_names)
             target_schedule_id = ps.create(obj_id=target_user.person_id,
                                            schedule=Schedule(name=user_schedule_name,
-                                                             schedule_type=ScheduleType.holidays))
+                                                             type=ScheduleType.holidays))
             print(f'new user holiday schedule: {user_schedule_name}')
         # get details with events
         target_schedule = ps.details(obj_id=target_user.person_id,
@@ -448,7 +450,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         print(f'Changing name to {new_name}')
         settings = Schedule(name=target_schedule.name,
                             new_name=new_name,
-                            schedule_type=target_schedule.schedule_type)
+                            type=target_schedule.schedule_type)
         updated_id = ps.update(obj_id=target_user.person_id,
                                schedule_id=target_schedule.schedule_id,
                                schedule=settings)
