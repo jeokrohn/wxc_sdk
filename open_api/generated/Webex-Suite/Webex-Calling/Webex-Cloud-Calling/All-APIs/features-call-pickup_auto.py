@@ -96,7 +96,7 @@ class ListCallPickupObject(ApiModel):
     location_id: Optional[str] = None
 
 
-class FeaturesCallPickupApi(ApiChild, base='/telephony/config/locations'):
+class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
     """
     Features:  Call Pickup
     

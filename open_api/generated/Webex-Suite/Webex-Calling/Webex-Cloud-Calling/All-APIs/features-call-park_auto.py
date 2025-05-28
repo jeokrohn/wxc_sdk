@@ -182,7 +182,7 @@ class PutRecallHuntGroupObject(ApiModel):
     option: Optional[GetRecallHuntGroupObjectOption] = None
 
 
-class FeaturesCallParkApi(ApiChild, base='/telephony/config'):
+class FeaturesCallParkApi(ApiChild, base='telephony/config'):
     """
     Features:  Call Park
     

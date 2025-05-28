@@ -145,7 +145,7 @@ class ValidateVirtualExtensionRangeResponseObject(ApiModel):
     virtual_extension_range_validation_status: Optional[list[VirtualExtensionRangeValidationStatusObject]] = None
 
 
-class BetaFeaturesVirtualExtensionsApi(ApiChild, base='/telephony/config'):
+class BetaFeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
     """
     Beta Features: Virtual Extensions
     

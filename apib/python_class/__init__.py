@@ -791,7 +791,7 @@ class PythonAPI:
         doc_lines = chain([self.title, ''], self.cleaned_doc_string.splitlines())
         docstring = '\n'.join(chain.from_iterable(break_line(line, prefix=' ' * 4) for line in doc_lines))
         class_head = self.class_template.format(class_name=class_name,
-                                                base=base,
+                                                base=base.lstrip('/'),
                                                 docstring=docstring)
 
         # full API source is head followed by source for each endpoint

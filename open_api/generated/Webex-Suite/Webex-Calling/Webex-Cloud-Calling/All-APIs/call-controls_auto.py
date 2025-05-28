@@ -214,7 +214,7 @@ class BargeInResponse(ApiModel):
     call_session_id: Optional[str] = None
 
 
-class CallControlsApi(ApiChild, base='/telephony/calls'):
+class CallControlsApi(ApiChild, base='telephony/calls'):
     """
     Call Controls
     

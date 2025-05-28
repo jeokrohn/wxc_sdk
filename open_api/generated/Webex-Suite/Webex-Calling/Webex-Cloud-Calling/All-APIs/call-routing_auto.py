@@ -810,7 +810,7 @@ class ReadTheUsageOfARoutingGroupResponse(ApiModel):
     route_list_count: Optional[str] = None
 
 
-class CallRoutingApi(ApiChild, base='/telephony/config'):
+class CallRoutingApi(ApiChild, base='telephony/config'):
     """
     Call Routing
     
