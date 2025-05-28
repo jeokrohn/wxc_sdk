@@ -247,8 +247,8 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.get(url=url, params=params)
         return TrunkDetail.model_validate(data)
 
-    def update(self, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
-               dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, org_id: str = None):
+    def update(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool = None,
+               max_concurrent_calls: int = None, org_id: str = None):
         """
         Modify a Trunk for the organization.
 
@@ -260,12 +260,8 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
 
         :param trunk_id:
         :type name: str
-        :param location_id: ID of location associated with the trunk.
-        :type location_id: str
         :param password: A password to use on the trunk.
         :type password: str
-        :param trunk_type: Trunk Type associated with the trunk.
-        :type trunk_type: :class:`TrunkType`
         :param dual_identity_support_enabled: Dual Identity Support setting impacts the handling of the From header
             and P-Asserted-Identity header when sending an initial SIP INVITE to the trunk for an outbound call.
         :type dual_identity_support_enabled: bool
@@ -274,10 +270,17 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :param org_id: Organization to which trunk belongs.
         :type org_id: str:return:
         """
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep()
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['password'] = password
+        if dual_identity_support_enabled is not None:
+            body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+        if max_concurrent_calls is not None:
+            body['maxConcurrentCalls'] = max_concurrent_calls
+        url = self.ep(trunk_id)
         self.put(url=url, params=params, json=body)
 
     def delete_trunk(self, trunk_id: str, org_id: str = None):
@@ -343,7 +346,41 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.get(url=url, params=params)
         return TrunkUsage.model_validate(data)
 
-    def usage_dial_plan(self, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
+    def usage_call_to_extension(self, trunk_id: str, order: str = None, name: List[str] = None, org_id: str = None,
+                                **params) -> Generator[IdAndName, None, None]:
+        """
+        Get local gateway call to on-premises extension usage for a trunk.
+
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
+        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = ','.join(name)
+        url = self.ep(f'{trunk_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    def usage_dial_plan(self, trunk_id: str, order: str = None, name: List[str] = None,
+                        org_id: str = None, **params) -> Generator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -356,12 +393,21 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = ','.join(name)
         url = self.ep(f'{trunk_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -385,8 +431,9 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{trunk_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -408,36 +455,10 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{trunk_id}/usageRouteGroup')
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
-
-    def usage_call_to_extension(self, trunk_id: str, org_id: str = None, order: str = None,
-                                name: List[str] = None, **params) -> Generator[IdAndName, None, None]:
-        """
-        Get local gateway call to on-premises extension usage for a trunk.
-
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
-        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
-        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-
-        Retrieving this information requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param trunk_id: ID of the trunk.
-        :param org_id: Organization to which the trunk belongs.
-        :param order: Order the trunks according to the designated fields. Available sort fields are name,
-            and locationName. Sort order is ascending by default
-        :param name: Return the list of trunks matching the local gateway names
-        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
-        """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id', 'params'})
-        if name:
-            params['name'] = ','.join(name)
-        url = self.ep(f'{trunk_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 

@@ -14,18 +14,15 @@ __all__ = ['CallParkRecall', 'RecallHuntGroup', 'AvailableRecallHuntGroup',
 
 
 class CallParkRecall(str, Enum):
-    """
-    Call park recall option.
-    """
+    #: Alert parking user only.
     parking_user_only = 'ALERT_PARKING_USER_ONLY'
+    #: Alert parking user first, then hunt group.
     parking_user_first_then_hunt_group = 'ALERT_PARKING_USER_FIRST_THEN_HUNT_GROUP'
+    #: Alert hunt group only.
     hunt_group_only = 'ALERT_HUNT_GROUP_ONLY'
 
 
 class RecallHuntGroup(ApiModel):
-    """
-    Recall options that are added to call park.
-    """
     #: Alternate user which is a hunt group id for call park recall alternate destination.
     hunt_group_id: Optional[str] = None
     #: Unique name for the hunt group.
@@ -96,10 +93,11 @@ class CallPark(ApiModel):
         :return: JSON
         :rtype: str
         """
-        data = json.loads(self.model_dump_json(exclude={'callpark_id': True,
-                                                        'location_name': True,
-                                                        'location_id': True,
-                                                        'recall': {'hunt_group_name': True}}))
+        data = self.model_dump(mode='json', exclude_unset=True,
+                               exclude={'callpark_id': True,
+                                        'location_name': True,
+                                        'location_id': True,
+                                        'recall': {'hunt_group_name': True}})
         # agents need to be passed as list of IDs only
         if data.get('agents'):
             data['agents'] = [a['id'] for a in data['agents']]
@@ -163,7 +161,18 @@ class LocationCallParkSettings(ApiModel):
 
 class CallParkApi(ApiChild, base='telephony/config/callParks'):
     """
-    Call Park API
+    Features:  Call Park
+
+    Features: Call Park supports reading and writing of Webex Calling Call Park settings for a specific organization.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
     """
 
     def _endpoint(self, *, location_id: str, callpark_id: str = None, path: str = None) -> str:
@@ -185,7 +194,7 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/callParks{call_park_id}{path}')
         return ep
 
-    def list(self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
+    def list(self, location_id: str, order: str = None, name: str = None,
              org_id: str = None, **params) -> Generator[CallPark, None, None]:
         """
         Read the List of Call Parks
@@ -194,8 +203,8 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
 
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
 
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
 
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
@@ -205,29 +214,33 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         :type order: str
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
-        :param org_id: List call parks for this organization.
+        :param org_id: List call park extensions for this organization.
         :type org_id: str
         :return: yields :class:`CallPark` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i > 1 and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
         url = self._endpoint(location_id=location_id)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallPark, params=params, item_key='callParks')
 
     def create(self, location_id: str, settings: CallPark, org_id: str = None) -> str:
         """
-        Create a Call Park
+        Create a Call Park Extension
 
-        Create new Call Parks for the given location.
+        Create new Call Park Extensions for the given location.
 
-        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
 
-        Creating a call park requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        NOTE: The Call Park ID will change upon modification of the Call Park name.
+        Creating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Create the call park for this location.
         :type location_id: str
@@ -322,15 +335,16 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         return data['id']
 
     def available_agents(self, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
-                         order: str = None, org_id: str = None) -> Generator[PersonPlaceAgent, None, None]:
+                         order: str = None, org_id: str = None, **params) -> Generator[PersonPlaceAgent, None, None]:
         """
         Get available agents from Call Parks
+
         Retrieve available agents from call parks for a given location.
 
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
 
-        Retrieving available agents from call parks requires a full or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
+        Retrieving available agents from call parks requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Return the available agents for this location.
         :type location_id: str
@@ -348,14 +362,22 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         :type org_id: str
         :return: yields :class:`PersonPlaceCallPark` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_park_name is not None:
+            params['callParkName'] = call_park_name
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableUsers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')
 
     def available_recalls(self, location_id: str, name: str = None, order: str = None,
-                          org_id: str = None) -> Generator[AvailableRecallHuntGroup, None, None]:
+                          org_id: str = None, **params) -> Generator[AvailableRecallHuntGroup, None, None]:
         """
         Get available recall hunt groups from Call Parks
 
@@ -377,8 +399,12 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         :type org_id: str
         :return: yields :class:`AvailableRecallHuntGroup` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableRecallHuntGroups')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AvailableRecallHuntGroup,

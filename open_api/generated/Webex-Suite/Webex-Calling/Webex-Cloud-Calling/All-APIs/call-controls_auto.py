@@ -1,22 +1,23 @@
-"""
-Webex Calling Call Control API and related data types
-"""
-import datetime
-from typing import Optional
+from collections.abc import Generator
+from datetime import datetime
+from json import loads
+from typing import Optional, Union, Any
 
+from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
 
-from ..api_child import ApiChild
-from ..base import ApiModel, enum_str
-from ..base import SafeEnum as Enum
-from ..webhook import WebhookEvent, WebhookEventData
-
-__all__ = ['CallType', 'TelephonyParty', 'RedirectReason', 'Redirection', 'Recall', 'RecordingState',
-           'Personality', 'CallState', 'TelephonyCall', 'TelephonyEventData', 'TelephonyEvent', 'DialResponse',
-           'RejectAction', 'HistoryType', 'CallHistoryRecord', 'CallInfo', 'CallsApi', 'RecallType']
+from wxc_sdk.api_child import ApiChild
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
+from wxc_sdk.base import SafeEnum as Enum
 
 
-class RejectAction(str, Enum):
+__all__ = ['BargeInResponse', 'Call', 'CallControlsApi', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum',
+           'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'PartyInformation', 'RecallInformation',
+           'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation', 'RedirectionReasonEnum',
+           'RejectActionEnum']
+
+
+class RejectActionEnum(str, Enum):
     #: Send the call to busy.
     busy = 'busy'
     #: Send the call to temporarily unavailable.
@@ -25,7 +26,7 @@ class RejectAction(str, Enum):
     ignore = 'ignore'
 
 
-class Personality(str, Enum):
+class CallPersonalityEnum(str, Enum):
     #: An outgoing call originated by the user.
     originator = 'originator'
     #: An incoming call received by the user.
@@ -35,7 +36,7 @@ class Personality(str, Enum):
     click_to_dial = 'clickToDial'
 
 
-class CallState(str, Enum):
+class CallStateEnum(str, Enum):
     #: The remote party is being alerted.
     connecting = 'connecting'
     #: The user's devices are alerting for the incoming or Click to Dial call.
@@ -50,7 +51,7 @@ class CallState(str, Enum):
     disconnected = 'disconnected'
 
 
-class CallType(str, Enum):
+class CallTypeEnum(str, Enum):
     #: The party is within the same location.
     location = 'location'
     #: The party is within the same organization but not within the same location.
@@ -66,12 +67,13 @@ class CallType(str, Enum):
     other = 'other'
 
 
-class TelephonyParty(ApiModel):
+class PartyInformation(ApiModel):
     #: The party's name. Only present when the name is available and privacy is not enabled.
     name: Optional[str] = None
     #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
-    #: digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, \*73, user@company.domain
-    number: str
+    #: digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`, `*73`,
+    #: `user@company.domain`
+    number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
     person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
@@ -79,10 +81,10 @@ class TelephonyParty(ApiModel):
     #: Indicates whether privacy is enabled for the name, number and personId/placeId.
     privacy_enabled: Optional[bool] = None
     #: The call type for the party.
-    call_type: Optional[CallType] = None
+    call_type: Optional[CallTypeEnum] = None
 
 
-class RedirectReason(str, Enum):
+class RedirectionReasonEnum(str, Enum):
     #: The call was redirected on a busy condition. For example, the call was forwarded by Call Forwarding Busy.
     busy = 'busy'
     #: The call was redirected on a no answer condition. For example, the call was forwarded by Call Forwarding No
@@ -106,32 +108,29 @@ class RedirectReason(str, Enum):
     unknown = 'unknown'
 
 
-class Redirection(ApiModel):
+class RedirectionInformation(ApiModel):
     #: The reason the incoming call was redirected.
-    reason: Optional[RedirectReason] = None
+    reason: Optional[RedirectionReasonEnum] = None
     #: The details of a party who redirected the incoming call.
-    redirecting_party: Optional[TelephonyParty] = None
+    redirecting_party: Optional[PartyInformation] = None
 
 
-class RecallType(str, Enum):
+class RecallTypeEnum(str, Enum):
     #: The user is being recalled for a call park they initiated.
     park = 'park'
 
 
-class Recall(ApiModel):
-    """
-    call recall
-    """
+class RecallInformation(ApiModel):
     #: The type of recall the incoming call is for. Park is the only type of recall currently supported but additional
     #: values may be added in the future.
-    recall_type: RecallType = Field(alias='type')
+    type: Optional[RecallTypeEnum] = None
     #: If the type is park, contains the details of where the call was parked. For example, if user A parks a call
     #: against user B and A is recalled for the park, then this field contains B's information in A's incoming call
     #: details. Only present when the type is park.
-    party: TelephonyParty
+    party: Optional[PartyInformation] = None
 
 
-class RecordingState(str, Enum):
+class RecordingStateEnum(str, Enum):
     #: Recording has been requested for the call but has not yet started.
     pending = 'pending'
     #: Recording is active for the call.
@@ -144,49 +143,36 @@ class RecordingState(str, Enum):
     failed = 'failed'
 
 
-class TelephonyCall(ApiModel):
-    # In events the property is "callId"
-    id_call_id: Optional[str] = Field(alias='callId', default=None)
-    # ..while the telephony API uses "id"
-    id_id: Optional[str] = Field(alias='id', default=None)
-
-    # .. but this should handle that
-    @property
-    def call_id(self) -> Optional[str]:
-        """
-        The call identifier of the call.
-        """
-        return self.id_id or self.id_call_id
-
+class Call(ApiModel):
+    #: The call identifier of the call.
+    id: Optional[str] = None
     #: The call session identifier of the call session the call belongs to. This can be used to correlate multiple
     #: calls that are part of the same call session.
-    call_session_id: str
+    call_session_id: Optional[str] = None
     #: The personality of the call.
-    personality: Personality
+    personality: Optional[CallPersonalityEnum] = None
     #: The current state of the call.
-    state: CallState
+    state: Optional[CallStateEnum] = None
     #: The remote party's details. For example, if user A calls user B then B is the remote party in A's outgoing call
     #: details and A is the remote party in B's incoming call details.
-    remote_party: TelephonyParty
+    remote_party: Optional[PartyInformation] = None
     #: The appearance value for the call. The appearance value can be used to display the user's calls in an order
     #: consistent with the user's devices. Only present when the call has an appearance value assigned.
     appearance: Optional[int] = None
     #: The date and time the call was created.
-    created: datetime.datetime
+    created: Optional[datetime] = None
     #: The date and time the call was answered. Only present when the call has been answered.
-    answered: Optional[datetime.datetime] = None
-    #: The list of details for previous redirections of the incoming call ordered from most recent to least recent.
-    #: For example, if user B forwards an incoming call to user C, then a redirection entry is present for B's
-    #: forwarding in C's incoming call details. Only present when there were previous redirections and the incoming
-    #: call's state is alerting.
-    redirections: list[Redirection] = Field(default_factory=list)
+    answered: Optional[datetime] = None
+    #: The list of details for previous redirections of the incoming call ordered from most recent to least recent. For
+    #: example, if user B forwards an incoming call to user C, then a redirection entry is present for B's forwarding
+    #: in C's incoming call details. Only present when there were previous redirections and the incoming call's state
+    #: is alerting.
+    redirections: Optional[list[RedirectionInformation]] = None
     #: The recall details for the incoming call. Only present when the incoming call is for a recall.
-    recall: Optional[Recall] = None
-    #: The call's current recording state. Only present when the user's call recording has been invoked during the
-    #: life of the call.
-    recording_state: Optional[RecordingState] = None
-    #: The date and time the call was disconnected
-    disconnected: Optional[datetime.datetime] = None
+    recall: Optional[RecallInformation] = None
+    #: The call's current recording state. Only present when the user's call recording has been invoked during the life
+    #: of the call.
+    recording_state: Optional[RecordingStateEnum] = None
     #: Indicates whether the call is capable of using the `mute
     #: <https://developer.webex.com/docs/api/v1/call-controls/mute>`_ and `unmute
     mute_capable: Optional[bool] = None
@@ -194,7 +180,7 @@ class TelephonyCall(ApiModel):
     muted: Optional[bool] = None
 
 
-class HistoryType(str, Enum):
+class CallHistoryRecordTypeEnum(str, Enum):
     #: A call history record for an outgoing call placed by the user.
     placed = 'placed'
     #: A call history record for an incoming call to the user that was not answered.
@@ -205,59 +191,45 @@ class HistoryType(str, Enum):
 
 class CallHistoryRecord(ApiModel):
     #: The type of call history record.
-    call_type: HistoryType = Field(alias='type')
+    type: Optional[CallHistoryRecordTypeEnum] = None
     #: The name of the called/calling party. Only present when the name is available and privacy is not enabled.
     name: Optional[str] = None
     #: The number of the called/calling party. Only present when the number is available and privacy is not enabled.
-    #: The number can be digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, \*73,
-    #: user@company.domain
+    #: The number can be digits or a URI. Some examples for number include: `1234`, `2223334444`, `+12223334444`,
+    #: `*73`, `user@company.domain`
     number: Optional[str] = None
     #: Indicates whether privacy is enabled for the name and number.
-    privacy_enabled: bool
+    privacy_enabled: Optional[bool] = None
     #: The date and time the call history record was created. For a placed call history record, this is when the call
     #: was placed. For a missed call history record, this is when the call was disconnected. For a received call
     #: history record, this is when the call was answered.
-    time: datetime.datetime
+    time: Optional[datetime] = None
 
 
-class CallInfo(ApiModel):
+class BargeInResponse(ApiModel):
     #: A unique identifier for the call which is used in all subsequent commands for this call.
-    call_id: str
-    #: A unqiue identifier for the call session the call belongs to. This can be used to correlate multiple calls
-    #: that are part of the same call session.
-    call_session_id: str
+    call_id: Optional[str] = None
+    #: A unqiue identifier for the call session the call belongs to. This can be used to correlate multiple calls that
+    #: are part of the same call session.
+    call_session_id: Optional[str] = None
 
 
-DialResponse = CallInfo
-
-
-class TelephonyEventData(WebhookEventData, TelephonyCall):
-    """
-    data in a webhook 'telephony_calls' event
-    """
-    resource = 'telephony_calls'
-    event_type: str
-    event_timestamp: datetime.datetime
-
-
-TelephonyEvent = WebhookEvent
-
-
-class CallsApi(ApiChild, base='telephony/calls'):
+class CallControlsApi(ApiChild, base='/telephony/calls'):
     """
     Call Controls
-
+    
     Call Control APIs in support of Webex Calling. All `GET` commands require the `spark:calls_read` scope while all
     other commands require the `spark:calls_write` scope.
-
+    
     **Notes:**
-
+    
     - These APIs support 3rd Party Call Control only.
+    
     - The Call Control APIs are only for use by Webex Calling Multi Tenant users and not applicable for users hosted on
-      UCM, including Dedicated Instance users.
+    UCM, including Dedicated Instance users.
     """
 
-    def list_calls(self) -> list[TelephonyCall]:
+    def list_calls(self) -> list[Call]:
         """
         List Calls
 
@@ -267,7 +239,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         """
         url = self.ep()
         data = super().get(url)
-        r = TypeAdapter(list[TelephonyCall]).validate_python(data['items'])
+        r = TypeAdapter(list[Call]).validate_python(data['items'])
         return r
 
     def answer(self, call_id: str, endpoint_id: str = None):
@@ -294,7 +266,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('answer')
         super().post(url, json=body)
 
-    def barge_in(self, target: str, endpoint_id: str = None) -> CallInfo:
+    def barge_in(self, target: str, endpoint_id: str = None) -> BargeInResponse:
         """
         Barge In
 
@@ -309,7 +281,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`CallInfo`
+        :rtype: :class:`BargeInResponse`
         """
         body = dict()
         body['target'] = target
@@ -317,10 +289,10 @@ class CallsApi(ApiChild, base='telephony/calls'):
             body['endpointId'] = endpoint_id
         url = self.ep('bargeIn')
         data = super().post(url, json=body)
-        r = CallInfo.model_validate(data)
+        r = BargeInResponse.model_validate(data)
         return r
 
-    def dial(self, destination: str, endpoint_id: str = None) -> CallInfo:
+    def dial(self, destination: str, endpoint_id: str = None) -> BargeInResponse:
         """
         Dial
 
@@ -337,7 +309,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`CallInfo`
+        :rtype: :class:`BargeInResponse`
         """
         body = dict()
         body['destination'] = destination
@@ -345,7 +317,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             body['endpointId'] = endpoint_id
         url = self.ep('dial')
         data = super().post(url, json=body)
-        r = CallInfo.model_validate(data)
+        r = BargeInResponse.model_validate(data)
         return r
 
     def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):
@@ -390,21 +362,21 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('hangup')
         super().post(url, json=body)
 
-    def call_history(self, history_type: HistoryType = None) -> list[CallHistoryRecord]:
+    def list_call_history(self, type: CallHistoryRecordTypeEnum = None) -> list[CallHistoryRecord]:
         """
         List Call History
 
         Get the list of call history records for the user. A maximum of 20 call history records per type (`placed`,
         `missed`, `received`) are returned.
 
-        :param history_type: The type of call history records to retrieve. If not specified, then all call history records are
+        :param type: The type of call history records to retrieve. If not specified, then all call history records are
             retrieved.
-        :type history_type: CallHistoryRecordTypeEnum
+        :type type: CallHistoryRecordTypeEnum
         :rtype: list[CallHistoryRecord]
         """
         params = {}
-        if history_type is not None:
-            params['type'] = enum_str(history_type)
+        if type is not None:
+            params['type'] = enum_str(type)
         url = self.ep('history')
         data = super().get(url, params=params)
         r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])
@@ -441,7 +413,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('mute')
         super().post(url, json=body)
 
-    def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> TelephonyParty:
+    def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> PartyInformation:
         """
         Park
 
@@ -457,7 +429,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         :param is_group_park: If set to`true`, the call is parked against an automatically selected member of the
             user's call park group and the destination parameter is ignored.
         :type is_group_park: bool
-        :rtype: TelephonyParty
+        :rtype: PartyInformation
         """
         body = dict()
         body['callId'] = call_id
@@ -467,7 +439,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             body['isGroupPark'] = is_group_park
         url = self.ep('park')
         data = super().post(url, json=body)
-        r = TelephonyParty.model_validate(data['parkedAgainst'])
+        r = PartyInformation.model_validate(data['parkedAgainst'])
         return r
 
     def pause_recording(self, call_id: str = None):
@@ -487,7 +459,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('pauseRecording')
         super().post(url, json=body)
 
-    def pickup(self, target: str = None, endpoint_id: str = None) -> CallInfo:
+    def pickup(self, target: str = None, endpoint_id: str = None) -> BargeInResponse:
         """
         Pickup
 
@@ -504,7 +476,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`CallInfo`
+        :rtype: :class:`BargeInResponse`
         """
         body = dict()
         if target is not None:
@@ -513,7 +485,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             body['endpointId'] = endpoint_id
         url = self.ep('pickup')
         data = super().post(url, json=body)
-        r = CallInfo.model_validate(data)
+        r = BargeInResponse.model_validate(data)
         return r
 
     def push(self, call_id: str = None):
@@ -533,7 +505,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('push')
         super().post(url, json=body)
 
-    def reject(self, call_id: str, action: RejectAction = None):
+    def reject(self, call_id: str, action: RejectActionEnum = None):
         """
         Reject
 
@@ -543,7 +515,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :param action: The rejection action to apply to the call. The busy action is applied if no specific action is
             provided.
-        :type action: RejectAction
+        :type action: RejectActionEnum
         :rtype: None
         """
         body = dict()
@@ -585,7 +557,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('resumeRecording')
         super().post(url, json=body)
 
-    def retrieve(self, destination: str = None, endpoint_id: str = None) -> CallInfo:
+    def retrieve(self, destination: str = None, endpoint_id: str = None) -> BargeInResponse:
         """
         Retrieve
 
@@ -602,7 +574,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`CallInfo`
+        :rtype: :class:`BargeInResponse`
         """
         body = dict()
         if destination is not None:
@@ -611,7 +583,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             body['endpointId'] = endpoint_id
         url = self.ep('retrieve')
         data = super().post(url, json=body)
-        r = CallInfo.model_validate(data)
+        r = BargeInResponse.model_validate(data)
         return r
 
     def start_recording(self, call_id: str = None):
@@ -648,7 +620,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('stopRecording')
         super().post(url, json=body)
 
-    def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None) -> CallInfo:
+    def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None) -> BargeInResponse:
         """
         Transfer
 
@@ -681,7 +653,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             `sip:user@company.domain`. This parameter is mandatory if `callId1` is provided and `callId2` is not
             provided.
         :type destination: str
-        :rtype: :class:`CallInfo`
+        :rtype: :class:`BargeInResponse`
         """
         body = dict()
         if call_id1 is not None:
@@ -692,7 +664,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             body['destination'] = destination
         url = self.ep('transfer')
         data = super().post(url, json=body)
-        r = CallInfo.model_validate(data)
+        r = BargeInResponse.model_validate(data)
         return r
 
     def transmit_dtmf(self, call_id: str = None, dtmf: str = None):
@@ -734,7 +706,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('unmute')
         super().post(url, json=body)
 
-    def call_details(self, call_id: str) -> TelephonyCall:
+    def get_call_details(self, call_id: str) -> Call:
         """
         Get Call Details
 
@@ -746,5 +718,5 @@ class CallsApi(ApiChild, base='telephony/calls'):
         """
         url = self.ep(f'{call_id}')
         data = super().get(url)
-        r = TelephonyCall.model_validate(data)
+        r = Call.model_validate(data)
         return r

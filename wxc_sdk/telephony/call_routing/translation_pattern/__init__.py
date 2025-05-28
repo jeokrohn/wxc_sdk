@@ -11,8 +11,10 @@ from wxc_sdk.common import IdAndName
 
 
 class TranslationPatternLevel(str, Enum):
-    organization = 'Organization'
-    location = 'Location'
+    #: The applied services of location level.
+    location = 'LOCATION'
+    #: The applied services of the organization level.
+    organization = 'ORGANIZATION'
 
 
 class TranslationPattern(ApiModel):
@@ -24,7 +26,9 @@ class TranslationPattern(ApiModel):
     matching_pattern: Optional[str] = None
     #: Replacement pattern given to a translation pattern for an organization.
     replacement_pattern: Optional[str] = None
+    #: Level at which the translation pattern is created. The level can either be `Organization` or `Location`.
     level: Optional[TranslationPatternLevel] = None
+    #: Location details for the translation pattern when the level is `Location`.
     location: Optional[IdAndName] = None
 
     def create_update(self) -> dict:
@@ -61,10 +65,58 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         :return:
         """
         if location_id is None:
+            # org level translation pattern endpoint
             return super().ep(path)
         path = path and f'/{path}' or ''
         base = 'telephony/config/locations'
         return self.session.ep(f'{base}/{location_id}/callRouting/translationPatterns{path}')
+
+    def list(self, limit_to_location_id: str = None,
+             limit_to_org_level_enabled: bool = None, order: str = None, name: str = None,
+             matching_pattern: str = None, org_id: str = None,
+             **params) -> Generator[TranslationPattern, None, None]:
+        """
+        Retrieve a list of Translation Patterns
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve a list of translation patterns for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: bool
+        :param order: Sort the list of translation patterns according to translation pattern name, ascending or
+            descending.
+        :type order: str
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternGet` instances
+        """
+        if org_id:
+            params['orgId'] = org_id
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
+                                              params=params)
 
     def create(self, pattern: TranslationPattern, location_id: str = None,
                org_id: str = None) -> str:
@@ -92,48 +144,6 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
-
-    def list(self, limit_to_location_id: str = None,
-             limit_to_org_level_enabled: bool = None, name: str = None,
-             matching_pattern: str = None, org_id: str = None,
-             **params) -> Generator[TranslationPattern, None, None]:
-        """
-        Retrieve a list of Translation Patterns
-
-        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
-        only.
-
-        Retrieve a list of translation patterns for a given organization.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
-            translation patterns.
-        :type limit_to_location_id: str
-        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
-            patterns.
-        :type limit_to_org_level_enabled: bool
-        :param name: Only return translation patterns with the matching `name`.
-        :type name: str
-        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
-        :type matching_pattern: str
-        :param org_id: ID of the organization containing the translation patterns.
-        :type org_id: str
-        :return: Generator yielding :class:`TranslationPatternGet` instances
-        """
-        if org_id:
-            params['orgId'] = org_id
-        if limit_to_location_id is not None:
-            params['limitToLocationId'] = limit_to_location_id
-        if limit_to_org_level_enabled is not None:
-            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
-        if name is not None:
-            params['name'] = name
-        if matching_pattern is not None:
-            params['matchingPattern'] = matching_pattern
-        url = self.ep()
-        return self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
-                                              params=params)
 
     def details(self, translation_id: str,
                 location_id: str = None,

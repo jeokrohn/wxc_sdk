@@ -145,7 +145,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         data = self.get(url=url, params=params)
         return RouteListDetail.model_validate(data)
 
-    def update(self, rl_id: str, name: str, rg_id: str, org_id: str = None):
+    def update(self, rl_id: str, name: str = None, rg_id: str=None, org_id: str = None):
         """
         Modify the details for a Route List.
 
@@ -165,8 +165,11 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = {'name': name,
-                'routeGroupId': rg_id}
+        body = dict()
+        if name is not None:
+            body['name'] = name
+        if rg_id is not None:
+            body['routeGroupId'] = rg_id
         url = self.ep(rl_id)
         self.put(url=url, params=params, json=body)
 
@@ -220,13 +223,15 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
                        delete_all_numbers: bool = None,
                        org_id: str = None) -> List[UpdateNumbersResponse]:
         """
+        Modify Numbers for Route List
+
         Modify numbers for a specific Route List of a Customer.
 
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
 
-        Retrieving a Route List requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param rl_id: ID of the Route List.
         :type rl_id: str

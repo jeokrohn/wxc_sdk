@@ -23,10 +23,12 @@ import glob
 import logging
 import os
 import re
+import shutil
 import sys
 import traceback
 from contextlib import contextmanager
 from os.path import basename
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -58,6 +60,10 @@ def main():
                         help='include unreferenced classes')
     parser.add_argument('--with-examples', action='store_true',
                         help='include example values for attributes')
+    parser.add_argument('--raise', action='store_true',
+                        help='raise exception on error instead of printing to stderr',
+                        dest='raise_exception')
+    parser.add_argument('--cleanup', action='store_true', help='delete all .py files in the output directory.')
     args = parser.parse_args()
 
     oas_path = args.oas or ''
@@ -116,6 +122,26 @@ def main():
                   file=sys.stderr)
             exit(1)
 
+    if args.cleanup:
+        cleanup_py_path = py_path or os.getenv('OAS_PY_PATH') or ''
+        if not cleanup_py_path:
+            print('No path given for cleanup, use --pypath to specify the path',
+                  file=sys.stderr)
+            exit(1)
+        cleanup_py_path = Path(cleanup_py_path)
+        if not cleanup_py_path.exists():
+            print(f'Path "{cleanup_py_path}" does not exist',
+                  file=sys.stderr)
+            exit(1)
+        for item in cleanup_py_path.iterdir():
+            if item.is_file() or item.is_symlink():
+                print(f'Removing file or symlink: {item}')
+                item.unlink()  # Remove file or symlink
+            elif item.is_dir():
+                print(f'Removing directory and all contents: {item}')
+                shutil.rmtree(item)  # Remove directory and all contents
+        exit(0)
+
     # conversion for each OAS file
     def convert_one_oas(oas_path: str):
         """
@@ -170,17 +196,23 @@ def main():
                   file=f)
         return
 
-    err = False
+    failed_oas_files = []
     for oas_file in oas_files:
         print(f'Conversion of "{oas_file}"')
         try:
             convert_one_oas(oas_file)
         except Exception:
-            err = True
+            if args.raise_exception:
+                raise
+            failed_oas_files.append(oas_file)
             print(f'Conversion of "{oas_file}" failed:',
                   file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
-    if err:
+    if failed_oas_files:
+        print('\n' * 2, file=sys.stderr)
+        print(f'Conversion of {len(failed_oas_files)} OAS files failed:', file=sys.stderr)
+        for failed_file in failed_oas_files:
+            print(f'  {failed_file}', file=sys.stderr)
         exit(1)
     exit(0)
 

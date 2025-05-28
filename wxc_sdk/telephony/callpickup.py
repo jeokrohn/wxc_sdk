@@ -53,7 +53,7 @@ class CallPickup(ApiModel):
         """
         data = self.model_dump(mode='json',
                                by_alias=True,
-                               exclude_none=True,
+                               exclude_unset=True,
                                exclude={'pickup_id': True,
                                         'location_name': True,
                                         'location_id': True})
@@ -111,9 +111,12 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         :type org_id: str
         :return: yields :class:`CallPickup` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i > 1 and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
         url = self._endpoint(location_id=location_id)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallPickup, params=params, item_key='callPickups')
@@ -223,11 +226,13 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         data = self.put(url, json=body, params=params)
         return data['id']
 
+    # noinspection DuplicatedCode
     def available_agents(self, location_id: str, call_pickup_name: str = None, name: str = None,
                          phone_number: str = None, order: str = None,
-                         org_id: str = None) -> Generator[PersonPlaceAgent, None, None]:
+                         org_id: str = None, **params) -> Generator[PersonPlaceAgent, None, None]:
         """
         Get available agents from Call Pickups
+
         Retrieve available agents from call pickups for a given location.
 
         Call Pickup enables a user(agent) to answer any ringing line within their pickup group.
@@ -251,8 +256,16 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         :type org_id: str
         :return: yields :class:`PersonPlaceCallPark` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_pickup_name is not None:
+            params['callPickupName'] = call_pickup_name
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableUsers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')

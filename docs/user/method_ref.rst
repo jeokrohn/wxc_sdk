@@ -818,49 +818,49 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.callqueue.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
         Update a Selective Call Forwarding Rule's settings for the designated feature
    * - :meth:`api.telephony.calls.answer <wxc_sdk.telephony.calls.CallsApi.answer>`
-        Answer an incoming call
+        Answer
    * - :meth:`api.telephony.calls.barge_in <wxc_sdk.telephony.calls.CallsApi.barge_in>`
-        Barge-in on another user’s answered call
+        Barge In
    * - :meth:`api.telephony.calls.call_details <wxc_sdk.telephony.calls.CallsApi.call_details>`
-        Get the details of the specified active call for the user
+        Get Call Details
    * - :meth:`api.telephony.calls.call_history <wxc_sdk.telephony.calls.CallsApi.call_history>`
         List Call History
    * - :meth:`api.telephony.calls.dial <wxc_sdk.telephony.calls.CallsApi.dial>`
-        Initiate an outbound call to a specified destination
+        Dial
    * - :meth:`api.telephony.calls.divert <wxc_sdk.telephony.calls.CallsApi.divert>`
-        Divert a call to a destination or a user's voicemail
+        Divert
    * - :meth:`api.telephony.calls.hangup <wxc_sdk.telephony.calls.CallsApi.hangup>`
-        Hangup a call
+        Hangup
    * - :meth:`api.telephony.calls.hold <wxc_sdk.telephony.calls.CallsApi.hold>`
-        Hold a connected call
+        Hold
    * - :meth:`api.telephony.calls.list_calls <wxc_sdk.telephony.calls.CallsApi.list_calls>`
-        Get the list of details for all active calls associated with the user
+        List Calls
    * - :meth:`api.telephony.calls.mute <wxc_sdk.telephony.calls.CallsApi.mute>`
         Mute
    * - :meth:`api.telephony.calls.park <wxc_sdk.telephony.calls.CallsApi.park>`
-        Park a connected call
+        Park
    * - :meth:`api.telephony.calls.pause_recording <wxc_sdk.telephony.calls.CallsApi.pause_recording>`
-        Pause recording on a call
+        Pause Recording
    * - :meth:`api.telephony.calls.pickup <wxc_sdk.telephony.calls.CallsApi.pickup>`
-        Picks up an incoming call to another user
+        Pickup
    * - :meth:`api.telephony.calls.push <wxc_sdk.telephony.calls.CallsApi.push>`
-        Pushes a call from the assistant to the executive the call is associated with
+        Push
    * - :meth:`api.telephony.calls.reject <wxc_sdk.telephony.calls.CallsApi.reject>`
-        Reject an unanswered incoming call
+        Reject
    * - :meth:`api.telephony.calls.resume <wxc_sdk.telephony.calls.CallsApi.resume>`
-        Resume a held call
+        Resume
    * - :meth:`api.telephony.calls.resume_recording <wxc_sdk.telephony.calls.CallsApi.resume_recording>`
-        Resume recording a call
+        Resume Recording
    * - :meth:`api.telephony.calls.retrieve <wxc_sdk.telephony.calls.CallsApi.retrieve>`
-        :param destination: Identifies where the call is parked
+        Retrieve
    * - :meth:`api.telephony.calls.start_recording <wxc_sdk.telephony.calls.CallsApi.start_recording>`
-        Start recording a call
+        Start Recording
    * - :meth:`api.telephony.calls.stop_recording <wxc_sdk.telephony.calls.CallsApi.stop_recording>`
-        Stop recording a call
+        Stop Recording
    * - :meth:`api.telephony.calls.transfer <wxc_sdk.telephony.calls.CallsApi.transfer>`
-        Transfer two calls together
+        Transfer
    * - :meth:`api.telephony.calls.transmit_dtmf <wxc_sdk.telephony.calls.CallsApi.transmit_dtmf>`
-        Transmit DTMF digits to a call
+        Transmit DTMF
    * - :meth:`api.telephony.calls.unmute <wxc_sdk.telephony.calls.CallsApi.unmute>`
         Unmute
    * - :meth:`api.telephony.conference.add_participant <wxc_sdk.telephony.conference.ConferenceControlsApi.add_participant>`
@@ -1372,7 +1372,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.prem_pstn.route_group.update <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.update>`
         Modifies an existing Route Group for an organization based on id
    * - :meth:`api.telephony.prem_pstn.route_group.usage <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage>`
-        List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
+        Read the Usage of a Routing Group
    * - :meth:`api.telephony.prem_pstn.route_group.usage_call_to_extension <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_call_to_extension>`
         List "Call to" on-premises Extension Locations for a specific route group
    * - :meth:`api.telephony.prem_pstn.route_group.usage_dial_plan <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_dial_plan>`
@@ -1380,7 +1380,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.prem_pstn.route_group.usage_location_pstn <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_location_pstn>`
         List PSTN Connection Locations for a specific route group
    * - :meth:`api.telephony.prem_pstn.route_group.usage_route_lists <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_route_lists>`
-        List Route Lists for a specific route group
+        Read the Route Lists of a Routing Group
    * - :meth:`api.telephony.prem_pstn.route_list.create <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.create>`
         Create a Route List for the organization
    * - :meth:`api.telephony.prem_pstn.route_list.delete_all_numbers <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.delete_all_numbers>`
@@ -1396,7 +1396,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.prem_pstn.route_list.update <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update>`
         Modify the details for a Route List
    * - :meth:`api.telephony.prem_pstn.route_list.update_numbers <wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update_numbers>`
-        Modify numbers for a specific Route List of a Customer
+        Modify Numbers for Route List
    * - :meth:`api.telephony.prem_pstn.trunk.create <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.create>`
         Create a Trunk for the organization
    * - :meth:`api.telephony.prem_pstn.trunk.delete_trunk <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.delete_trunk>`

@@ -10,9 +10,9 @@ from re import match
 from typing import ClassVar
 from unittest import skip
 
-from wxc_sdk.all_types import *
 from tests.base import TestWithLocations, async_test
 from tests.testutil import create_call_park_extension
+from wxc_sdk.all_types import *
 
 # Number of call parks to create by create many test
 CP_MANY = 100
@@ -89,7 +89,7 @@ class TestCreate(TestWithLocations):
         create the most trivial call park
         """
         # pick random location
-        target_location = random.choice(self.locations)
+        target_location = random.choice(self.telephony_locations)
         print(f'Target location: {target_location.name}')
 
         # get available call park name in location
@@ -113,7 +113,7 @@ class TestCreate(TestWithLocations):
         create many call parks and test pagination
         """
         # pick a random location
-        target_location = random.choice(self.locations)
+        target_location = random.choice(self.telephony_locations)
         print(f'Target location: {target_location.name}')
 
         # shortcut for callpark API
@@ -177,12 +177,7 @@ class TestCreate(TestWithLocations):
         """
         Create a call park with a call park extension
         """
-        # TODO: locations.list() is broken and returns locations without calling entitlement
-        #  ... which breaks all tests relying on calling
-        # pick random location
-        target_location = next(self.api.locations.list(name='Hartford'), None)
-        # TODO: revert to random location selection asap (see above)
-        # target_location: Location = random.choice(self.locations)
+        target_location: Location = random.choice(self.telephony_locations)
         print(f'Target location: {target_location.name}')
 
         # new name for call park
