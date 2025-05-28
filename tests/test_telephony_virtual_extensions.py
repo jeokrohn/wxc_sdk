@@ -164,7 +164,7 @@ class TestVirtualExtensions(TestVirtualExtensionsBase):
         Create a duplicate of an org virtual extension at the location level
         """
         # we need at least one org level virtual extension to test this
-        with self.dummy_virtual_extensions(0, asssert_count=1):
+        with self.dummy_virtual_extensions(0, assert_count=1):
             vapi = self.api.telephony.virtual_extensions
             ve_list = list(vapi.list_extensions(orgLevelOnly=True))
             org_ve = choice(ve_list)
