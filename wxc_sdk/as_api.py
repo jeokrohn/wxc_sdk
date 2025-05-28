@@ -14003,7 +14003,18 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
 class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
     """
-    Call Park API
+    Features:  Call Park
+
+    Features: Call Park supports reading and writing of Webex Calling Call Park settings for a specific organization.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
     """
 
     def _endpoint(self, *, location_id: str, callpark_id: str = None, path: str = None) -> str:
@@ -14025,7 +14036,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/callParks{call_park_id}{path}')
         return ep
 
-    def list_gen(self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
+    def list_gen(self, location_id: str, order: str = None, name: str = None,
              org_id: str = None, **params) -> AsyncGenerator[CallPark, None, None]:
         """
         Read the List of Call Parks
@@ -14034,8 +14045,8 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
 
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
 
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
 
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
@@ -14045,18 +14056,21 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :type order: str
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
-        :param org_id: List call parks for this organization.
+        :param org_id: List call park extensions for this organization.
         :type org_id: str
         :return: yields :class:`CallPark` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i > 1 and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
         url = self._endpoint(location_id=location_id)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallPark, params=params, item_key='callParks')
 
-    async def list(self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
+    async def list(self, location_id: str, order: str = None, name: str = None,
              org_id: str = None, **params) -> List[CallPark]:
         """
         Read the List of Call Parks
@@ -14065,8 +14079,8 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
 
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
 
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
 
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
@@ -14076,29 +14090,33 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :type order: str
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
-        :param org_id: List call parks for this organization.
+        :param org_id: List call park extensions for this organization.
         :type org_id: str
         :return: yields :class:`CallPark` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i > 1 and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
         url = self._endpoint(location_id=location_id)
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CallPark, params=params, item_key='callParks')]
 
     async def create(self, location_id: str, settings: CallPark, org_id: str = None) -> str:
         """
-        Create a Call Park
+        Create a Call Park Extension
 
-        Create new Call Parks for the given location.
+        Create new Call Park Extensions for the given location.
 
-        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
 
-        Creating a call park requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        NOTE: The Call Park ID will change upon modification of the Call Park name.
+        Creating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Create the call park for this location.
         :type location_id: str
@@ -14193,15 +14211,16 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         return data['id']
 
     def available_agents_gen(self, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
-                         order: str = None, org_id: str = None) -> AsyncGenerator[PersonPlaceAgent, None, None]:
+                         order: str = None, org_id: str = None, **params) -> AsyncGenerator[PersonPlaceAgent, None, None]:
         """
         Get available agents from Call Parks
+
         Retrieve available agents from call parks for a given location.
 
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
 
-        Retrieving available agents from call parks requires a full or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
+        Retrieving available agents from call parks requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Return the available agents for this location.
         :type location_id: str
@@ -14219,22 +14238,31 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :type org_id: str
         :return: yields :class:`PersonPlaceCallPark` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_park_name is not None:
+            params['callParkName'] = call_park_name
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableUsers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')
 
     async def available_agents(self, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
-                         order: str = None, org_id: str = None) -> List[PersonPlaceAgent]:
+                         order: str = None, org_id: str = None, **params) -> List[PersonPlaceAgent]:
         """
         Get available agents from Call Parks
+
         Retrieve available agents from call parks for a given location.
 
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
 
-        Retrieving available agents from call parks requires a full or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
+        Retrieving available agents from call parks requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Return the available agents for this location.
         :type location_id: str
@@ -14252,14 +14280,22 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :type org_id: str
         :return: yields :class:`PersonPlaceCallPark` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_park_name is not None:
+            params['callParkName'] = call_park_name
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableUsers')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')]
 
     def available_recalls_gen(self, location_id: str, name: str = None, order: str = None,
-                          org_id: str = None) -> AsyncGenerator[AvailableRecallHuntGroup, None, None]:
+                          org_id: str = None, **params) -> AsyncGenerator[AvailableRecallHuntGroup, None, None]:
         """
         Get available recall hunt groups from Call Parks
 
@@ -14281,15 +14317,19 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :type org_id: str
         :return: yields :class:`AvailableRecallHuntGroup` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableRecallHuntGroups')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AvailableRecallHuntGroup,
                                               params=params, item_key='huntGroups')
 
     async def available_recalls(self, location_id: str, name: str = None, order: str = None,
-                          org_id: str = None) -> List[AvailableRecallHuntGroup]:
+                          org_id: str = None, **params) -> List[AvailableRecallHuntGroup]:
         """
         Get available recall hunt groups from Call Parks
 
@@ -14311,8 +14351,12 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :type org_id: str
         :return: yields :class:`AvailableRecallHuntGroup` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableRecallHuntGroups')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableRecallHuntGroup,
@@ -14411,9 +14455,12 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         :type org_id: str
         :return: yields :class:`CallPickup` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i > 1 and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
         url = self._endpoint(location_id=location_id)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallPickup, params=params, item_key='callPickups')
@@ -14442,9 +14489,12 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         :type org_id: str
         :return: yields :class:`CallPickup` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i > 1 and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
         url = self._endpoint(location_id=location_id)
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CallPickup, params=params, item_key='callPickups')]
@@ -14554,11 +14604,14 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         data = await self.put(url, json=body, params=params)
         return data['id']
 
+    # noinspection DuplicatedCode
+
     def available_agents_gen(self, location_id: str, call_pickup_name: str = None, name: str = None,
                          phone_number: str = None, order: str = None,
-                         org_id: str = None) -> AsyncGenerator[PersonPlaceAgent, None, None]:
+                         org_id: str = None, **params) -> AsyncGenerator[PersonPlaceAgent, None, None]:
         """
         Get available agents from Call Pickups
+
         Retrieve available agents from call pickups for a given location.
 
         Call Pickup enables a user(agent) to answer any ringing line within their pickup group.
@@ -14582,17 +14635,26 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         :type org_id: str
         :return: yields :class:`PersonPlaceCallPark` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_pickup_name is not None:
+            params['callPickupName'] = call_pickup_name
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableUsers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')
 
     async def available_agents(self, location_id: str, call_pickup_name: str = None, name: str = None,
                          phone_number: str = None, order: str = None,
-                         org_id: str = None) -> List[PersonPlaceAgent]:
+                         org_id: str = None, **params) -> List[PersonPlaceAgent]:
         """
         Get available agents from Call Pickups
+
         Retrieve available agents from call pickups for a given location.
 
         Call Pickup enables a user(agent) to answer any ringing line within their pickup group.
@@ -14616,8 +14678,16 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         :type org_id: str
         :return: yields :class:`PersonPlaceCallPark` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i > 1 and v is not None}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if call_pickup_name is not None:
+            params['callPickupName'] = call_pickup_name
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableUsers')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')]
@@ -16397,10 +16467,105 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         :return:
         """
         if location_id is None:
+            # org level translation pattern endpoint
             return super().ep(path)
         path = path and f'/{path}' or ''
         base = 'telephony/config/locations'
         return self.session.ep(f'{base}/{location_id}/callRouting/translationPatterns{path}')
+
+    def list_gen(self, limit_to_location_id: str = None,
+             limit_to_org_level_enabled: bool = None, order: str = None, name: str = None,
+             matching_pattern: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[TranslationPattern, None, None]:
+        """
+        Retrieve a list of Translation Patterns
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve a list of translation patterns for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: bool
+        :param order: Sort the list of translation patterns according to translation pattern name, ascending or
+            descending.
+        :type order: str
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternGet` instances
+        """
+        if org_id:
+            params['orgId'] = org_id
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
+                                              params=params)
+
+    async def list(self, limit_to_location_id: str = None,
+             limit_to_org_level_enabled: bool = None, order: str = None, name: str = None,
+             matching_pattern: str = None, org_id: str = None,
+             **params) -> List[TranslationPattern]:
+        """
+        Retrieve a list of Translation Patterns
+
+        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
+        only.
+
+        Retrieve a list of translation patterns for a given organization.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
+            translation patterns.
+        :type limit_to_location_id: str
+        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
+            patterns.
+        :type limit_to_org_level_enabled: bool
+        :param order: Sort the list of translation patterns according to translation pattern name, ascending or
+            descending.
+        :type order: str
+        :param name: Only return translation patterns with the matching `name`.
+        :type name: str
+        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
+        :type matching_pattern: str
+        :param org_id: ID of the organization containing the translation patterns.
+        :type org_id: str
+        :return: Generator yielding :class:`TranslationPatternGet` instances
+        """
+        if org_id:
+            params['orgId'] = org_id
+        if limit_to_location_id is not None:
+            params['limitToLocationId'] = limit_to_location_id
+        if limit_to_org_level_enabled is not None:
+            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = name
+        if matching_pattern is not None:
+            params['matchingPattern'] = matching_pattern
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
+                                              params=params)]
 
     async def create(self, pattern: TranslationPattern, location_id: str = None,
                org_id: str = None) -> str:
@@ -16428,90 +16593,6 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         data = await super().post(url, params=params, json=body)
         r = data['id']
         return r
-
-    def list_gen(self, limit_to_location_id: str = None,
-             limit_to_org_level_enabled: bool = None, name: str = None,
-             matching_pattern: str = None, org_id: str = None,
-             **params) -> AsyncGenerator[TranslationPattern, None, None]:
-        """
-        Retrieve a list of Translation Patterns
-
-        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
-        only.
-
-        Retrieve a list of translation patterns for a given organization.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
-            translation patterns.
-        :type limit_to_location_id: str
-        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
-            patterns.
-        :type limit_to_org_level_enabled: bool
-        :param name: Only return translation patterns with the matching `name`.
-        :type name: str
-        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
-        :type matching_pattern: str
-        :param org_id: ID of the organization containing the translation patterns.
-        :type org_id: str
-        :return: Generator yielding :class:`TranslationPatternGet` instances
-        """
-        if org_id:
-            params['orgId'] = org_id
-        if limit_to_location_id is not None:
-            params['limitToLocationId'] = limit_to_location_id
-        if limit_to_org_level_enabled is not None:
-            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
-        if name is not None:
-            params['name'] = name
-        if matching_pattern is not None:
-            params['matchingPattern'] = matching_pattern
-        url = self.ep()
-        return self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
-                                              params=params)
-
-    async def list(self, limit_to_location_id: str = None,
-             limit_to_org_level_enabled: bool = None, name: str = None,
-             matching_pattern: str = None, org_id: str = None,
-             **params) -> List[TranslationPattern]:
-        """
-        Retrieve a list of Translation Patterns
-
-        A translation pattern lets you manipulate dialed digits before routing a call and applies to outbound calls
-        only.
-
-        Retrieve a list of translation patterns for a given organization.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param limit_to_location_id: When a location ID is passed, then return only the corresponding location level
-            translation patterns.
-        :type limit_to_location_id: str
-        :param limit_to_org_level_enabled: When set to be `true`, then return only the organization-level translation
-            patterns.
-        :type limit_to_org_level_enabled: bool
-        :param name: Only return translation patterns with the matching `name`.
-        :type name: str
-        :param matching_pattern: Only return translation patterns with the matching `matchingPattern`.
-        :type matching_pattern: str
-        :param org_id: ID of the organization containing the translation patterns.
-        :type org_id: str
-        :return: Generator yielding :class:`TranslationPatternGet` instances
-        """
-        if org_id:
-            params['orgId'] = org_id
-        if limit_to_location_id is not None:
-            params['limitToLocationId'] = limit_to_location_id
-        if limit_to_org_level_enabled is not None:
-            params['limitToOrgLevelEnabled'] = str(limit_to_org_level_enabled).lower()
-        if name is not None:
-            params['name'] = name
-        if matching_pattern is not None:
-            params['matchingPattern'] = matching_pattern
-        url = self.ep()
-        return [o async for o in self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
-                                              params=params)]
 
     async def details(self, translation_id: str,
                 location_id: str = None,
@@ -16661,9 +16742,18 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
         :param params: additional parameters
         :return: yields :class:`wxc_sdk.common.CallParkExtension` instances
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if extension is not None:
+            params['extension'] = extension
+        if location_name is not None:
+            params['locationName'] = location_name
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallParkExtension, params=params)
@@ -16699,9 +16789,18 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
         :param params: additional parameters
         :return: yields :class:`wxc_sdk.common.CallParkExtension` instances
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if extension is not None:
+            params['extension'] = extension
+        if location_name is not None:
+            params['locationName'] = location_name
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self._endpoint()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CallParkExtension, params=params)]
@@ -16735,13 +16834,17 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
 
     async def create(self, location_id: str, name: str, extension: str, org_id: str = None, ) -> str:
         """
+        Create a Call Park Extension
+
         Create new Call Park Extensions for the given location.
+
         Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
         Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
         monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
         line key.
-        Creating a call park extension requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+
+        Creating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Create the call park extension for this location.
         :type location_id: str
@@ -16765,13 +16868,17 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
 
     async def delete(self, location_id: str, cpe_id: str, org_id: str = None):
         """
+        Delete a Call Park Extension
+
         Delete the designated Call Park Extension.
+
         Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
         Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
         monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
         line key.
-        Deleting a call park extension requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+
+        Deleting a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Location from which to delete a call park extension.
         :type location_id: str
@@ -16790,13 +16897,17 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
 
     async def update(self, location_id: str, cpe_id: str, name: str = None, extension: str = None, org_id: str = None):
         """
+        Update a Call Park Extension
+
         Update the designated Call Park Extension.
+
         Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
         Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
         monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
         line key.
-        Updating a call park extension requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+
+        Updating a call park extension requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call park extension exists.
         :type location_id: str
@@ -16837,359 +16948,173 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
       UCM, including Dedicated Instance users.
     """
 
-    async def dial(self, destination: str) -> DialResponse:
+    async def list_calls(self) -> list[TelephonyCall]:
         """
-        Initiate an outbound call to a specified destination. This is also commonly referred to as Click to Call or
-        Click to Dial. Alerts on all the devices belonging to the user. When the user answers on one of these alerting
-        devices, an outbound call is placed from that device to the destination.
+        List Calls
 
-        :param destination: The destination to be dialed. The destination can be digits or a URI. Some examples for
-            destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain,
-            sip:user@company.domain
-        :type destination: str
-        :return: Call id and call session id
+        Get the list of details for all active calls associated with the user.
+
+        :rtype: list[Call]
         """
-        ep = self.ep('dial')
-        data = await self.post(ep, json={'destination': destination})
-        return DialResponse.model_validate(data)
+        url = self.ep()
+        data = await super().get(url)
+        r = TypeAdapter(list[TelephonyCall]).validate_python(data['items'])
+        return r
 
     async def answer(self, call_id: str, endpoint_id: str = None):
         """
+        Answer
+
         Answer an incoming call. When no endpointId is specified, the call is answered on the user's primary device.
         When an endpointId is specified, the call is answered on the device or application identified by the
-        endpointId. The answer  API is rejected if the device is not alerting for the call or the device does not
+        endpointId. The answer API is rejected if the device is not alerting for the call or the device does not
         support answer via API.
 
         :param call_id: The call identifier of the call to be answered.
         :type call_id: str
-        :param endpoint_id: The ID of the device or application to answer the call on. The endpointId must be one of
-            the endpointIds returned by :meth:`wxc_sdk.person_settings.preferred_answer.AsPreferredAnswerApi.read`
+        :param endpoint_id: The ID of the device or application to answer the call on. The `endpointId` must be one of
+            the endpointIds returned by the `Get Preferred Answer Endpoint API
+            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
+        :rtype: None
         """
-        body = {to_camel(k): v for k, v in locals().items()
-                if v is not None and k != 'self'}
-        ep = self.ep('answer')
-        await self.post(ep, json=body)
+        body = dict()
+        body['callId'] = call_id
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
+        url = self.ep('answer')
+        await super().post(url, json=body)
 
-    async def reject(self, call_id: str, action: RejectAction = None):
+    async def barge_in(self, target: str, endpoint_id: str = None) -> CallInfo:
         """
-        Reject an unanswered incoming call.
+        Barge In
 
-        :param call_id: The call identifier of the call to be rejected.
-        :type call_id: str
-        :param action: The rejection action to apply to the call. The busy action is applied if no specific action is
-            provided.
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('reject')
-        await self.post(ep, json=data)
+        Barge-in on another user's answered call. A new call is initiated to perform the barge-in in a similar manner
+        to the dial command.
 
-    async def hangup(self, call_id: str):
+        :param target: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target
+            include: `1234`, `2223334444`, `+12223334444`, `tel:+12223334444`, `user@company.domain`,
+            `sip:user@company.domain`
+        :type target: str
+        :param endpoint_id: The ID of the device or application to use for the barge-in. The `endpointId` must be one
+            of the endpointIds returned by the `Get Preferred Answer Endpoint API
+            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+        :type endpoint_id: str
+        :rtype: :class:`CallInfo`
         """
-        Hangup a call. If used on an unanswered incoming call, the call is rejected and sent to busy.
+        body = dict()
+        body['target'] = target
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
+        url = self.ep('bargeIn')
+        data = await super().post(url, json=body)
+        r = CallInfo.model_validate(data)
+        return r
 
-        :param call_id: The call identifier of the call to hangup.
-        :type call_id: str
+    async def dial(self, destination: str, endpoint_id: str = None) -> CallInfo:
         """
-        ep = self.ep('hangup')
-        await self.post(ep, json={'callId': call_id})
+        Dial
 
-    async def hold(self, call_id: str):
-        """
-        Hold a connected call.
+        Initiate an outbound call to a specified destination. This is also commonly referred to as Click to Call or
+        Click to Dial. Alerts occur on all the devices belonging to a user unless an optional endpointId is specified
+        in which case only the device or application identified by the endpointId is alerted. When a user answers an
+        alerting device, an outbound call is placed from that device to the destination.
 
-        :param call_id: The call identifier of the call to hold.
-        :type call_id: str
+        :param destination: The destination to be dialed. The destination can be digits or a URI. Some examples for
+            destination include: `1234`, `2223334444`, `+12223334444`, `*73`, `tel:+12223334444`,
+            `user@company.domain`, and `sip:user@company.domain`.
+        :type destination: str
+        :param endpoint_id: The ID of the device or application to use for the call. The `endpointId` must be one of
+            the endpointIds returned by the `Get Preferred Answer Endpoint API
+            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+        :type endpoint_id: str
+        :rtype: :class:`CallInfo`
         """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('hold')
-        await self.post(ep, json=data)
-
-    async def resume(self, call_id: str):
-        """
-        Resume a held call.
-
-        :param call_id: The call identifier of the call to resume.
-        :type call_id: str
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('resume')
-        await self.post(ep, json=data)
+        body = dict()
+        body['destination'] = destination
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
+        url = self.ep('dial')
+        data = await super().post(url, json=body)
+        r = CallInfo.model_validate(data)
+        return r
 
     async def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):
         """
-        Divert a call to a destination or a user's voicemail. This is also commonly referred to as Blind Transfer
+        Divert
+
+        Divert a call to a destination or a user's voicemail. This is also commonly referred to as a Blind Transfer.
 
         :param call_id: The call identifier of the call to divert.
         :type call_id: str
         :param destination: The destination to divert the call to. If toVoicemail is false, destination is required.
-            The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444,
-            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
+            The destination can be digits or a URI. Some examples for destination include: `1234`, `2223334444`,
+            `+12223334444`, `*73`, `tel:+12223334444`, `user@company.domain`, `sip:user@company.domain`
         :type destination: str
         :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
             specified user's voicemail.
         :type to_voicemail: bool
+        :rtype: None
         """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('divert')
-        await self.post(ep, json=data)
+        body = dict()
+        body['callId'] = call_id
+        if destination is not None:
+            body['destination'] = destination
+        if to_voicemail is not None:
+            body['toVoicemail'] = to_voicemail
+        url = self.ep('divert')
+        await super().post(url, json=body)
 
-    async def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None):
+    async def hangup(self, call_id: str):
         """
-        Transfer two calls together. Unanswered incoming calls cannot be transferred but can be diverted using the
-        divert API. If the user has only two calls and wants to transfer them together, the callId1 and callId2
-        parameters are optional and when not provided the calls are automatically selected and transferred. If the
-        user has more than two calls and wants to transfer two of them together, the callId1 and callId2 parameters
-        are mandatory to specify which calls are being transferred. These are also commonly referred to as Attended
-        Transfer, Consultative Transfer, or Supervised Transfer and will return a 204 response. If the user wants to
-        transfer one call to a new destination but only when the destination responds, the callId1 and destination
-        parameters are mandatory to specify the call being transferred and the destination. This is referred to as a
-        Mute Transfer and is similar to the divert API with the difference of waiting for the destination to respond
-        prior to transferring the call. If the destination does not respond, the call is not transferred. This will
-        return a 201 response.
+        Hangup
 
-        :param call_id1: The call identifier of the first call to transfer. This parameter is mandatory if either
-            call_id2 or destination is provided.
-        :type call_id1: str
-        :param call_id2: The call identifier of the first call to transfer. This parameter is mandatory if either
-            callId2 or destination is provided.
-        :type call_id1: str
-        :param destination: The destination to be transferred to. The destination can be digits or a URI. Some
-            examples for destination include: 1234, 2223334444,
-            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain.
-            This parameter is mandatory if call_id1 is provided and call_id2 is not provided.
-        :type destination: str
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('transfer')
-        await self.post(ep, json=data)
+        Hangup a call. If used on an unanswered incoming call, the call is rejected and sent to busy.
 
-    async def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> ParkedAgainst:
-        """
-        Park a connected call. The number field in the response can be used as the destination for the retrieve
-        command to retrieve the parked call.
-
-        :param call_id: The call identifier of the call to park.
+        :param call_id: The call identifier of the call to hangup.
         :type call_id: str
-        :param destination: Identifies where the call is to be parked. If not provided, the call is parked against the
-            parking user.
-            The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444,
-            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
-        :type destination: str
-        :param is_group_park: If set to true, the call is parked against an automatically selected member of the
-            user's call park group and the destination parameter is ignored.
-        :type is_group_park: bool
-        :return: The details of where the call has been parked.
-        :rtype: :class:`ParkedAgainst`
+        :rtype: None
         """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('park')
-        data = await self.post(ep, json=data)
-        return ParkedAgainst.model_validate(data)
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('hangup')
+        await super().post(url, json=body)
 
-    async def retrieve(self, destination: str) -> CallInfo:
+    async def call_history(self, history_type: HistoryType = None) -> list[CallHistoryRecord]:
         """
-        :param destination: Identifies where the call is parked. The number field from the park command response can
-            be used as the destination for the retrieve command. If not provided, the call parked against the
-            retrieving user is retrieved. The destination can be digits or a URI. Some examples for destination
-            include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain,
-            sip:user@company.domain
-        :return: call id and call session id of retreived call
-        :rtype: :class:`CallInfo`
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('retrieve')
-        data = await self.post(ep, json=data)
-        return CallInfo.model_validate(data)
+        List Call History
 
-    async def start_recording(self, call_id: str):
-        """
-        Start recording a call. Use of this API is only valid when the user's call recording mode is set to "On Demand".
+        Get the list of call history records for the user. A maximum of 20 call history records per type (`placed`,
+        `missed`, `received`) are returned.
 
-        :param call_id: The call identifier of the call to start recording.
-        :type call_id: str
+        :param history_type: The type of call history records to retrieve. If not specified, then all call history records are
+            retrieved.
+        :type history_type: CallHistoryRecordTypeEnum
+        :rtype: list[CallHistoryRecord]
         """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('startRecording')
-        await self.post(ep, json=data)
+        params = {}
+        if history_type is not None:
+            params['type'] = enum_str(history_type)
+        url = self.ep('history')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])
+        return r
 
-    async def stop_recording(self, call_id: str):
+    async def hold(self, call_id: str):
         """
-        Stop recording a call. Use of this API is only valid when a call is being recorded and the user's call
-        recording mode is set to "On Demand".
+        Hold
 
-        :param call_id: The call identifier of the call to stop recording.
-        :type call_id: str
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('stopRecording')
-        await self.post(ep, json=data)
-
-    async def pause_recording(self, call_id: str):
-        """
-        Pause recording on a call. Use of this API is only valid when a call is being recorded and the user's call
-        recording mode is set to "On Demand" or "Always with Pause/Resume".
-
-        :param call_id: The call identifier of the call to pause recording.
-        :type call_id: str
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('pauseRecording')
-        await self.post(ep, json=data)
-
-    async def resume_recording(self, call_id: str):
-        """
-        Resume recording a call. Use of this API is only valid when a call's recording is paused and the user's call
-        recording mode is set to "On Demand" or "Always with Pause/Resume".
-
-        :param call_id: The call identifier of the call to resume recording.
-        :type call_id: str
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('resumeRecording')
-        await self.post(ep, json=data)
-
-    async def transmit_dtmf(self, call_id: str, dtmf: str):
-        """
-        Transmit DTMF digits to a call.
+        Hold a connected call.
 
         :param call_id: The call identifier of the call to hold.
         :type call_id: str
-        :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6,
-            7, 8, 9, *, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value
-            “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
-            successively.
+        :rtype: None
         """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('transmitDtmf')
-        await self.post(ep, json=data)
-
-    async def push(self, call_id: str):
-        """
-        Pushes a call from the assistant to the executive the call is associated with. Use of this API is only valid
-        when the assistant’s call is associated with an executive.
-
-        :param call_id: The call identifier of the call to push.
-        :type call_id: str
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('push')
-        await self.post(ep, json=data)
-
-    async def pickup(self, target: str) -> CallInfo:
-        """
-        Picks up an incoming call to another user. A new call is initiated to perform the pickup in a similar manner
-        to the dial command. When target is not present, the API pickups up a call from the user’s call pickup group.
-        When target is present, the API pickups an incoming call from the specified target user.
-
-        :param target: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the
-            user’s call pickup group is picked up. The target can be digits or a URI. Some examples for target
-            include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
-        :type target: str
-        :return: call info of picked up call
-        :rtype: :class:`CallInfo`
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('pickup')
-        data = await self.post(ep, json=data)
-        return CallInfo.model_validate(data)
-
-    async def barge_in(self, target: str):
-        """
-        Barge-in on another user’s answered call. A new call is initiated to perform the barge-in in a similar manner
-        to the dial command.
-
-        :param target: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target
-            include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
-        :type target: str
-        :return: call info of picked up call
-        :rtype: :class:`CallInfo`
-        """
-        data = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                if i and v is not None}
-        ep = self.ep('bargeIn')
-        data = await self.post(ep, json=data)
-        return CallInfo.model_validate(data)
-
-    def list_calls_gen(self) -> AsyncGenerator[TelephonyCall, None, None]:
-        """
-        Get the list of details for all active calls associated with the user.
-
-        :return: yield :class:`TelephonyCall`
-        """
-        ep = self.ep()
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=ep, model=TelephonyCall)
-
-    async def list_calls(self) -> List[TelephonyCall]:
-        """
-        Get the list of details for all active calls associated with the user.
-
-        :return: yield :class:`TelephonyCall`
-        """
-        ep = self.ep()
-        # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=ep, model=TelephonyCall)]
-
-    async def call_details(self, call_id: str) -> TelephonyCall:
-        """
-        Get the details of the specified active call for the user.
-
-        :param call_id: The call identifier of the call.
-        :type call_id: str
-        :return: call details
-        :rtype: :class:`TelephonyCall`
-        """
-        ep = self.ep(call_id)
-        data = await self.get(ep)
-        return TelephonyCall.model_validate(data)
-
-    def call_history_gen(self, history_type: Union[str, HistoryType] = None) -> AsyncGenerator[CallHistoryRecord, None, None]:
-        """
-        List Call History
-
-        Get the list of call history records for the user. A maximum of 20 call history records per type (placed,
-        missed, received) are returned.
-
-        :param history_type: The type of call history records to retrieve. If not specified, then all call history
-            records are retrieved. Possible values: placed, missed, received
-        :type history_type: HistoryType or str
-        :return: yields :class:`CallHistoryRecord` objects
-        """
-        params = history_type and {'type': enum_str(history_type)} or None
-        url = self.ep('history')
-        return self.session.follow_pagination(url=url, model=CallHistoryRecord, params=params)
-
-    async def call_history(self, history_type: Union[str, HistoryType] = None) -> List[CallHistoryRecord]:
-        """
-        List Call History
-
-        Get the list of call history records for the user. A maximum of 20 call history records per type (placed,
-        missed, received) are returned.
-
-        :param history_type: The type of call history records to retrieve. If not specified, then all call history
-            records are retrieved. Possible values: placed, missed, received
-        :type history_type: HistoryType or str
-        :return: yields :class:`CallHistoryRecord` objects
-        """
-        params = history_type and {'type': enum_str(history_type)} or None
-        url = self.ep('history')
-        return [o async for o in self.session.follow_pagination(url=url, model=CallHistoryRecord, params=params)]
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('hold')
+        await super().post(url, json=body)
 
     async def mute(self, call_id: str):
         """
@@ -17207,6 +17132,283 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         url = self.ep('mute')
         await super().post(url, json=body)
 
+    async def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> TelephonyParty:
+        """
+        Park
+
+        Park a connected call. The number field in the response can be used as the destination for the retrieve command
+        to retrieve the parked call.
+
+        :param call_id: The call identifier of the call to park.
+        :type call_id: str
+        :param destination: Identifes where the call is to be parked. If not provided, the call is parked against the
+            parking user. The destination can be digits or a URI. Some examples for destination include: `1234`,
+            `2223334444`, `+12223334444`, `*73`, `tel:+12223334444`, `user@company.domain`, `sip:user@company.domain`
+        :type destination: str
+        :param is_group_park: If set to`true`, the call is parked against an automatically selected member of the
+            user's call park group and the destination parameter is ignored.
+        :type is_group_park: bool
+        :rtype: TelephonyParty
+        """
+        body = dict()
+        body['callId'] = call_id
+        if destination is not None:
+            body['destination'] = destination
+        if is_group_park is not None:
+            body['isGroupPark'] = is_group_park
+        url = self.ep('park')
+        data = await super().post(url, json=body)
+        r = TelephonyParty.model_validate(data['parkedAgainst'])
+        return r
+
+    async def pause_recording(self, call_id: str = None):
+        """
+        Pause Recording
+
+        Pause recording on a call. Use of this API is only valid when a call is being recorded and the user's call
+        recording mode is set to "On Demand" or "Always with Pause/Resume".
+
+        :param call_id: The call identifier of the call to pause recording.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        url = self.ep('pauseRecording')
+        await super().post(url, json=body)
+
+    async def pickup(self, target: str = None, endpoint_id: str = None) -> CallInfo:
+        """
+        Pickup
+
+        Picks up an incoming call to another user. A new call is initiated to perform the pickup in a similar manner to
+        the dial command. When target is not present, the API pickups up a call from the user's call pickup group.
+        When target is present, the API pickups an incoming call from the specified target user.
+
+        :param target: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the
+            user's call pickup group is picked up. The target can be digits or a URI. Some examples for target
+            include: `1234`, `2223334444`, `+12223334444`, `tel:+12223334444`, `user@company.domain`,
+            `sip:user@company.domain`
+        :type target: str
+        :param endpoint_id: The ID of the device or application to use for the pickup. The `endpointId` must be one of
+            the endpointIds returned by the `Get Preferred Answer Endpoint API
+            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+        :type endpoint_id: str
+        :rtype: :class:`CallInfo`
+        """
+        body = dict()
+        if target is not None:
+            body['target'] = target
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
+        url = self.ep('pickup')
+        data = await super().post(url, json=body)
+        r = CallInfo.model_validate(data)
+        return r
+
+    async def push(self, call_id: str = None):
+        """
+        Push
+
+        Pushes a call from the assistant to the executive the call is associated with. Use of this API is only valid
+        when the assistant's call is associated with an executive.
+
+        :param call_id: The call identifier of the call to push.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        url = self.ep('push')
+        await super().post(url, json=body)
+
+    async def reject(self, call_id: str, action: RejectAction = None):
+        """
+        Reject
+
+        Reject an unanswered incoming call.
+
+        :param call_id: The call identifier of the call to be rejected.
+        :type call_id: str
+        :param action: The rejection action to apply to the call. The busy action is applied if no specific action is
+            provided.
+        :type action: RejectAction
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        if action is not None:
+            body['action'] = enum_str(action)
+        url = self.ep('reject')
+        await super().post(url, json=body)
+
+    async def resume(self, call_id: str):
+        """
+        Resume
+
+        Resume a held call.
+
+        :param call_id: The call identifier of the call to resume.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('resume')
+        await super().post(url, json=body)
+
+    async def resume_recording(self, call_id: str = None):
+        """
+        Resume Recording
+
+        Resume recording a call. Use of this API is only valid when a call's recording is paused and the user's call
+        recording mode is set to "On Demand" or "Always with Pause/Resume".
+
+        :param call_id: The call identifier of the call to resume recording.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        url = self.ep('resumeRecording')
+        await super().post(url, json=body)
+
+    async def retrieve(self, destination: str = None, endpoint_id: str = None) -> CallInfo:
+        """
+        Retrieve
+
+        Retrieve a parked call. A new call is initiated to perform the retrieval in a similar manner to the dial
+        command. The number field from the park command response can be used as the destination for the retrieve
+        command.
+
+        :param destination: Identifies where the call is parked. The number field from the park command response can be
+            used as the destination for the retrieve command. If not provided, the call parked against the retrieving
+            user is retrieved. The destination can be digits or a URI. Some examples for destination include: `1234`,
+            `2223334444`, `+12223334444`, `*73`, `tel:+12223334444`, `user@company.domain`, `sip:user@company.domain`
+        :type destination: str
+        :param endpoint_id: The ID of the device or application to use for the retrieval. The `endpointId` must be one
+            of the endpointIds returned by the `Get Preferred Answer Endpoint API
+            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+        :type endpoint_id: str
+        :rtype: :class:`CallInfo`
+        """
+        body = dict()
+        if destination is not None:
+            body['destination'] = destination
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
+        url = self.ep('retrieve')
+        data = await super().post(url, json=body)
+        r = CallInfo.model_validate(data)
+        return r
+
+    async def start_recording(self, call_id: str = None):
+        """
+        Start Recording
+
+        Start recording a call. Use of this API is only valid when the user's call recording mode is set to "On
+        Demand".
+
+        :param call_id: The call identifier of the call to start recording.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        url = self.ep('startRecording')
+        await super().post(url, json=body)
+
+    async def stop_recording(self, call_id: str = None):
+        """
+        Stop Recording
+
+        Stop recording a call. Use of this API is only valid when a call is being recorded and the user's call
+        recording mode is set to "On Demand".
+
+        :param call_id: The call identifier of the call to stop recording.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        url = self.ep('stopRecording')
+        await super().post(url, json=body)
+
+    async def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None) -> CallInfo:
+        """
+        Transfer
+
+        Transfer two calls together.
+
+        Unanswered incoming calls cannot be transferred but can be diverted using the divert API.
+
+        If the user has only two calls and wants to transfer them together, the `callId1` and `callId2` parameters are
+        optional and when not provided the calls are automatically selected and transferred.
+
+        If the user has more than two calls and wants to transfer two of them together, the `callId1` and `callId2`
+        parameters are mandatory to specify which calls are being transferred. Those are also commonly referred to as
+        Attended Transfer, Consultative Transfer, or Supervised Transfer and will return a `204` response.
+
+        If the user wants to transfer one call to a new destination but only when the destination responds, the
+        `callId1` and destination parameters are mandatory to specify the call being transferred and the destination.
+
+        This is referred to as a Mute Transfer and is similar to the divert API with the difference of waiting for the
+        destination to respond prior to transferring the call. If the destination does not respond, the call is not
+        transferred. This will return a `201` response.
+
+        :param call_id1: The call identifier of the first call to transfer. This parameter is mandatory if either
+            `callId2` or `destination` is provided.
+        :type call_id1: str
+        :param call_id2: The call identifier of the second call to transfer. This parameter is mandatory if `callId1`
+            is provided and `destination` is not provided.
+        :type call_id2: str
+        :param destination: The destination to be transferred to. The destination can be digits or a URI. Some examples
+            for destination include: `1234`, `2223334444`, `+12223334444`, `tel:+12223334444`, `user@company.domain`,
+            `sip:user@company.domain`. This parameter is mandatory if `callId1` is provided and `callId2` is not
+            provided.
+        :type destination: str
+        :rtype: :class:`CallInfo`
+        """
+        body = dict()
+        if call_id1 is not None:
+            body['callId1'] = call_id1
+        if call_id2 is not None:
+            body['callId2'] = call_id2
+        if destination is not None:
+            body['destination'] = destination
+        url = self.ep('transfer')
+        data = await super().post(url, json=body)
+        r = CallInfo.model_validate(data)
+        return r
+
+    async def transmit_dtmf(self, call_id: str = None, dtmf: str = None):
+        """
+        Transmit DTMF
+
+        Transmit DTMF digits to a call.
+
+        :param call_id: The call identifier of the call to transmit DTMF digits for.
+        :type call_id: str
+        :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: `[0, 1, 2, 3, 4, 5, 6,
+            7, 8, 9, *, #, A, B, C, D]`. A comma "," may be included to indicate a pause between digits. For the value
+            “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
+            successively.
+        :type dtmf: str
+        :rtype: None
+        """
+        body = dict()
+        if call_id is not None:
+            body['callId'] = call_id
+        if dtmf is not None:
+            body['dtmf'] = dtmf
+        url = self.ep('transmitDtmf')
+        await super().post(url, json=body)
+
     async def unmute(self, call_id: str):
         """
         Unmute
@@ -17222,6 +17424,21 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         body['callId'] = call_id
         url = self.ep('unmute')
         await super().post(url, json=body)
+
+    async def call_details(self, call_id: str) -> TelephonyCall:
+        """
+        Get Call Details
+
+        Get the details of the specified active call for the user.
+
+        :param call_id: The call identifier of the call.
+        :type call_id: str
+        :rtype: :class:`Call`
+        """
+        url = self.ep(f'{call_id}')
+        data = await super().get(url)
+        r = TelephonyCall.model_validate(data)
+        return r
 
 
 class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
@@ -21948,11 +22165,10 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         """
         url = self.ep(f'{dial_plan_id}/dialPatterns')
         params = org_id and {'orgId': org_id} or None
-
-        class Body(ApiModel):
-            dial_patterns: list[PatternAndAction]
-
-        body = Body(dial_patterns=dial_patterns).model_dump_json()
+        body = dict()
+        body['dialPatterns'] = TypeAdapter(list[PatternAndAction]).dump_python(dial_patterns, mode='json',
+                                                                               by_alias=True,
+                                                                               exclude_none=True)
         await self.put(url=url, params=params, data=body)
 
     async def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):
@@ -22128,13 +22344,16 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     async def usage(self, rg_id: str, org_id: str = None) -> RouteGroupUsage:
         """
+        Read the Usage of a Routing Group
+
         List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
-        specific Route Group. Users within Call to Extension locations are registered to a PBX which allows you to
-        route unknown extensions (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route
-        Group. PSTN Connections may be cisco PSTN, cloud-connected PSTN, or premises-based PSTN (local gateway).
-        Dial Plans allow you to route calls to on-premises extensions via your trunk or route group. Route Lists are
-        a list of numbers that can be reached via a route group. It can be used to provide cloud PSTN connectivity to
-        Webex Calling Dedicated Instance.
+        specific Route Group.
+        Users within Call to Extension locations are registered to a PBX which allows you to route unknown extensions
+        (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route Group.
+        PSTN Connections may be a Cisco PSTN, a cloud-connected PSTN, or a premises-based PSTN (local gateway).
+        Dial Plans allow you to route calls to on-premises extensions via your trunk or route group.
+        Route Lists are a list of numbers that can be reached via a route group and can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
 
         Retrieving usage information requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
@@ -22151,7 +22370,8 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         data = await self.get(url=url, params=params)
         return RouteGroupUsage.model_validate(data)
 
-    def usage_call_to_extension_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_call_to_extension_gen(self, rg_id: str, location_name: str = None, order: str = None,
+                                org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
@@ -22161,17 +22381,26 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_call_to_extension(self, rg_id: str, org_id: str = None, **params) -> List[IdAndName]:
+    async def usage_call_to_extension(self, rg_id: str, location_name: str = None, order: str = None,
+                                org_id: str = None, **params) -> List[IdAndName]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
@@ -22181,17 +22410,26 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def usage_dial_plan_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_dial_plan_gen(self, rg_id: str, location_name: str = None, order: str = None,
+                        org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
         """
         List Dial Plan Locations for a specific route group.
 
@@ -22204,17 +22442,26 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_dial_plan(self, rg_id: str, org_id: str = None, **params) -> List[IdAndName]:
+    async def usage_dial_plan(self, rg_id: str, location_name: str = None, order: str = None,
+                        org_id: str = None, **params) -> List[IdAndName]:
         """
         List Dial Plan Locations for a specific route group.
 
@@ -22227,17 +22474,26 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def usage_location_pstn_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_location_pstn_gen(self, rg_id: str, location_name: str = None,
+                            order: str = None, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -22246,17 +22502,26 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_location_pstn(self, rg_id: str, org_id: str = None, **params) -> List[IdAndName]:
+    async def usage_location_pstn(self, rg_id: str, location_name: str = None,
+                            order: str = None, org_id: str = None, **params) -> List[IdAndName]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -22265,50 +22530,80 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         of spark-admin:telephony_config_read.
 
         :param rg_id: Route group requested for information.
+        :param location_name: Return the list of locations matching the location name.
+        :type location_name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def usage_route_lists_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[UsageRouteLists, None, None]:
+    def usage_route_lists_gen(self, rg_id: str, name: str = None, order: str = None, org_id: str = None,
+                          **params) -> AsyncGenerator[UsageRouteLists, None, None]:
         """
-        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a
-        Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+        Read the Route Lists of a Routing Group
 
-        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
+        Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+
+        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param rg_id: Route group requested for information.
+        :param name: Return the list of locations matching the location name.
+        :type name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageRouteList')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)
 
-    async def usage_route_lists(self, rg_id: str, org_id: str = None, **params) -> List[UsageRouteLists]:
+    async def usage_route_lists(self, rg_id: str, name: str = None, order: str = None, org_id: str = None,
+                          **params) -> List[UsageRouteLists]:
         """
-        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a
-        Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+        Read the Route Lists of a Routing Group
 
-        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
+        Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+
+        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param rg_id: Route group requested for information.
+        :param name: Return the list of locations matching the location name.
+        :type name: str
+        :param order: Order the locations according to designated fields.  Available sort orders are `asc`, and `desc`.
+        :type order: str
         :param org_id: Organization associated with specific route group.
         :return: generator of instances
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'rg_id', 'params'})
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
         url = self.ep(f'{rg_id}/usageRouteList')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)]
@@ -22426,7 +22721,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         data = await self.get(url=url, params=params)
         return RouteListDetail.model_validate(data)
 
-    async def update(self, rl_id: str, name: str, rg_id: str, org_id: str = None):
+    async def update(self, rl_id: str, name: str = None, rg_id: str=None, org_id: str = None):
         """
         Modify the details for a Route List.
 
@@ -22446,8 +22741,11 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = {'name': name,
-                'routeGroupId': rg_id}
+        body = dict()
+        if name is not None:
+            body['name'] = name
+        if rg_id is not None:
+            body['routeGroupId'] = rg_id
         url = self.ep(rl_id)
         await self.put(url=url, params=params, json=body)
 
@@ -22528,13 +22826,15 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
                        delete_all_numbers: bool = None,
                        org_id: str = None) -> List[UpdateNumbersResponse]:
         """
+        Modify Numbers for Route List
+
         Modify numbers for a specific Route List of a Customer.
 
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
         connectivity to Webex Calling Dedicated Instance.
 
-        Retrieving a Route List requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param rl_id: ID of the Route List.
         :type rl_id: str
@@ -22707,8 +23007,8 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         data = await self.get(url=url, params=params)
         return TrunkDetail.model_validate(data)
 
-    async def update(self, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
-               dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, org_id: str = None):
+    async def update(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool = None,
+               max_concurrent_calls: int = None, org_id: str = None):
         """
         Modify a Trunk for the organization.
 
@@ -22720,12 +23020,8 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
         :param trunk_id:
         :type name: str
-        :param location_id: ID of location associated with the trunk.
-        :type location_id: str
         :param password: A password to use on the trunk.
         :type password: str
-        :param trunk_type: Trunk Type associated with the trunk.
-        :type trunk_type: :class:`TrunkType`
         :param dual_identity_support_enabled: Dual Identity Support setting impacts the handling of the From header
             and P-Asserted-Identity header when sending an initial SIP INVITE to the trunk for an outbound call.
         :type dual_identity_support_enabled: bool
@@ -22734,10 +23030,17 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :param org_id: Organization to which trunk belongs.
         :type org_id: str:return:
         """
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
-        params = org_id and {'orgId': org_id} or None
-        url = self.ep()
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        body['password'] = password
+        if dual_identity_support_enabled is not None:
+            body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+        if max_concurrent_calls is not None:
+            body['maxConcurrentCalls'] = max_concurrent_calls
+        url = self.ep(trunk_id)
         await self.put(url=url, params=params, json=body)
 
     async def delete_trunk(self, trunk_id: str, org_id: str = None):
@@ -22803,7 +23106,74 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         data = await self.get(url=url, params=params)
         return TrunkUsage.model_validate(data)
 
-    def usage_dial_plan_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_call_to_extension_gen(self, trunk_id: str, order: str = None, name: List[str] = None, org_id: str = None,
+                                **params) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        Get local gateway call to on-premises extension usage for a trunk.
+
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
+        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = ','.join(name)
+        url = self.ep(f'{trunk_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_call_to_extension(self, trunk_id: str, order: str = None, name: List[str] = None, org_id: str = None,
+                                **params) -> List[IdAndName]:
+        """
+        Get local gateway call to on-premises extension usage for a trunk.
+
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
+        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: ID of the trunk.
+        :type trunk_id: str
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = ','.join(name)
+        url = self.ep(f'{trunk_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
+    def usage_dial_plan_gen(self, trunk_id: str, order: str = None, name: List[str] = None,
+                        org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -22816,17 +23186,27 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = ','.join(name)
         url = self.ep(f'{trunk_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_dial_plan(self, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+    async def usage_dial_plan(self, trunk_id: str, order: str = None, name: List[str] = None,
+                        org_id: str = None, **params) -> List[IdAndName]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -22839,12 +23219,21 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
+        :param order: Order the trunks according to the designated fields.  Available sort fields are `name`, and
+            `locationName`. Sort order is ascending by default
+        :type order: str
+        :param name: Return the list of trunks matching the local gateway names
+        :type name: list[str]
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if order is not None:
+            params['order'] = order
+        if name is not None:
+            params['name'] = ','.join(name)
         url = self.ep(f'{trunk_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
@@ -22868,8 +23257,9 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{trunk_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -22893,8 +23283,9 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{trunk_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
@@ -22916,8 +23307,9 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{trunk_id}/usageRouteGroup')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -22939,63 +23331,10 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :type org_id: str
         :return: id and name objects
         """
-        params = {to_camel(p): v for p, v in locals().items()
-                  if v is not None and p not in {'self', 'trunk_id'}}
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{trunk_id}/usageRouteGroup')
-        # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
-
-    def usage_call_to_extension_gen(self, trunk_id: str, org_id: str = None, order: str = None,
-                                name: List[str] = None, **params) -> AsyncGenerator[IdAndName, None, None]:
-        """
-        Get local gateway call to on-premises extension usage for a trunk.
-
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
-        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
-        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-
-        Retrieving this information requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param trunk_id: ID of the trunk.
-        :param org_id: Organization to which the trunk belongs.
-        :param order: Order the trunks according to the designated fields. Available sort fields are name,
-            and locationName. Sort order is ascending by default
-        :param name: Return the list of trunks matching the local gateway names
-        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
-        """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id', 'params'})
-        if name:
-            params['name'] = ','.join(name)
-        url = self.ep(f'{trunk_id}/usageCallToExtension')
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
-
-    async def usage_call_to_extension(self, trunk_id: str, org_id: str = None, order: str = None,
-                                name: List[str] = None, **params) -> List[IdAndName]:
-        """
-        Get local gateway call to on-premises extension usage for a trunk.
-
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
-        gateway or other supported device. The trunk can be assigned to a Route Group which is a group of trunks that
-        allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-
-        Retrieving this information requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param trunk_id: ID of the trunk.
-        :param org_id: Organization to which the trunk belongs.
-        :param order: Order the trunks according to the designated fields. Available sort fields are name,
-            and locationName. Sort order is ascending by default
-        :param name: Return the list of trunks matching the local gateway names
-        :return: generator of :class:`wxc_sdk.common.IdAndName` instances
-        """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id', 'params'})
-        if name:
-            params['name'] = ','.join(name)
-        url = self.ep(f'{trunk_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 

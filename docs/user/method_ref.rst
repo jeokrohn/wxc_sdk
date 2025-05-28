@@ -750,7 +750,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.callpark.call_park_settings <wxc_sdk.telephony.callpark.CallParkApi.call_park_settings>`
         Get Call Park Settings
    * - :meth:`api.telephony.callpark.create <wxc_sdk.telephony.callpark.CallParkApi.create>`
-        Create a Call Park
+        Create a Call Park Extension
    * - :meth:`api.telephony.callpark.delete_callpark <wxc_sdk.telephony.callpark.CallParkApi.delete_callpark>`
         Delete a Call Park
    * - :meth:`api.telephony.callpark.details <wxc_sdk.telephony.callpark.CallParkApi.details>`
@@ -762,15 +762,15 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.callpark.update_call_park_settings <wxc_sdk.telephony.callpark.CallParkApi.update_call_park_settings>`
         Update Call Park settings
    * - :meth:`api.telephony.callpark_extension.create <wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.create>`
-        Create new Call Park Extensions for the given location
+        Create a Call Park Extension
    * - :meth:`api.telephony.callpark_extension.delete <wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.delete>`
-        Delete the designated Call Park Extension
+        Delete a Call Park Extension
    * - :meth:`api.telephony.callpark_extension.details <wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.details>`
         Get Details for a Call Park Extension
    * - :meth:`api.telephony.callpark_extension.list <wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.list>`
         Read the List of Call Park Extensions
    * - :meth:`api.telephony.callpark_extension.update <wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.update>`
-        Update the designated Call Park Extension
+        Update a Call Park Extension
    * - :meth:`api.telephony.callqueue.alternate_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.alternate_available_phone_numbers>`
         Get Call Queue Alternate Available Phone Numbers
    * - :meth:`api.telephony.callqueue.available_agents <wxc_sdk.telephony.callqueue.CallQueueApi.available_agents>`

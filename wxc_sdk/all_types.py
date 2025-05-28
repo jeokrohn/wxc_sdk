@@ -160,7 +160,7 @@ from wxc_sdk.telephony.callqueue.announcement import Announcement
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward, \
     HolidayService, NightService, StrandedCalls, StrandedCallsAction
 from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, HistoryType, \
-    ParkedAgainst, Personality, Recall, RecordingState, RedirectReason, Redirection, RejectAction, TelephonyCall, \
+    Personality, Recall, RecallType, RecordingState, RedirectReason, Redirection, RejectAction, TelephonyCall, \
     TelephonyEvent, TelephonyEventData, TelephonyParty
 from wxc_sdk.telephony.conference import ConferenceDetails, ConferenceParticipant, ConferenceState, \
     ConferenceTypeEnum
@@ -332,7 +332,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
            'PSTNConnection', 'PSTNConnectionOption', 'PSTNServiceType', 'PSTNType', 'PTTConnectionType', 'Paging',
-           'PagingAgent', 'ParkedAgainst', 'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody',
+           'PagingAgent', 'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody',
            'PatchMeetingResponse', 'PatchUserOperation', 'PatchUserOperationOp', 'PatternAction', 'PatternAndAction',
            'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress', 'PersonECBN', 'PersonECBNDirectLine',
            'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent',
@@ -346,8 +346,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
            'QueryMeetingParticipantsWithEmailBody', 'QueryStatusResponse', 'Question', 'QuestionAnswer',
            'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk',
-           'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Recipient', 'Record', 'Recording', 'RecordingFormat',
-           'RecordingOwnerType', 'RecordingParty', 'RecordingPartyActor', 'RecordingServiceData',
+           'Recall', 'RecallHuntGroup', 'RecallType', 'ReceptionistSettings', 'Recipient', 'Record', 'Recording',
+           'RecordingFormat', 'RecordingOwnerType', 'RecordingParty', 'RecordingPartyActor', 'RecordingServiceData',
            'RecordingServiceType', 'RecordingSession', 'RecordingState', 'RecordingStatus', 'RecordingStorageRegion',
            'RecordingUser', 'RecordingVendor', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence',
            'RedirectReason', 'Redirection', 'Registration', 'RejectAction', 'RepoAnnouncement', 'Report',
