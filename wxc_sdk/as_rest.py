@@ -198,7 +198,7 @@ def retry_request(func):
         # determine how long we have to wait
         retry_after = int(e.headers.get('Retry-After', 5))
 
-        # never wait more than the defined maximum of 20 s
+        # never wait more than the defined maximum wait time
         retry_after = min(retry_after, RETRY_429_MAX_WAIT)
         log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
         await asyncio.sleep(retry_after)

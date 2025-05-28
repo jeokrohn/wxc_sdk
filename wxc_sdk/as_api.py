@@ -25803,7 +25803,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return r
 
 
-class AsVirtualExtensionsApi(AsApiChild, base='/telephony/config'):
+class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
     """
     Features: Virtual Extensions
 
@@ -25971,11 +25971,11 @@ class AsVirtualExtensionsApi(AsApiChild, base='/telephony/config'):
         r = data['id']
         return r
 
-    async def validate_prefix_and_extension_pattern_for_range(self, location_id: str = None,
-                                                        name: str = None, prefix: str = None,
-                                                        patterns: list[str] = None,
-                                                        range_id: str = None,
-                                                        org_id: str = None) -> ValidateVirtualExtensionRange:
+    async def validate_range(self, location_id: str = None,
+                       name: str = None, prefix: str = None,
+                       patterns: list[str] = None,
+                       range_id: str = None,
+                       org_id: str = None) -> ValidateVirtualExtensionRange:
         """
         Validate the prefix and extension pattern for a Virtual Extension Range.
 
@@ -26018,7 +26018,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='/telephony/config'):
             body['patterns'] = patterns
         if range_id is not None:
             body['rangeId'] = range_id
-        url = self.ep('virtualExtensionRanges/action/validate/invoke')
+        url = self.ep('virtualExtensionRanges/actions/validate/invoke')
         data = await super().post(url, params=params, json=body)
         r = ValidateVirtualExtensionRange.model_validate(data)
         return r
@@ -26301,7 +26301,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='/telephony/config'):
         r = data['id']
         return r
 
-    async def validate_external_phone_number(self, phone_numbers: list[str], org_id: str = None) -> str:
+    async def validate_external_phone_number(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumber:
         """
         Validate an external phone number
 
@@ -26321,7 +26321,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='/telephony/config'):
         :type phone_numbers: list[str]
         :param org_id: Unique identifier for the organization.
         :type org_id: str
-        :rtype: str
+        :rtype: ValidatePhoneNumber
         """
         params = {}
         if org_id is not None:
@@ -26330,7 +26330,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='/telephony/config'):
         body['phoneNumbers'] = phone_numbers
         url = self.ep('virtualExtensions/actions/validateNumbers/invoke')
         data = await super().post(url, params=params, json=body)
-        r = data['status']
+        r = ValidatePhoneNumber.model_validate(data)
         return r
 
     async def get_extension_settings(self, org_id: str = None) -> VirtualExtensionMode:
@@ -26418,7 +26418,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='/telephony/config'):
         url = self.ep(f'virtualExtensions/{extension_id}')
         await super().delete(url, params=params)
 
-    async def get_extension(self, extension_id: str, org_id: str = None) -> VirtualExtension:
+    async def details_extension(self, extension_id: str, org_id: str = None) -> VirtualExtension:
         """
         Get a Virtual Extension
 

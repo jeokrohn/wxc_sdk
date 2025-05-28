@@ -1,15 +1,17 @@
 from collections.abc import Generator
 from typing import Optional
 
+from pydantic import Field
+
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['VirtualExtensionsApi', 'VirtualExtension', 'VirtualExtensionLevel',
-           'VirtualExtensionRange',
-           'VirtualExtensionMode', 'VirtualExtensionRangeAction',
-           'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionRangeStatus',
-           'VirtualExtensionRangeValidationStatus', 'VirtualExtensionRangeValidationResult']
+__all__ = ['VirtualExtensionsApi', 'VirtualExtension', 'VirtualExtensionMode',
+           'VirtualExtensionLevel', 'VirtualExtensionRange', 'VirtualExtensionRangeAction',
+           'ValidateVirtualExtensionStatus', 'VirtualExtensionValidationStatus',
+           'VirtualExtensionRangeValidationResult', 'ValidateVirtualExtensionRange',
+           'PhoneNumberStatus', 'ValidatePhoneNumber']
 
 
 class VirtualExtensionLevel(str, Enum):
@@ -78,14 +80,14 @@ class VirtualExtensionRangeAction(str, Enum):
     replace = 'REPLACE'
 
 
-class ValidateVirtualExtensionRangeStatus(str, Enum):
+class ValidateVirtualExtensionStatus(str, Enum):
     #: Validation is successful.
     ok = 'OK'
     #: Validation failed.
     errors = 'ERRORS'
 
 
-class VirtualExtensionRangeValidationStatus(str, Enum):
+class VirtualExtensionValidationStatus(str, Enum):
     #: Validation is successful.
     valid = 'VALID'
     #: Duplicate patterns for virtual extension range.
@@ -106,21 +108,34 @@ class VirtualExtensionRangeValidationResult(ApiModel):
     #: Pattern used for a virtual extension range validation.
     pattern: Optional[str] = None
     #: Error code for the virtual extension range validation.
-    error_code: Optional[str] = None
+    error_code: Optional[int] = None
     #: Error message for the virtual extension range validation.
     message: Optional[str] = None
     #: Virtual extension range validation status.
-    status: Optional[VirtualExtensionRangeValidationStatus] = None
+    status: Optional[VirtualExtensionValidationStatus] = None
 
 
 class ValidateVirtualExtensionRange(ApiModel):
     #: Virtual extension range validation status.
-    status: Optional[ValidateVirtualExtensionRangeStatus] = None
+    status: Optional[ValidateVirtualExtensionStatus] = None
     #: Array of virtual extension range validation status. This is set only when the `status` is `ERRORS`.
-    virtual_extension_range_validation_status: Optional[list[VirtualExtensionRangeValidationResult]] = None
+    validation_status: Optional[list[VirtualExtensionRangeValidationResult]] = (
+        Field(alias='virtualExtensionRangeValidationStatus', default=None))
 
 
-class VirtualExtensionsApi(ApiChild, base='/telephony/config'):
+class PhoneNumberStatus(ApiModel):
+    phone_number: Optional[str] = None
+    state: Optional[VirtualExtensionValidationStatus] = None
+    error_code: Optional[int] = None
+    message: Optional[str] = None
+
+
+class ValidatePhoneNumber(ApiModel):
+    status: Optional[ValidateVirtualExtensionStatus] = None
+    phone_number_status: Optional[list[PhoneNumberStatus]] = Field(default_factory=list)
+
+
+class VirtualExtensionsApi(ApiChild, base='telephony/config'):
     """
     Features: Virtual Extensions
 
@@ -237,11 +252,11 @@ class VirtualExtensionsApi(ApiChild, base='/telephony/config'):
         r = data['id']
         return r
 
-    def validate_prefix_and_extension_pattern_for_range(self, location_id: str = None,
-                                                        name: str = None, prefix: str = None,
-                                                        patterns: list[str] = None,
-                                                        range_id: str = None,
-                                                        org_id: str = None) -> ValidateVirtualExtensionRange:
+    def validate_range(self, location_id: str = None,
+                       name: str = None, prefix: str = None,
+                       patterns: list[str] = None,
+                       range_id: str = None,
+                       org_id: str = None) -> ValidateVirtualExtensionRange:
         """
         Validate the prefix and extension pattern for a Virtual Extension Range.
 
@@ -284,7 +299,7 @@ class VirtualExtensionsApi(ApiChild, base='/telephony/config'):
             body['patterns'] = patterns
         if range_id is not None:
             body['rangeId'] = range_id
-        url = self.ep('virtualExtensionRanges/action/validate/invoke')
+        url = self.ep('virtualExtensionRanges/actions/validate/invoke')
         data = super().post(url, params=params, json=body)
         r = ValidateVirtualExtensionRange.model_validate(data)
         return r
@@ -506,7 +521,7 @@ class VirtualExtensionsApi(ApiChild, base='/telephony/config'):
         r = data['id']
         return r
 
-    def validate_external_phone_number(self, phone_numbers: list[str], org_id: str = None) -> str:
+    def validate_external_phone_number(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumber:
         """
         Validate an external phone number
 
@@ -526,7 +541,7 @@ class VirtualExtensionsApi(ApiChild, base='/telephony/config'):
         :type phone_numbers: list[str]
         :param org_id: Unique identifier for the organization.
         :type org_id: str
-        :rtype: str
+        :rtype: ValidatePhoneNumber
         """
         params = {}
         if org_id is not None:
@@ -535,7 +550,7 @@ class VirtualExtensionsApi(ApiChild, base='/telephony/config'):
         body['phoneNumbers'] = phone_numbers
         url = self.ep('virtualExtensions/actions/validateNumbers/invoke')
         data = super().post(url, params=params, json=body)
-        r = data['status']
+        r = ValidatePhoneNumber.model_validate(data)
         return r
 
     def get_extension_settings(self, org_id: str = None) -> VirtualExtensionMode:
@@ -623,7 +638,7 @@ class VirtualExtensionsApi(ApiChild, base='/telephony/config'):
         url = self.ep(f'virtualExtensions/{extension_id}')
         super().delete(url, params=params)
 
-    def get_extension(self, extension_id: str, org_id: str = None) -> VirtualExtension:
+    def details_extension(self, extension_id: str, org_id: str = None) -> VirtualExtension:
         """
         Get a Virtual Extension
 

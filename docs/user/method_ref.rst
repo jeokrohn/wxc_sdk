@@ -1469,10 +1469,10 @@ The method name is a link to the method documentation.
         Delete a Virtual Extension
    * - :meth:`api.telephony.virtual_extensions.delete_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.delete_range>`
         Delete a Virtual Extension Range
+   * - :meth:`api.telephony.virtual_extensions.details_extension <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.details_extension>`
+        Get a Virtual Extension
    * - :meth:`api.telephony.virtual_extensions.details_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.details_range>`
         Get details of a Virtual Extension Range
-   * - :meth:`api.telephony.virtual_extensions.get_extension <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.get_extension>`
-        Get a Virtual Extension
    * - :meth:`api.telephony.virtual_extensions.get_extension_settings <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.get_extension_settings>`
         Get Virtual extension settings
    * - :meth:`api.telephony.virtual_extensions.list_extensions <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.list_extensions>`
@@ -1487,7 +1487,7 @@ The method name is a link to the method documentation.
         Update a Virtual Extension
    * - :meth:`api.telephony.virtual_extensions.validate_external_phone_number <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.validate_external_phone_number>`
         Validate an external phone number
-   * - :meth:`api.telephony.virtual_extensions.validate_prefix_and_extension_pattern_for_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.validate_prefix_and_extension_pattern_for_range>`
+   * - :meth:`api.telephony.virtual_extensions.validate_range <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.validate_range>`
         Validate the prefix and extension pattern for a Virtual Extension Range
    * - :meth:`api.telephony.virtual_lines.assigned_devices <wxc_sdk.telephony.virtual_line.VirtualLinesApi.assigned_devices>`
         Get List of Devices assigned for a Virtual Line

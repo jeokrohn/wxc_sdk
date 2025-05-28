@@ -212,10 +212,10 @@ from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, Outboun
     ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
 from wxc_sdk.telephony.pstn import PSTNConnectionOption, PSTNServiceType, PSTNType
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction, SupervisorAgentStatus
-from wxc_sdk.telephony.virtual_extensions import ValidateVirtualExtensionRange, \
-    ValidateVirtualExtensionRangeStatus, VirtualExtension, VirtualExtensionLevel, VirtualExtensionMode, \
-    VirtualExtensionRange, VirtualExtensionRangeAction, VirtualExtensionRangeValidationResult, \
-    VirtualExtensionRangeValidationStatus
+from wxc_sdk.telephony.virtual_extensions import PhoneNumberStatus, ValidatePhoneNumber, \
+    ValidateVirtualExtensionRange, ValidateVirtualExtensionStatus, VirtualExtension, VirtualExtensionLevel, \
+    VirtualExtensionMode, VirtualExtensionRange, VirtualExtensionRangeAction, \
+    VirtualExtensionRangeValidationResult, VirtualExtensionValidationStatus
 from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices, VirtualLineLocation, \
     VirtualLineNumberPhoneNumber
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits, \
@@ -338,7 +338,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent',
            'PersonSettingsApiChild', 'PersonType', 'PersonalAssistant', 'PersonalAssistantAlerting',
            'PersonalAssistantPresence', 'PersonalMeetingRoom', 'PersonalMeetingRoomOptions', 'Personality',
-           'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType', 'PhotoObject', 'PhotoObjectType',
+           'PhoneLanguage', 'PhoneNumber', 'PhoneNumberStatus', 'PhoneNumberType', 'PhotoObject', 'PhotoObjectType',
            'PickupNotificationType', 'PinLength', 'PlayList', 'PlaylistAnnouncement', 'Policy',
            'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse',
            'PrimaryContactMethod', 'PrimaryOrShared', 'PriorityAlert', 'PriorityAlertCriteria', 'Privacy',
@@ -382,12 +382,12 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserDeviceCount',
            'UserLicenseType', 'UserLicensesResponse', 'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType',
            'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
-           'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
-           'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionRangeStatus', 'ValidationRules',
-           'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState', 'VirtualExtension',
-           'VirtualExtensionDestination', 'VirtualExtensionLevel', 'VirtualExtensionMode', 'VirtualExtensionRange',
-           'VirtualExtensionRangeAction', 'VirtualExtensionRangeValidationResult',
-           'VirtualExtensionRangeValidationStatus', 'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation',
+           'ValidatePhoneNumber', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState',
+           'ValidatePhoneNumbersResponse', 'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionStatus',
+           'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState',
+           'VirtualExtension', 'VirtualExtensionDestination', 'VirtualExtensionLevel', 'VirtualExtensionMode',
+           'VirtualExtensionRange', 'VirtualExtensionRangeAction', 'VirtualExtensionRangeValidationResult',
+           'VirtualExtensionValidationStatus', 'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation',
            'VirtualLineNumberPhoneNumber', 'VlanSetting', 'VoiceMailPartyInformation', 'VoiceMailRules',
            'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
            'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
