@@ -11,6 +11,7 @@ from typing import ClassVar
 
 from tests.base import TestWithLocations, WithIntegrationTokens, async_test
 from wxc_sdk.all_types import *
+from wxc_sdk.rest import RestError
 
 
 @dataclass(init=False)
@@ -158,6 +159,19 @@ class TestVirtualExtensions(TestVirtualExtensionsBase):
                 print(f'got 429 response without Retry-After header: {request.response_headers["Date"]}, {request.url}')
         if err:
             self.fail('got 429 response without Retry-After header')
+
+    def test_ext_change_name(self):
+        """
+        Change the name of a virtual extension
+        """
+        with self.dummy_virtual_extensions(1):
+            vapi = self.api.telephony.virtual_extensions
+            ve = list(vapi.list_extensions())[0]
+            vapi.update_extension(extension_id=ve.id, first_name='new first name', last_name='new last name', display_name='new display name')
+            details = vapi.details_extension(extension_id=ve.id)
+        self.assertEqual('new first name', details.first_name)
+        self.assertEqual('new last name', details.last_name)
+        self.assertEqual('new display name', details.display_name)
 
     def test_ext_create_duplicate_at_location(self):
         """
@@ -328,6 +342,51 @@ class TestVirtualExtensions(TestVirtualExtensionsBase):
         result = vapi.create_range(name=next(self.available_range_names), prefix='+496100773',
                                    patterns=[next(self.available_patterns) for _ in range(100)])
         print(f'created virtual extension range: {result}')
+
+    def test_range_org_create_add_patterns(self):
+        """
+        Add patterns to an existing virtual extension range.
+        """
+        vapi = self.api.telephony.virtual_extensions
+        range_name = next(self.available_range_names)
+        patterns = [next(self.available_patterns) for _ in range(30)]
+        range_id = vapi.create_range(name=range_name, prefix='+496100773',
+                                   patterns=patterns)
+        print(f'created virtual extension range: {range_id}')
+        try:
+            # add patterns to the virtual extension range
+            add_patterns = [next(self.available_patterns) for _ in range(30)]
+            vapi.modify_range(extension_range_id=range_id, patterns=add_patterns,
+                              action=VirtualExtensionRangeAction.add)
+            range_details = vapi.details_range(range_id)
+            self.assertEqual(len(range_details.patterns), len(patterns) + len(add_patterns))
+        finally:
+            vapi.delete_range(range_id)
+            print(f'deleted virtual extension range: {range_id}')
+
+    def test_range_org_create_add_patterns_fail_100(self):
+        """
+        Add patterns to an existing virtual extension range and exceed the limit of 100 patterns
+        """
+        vapi = self.api.telephony.virtual_extensions
+        range_name = next(self.available_range_names)
+        patterns = [next(self.available_patterns) for _ in range(30)]
+        range_id = vapi.create_range(name=range_name, prefix='+496100773',
+                                   patterns=patterns)
+        print(f'created virtual extension range: {range_id}')
+        try:
+            # add patterns to the virtual extension range
+            add_patterns = [next(self.available_patterns) for _ in range(71)]
+            with self.assertRaises(RestError) as exc:
+                vapi.modify_range(extension_range_id=range_id, patterns=add_patterns,
+                                  action=VirtualExtensionRangeAction.add)
+            re:RestError = exc.exception
+            self.assertEqual(400, re.response.status_code)
+            self.assertEqual(27854, re.code)
+        finally:
+            vapi.delete_range(range_id)
+            print(f'deleted virtual extension range: {range_id}')
+
 
     @async_test
     async def test_range_zzz_delete(self):
