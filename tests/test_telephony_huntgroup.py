@@ -44,7 +44,7 @@ class TestList(TestCaseWithLog):
                 err = err or detail
                 print(f'{hg.name}/{hg.location_name}: {detail}')
             detail: HuntGroup
-            if detail.address_agents is not None:
+            if detail.agents is not None:
                 print(f'{hg.name}/{hg.location_name}: unknown attribute address_agents set')
                 err = err or ValueError('address_agents set')
         if all(not isinstance(detail, HuntGroup) or detail.address_agents is None for detail in details):

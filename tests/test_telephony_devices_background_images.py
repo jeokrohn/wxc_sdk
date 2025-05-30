@@ -21,6 +21,8 @@ class TestBackgroundImages(TestCaseWithLog):
         bg_image = os.path.abspath('./sonda.png')
         devices = list(self.api.devices.list(product_type='phone', product='Cisco 8851'))
         target_device = next((d for d in devices if 'Henry Green' in d.display_name), None)
+        if target_device is None:
+            self.skipTest('No target device')
         dapi = self.api.telephony.devices
         images = dapi.list_background_images()
         names = set(im.file_name for im in images.background_images)
@@ -41,6 +43,8 @@ class TestBackgroundImages(TestCaseWithLog):
         bg_image = os.path.abspath('./sonda.png')
         devices = list(self.api.devices.list(product_type='phone', product='Cisco 8851'))
         target_device = next((d for d in devices if 'Henry Green' in d.display_name), None)
+        if target_device is None:
+            self.skipTest('No target device')
         dapi = self.api.telephony.devices
         images = dapi.list_background_images()
         names = set(im.file_name for im in images.background_images)

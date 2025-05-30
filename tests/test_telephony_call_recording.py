@@ -55,8 +55,8 @@ class TestSettings(TestCaseWithLog):
         print(json.dumps(vendors.model_dump(mode='json', by_alias=True), indent=2))
 
     def test_get_org_vendor_id(self):
-        vendor_id = self.api.telephony.call_recording.get_org_vendor_id()
-        print(f'got vendor id: {vendor_id}')
+        vendors = self.api.telephony.call_recording.get_org_vendors()
+        print(f'got vendor id: {vendors.vendor_id}')
 
     def test_org_users(self):
         users = list(self.api.telephony.call_recording.list_org_users())

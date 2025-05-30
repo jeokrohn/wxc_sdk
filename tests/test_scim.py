@@ -134,6 +134,9 @@ class TestWithScimToken(TestCaseWithLog):
         # replace session access token with service app access token
         cls.api.session._tokens.access_token = tokens.access_token
 
+    def setUp(self) -> None:
+        super().setUp()
+
     @property
     def org_id(self) -> str:
         return webex_id_to_uuid(self.me.org_id)
@@ -1039,6 +1042,10 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.int_api = WebexSimpleApi(tokens=cls.integration_tokens)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.har_writer.register_webex_api(self.int_api)
 
     def contact_from_random_user(self, new_user: User, address_as_str: bool = True) -> Contact:
         """

@@ -149,7 +149,7 @@ class TestCreateOperatingModes(TestCaseWithLog):
         year = date.today().year
         us_holidays = CalendarifiyApi().holidays(country='US', year=year, holiday_type='national')
 
-        holidays = [OperatingModeHoliday(id=str(uuid.uuid4()), name=h.name, all_day_enabled=True,
+        holidays = [OperatingModeHoliday(id=str(uuid.uuid4()), name=h.name[:30], all_day_enabled=True,
                                          start_date=h.date, end_date=h.date)
                     for h in us_holidays]
         location: TelephonyLocation = random.choice(self.locations)

@@ -115,7 +115,7 @@ class TestRead(TestCaseWithUsers):
                 else:
                     print('preferred_answer_endpoint_id is None')
                 for ep in sorted(pa_setting.endpoints, key=attrgetter('name')):
-                    print(f'  {ep.type}, {ep.name}: {base64.b64decode(ep.id).decode()}')
+                    print(f'  {ep.type}, {ep.name}: {base64.b64decode(ep.id+"==").decode()}')
         self.assertFalse(any(isinstance(r, Exception) for r in results))
 
 
