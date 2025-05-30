@@ -632,7 +632,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.phone_numbers <wxc_sdk.telephony.TelephonyApi.phone_numbers>`
         Get Phone Numbers for an Organization with Given Criterias
    * - :meth:`api.telephony.read_list_of_announcement_languages <wxc_sdk.telephony.TelephonyApi.read_list_of_announcement_languages>`
-        List all languages supported by Webex Calling for announcements and voice prompts
+        Read the List of Announcement Languages
    * - :meth:`api.telephony.read_moh <wxc_sdk.telephony.TelephonyApi.read_moh>`
         Get the organization Music on Hold configuration
    * - :meth:`api.telephony.route_choices <wxc_sdk.telephony.TelephonyApi.route_choices>`
@@ -648,7 +648,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.validate_extensions <wxc_sdk.telephony.TelephonyApi.validate_extensions>`
         Validate the List of Extensions
    * - :meth:`api.telephony.validate_phone_numbers <wxc_sdk.telephony.TelephonyApi.validate_phone_numbers>`
-        Validate the list of phone numbers in an organization
+        Validate phone numbers
    * - :meth:`api.telephony.access_codes.create <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.create>`
         Create access code in location
    * - :meth:`api.telephony.access_codes.delete_all <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.delete_all>`
@@ -1003,6 +1003,14 @@ The method name is a link to the method documentation.
         Read the Click-to-call Settings
    * - :meth:`api.telephony.guest_calling.update <wxc_sdk.telephony.guest_calling.GuestCallingApi.update>`
         Update the Click-to-call Settings
+   * - :meth:`api.telephony.hotdesking_voiceportal.location_get <wxc_sdk.telephony.hotdesking_voiceportal.HotDeskingSigninViaVoicePortalApi.location_get>`
+        Voice Portal Hot desking sign in details for a location
+   * - :meth:`api.telephony.hotdesking_voiceportal.location_update <wxc_sdk.telephony.hotdesking_voiceportal.HotDeskingSigninViaVoicePortalApi.location_update>`
+        Update Voice Portal Hot desking sign in details for a location
+   * - :meth:`api.telephony.hotdesking_voiceportal.user_get <wxc_sdk.telephony.hotdesking_voiceportal.HotDeskingSigninViaVoicePortalApi.user_get>`
+        Voice Portal Hot desking sign in details for a user
+   * - :meth:`api.telephony.hotdesking_voiceportal.user_update <wxc_sdk.telephony.hotdesking_voiceportal.HotDeskingSigninViaVoicePortalApi.user_update>`
+        Update Voice Portal Hot desking sign in details for a user
    * - :meth:`api.telephony.huntgroup.alternate_available_phone_numbers <wxc_sdk.telephony.huntgroup.HuntGroupApi.alternate_available_phone_numbers>`
         Get Hunt Group Alternate Available Phone Numbers
    * - :meth:`api.telephony.huntgroup.by_name <wxc_sdk.telephony.huntgroup.HuntGroupApi.by_name>`
@@ -1060,17 +1068,17 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.jobs.manage_numbers.abandon <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.abandon>`
         Abandon the Manage Numbers Job
    * - :meth:`api.telephony.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`
-        Lists all error details of Manage Numbers job
+        List Manage Numbers Job errors
    * - :meth:`api.telephony.jobs.manage_numbers.initiate_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.initiate_job>`
-        Starts the execution of an operation on a set of numbers
+        Initiate Number Jobs
    * - :meth:`api.telephony.jobs.manage_numbers.list <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list>`
-        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
+        List Manage Numbers Jobs
    * - :meth:`api.telephony.jobs.manage_numbers.pause <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.pause>`
-        Pause the running Manage Numbers Job
+        Pause the Manage Numbers Job
    * - :meth:`api.telephony.jobs.manage_numbers.resume <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.resume>`
-        Resume the paused Manage Numbers Job
+        Resume the Manage Numbers Job
    * - :meth:`api.telephony.jobs.manage_numbers.status <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.status>`
-        Returns the status and other details of the job
+        Get Manage Numbers Job Status
    * - :meth:`api.telephony.jobs.move_users.abandon <wxc_sdk.telephony.jobs.MoveUsersJobsApi.abandon>`
         Abandon the Move Users Job
    * - :meth:`api.telephony.jobs.move_users.errors <wxc_sdk.telephony.jobs.MoveUsersJobsApi.errors>`

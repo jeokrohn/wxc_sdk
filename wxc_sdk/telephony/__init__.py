@@ -23,6 +23,7 @@ from .dect_devices import DECTDevicesApi
 from .devices import TelephonyDevicesApi
 from .emergency_services import OrgEmergencyServicesApi
 from .guest_calling import GuestCallingApi
+from .hotdesking_voiceportal import HotDeskingSigninViaVoicePortalApi
 from .huntgroup import HuntGroupApi
 from .jobs import JobsApi
 from .location import TelephonyLocationApi
@@ -667,6 +668,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     #: emergency services
     emergency_services: OrgEmergencyServicesApi
     guest_calling: GuestCallingApi
+    hotdesking_voiceportal: HotDeskingSigninViaVoicePortalApi
     huntgroup: HuntGroupApi
     jobs: JobsApi
     #: location specific settings
@@ -714,6 +716,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.devices = TelephonyDevicesApi(session=session)
         self.emergency_services = OrgEmergencyServicesApi(session=session)
         self.guest_calling = GuestCallingApi(session=session)
+        self.hotdesking_voiceportal = HotDeskingSigninViaVoicePortalApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
         self.jobs = JobsApi(session=session)
         self.location = TelephonyLocationApi(session=session)

@@ -41,19 +41,20 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
            'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi',
            'AsExecAssistantApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestCallingApi',
-           'AsGuestManagementApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
-           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
-           'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
-           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
-           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
-           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
-           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
-           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
-           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsGuestManagementApi', 'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi',
+           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
+           'AsManageNumbersJobsApi', 'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi',
+           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
+           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
+           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
            'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
@@ -18888,6 +18889,120 @@ class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
                                               params=params)]
 
 
+class AsHotDeskingSigninViaVoicePortalApi(AsApiChild, base='telephony/config'):
+    """
+    Features: Hot Desking Sign-in via Voice Portal
+
+    Features: Hot desking is a feature that allows users to sign in to a shared phone and make calls using their own
+    phone number.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+
+    async def location_get(self, location_id: str, org_id: str = None) -> HotDeskingVoicePortalSetting:
+        """
+        Voice Portal Hot desking sign in details for a location
+
+        Get the Hot desking sign in details for a location.
+
+        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Location in which the hot desking sign in resides.
+        :type location_id: str
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :rtype: HotDeskingVoicePortalSetting
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/features/hotDesking')
+        data = await super().get(url, params=params)
+        return HotDeskingVoicePortalSetting.model_validate(data)
+
+    async def location_update(self, location_id: str,
+                        setting: HotDeskingVoicePortalSetting,
+                        org_id: str = None):
+        """
+        Update Voice Portal Hot desking sign in details for a location
+
+        Update the Hot desking sign in details for a location.
+
+        This requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location in which the hot desking sign in resides.
+        :type location_id: str
+        :param setting: Hot desking sign in details for a location.
+        :type setting: HotDeskingVoicePortalSetting
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = setting.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        url = self.ep(f'locations/{location_id}/features/hotDesking')
+        await super().put(url, params=params, json=body)
+
+    async def user_get(self, person_id: str, org_id: str = None) -> HotDeskingVoicePortalSetting:
+        """
+        Voice Portal Hot desking sign in details for a user
+
+        Get the Hot desking sign in details for a user.
+
+        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param person_id: ID of the person associated with the hot desking details.
+        :type person_id: str
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :rtype: HotDeskingVoicePortalSetting
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/features/hotDesking/guest')
+        data = await super().get(url, params=params)
+        return HotDeskingVoicePortalSetting.model_validate(data)
+
+    async def user_update(self, person_id: str,
+                    setting: HotDeskingVoicePortalSetting,
+                    org_id: str = None):
+        """
+        Update Voice Portal Hot desking sign in details for a user
+
+        Update the Hot desking sign in details for a user.
+
+        This requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: ID of the person associated with the hot desking details.
+        :type person_id: str
+        :param setting: Hot desking sign in details for a user.
+        :type setting: HotDeskingVoicePortalSetting
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = setting.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        url = self.ep(f'people/{person_id}/features/hotDesking/guest')
+        await super().put(url, params=params, json=body)
+
+
 class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
     """
     Hunt Group API
@@ -19604,15 +19719,17 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
     def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None, None]:
         """
-        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
-        irrespective of its status.
+        List Manage Numbers Jobs
+
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
+        of its status.
 
         The public API only supports initiating jobs which move numbers between locations.
 
         Via Control Hub they can initiate both the move and delete, so this listing can show both.
 
-        This API requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
@@ -19625,15 +19742,17 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
     async def list(self, org_id: str = None, **params) -> List[NumberJob]:
         """
-        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
-        irrespective of its status.
+        List Manage Numbers Jobs
+
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
+        of its status.
 
         The public API only supports initiating jobs which move numbers between locations.
 
         Via Control Hub they can initiate both the move and delete, so this listing can show both.
 
-        This API requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
@@ -19647,6 +19766,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
     async def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
                      number_usage_type: str = None) -> NumberJob:
         """
+        Initiate Number Jobs
+
         Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
         `NUMBER_USAGE_CHANGE`.
 
@@ -19656,7 +19777,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         Although the job can internally perform the `DELETE` action, only the `MOVE` and `NUMBER_USAGE_CHANGE`
         operations are publicly supported.
 
-        Although the `numbers` field is an array, we currently only support a single number with each request.
+        Although the `numbers` field is an array, we currently only support a single number with each request for
+        `MOVE` operation type and change of usage type of up to 1000 numbers per request.
 
         Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
         progress the API call will receive a `409` http status code.
@@ -19705,7 +19827,10 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
     async def status(self, job_id: str = None) -> NumberJob:
         """
+        Get Manage Numbers Job Status
+
         Returns the status and other details of the job.
+
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
@@ -19718,7 +19843,10 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
     async def pause(self, job_id: str = None, org_id: str = None):
         """
+        Pause the Manage Numbers Job
+
         Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param job_id: Pause the Manage Numbers job for this jobId.
@@ -19735,7 +19863,10 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
     async def resume(self, job_id: str = None, org_id: str = None):
         """
+        Resume the Manage Numbers Job
+
         Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param job_id: Resume the Manage Numbers job for this jobId.
@@ -19770,9 +19901,26 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
     def errors_gen(self, job_id: str = None, org_id: str = None,
                **params) -> AsyncGenerator[ManageNumberErrorItem, None, None]:
         """
+        List Manage Numbers Job errors
+
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+
         List of possible Errors:
+
+            * BATCH-1017021 - Failed to move because it is an inactive number.
+
+            * BATCH-1017022 - Failed to move because the source location and target location have different CCP
+            providers.
+
+            * BATCH-1017023 - Failed because it is not an unassigned number.
+
+            * BATCH-1017024 - Failed because it is a main number.
+
+            * BATCH-1017027 - Manage Numbers Move Operation is not supported.
+
+            * BATCH-1017031 - Hydra request is supported only for single number move job.
+
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
@@ -19789,9 +19937,26 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
     async def errors(self, job_id: str = None, org_id: str = None,
                **params) -> List[ManageNumberErrorItem]:
         """
+        List Manage Numbers Job errors
+
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+
         List of possible Errors:
+
+            * BATCH-1017021 - Failed to move because it is an inactive number.
+
+            * BATCH-1017022 - Failed to move because the source location and target location have different CCP
+            providers.
+
+            * BATCH-1017023 - Failed because it is not an unassigned number.
+
+            * BATCH-1017024 - Failed because it is a main number.
+
+            * BATCH-1017027 - Manage Numbers Move Operation is not supported.
+
+            * BATCH-1017031 - Hydra request is supported only for single number move job.
+
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
@@ -21206,6 +21371,8 @@ class AsOrgMSTeamsSettingApi(AsApiChild, base='telephony/config/settings/msTeams
         """
         Get an Organization's MS Teams Settings
 
+        Not supported for Webex for Government (FedRAMP)
+
         Get organization MS Teams settings.
 
         At an organization level, MS Teams settings allow access to viewing the `HIDE WEBEX APP` and `PRESENCE SYNC`
@@ -21230,6 +21397,8 @@ class AsOrgMSTeamsSettingApi(AsApiChild, base='telephony/config/settings/msTeams
                   org_id: str = None):
         """
         Update an Organization's MS Teams Setting
+
+        Not supported for Webex for Government (FedRAMP)
 
         Update an MS Teams setting.
 
@@ -24996,6 +25165,37 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         path = path and f'/{path}' or ''
         return self.ep(f'{location_id}/numbers{path}')
 
+    async def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
+        """
+        Remove phone numbers from a location
+
+        Remove the specified set of phone numbers from a location for an organization.
+
+        Phone numbers must follow the E.164 format.
+
+        Removing a mobile number may require more time depending on mobile carrier capabilities.
+
+        Removing a phone number from a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        A location's main number cannot be removed.
+
+        This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.
+
+        :param location_id: LocationId from which numbers should be removed.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers to be removed.
+        :type phone_numbers: list[str]
+        :param org_id: Organization to manage
+        :type org_id: str
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'phoneNumbers': phone_numbers}
+        await self.delete(url=url, params=params, json=body)
+
     async def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
             number_usage_type: NumberUsageType = None,
             state: NumberState = NumberState.inactive, subscription_id: str = None,
@@ -25082,37 +25282,6 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         body = {'phoneNumbers': phone_numbers}
         await super().post(url, params=params, json=body)
-
-    async def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
-        """
-        Remove phone numbers from a location
-
-        Remove the specified set of phone numbers from a location for an organization.
-
-        Phone numbers must follow the E.164 format.
-
-        Removing a mobile number may require more time depending on mobile carrier capabilities.
-
-        Removing a phone number from a location requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        A location's main number cannot be removed.
-
-        This API is only supported for non-integrated PSTN connection types of Local
-        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.
-
-        :param location_id: LocationId from which numbers should be removed.
-        :type location_id: str
-        :param phone_numbers: List of phone numbers to be removed.
-        :type phone_numbers: list[str]
-        :param org_id: Organization to manage
-        :type org_id: str
-        """
-        url = self._url(location_id)
-        params = org_id and {'orgId': org_id} or None
-        body = {'phoneNumbers': phone_numbers}
-        await self.delete(url=url, params=params, json=body)
 
 
 class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/locations'):
@@ -27956,6 +28125,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     #: emergency services
     emergency_services: AsOrgEmergencyServicesApi
     guest_calling: AsGuestCallingApi
+    hotdesking_voiceportal: AsHotDeskingSigninViaVoicePortalApi
     huntgroup: AsHuntGroupApi
     jobs: AsJobsApi
     #: location specific settings
@@ -28003,6 +28173,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.devices = AsTelephonyDevicesApi(session=session)
         self.emergency_services = AsOrgEmergencyServicesApi(session=session)
         self.guest_calling = AsGuestCallingApi(session=session)
+        self.hotdesking_voiceportal = AsHotDeskingSigninViaVoicePortalApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
         self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
@@ -28239,6 +28410,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     async def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
         """
+        Validate phone numbers
+
         Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
         response.
 
@@ -28419,12 +28592,12 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     async def read_list_of_announcement_languages(self) -> list[AnnouncementLanguage]:
         """
-        List all languages supported by Webex Calling for announcements and voice prompts.
-        Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+        Read the List of Announcement Languages
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
-        -announcement-languages
+        List all languages supported by Webex Calling for announcements and voice prompts.
+
+        Retrieving announcement languages requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
         """
         url = self.ep('announcementLanguages')
         data = await super().get(url=url)

@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new API :attr:`api.telephony.hotdesking_voiceportal <wxc_sdk.telephony.TelephonyApi.hotdesking_voiceportal>`
+
 1.25.0
 ------
 - feat: new attributes :attr:`PSTNConnectionOption.route_type <wxc_sdk.telephony.pstn.PSTNConnectionOption.route_type>` and :attr:`.route_id <wxc_sdk.telephony.pstn.PSTNConnectionOption.route_type>`
