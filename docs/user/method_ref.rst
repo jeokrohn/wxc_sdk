@@ -707,8 +707,6 @@ The method name is a link to the method documentation.
         Get Location Intercept
    * - :meth:`api.telephony.call_recording.get_call_recording_regions <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_call_recording_regions>`
         Get Call Recording Regions
-   * - :meth:`api.telephony.call_recording.get_location_vendor_id <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendor_id>`
-        Get Call Recording Vendor ID for a Location
    * - :meth:`api.telephony.call_recording.get_location_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendors>`
         Get Location Call Recording Vendors
    * - :meth:`api.telephony.call_recording.get_org_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_org_vendors>`

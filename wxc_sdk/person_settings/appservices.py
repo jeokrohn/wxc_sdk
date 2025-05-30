@@ -25,8 +25,10 @@ class AppServicesSettings(ApiModel):
     desktop_client_id: Optional[str] = None
     #: Indicates that the tablet Webex Calling application is enabled for use.
     tablet_client_enabled: Optional[bool] = None
+    tablet_client_id: Optional[str] = None
     #: indicates that the mobile Webex Calling application is enabled for use.
     mobile_client_enabled: Optional[bool] = None
+    mobile_client_id: Optional[str] = None
     #: Number of available device licenses for assigning devices/apps.
     #: this value cannot be updated
     available_line_count: Optional[int] = None

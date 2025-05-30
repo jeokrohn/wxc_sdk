@@ -12,9 +12,9 @@ from wxc_sdk.common import IdAndName
 
 class TranslationPatternLevel(str, Enum):
     #: The applied services of location level.
-    location = 'LOCATION'
+    location = 'Location'
     #: The applied services of the organization level.
-    organization = 'ORGANIZATION'
+    organization = 'Organization'
 
 
 class TranslationPattern(ApiModel):

@@ -144,6 +144,7 @@ class JobErrorItem(ApiModel):
     item_number: int
     #: Unique identifier to track the HTTP requests.
     tracking_id: str
+    error_type: str
     error: JobError
 
 

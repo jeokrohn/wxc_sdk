@@ -64,6 +64,7 @@ __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations
            'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces', 'WithIntegrationTokens',
            'TestLocationsUsersWorkspacesVirtualLines', 'TestWithTarget', 'TestWithProfessionalWorkspace', 'UserTokens']
 
+SKIP_TESTS_WITH_EXISTING_LOGS = False
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
     """
@@ -280,44 +281,6 @@ class WithIntegrationTokens(TestCase):
 
 
 # noinspection DuplicatedCode
-def log_name(prefix: str, test_case_id: str) -> str:
-    """
-    Get the name for the next REST logfile
-    Log file format: '{prefix}_{index:03d}_{test_case_id}'
-
-    :param prefix:
-    :param test_case_id:
-    :return: path of log file
-    """
-    # all logs are in the logs directory below the directory of this file
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    base_dir = os.path.join(base_dir, 'logs')
-    os.makedirs(base_dir, exist_ok=True)
-
-    # get all existing files in that directory, basename only (w/o path)
-    logs = glob.glob(os.path.join(base_dir, f'{prefix}_*.log'))
-    logs = list(map(os.path.basename, logs))
-
-    # sort files and only look for files matching the log filename structure
-    logs_re = re.compile(r'rest_(?P<index>\d{4})_(?P<test_id>.+).log')
-    logs.sort()
-    # noinspection PyShadowingNames
-    logs = [log
-            for log in logs
-            if logs_re.match(log)]
-
-    # next log file index is based on index of last log file in the list
-    if not logs:
-        next_log_index = 1
-    else:
-        m = logs_re.match(logs[-1])
-        next_log_index = int(m.group('index')) + 1
-
-    # build the log file name
-    # noinspection PyShadowingNames
-    log = os.path.join(base_dir,
-                       f'{prefix}_{next_log_index:04d}_{test_case_id}.log')
-    return log
 
 
 class LoggedRequest(BaseModel):
@@ -478,13 +441,56 @@ class TestCaseWithLog(TestCaseWithTokens):
 
     rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest', 'webexteamsasyncapi.rest']
 
+    def log_name(self, prefix: str, test_case_id: str) -> str:
+        """
+        Get the name for the next REST logfile
+        Log file format: '{prefix}_{index:03d}_{test_case_id}'
+
+        :param prefix:
+        :param test_case_id:
+        :return: path of log file
+        """
+        # all logs are in the logs directory below the directory of this file
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        base_dir = os.path.join(base_dir, 'logs')
+        os.makedirs(base_dir, exist_ok=True)
+
+        # get all existing files in that directory, basename only (w/o path)
+        logs = glob.glob(os.path.join(base_dir, f'{prefix}_*.log'))
+        logs = list(map(os.path.basename, logs))
+
+        # sort files and only look for files matching the log filename structure
+        logs_re = re.compile(r'rest_(?P<index>\d{4})_(?P<test_id>.+).log')
+        logs.sort()
+        # noinspection PyShadowingNames
+        logs = [log
+                for log in logs
+                if logs_re.match(log)]
+
+        existing_test_ids = set(logs_re.match(log).group('test_id') for log in logs)
+        if SKIP_TESTS_WITH_EXISTING_LOGS and test_case_id in existing_test_ids:
+            self.skipTest(f'Log file already exists for test case {test_case_id}')
+
+        # next log file index is based on index of last log file in the list
+        if not logs:
+            next_log_index = 1
+        else:
+            m = logs_re.match(logs[-1])
+            next_log_index = int(m.group('index')) + 1
+
+        # build the log file name
+        # noinspection PyShadowingNames
+        log = os.path.join(base_dir,
+                           f'{prefix}_{next_log_index:04d}_{test_case_id}.log')
+        return log
+
     def setUp(self) -> None:
         super().setUp()
         print(f'{self.__class__.__name__}.setUp() in TestCaseWithLog.setUp()')
         test_case_id = self.id()
 
         # we always want to have REST logging into a file
-        self.log_path = log_name(prefix='rest', test_case_id=test_case_id)
+        self.log_path = self.log_name(prefix='rest', test_case_id=test_case_id)
         file_handler = logging.FileHandler(filename=self.log_path)
         file_handler.setLevel(logging.DEBUG)
         file_fmt = logging.Formatter(fmt='%(asctime)s %(threadName)s %(message)s')

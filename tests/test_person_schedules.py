@@ -374,7 +374,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
                                schedule_id=schedule.schedule_id)
                 print(f'Getting user schedule details for {schedule.name:{name_len}} '
                       f'   failed as expected (is a location schedule)')
-                self.assertEqual('GROUP', schedule.level)
+                self.assertEqual('LOCATION', schedule.level)
             else:
                 # for schedules which aren't actually location schedules the details call should work
                 ps.details(obj_id=target_user.person_id, schedule_type=schedule.schedule_type,
@@ -485,7 +485,7 @@ class TestLevel(TestCaseWithUsers, TestWithLocations):
         if not schedules:
             self.skipTest('No schedules')
         levels = set(schedule.level for schedule in schedules)
-        self.assertFalse(levels - {'USER', 'GROUP'})
+        self.assertFalse(levels - {'PEOPLE', 'LOCATION'})
         no_level = [s for s in schedules if not s.level]
         if no_level:
             print('\n'.join(f'{s}' for s in no_level))

@@ -156,7 +156,7 @@ class BulkFailed(ApiModel):
     #: Error message for the contact creation failure.
     error_message: Optional[str] = None
     #: HTTP Response code for the contact creation failure.
-    error_code: Optional[int] = None
+    error_code: Optional[str] = None
     status_code: Optional[int]
 
 

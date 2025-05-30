@@ -59,6 +59,10 @@ class Incident(ApiModel):
     change_id: Optional[str] = None
     publication_id: Optional[str] = None
     incident_number: Optional[str] = None
+    start_at: Optional[datetime] = None
+    end_at: Optional[datetime] = None
+    auto_status_setting: Optional[bool] = None
+
 
 
 class WebexStatus(ApiModel):

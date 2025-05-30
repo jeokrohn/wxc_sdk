@@ -12,7 +12,6 @@
 * update docs/user/changes.rst, prepare commit message
 * shelve all changes that should not be part of the build
 * run "script/build"
-* check API changes based on information scraped from developer.webex.com
 * run all tests and check results
 * review TODOs: did we miss anything
 * run "script/build"

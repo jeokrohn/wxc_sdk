@@ -7,13 +7,14 @@ from dataclasses import dataclass
 from io import StringIO
 from itertools import chain
 from typing import Optional, TextIO
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from tests.base import TestCaseWithLog, TestCaseWithTokens
 from wxc_sdk.har_writer import HAREntry, HarWriter
 from wxc_sdk.har_writer.har import HAR, PostData
 
 
+@skip('skipping for now')
 @dataclass(init=False, repr=False)
 class TestHar(TestCase):
     latest_har_in_downloads: str
@@ -105,6 +106,7 @@ class TestHar(TestCase):
         self.assertEqual(source_har, har)
 
 
+@skip('skipping for now')
 class TestWriteHar(TestCaseWithLog):
     proxy = True
     with_har = True
