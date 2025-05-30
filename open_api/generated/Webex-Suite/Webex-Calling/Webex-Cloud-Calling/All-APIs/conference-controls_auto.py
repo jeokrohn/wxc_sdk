@@ -1,15 +1,21 @@
+from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from json import loads
+from typing import Optional, Union, Any
+
+from dateutil.parser import isoparse
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['ConferenceControlsApi', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceState',
+
+__all__ = ['ConferenceControlsApi', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceStateEnum',
            'ConferenceTypeEnum']
 
 
-class ConferenceState(str, Enum):
+class ConferenceStateEnum(str, Enum):
     #: The controller is an active participant.
     connected = 'connected'
     #: The controller has held the conference and so is no longer an active participant.
@@ -35,7 +41,7 @@ class ConferenceParticipant(ApiModel):
 
 class ConferenceDetails(ApiModel):
     #: The state of the conference.
-    state: Optional[ConferenceState] = None
+    state: Optional[ConferenceStateEnum] = None
     #: The appearance index for the conference leg. Only present when the conference has an appearance value assigned.
     appearance: Optional[int] = None
     #: The conference start time in ISO 8601 format.
@@ -51,9 +57,9 @@ class ConferenceDetails(ApiModel):
 class ConferenceControlsApi(ApiChild, base='telephony/conference'):
     """
     Conference Controls
-
+    
     Conference Control APIs in support of Webex Calling.
-
+    
     All `GET` commands require the `spark:calls_read` scope while all other commands require the `spark:calls_write`
     scope.
     """
