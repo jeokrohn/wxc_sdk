@@ -299,7 +299,7 @@ def log_name(prefix: str, test_case_id: str) -> str:
     logs = list(map(os.path.basename, logs))
 
     # sort files and only look for files matching the log filename structure
-    logs_re = re.compile(r'rest_(?P<index>\d{3})_(?P<test_id>.+).log')
+    logs_re = re.compile(r'rest_(?P<index>\d{4})_(?P<test_id>.+).log')
     logs.sort()
     # noinspection PyShadowingNames
     logs = [log
@@ -316,7 +316,7 @@ def log_name(prefix: str, test_case_id: str) -> str:
     # build the log file name
     # noinspection PyShadowingNames
     log = os.path.join(base_dir,
-                       f'{prefix}_{next_log_index:03d}_{test_case_id}.log')
+                       f'{prefix}_{next_log_index:04d}_{test_case_id}.log')
     return log
 
 
