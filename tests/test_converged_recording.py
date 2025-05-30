@@ -1,8 +1,8 @@
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Optional, ClassVar
-from unittest import TestCase
 
 import yaml
 from dotenv import load_dotenv
@@ -11,14 +11,13 @@ from pydantic import TypeAdapter
 from tests.base import TestCaseWithLog, WithIntegrationTokens
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
+from wxc_sdk.converged_recordings import ConvergedRecording, ConvergedRecordingMeta
 from wxc_sdk.integration import Integration
-from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.tokens import Tokens
-from wxc_sdk.converged_recordings import ConvergedRecording
 
 
 @dataclass(init=False, repr=False)
-class WithRecordingServiceApp(TestCase):
+class WithRecordingServiceApp(TestCaseWithLog):
     """
     Base class for tests that need to use the recording service app.
     Service app hase these scopes:
@@ -114,13 +113,18 @@ class WithRecordingServiceApp(TestCase):
         # create API with standard token
         cls.recording_service_api = WebexSimpleApi(tokens=cls.recording_service_tokens.access_token)
 
+    def setUp(self):
+        super().setUp()
+        self.har_writer.register_webex_api(self.recording_service_api)
+
+
     @property
     def org_id(self) -> str:
         return webex_id_to_uuid(self.me.org_id)
 
 
 @dataclass(init=False, repr=False)
-class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens, TestCaseWithLog):
+class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens):
     integration_api: ClassVar[WebexSimpleApi]
 
     @classmethod
@@ -128,16 +132,38 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens, Tes
         super().setUpClass()
         cls.integration_api = WebexSimpleApi(tokens=cls.integration_tokens)
 
+    def setUp(self):
+        super().setUp()
+        self.har_writer.register_webex_api(self.integration_api)
+
     def test_list(self):
         api = self.recording_service_api
         recordings = list(api.converged_recordings.list())
         print(json.dumps(TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True),
                          indent=2))
 
-    def test_metadata(self):
+    def test_list_admin_or_compliance(self):
+        """
+        Get recordings via listfor admin or compliance office
+        """
         api = self.integration_api
-        recordings = list(api.converged_recordings.list())
+        recordings = list(api.converged_recordings.list_for_admin_or_compliance_officer(max=100))
+        print(json.dumps(TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True),
+                         indent=2))
+
+    def test_metadata(self):
+        """
+        Get metadata for all
+        """
+        api = self.integration_api
+        recordings = list(api.converged_recordings.list_for_admin_or_compliance_officer(max=100))
         if not recordings:
             self.skipTest('No recordings found')
-        meta = api.converged_recordings.metadata(recordings[0].id)
-        print(json.dumps(meta.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+        # get metadata for all recordings
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            results = list(executor.map(api.converged_recordings.metadata, (r.id for r in recordings)))
+
+        print(json.dumps(TypeAdapter(list[ConvergedRecordingMeta]).dump_python(results, mode='json', by_alias=True),
+                         indent=2))
+        print(f'Got metadata for {len(results)} recordings')
+
