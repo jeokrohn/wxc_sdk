@@ -118,6 +118,8 @@ class OrgMSTeamsSettingApi(ApiChild, base='telephony/config/settings/msTeams'):
         """
         Get an Organization's MS Teams Settings
 
+        Not supported for Webex for Government (FedRAMP)
+
         Get organization MS Teams settings.
 
         At an organization level, MS Teams settings allow access to viewing the `HIDE WEBEX APP` and `PRESENCE SYNC`
@@ -142,6 +144,8 @@ class OrgMSTeamsSettingApi(ApiChild, base='telephony/config/settings/msTeams'):
                   org_id: str = None):
         """
         Update an Organization's MS Teams Setting
+
+        Not supported for Webex for Government (FedRAMP)
 
         Update an MS Teams setting.
 
