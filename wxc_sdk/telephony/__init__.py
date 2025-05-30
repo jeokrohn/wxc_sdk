@@ -1020,12 +1020,12 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
     def read_list_of_announcement_languages(self) -> list[AnnouncementLanguage]:
         """
-        List all languages supported by Webex Calling for announcements and voice prompts.
-        Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+        Read the List of Announcement Languages
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of
-        -announcement-languages
+        List all languages supported by Webex Calling for announcements and voice prompts.
+
+        Retrieving announcement languages requires a full or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
         """
         url = self.ep('announcementLanguages')
         data = super().get(url=url)
