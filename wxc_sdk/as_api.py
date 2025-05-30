@@ -19549,7 +19549,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
         return r
 
     def errors_gen(self, job_id: str, org_id: str = None,
-                                                **params) -> AsyncGenerator[JobErrorItem, None, None]:
+               **params) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -19573,7 +19573,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
     async def errors(self, job_id: str, org_id: str = None,
-                                                **params) -> List[JobErrorItem]:
+               **params) -> List[JobErrorItem]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -22765,7 +22765,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         data = await self.get(url=url, params=params)
         return RouteListDetail.model_validate(data)
 
-    async def update(self, rl_id: str, name: str = None, rg_id: str=None, org_id: str = None):
+    async def update(self, rl_id: str, name: str = None, rg_id: str = None, org_id: str = None):
         """
         Modify the details for a Route List.
 
@@ -25998,7 +25998,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
     async def create_receptionist_contact_directory(self, location_id: str, name: str, contacts: List[str],
-                                                org_id: str = None) -> str:
+                                              org_id: str = None) -> str:
         """
         Create a Receptionist Contact Directory
 
@@ -26033,7 +26033,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return r
 
     async def list_receptionist_contact_directories(self, location_id: str,
-                                                      org_id: str = None) -> List[IdAndName]:
+                                              org_id: str = None) -> List[IdAndName]:
         """
         Read list of Receptionist Contact Directories
 

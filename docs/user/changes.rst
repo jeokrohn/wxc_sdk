@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.25.0
+------
 - feat: new attributes :attr:`PSTNConnectionOption.route_type <wxc_sdk.telephony.pstn.PSTNConnectionOption.route_type>` and :attr:`.route_id <wxc_sdk.telephony.pstn.PSTNConnectionOption.route_type>`
 - feat: new endpoints in :class:`CallRecordingSettingsApi <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi>` :meth:`get_call_recording_regions <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_call_recording_regions>`, :meth:`list_org_users <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.list_org_users>`, :meth:`set_location_vendor <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.set_location_vendor>`, :meth:`get_location_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendors>`, :meth:`get_location_vendor_id <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_location_vendor_id>`, :meth:`list_location_users <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.list_location_users>`, :meth:`get_org_vendors <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.get_org_vendors>`, :meth:`set_org_vendor <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.set_org_vendor>`
 - fest: new job api: :attr:`api.telephony.jobs.call_recording <wxc_sdk.telephony.jobs.JobsApi.call_recording>`
