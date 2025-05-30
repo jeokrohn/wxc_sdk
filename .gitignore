@@ -178,3 +178,4 @@ cython_debug/
 /examples/workspace_w_3rd_party*.csv
 /examples/*.har
 /apib/tests/generated/
+/tests/user_tokens.yml

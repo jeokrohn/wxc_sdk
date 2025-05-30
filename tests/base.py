@@ -1,19 +1,21 @@
 """
 base functions for unit tests
 """
-from dateutil import tz
-from dotenv import load_dotenv
 
-load_dotenv()
 import asyncio
+import concurrent
 import glob
+import http.server
 import json
 import logging
 import os
 import random
 import re
+import socketserver
+import threading
 import time
 import urllib.parse
+import uuid
 from collections import Counter
 from collections.abc import Iterable, Generator
 from concurrent.futures import ThreadPoolExecutor
@@ -25,10 +27,19 @@ from itertools import takewhile
 from typing import Optional, Any, Union, ClassVar
 from unittest import TestCase
 
+import requests
 import yaml
+from dateutil import tz
+from dotenv import load_dotenv
 from pydantic import ValidationError, BaseModel, Field, model_validator, TypeAdapter
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 from yaml import safe_load
 from yaml.scanner import ScannerError
+
+load_dotenv()
 
 from tests.testutil import create_workspace_with_webex_calling
 from wxc_sdk import WebexSimpleApi
@@ -51,7 +62,7 @@ log = logging.getLogger(__name__)
 
 __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
            'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces', 'WithIntegrationTokens',
-           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithTarget', 'TestWithProfessionalWorkspace']
+           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithTarget', 'TestWithProfessionalWorkspace', 'UserTokens']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
@@ -897,3 +908,234 @@ class TestWithProfessionalWorkspace(TestWithTarget):
     def setUp(self) -> None:
         super().setUp()
         self.assertIsNotNone(self.workspace, 'No professional workspace created')
+
+
+TokenCache = TypeAdapter(dict[str, Tokens])
+
+
+@dataclass(init=False, repr=False)
+class UserTokens(TestCaseWithLog):
+    """
+    Base class for tests that need user tokens
+    """
+
+    # cache with tokens for each user indexed by user_id
+    _token_cache: ClassVar[dict[str, Tokens]] = {}
+
+    _cache_file: ClassVar[str] = 'user_tokens.yml'
+
+    # prefix for environment variables _CLIENT_ID, _CLIENT_SECRET, _CLIENT_SCOPES
+    _env_prefix: ClassVar[str] = 'TEST_USER_'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # read token cache from file
+        cls.read_and_validate_user_cache()
+        return
+
+    def setUp(self) -> None:
+        super().setUp()
+        # make sure that environment variables are set
+        for env_var in ('CLIENT_ID', 'CLIENT_SECRET', 'SCOPES', 'PASSWORD'):
+            if not os.getenv(self._env_prefix + env_var):
+                self.skipTest(f'Need environment variable {self._env_prefix + env_var} to run test')
+        return
+
+    @classmethod
+    def build_integration(cls) -> Integration:
+        """
+        Build integration
+        """
+        client_id = os.getenv(cls._env_prefix + 'CLIENT_ID')
+        client_secret = os.getenv(cls._env_prefix + 'CLIENT_SECRET')
+        scopes = os.getenv(cls._env_prefix + 'SCOPES')
+
+        # scopes is the full URL; we need the redirect URI
+        parsed = urllib.parse.urlparse(scopes)
+        query = parsed.query
+
+        # try to parse the query and get the redirect URI
+        parsed_query = urllib.parse.parse_qs(query)
+        redirect_uri = parsed_query.get('redirect_uri')[0]
+
+        # also get the scopes
+        scopes = parse_scopes(scopes)
+        integration = Integration(client_id=client_id, client_secret=client_secret, scopes=scopes,
+                                  redirect_url=redirect_uri)
+        return integration
+
+    @classmethod
+    def write_user_cache(cls):
+        with open(cls._cache_file, 'w') as f:
+            yaml.dump(TokenCache.dump_python(cls._token_cache, mode='json'), f)
+        return
+
+    @classmethod
+    def read_and_validate_user_cache(cls):
+        """
+        Read token cache from file and validate tokens
+        """
+        try:
+            with open(cls._cache_file, 'r') as f:
+                data = yaml.safe_load(f)
+                cls._token_cache = TokenCache.validate_python(data)
+        except FileNotFoundError:
+            cls._token_cache = {}
+
+        # check remaining lifetime and refresh/regenerate tokens if needed
+        integration = cls.build_integration()
+        updated = False
+        for user_id, tokens in cls._token_cache.items():
+            if tokens.remaining < 24 * 60 * 60:
+                updated = True
+                # we need to refresh or try to get new tokens
+                try:
+                    integration.refresh(tokens)
+                except requests.HTTPError:
+                    tokens = cls.create_user_tokens(user_id=user_id)
+                if tokens is None or not tokens.access_token:
+                    # remove user from cache
+                    cls._token_cache.pop(user_id)
+        if updated:
+            cls.write_user_cache()
+        return
+
+    @classmethod
+    def get_user_tokens(cls, user_id: str) -> Tokens:
+        """
+        Get tokens for user:
+            * from cache
+            * or via OAuth flow
+        """
+        tokens = cls._token_cache.get(user_id)
+        if not tokens:
+            tokens = cls.create_user_tokens(user_id=user_id)
+            cls._token_cache[user_id] = tokens
+            cls.write_user_cache()
+        return tokens
+
+    @classmethod
+    def create_user_tokens(cls, user_id: str) -> Optional[Tokens]:
+        """
+        Create tokens for user
+        """
+
+        def serve_redirect():
+            """
+            Temporarily start a web server to serve the redirect URI at http://localhost:6001/redirect'
+            :return: parses query of the GET on the redirect URI
+            """
+
+            # mutable to hold the query result
+            oauth_response = dict()
+
+            class RedirectRequestHandler(http.server.BaseHTTPRequestHandler):
+                # handle the GET request on the redirect URI
+
+                # noinspection PyPep8Naming
+                def do_GET(self):
+                    # serve exactly one GET on the redirect URI and then we are done
+
+                    parsed = urllib.parse.urlparse(self.path)
+                    if parsed.path == '/redirect':
+                        log.debug('serve_redirect: got GET on /redirect')
+                        query = urllib.parse.parse_qs(parsed.query)
+                        oauth_response['query'] = query
+                        # we are done
+                        self.shutdown(self.server)
+                    self.send_response(200)
+                    self.flush_headers()
+
+                @staticmethod
+                def shutdown(server: socketserver.BaseServer):
+                    log.debug('serve_redirect: shutdown of local web server requested')
+                    threading.Thread(target=server.shutdown, daemon=True).start()
+
+            httpd = http.server.HTTPServer(server_address=('', 6001),
+                                           RequestHandlerClass=RedirectRequestHandler)
+            log.debug('serve_redirect: starting local web server for redirect URI')
+            httpd.serve_forever()
+            httpd.server_close()
+            log.debug(f'serve_redirect: server terminated, result {oauth_response["query"]}')
+            return oauth_response['query']
+
+        def browser_auth_flow(url: str, cred_email: str, cred_password: str):
+            """
+            Drive a user auth flow in Chrome
+            """
+            # start OAuth flow
+            web_driver = webdriver.Chrome()
+            web_driver.get(url)
+
+            email = WebDriverWait(driver=web_driver, timeout=10).until(
+                method=EC.visibility_of_element_located((By.ID, 'IDToken1'))
+            )
+            email.send_keys(cred_email)
+
+            # wait for "Sign In" button
+            sign_in = WebDriverWait(driver=web_driver, timeout=10).until(
+                method=EC.element_to_be_clickable((By.ID, 'IDButton2')))
+            sign_in.click()
+            password = WebDriverWait(driver=web_driver, timeout=10).until(
+                method=EC.visibility_of_element_located((By.ID, 'IDToken2')))
+            password.send_keys(cred_password)
+
+            # wait for "Sign In" button
+            sign_in = WebDriverWait(driver=web_driver, timeout=10).until(
+                method=EC.element_to_be_clickable((By.ID, 'Button1')))
+            sign_in.click()
+
+            # unselect userGrantCheckBox
+            user_grant_checkbox = WebDriverWait(driver=web_driver, timeout=10).until(
+                method=EC.element_to_be_clickable((By.ID, 'userGrantCheckBox')))
+            user_grant_checkbox.click()
+
+            # click "Accept" button
+            accept = WebDriverWait(driver=web_driver, timeout=10).until(
+                method=EC.element_to_be_clickable((By.NAME, 'accept')))
+            accept.click()
+            return
+
+        user = cls.api.people.details(user_id)
+        user_email = user.emails[0]
+        user_password = os.getenv(cls._env_prefix + 'PASSWORD')
+
+        integration = cls.build_integration()
+
+        with ThreadPoolExecutor() as executor:
+            # start web server
+            fut = executor.submit(serve_redirect)
+
+            # driver auth flow in Chrome
+            oauth_state = str(uuid.uuid4())
+            oauth_url = integration.auth_url(state=oauth_state)
+            browser_auth_flow(oauth_url, user_email, user_password)
+
+            try:
+                result = fut.result(timeout=10)
+            except concurrent.futures.TimeoutError:
+                # noinspection PyBroadException
+                try:
+                    # post a dummy response to the redirect URI to stop the server
+                    with requests.Session() as session:
+                        session.get(integration.redirect_url, params={'code': 'foo'})
+                except Exception:
+                    pass
+                log.warning('Authorization did not finish in time (60 seconds)')
+                return
+
+        # get the authorization code from the response
+        code = result['code'][0]
+        response_state = result['state'][0]
+        if response_state != oauth_state:
+            log.error('Authorization code from response does not match authorization code from request')
+            return
+
+        # get access tokens
+        new_tokens = integration.tokens_from_code(code=code)
+        if new_tokens is None:
+            log.error('Failed to obtain tokens')
+            return None
+        return new_tokens

@@ -45,15 +45,15 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
            'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
            'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
-           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
-           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
+           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
            'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
@@ -2417,6 +2417,75 @@ class AsLocationsApi(AsApiChild, base='locations'):
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
         await super().delete(url)
+
+
+class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/settings/personalAssistant'):
+    """
+    Personal Assistant Settings For Me
+
+    Call settings for me APIs allow a person to read or modify their settings.
+
+    Viewing settings requires a user auth token with a scope of `spark:telephony_config_read`.
+
+    Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
+    """
+    async def get(self) -> PersonalAssistant:
+        """
+        Get My Personal Assistant
+
+        Retrieve user's own Personal Assistant details.
+
+        Personal Assistant is used to manage a user's incoming calls when they are away.
+
+        Retrieving Personal Assistant details requires a user auth token with `spark:telephony_config_read`.
+
+        :rtype: :class:`PersonalAssistant`
+        """
+        url = self.ep()
+        data = await super().get(url)
+        r = PersonalAssistant.model_validate(data)
+        return r
+
+    async def update(self, settings: PersonalAssistant):
+        """
+        Update My Personal Assistant
+
+        Update user's own Personal Assistant details.
+
+        Personal Assistant is used to manage a user's incoming calls when they are away.
+
+        Updating Personal Assistant details requires a auth token with the `spark:telephony_config_write`.
+
+        :param settings: Personal Assistant settings.
+        :type settings: PersonalAssistant
+        :rtype: None
+        """
+        body = settings.model_dump(mode='json', exclude_unset=True, by_alias=True)
+        url = self.ep()
+        await super().put(url, json=body)
+
+
+@dataclass(init=False, repr=False)
+class AsMeSettingsApi(AsApiChild, base='people'):
+    """
+    Call Settings For Me
+
+    Call settings for me APIs allow a person to read or modify their settings.
+
+    Viewing settings requires a user auth token with a scope of `spark:telephony_config_read`.
+
+    Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
+    """
+
+    personal_assistant: AsMePersonalAssistantApi
+
+    def __init__(self, session: AsRestSession):
+        """
+
+        :meta private:
+        """
+        super().__init__(session=session)
+        self.personal_assistant = AsMePersonalAssistantApi(session=session)
 
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
@@ -30275,6 +30344,8 @@ class AsWebexSimpleApi:
     licenses: AsLicensesApi
     #: Location API :class:`AsLocationsApi`
     locations: AsLocationsApi
+    #: call settings for me  API :class:`AsMeSettingsApi`
+    me: AsMeSettingsApi
     #: meetings API :class:`AsMeetingsApi`
     meetings: AsMeetingsApi
     #: membership API :class:`AsMembershipApi`
@@ -30358,6 +30429,7 @@ class AsWebexSimpleApi:
         self.guests = AsGuestManagementApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)
+        self.me = AsMeSettingsApi(session=session)
         self.meetings = AsMeetingsApi(session=session)
         self.membership = AsMembershipApi(session=session)
         self.messages = AsMessagesApi(session=session)

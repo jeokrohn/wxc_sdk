@@ -17,6 +17,7 @@ from .groups import GroupsApi
 from .guests import GuestManagementApi
 from .licenses import LicensesApi
 from .locations import LocationsApi
+from .me import MeSettingsApi
 from .meetings import MeetingsApi
 from .memberships import MembershipApi
 from .messages import MessagesApi
@@ -82,6 +83,8 @@ class WebexSimpleApi:
     licenses: LicensesApi
     #: Location API :class:`locations.LocationsApi`
     locations: LocationsApi
+    #: call settings for me  API :class:`me.MeSettingsApi`
+    me: MeSettingsApi
     #: meetings API :class:`meetings.MeetingsApi`
     meetings: MeetingsApi
     #: membership API :class:`memberships.MembershipApi`
@@ -165,6 +168,7 @@ class WebexSimpleApi:
         self.guests = GuestManagementApi(session=session)
         self.licenses = LicensesApi(session=session)
         self.locations = LocationsApi(session=session)
+        self.me = MeSettingsApi(session=session)
         self.meetings = MeetingsApi(session=session)
         self.membership = MembershipApi(session=session)
         self.messages = MessagesApi(session=session)

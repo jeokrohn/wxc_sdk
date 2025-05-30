@@ -113,6 +113,10 @@ The method name is a link to the method documentation.
         Update details for a location, by ID
    * - :meth:`api.locations.update_floor <wxc_sdk.locations.LocationsApi.update_floor>`
         Update a Location Floor
+   * - :meth:`api.me.personal_assistant.get <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.get>`
+        Get My Personal Assistant
+   * - :meth:`api.me.personal_assistant.update <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.update>`
+        Update My Personal Assistant
    * - :meth:`api.meetings.create <wxc_sdk.meetings.MeetingsApi.create>`
         Creates a new meeting
    * - :meth:`api.meetings.delete <wxc_sdk.meetings.MeetingsApi.delete>`

@@ -1,5 +1,8 @@
+from unittest import TestCase
+
 from wxc_sdk import __version__
 
 
-def test_version():
-    assert __version__ == '1.24.0'
+class TestVersion(TestCase):
+    def test_version(self):
+        assert __version__ == '1.24.0'

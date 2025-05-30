@@ -27,6 +27,7 @@ Subpackages
    wxc_sdk.integration
    wxc_sdk.licenses
    wxc_sdk.locations
+   wxc_sdk.me
    wxc_sdk.meetings
    wxc_sdk.memberships
    wxc_sdk.messages
