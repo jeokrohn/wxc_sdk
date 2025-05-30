@@ -47,6 +47,37 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         path = path and f'/{path}' or ''
         return self.ep(f'{location_id}/numbers{path}')
 
+    def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
+        """
+        Remove phone numbers from a location
+
+        Remove the specified set of phone numbers from a location for an organization.
+
+        Phone numbers must follow the E.164 format.
+
+        Removing a mobile number may require more time depending on mobile carrier capabilities.
+
+        Removing a phone number from a location requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        A location's main number cannot be removed.
+
+        This API is only supported for non-integrated PSTN connection types of Local
+        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
+        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.
+
+        :param location_id: LocationId from which numbers should be removed.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers to be removed.
+        :type phone_numbers: list[str]
+        :param org_id: Organization to manage
+        :type org_id: str
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'phoneNumbers': phone_numbers}
+        self.delete(url=url, params=params, json=body)
+
     def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
             number_usage_type: NumberUsageType = None,
             state: NumberState = NumberState.inactive, subscription_id: str = None,
@@ -133,34 +164,3 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         body = {'phoneNumbers': phone_numbers}
         super().post(url, params=params, json=body)
-
-    def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
-        """
-        Remove phone numbers from a location
-
-        Remove the specified set of phone numbers from a location for an organization.
-
-        Phone numbers must follow the E.164 format.
-
-        Removing a mobile number may require more time depending on mobile carrier capabilities.
-
-        Removing a phone number from a location requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        A location's main number cannot be removed.
-
-        This API is only supported for non-integrated PSTN connection types of Local
-        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.
-
-        :param location_id: LocationId from which numbers should be removed.
-        :type location_id: str
-        :param phone_numbers: List of phone numbers to be removed.
-        :type phone_numbers: list[str]
-        :param org_id: Organization to manage
-        :type org_id: str
-        """
-        url = self._url(location_id)
-        params = org_id and {'orgId': org_id} or None
-        body = {'phoneNumbers': phone_numbers}
-        self.delete(url=url, params=params, json=body)

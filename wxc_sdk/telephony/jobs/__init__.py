@@ -356,15 +356,17 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
 
     def list(self, org_id: str = None, **params) -> Generator[NumberJob, None, None]:
         """
-        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
-        irrespective of its status.
+        List Manage Numbers Jobs
+
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
+        of its status.
 
         The public API only supports initiating jobs which move numbers between locations.
 
         Via Control Hub they can initiate both the move and delete, so this listing can show both.
 
-        This API requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
@@ -378,6 +380,8 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
     def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
                      number_usage_type: str = None) -> NumberJob:
         """
+        Initiate Number Jobs
+
         Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
         `NUMBER_USAGE_CHANGE`.
 
@@ -387,7 +391,8 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         Although the job can internally perform the `DELETE` action, only the `MOVE` and `NUMBER_USAGE_CHANGE`
         operations are publicly supported.
 
-        Although the `numbers` field is an array, we currently only support a single number with each request.
+        Although the `numbers` field is an array, we currently only support a single number with each request for
+        `MOVE` operation type and change of usage type of up to 1000 numbers per request.
 
         Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
         progress the API call will receive a `409` http status code.
@@ -436,7 +441,10 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
 
     def status(self, job_id: str = None) -> NumberJob:
         """
+        Get Manage Numbers Job Status
+
         Returns the status and other details of the job.
+
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
@@ -449,7 +457,10 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
 
     def pause(self, job_id: str = None, org_id: str = None):
         """
+        Pause the Manage Numbers Job
+
         Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param job_id: Pause the Manage Numbers job for this jobId.
@@ -466,7 +477,10 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
 
     def resume(self, job_id: str = None, org_id: str = None):
         """
+        Resume the Manage Numbers Job
+
         Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param job_id: Resume the Manage Numbers job for this jobId.
@@ -501,9 +515,26 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
     def errors(self, job_id: str = None, org_id: str = None,
                **params) -> Generator[ManageNumberErrorItem, None, None]:
         """
+        List Manage Numbers Job errors
+
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+
         List of possible Errors:
+
+            * BATCH-1017021 - Failed to move because it is an inactive number.
+
+            * BATCH-1017022 - Failed to move because the source location and target location have different CCP
+            providers.
+
+            * BATCH-1017023 - Failed because it is not an unassigned number.
+
+            * BATCH-1017024 - Failed because it is a main number.
+
+            * BATCH-1017027 - Manage Numbers Move Operation is not supported.
+
+            * BATCH-1017031 - Hydra request is supported only for single number move job.
+
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 

@@ -865,6 +865,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
     def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
         """
+        Validate phone numbers
+
         Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
         response.
 
