@@ -51,6 +51,7 @@ async def work_on_one_location(api: AsWebexSimpleApi, location: TelephonyLocatio
     """
     Work on one location, create, update or remove patterns
     """
+
     async def create(pattern: str):
         try:
             await dapi.create(location.location_id,
@@ -70,7 +71,6 @@ async def work_on_one_location(api: AsWebexSimpleApi, location: TelephonyLocatio
         except AsRestError as e:
             print(f'{location.name}: failed to remove pattern {pattern.pattern}, error: {e}')
             raise
-
 
     async def update(pattern: DigitPattern):
         try:
@@ -127,6 +127,7 @@ async def work_on_one_location(api: AsWebexSimpleApi, location: TelephonyLocatio
         await asyncio.gather(*tasks)
     return
 
+
 @contextmanager
 def setup_logging(args: argparse.Namespace, api: AsWebexSimpleApi):
     """
@@ -158,6 +159,7 @@ def setup_logging(args: argparse.Namespace, api: AsWebexSimpleApi):
     logging.getLogger().addHandler(console_handler)
     with file_handler(args.log_file):
         yield
+
 
 async def main():
     parser = argparse.ArgumentParser(
@@ -229,6 +231,7 @@ async def main():
             await asyncio.gather(*[work_on_one_location(api, loc, pattern_list, dry_run)
                                    for loc in location_list])
     return
+
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -64,7 +64,6 @@ class Incident(ApiModel):
     auto_status_setting: Optional[bool] = None
 
 
-
 class WebexStatus(ApiModel):
     indicator: Optional[str] = None
 

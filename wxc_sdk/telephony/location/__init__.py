@@ -84,7 +84,6 @@ class TelephonyLocation(ApiModel):
     #: allows use of the chargeNumber.
     use_charge_number_for_pcharge_info: Optional[bool] = Field(default=None, alias='useChargeNumberForPChargeInfo')
 
-
     def update(self) -> dict:
         """
         restricted data used for updates
@@ -655,7 +654,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
     def create_receptionist_contact_directory(self, location_id: str, name: str, contacts: List[str],
-                                                org_id: str = None) -> str:
+                                              org_id: str = None) -> str:
         """
         Create a Receptionist Contact Directory
 
@@ -690,7 +689,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         return r
 
     def list_receptionist_contact_directories(self, location_id: str,
-                                                      org_id: str = None) -> List[IdAndName]:
+                                              org_id: str = None) -> List[IdAndName]:
         """
         Read list of Receptionist Contact Directories
 

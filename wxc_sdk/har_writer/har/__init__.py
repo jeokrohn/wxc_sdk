@@ -132,7 +132,7 @@ class PostData(HARModel):
         model validator to make sure that when deserializing (or instantiating) a multiform PostData instance then the
         text attribute has the base64 decoded text.
         """
-        pd:PostData = handler(data)
+        pd: PostData = handler(data)
         if pd.is_multipart() and isinstance(pd.text, str):
             # if text is str then we assume that this is base64 encoded
             pd.text = base64.b64decode(pd.text.encode())
@@ -260,7 +260,7 @@ class HARResponse(HARModel):
     content_str: Optional[str] = Field(default=None, exclude=None)
 
     @property
-    def json_data(self)->Optional[dict]:
+    def json_data(self) -> Optional[dict]:
         """
         JSON content if available
         """

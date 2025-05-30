@@ -958,6 +958,7 @@ class StartMoveUsersJobResponse(ApiModel):
     users_list: Optional[list[MoveUserItem]] = None
     job_details: Optional[StartJobResponse] = None
 
+
 class CallRecordingJobCounts(ApiModel):
     #: Total number of locations.
     total_number_of_locations: Optional[int] = None
@@ -967,6 +968,7 @@ class CallRecordingJobCounts(ApiModel):
     failed_users: Optional[int] = None
     #: Updated number of users.
     updated_users: Optional[int] = None
+
 
 class CallRecordingJobStatus(ApiModel):
     #: Name of the job.
@@ -994,7 +996,8 @@ class CallRecordingJobStatus(ApiModel):
     vendor_id: Optional[str] = None
     #: Job statistics.
     counts: Optional[CallRecordingJobCounts] = None
-    
+
+
 class CallRecordingJobsApi(ApiChild, base='telephony/config/jobs/callRecording'):
     def list(self, org_id: str = None, **params) -> Generator[CallRecordingJobStatus, None, None]:
         """
@@ -1044,7 +1047,7 @@ class CallRecordingJobsApi(ApiChild, base='telephony/config/jobs/callRecording')
         return r
 
     def errors(self, job_id: str, org_id: str = None,
-                                                **params) -> Generator[JobErrorItem, None, None]:
+               **params) -> Generator[JobErrorItem, None, None]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -1066,7 +1069,8 @@ class CallRecordingJobsApi(ApiChild, base='telephony/config/jobs/callRecording')
             params['orgId'] = org_id
         url = self.ep(f'{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
-    
+
+
 class MoveUsersJobsApi(ApiChild, base='telephony/config/jobs/person/moveLocation'):
     def validate_or_initiate(self, users_list: list[MoveUsersList],
                              org_id: str = None) -> StartMoveUsersJobResponse:

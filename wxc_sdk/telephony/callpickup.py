@@ -4,7 +4,7 @@ from typing import Optional, Literal
 from pydantic import Field
 
 from ..api_child import ApiChild
-from ..base import ApiModel, to_camel
+from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..common import PersonPlaceAgent
 

@@ -281,7 +281,7 @@ class AsRestSession(ClientSession):
         # keyword arguments for requests start with 'req_'. Any other keyword arguments are passed to the session.
         request_arguments = dict()
         session_arguments = dict()
-        for k,v in kwargs.items():
+        for k, v in kwargs.items():
             if k.startswith('req_'):
                 request_arguments[k[4:]] = v
             else:

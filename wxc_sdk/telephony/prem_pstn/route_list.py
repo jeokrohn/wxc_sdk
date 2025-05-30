@@ -145,7 +145,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         data = self.get(url=url, params=params)
         return RouteListDetail.model_validate(data)
 
-    def update(self, rl_id: str, name: str = None, rg_id: str=None, org_id: str = None):
+    def update(self, rl_id: str, name: str = None, rg_id: str = None, org_id: str = None):
         """
         Modify the details for a Route List.
 

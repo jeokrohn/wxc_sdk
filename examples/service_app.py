@@ -8,12 +8,10 @@ import os
 import sys
 from json import dumps, loads
 from os import getenv
-from os.path import basename, splitext, isfile
 from typing import Optional
 
 import yaml
 from dotenv import load_dotenv
-from yaml import safe_load, safe_dump
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.integration import Integration

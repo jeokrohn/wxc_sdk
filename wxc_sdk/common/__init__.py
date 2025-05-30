@@ -1072,6 +1072,7 @@ class PrimaryOrShared(str, Enum):
     #: Device is a hotdesking guest.
     hotdesking_guest = 'HOTDESKING_GUEST'
 
+
 class MediaFileType(str, Enum):
     """
     Media Type of the audio file.
