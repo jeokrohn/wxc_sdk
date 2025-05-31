@@ -660,15 +660,15 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.announcements_repo.delete <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.delete>`
         Delete an announcement greeting
    * - :meth:`api.telephony.announcements_repo.details <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.details>`
-        Fetch details of a binary announcement greeting by its ID at an organization level
+        Fetch details of a binary announcement greeting at the organization or location level
    * - :meth:`api.telephony.announcements_repo.list <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.list>`
-        Fetch a list of binary announcement greetings at an organization as well as location level
+        Fetch list of announcement greetings on location and organization level
    * - :meth:`api.telephony.announcements_repo.modify <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.modify>`
-        Modify an existing announcement greeting
+        Modify a binary announcement greeting at organization or location level
    * - :meth:`api.telephony.announcements_repo.upload_announcement <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.upload_announcement>`
-        Upload a binary file to the announcement repository at organization or location level
+        Upload a binary announcement greeting at organization or location level
    * - :meth:`api.telephony.announcements_repo.usage <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.usage>`
-        Retrieves repository usage for announcements for an organization
+        Fetch repository usage for announcements for an organization or location
    * - :meth:`api.telephony.auto_attendant.alternate_available_phone_numbers <wxc_sdk.telephony.autoattendant.AutoAttendantApi.alternate_available_phone_numbers>`
         Get Auto Attendant Alternate Available Phone Numbers
    * - :meth:`api.telephony.auto_attendant.by_name <wxc_sdk.telephony.autoattendant.AutoAttendantApi.by_name>`

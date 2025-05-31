@@ -86,10 +86,14 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
              media_file_type: str = None, name: str = None, org_id: str = None,
              **params) -> Generator[RepoAnnouncement, None, None]:
         """
+        Fetch list of announcement greetings on location and organization level
+
         Fetch a list of binary announcement greetings at an organization as well as location level.
+
         An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
-        This API requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param location_id: Return the list of enterprise or Location announcement files. Without this parameter, the
             Enterprise level announcements are returned. Possible values: all, locations,
@@ -183,9 +187,13 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                             location_id: str = None,
                             org_id: str = None) -> str:
         """
+        Upload a binary announcement greeting at organization or location level
+
         Upload a binary file to the announcement repository at organization or location level.
+
         An admin can upload a file at an organization or location level. This file will be uploaded to the
         announcement repository.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write .
 
         :param name: Announcement name
@@ -253,7 +261,10 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
 
     def usage(self, location_id: str = None, org_id: str = None) -> RepositoryUsage:
         """
-        Retrieves repository usage for announcements for an organization.
+        Fetch repository usage for announcements for an organization or location
+
+        Retrieves repository usage for announcements for an organization or location
+
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
@@ -273,7 +284,10 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
 
     def details(self, announcement_id: str, location_id: str = None, org_id: str = None) -> RepoAnnouncement:
         """
+        Fetch details of a binary announcement greeting at the organization or location level
+
         Fetch details of a binary announcement greeting by its ID at an organization level.
+
         An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
@@ -297,6 +311,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
     def delete(self, announcement_id: str, location_id: str = None, org_id: str = None):
         """
         Delete an announcement greeting.
+
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param announcement_id: Unique identifier of an announcement.
@@ -318,9 +333,17 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
     def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
                upload_as: str = None, location_id: str = None, org_id: str = None):
         """
-        Modify an existing announcement greeting
+        Modify a binary announcement greeting at organization or location level
 
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Modify an existing announcement greeting at a organization or location level.
+
+        An admin can upload a file or modify an existing file at a location level. This file will be uploaded to the
+        announcement repository.
+
+        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
+        Content-Type.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param announcement_id: Unique identifier of an announcement.
         :type announcement_id: str
