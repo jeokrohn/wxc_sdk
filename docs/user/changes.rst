@@ -2,6 +2,7 @@ Release history
 ===============
 
 - feat: new API :attr:`api.telephony.hotdesking_voiceportal <wxc_sdk.telephony.TelephonyApi.hotdesking_voiceportal>`
+- feat: new endpoint: :meth:`api.telephony.location.single_number_reach_primary_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.single_number_reach_primary_available_phone_numbers>`
 
 1.25.0
 ------
